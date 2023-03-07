@@ -21,7 +21,7 @@ class TestRecurrentEvent(common.TransactionCase):
             'duration': 1.0,
             'name': 'Test Meeting',
             'recurrency': True,
-            'rrule_type': 'daily'
+            'rrule_type': 'daily',
         })
         # I search for all the recurrent meetings
         meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
@@ -45,7 +45,7 @@ class TestRecurrentEvent(common.TransactionCase):
             'wed': True,
             'name': 'Review code with programmer',
             'recurrency': True,
-            'rrule_type': 'weekly'
+            'rrule_type': 'weekly',
         })
 
         # I search for all the recurrent weekly meetings.

@@ -160,6 +160,7 @@ export class CalendarController extends Component {
         return {
             resModel: this.model.resModel,
             viewId: this.model.quickCreateFormViewId,
+            title: _t("New Event"),
             context,
         };
     }
