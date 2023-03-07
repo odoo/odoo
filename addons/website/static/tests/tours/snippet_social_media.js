@@ -13,7 +13,7 @@ const preventRaceConditionStep = [{
     content: "Wait a few ms to avoid race condition",
     // Ensure the class is remove from previous call of those steps
     extra_trigger: `body:not(.${socialRaceConditionClass})`,
-    trigger: 'iframe .s_social_media',
+    trigger: '.s_social_media',
     run() {
         setTimeout(() => {
             document.body.classList.add(socialRaceConditionClass);
