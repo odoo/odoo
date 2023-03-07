@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from typing import Any
+
 import babel.dates
 import pytz
 from lxml import etree
@@ -7,7 +9,7 @@ import json
 
 from odoo import _, _lt, api, fields, models
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils, lazy
+from odoo.tools import date_utils, lazy, safe_eval, DotDict
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
@@ -133,6 +135,164 @@ class Base(models.AbstractModel):
                                                        order=expand_orderby)
 
         return groups
+
+
+    @api.model
+    def unity_read(self, **specs: dict):
+        """
+        :param specs: dict
+                    {
+                        method: 'read'|'search'
+                        ids|domain: if method = read: ids: [], else domain = [(...)]
+                        context: {'key': 3}
+                        fields: FieldSpecifications : {
+                            field1: 1   # will return the value for field1
+                            field_X2Many: 1  # will return a list of ids for the x2many
+                            field_many2one : 1  # will return the [id, display_name] for this field
+                            another_many2one: {__context: str }, # will return the [id, display_name evaluated with the __context]
+                            another_X2Many: FieldSpecifications + {
+                                __context: str  # will return the fields read with the __context
+                                # this is a recursive structure of FieldSpecifications
+                            }
+                        }
+                        __extra: {
+                            "prout" : {
+                                model: str  # a model name
+                                method: 'read'|'search'
+                                ids|domain: if method = read: ids: [], else domain = str
+                                field: FieldSpecifications  # see above
+                                context: str
+                            },
+                            ...
+                        }
+                    }
+
+                    if a domain or a context is of type str, it will be evaluated server side
+
+        :return: list where list[0] is the result of the main read and list[1] is a dict where each key is the key
+                received and the value the result of the method
+        """
+
+        result, result_raw = self._unity_read(specs)
+        extra_results = {}
+
+        if "__extra" in specs and specs["method"] == 'read' and len(specs["ids"]) == 1:
+            local_values: DotDict[str, Any] = DotDict(result_raw[0])
+            for spec_name, extra_spec in specs["__extra"].items():
+                context_str = extra_spec.get("context")
+                model = extra_spec["model"]
+                if context_str:
+                    context = safe_eval.safe_eval(context_str, globals_dict=None, locals_dict=local_values)
+                    extra_result, _ = self.env[model].with_context(**context)._unity_read(extra_spec, local_values)
+                else:
+                    extra_result, _ = self.env[model]._unity_read(extra_spec, local_values)
+                extra_results[spec_name] = extra_result
+        return [result, extra_results]
+
+    def _unity_read(self, specs, locals_dict=None):
+        if specs['method'] == 'read':
+            return self.browse(specs['ids'])._read_main({}, specs['fields'])
+        elif specs['method'] in ('search', 'search_read'):
+            offset: int | None = specs.get('offset', 0)
+            limit: int | None = specs.get('limit', 0)
+            order: str | None = specs.get('order')
+            count_limit: int | None = specs.get('count_limit', 0)
+            if locals_dict:
+                domain_str = specs.get('domain', "[]")
+                domain = safe_eval.safe_eval(domain_str, globals_dict={"uid": self  ._uid}, locals_dict=locals_dict)
+            else:
+                domain = specs['domain']
+            return self.search(domain, offset, limit, order)._unity_search(specs['fields'], domain, limit, offset, count_limit)
+
+
+        else:
+            raise NotImplementedError(f"the method {specs['method']} is not supported by unity_read")
+
+    # def _unity_read(self, model, fields_spec,  ids):
+    #     records: models.BaseModel = self.env[model].browse(ids)
+    #
+    #     global_context_dict = {
+    #         'active_ids': ids,
+    #         'active_model': model,
+    #         'context': self._context,
+    #     }
+    #
+    #     return records._read_main(global_context_dict, fields_spec)
+
+    def _unity_search(self, fields_spec, domain, limit=0, offset=0, count_limit=None):
+        global_context_dict = {
+            'active_model': self._name,
+            'context': DotDict(self._context),
+        }
+
+        if not self:
+            return {
+                'length': 0,
+                'records': []
+            }
+        if limit and (len(self) == limit or self.env.context.get('force_search_count')):
+            length = self.search_count(domain, limit=count_limit)
+        else:
+            length = len(self) + offset
+
+        global_context_dict['active_ids'] = self._ids
+        read_main, read_main_raw = self._read_main(global_context_dict, fields_spec)
+        return {'length': length,
+                'records': read_main}, read_main_raw
+
+    def _read_x2many(self, global_context_dict, field_name, specification, record_raw, local_context_dict):
+        assert self["id"] == record_raw["id"]
+        if "__context" in specification:
+            evaluated_context = safe_eval.safe_eval(specification["__context"], global_context_dict,
+                                                    local_context_dict)
+            print(
+                f"[{field_name}] with context: {specification['__context']} has been evaluated to {evaluated_context}")
+            x2many = self[field_name].with_context(**evaluated_context)
+        else:
+            x2many = self[field_name]
+        return x2many._read_main(global_context_dict, specification, record_raw)
+
+    def _read_many2one(self, global_context_dict, field_name, specification, local_context_dict):
+        if "__context" in specification:
+            evaluated_context = safe_eval.safe_eval(specification["__context"], global_context_dict, local_context_dict)
+            print(f"[{field_name}] with context: {specification['__context']} has been evaluated to {evaluated_context}")
+
+            many2one_record = self[field_name].with_context(**evaluated_context)
+        else:
+            many2one_record = self[field_name]
+        return self._fields[field_name].convert_to_read(many2one_record, self, use_name_get=True)
+
+    def _read_main(self, global_context_dict, specification, parent_raw: dict = None):
+        records_result_raw: list[dict] = self._read_format([field for field in specification if not field.startswith("__")], load=None)
+        local_context_dict = {
+            'active_model': self._name,
+        }
+        records = []
+        for record, record_raw in zip(self, records_result_raw):
+            assert record.id == record_raw["id"]
+            local_context_dict['active_id'] = record.id
+            local_context_dict.update(record_raw)
+            vals = {'id': record_raw['id']}
+            for field_name, field_spec in specification.items():
+                if field_name.startswith("__"):
+                    continue
+                field = record._fields[field_name]
+                if field_spec == 1:
+                    vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=True)
+                else:
+                    if field.type == "many2one":
+                        vals[field_name] = record._read_many2one(global_context_dict, field_name, field_spec, local_context_dict) or False
+                    else:
+                        assert field.type in ["many2many", "one2many"]
+                        if parent_raw:
+                            local_context_dict["parent"] = DotDict(parent_raw)
+                        x2many_result, _ = record._read_x2many(global_context_dict, field_name, field_spec, record_raw, local_context_dict)
+                        vals[field_name] = x2many_result
+            records.append(vals)
+        return records, records_result_raw
+
+
+
 
     @api.model
     def read_progress_bar(self, domain, group_by, progress_bar):

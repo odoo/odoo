@@ -59,7 +59,7 @@ from .tools import (
     clean_context, config, CountingStream, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
-    partition, populate, Query, ReversedIterable, split_every, unique,
+    partition, populate, Query, ReversedIterable, split_every, unique
 )
 from .tools.func import frame_codeinfo
 from .tools.lru import LRU
@@ -139,6 +139,34 @@ def fix_import_export_id_paths(fieldname):
     fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
+
+def merge_trigger_trees(trees: list, select=bool):
+    """ Merge trigger trees list into a final tree. The function ``select`` is
+    called on every field to determine which fields should be kept in the tree
+    nodes. This enables to discard some fields from the tree nodes.
+    """
+    result_tree = {}                        # the resulting tree
+    root_fields = OrderedSet()              # the fields in the root node
+    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+
+    for tree in trees:
+        for key, val in tree.items():
+            if key is None:
+                root_fields.update(val)
+            else:
+                subtrees_to_merge[key].append(val)
+
+    # the root node contains the collected fields for which select is true
+    root_node = [field for field in root_fields if select(field)]
+    if root_node:
+        result_tree[None] = root_node
+
+    for key, subtrees in subtrees_to_merge.items():
+        subtree = merge_trigger_trees(subtrees, select)
+        if subtree:
+            result_tree[key] = subtree
+
+    return result_tree
 
 
 class MetaModel(api.Meta):
