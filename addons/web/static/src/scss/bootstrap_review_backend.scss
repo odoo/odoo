@@ -3,6 +3,83 @@
 /// ==============================================================================
 
 
+// Buttons
+// ============================================================================
+// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
+// We do it ourself here generating each btn design type individually.
+
+// 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
+//    maps.
+@each $-name, $-value in $o-btns-bs-override {
+    .btn-#{$-name} {
+        @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+        );
+    }
+}
+
+@each $-name, $-value in $o-btns-bs-outline-override {
+    .btn-outline-#{$-name} {
+        @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+        );
+    }
+}
+
+// 2. Render '$theme-colors' buttons excluding the ones already generated
+//    using the custom maps.
+@each $-name, $-color in $theme-colors {
+    @if (not map-get($o-btns-bs-override, $-name)) {
+        .btn-#{$-name} {
+            @include button-variant($-color, $-color);
+        }
+    }
+    @if (not map-get($o-btns-bs-outline-override, $-name)) {
+        .btn-outline-#{$-name} {
+            @include button-outline-variant($-color);
+        }
+    }
+}
+
+// 3. Render custom buttons.
+@each $-name, $-color in $o-btn-custom {
+    .btn-#{$-name} {
+        @include button-variant($-color, $-color);
+    }
+}
+
+// Button group
+// ============================================================================
+.btn-group {
+    > .btn, .btn-group {
+        // Ensure that active buttons will always be rendered on top, including
+        // hovered ones.
+        &:active, &.active, &:active:hover, &.active:hover {
+            z-index: 2;
+        }
+
+        &:not(:first-child) {
+            margin-left: $btn-border-width;
+        }
+    }
+}
+
 // Bootstrap '$theme-colors' text-x and bg-x classes generation
 // ============================================================================
 // Bootstrap's default behavior is to generate classes directly from its

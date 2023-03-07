@@ -1,4 +1,6 @@
 .o_field_statusbar {
+    $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
+
     > .o_statusbar_status {
         display: flex;
         align-content: space-around;
@@ -12,6 +14,7 @@
             position: relative;
             padding-left: $o-statusbar-arrow-width*2;
             border-width: 0;
+            border-radius: 0;
             font-size: $font-size-sm;
 
             &:first-child {
