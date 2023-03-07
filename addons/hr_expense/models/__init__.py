@@ -3,6 +3,7 @@
 from . import hr_employee
 from . import account_move
 from . import account_move_line
+from . import account_payment
 from . import hr_department
 from . import hr_expense
 from . import product_template
