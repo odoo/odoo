@@ -1551,7 +1551,8 @@ class MrpProduction(models.Model):
             total_amount = sum(mo_amounts)
             if total_amount < production.product_qty and not cancel_remaining_qty:
                 amounts[production].append(production.product_qty - total_amount)
-            elif total_amount > production.product_qty or production.state in ['done', 'cancel']:
+            elif float_compare(total_amount, production.product_qty, precision_rounding=production.product_uom_id.rounding) > 0 \
+                    or production.state in ['done', 'cancel']:
                 raise UserError(_("Unable to split with more than the quantity to produce."))
 
         backorder_vals_list = []
