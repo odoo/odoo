@@ -21,7 +21,7 @@ export class MailAttachments extends Component {
     }
 
     getValue(){
-        return this.props.value || [];
+        return this.props.record.data[this.props.name] || [];
     }
 
     getUrl(attachmentId) {
@@ -49,7 +49,7 @@ export class MailAttachments extends Component {
                 placeholder: false,
             });
         }
-        this.props.update(this.getValue().concat(extraFiles));
+        this.props.record.update({ [this.props.name]: this.getValue().concat(extraFiles) });
     }
 
     onFileRemove(deleteId) {
@@ -58,7 +58,7 @@ export class MailAttachments extends Component {
                 this.attachmentIdsToUnlink.add(item.id);
             }
         }
-        this.props.update(this.getValue().filter((item) => !this.attachmentIdsToUnlink.has(item.id)));
+        this.props.record.update({ [this.props.name]: this.getValue().filter((item) => !this.attachmentIdsToUnlink.has(item.id)) });
     }
 
     async onWillUnmount(){
