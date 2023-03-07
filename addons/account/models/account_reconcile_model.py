@@ -798,7 +798,7 @@ class AccountReconcileModel(models.Model):
             return self.env['res.partner']
 
         for partner_mapping in self.partner_mapping_line_ids:
-            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref or '') if partner_mapping.payment_ref_regex else True
             match_narration = re.match(partner_mapping.narration_regex, st_line.narration or '') if partner_mapping.narration_regex else True
 
             if match_payment_ref and match_narration:
