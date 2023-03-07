@@ -275,37 +275,6 @@
 
 <template id="course_join">
     <div class="o_wslides_js_course_join flex-grow-1 d-grid">
-        <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
-            class="btn btn-primary o_wslides_js_course_join_link"
-            title="Start Course" aria-label="Start Course Channel" href="#"
-            t-att-data-channel-id="channel.id"
-            t-att-data-channel-enroll="channel.enroll">
-            <span class="cta-title text_small_caps">
-                Join this Course
-            </span>
-        </a>
-
-        <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
-            <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
-                 t-att-data-channel-id="channel.id">
-                Private Course
-                <div t-if="is_public_user">
-                    <small>
-                        Please <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to contact responsible.
-                    </small>
-                </div>
-                <div t-elif="channel.has_requested_access">
-                    <small class="text-success">
-                        Request already sent
-                    </small>
-                </div>
-                <div t-else="" class="o_wslides_enroll_msg">
-                    <small>
-                        <div t-field="channel.enroll_msg"/>
-                    </small>
-                </div>
-            </div>
-        </div>
         <t t-if="channel.is_member">
             <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
                     t-att-data-channel-id="channel.id"
@@ -332,6 +301,76 @@
                     </div>
                 </div>
             </div>
+        </t>
+        <t t-elif="channel.enroll in ['public', 'invite']">
+            <div t-if="channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed"
+                 class="text-center">
+                <div class="alert my-0 bg-100">
+                    <h6>
+                        <i class="fa fa-lock"/>
+                        <span>Course Locked</span>
+                    </h6>
+                    <div>
+                        <small>
+                            Finish
+                            <a t-if="len(channel.prerequisite_channel_ids) == 1"
+                               t-attf-href="/slides/{{slug(channel.prerequisite_channel_ids[0])}}"
+                               t-out="channel.prerequisite_channel_ids[0].name"/>
+                            <a t-else="" href="#" class="o_wslides_js_prerequisite_course"
+                               t-att-data-channels="json.dumps(
+                                  [{'course_id': course.id, 'course_name': course.name}
+                                  for course in channel.prerequisite_channel_ids]
+                               )">
+                                courses
+                            </a>
+                            to unlock
+                        </small>
+                    </div>
+                    <div>
+                        <small t-if="channel.enroll == 'public'">
+                            or
+                            <a href="#" class="o_wslides_js_course_join_link"
+                               t-att-data-channel-id="channel.id"
+                               t-att-data-channel-enroll="channel.enroll">
+                                join
+                            </a> anyway.
+                        </small>
+                        <small t-else="">
+                            or <a href="#" class="o_wslides_js_channel_enroll" t-att-data-channel-id="channel.id">request</a> direct access.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <t t-else="">
+                <a t-if="channel.enroll == 'public'" role="button"
+                    class="btn btn-primary o_wslides_js_course_join_link"
+                    title="Start Course" aria-label="Start Course Channel" href="#"
+                    t-att-data-channel-id="channel.id"
+                    t-att-data-channel-enroll="channel.enroll">
+                    <span class="cta-title text_small_caps">
+                        Join this Course
+                    </span>
+                </a>
+                <div t-if="channel.enroll == 'invite'" class="text-center">
+                    <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
+                         t-att-data-channel-id="channel.id">
+                        Private Course
+                        <div t-if="is_public_user">
+                            <small>
+                                Please <a t-attf-href="/web/login?redirect=/slides/{{slug(channel)}}">sign in</a> to contact responsible.
+                            </small>
+                        </div>
+                        <div t-elif="channel.has_requested_access">
+                            <small class="text-success">
+                                Request already sent
+                            </small>
+                        </div>
+                        <div t-else="" class="o_wslides_enroll_msg">
+                            <small t-field="channel.enroll_msg"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </t>
     </div>
 </template>

@@ -125,6 +125,23 @@
                 <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
             </div>
         </div>
+        <t t-if="channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed">
+            <small t-if="len(channel.prerequisite_channel_ids) == 1" class="text-center">
+                Prerequisite:
+                <a t-attf-href="/slides/{{slug(channel.prerequisite_channel_ids[0])}}"
+                   t-out="channel.prerequisite_channel_ids[0].name"/>
+            </small>
+            <small t-else="" class="text-center">
+                There are some
+                <a href="#" class="o_wslides_js_prerequisite_course"
+                   t-att-data-channels="json.dumps([
+                      {'course_id': course.id, 'course_name': course.name}
+                      for course in channel.prerequisite_channel_ids]
+                   )">
+                    prerequisite courses.
+                </a>
+            </small>
+        </t>
         <div class="oe_website_sale">
             <div class="add_to_cart_button">
                 <form action="/shop/cart/update" method="POST">
