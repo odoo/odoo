@@ -11,8 +11,8 @@ from collections import defaultdict
 class StockPicking(models.Model):
     _inherit='stock.picking'
 
-    pos_session_id = fields.Many2one('pos.session')
-    pos_order_id = fields.Many2one('pos.order')
+    pos_session_id = fields.Many2one('pos.session', index=True)
+    pos_order_id = fields.Many2one('pos.order', index=True)
 
     def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
         return {
