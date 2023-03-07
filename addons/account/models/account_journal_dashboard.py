@@ -333,6 +333,7 @@ class account_journal(models.Model):
         return ('''
             SELECT
                 (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
+                %(sign)s * amount_residual_signed AS amount_total_company,
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
@@ -342,7 +343,10 @@ class account_journal(models.Model):
             AND move.state = 'posted'
             AND move.payment_state in ('not_paid', 'partial')
             AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-        ''', {'journal_id': self.id})
+        ''', {
+            'sign': 1 if self.type == 'sale' else -1,
+            'journal_id': self.id,
+        })
 
     def _get_draft_bills_query(self):
         """
@@ -353,6 +357,7 @@ class account_journal(models.Model):
         return ('''
             SELECT
                 (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
+                %(sign)s * amount_residual_signed AS amount_total_company,
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
@@ -362,12 +367,16 @@ class account_journal(models.Model):
             AND move.state = 'draft'
             AND move.payment_state in ('not_paid', 'partial')
             AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-        ''', {'journal_id': self.id})
+        ''', {
+            'sign': 1 if self.type == 'sale' else -1,
+            'journal_id': self.id,
+        })
 
     def _get_late_bills_query(self):
         return """
             SELECT
                 (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
+                %(sign)s * amount_residual_signed AS amount_total_company,
                 currency_id AS currency,
                 move_type,
                 invoice_date,
@@ -378,7 +387,11 @@ class account_journal(models.Model):
             AND state = 'posted'
             AND payment_state in ('not_paid', 'partial')
             AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-        """, {'journal_id': self.id, 'today': fields.Date.context_today(self)}
+        """, {
+            'sign': 1 if self.type == 'sale' else -1,
+            'journal_id': self.id,
+            'today': fields.Date.context_today(self)
+        }
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
@@ -397,14 +410,17 @@ class account_journal(models.Model):
             rslt_count += 1
             date = result.get('invoice_date') or fields.Date.context_today(self)
 
-            amount = result.get('amount_total', 0) or 0
-            if cur != target_currency:
+            if cur == target_currency:
+                amount = result.get('amount_total', 0) or 0
+            elif company.currency_id == target_currency and result.get('amount_total_company'):
+                amount = result.get('amount_total_company') or 0
+            else:
                 key = (cur, target_currency, company, date)
                 # Using setdefault will call _get_conversion_rate, so we explicitly check the
                 # existence of the key in the cache instead.
                 if key not in curr_cache:
                     curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
-                amount *= curr_cache[key]
+                amount = curr_cache[key] * result.get('amount_total', 0) or 0
             rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
