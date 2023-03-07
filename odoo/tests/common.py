@@ -2408,7 +2408,7 @@ class Form(object):
             if not value:
                 return False
             # out of onchange, m2o are name-gotten
-            return value[0]
+            return value['id']
         elif descr['type'] == 'one2many':
             # ignore o2ms nested in o2ms
             if not descr['edition_view']:
@@ -2779,7 +2779,7 @@ def record_to_values(fields, record):
     for f, v in record.read(to_read)[0].items():
         descr = fields[f]
         if descr['type'] == 'many2one':
-            v = v and v[0]
+            v = v
         elif descr['type'] == 'many2many':
             v = [(6, 0, v or [])]
         elif descr['type'] == 'one2many':

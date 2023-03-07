@@ -3092,12 +3092,14 @@ class BaseModel(metaclass=MetaModel):
                 'records': read_main}
 
     def _read_main(self, specification: list | dict, limit: int | None = None, offset: int | None = None) -> list[dict]:
-        if isinstance(specification, list):
-            specification = { f : {} for f in specification }
-
-        self.browse(self._prefetch_ids).fetch(specification.keys())
         # todo vsc: replace _read_format
         #  and remove load=_classic_read : the specification should be able to support it correctly
+
+        if isinstance(specification, collections.abc.Sequence):
+            specification = { field_name : {} for field_name in specification }
+
+        # todo vsc: only prefetch the fields for the records respecting the limit
+        self.browse(self._prefetch_ids).fetch(specification.keys())
         records = []
 
         if offset is not None and offset > 0:
@@ -3125,17 +3127,18 @@ class BaseModel(metaclass=MetaModel):
                         relational_record = record[field_name]
 
                     if field.type == "many2one":
+                        # TODO VSC: move all this to the convert_to_read of the many2one
                         if 'fields' in field_spec and len(field_spec['fields']):
                             if len(field_spec["fields"]) == 1 and 'display_name' in field_spec["fields"]:
-                                # specificaton like many2one_id: {'fields': {'display_name':{}}
+                                # specificaton like 'many2one_id': {'fields': {'display_name':{}}
                                 vals[field_name] = field.convert_to_read(relational_record, self,
-                                                                         use_name_get=True) or Fasle
+                                                                         use_name_get=True) or False
                             else:
                                 # specification for more fields other than display_name on the many2one like
                                 # 'many2one_id' : {'fields':{'id':{}, 'write_date':{}}}
                                 vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
                         else:
-                            # specification like 'many2one_id': {}, 'many2one_id' : {'fields':{}}
+                            # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
                             vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
                     else:
                         assert field.type in ["many2many", "one2many"]
@@ -5172,7 +5175,7 @@ class BaseModel(metaclass=MetaModel):
             del context['active_test']
             records = records.with_context(context)
 
-        return records._read_format(fnames=fields, **read_kwargs)
+        return records._read_main(fields, limit=limit, offset=offset)
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."

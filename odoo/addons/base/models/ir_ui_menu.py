@@ -281,7 +281,7 @@ class IrUiMenu(models.Model):
         menu_items_map = {menu_item["id"]: menu_item for menu_item in menu_items}
         for menu_item in menu_items:
             menu_item.setdefault('children', [])
-            parent = menu_item['parent_id'] and menu_item['parent_id'][0]
+            parent = menu_item['parent_id']
             menu_item['xmlid'] = xmlids.get(menu_item['id'], "")
             if parent in menu_items_map:
                 menu_items_map[parent].setdefault(
