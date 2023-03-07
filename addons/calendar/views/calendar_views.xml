@@ -171,14 +171,14 @@
                                         <field name="privacy" readonly="not user_can_edit" nolabel="1"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
-                                    <field name="description"/>
+                                    <field name="description" options="{'height': 100}"/>
                                 </group>
                                 <group>
                                     <div class="o_row" colspan="2">
                                         <div colspan="1">
                                             <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> Attendees</span>
                                         </div>
-                                        <div name="send_buttons" class="d-flex gap-1" colspan="1">
+                                        <div name="send_buttons" class="sm-2" colspan="1">
                                             <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
                                         </div>
                                     </div>
@@ -192,8 +192,10 @@
                                         <field name="partner_ids" widget="many2manyattendee"
                                             placeholder="Select attendees..."
                                             context="{'force_email':True}"
+                                            domain="[('type','!=','private')]"
                                             class="oe_inline"
-                                            readonly="not user_can_edit"/>
+                                            readonly="not user_can_edit"
+                                        />
                                     </div>
                                     <div class="alert alert-warning o_form_header mt-2" invisible="not invalid_email_partner_ids" role="status">
                                         <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
@@ -202,53 +204,55 @@
                                 </group>
                             </group>
                         </page>
+
                         <page name="page_options" string="Options">
                             <group>
-                                <div>
-                                    <group>
-                                        <field name="recurrency" readonly="not user_can_edit"/>
+                                <field name="recurrence_id" invisible="1" />
+                                <field name="rrule_type" invisible="1" />
+                                <group class="mb-0">
+                                    <field name="recurrency" />
+                                    <field name="rrule_type_ui" class="w-auto" invisible="not recurrency" required="recurrency"/>
+                                </group>
+                                <newline />
+                                <group invisible="not recurrency">
+                                    <group class="o_row" invisible="rrule_type_ui != 'custom'">
+                                        <field name="interval" string="Repeat every" class="oe_inline w-auto" />
+                                        <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'"/>
                                     </group>
-                                    <div invisible="not recurrency">
-                                        <group>
-                                            <label for="interval"/>
-                                            <div class="o_col">
-                                                <div class="o_row">
-                                                    <field name="interval" class="oe_inline" readonly="not user_can_edit" required="recurrency"/>
-                                                    <field name="rrule_type" readonly="not user_can_edit" required="recurrency"/>
-                                                </div>
-                                                <widget name="week_days" invisible="rrule_type != 'weekly'" readonly="not user_can_edit"/>
-                                            </div>
-                                            <label string="Until" for="end_type"/>
-                                            <div class="o_row">
-                                                <field name="end_type" readonly="not user_can_edit" required="recurrency"/>
-                                                <field name="count" invisible="end_type != 'count'" readonly="not user_can_edit" required="recurrency"/>
-                                                <field name="until" invisible="end_type != 'end_date'" readonly="not user_can_edit" required="end_type == 'end_date' and recurrency"/>
-                                            </div>
-                                        </group>
-                                        <group invisible="rrule_type != 'monthly'">
-                                            <label string="Day of Month" for="month_by"/>
-                                            <div class="o_row">
-                                                <field name="month_by"/>
-                                                <field name="day"
-                                                    invisible="month_by != 'date'"
-                                                    readonly="not user_can_edit"
-                                                    required="month_by == 'date' and rrule_type == 'monthly'"/>
-                                                <field name="byday" string="The"
-                                                    invisible="month_by != 'day'"
-                                                    readonly="not user_can_edit"
-                                                    required="recurrency and month_by == 'day' and rrule_type == 'monthly'"/>
-                                                <field name="weekday" nolabel="1"
-                                                    invisible="month_by != 'day'"
-                                                    readonly="not user_can_edit"
-                                                    required="recurrency and month_by == 'day' and rrule_type == 'monthly'"/>
-                                            </div>
-                                        </group>
-                                    </div>
-                                </div>
+                                </group>
+                                <newline />
+                                <group class="gap-0" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">
+                                    <span class="fw-bold pe-3">Repeat on</span>
+                                    <widget name="calendar_week_days" />
+                                </group>
                                 <group>
                                     <field name="recurrence_id" invisible="1" />
                                 </group>
                             </group>
+                            <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
+                                <label string="Day of Month" for="month_by" />
+                                <field name="month_by" nolabel="1" required="rrule_type_ui == 'monthly' or rrule_type == 'monthly'"/>
+                                <field name="day" nolabel="1"
+                                    required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'date'"
+                                    invisible="month_by != 'date'"
+                                />
+                                <field name="byday" string="The" nolabel="1"
+                                    required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
+                                    invisible="month_by != 'day'"
+                                />
+                                <field name="weekday" nolabel="1"
+                                    required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
+                                    invisible="month_by != 'day'"
+                                />
+                            </div>
+                            <div class="d-flex gap-2" invisible="not recurrency">
+                                <label string="Until" for="end_type" />
+                                <field name="end_type" class="oe_inline w-auto" nolabel="1" required="recurrency"/>
+                                <field name="count" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'count'" required="recurrency"/>
+                                <field name="until" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'end_date'"
+                                    required="recurrency and end_type == 'end_date'"
+                                />
+                            </div>
                         </page>
 
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one" invisible="not user_can_edit">
@@ -320,7 +324,7 @@
                     </group>
                     <group>
                         <field name="partner_ids" widget="many2manyattendee"
-                            placeholder="Select attendees..."
+                            placeholder="Add attendees..."
                             context="{'force_email':True}"
                             class="oe_inline"
                         />

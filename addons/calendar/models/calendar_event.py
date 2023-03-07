@@ -3,7 +3,7 @@
 
 import logging
 import math
-from datetime import timedelta
+from datetime import datetime, timedelta
 from itertools import repeat
 from werkzeug.urls import url_parse
 
@@ -40,6 +40,13 @@ SORT_ALIASES = {
     'start_date': 'sort_start',
 }
 
+RRULE_TYPE_SELECTION_UI = [
+    ('daily', 'Daily'),
+    ('weekly', 'Weekly'),
+    ('monthly', 'Monthly'),
+    ('yearly', 'Yearly'),
+    ('custom', 'Custom')
+]
 
 def get_weekday_occurence(date):
     """
@@ -99,6 +106,17 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
+    @api.model
+    def _default_start(self):
+        now = fields.Datetime.now()
+        return now + (datetime.min - now) % timedelta(minutes=30)
+
+    @api.model
+    def _default_stop(self):
+        now = fields.Datetime.now()
+        start = now + (datetime.min - now) % timedelta(minutes=30)
+        return start + timedelta(hours=1)
+
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description')
@@ -138,10 +156,10 @@ class Meeting(models.Model):
         'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
     # timing
     start = fields.Datetime(
-        'Start', required=True, tracking=True, default=fields.Date.today,
+        'Start', required=True, tracking=True, default=_default_start,
         help="Start date of an event, without time for full days events")
     stop = fields.Datetime(
-        'Stop', required=True, tracking=True, default=lambda self: fields.Datetime.today() + timedelta(hours=1),
+        'Stop', required=True, tracking=True, default=_default_stop,
         compute='_compute_stop', readonly=False, store=True,
         help="Stop date of an event, without time for full days events")
     display_time = fields.Char('Event Time', compute='_compute_display_time')
@@ -189,6 +207,10 @@ class Meeting(models.Model):
     # If some of these fields are set and recurrence_id does not exists,
     # a `calendar.recurrence.rule` will be dynamically created.
     rrule = fields.Char('Recurrent Rule', compute='_compute_recurrence', readonly=False)
+    rrule_type_ui = fields.Selection(RRULE_TYPE_SELECTION_UI, string='Repeat',
+                                     compute="_compute_rrule_type_ui",
+                                     readonly=False,
+                                     help="Let the event automatically repeat at that interval")
     rrule_type = fields.Selection(RRULE_TYPE_SELECTION, string='Recurrence',
                                   help="Let the event automatically repeat at that interval",
                                   compute='_compute_recurrence', readonly=False)
@@ -198,10 +220,10 @@ class Meeting(models.Model):
         END_TYPE_SELECTION, string='Recurrence Termination',
         compute='_compute_recurrence', readonly=False)
     interval = fields.Integer(
-        string='Repeat Every', compute='_compute_recurrence', readonly=False,
+        string='Repeat On', compute='_compute_recurrence', readonly=False,
         help="Repeat every (Days/Week/Month/Year)")
     count = fields.Integer(
-        string='Repeat', help="Repeat x times", compute='_compute_recurrence', readonly=False)
+        string='Number of Repetitions', help="Repeat x times", compute='_compute_recurrence', readonly=False)
     mon = fields.Boolean(compute='_compute_recurrence', readonly=False)
     tue = fields.Boolean(compute='_compute_recurrence', readonly=False)
     wed = fields.Boolean(compute='_compute_recurrence', readonly=False)
@@ -373,6 +395,16 @@ class Meeting(models.Model):
                 )
 
     @api.depends('recurrence_id', 'recurrency')
+    def _compute_rrule_type_ui(self):
+        defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
+        for event in self:
+            if event.recurrency:
+                if event.recurrence_id:
+                    event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
+                else:
+                    event.rrule_type_ui = defaults["rrule_type"]
+
+    @api.depends('recurrence_id', 'recurrency', 'rrule_type_ui')
     def _compute_recurrence(self):
         recurrence_fields = self._get_recurrent_fields()
         false_values = {field: False for field in recurrence_fields}  # computes need to set a value
@@ -388,6 +420,7 @@ class Meeting(models.Model):
                     if event.recurrence_id[field]
                 }
                 rrule_values = rrule_values or default_rrule_values
+                rrule_values['rrule_type'] = (event.rrule_type if event.rrule_type_ui == "custom" else event.rrule_type_ui) or defaults.pop('rrule_type')
                 event.update({**false_values, **defaults, **event_values, **rrule_values})
             else:
                 event.update(false_values)
