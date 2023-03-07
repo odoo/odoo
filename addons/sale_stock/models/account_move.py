@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import fields, models
+from odoo import models, api
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
@@ -106,6 +106,17 @@ class AccountMove(models.Model):
             })
 
         return res
+
+    @api.depends('line_ids.sale_line_ids.order_id')
+    def _compute_delivery_date(self):
+        # EXTENDS 'account'
+        super()._compute_delivery_date()
+        for move in self:
+            sale_order_effective_date = list(filter(None, move.line_ids.sale_line_ids.order_id.mapped('effective_date')))
+            effective_date_res = max(sale_order_effective_date) if sale_order_effective_date else False
+            # if multiple sale order we take the bigger effective_date
+            if effective_date_res:
+                move.delivery_date = effective_date_res
 
 
 class AccountMoveLine(models.Model):

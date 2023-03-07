@@ -66,6 +66,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
+                'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
@@ -76,6 +77,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
                 'invoice_date': time.strftime('%Y-%m-08'),
+                'delivery_date': time.strftime('%Y-%m-08'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                     Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
@@ -86,6 +88,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
                 'invoice_date': time.strftime('%Y-%m-08'),
+                'delivery_date': time.strftime('%Y-%m-08'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 5}),
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
@@ -97,6 +100,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_immediate',
                 'invoice_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
@@ -108,6 +112,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
+                'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
@@ -123,6 +128,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'base.res_partner_12',
                 'invoice_user_id': False,
                 'invoice_date': fifteen_months_ago.strftime("%Y-%m-17"),
+                'delivery_date': fifteen_months_ago.strftime("%Y-%m-17"),
                 'invoice_line_ids': [
                     Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10,
                                     'tax_ids': self.env.company.account_purchase_tax_id.ids}),

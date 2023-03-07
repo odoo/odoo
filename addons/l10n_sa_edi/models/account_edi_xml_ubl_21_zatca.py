@@ -91,7 +91,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
     def _get_delivery_vals_list(self, invoice):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         shipping_address = invoice.partner_shipping_id
-        return [{'actual_delivery_date': invoice.l10n_sa_delivery_date,
+        return [{'actual_delivery_date': invoice.delivery_date or invoice.invoice_date,
                  'delivery_address_vals': self._get_partner_address_vals(shipping_address) if shipping_address else {},}]
 
     def _get_partner_party_identification_vals_list(self, partner):

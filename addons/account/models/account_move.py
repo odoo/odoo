@@ -286,6 +286,15 @@ class AccountMove(models.Model):
         index=True,
         copy=False,
     )
+    delivery_date = fields.Date(
+        string='Delivery Date',
+        copy=False,
+        readonly=True,
+        store=True,
+        compute='_compute_delivery_date',
+        states={'draft': [('readonly', False)]},
+    )
+    show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     invoice_payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string='Payment Terms',
@@ -841,6 +850,14 @@ class AccountMove(models.Model):
                 (k['date_maturity'] for k in move.needed_terms.keys() if k),
                 default=False,
             ) or move.invoice_date_due or today
+
+    def _compute_delivery_date(self):
+        pass
+
+    @api.depends('delivery_date')
+    def _compute_show_delivery_date(self):
+        for move in self:
+            move.show_delivery_date = move.delivery_date and move.is_sale_document()
 
     @api.depends('journal_id', 'statement_line_id')
     def _compute_currency_id(self):

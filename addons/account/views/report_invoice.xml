@@ -74,6 +74,10 @@
                                 <strong>Due Date:</strong>
                                 <p class="m-0" t-field="o.invoice_date_due"/>
                             </div>
+                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.delivery_date" name="delivery_date">
+                                <strong>Delivery Date:</strong>
+                                <p class="m-0" t-field="o.delivery_date"/>
+                            </div>
                             <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_origin" name="origin">
                                 <strong>Source:</strong>
                                 <p class="m-0" t-field="o.invoice_origin"/>

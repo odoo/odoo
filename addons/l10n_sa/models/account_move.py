@@ -10,17 +10,16 @@ from odoo.tools import float_repr
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_sa_delivery_date = fields.Date(string='Delivery Date', default=fields.Date.context_today, copy=False,
-                                        readonly=True, states={'draft': [('readonly', False)]},
-                                        help="In case of multiple deliveries, you should take the date of the latest one. ")
-    l10n_sa_show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
     l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date', readonly=True, copy=False)
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
+        # EXTENDS 'account'
+        super()._compute_show_delivery_date()
         for move in self:
-            move.l10n_sa_show_delivery_date = move.country_code == 'SA' and move.move_type in ('out_invoice', 'out_refund')
+            if move.country_code == 'SA':
+                move.show_delivery_date = move.is_sale_document()
 
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id', 'company_id.vat')
     def _compute_qr_code_str(self):
@@ -49,11 +48,10 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         res = super()._post(soft)
-        for record in self:
-            if record.country_code == 'SA' and record.move_type in ('out_invoice', 'out_refund'):
-                if not record.l10n_sa_show_delivery_date:
-                    raise UserError(_('Delivery Date cannot be empty'))
-                self.write({
-                    'l10n_sa_confirmation_datetime': fields.Datetime.now()
-                })
+        for move in self:
+            if move.country_code == 'SA' and move.is_sale_document():
+                vals = {'l10n_sa_confirmation_datetime': fields.Datetime.now()}
+                if not move.delivery_date:
+                    vals['delivery_date'] = move.invoice_date
+                move.write(vals)
         return res
