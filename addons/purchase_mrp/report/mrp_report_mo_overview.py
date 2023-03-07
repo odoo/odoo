@@ -46,17 +46,17 @@ class ReportMoOverview(models.AbstractModel):
             return self._format_receipt_date(receipt_state, doc_in.date_planned)
         return res
 
-    def _get_resupply_data(self, rules, rules_delay, quantity, product, warehouse):
-        res = super()._get_resupply_data(rules, rules_delay, quantity, product, warehouse)
+    def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, warehouse):
+        res = super()._get_resupply_data(rules, rules_delay, quantity, uom_id, product, warehouse)
         if any(rule for rule in rules if rule.action == 'buy' and product.seller_ids):
             supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id)
             return {
                 'delay': supplier.delay + rules_delay,
-                'cost': supplier.price * quantity,
+                'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom),
             }
         return res
 
-    def _get_replenishment_cost(self, product, quantity, currency, move_in=False):
+    def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):
         if move_in and move_in.purchase_line_id:
-            return currency.round(move_in.purchase_line_id.price_unit * quantity)
-        return super()._get_replenishment_cost(product, quantity, currency, move_in)
+            return currency.round(move_in.purchase_line_id.price_unit * uom_id._compute_quantity(quantity, move_in.purchase_line_id.product_uom))
+        return super()._get_replenishment_cost(product, quantity, uom_id, currency, move_in)
