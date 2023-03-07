@@ -148,6 +148,10 @@ class CustomerPortal(Controller):
         partner_sudo = request.env.user.partner_id
         if partner_sudo.user_id and not partner_sudo.user_id._is_public():
             sales_user_sudo = partner_sudo.user_id
+        else:
+            fallback_sales_user = partner_sudo.commercial_partner_id.user_id
+            if fallback_sales_user and not fallback_sales_user._is_public():
+                sales_user_sudo = fallback_sales_user
 
         return {
             'sales_user': sales_user_sudo,
