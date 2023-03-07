@@ -330,6 +330,12 @@ registerModel({
         attachmentsLoaderTimer: one('Timer', {
             inverse: 'chatterOwnerAsAttachmentsLoader',
         }),
+        canPostMessage: attr({
+            compute() {
+                return Boolean(this.isTemporary || this.hasWriteAccess ||
+                    (this.hasReadAccess && this.thread && this.thread.canPostOnReadonly));
+            },
+        }),
         /**
          * States the OWL Chatter component of this chatter.
          */
