@@ -245,7 +245,7 @@ class HolidaysRequest(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
     employee_ids = fields.Many2many(
-        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False,
+        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False, groups="hr_holidays.group_hr_holidays_user",
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     multi_employee = fields.Boolean(
         compute='_compute_from_employee_ids', store=True, compute_sudo=False,
@@ -690,7 +690,7 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
-        mapped_days = self.holiday_status_id.get_employees_days((self.employee_id | self.employee_ids).ids)
+        mapped_days = self.holiday_status_id.get_employees_days((self.employee_id | self.sudo().employee_ids).ids)
         for holiday in self:
             if holiday.holiday_type != 'employee'\
                     or not holiday.employee_id and not holiday.employee_ids\
@@ -1325,7 +1325,7 @@ class HolidaysRequest(models.Model):
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
-                    if (state == 'validate' and val_type == 'manager') and self.env.user != (holiday.employee_id | holiday.employee_ids).leave_manager_id:
+                    if (state == 'validate' and val_type == 'manager') and self.env.user != (holiday.employee_id | holiday.sudo().employee_ids).leave_manager_id:
                         if holiday.employee_id:
                             employees = holiday.employee_id
                         else:
