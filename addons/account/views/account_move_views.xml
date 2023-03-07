@@ -758,6 +758,7 @@
                         <field name="hide_post_button" invisible="1"/>
                         <field name="duplicated_ref_ids" invisible="1"/>
                         <field name="quick_encoding_vals" invisible="1"/>
+                        <field name="show_delivery_date" invisible="1"/>
 
                         <div class="oe_title">
                             <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
@@ -845,7 +846,7 @@
                                            placeholder="Payment Terms"
                                            options="{'no_quick_create':True}"/>
                                 </div>
-
+                                <field name="delivery_date" attrs="{'invisible': [('show_delivery_date', '=', False)]}"/>
                                 <label for="journal_id"
                                        groups="account.group_account_readonly"
                                        invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
@@ -1207,6 +1208,7 @@
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="qr_code_method"
                                                attrs="{'invisible': [('display_qr_code', '=', False)]}"/>
+                                        <field name="delivery_date"/>
                                     </group>
                                     <group string="Accounting"
                                            name="accounting_info_group"
