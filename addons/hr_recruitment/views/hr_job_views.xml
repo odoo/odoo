@@ -178,7 +178,7 @@
         <field name="arch" type="xml">
             <div name="recruitment_target" position="after">
                 <field name="user_id" widget="many2one_avatar_user"/>
-                <field name="interviewer_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" />
+                <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
             </div>
             <xpath expr="//field[@name='department_id']" position="after">
                 <label for="address_id"/>

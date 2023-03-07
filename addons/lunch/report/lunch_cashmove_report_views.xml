@@ -36,7 +36,7 @@
             <tree string="cashmove tree">
                 <field name="currency_id" invisible="1"/>
                 <field name="date"/>
-                <field name="user_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="description"/>
                 <field name="amount" sum="Total" widget="monetary"/>
             </tree>
@@ -64,7 +64,7 @@
                 <sheet>
                     <group>
                         <field name="currency_id" invisible="1"/>
-                        <field name="user_id" required="1"/>
+                        <field name="user_id" required="1" widget="many2one_avatar"/>
                         <field name="date"/>
                         <field name="amount" widget="monetary"/>
                     </group>

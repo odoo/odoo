@@ -198,7 +198,7 @@
                                 <field name="active" invisible="1"/>
                                 <!-- employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]") -->
                                 <field name="company_id" invisible="1"/>
-                                <field name="employee_id"/>
+                                <field name="employee_id" widget="many2one_avatar_user"/>
                                 <field name="date_start" string="Contract Start Date"/>
                                 <field name="date_end" string="Contract End Date"/>
                                 <field name="company_country_id" invisible="1"/>
@@ -227,7 +227,7 @@
                                 <field name="job_id" groups="hr_contract.group_hr_contract_manager"/>
                                 <field name="contract_type_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="contract_type_id" groups="hr_contract.group_hr_contract_manager"/>
-                                <field name="hr_responsible_id" required="1"/>
+                                <field name="hr_responsible_id" required="1" widget="many2one_avatar_user"/>
                             </group>
                         </group>
                         <notebook>
