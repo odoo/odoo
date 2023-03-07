@@ -26,10 +26,6 @@ export class ProjectStateSelectionField extends StateSelectionField {
 export const projectStateSelectionField = {
     ...stateSelectionField,
     component: ProjectStateSelectionField,
-    extractProps: (fieldInfo) => ({
-        ...stateSelectionField.extractProps(fieldInfo),
-        hideLabel: !!fieldInfo.options.hideLabel,
-    }),
 };
 
 registry.category("fields").add("kanban.project_state_selection", projectStateSelectionField);

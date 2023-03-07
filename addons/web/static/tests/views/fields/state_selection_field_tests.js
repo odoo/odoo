@@ -532,6 +532,7 @@ QUnit.module("Fields", (hooks) => {
                 return performRPC(route, args);
             },
         });
+        assert.containsNone(target, ".o_status_label");
 
         await click(target, ".o_field_state_selection button");
         const doneItem = target.querySelectorAll(".dropdown-item")[2]; // item "done";
