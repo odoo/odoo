@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from operator import itemgetter
 from pytz import timezone
 
-from odoo import models, fields, api, exceptions, _
+from odoo import _, api, exceptions, fields, models
 from odoo.addons.resource.models.utils import Intervals
 from odoo.tools import format_datetime
 from odoo.osv.expression import AND, OR
@@ -29,6 +29,7 @@ class HrAttendance(models.Model):
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True)
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
+    overtime_ids = fields.Many2many('hr.attendance.overtime')
 
     def name_get(self):
         result = []
@@ -280,7 +281,7 @@ class HrAttendance(models.Model):
                     elif overtime:
                         overtime.sudo().write({
                             'duration': overtime_duration,
-                            'duration_real': overtime_duration
+                            'duration_real': overtime_duration,
                         })
                 elif overtime:
                     overtime_to_unlink |= overtime

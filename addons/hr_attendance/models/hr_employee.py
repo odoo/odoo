@@ -3,6 +3,7 @@
 
 import pytz
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import float_round
@@ -39,11 +40,19 @@ class HrEmployee(models.Model):
         compute='_compute_total_overtime', compute_sudo=True,
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
 
+    def _get_attendances_by_day(self, start, end):
+        attendances_by_day = defaultdict(lambda: self.env["hr.attendance"])
+        attendances = self.env["hr.attendance"].search([("check_in", ">=", start), ("check_out", "<=", end)])
+        for attendance in attendances:
+            attendances_by_day[attendance.check_in.date()] += attendance
+        return attendances_by_day
+
     @api.depends('overtime_ids.duration', 'attendance_ids')
     def _compute_total_overtime(self):
         for employee in self:
             if employee.company_id.hr_attendance_overtime:
-                employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration')), 2)
+                real_overtime = employee.overtime_ids.filtered("real_overtime")
+                employee.total_overtime = float_round(sum(real_overtime.mapped("duration")), 2)
             else:
                 employee.total_overtime = 0
 

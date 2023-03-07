@@ -525,6 +525,20 @@ class HrEmployeePrivate(models.Model):
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
 
+    def _get_employees_working_hours(self, employees, start_datetime, end_datetime):
+
+        # find working hours for the given period of employees with working calendar
+        # Note: convert date str into datetime object. Time will be 00:00:00 and 23:59:59
+        # respectively for date_start and date_stop, because we want the date_stop to be included.
+        start_datetime = datetime.combine(fields.Date.from_string(start_datetime), time.min)
+        end_datetime = datetime.combine(fields.Date.from_string(end_datetime), time.max)
+        start_datetime = start_datetime.replace(tzinfo=UTC)
+        end_datetime = end_datetime.replace(tzinfo=UTC)
+
+        employees_work_days_data, _dummy = employees.sudo().resource_id._get_valid_work_intervals(start_datetime, end_datetime)
+
+        return employees_work_days_data
+
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
