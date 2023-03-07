@@ -3028,9 +3028,8 @@ class Many2one(_Relational):
         return value.display_name
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records
