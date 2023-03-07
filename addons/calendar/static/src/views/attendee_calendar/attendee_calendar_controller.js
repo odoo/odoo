@@ -3,7 +3,7 @@
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
-
+import { CalendarQuickCreate } from "@calendar/views/calendar_form/calendar_quick_create";
 export class AttendeeCalendarController extends CalendarController {
     setup() {
         super.setup();
@@ -22,6 +22,44 @@ export class AttendeeCalendarController extends CalendarController {
             views: [[false, 'form']],
         }, {
             additionalContext: this.props.context,
+        });
+    }
+
+    goToFullEvent (resId, additionalContext) {
+        this.actionService.doAction({
+            type: 'ir.actions.act_window',
+            res_model: 'calendar.event',
+            views: [[false, 'form']],
+            res_id: resId || false,
+        }, {
+            additionalContext
+        });
+    }
+
+    async editRecord(record, context = {}) {
+        if (record.id) {
+            return this.goToFullEvent(record.id, context);
+        }
+        const onDialogClosed = () => {
+            this.model.load();
+        };
+        return new Promise((resolve) => {
+            this.displayDialog(
+                CalendarQuickCreate, {
+                    viewId: this.model.quickCreateFormViewId,
+                    resModel: "calendar.event",
+                    size: "md",
+                    context,
+                    goToFullEvent: (contextData) => {
+                        const fullContext = {
+                            ...context,
+                            ...contextData
+                        };
+                        this.goToFullEvent(false, fullContext)
+                    },
+                    onRecordSaved: () => resolve(onDialogClosed())
+                }
+            );
         });
     }
 

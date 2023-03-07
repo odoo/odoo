@@ -11,10 +11,12 @@ import {
 
 export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
     state = useState({ expanded: false });
-    attendeesCount = null;
 
     setup() {
         this.attendeesCount = this.props.record.data.attendees_count;
+        this.acceptedCount = this.props.record.data.accepted_count;
+        this.declinedCount = this.props.record.data.declined_count;
+        this.uncertainCount = this.attendeesCount - this.acceptedCount - this.declinedCount;
 
         useEffect(() => {
             const popover = document.querySelector(".o_field_many2manyattendeeexpandable")
@@ -26,22 +28,6 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
 
     onExpanderClick() {
         this.state.expanded = !this.state.expanded;
-    }
-
-    get partners() {
-        return this.props.record.preloadedData.partner_ids;
-    }
-
-    get acceptedCount() {
-        return this.partners.filter(p => p.status === 'accepted').length;
-    }
-
-    get declinedCount() {
-        return this.partners.filter(p => p.status === 'declined').length;
-    }
-
-    get uncertainCount() {
-        return this.partners.filter(p => p.status !== 'accepted' && p.status !== 'declined').length;
     }
 }
 

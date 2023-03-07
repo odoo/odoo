@@ -122,47 +122,34 @@
                             <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
                     </div>
-                    <div class="d-flex align-items-baseline">
-                        <field name="partner_ids" widget="many2manyattendee"
-                            placeholder="Select attendees..."
-                            context="{'force_email':True}"
-                            domain="[('type','!=','private')]"
-                            class="oe_inline o_calendar_attendees"
-                        />
-                        <div name="send_buttons" class="sm-2">
-                            <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
-                        </div>
-                        <button name="action_join_video_call" class="btn-primary" help="Join Video Call" type="object" string="Join Video Call" attrs="{'invisible': [('videocall_location', '=', False)]}"/>
-                    </div>
-                    <div class="alert alert-warning o_form_header mt-2" attrs="{'invisible': [('invalid_email_partner_ids', '=', [])]}" role="status">
-                        <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
-                        <field name="invalid_email_partner_ids" widget="many2manyattendee" class="oe_inline o_calendar_attendees"/>
-                    </div>
+                    <group>
+                        <group>
+                            <field name="start_date" string="from" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}" force_save="1"/>
+                            <field name="stop_date" string="to" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
+        
+                            <field name="start" string="from" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
+                            <field name="stop" string="to" attrs="{'invisible': [('allday','=',True)]}"/>
+                            <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                            <div attrs="{'invisible': [('allday','=',True)]}">
+                                <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                <span> hours</span>
+                            </div>
+                            <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
+                            <field name="allday" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        </group>
+                    </group>
                     <notebook>
-                        <page name="page_details" string="Meeting Details">
+                        <page name="page_details" string="Information">
                             <group>
                                 <group>
-
-                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}" force_save="1"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
-
-                                    <field name="start" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
-                                    <field name="stop" string="Ending At" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <div attrs="{'invisible': [('allday','=',True)]}">
-                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                        <span> hours</span>
-                                    </div>
-                                     <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
-                                    <field name="allday" force_save="1"/>
-                                    <field name="user_id" widget="many2one_avatar_user"/>
-                                </group>
-                                <group>
-                                    <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                     <field name="location" />
-                                    <label for="videocall_location"/>
-                                    <div col="2" class="o_row">
-                                        <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                                    <label for="videocall_location" class="opacity-100"/>
+                                    <div col="2">
+                                        <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
                                         <button name="clear_videocall_location" type="object" class="btn btn-link"
                                             attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
                                             <span class="fa fa-times"></span><span> Clear meeting</span>
@@ -171,14 +158,48 @@
                                             attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
                                             <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
                                         </button>
+                                        <button name="action_join_video_call" class="btn btn-link" help="Join Video Call" type="object" attrs="{'invisible': [('videocall_location', '=', False)]}">
+                                            <span class="fa fa-arrow-right"></span><span> Join video call</span>
+                                        </button>
                                     </div>
                                     <field name="videocall_source" invisible="1"/>
                                     <field name="access_token" invisible="1" force_save="1"/>
-                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                    <label for="privacy"/>
+                                    <div class="o_row">
+                                        <field name="show_as" nolabel="1"/>
+                                        <field name="privacy" nolabel="1"/>
+                                    </div>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="description"/>
                                 </group>
-                            </group>
-                            <group>
-                                <field name="description"/>
+                                <group>
+                                    <div class="o_row" colspan="2">
+                                        <div colspan="1">
+                                            <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> Attendees</span>
+                                        </div>
+                                        <div name="send_buttons" class="sm-2" colspan="1">
+                                            <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
+                                        </div>
+                                    </div>
+                                    <div colspan="2">
+                                        <field name="accepted_count" class="w-auto oe_inline" nolabel="1"/> yes,
+                                        <field name="tentative_count" class="w-auto oe_inline" nolabel="1"/> maybe,
+                                        <field name="declined_count" class="w-auto oe_inline" nolabel="1"/> no,
+                                        <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> awaiting
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <field name="partner_ids" widget="many2manyattendee"
+                                            placeholder="Select attendees..."
+                                            context="{'force_email':True}"
+                                            domain="[('type','!=','private')]"
+                                            class="oe_inline"
+                                        />
+                                    </div>
+                                    <div class="alert alert-warning o_form_header mt-2" attrs="{'invisible': [('invalid_email_partner_ids', '=', [])]}" role="status">
+                                        <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
+                                        <field name="invalid_email_partner_ids" widget="many2manyattendee" class="oe_inline"/>
+                                    </div>
+                                </group>
                             </group>
                         </page>
                         <page name="page_options" string="Options">
@@ -222,8 +243,6 @@
                                     </div>
                                 </div>
                                 <group>
-                                    <field name="privacy"/>
-                                    <field name="show_as"/>
                                     <field name="recurrence_id" invisible="1" />
                                 </group>
                             </group>
@@ -275,6 +294,57 @@
         </field>
     </record>
 
+    <record id="view_calendar_event_form_quick_create" model="ir.ui.view">
+        <field name="name">calendar.event.form.quick_create</field>
+        <field name="model">calendar.event</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <form string="Meetings" js_class="calendar_quick_create_form_view">
+                <sheet>
+                    <field name="recurrence_update" invisible="1"/>
+                    <field name="videocall_source" invisible="1"/>
+                    <field name="access_token" invisible="1"/>
+                    <div class="o_row">
+                        <h1 class="w-100"><field name="name" nolabel="1" placeholder="Add title" colspan="2"/></h1>
+                    </div>
+                    <group>
+                        <field name="start_date" string="From" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}"/>
+                        <field name="stop_date" string="To" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}"/>
+                        <field name="start" string="From" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}" options="{'block': True, 'icon': 'fa fa-users'}"/>
+                        <field name="stop" string="To" attrs="{'invisible': [('allday','=',True)]}"/>
+                    </group>
+                    <group>
+                        <field name="allday"/>
+                    </group>
+                    <group>
+                        <field name="partner_ids" widget="many2manyattendee"
+                            placeholder="Select attendees..."
+                            context="{'force_email':True}"
+                            domain="[('type','!=','private')]"
+                            class="oe_inline"
+                        />
+                        <label for="videocall_location" class="opacity-100"/>
+                        <div col="2">
+                            <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                            <button name="clear_videocall_location" type="object" class="btn btn-link"
+                                attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                <span class="fa fa-times"></span><span> Clear meeting</span>
+                            </button>
+                            <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
+                                attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
+                            </button>
+                            <button name="action_join_video_call" class="btn btn-link" help="Join Video Call" type="object" attrs="{'invisible': [('videocall_location', '=', False)]}">
+                                <span class="fa fa-arrow-right"></span><span> Join video call</span>
+                            </button>
+                        </div>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_calendar_event_calendar" model="ir.ui.view">
         <field name="name">calendar.event.calendar</field>
         <field name="model">calendar.event</field>
@@ -283,10 +353,14 @@
             <calendar js_class="attendee_calendar" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
                 event_open_popup="true"
                 event_limit="5"
+                quick_add="0"
+                quick_create_form_view_id="%(calendar.view_calendar_event_form_quick_create)d"
                 color="partner_ids">
                 <field name="location" attrs="{'invisible': [('location', '=', False)]}" options="{'icon': 'fa fa-map-marker'}"/>
                 <field name="attendee_status" invisible="1"/>
                 <field name="attendees_count" invisible="1"/>
+                <field name="accepted_count" invisible="1"/>
+                <field name="declined_count" invisible="1"/>
                 <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
                        filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"

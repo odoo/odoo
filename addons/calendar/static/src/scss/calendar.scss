@@ -85,8 +85,14 @@
     padding-top: 0px !important;
 }
 
-.o_calendar_attendees {
-    max-width:80% !important;
+.o_field_many2manyattendee .o_field_tags {
+    flex-direction: column;
+    span.badge {
+        width: fit-content;
+    }
+    .o_field_many2many_selection {
+        flex: 1 0 auto;
+    }
 }
 
 .o_attendee_border {

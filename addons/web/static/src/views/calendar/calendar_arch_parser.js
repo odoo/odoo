@@ -35,6 +35,7 @@ export class CalendarArchParser extends XMLParser {
         let isDateHidden = false;
         let isTimeHidden = false;
         let formViewId = false;
+        let quickCreateFormViewId = false;
         const popoverFields = {};
         const filtersInfo = {};
 
@@ -100,6 +101,12 @@ export class CalendarArchParser extends XMLParser {
                     }
                     if (node.hasAttribute("form_view_id")) {
                         formViewId = parseInt(node.getAttribute("form_view_id"), 10);
+                    }
+                    if (node.hasAttribute("quick_create_form_view_id")) {
+                        quickCreateFormViewId = parseInt(
+                            node.getAttribute("quick_create_form_view_id"),
+                            10
+                        );
                     }
 
                     break;
@@ -182,6 +189,7 @@ export class CalendarArchParser extends XMLParser {
             fieldNames: [...fieldNames],
             filtersInfo,
             formViewId,
+            quickCreateFormViewId,
             hasEditDialog,
             hasQuickCreate,
             isDateHidden,

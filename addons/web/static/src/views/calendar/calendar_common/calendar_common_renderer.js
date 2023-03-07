@@ -143,11 +143,12 @@ export class CalendarCommonRenderer extends Component {
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) && (record.isAllDay || allDay &&
-                record.end.toMillis() !== record.end.startOf('day').toMillis())
+                ["week", "month"].includes(this.props.model.scale) &&
+                (record.isAllDay ||
+                    (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis()))
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
-            allDay: allDay ,
+            allDay: allDay,
         };
     }
     getPopoverProps(record) {
@@ -230,7 +231,7 @@ export class CalendarCommonRenderer extends Component {
             if (record.isStriked) {
                 el.classList.add("o_event_striked");
             }
-            if (record.duration <= 0.25 ) {
+            if (record.duration <= 0.25) {
                 el.classList.add("o_event_oneliner");
             }
         }
