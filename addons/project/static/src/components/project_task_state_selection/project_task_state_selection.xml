@@ -27,7 +27,8 @@
                     <i t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }} {{ ['1_done', '1_canceled'].includes(currentValue) and isView(['kanban']) ? 'opacity-50' : '' }}"></i>
                 </button>
                 <button t-else="" class="o_state_button btn oe_highlight rounded-pill" style="white-space: nowrap;" tabindex="-1"
-                    t-att-class="currentValue == '1_done' ? 'btn-success' : 'btn-light border-2 border-dark'"
+                    t-attf-class="#{currentValue == '1_done' ? 'btn-success' : 'btn-outline-secondary'}"
+                    t-att-class="{'bg-view border' : state.isStateButtonHighlighted}"
                     t-on-click="toggleState" t-on-mouseenter="onMouseEnterStateButton"
                     t-on-mouseleave="onMouseLeaveStateButton">
                     <div class="d-flex align-items-center">
@@ -61,7 +62,7 @@
                     </span>
                 </t>
                 <t t-elif="currentValue != '1_done' and currentValue != '1_canceled'">
-                    <span t-attf-class="{{ statusColor(currentValue) }} o_status_label" t-out="label"/>
+                    <span t-attf-class="o_status_label" t-out="label"/>
                 </t>
                 <t t-else="">
                     <span class="o_status_label" t-out="label"/>
