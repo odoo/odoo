@@ -67,9 +67,10 @@ class ProductProduct(models.Model):
                     for prod in products:
                         prod_re[prod.id] = re_ind
                 re_ind += 1
-            res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
+            res_val = tot_products.with_context(skip_update=True)._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
+            field_names = set(fields_list)
             for key in res_val:
-                for l in res_val[key]:
+                for l in filter(lambda k: k in field_names, res_val[key]):
                     re = res[prod_re[key]]
                     if re.get(l):
                         re[l] += res_val[key][l]
@@ -161,10 +162,12 @@ class ProductProduct(models.Model):
             res[product_id]['total_cost'] = total and total or 0.0
             res[product_id]['total_margin'] = res[product_id].get('turnover', 0.0) - res[product_id]['total_cost']
             res[product_id]['total_margin_rate'] = res[product_id].get('turnover', 0.0) and res[product_id]['total_margin'] * 100 / res[product_id].get('turnover', 0.0) or 0.0
+        skip_update = self.env.context.get('skip_update')
         for product in self:
             res[product.id]['normal_cost'] = product.standard_price * res[product.id]['purchase_num_invoiced']
             res[product.id]['purchase_gap'] = res[product.id]['normal_cost'] - res[product.id]['total_cost']
             res[product.id]['expected_margin'] = res[product.id].get('sale_expected', 0.0) - res[product.id]['normal_cost']
             res[product.id]['expected_margin_rate'] = res[product.id].get('sale_expected', 0.0) and res[product.id]['expected_margin'] * 100 / res[product.id].get('sale_expected', 0.0) or 0.0
-            product.write(res[product.id])
+            if not skip_update:
+                product.update(res[product.id])
         return res
