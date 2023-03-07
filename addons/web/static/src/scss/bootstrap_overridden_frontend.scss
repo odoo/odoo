@@ -44,6 +44,19 @@ $blockquote-small-color: inherit !default;
 // Link
 $link-decoration: none !default;
 
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+// Bootstrap tables can basically be customized with the `$table-bg` and
+// `$table-color` variables. The problem is that, by default, BS5 defines them
+// so that the background-color is null (so transparent: displaying the
+// background-color of its ancestors) but the color is forced to the body color
+// (by default: white). This is a problem as soon as the ancestors background
+// colors are a color close to the body text color: the text becomes invisible.
+// We disable this behavior by not forcing a text color for tables.
+$table-color: inherit !default;
+
 // Forms
 
 $input-transition: background-color .05s ease-in-out, border-color .05s ease-in-out, box-shadow .05s ease-in-out !default;
