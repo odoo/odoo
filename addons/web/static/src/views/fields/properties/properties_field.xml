@@ -13,7 +13,7 @@
                         t-att-property-name="propertyConfiguration.name">
                         <t t-set="domId" t-value="generateUniqueDomID()"/>
                         <label
-                            t-attf-class="o_field_property_label o_form_label text-break {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex align-items-center"
+                            t-attf-class="o_field_property_label o_form_label text-break {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex align-items-baseline"
                             t-att-for="domId">
                             <b
                                 t-if="propertyConfiguration.string and propertyConfiguration.string.length"
