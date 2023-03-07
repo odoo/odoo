@@ -18,11 +18,11 @@ export class StateSelectionField extends Component {
     };
     static props = {
         ...standardFieldProps,
-        hideLabel: { type: Boolean, optional: true },
+        showLabel: { type: Boolean, optional: true },
         withCommand: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        hideLabel: false,
+        showLabel: true,
     };
 
     setup() {
@@ -60,9 +60,6 @@ export class StateSelectionField extends Component {
         }
         return formatSelection(this.currentValue, { selection: this.options });
     }
-    get showLabel() {
-        return !this.props.hideLabel;
-    }
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
     }
@@ -89,7 +86,7 @@ export const stateSelectionField = {
     displayName: _lt("Label Selection"),
     supportedTypes: ["selection"],
     extractProps: ({ options, viewType }) => ({
-        hideLabel: !!options.hide_label && viewType === "list",
+        showLabel: viewType === "list" && !options.hide_label,
         withCommand: viewType === "form",
     }),
 };
