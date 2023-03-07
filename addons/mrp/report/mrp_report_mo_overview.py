@@ -286,18 +286,14 @@ class ReportMoOverview(models.AbstractModel):
             total_ordered += replenishment['summary']['quantity']
 
         reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
-        missing_quantity = move_raw.product_uom_qty - (reserved_quantity + total_ordered)
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
-        if product.type == 'product' and float_compare(missing_quantity, free_qty, precision_rounding=move_raw.product_uom.rounding) > 0:
+        missing_quantity = move_raw.product_uom_qty - (reserved_quantity + free_qty + total_ordered)
+        if product.type == 'product' and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
             # Need to order more products to fulfill the need
             resupply_rules = replenish_data['products'][product.id].get('resupply_rules', [])
             rules_delay = sum(rule.delay for rule in resupply_rules)
             resupply_data = self._get_resupply_data(resupply_rules, rules_delay, missing_quantity, move_raw.product_uom, product, production.warehouse_id)
-            if resupply_data:
-                receipt = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay'])))
-            else:
-                receipt = self._format_receipt_date('unavailable')
 
             to_order_line = {'summary': {
                 'level': level + 1,
@@ -309,18 +305,16 @@ class ReportMoOverview(models.AbstractModel):
                 'quantity': missing_quantity,
                 'uom_name': move_raw.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
-                'receipt': receipt,
-                'mo_cost': currency.round(resupply_data['cost'] if resupply_data else product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id)),
                 'product_cost': currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id)),
                 'currency_id': currency.id,
                 'currency': currency,
             }}
             if resupply_data:
-                to_order_line['mo_cost'] = currency.round(resupply_data['cost'] * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
-                to_order_line['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay']))),
+                to_order_line['summary']['mo_cost'] = currency.round(resupply_data['cost'])
+                to_order_line['summary']['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay'])))
             else:
-                to_order_line['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
-                to_order_line['receipt'] = self._format_receipt_date('unavailable')
+                to_order_line['summary']['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
+                to_order_line['summary']['receipt'] = self._format_receipt_date('unavailable')
             replenishments.append(to_order_line)
 
         return replenishments
