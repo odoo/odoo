@@ -27,7 +27,8 @@ mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
                                                      'mail_notrack': True,
                                                      'no_reset_password': True,
-                                                     'mail_channel_nosubscribe': True})
+                                                     'mail_channel_nosubscribe': True,
+                                                     'skip_onboarding_todo': True})
 
 
 class MockEmail(common.BaseCase, MockSmtplibCase):

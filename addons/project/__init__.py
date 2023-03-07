@@ -21,3 +21,8 @@ def _check_exists_collaborators_for_project_sharing(env):
 
 def _project_post_init(env):
     _check_exists_collaborators_for_project_sharing(env)
+
+def _project_uninstall(env):
+    # The filter related to project_id need to be removed from the domain of the to-do action
+    todo_action_rec = env.ref("note.action_note_note")
+    todo_action_rec.domain = "[('user_ids', 'in', uid)]"

@@ -10,11 +10,11 @@ class NoteController(http.Controller):
     @http.route('/note/new', type='json', auth='user')
     def note_new_from_systray(self, note, activity_type_id=None, date_deadline=None):
         """ Route to create note and their activity directly from the systray """
-        note = request.env['note.note'].create({'memo': note})
+        note = request.env['project.task'].create({'name': note})
         if date_deadline:
             note.activity_schedule(
                 activity_type_id=activity_type_id or request.env['mail.activity.type'].search([('category', '=', 'reminder')], limit=1).id,
-                note=note.memo,
+                note=note.name,
                 date_deadline=date_deadline
             )
         return note.id

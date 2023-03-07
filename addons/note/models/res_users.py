@@ -1,50 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
-from odoo import api, models, modules, _
-
-_logger = logging.getLogger(__name__)
-
+from odoo import api, models, modules, _, _lt
 
 class Users(models.Model):
     _name = 'res.users'
     _inherit = ['res.users']
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        users = super().create(vals_list)
-        user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
-        # for new employee, create his own 5 base note stages
-        users.filtered_domain([('groups_id', 'in', [user_group_id])])._create_note_stages()
-        return users
-
-    @api.model
-    def _init_data_user_note_stages(self):
-        emp_group_id = self.env.ref('base.group_user').id
-        query = """
-SELECT res_users.id
-FROM res_users
-WHERE res_users.active IS TRUE AND EXISTS (
-    SELECT 1 FROM res_groups_users_rel WHERE res_groups_users_rel.gid = %s AND res_groups_users_rel.uid = res_users.id
-) AND NOT EXISTS (
-    SELECT 1 FROM note_stage stage WHERE stage.user_id = res_users.id
-)
-GROUP BY id"""
-        self.env.cr.execute(query, (emp_group_id,))
-        uids = [res[0] for res in self.env.cr.fetchall()]
-        self.browse(uids)._create_note_stages()
-
-    def _create_note_stages(self):
-        for num in range(4):
-            stage = self.env.ref('note.note_stage_%02d' % (num,), raise_if_not_found=False)
-            if not stage:
-                break
-            for user in self:
-                stage.sudo().copy(default={'user_id': user.id})
-        else:
-            _logger.debug("Created note columns for %s", self)
 
     @api.model
     def systray_get_activities(self):
@@ -53,22 +14,53 @@ GROUP BY id"""
             activity menu not visible for note.
         """
         activities = super(Users, self).systray_get_activities()
-        notes_count = self.env['note.note'].search_count([('user_id', '=', self.env.uid)])
+        notes_count = self.env['project.task'].sudo().search_count([('user_ids', 'in', [self.env.uid])])
         if notes_count:
-            note_index = next((index for (index, a) in enumerate(activities) if a["model"] == "note.note"), None)
-            note_label = _('Notes')
+            note_index = next((index for (index, a) in enumerate(activities) if a["model"] == "project.task"), None)
+            note_label = _("To-do")
             if note_index is not None:
                 activities[note_index]['name'] = note_label
             else:
                 activities.append({
-                    'id': self.env['ir.model']._get('note.note').id,
+                    'id': self.env['ir.model']._get('project.task').id,
                     'type': 'activity',
                     'name': note_label,
-                    'model': 'note.note',
-                    'icon': modules.module.get_module_icon(self.env['note.note']._original_module),
+                    'model': 'project.task',
+                    'icon': modules.module.get_module_icon(self.env['project.task']._original_module),
                     'total_count': 0,
                     'today_count': 0,
                     'overdue_count': 0,
                     'planned_count': 0
                 })
         return activities
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        users = super(Users, self).create(vals_list)
+        if not self.env.context.get('skip_onboarding_todo'):
+            users.filtered(lambda user: not user.partner_share)._generate_onboarding_todo()
+        return users
+
+    def _generate_onboarding_todo(self):
+        todos_to_create = []
+        for user in self:
+            self = self.with_context(lang=user.lang or self.env.user.lang)
+            render_ctx = {'object': user}
+            body = self.env['ir.qweb']._render(
+                'note.todo_user_onboarding',
+                render_ctx,
+                minimal_qcontext=True,
+                raise_if_not_found=False
+            )
+            if not body:
+                break
+
+            title = _lt('Welcome %s!', user.name)
+            todos_to_create.append({
+                'user_ids': [user.id],
+                'description': body,
+                'name': title,
+            })
+
+        if todos_to_create:
+            self.env['project.task'].sudo().with_context(onboarding_todo_creation=True).create(todos_to_create)

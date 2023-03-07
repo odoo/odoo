@@ -4,13 +4,13 @@ import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
 import { Domain } from '@web/core/domain';
 import { session } from '@web/session';
 
-export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
+export class TodoKanbanDynamicGroupList extends KanbanDynamicGroupList {
     get context() {
         const context = super.context;
         if (context.createPersonalStageGroup) {
             context.default_user_id = context.uid;
             delete context.createPersonalStageGroup;
-            delete context.default_project_id;
+            delete context.default_project_id; //Only appears in project but the cost of overriding the custom Kanban view just to add this line in project doesn't worth it 
         }
         return context;
     }

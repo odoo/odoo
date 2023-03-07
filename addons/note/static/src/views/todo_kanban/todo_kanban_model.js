@@ -2,10 +2,10 @@
 
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 
-import { ProjectTaskKanbanDynamicGroupList } from "./project_task_kanban_dynamic_group_list";
+import { TodoKanbanDynamicGroupList } from "./todo_kanban_dynamic_group_list";
 import { Record } from '@web/views/relational_model';
 
-export class ProjectTaskRecord extends Record {
+export class TodoRecord extends Record {
     async _applyChanges(changes) {
         const value = changes.personal_stage_type_ids;
         if (Array.isArray(value)) {
@@ -26,7 +26,7 @@ export class ProjectTaskRecord extends Record {
     }
 }
 
-export class ProjectTaskKanbanGroup extends KanbanModel.Group {
+export class TodoKanbanGroup extends KanbanModel.Group {
     get isPersonalStageGroup() {
         return !!this.groupByField && this.groupByField.name === 'personal_stage_type_ids';
     }
@@ -41,8 +41,8 @@ export class ProjectTaskKanbanGroup extends KanbanModel.Group {
     }
 }
 
-export class ProjectTaskKanbanModel extends KanbanModel { }
+export class TodoKanbanModel extends KanbanModel { }
 
-ProjectTaskKanbanModel.DynamicGroupList = ProjectTaskKanbanDynamicGroupList;
-ProjectTaskKanbanModel.Group = ProjectTaskKanbanGroup;
-ProjectTaskKanbanModel.Record = ProjectTaskRecord;
+TodoKanbanModel.DynamicGroupList = TodoKanbanDynamicGroupList;
+TodoKanbanModel.Group = TodoKanbanGroup;
+TodoKanbanModel.Record = TodoRecord;

@@ -1,57 +1,155 @@
 <?xml version="1.0"?>
-<odoo>
-  <data noupdate="1">
-    <record id="note_1" model="note.note">
+<odoo> 
+    <data noupdate="1">
+
+    <!-- Personal Stages: Mitchell Admin-->
+    <record model="project.task.type" id="personal_stage_admin_00">
+        <field name="name">Inbox</field>
+        <field name="sequence">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_admin_01">
+        <field name="name">Today</field>
+        <field name="sequence">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_admin_02">
+        <field name="name">This Week</field>
+        <field name="sequence">3</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_admin_03">
+        <field name="name">This Month</field>
+        <field name="sequence">4</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_admin_04">
+        <field name="name">Later</field>
+        <field name="sequence">5</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_admin_05">
+        <field name="name">Done</field>
+        <field name="sequence">6</field>
+        <field name="fold">True</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_admin_06">
+        <field name="name">Canceled</field>
+        <field name="sequence">7</field>
+        <field name="fold">True</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Personal Stages: Marc Demo -->
+    <record model="project.task.type" id="personal_stage_demo_00">
+        <field name="name">Inbox</field>
+        <field name="sequence">1</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_demo_01">
+        <field name="name">Today</field>
+        <field name="sequence">2</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_demo_02">
+        <field name="name">This Week</field>
+        <field name="sequence">3</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_demo_03">
+        <field name="name">This Month</field>
+        <field name="sequence">4</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_demo_04">
+        <field name="name">Later</field>
+        <field name="sequence">5</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_demo_05">
+        <field name="name">Done</field>
+        <field name="sequence">6</field>
+        <field name="fold">True</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record model="project.task.type" id="personal_stage_demo_06">
+        <field name="name">Canceled</field>
+        <field name="sequence">7</field>
+        <field name="fold">True</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+
+    <!-- To-do's: Mitchell Admin and Marc Demo-->
+    <record id="note_1" model="project.task">
       <field name="name">Customer report #349872</field>
-      <field name="memo"><![CDATA[<p><b>Customer report #349872</b></p>
+      <field name="description"><![CDATA[<p><b>Customer report #349872</b></p>
     <p><br/></p>
     <p>* Calendar app in Home</p>
     <p>*  The calendar module should create a menu in Home, like described above.</p>
     <p>*  This module should become a main application (in the first screen at installation)</p>
     <p>*  We should use the term Calendar, not Meeting.</p>]]>
       </field>
-      <field name="user_id" ref="base.user_demo"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
       <field name="color">2</field>
     </record>
 
-    <record id="note_2" model="note.note">
-      <field name="memo"><![CDATA[<p><b>Call Raoulette</b></p>
+    <record id="note_2" model="project.task">
+      <field name="name">Call Raoulette</field>
+      <field name="description"><![CDATA[<p><b>Call Raoulette</b></p>
     <p><br/></p>
     <p>* Followed by the telephone conversation and mail about D.544.3</p>]]>
       </field>
-      <field name="user_id" ref="base.user_demo"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
     </record>
 
-    <record id="note_4" model="note.note">
-      <field name="memo"><![CDATA[<p><b>Project N.947.5</b></p>]]>
+    <record id="note_4" model="project.task">
+      <field name="name">Project N.947.5</field>
+      <field name="description"><![CDATA[<p><b>Project N.947.5</b></p>]]>
       </field>
-      <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" ref="base.user_admin"/>
+      <field name="personal_stage_type_id" ref="personal_stage_admin_02"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
     </record>
 
-    <record id="note_5" model="note.note">
-      <field name="memo"><![CDATA[<p><b>Shop for family dinner</b></p>
+    <record id="note_5" model="project.task">
+      <field name="name">Shop for family dinner</field>
+      <field name="description"><![CDATA[<p><b>Shop for family dinner</b></p>
     <p><br/></p>
     <ul class="o_checklist">
      <li id="checklist-id-1"><p>stuffed turkey</p></li>
      <li id="checklist-id-2"><p>wine</p></li>
     </ul>]]>
       </field>
-      <field name="user_id" ref="base.user_demo"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
     </record>
 
-    <record id="note_6" model="note.note">
-      <field name="memo"><![CDATA[<p><b>Idea to develop</b></p>
+    <record id="note_6" model="project.task">
+      <field name="name">Idea to develop</field>
+      <field name="description"><![CDATA[<p><b>Idea to develop</b></p>
     <p><br/></p>
     <p>* Create a module note_pad
     it transforms the html editable memo text field into widget='pad', similar to project_pad depends on 'memo' and 'pad' modules</p>]]>
       </field>
-      <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" ref="base.user_admin"/>
+      <field name="personal_stage_type_id" ref="personal_stage_admin_02"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
     </record>
 
-    <record id="note_8" model="note.note">
-      <field name="memo"><![CDATA[<p><b>New computer specs</b></p>
+    <record id="note_8" model="project.task">
+      <field name="name">New computer specs</field>
+      <field name="description"><![CDATA[<p><b>New computer specs</b></p>
      <p><br/></p>
      <ul class="o_checklist">
      <li id="checklist-id-1"><p>Motherboard according to processor </p></li>
@@ -63,29 +161,49 @@
      <li id="checklist-id-7"><p>Screen a big one, full of pixels, of course !</p></li>
     </ul>]]>
       </field>
-      <field name="stage_id" ref="note_stage_03"/>
+      <field name="personal_stage_type_id" ref="personal_stage_admin_03"/>
       <field name="color">3</field>
-      <field name="user_id" ref="base.user_admin"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
     </record>
 
-    <record id="note_9" model="note.note">
-      <field name="memo"><![CDATA[<p><b>Read those books</b></p>
+    <record id="note_9" model="project.task">
+      <field name="name">Read those books</field>
+      <field name="description"><![CDATA[<p><b>Read those books</b></p>
       <p><br/></p>
       <p>* Odoo: a modern approach to integrated business management</p>
       <p>* Odoo for Retail and Industrial Management</p>]]>
       </field>
-      <field name="user_id" ref="base.user_demo"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
     </record>
 
-    <record id="note_12" model="note.note">
-      <field name="memo"><![CDATA[<p><b>Read some documentation about Odoo before diving into the code</b></p>
+    <record id="note_12" model="project.task">
+      <field name="name">Read some documentation about Odoo before diving into the code</field>
+      <field name="description"><![CDATA[<p><b>Read some documentation about Odoo before diving into the code</b></p>
       <p><br/></p>
       <p>* Odoo: a modern approach to integrated business management</p>
       <p>* Odoo for Retail and Industrial Management</p>]]>
       </field>
       <field name="color">7</field>
-      <field name="stage_ids" eval="[(6,0,[ref('note_stage_03')])]"/>
-      <field name="user_id" ref="base.user_admin"/>
+      <field name="personal_stage_type_ids" eval="[(6,0,[ref('personal_stage_admin_03')])]"/>
+      <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="note_13" model="project.task">
+      <field name="name">Bug to fix</field>
+      <field name="description"><![CDATA[
+     <p>The following bugs have been identified after a call with two customers. It should be fix as soon as possible.
+     A task should be created in the project Research & Development to do so.<br/></p>
+     <ul class="o_checklist">
+     <li id="checklist-id-1"><p>Contact email not visible on the website</p></li>
+     <li id="checklist-id-2"><p>Customer do not have access to their invoices on the portal</p></li>
+     <li id="checklist-id-3"><p>The logo displayed on the website is to small</p></li>
+     <li id="checklist-id-4"><p>An error message appears when the user deletes an item from its basket</p></li>
+     <li id="checklist-id-5"><p>Notification emails are not sent anymore</p></li>
+     </ul>]]>
+      </field>
+      <field name="personal_stage_type_id" ref="personal_stage_admin_02"/>
+      <field name="color">5</field>
+      <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
     </record>
 
   </data>

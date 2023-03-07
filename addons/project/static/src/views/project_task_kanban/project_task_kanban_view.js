@@ -1,14 +1,14 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { kanbanView } from '@web/views/kanban/kanban_view';
-import { ProjectTaskKanbanModel } from "./project_task_kanban_model";
+import { TodoKanbanModel } from "@note/views/todo_kanban/todo_kanban_model";
+import { todoKanbanView } from "@note/views/todo_kanban/todo_kanban_view";
 import { ProjectTaskKanbanRenderer } from './project_task_kanban_renderer';
 import { ProjectControlPanel } from "../../components/project_control_panel/project_control_panel";
 
 export const projectTaskKanbanView = {
-    ...kanbanView,
-    Model: ProjectTaskKanbanModel,
+    ...todoKanbanView,
+    Model: TodoKanbanModel,
     Renderer: ProjectTaskKanbanRenderer,
     ControlPanel: ProjectControlPanel,
 };

@@ -100,12 +100,5 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <!-- You have been assigned email -->
-        <template id="project_message_user_assigned">
-    <span>Dear <t t-esc="assignee_name"/>,</span>
-    <br/><br/>
-    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
-    <br/>
-        </template>
     </data>
 </odoo>

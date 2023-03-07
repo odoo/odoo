@@ -7,4 +7,4 @@ from odoo import models, fields
 class MailActivity(models.Model):
     _inherit = "mail.activity"
 
-    note_id = fields.Many2one('note.note', string="Related Note", ondelete='cascade')
+    note_id = fields.Many2one('project.task', string="Related To-Do", ondelete='cascade')

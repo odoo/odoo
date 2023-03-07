@@ -18,6 +18,7 @@
         'web',
         'web_tour',
         'digest',
+        'note',
     ],
     'data': [
         'security/project_security.xml',
@@ -42,6 +43,7 @@
         'views/project_portal_templates.xml',
         'views/project_task_templates.xml',
         'views/project_sharing_templates.xml',
+        'views/todo_views.xml',
         'report/project_report_views.xml',
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
@@ -57,6 +59,7 @@
     'installable': True,
     'application': True,
     'post_init_hook': '_project_post_init',
+    'uninstall_hook': '_project_uninstall',
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
@@ -79,6 +82,9 @@
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/scss/project_sharing_frontend.scss',
             'project/static/src/js/portal_rating.js',
+        ],
+        'note.assets_backend': [
+            'note/static/src/views/todo_kanban/*',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/**/*.js',

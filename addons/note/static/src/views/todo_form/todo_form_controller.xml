@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="note.TodoFormView" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_form_view_container')]/Layout" position="inside">
+            <t t-set-slot="control-panel-todo-name">
+                <div class="o_editable_breadcrumb_todo_name">
+                    <t t-set="record" t-value="model.root"/>
+                    <Field
+                        name="'name'"
+                        record="record"
+                        value="record.data.name"
+                        id="'name'"
+                        fieldInfo="record.activeFields.name"
+                    />
+                </div>
+            </t>
+            <t t-set-slot="todo-mark-as-done-button">
+                <a title="Mark as done"
+                   t-on-click="_onDoneToggled"
+                   t-on-mouseleave="_actualizeDoneState"
+                   t-attf-class="o_todo_done_button fa fa-lg fa-check-circle{{!todoState.isDone ? '-o' : ' done_button_enabled'}}"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

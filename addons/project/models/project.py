@@ -71,18 +71,14 @@ PROJECT_TASK_WRITABLE_FIELDS = {
 }
 
 class ProjectTaskType(models.Model):
-    _name = 'project.task.type'
-    _description = 'Task Stage'
-    _order = 'sequence, id'
+    _inherit = 'project.task.type'
 
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
 
     active = fields.Boolean('Active', default=True)
-    name = fields.Char(string='Name', required=True, translate=True)
     description = fields.Text(translate=True)
-    sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=_get_default_project_ids,
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
@@ -98,8 +94,6 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
-    fold = fields.Boolean(string='Folded in Kanban',
-        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
@@ -112,8 +106,6 @@ class ProjectTaskType(models.Model):
             " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
-
-    user_id = fields.Many2one('res.users', 'Stage Owner', index=True)
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -145,33 +137,6 @@ class ProjectTaskType(models.Model):
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super(ProjectTaskType, self).write(vals)
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        if not default.get('name'):
-            default['name'] = _("%s (copy)") % (self.name)
-        return super().copy(default)
-
-    def toggle_active(self):
-        res = super().toggle_active()
-        stage_active = self.filtered('active')
-        inactive_tasks = self.env['project.task'].with_context(active_test=False).search(
-            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1)
-        if stage_active and inactive_tasks:
-            wizard = self.env['project.task.type.delete.wizard'].create({
-                'stage_ids': stage_active.ids,
-            })
-
-            return {
-                'name': _('Unarchive Tasks'),
-                'view_mode': 'form',
-                'res_model': 'project.task.type.delete.wizard',
-                'views': [(self.env.ref('project.view_project_task_type_unarchive_wizard').id, 'form')],
-                'type': 'ir.actions.act_window',
-                'res_id': wizard.id,
-                'target': 'new',
-            }
-        return res
-
     @api.depends('project_ids', 'project_ids.rating_active')
     def _compute_disabled_rating_warning(self):
         for stage in self:
@@ -185,37 +150,6 @@ class ProjectTaskType(models.Model):
     def _check_personal_stage_not_linked_to_projects(self):
         if any(stage.user_id and stage.project_ids for stage in self):
             raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
-
-    def remove_personal_stage(self):
-        """
-        Remove a personal stage, tasks using that stage will move to the first
-        stage with a lower priority if it exists higher if not.
-        This method will not allow to delete the last personal stage.
-        Having no personal_stage_type_id makes the task not appear when grouping by personal stage.
-        """
-        self.ensure_one()
-        assert self.user_id == self.env.user or self.env.su
-
-        users_personal_stages = self.env['project.task.type']\
-            .search([('user_id', '=', self.user_id.id)], order='sequence DESC')
-        if len(users_personal_stages) == 1:
-            raise ValidationError(_("You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."))
-
-        # Find the most suitable stage, they are already sorted by sequence
-        new_stage = self.env['project.task.type']
-        for stage in users_personal_stages:
-            if stage == self:
-                continue
-            if stage.sequence > self.sequence:
-                new_stage = stage
-            elif stage.sequence <= self.sequence:
-                new_stage = stage
-                break
-
-        self.env['project.task.stage.personal'].search([('stage_id', '=', self.id)]).write({
-            'stage_id': new_stage.id,
-        })
-        self.unlink()
 
 class Project(models.Model):
     _name = "project.project"
@@ -1065,9 +999,8 @@ class Project(models.Model):
 
 class Task(models.Model):
     _name = "project.task"
-    _description = "Task"
     _date_name = "date_assign"
-    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
+    _inherit = ['project.task', 'portal.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, date_deadline asc, sequence, id desc"
     _primary_email = 'email_from'
@@ -1089,14 +1022,10 @@ class Task(models.Model):
         return self.stage_find(project_id, [('fold', '=', False)])
 
     @api.model
-    def _default_personal_stage_type_id(self):
-        return self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).id
-
-    @api.model
     def _default_company_id(self):
         if self._context.get('default_project_id'):
             return self.env['project.project'].browse(self._context['default_project_id']).company_id
-        return self.env.company
+        return super()._default_company_id()
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -1107,24 +1036,14 @@ class Task(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    @api.model
-    def _read_group_personal_stage_type_ids(self, stages, domain, order):
-        return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
-
-    active = fields.Boolean(default=True)
-    name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High'),
     ], default='0', index=True, string="Priority", tracking=True)
-    sequence = fields.Integer(string='Sequence', default=10)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False, task_dependency_tracking=True)
-    tag_ids = fields.Many2many('project.tags', string='Tags',
-        help="You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates.")
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
         ('done', 'Ready'),
@@ -1134,8 +1053,6 @@ class Task(models.Model):
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
-    date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
-        help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True)
 
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
@@ -1156,25 +1073,10 @@ class Task(models.Model):
     planned_hours = fields.Float("Initially Planned Hours", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
-    # Tracking of this field is done in the write function
-    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id', string='Assignees', context={'active_test': False}, tracking=True)
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
     # See project_task_stage_personal.py for the model defininition
-    personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
-        ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
-        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stage')
-    # Personal Stage computed from the user
-    personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
-        compute='_compute_personal_stage_id', help="The current user's personal stage.")
-    # This field is actually a related field on personal_stage_id.stage_id
-    # However due to the fact that personal_stage_id is computed, the orm throws out errors
-    # saying the field cannot be searched.
-    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal User Stage',
-        compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
-        search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
-        help="The current user's personal task stage.")
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True,
         compute='_compute_partner_id', store=True, readonly=False,
@@ -1188,7 +1090,6 @@ class Task(models.Model):
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
         required=True, copy=True, default=_default_company_id)
-    color = fields.Integer(string='Color Index')
     project_color = fields.Integer(related='project_id.color', string='Project Color')
     rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
@@ -1372,58 +1273,6 @@ class Task(models.Model):
     @api.depends('stage_id', 'project_id')
     def _compute_kanban_state(self):
         self.kanban_state = 'normal'
-
-    @api.depends_context('uid')
-    @api.depends('user_ids')
-    def _compute_personal_stage_id(self):
-        # An user may only access his own 'personal stage' and there can only be one pair (user, task_id)
-        personal_stages = self.env['project.task.stage.personal'].search([('user_id', '=', self.env.uid), ('task_id', 'in', self.ids)])
-        self.personal_stage_id = False
-        for personal_stage in personal_stages:
-            personal_stage.task_id.personal_stage_id = personal_stage
-
-    @api.depends('personal_stage_id')
-    def _compute_personal_stage_type_id(self):
-        for task in self:
-            task.personal_stage_type_id = task.personal_stage_id.stage_id
-
-    def _inverse_personal_stage_type_id(self):
-        for task in self:
-            task.personal_stage_id.stage_id = task.personal_stage_type_id
-
-    @api.model
-    def _search_personal_stage_type_id(self, operator, value):
-        return [('personal_stage_type_ids', operator, value)]
-
-    @api.model
-    def _get_default_personal_stage_create_vals(self, user_id):
-        return [
-            {'sequence': 1, 'name': _('Inbox'), 'user_id': user_id, 'fold': False},
-            {'sequence': 2, 'name': _('Today'), 'user_id': user_id, 'fold': False},
-            {'sequence': 3, 'name': _('This Week'), 'user_id': user_id, 'fold': False},
-            {'sequence': 4, 'name': _('This Month'), 'user_id': user_id, 'fold': False},
-            {'sequence': 5, 'name': _('Later'), 'user_id': user_id, 'fold': False},
-            {'sequence': 6, 'name': _('Done'), 'user_id': user_id, 'fold': True},
-            {'sequence': 7, 'name': _('Canceled'), 'user_id': user_id, 'fold': True},
-        ]
-
-    def _populate_missing_personal_stages(self):
-        # Assign the default personal stage for those that are missing
-        personal_stages_without_stage = self.env['project.task.stage.personal'].sudo().search([('task_id', 'in', self.ids), ('stage_id', '=', False)])
-        if personal_stages_without_stage:
-            user_ids = personal_stages_without_stage.user_id
-            personal_stage_by_user = defaultdict(lambda: self.env['project.task.stage.personal'])
-            for personal_stage in personal_stages_without_stage:
-                personal_stage_by_user[personal_stage.user_id] |= personal_stage
-            for user_id in user_ids:
-                stage = self.env['project.task.type'].sudo().search([('user_id', '=', user_id.id)], limit=1)
-                # In the case no stages have been found, we create the default stages for the user
-                if not stage:
-                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_id=False).create(
-                        self.with_context(lang=user_id.partner_id.lang)._get_default_personal_stage_create_vals(user_id.id)
-                    )
-                    stage = stages[0]
-                personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Set task notification based on project notification preference if user follow the project"""
@@ -1668,10 +1517,10 @@ class Task(models.Model):
             else:
                 task.stage_id = False
 
-    @api.depends('project_id', 'stage_id', 'personal_stage_id')
+    @api.depends('project_id', 'stage_id', 'personal_stage_type_id')
     def _compute_stage_display(self):
         for task in self:
-            task.stage_display = task.stage_id.name if task.project_id else task.personal_stage_id.stage_id.name
+            task.stage_display = task.stage_id.name if task.project_id else task.personal_stage_type_id.name
 
     @api.depends('user_ids')
     def _compute_portal_user_names(self):
@@ -1972,13 +1821,6 @@ class Task(models.Model):
                         default_project_id=project_id
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
-            # user_ids change: update date_assign
-            if vals.get('user_ids'):
-                vals['date_assign'] = fields.Datetime.now()
-                if not project_id:
-                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
-                    if self.env.user.id not in user_ids:
-                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
@@ -2005,8 +1847,6 @@ class Task(models.Model):
             }
             self = self.with_context(ctx).sudo()
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        tasks._populate_missing_personal_stages()
-        self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
         # in case we were already in sudo, we don't check the rights.
         if is_portal_user and not was_in_sudo:
@@ -2026,8 +1866,6 @@ class Task(models.Model):
         return tasks
 
     def write(self, vals):
-        if len(self) == 1:
-            handle_history_divergence(self, 'description', vals)
         portal_can_write = False
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
@@ -2047,9 +1885,6 @@ class Task(models.Model):
             vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = now
         task_ids_without_user_set = set()
-        if 'user_ids' in vals and 'date_assign' not in vals:
-            # prepare update of date_assign after super call
-            task_ids_without_user_set = {task.id for task in self if not task.user_ids}
 
         # recurrence fields
         rec_fields = vals.keys() & self._get_recurrence_fields()
@@ -2084,16 +1919,7 @@ class Task(models.Model):
         if portal_can_write:
             tasks = tasks.sudo()
 
-        # Track user_ids to send assignment notifications
-        old_user_ids = {t: t.user_ids for t in self}
-
-        if "personal_stage_type_id" in vals and not vals['personal_stage_type_id']:
-            del vals['personal_stage_type_id']
-
         result = super(Task, tasks).write(vals)
-
-        if 'user_ids' in vals:
-            tasks._populate_missing_personal_stages()
 
         # user_ids change: update date_assign
         if 'user_ids' in vals:
@@ -2111,7 +1937,6 @@ class Task(models.Model):
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
 
-        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         for recurrence, task in task_for_recurrence.items():
             recurrence._create_task(task_from=task)
         return result
@@ -2122,11 +1947,28 @@ class Task(models.Model):
             childs.unlink_task_and_subtasks_recursively()
         self.unlink()
 
+    def _add_default_task_assignees_in_list(self, create_vals):
+        """
+            Override from note to not set a default assignee if the task belong to a project or
+            if the user is a portal user.
+        """
+        is_portal_user = self.env.user.has_group('base.group_portal')
+        if not is_portal_user and \
+           ('display_project_id' not in create_vals or \
+           'display_project_id' in create_vals and not create_vals['display_project_id']):
+            user_ids = self._fields['user_ids'].convert_to_cache(create_vals.get('user_ids', []), self)
+            if self.env.user.id not in user_ids:
+                create_vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
         if project_task_type.fold:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
+
+    def _ensure_personal_stages(self):
+        self = self.with_context(default_project_id=False)
+        super(Task, self)._ensure_personal_stages()
 
     # ---------------------------------------------------
     # Subtasks
@@ -2205,36 +2047,6 @@ class Task(models.Model):
                 _('Assigned On: %s', self.date_assign.strftime(get_lang(self.env).date_format)))
         return render_context
 
-    @api.model
-    def _task_message_auto_subscribe_notify(self, users_per_task):
-        if self.env.context.get('mail_auto_subscribe_no_notify'):
-            return
-        # Utility method to send assignation notification upon writing/creation.
-        template_id = self.env['ir.model.data']._xmlid_to_res_id('project.project_message_user_assigned', raise_if_not_found=False)
-        if not template_id:
-            return
-        task_model_description = self.env['ir.model']._get(self._name).display_name
-        for task, users in users_per_task.items():
-            if not users:
-                continue
-            values = {
-                'object': task,
-                'model_description': task_model_description,
-                'access_link': task._notify_get_action_link('view'),
-            }
-            for user in users:
-                values.update(assignee_name=user.sudo().name)
-                assignation_msg = self.env['ir.qweb']._render('project.project_message_user_assigned', values, minimal_qcontext=True)
-                assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
-                task.message_notify(
-                    subject=_('You have been assigned to %s', task.display_name),
-                    body=assignation_msg,
-                    partner_ids=user.partner_id.ids,
-                    record_name=task.display_name,
-                    email_layout_xmlid='mail.mail_notification_layout',
-                    model_description=task_model_description,
-                    mail_auto_delete=False,
-                )
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         if 'user_ids' not in updated_values:
@@ -2377,15 +2189,6 @@ class Task(models.Model):
         if leftover:
             res.update(super(Task, leftover)._notify_get_reply_to(default=default))
         return res
-
-    def _ensure_personal_stages(self):
-        user = self.env.user
-        ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
-        # In the case no stages have been found, we create the default stages for the user
-        if not ProjectTaskTypeSudo.search_count([('user_id', '=', user.id)], limit=1):
-            ProjectTaskTypeSudo.with_context(lang=user.lang, default_project_id=False).create(
-                self.with_context(lang=user.lang)._get_default_personal_stage_create_vals(user.id)
-            )
 
     def email_split(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
@@ -2589,6 +2392,27 @@ class Task(models.Model):
     def action_unlink_task_from_recurrence(self):
         self.recurrence_template_id.unlink_task_and_subtasks_recursively()
 
+    def action_convert_to_task(self):
+        self.ensure_one()
+        self.write({
+            'company_id': self.project_id.company_id
+        })
+        return {
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.id,
+            'type': 'ir.actions.act_window',
+            'target': 'main'
+        }
+
+    @api.model
+    def get_conversion_view_id(self):
+        return self.env.ref('project.project_task_todo_conversion_form').id
+
+    @api.model
+    def current_user_has_project_access(self):
+        return self.env.user.has_group('project.group_project_user')
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
@@ -2647,23 +2471,12 @@ class Task(models.Model):
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
 
-class ProjectTags(models.Model):
+class Tags(models.Model):
     """ Tags of project's tasks """
     _name = "project.tags"
-    _description = "Project Tags"
+    _inherit = ["project.tags"]
 
-    def _get_default_color(self):
-        return randint(1, 11)
-
-    name = fields.Char('Name', required=True, translate=True)
-    color = fields.Integer(string='Color', default=_get_default_color,
-        help="Transparent tags are not visible in the kanban view of your projects and tasks.")
     project_ids = fields.Many2many('project.project', 'project_project_project_tags_rel', string='Projects')
-    task_ids = fields.Many2many('project.task', string='Tasks')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "A tag with the same name already exists."),
-    ]
 
     def _get_project_tags_domain(self, domain, project_id):
         tag_ids = list(self.with_user(SUPERUSER_ID)._search(
@@ -2685,7 +2498,7 @@ class ProjectTags(models.Model):
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
         if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain or [], self.env.context['project_id'])
+            domain = self._get_project_tags_domain(domain or [], self.env.context.get('project_id'))
         return super()._name_search(name, domain, operator, limit, order, name_get_uid)
 
     @api.model

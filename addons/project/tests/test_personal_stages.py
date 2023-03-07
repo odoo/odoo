@@ -10,36 +10,42 @@ class TestPersonalStages(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # Default stages are normally created when the user is loading the related view (My Tasks)
+        cls.task_1.with_user(cls.user_projectuser)._ensure_personal_stages()
+        cls.task_1.with_user(cls.user_projectmanager)._ensure_personal_stages()
+
         cls.user_stages = cls.env['project.task.type'].search([('user_id', '=', cls.user_projectuser.id)])
         cls.manager_stages = cls.env['project.task.type'].search([('user_id', '=', cls.user_projectmanager.id)])
 
     def test_personal_stage_base(self):
         # Project User is assigned to task_1 he should be able to see a personal stage
-        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_type_id()
         self.assertTrue(self.task_1.with_user(self.user_projectuser).personal_stage_type_id,
             'Project User is assigned to task 1, he should have a personal stage assigned.')
 
-        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.assertFalse(self.env['project.task'].browse(self.task_1.id).with_user(self.user_projectmanager).personal_stage_type_id,
             'Project Manager is not assigned to task 1, he should not have a personal stage assigned.')
 
         # Now assign a second user to our task_1
         self.task_1.user_ids += self.user_projectmanager
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.assertTrue(self.task_1.with_user(self.user_projectmanager).personal_stage_type_id,
             'Project Manager has now been assigned to task 1 and should have a personal stage assigned.')
 
-        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         task_1_manager_stage = self.task_1.with_user(self.user_projectmanager).personal_stage_type_id
 
-        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_type_id()
         self.task_1.with_user(self.user_projectuser).personal_stage_type_id = self.user_stages[1]
         self.assertEqual(self.task_1.with_user(self.user_projectuser).personal_stage_type_id, self.user_stages[1],
             'Assigning another personal stage to the task should have changed it for user 1.')
 
-        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.assertEqual(self.task_1.with_user(self.user_projectmanager).personal_stage_type_id, task_1_manager_stage,
             'Modifying the personal stage of Project User should not have affected the personal stage of Project Manager.')
 
+        self.task_2.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.task_2.with_user(self.user_projectmanager).personal_stage_type_id = self.manager_stages[1]
         self.assertEqual(self.task_1.with_user(self.user_projectmanager).personal_stage_type_id, task_1_manager_stage,
             'Modifying the personal stage on task 2 for Project Manager should not have affected the stage on task 1.')
