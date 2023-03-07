@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { isSelectionFormat } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor, setTestSelection, Direction, unformat } from '../utils.js';
 
