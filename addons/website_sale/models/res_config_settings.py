@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
     send_abandoned_cart_email = fields.Boolean('Abandoned Email', related='website_id.send_abandoned_cart_email', readonly=False)
     add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
     terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
-
+    price_include = fields.Boolean(related="sale_tax_id.price_include")
     module_delivery = fields.Boolean(
         compute='_compute_module_delivery', store=True, readonly=False)
     module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
