@@ -4,6 +4,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -442,11 +443,14 @@ export class FormController extends Component {
 
         // Before we save, we gather dirty translate fields data. It needs to be done before the
         // save as nothing will be dirty after. It is why there is a compute part and a show part.
-        if (record.dirtyTranslatableFields.length) {
+        const dirtyTranslatableFields = localization.multiLang
+            ? Object.values(record.fields).filter((f) => f.translate && record.isFieldDirty(f.name))
+            : [];
+        if (dirtyTranslatableFields.length) {
             const { resId } = record;
             this.fieldsToTranslate[resId] = new Set([
                 ...toRaw(this.fieldsToTranslate[resId] || []),
-                ...record.dirtyTranslatableFields,
+                ...dirtyTranslatableFields,
             ]);
         }
         if (this.props.saveRecord) {
