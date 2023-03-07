@@ -3432,7 +3432,7 @@ class MailThread(models.AbstractModel):
 
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
-            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
+            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=local_msg_vals)['is_thread_notification']
             group_data.setdefault('active', True)
             group_data.setdefault('actions', list())
             group_data.setdefault('has_button_access', is_thread_notification)
@@ -3457,10 +3457,10 @@ class MailThread(models.AbstractModel):
     def _notify_get_recipients_thread_info(self, msg_vals=None):
         """ Tool method to compute thread info used in ``_notify_classify_recipients``
         and its sub-methods. """
-        res_model = msg_vals['model'] if msg_vals and 'model' in msg_vals else self._name
-        res_id = msg_vals['res_id'] if msg_vals and 'res_id' in msg_vals else self.ids[0] if self.ids else False
+        res_model = msg_vals['model'] if (msg_vals and 'model' in msg_vals) else self._name
+        res_id = msg_vals['res_id'] if (msg_vals and 'res_id' in msg_vals) else (self.ids[0] if self.ids else False)
         return {
-            'is_thread_notification': res_model and (res_model != 'mail.thread') and res_id
+            'is_thread_notification': bool(res_id) if (res_model and res_model != 'mail.thread') else False
         }
 
     @api.model
