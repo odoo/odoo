@@ -98,6 +98,10 @@
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
+                                        <field name="website_published" invisible="1"/>
+                                        <field name="prerequisite_channel_ids" widget="many2many_tags"/>
+                                        <field name="prerequisite_of_channel_ids" widget="many2many_tags" readonly="1"
+                                               attrs="{'invisible': [('prerequisite_of_channel_ids', '=', [])]}"/>
                                         <field name="visibility" widget="radio" options="{'horizontal': true}"/>
                                         <field name="enroll" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('visibility', '=', 'course_attendees')]}"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>

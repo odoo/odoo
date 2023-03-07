@@ -58,7 +58,7 @@ publicWidget.registry.websiteSlidesEnroll = publicWidget.Widget.extend({
     _openDialog: function (channelId) {
         new SlideEnrollDialog(this, {
             channelId: channelId,
-            $element: this.$el
+            $element: this.$el.closest('.alert')
         }).open();
     },
     

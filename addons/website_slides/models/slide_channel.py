@@ -359,6 +359,16 @@ class Channel(models.Model):
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights', compute_sudo=False)
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights', compute_sudo=False)
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights', compute_sudo=False)
+    # prerequisite settings
+    prerequisite_channel_ids = fields.Many2many(
+        'slide.channel', 'slide_channel_prerequisite_slide_channel_rel', 'channel_id', 'prerequisite_channel_id',
+        string='Prerequisites', help='Prerequisite courses to complete before accessing this one.',
+        domain="[('id', '!=', id), ('visibility', '=', visibility), ('website_published', '=', website_published)]")
+    prerequisite_of_channel_ids = fields.Many2many(
+        'slide.channel', 'slide_channel_prerequisite_slide_channel_rel', 'prerequisite_channel_id', 'channel_id',
+        string='Prerequisite Of', help='Courses that have this course as prerequisite.')
+    prerequisite_user_has_completed = fields.Boolean(
+        'Has Completed Prerequisite', compute='_compute_prerequisite_user_has_completed')
 
     _sql_constraints = [
         (
@@ -539,6 +549,22 @@ class Channel(models.Model):
                 channel.can_review = user_karma >= channel.karma_review
                 channel.can_comment = user_karma >= channel.karma_slide_comment
                 channel.can_vote = user_karma >= channel.karma_slide_vote
+
+    ######################
+    # Prerequisite Compute
+    ######################
+
+    @api.depends('prerequisite_channel_ids', 'channel_partner_ids.completed')
+    @api.depends_context('uid')
+    def _compute_prerequisite_user_has_completed(self):
+        completed_prerequisite_channels = self.env['slide.channel.partner'].sudo().search([
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ('channel_id', 'in', self.prerequisite_channel_ids.ids),
+            ('completed', '=', True),
+        ]).mapped('channel_id')
+        for channel in self:
+            channel.prerequisite_user_has_completed = all(
+                channel in completed_prerequisite_channels for channel in channel.prerequisite_channel_ids)
 
     # ---------------------------------------------------------
     # ORM Overrides

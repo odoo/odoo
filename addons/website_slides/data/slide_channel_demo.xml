@@ -42,6 +42,9 @@
     <record id="slide_channel_demo_2_gard2" model="slide.channel">
         <field name="name">Trees, Wood and Gardens</field>
         <field name="user_id" ref="base.user_demo"/>
+        <field name="prerequisite_channel_ids" eval="[(5, 0),
+                                                      (4, ref('website_slides.slide_channel_demo_0_gard_0')),
+                                                      (4, ref('website_slides.slide_channel_demo_1_gard1'))]"/>
         <field name="enroll">public</field>
         <field name="channel_type">documentation</field>
         <field name="allow_comment" eval="True"/>
