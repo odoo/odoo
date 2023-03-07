@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { increment, one, Model } from "@mail/legacy/model";
+import { increment, one, Model } from "@im_livechat/legacy/model";
 
 import session from "web.session";
 import utils from "web.utils";

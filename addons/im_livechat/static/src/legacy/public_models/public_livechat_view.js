@@ -2,7 +2,7 @@
 
 import PublicLivechatView from "@im_livechat/legacy/widgets/public_livechat_view/public_livechat_view";
 
-import { attr, one, Model } from "@mail/legacy/model";
+import { attr, one, Model } from "@im_livechat/legacy/model";
 
 Model({
     name: "PublicLivechatView",

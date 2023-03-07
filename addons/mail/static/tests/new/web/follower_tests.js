@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { makeDeferred } from "@mail/legacy/utils/deferred";
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { editInput, getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let target;
 QUnit.module("follower", {

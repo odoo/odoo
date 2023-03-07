@@ -43,9 +43,6 @@ The service is provided by the In App Purchase Odoo platform.
         'mail.assets_backend': [
             'sms/static/src/new/**/*',
         ],
-        'mail.assets_discuss_public': [
-            'sms/static/src/components/sms_button/*',
-        ],
         'web.assets_backend': [
             'sms/static/src/components/*/*',
         ],

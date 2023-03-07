@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { file, makeTestPromise } from "web.test_utils";
+import { file } from "web.test_utils";
 import {
     afterNextRender,
     click,
@@ -17,7 +17,13 @@ import {
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 const { inputFiles } = file;
 
-import { getFixture, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import { Composer } from "@mail/new/composer/composer";
 
 let target;
@@ -794,7 +800,7 @@ QUnit.test(
     // FIXME: upload uses XHR, so not properly testable.
     async function (assert) {
         const pyEnv = await startServer();
-        const attachmentUploadedPromise = makeTestPromise();
+        const attachmentUploadedPromise = makeDeferred();
         const channelId = pyEnv["mail.channel"].create({ name: "General" });
         const { openDiscuss } = await start({
             async mockRPC(route) {
@@ -934,7 +940,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         // Promise to block attachment uploading
-        const uploadPromise = makeTestPromise();
+        const uploadPromise = makeDeferred();
         const channelId = pyEnv["mail.channel"].create({ name: "test" });
         const { openDiscuss } = await start({
             async mockRPC(route, args) {
@@ -972,7 +978,7 @@ QUnit.test(
         // upload started.
         const pyEnv = await startServer();
         // Promise to block attachment uploading
-        const uploadPromise = makeTestPromise();
+        const uploadPromise = makeDeferred();
         const channelId = pyEnv["mail.channel"].create({ name: "test" });
         const { openDiscuss } = await start({
             async mockRPC(route, args) {

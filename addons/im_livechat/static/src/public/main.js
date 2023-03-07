@@ -3,8 +3,8 @@
 import { publicLivechatService } from "@im_livechat/services/public_livechat_service";
 import { isAvailable, options, serverUrl } from "@im_livechat/livechat_data";
 
-import { messagingService } from "@mail/legacy/services/messaging_service";
-import { makeMessagingToLegacyEnv } from "@mail/legacy/utils/make_messaging_to_legacy_env";
+import { messagingService } from "@im_livechat/legacy/services/messaging_service";
+import { makeMessagingToLegacyEnv } from "@im_livechat/legacy/utils/make_messaging_to_legacy_env";
 
 import { registry } from "@web/core/registry";
 

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, Patch } from '@mail/legacy/model';
+import { attr, Patch } from '@im_livechat/legacy/model';
 
 Patch({
     name: 'Chatbot',

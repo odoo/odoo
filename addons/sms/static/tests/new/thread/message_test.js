@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { startServer, start, click } from "@mail/../tests/helpers/test_utils";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { makeDeferred } from "@mail/legacy/utils/deferred";
+import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let target;
 

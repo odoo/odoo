@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Patch } from '@mail/legacy/model';
+import { attr, clear, one, Patch } from '@im_livechat/legacy/model';
 
 import {unaccent} from 'web.utils';
 import {setCookie} from 'web.utils.cookies';

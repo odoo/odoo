@@ -9,8 +9,8 @@ import time from "web.time";
 
 /**
  * This is a message that is handled by im_livechat, without making use of the
- * mail.Manager. The purpose of this is to make im_livechat compatible with
- * mail.widget.Thread.
+ * im_livechat.Manager. The purpose of this is to make im_livechat compatible with
+ * im_livechat.widget.Thread.
  *
  * @see @im_livechat/legacy/models/public_livechat_message for more information.
  */

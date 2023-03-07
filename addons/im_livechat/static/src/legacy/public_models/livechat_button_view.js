@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from "@mail/legacy/model";
+import { attr, clear, one, Model } from "@im_livechat/legacy/model";
 
 import { getCookie, deleteCookie } from "web.utils.cookies";
 

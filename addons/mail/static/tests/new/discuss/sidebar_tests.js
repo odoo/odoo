@@ -8,8 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { makeDeferred } from "@mail/legacy/utils/deferred";
-import { editInput, getFixture } from "@web/../tests/helpers/utils";
+import { editInput, getFixture, makeDeferred } from "@web/../tests/helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 let target;

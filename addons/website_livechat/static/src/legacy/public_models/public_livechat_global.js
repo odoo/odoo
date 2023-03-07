@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Patch } from '@mail/legacy/model';
+import { Patch } from '@im_livechat/legacy/model';
 
 import { deleteCookie, setCookie } from 'web.utils.cookies';
 

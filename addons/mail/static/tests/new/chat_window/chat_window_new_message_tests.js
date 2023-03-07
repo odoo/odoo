@@ -8,8 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
-import { makeDeferred } from "@mail/legacy/utils/deferred";
+import { getFixture, makeDeferred } from "@web/../tests/helpers/utils";
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,

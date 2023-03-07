@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from "@mail/legacy/model";
+import { attr, one, Model } from "@im_livechat/legacy/model";
 
 Model({
     name: "ChatbotStep",

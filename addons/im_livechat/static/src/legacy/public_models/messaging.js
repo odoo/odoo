@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { one, Patch } from "@mail/legacy/model";
+import { one, Patch } from "@im_livechat/legacy/model";
 
 Patch({
     name: "Messaging",

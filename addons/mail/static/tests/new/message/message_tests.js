@@ -13,12 +13,12 @@ const { DateTime } = luxon;
 import {
     editInput,
     getFixture,
+    makeDeferred,
     nextTick,
     patchWithCleanup,
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { makeDeferred } from "@mail/legacy/utils/deferred";
 
 let target;
 

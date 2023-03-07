@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from "@mail/legacy/model";
+import { attr, clear, many, one, Model } from "@im_livechat/legacy/model";
 
 import { qweb } from "web.core";
 import { Markup } from "web.utils";

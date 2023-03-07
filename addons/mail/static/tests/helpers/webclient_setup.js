@@ -4,16 +4,12 @@ import { busService } from "@bus/services/bus_service";
 import { busParametersService } from "@bus/bus_parameters_service";
 import { imStatusService } from "@bus/im_status_service";
 import { multiTabService } from "@bus/multi_tab_service";
-import { makeMultiTabToLegacyEnv } from "@bus/services/legacy/make_multi_tab_to_legacy_env";
-import { makeBusServiceToLegacyEnv } from "@bus/services/legacy/make_bus_service_to_legacy_env";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
 import { ActivityMenu } from "@mail/new/web/activity/activity_menu";
 import { ChatWindowContainer } from "@mail/new/web/chat_window/chat_window_container";
 import { MessagingMenu } from "@mail/new/web/messaging_menu/messaging_menu";
-import { messagingService as newMessagingService } from "@mail/new/core/messaging_service";
-import { messagingService } from "@mail/legacy/services/messaging_service";
-import { makeMessagingToLegacyEnv } from "@mail/legacy/utils/make_messaging_to_legacy_env";
+import { messagingService } from "@mail/new/core/messaging_service";
 
 import { patch } from "@web/core/utils/patch";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
@@ -126,13 +122,12 @@ export const setupManager = {
             "mail.thread": threadService,
             "mail.message": messageService,
             "mail.chat_window": chatWindowService,
-            "mail.messaging": newMessagingService,
+            "mail.messaging": messagingService,
             "mail.rtc": rtcService,
             "mail.sound_effects": soundEffects,
             "mail.user_settings": userSettingsService,
             "mail.persona": personaService,
             "mail.out_of_focus": outOfFocusService,
-            messaging: messagingService,
             messagingValues,
             presence: makeFakePresenceService({
                 isOdooFocused: () => true,
@@ -160,12 +155,6 @@ async function setupMessagingServiceRegistries({
     services,
 }) {
     const serviceRegistry = registry.category("services");
-
-    patchWithCleanup(messagingService, {
-        async _startModelManager() {
-            // never start model manager since it interferes with tests.
-        },
-    });
 
     const OriginalAudio = window.Audio;
     patchWithCleanup(
@@ -210,15 +199,6 @@ async function setupMessagingServiceRegistries({
             serviceRegistry.add(serviceName, service);
         }
     });
-    registry
-        .category("wowlToLegacyServiceMappers")
-        .add("bus_service_to_legacy_env", makeBusServiceToLegacyEnv);
-    registry
-        .category("wowlToLegacyServiceMappers")
-        .add("multi_tab_to_legacy_env", makeMultiTabToLegacyEnv);
-    registry
-        .category("wowlToLegacyServiceMappers")
-        .add("messaging_service_to_legacy_env", makeMessagingToLegacyEnv);
 
     registry.category("systray").add(
         "mail.activity_menu",

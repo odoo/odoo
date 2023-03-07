@@ -83,7 +83,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         // Clearable and cancellable throttled version of the
         // `doNotifyMyselfTyping` method. (basically `notifyMyselfTyping`
         // with slight pre- and post-processing)
-        // @see {mail.model.ResetableThrottleFunction}
+        // @see {im_livechat.model.ResetableThrottleFunction}
         // This is useful when the user posts a message and types something
         // else: he must notify immediately that he is typing something,
         // instead of waiting for the throttle internal timer.

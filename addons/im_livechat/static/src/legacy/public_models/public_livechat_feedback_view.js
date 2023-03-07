@@ -2,7 +2,7 @@
 
 import Feedback from "@im_livechat/legacy/widgets/feedback/feedback";
 
-import { attr, one, Model } from "@mail/legacy/model";
+import { attr, one, Model } from "@im_livechat/legacy/model";
 
 Model({
     name: "PublicLivechatFeedbackView",

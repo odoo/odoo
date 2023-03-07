@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, Model } from "@mail/legacy/model";
+import { attr, clear, Model } from "@im_livechat/legacy/model";
 
 import PublicLivechatMessage from "@im_livechat/legacy/legacy_models/public_livechat_message";
 

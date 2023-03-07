@@ -2,7 +2,7 @@
 
 import PublicLivechat from "@im_livechat/legacy/legacy_models/public_livechat";
 
-import { attr, clear, one, Model } from "@mail/legacy/model";
+import { attr, clear, one, Model } from "@im_livechat/legacy/model";
 
 import { unaccent } from "web.utils";
 import { deleteCookie, setCookie } from "web.utils.cookies";

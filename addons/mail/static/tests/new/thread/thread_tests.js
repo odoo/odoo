@@ -12,9 +12,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { makeDeferred } from "@mail/legacy/utils/deferred";
 
-import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let target;
 
