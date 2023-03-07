@@ -212,10 +212,11 @@ export class PropertyTags extends Component {
         }
 
         // cycle trough colors
-        const tagColor =
+        let tagColor =
             this.props.tags && this.props.tags.length
                 ? (this.props.tags[this.props.tags.length - 1][2] + 1) % ColorList.COLORS.length
                 : parseInt(Math.random() * ColorList.COLORS.length);
+        tagColor = tagColor || 1;  // never select white by default
 
         const newTag = [newValue, newLabel, tagColor];
         const updatedTags = [...this.availableTags, newTag];
