@@ -10,6 +10,7 @@ patch(NewContentModal.prototype, 'website_hr_recruitment_new_content', {
         const newJobElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_hr_recruitment');
         newJobElement.createNewContent = () => this.createNewJob();
         newJobElement.status = MODULE_STATUS.INSTALLED;
+        newJobElement.model = 'hr.job';
     },
 
     async createNewJob() {
