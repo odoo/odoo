@@ -719,15 +719,16 @@
                           js_class="project_calendar"
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
+                    <field name="is_private" invisible="1"/>
                     <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)"/>
                     <field name="milestone_id" attrs="{'invisible': ['|', ('allow_milestones', '=', False), ('milestone_id', '=', False)]}"/>
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
-                    <field name="date_deadline"/>
                     <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" attrs="{'invisible': ['|', ('is_private', '=', True), ('stage_id', '=', False)]}"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
+                    <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('is_private', '=', False), ('personal_stage_id', '=', False)]}"/>
                 </calendar>
             </field>
         </record>

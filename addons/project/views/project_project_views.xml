@@ -553,9 +553,9 @@
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="user_id" widget="many2one_avatar_user" attrs="{'invisible': [('user_id', '=', False)]}"/>
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" string="Favorite"/>
-                    <field name="stage_id" groups="project.group_project_stages"/>
+                    <field name="stage_id" groups="project.group_project_stages" attrs="{'invisible': [('stage_id', '=', False)]}"/>
                     <field name="last_update_color" invisible="1"/>
-                    <field name="last_update_status" string="Status" widget="status_with_color"/>
+                    <field name="last_update_status" string="Status" widget="status_with_color" attrs="{'invisible': [('last_update_status', '=', 'to_define')]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                 </calendar>
             </field>
