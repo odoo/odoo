@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='managers']" position="inside">
-                    <field name="expense_manager_id" context="{'default_company_id': company_id}"/>
+                    <field name="expense_manager_id" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
                 </xpath>
                  <xpath expr="//group[@name='managers']" position="attributes">
                     <attribute name="invisible">0</attribute>
@@ -21,7 +21,7 @@
             <field name="inherit_id" ref="hr.view_employee_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='work_location_id']" position="after">
-                    <field name="expense_manager_id" optional="hide" string="Expense Approver"/>
+                    <field name="expense_manager_id" optional="hide" string="Expense Approver" widget="many2one_avatar_user"/>
                 </xpath>
             </field>
         </record>
@@ -54,7 +54,7 @@
                     <field name="date" optional="show"/>
                     <field name="product_id" optional="hide"/>
                     <field name="name"/>
-                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                    <field name="employee_id" widget="many2one_avatar_user"/>
                     <field name="sheet_id" optional="show" invisible="not context.get('show_report', False)" readonly="1"/>
                     <field name="payment_mode" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -190,7 +190,7 @@
                                     <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-3"> ) </span>
                                 </div>
                             </div>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
+                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div id="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}">
                                 <field name="payment_mode" widget="radio"/>
@@ -265,7 +265,8 @@
                                 </div>
                                 <div class="row mt8">
                                     <div class="col-6 text-muted">
-                                        <span><t t-esc="record.employee_id.value"/> <t t-esc="record.date.value"/></span>
+                                        <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}"/><br/>
+                                        <t t-esc="record.date.value"/>
                                     </div>
                                     <div class="col-6">
                                         <span class="float-end text-end">
@@ -618,7 +619,7 @@
                 <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree" sample="1" decoration-info="state == 'draft'">
                     <field name="company_id" invisible="1"/>
                     <field name="product_ids" invisible="1"/>
-                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                    <field name="employee_id" widget="many2one_avatar_user"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report"/>
@@ -737,7 +738,7 @@
                     </div>
                     <group>
                         <group name="employee_details">
-                            <field name="employee_id" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
+                            <field name="employee_id" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
                             <field name="payment_mode"/>
                             <field name="employee_journal_id" groups="account.group_account_invoice,account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}" context="{'default_company_id': company_id}"/>
                             <field name="selectable_payment_method_line_ids" invisible="1"/>
@@ -854,7 +855,7 @@
                                 </div>
                                 <div class="row mt8">
                                     <div class="col-6 text-muted">
-                                        <span><t t-esc="record.employee_id.value"/> <t t-esc="record.accounting_date.value"/></span>
+                                        <span><t t-esc="record.employee_id.value"/>  <field name="employee_id" widget="many2one_avatar_user"/><t t-esc="record.accounting_date.value"/></span>
                                     </div>
                                     <div class="col-6">
                                         <span class="float-end text-end">

@@ -22,15 +22,15 @@
                     </div>
                     <group col="2">
                         <group string="Contract Information">
-                            <field name="user_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
                             <field name="cost_subtype_id"/>
-                            <field name="insurer_id"/>
+                            <field name="insurer_id" widget="many2one_avatar"/>
                             <field name="ins_ref"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Vehicle Information">
                             <field name="vehicle_id"/>
-                            <field name="purchaser_id"/>
+                            <field name="purchaser_id" widget="many2one_avatar"/>
                         </group>
                     </group>
                     <group col="2">
@@ -231,11 +231,11 @@
                             <field name="service_type_id" />
                             <field name="date" />
                             <field name="amount" widget="monetary"/>
-                            <field name="vendor_id"/>
+                            <field name="vendor_id" widget="many2one_avatar"/>
                         </group>
                         <group>
                             <field name="vehicle_id"/>
-                            <field name="purchaser_id"/>
+                            <field name="purchaser_id" widget="many2one_avatar"/>
                             <label for="odometer"/>
                             <div class="o_row">
                                 <field name="odometer" class="w-25"/>

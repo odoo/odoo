@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="purchaser_employee_id" optional="hide" widget="many2one_avatar_employee"/>
+                <field name="purchaser_employee_id" optional="hide" widget="many2one_avatar_user"/>
             </xpath>
         </field>
     </record>
@@ -51,7 +51,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="purchaser_employee_id" readonly="1" widget="many2one_avatar" optional="hide"/>
+                <field name="purchaser_employee_id" readonly="1" widget="many2one_avatar_user" optional="hide"/>
             </xpath>
         </field>
     </record>

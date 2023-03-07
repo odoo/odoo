@@ -102,8 +102,8 @@
                             <group>
                                 <field name="department_id"/>
                                 <field name="job_id"/>
-                                <field name="parent_id"/>
-                                <field name="coach_id"/>
+                                <field name="parent_id" widget="many2one_avatar_user"/>
+                                <field name="coach_id" widget="many2one_avatar_user"/>
                             </group>
                         </group>
                         <notebook>
@@ -187,7 +187,7 @@
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
-                                        <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'allow_create_employee': False, 'default_create_employee': False}"/>
+                                        <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'allow_create_employee': False, 'default_create_employee': False}" widget="many2one_avatar_user"/>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -256,7 +256,7 @@
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="parent_id"/>
+                    <field name="parent_id" widget="many2one_avatar_user"/>
                     <field name="address_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="work_location_id" optional="hide"/>
@@ -413,25 +413,6 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
-        </record>
-
-        <!-- Employee tree by manager -->
-        <record id="view_partner_tree2" model="ir.ui.view">
-            <field name="name">hr.employee.tree</field>
-            <field name="model">hr.employee</field>
-            <field name="priority" eval="20"/>
-            <field name="arch" type="xml">
-                <tree string="Employees">
-                    <field name="name"/>
-                    <field name="work_phone" class="o_force_ltr"/>
-                    <field name="work_email"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="department_id"/>
-                    <field name="job_id"/>
-                    <field name="coach_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
-                </tree>
-            </field>
         </record>
 
         <record id="action_hr_employee_create_user" model="ir.actions.server">
