@@ -65,17 +65,24 @@ Widget.template = xml/*xml*/ `
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
     const widget = viewWidgetRegistry.get(name);
-
     const widgetInfo = {
         name,
-        modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
+        modifiers: {},
         widget,
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
-        attrs: {}, // populated below
+        options: {},
+        attrs: {},
     };
 
     for (const { name, value } of node.attributes) {
-        if (!name.startsWith("t-att")) {
+        if (["name", "widget"].includes(name)) {
+            // avoid adding name and widget to attrs
+            continue;
+        }
+        if (name === "modifiers") {
+            widgetInfo.modifiers = JSON.parse(value);
+        } else if (name === "options") {
+            widgetInfo.options = evaluateExpr(value);
+        } else if (!name.startsWith("t-att")) {
             // all other (non dynamic) attributes
             widgetInfo.attrs[name] = value;
         }
