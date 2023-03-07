@@ -46,9 +46,9 @@
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
                             <div class="oe_title ps-0 pe-2">
                                 <label for="name" string="Employee Name"/>
-                                <h1 class="d-flex flex-row align-items-center">
-                                    <span class="me-2">
-                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                <h1 class="d-flex flex-row">
+                                    <span class="me-2" invisible="not context.get('chat_icon')">
+                                        <widget name="hr_employee_chat"/>
                                     </span>
                                     <field name="name" placeholder="e.g. John Doe" required="True"
                                         style="font-size: min(4vw, 2.6rem);"/>
@@ -71,8 +71,8 @@
                                 <field name="department_id" context="{'open_employees_kanban': 1}"/>
                                 <field name="employee_type"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="parent_id"/>
-                                <field name="coach_id"/>
+                                <field name="parent_id" widget="many2one_avatar_user"/>
+                                <field name="coach_id" widget="many2one_avatar_user"/>
                             </group>
                         </group>
                         <notebook>
@@ -111,7 +111,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_title"/>
-                    <field name="parent_id"/>
+                    <field name="parent_id" widget="many2one_avatar_user"/>
                     <field name="coach_id" invisible="1"/>
                 </tree>
             </field>

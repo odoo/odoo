@@ -58,7 +58,7 @@
                         </div>
                     </h1>
                     <h2>
-                        <field name="employee_id"/>
+                        <field name="employee_id" widget="many2one_avatar_user"/>
                     </h2>
                     <group>
                         <group>
@@ -101,7 +101,7 @@
                         <page string="Employee Information" name="contract_others">
                             <group>
                                 <field name="date_hired"/>
-                                <field name="hr_responsible_id"/>
+                                <field name="hr_responsible_id" widget="many2one_avatar_user"/>
                                 <field name="company_id"/>
                             </group>
                         </page>

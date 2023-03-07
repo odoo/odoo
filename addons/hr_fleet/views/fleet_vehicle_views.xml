@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='driver_id']" position="after">
-                <field name="driver_employee_id" widget="many2one_avatar" optional="hide"/>
+                <field name="driver_employee_id" widget="many2one_avatar_user" optional="hide"/>
             </xpath>
         </field>
     </record>
@@ -22,7 +22,7 @@
                 <attribute name="optional">hide</attribute>
             </field>
             <field name="driver_id" position="after">
-                <field name="driver_employee_id" widget="many2one_avatar"/>
+                <field name="driver_employee_id" widget="many2one_avatar_user"/>
             </field>
             <field name="date_end" position="after">
                 <field name="attachment_number" optional="show" />
@@ -99,10 +99,10 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
         <field name="arch" type="xml">
             <field name="driver_id" position="after">
-                <field name="driver_employee_id" optional="hide"/>
+                <field name="driver_employee_id" optional="hide" widget="many2one_avatar_user"/>
             </field>
             <field name="future_driver_id" position="after">
-                <field name="future_driver_employee_id" optional="hide"/>
+                <field name="future_driver_employee_id" optional="hide" widget="many2one_avatar_user"/>
             </field>
         </field>
     </record>

@@ -89,8 +89,8 @@
                         <group string="Driver">
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type" invisible="1"/>
-                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
-                            <field name="future_driver_id"/>
+                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar"/>
+                            <field name="future_driver_id" widget="many2one_avatar"/>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
                             <field name="next_assignation_date"/>
@@ -107,7 +107,7 @@
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
-                            <field name="manager_id" domain="[('share', '=', False)]"/>
+                            <field name="manager_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                             <field name="location"/>
                         </group>
                     </group>
@@ -183,7 +183,7 @@
                 <field name="license_plate" readonly="1"/>
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
                 <field name="category_id"/>
-                <field name="manager_id" optional="hide"/>
+                <field name="manager_id" optional="hide" widget="many2one_avatar_user"/>
                 <field name="driver_id" widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="log_drivers" invisible="1"/>
@@ -283,7 +283,7 @@
                                 </div>
                                 <ul>
                                     <li>
-                                        <t t-if="record.driver_id.raw_value"><field name="driver_id"/></t>
+                                        <t t-if="record.driver_id.raw_value"><field name="driver_id" widget="many2one_avatar"/></t>
                                     </li>
                                     <li>
                                         <t t-if="record.future_driver_id.raw_value">Future Driver : <field name="future_driver_id"/></t>
