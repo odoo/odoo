@@ -61,7 +61,14 @@ class OnboardingStep(models.Model):
         # Make sure progress records exist for the current context (company)
         steps_without_progress = self.filtered(lambda step: not step.current_progress_step_id)
         steps_without_progress._create_progress_steps()
-        return self.current_progress_step_id.action_set_just_done()
+        return self.current_progress_step_id.action_set_just_done().step_id
+
+    @api.model
+    def action_validate_step(self, xml_id):
+        step = self.env.ref(xml_id, raise_if_not_found=False)
+        if not step:
+            return "NOT_FOUND"
+        return "JUST_DONE" if step.action_set_just_done() else "WAS_DONE"
 
     def _create_progress_steps(self):
         onboarding_progress_records = self.env['onboarding.progress'].search([

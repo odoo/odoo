@@ -15,7 +15,8 @@ class TestOnboarding(TestOnboardingCommon):
             self.onboarding_1.current_progress_id._get_and_update_onboarding_state(),
             {self.onboarding_1_step_1.id: 'not_done', self.onboarding_1_step_2.id: 'not_done'})
 
-        self.onboarding_1_step_1.action_set_just_done()
+        self.assertEqual(self.onboarding_1_step_1.action_set_just_done(), self.onboarding_1_step_1,
+                         "The onboarding step just validated should have been returned.")
         # Test completed step state consolidation from `just_done` to `done`
         self.assertDictEqual(
             self.onboarding_1.current_progress_id._get_and_update_onboarding_state(),
@@ -24,6 +25,8 @@ class TestOnboarding(TestOnboardingCommon):
             self.onboarding_1.current_progress_id._get_and_update_onboarding_state(),
             {self.onboarding_1_step_1.id: 'done', self.onboarding_1_step_2.id: 'not_done'})
         self.assert_step_is_done(self.onboarding_1_step_1, self.company_2)
+        self.assertFalse(self.onboarding_1_step_1.action_set_just_done(),
+                         "The onboarding step already validated should not have been returned.")
         self.assert_onboarding_is_not_done(self.onboarding_1, self.company_2)
 
         self.onboarding_1_step_2.action_set_just_done()
