@@ -857,6 +857,87 @@ class IrActionsReport(models.Model):
         if res_ids:
             _logger.info("The PDF report has been generated for model: %s, records %s.", report_sudo.model, str(res_ids))
 
+<<<<<<< HEAD
+||||||| parent of 658dd4aa633 (temp)
+        # A call to wkhtmltopdf is mandatory in 2 cases:
+        # - The report is not linked to a record.
+        # - The report is not fully present in attachments.
+        if save_in_attachment and not res_ids:
+            _logger.info('The PDF report has been generated from attachments.')
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
+            return self_sudo._post_pdf(save_in_attachment), 'pdf'
+
+        if self.get_wkhtmltopdf_state() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+
+        html = self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
+
+        # Ensure the current document is utf-8 encoded.
+        html = html.decode('utf-8')
+
+        bodies, html_ids, header, footer, specific_paperformat_args = self_sudo.with_context(context)._prepare_html(html)
+
+        if self_sudo.attachment and set(res_ids) != set(html_ids):
+            raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
+                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
+
+        pdf_content = self._run_wkhtmltopdf(
+            bodies,
+            header=header,
+            footer=footer,
+            landscape=context.get('landscape'),
+            specific_paperformat_args=specific_paperformat_args,
+            set_viewport_size=context.get('set_viewport_size'),
+        )
+        if res_ids:
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
+            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
+            return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
+=======
+        # A call to wkhtmltopdf is mandatory in 2 cases:
+        # - The report is not linked to a record.
+        # - The report is not fully present in attachments.
+        if save_in_attachment and not res_ids:
+            _logger.info('The PDF report has been generated from attachments.')
+            if len(save_in_attachment) > 1:
+                self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
+            return self_sudo._post_pdf(save_in_attachment), 'pdf'
+
+        if self.get_wkhtmltopdf_state() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+
+        html = self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
+
+        # Ensure the current document is utf-8 encoded.
+        html = html.decode('utf-8')
+
+        bodies, html_ids, header, footer, specific_paperformat_args = self_sudo.with_context(context)._prepare_html(html)
+
+        if self_sudo.attachment and set(res_ids) != set(html_ids):
+            raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
+                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
+
+        pdf_content = self._run_wkhtmltopdf(
+            bodies,
+            header=header,
+            footer=footer,
+            landscape=context.get('landscape'),
+            specific_paperformat_args=specific_paperformat_args,
+            set_viewport_size=context.get('set_viewport_size'),
+        )
+        if res_ids:
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
+            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
+            return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
+>>>>>>> 658dd4aa633 (temp)
         return pdf_content, 'pdf'
 
     @api.model
