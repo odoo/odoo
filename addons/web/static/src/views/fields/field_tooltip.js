@@ -12,7 +12,7 @@ export function getTooltipInfo(params) {
         debug: Boolean(odoo.debug),
         field: {
             name: params.field.name,
-            help: params.fieldInfo.help !== null ? params.fieldInfo.help : params.field.help,
+            help: params.fieldInfo.help ?? params.field.help,
             type: params.field.type,
             widget: params.fieldInfo.widget,
             widgetDescription,

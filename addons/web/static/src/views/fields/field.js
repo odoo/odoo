@@ -165,30 +165,44 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
-    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
     const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
     const fieldInfo = {
         name,
         viewType,
         widget,
-        modifiers,
+        modifiers: {},
         field,
-        context: node.getAttribute("context") || "{}",
-        string: node.getAttribute("string") || fields[name].string,
-        help: node.getAttribute("help"),
-        onChange: archParseBoolean(node.getAttribute("on_change")),
-        forceSave: archParseBoolean(node.getAttribute("force_save")),
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
-        alwaysInvisible: modifiers.invisible === true || modifiers.column_invisible === true,
-        decorations: {}, // populated below
-        attrs: {}, // populated below
+        context: "{}",
+        string: fields[name].string,
+        help: undefined,
+        onChange: false,
+        forceSave: false,
+        options: {},
+        alwaysInvisible: false,
+        decorations: {},
+        attrs: {},
+        domain: undefined,
     };
-    if (node.getAttribute("domain")) {
-        // TODO WOWl: remove with new model?
-        fieldInfo.domain = node.getAttribute("domain");
-    }
+
     for (const { name, value } of node.attributes) {
-        if (name.startsWith("decoration-")) {
+        if (["name", "widget"].includes(name)) {
+            // avoid adding name and widget to attrs
+            continue;
+        }
+        if (["context", "string", "help", "domain"].includes(name)) {
+            fieldInfo[name] = value;
+        } else if (name === "modifiers") {
+            fieldInfo.modifiers = JSON.parse(value);
+            fieldInfo.alwaysInvisible =
+                fieldInfo.modifiers.invisible === true ||
+                fieldInfo.modifiers.column_invisible === true;
+        } else if (name === "on_change") {
+            fieldInfo.onChange = archParseBoolean(value);
+        } else if (name === "options") {
+            fieldInfo.options = evaluateExpr(value);
+        } else if (name === "force_save") {
+            fieldInfo.forceSave = archParseBoolean(value);
+        } else if (name.startsWith("decoration-")) {
             // prepare field decorations
             fieldInfo.decorations[name.replace("decoration-", "")] = value;
         } else if (!name.startsWith("t-att")) {
