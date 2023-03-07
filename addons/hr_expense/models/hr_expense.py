@@ -569,6 +569,24 @@ class HrExpense(models.Model):
     # Business
     # ----------------------------------------
 
+    def _prepare_move_line_vals(self):
+        self.ensure_one()
+        return {
+            'name': self.employee_id.name + ': ' + self.name.split('\n')[0][:64],
+            'account_id': self.account_id.id,
+            'quantity': self.quantity or 1,
+            # 'unit_amount' is there when the product selected has a cost defined.
+            # This cost will always be in company currency.
+            'price_unit': self.unit_amount if self.unit_amount != 0 else self.total_amount_company,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'expense_id': self.id,
+            'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().address_home_id.commercial_partner_id.id,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'currency_id': self.company_currency_id.id,
+        }
+
     def _get_expense_account_destination(self):
         self.ensure_one()
         account_dest = self.env['account.account']
@@ -589,51 +607,7 @@ class HrExpense(models.Model):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
-        moves = self.env['account.move'].create([
-            {
-                'journal_id': (
-                    sheet.bank_journal_id
-                    if sheet.payment_mode == 'company_account' else
-                    sheet.journal_id
-                ).id,
-                'move_type': 'in_receipt',
-                'company_id': sheet.company_id.id,
-                'partner_id': sheet.employee_id.sudo().address_home_id.commercial_partner_id.id,
-                'date': sheet.accounting_date or fields.Date.context_today(sheet),
-                'invoice_date': sheet.accounting_date or fields.Date.context_today(sheet),
-                'ref': sheet.name,
-                # force the name to the default value, to avoid an eventual 'default_name' in the context
-                # to set it to '' which cause no number to be given to the account.move when posted.
-                'name': '/',
-                'expense_sheet_id': [Command.set(sheet.ids)],
-                'line_ids':[
-                    Command.create({
-                        'name': expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64],
-                        'account_id': expense.account_id.id,
-                        'quantity': expense.quantity or 1,
-                        # 'unit_amount' is there when the product selected has a cost defined.
-                        # This cost will always be in company currency.
-                        'price_unit': expense.unit_amount if expense.unit_amount != 0 else expense.total_amount_company,
-                        'product_id': expense.product_id.id,
-                        'product_uom_id': expense.product_uom_id.id,
-                        'analytic_distribution': expense.analytic_distribution,
-                        'expense_id': expense.id,
-                        'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
-                        'tax_ids': [(6, 0, expense.tax_ids.ids)],
-                        'currency_id': expense.company_currency_id.id,
-                    })
-                    for expense in sheet.expense_line_ids
-                ]
-            }
-            for sheet in self.sheet_id
-        ])
-        moves._post()
-
-        for expense in self:
-            if expense.payment_mode == 'company_account':
-                expense.sheet_id.paid_expense_sheets()
-
-        return {move.expense_sheet_id.id: move for move in moves}
+        return self.sheet_id._do_create_moves() # backport
 
     def refuse_expense(self, reason):
         self.write({'is_refused': True})
@@ -899,6 +873,7 @@ class HrExpenseSheet(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
+    journal_displayed_id = fields.Many2one('account.journal', string='Journal', compute='_compute_journal_displayed_id') # fix in stable
     journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', '=', 'purchase'), ('company_id', '=', company_id)]",
         default=_default_journal_id, help="The journal used when the expense is done.")
     bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', 'in', ['cash', 'bank']), ('company_id', '=', company_id)]",
@@ -914,6 +889,12 @@ class HrExpenseSheet(models.Model):
     _sql_constraints = [
         ('journal_id_required_posted', "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))", 'The journal must be set on posted expense'),
     ]
+
+    @api.depends('journal_id', 'bank_journal_id', 'payment_mode')
+    def _compute_journal_displayed_id(self):
+        for sheet in self:
+            paid_by_employee = sheet.payment_mode == 'own_account'
+            sheet.journal_displayed_id = sheet.journal_id if paid_by_employee else sheet.bank_journal_id
 
     @api.depends('expense_line_ids.total_amount_company', 'expense_line_ids.amount_tax_company')
     def _compute_amount(self):
@@ -1043,7 +1024,8 @@ class HrExpenseSheet(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
-            return self.env.ref('hr_expense.mt_expense_approved')
+            if init_values['state'] not in ('post', 'done'):
+                return self.env.ref('hr_expense.mt_expense_approved')
         elif 'state' in init_values and self.state == 'cancel':
             return self.env.ref('hr_expense.mt_expense_refused')
         elif 'state' in init_values and self.state == 'done':
@@ -1079,24 +1061,88 @@ class HrExpenseSheet(models.Model):
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
         res = expense_line_ids.with_context(clean_context(self.env.context)).action_move_create()
-        for sheet in self.filtered(lambda s: not s.accounting_date):
-            sheet.accounting_date = sheet.account_move_id.date
-        to_post = self.filtered(lambda sheet: sheet.payment_mode == 'own_account' and sheet.expense_line_ids)
-        to_post.write({'state': 'post'})
-        (self - to_post).write({'state': 'done'})
+
+        paid_expenses_company = self.filtered(lambda m: m.payment_mode == 'company_account')
+        paid_expenses_company.write({'state': 'done', 'amount_residual': 0.0, 'payment_state': 'paid'})
+
+        paid_expenses_employee = self - paid_expenses_company
+        paid_expenses_employee.write({'state': 'post'})
+
         self.activity_update()
         return res
 
+    def _do_create_moves(self):
+        self = self.with_context(clean_context(self.env.context)) # remove default_*
+
+        own_account_sheets = self.filtered(lambda sheet: sheet.payment_mode == 'own_account')
+        company_account_sheets = self - own_account_sheets
+
+        moves = self.env['account.move'].create([sheet._prepare_bill_vals() for sheet in own_account_sheets])
+        payments = self.env['account.payment'].create([sheet._prepare_payment_vals() for sheet in company_account_sheets])
+
+        moves |= payments.move_id
+        moves.action_post()
+
+        self.activity_update()
+
+        for sheet in self.filtered(lambda s: not s.accounting_date):
+            sheet.accounting_date = sheet.account_move_id.date
+
+        return {move.expense_sheet_id.id: move for move in moves}
+
+    def _prepare_payment_vals(self):
+        self.ensure_one()
+        res = self._prepare_move_vals()
+        payment_method_line = self.env['account.payment.method.line'].search(
+            [('payment_type', '=', 'outbound'),
+             ('journal_id', '=', self.bank_journal_id.id),
+             ('code', '=', 'manual'),
+             ('company_id', '=', self.company_id.id)], limit=1)
+        if not payment_method_line:
+            raise UserError(_("You need to add a manual payment method on the journal (%s)", self.bank_journal_id.name))
+        res.update({
+            'journal_id': self.bank_journal_id.id,
+            'move_type': 'entry',
+            'amount': self.total_amount,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'payment_method_line_id': payment_method_line.id,
+            'partner_id': False,
+        })
+        return res
+
+    def _prepare_bill_vals(self):
+        self.ensure_one()
+        res = self._prepare_move_vals()
+        res.update({
+            'journal_id': self.journal_id.id,
+            'move_type': 'in_invoice',
+            'partner_id': self.employee_id.sudo().address_home_id.commercial_partner_id.id,
+        })
+        return res
+
+    def _prepare_move_vals(self):
+        self.ensure_one()
+        return {
+            # force the name to the default value, to avoid an eventual 'default_name' in the context
+            # to set it to '' which cause no number to be given to the account.move when posted.
+            'name': '/',
+            'date': self.accounting_date or fields.Date.context_today(self),
+            'invoice_date': self.accounting_date or fields.Date.context_today(self), # expense payment behave as bills
+            'ref': self.name,
+            'expense_sheet_id': [Command.set(self.ids)],
+            'line_ids':[
+                Command.create(expense._prepare_move_line_vals())
+                for expense in self.expense_line_ids
+            ]
+        }
+
     def action_unpost(self):
-        self = self.with_context(clean_context(self.env.context))
-        for sheet in self:
-            move = sheet.account_move_id
-            sheet.account_move_id = False
-            if move.state == 'draft':
-                move.unlink()
-            else:
-                move._reverse_moves(cancel=True)
-            sheet.write({'state': 'draft'})
+        draft_moves = self.account_move_id.filtered(lambda _move: _move.state == 'draft')
+        draft_moves.unlink()
+        moves = self.account_move_id - draft_moves
+        moves._reverse_moves(default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in moves], cancel=True)
+        self.reset_expense_sheets()
 
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
@@ -1124,10 +1170,10 @@ class HrExpenseSheet(models.Model):
         return {
             'name': self.account_move_id.name,
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'account.move',
-            'res_id': self.account_move_id.id
+            'views': [[False, "form"]],
+            'res_model': 'account.move' if self.payment_mode == 'own_account' else 'account.payment',
+            'res_id': self.account_move_id.id if self.payment_mode == 'own_account' else self.account_move_id.payment_id.id,
         }
 
     # --------------------------------------------

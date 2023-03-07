@@ -53,7 +53,7 @@ class AccountMoveLine(models.Model):
 
     def _convert_to_tax_base_line_dict(self):
         result = super()._convert_to_tax_base_line_dict()
-        if self.move_id.expense_sheet_id:
+        if self.expense_id:
             result.setdefault('extra_context', {})
             result['extra_context']['force_price_include'] = True
         return result
