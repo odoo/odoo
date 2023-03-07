@@ -3,6 +3,7 @@ from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tools.misc import format_amount
 
 @tagged('post_install', '-at_install')
 class TestAccountJournalDashboard(AccountTestInvoicingCommon):
@@ -93,3 +94,71 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEqual(dashboard_data['number_late'], 2)
         self.assertIn('78.42', dashboard_data['sum_late'])
+
+    def test_sale_purchase_journal_for_multi_currency_purchase(self):
+        currency = self.currency_data['currency']
+        company_currency = self.company_data['currency']
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'invoice_line_ids': [
+                (0, 0, {'name': 'test', 'price_unit': 200})
+            ],
+        })
+        invoice.action_post()
+
+        payment = self.env['account.payment'].create({
+            'amount': 90.0,
+            'date': '2016-01-01',
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+        })
+        payment.action_post()
+
+        (invoice + payment.move_id).line_ids.filtered_domain([
+            ('account_id', '=', self.company_data['default_account_payable'].id)
+        ]).reconcile()
+
+        dashboard_data = self.company_data['default_journal_purchase'].get_journal_dashboard_datas()
+        self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
+        self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
+
+    def test_sale_purchase_journal_for_multi_currency_sale(self):
+        currency = self.currency_data['currency']
+        company_currency = self.company_data['currency']
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'invoice_line_ids': [
+                (0, 0, {'name': 'test', 'price_unit': 200})
+            ],
+        })
+        invoice.action_post()
+
+        payment = self.env['account.payment'].create({
+            'amount': 90.0,
+            'date': '2016-01-01',
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+        })
+        payment.action_post()
+
+        (invoice + payment.move_id).line_ids.filtered_domain([
+            ('account_id', '=', self.company_data['default_account_receivable'].id)
+        ]).reconcile()
+
+        dashboard_data = self.company_data['default_journal_sale'].get_journal_dashboard_datas()
+        self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
+        self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
