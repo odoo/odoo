@@ -132,6 +132,10 @@ $o-bg-colors-custom: (
     "favourite": $o-main-favorite-color,
 ) !default;
 
+$o-btn-custom: (
+    "favourite": $o-main-favorite-color,
+) !default;
+
 // Components (BS)
 
 $o-border-color: $o-gray-300 !default;
@@ -222,11 +226,52 @@ $o-border-radius-sm: .2rem !default;
 // touch
 $o-touch-btn-padding: 7px 14px !default;
 
-// Buttons
-$o-btn-secondary-bg: $o-white !default;
-$o-btn-secondary-hover-bg: $o-gray-100 !default;
-$o-btn-secondary-hover-border: $o-gray-200 !default;
+// == Buttons
+// Map of customized values for each button. If a button's design is defined
+// here, the relative values will take priority over default BS ones.
+// Notice: each map's entry is passed directly to the Bootstrap mixin, meaning
+// that all states must be defined, there can't be omissions.
+$o-btns-bs-override: () !default;
+$o-btns-bs-override: map-merge((
+    "primary": (
+        background: $o-brand-primary,
+        border: $o-brand-primary,
+        color: $o-white,
 
-$o-btn-light-bg: $o-white !default;
-$o-btn-light-border: $o-btn-light-bg !default;
-$o-btn-light-background-hover: $o-gray-100 !default;
+        hover-background: darken($o-brand-primary, 10%),
+        hover-border: darken($o-brand-primary, 20%),
+        hover-color: $o-white,
+
+        active-background: darken($o-brand-primary, 20%),
+        active-border: darken($o-brand-primary, 20%),
+        active-color: $o-white,
+    ),
+    "secondary": (
+        background: $o-gray-300,
+        border: $o-gray-300,
+        color: $o-gray-800,
+
+        hover-background: $o-gray-400,
+        hover-border: $o-gray-400,
+        hover-color: $o-gray-900,
+
+        active-background: mix($o-action, $o-gray-100, 20%),
+        active-border:  $o-action,
+        active-color: $o-gray-900,
+    ),
+    "light": (
+        background: $o-white,
+        border: $o-white,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-100,
+        hover-border: $o-gray-100,
+        hover-color: $o-gray-900,
+
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
+    ),
+), $o-btns-bs-override);
+
+$o-btns-bs-outline-override: () !default;
