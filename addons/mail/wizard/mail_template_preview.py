@@ -28,21 +28,16 @@ class MailTemplatePreview(models.TransientModel):
     def _selection_languages(self):
         return self.env['res.lang'].get_installed()
 
-    @api.model
-    def default_get(self, fields):
-        result = super(MailTemplatePreview, self).default_get(fields)
-        if not result.get('mail_template_id') or 'resource_ref' not in fields:
-            return result
-        mail_template = self.env['mail.template'].browse(result['mail_template_id']).sudo()
-        model = mail_template.model
-        res = self.env[model].search([], limit=1)
-        if res:
-            result['resource_ref'] = '%s,%s' % (model, res.id)
-        return result
 
     mail_template_id = fields.Many2one('mail.template', string='Related Mail Template', required=True)
     model_id = fields.Many2one('ir.model', string='Targeted model', related="mail_template_id.model_id")
-    resource_ref = fields.Reference(string='Record', selection='_selection_target_model')
+    resource_ref = fields.Reference(
+        string='Record',
+        compute='_compute_resource_ref',
+        compute_sudo=False, readonly=False,
+        selection='_selection_target_model',
+        store=True
+    )
     lang = fields.Selection(_selection_languages, string='Template Preview Language')
     no_record = fields.Boolean('No Record', compute='_compute_no_record')
     error_msg = fields.Char('Error Message', compute='_compute_mail_template_fields')
@@ -87,6 +82,14 @@ class MailTemplatePreview(models.TransientModel):
                 self._set_mail_attributes()
                 error_msg = user_error.args[0]
         self.error_msg = error_msg
+
+    @api.depends('mail_template_id')
+    def _compute_resource_ref(self):
+        for preview in self:
+            mail_template = preview.mail_template_id.sudo()
+            model = mail_template.model
+            res = self.env[model].search([], limit=1)
+            preview.resource_ref = f'{model},{res.id}' if res else False
 
     def _set_mail_attributes(self, values=None):
         for field in self._MAIL_TEMPLATE_FIELDS:
