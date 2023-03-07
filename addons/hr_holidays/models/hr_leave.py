@@ -162,7 +162,7 @@ class HolidaysRequest(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict",
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
-        tracking=True)
+        tracking=True, compute_sudo=False)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean(related='employee_id.active', string='Employee Active', readonly=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
@@ -206,7 +206,7 @@ class HolidaysRequest(models.Model):
         'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     multi_employee = fields.Boolean(
-        compute='_compute_from_employee_ids', store=True,
+        compute='_compute_from_employee_ids', store=True, compute_sudo=False,
         help='Holds whether this allocation concerns more than 1 employee')
     category_id = fields.Many2one(
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag',
@@ -1501,8 +1501,12 @@ class HolidaysRequest(models.Model):
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
-                    if (state == 'validate' and val_type == 'manager') and self.env.user != holiday.employee_id.leave_manager_id:
-                        raise UserError(_('You must be %s\'s Manager to approve this leave', holiday.employee_id.name))
+                    if (state == 'validate' and val_type == 'manager') and self.env.user != (holiday.employee_id | holiday.employee_ids).leave_manager_id:
+                        if holiday.employee_id:
+                            employees = holiday.employee_id
+                        else:
+                            employees = ', '.join(holiday.employee_ids.filtered(lambda e: e.leave_manager_id != self.env.user).mapped('name'))
+                        raise UserError(_('You must be %s\'s Manager to approve this leave', employees))
 
                     if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
