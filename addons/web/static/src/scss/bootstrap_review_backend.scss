@@ -3,6 +3,78 @@
 /// ==============================================================================
 
 
+// Buttons
+// ============================================================================
+// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
+// We do it ourself here generating each btn design type individually.
+
+// 1. Render buttons defined in '$o-btns-custom' and '$o-btns-outline-custom'
+//    maps.
+@each $-name, $-value in $o-btns-custom {
+    .btn-#{$-name} {
+        @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+            // Handle btn-text exception specifically
+            $disabled-color: if(alpha(o-safe-get($-value, background)) == 0, $o-main-color-muted, color-contrast(o-safe-get($-value, background))),
+        );
+    }
+}
+
+@each $-name, $-value in $o-btns-outline-custom {
+    .btn-outline-#{$-name} {
+        @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+        );
+    }
+}
+
+// 2. Render '$theme-colors' buttons excluding the ones already generated
+//    using the custom maps.
+@each $-name, $-color in $theme-colors {
+    @if (not map-get($o-btns-custom, $-name)) {
+        .btn-#{$-name} {
+            @include button-variant($-color, $-color);
+        }
+    }
+    @if (not map-get($o-btns-outline-custom, $-name)) {
+        .btn-outline-#{$-name} {
+            @include button-outline-variant($-color);
+        }
+    }
+}
+
+// Button group
+// ============================================================================
+.btn-group {
+    > .btn, .btn-group {
+        // Ensure that active buttons will always be rendered on top, including
+        // hovered ones.
+        &:active, &.active, &:active:hover, &.active:hover {
+            z-index: 2;
+        }
+
+        &:not(:first-child) {
+            margin-left: $btn-border-width;
+        }
+    }
+}
+
 // Bootstrap '$theme-colors' text-x and bg-x classes generation
 // ============================================================================
 // Bootstrap's default behavior is to generate classes directly from its
