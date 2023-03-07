@@ -266,6 +266,9 @@
             <attribute name="t-call">l10n_ar.document_tax_totals</attribute>
         </t>
 
+        <xpath expr="//div[@name='payment_term']" position="replace"/>
+        <xpath expr="//p[@name='incoterm']" position="replace"/>
+
     </template>
 
     <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
