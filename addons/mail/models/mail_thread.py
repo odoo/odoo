@@ -2011,7 +2011,9 @@ class MailThread(models.AbstractModel):
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
         if not msg_values.get('record_name'):
-            msg_values['record_name'] = self.display_name
+            # use sudo as record access is not always granted (notably when replying
+            # a notification) -> final check is done at message creation level
+            msg_values['record_name'] = self.sudo().display_name
         msg_values.update({
             # author
             'author_id': author_id,
@@ -2063,6 +2065,7 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
+        return
 
     def _message_mail_after_hook(self, mails):
         """ Hook to add custom behavior after having sent an mass mailing.
@@ -2081,6 +2084,13 @@ class MailThread(models.AbstractModel):
           * create attachments from ``attachments``. If those are linked to the
             content (body) through CIDs body is updated. CIDs are found and
             replaced by links to web/image as CIDs are not supported as it.
+
+        Note that attachments are created/written in sudo as we consider at this
+        point access is granted on related record and/or to post the linked
+        message. The caller must verify the access rights accordingly. Indeed
+        attachments rights are stricter than message rights which may lead to
+        ACLs issues e.g. when posting on a readonly document or replying to
+        a notification on a private document.
 
         :param list(tuple(str,str)) or list(tuple(str,str, dict)) attachments:
           list of attachment tuples in the form ``(name,content)`` or
@@ -2166,7 +2176,7 @@ class MailThread(models.AbstractModel):
                 # keep cid, name list and token synced with attachement_values_list length to match ids latter
                 attachement_extra_list.append((cid, name, token))
 
-            new_attachments = self.env['ir.attachment'].create(attachement_values_list)
+            new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
             attach_cid_mapping, attach_name_mapping = {}, {}
             for attachment, (cid, name, token) in zip(new_attachments, attachement_extra_list):
                 if cid:
@@ -3432,7 +3442,7 @@ class MailThread(models.AbstractModel):
 
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
-            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
+            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=local_msg_vals)['is_thread_notification']
             group_data.setdefault('active', True)
             group_data.setdefault('actions', list())
             group_data.setdefault('has_button_access', is_thread_notification)
@@ -3457,10 +3467,10 @@ class MailThread(models.AbstractModel):
     def _notify_get_recipients_thread_info(self, msg_vals=None):
         """ Tool method to compute thread info used in ``_notify_classify_recipients``
         and its sub-methods. """
-        res_model = msg_vals['model'] if msg_vals and 'model' in msg_vals else self._name
-        res_id = msg_vals['res_id'] if msg_vals and 'res_id' in msg_vals else self.ids[0] if self.ids else False
+        res_model = msg_vals['model'] if (msg_vals and 'model' in msg_vals) else self._name
+        res_id = msg_vals['res_id'] if (msg_vals and 'res_id' in msg_vals) else (self.ids[0] if self.ids else False)
         return {
-            'is_thread_notification': res_model and (res_model != 'mail.thread') and res_id
+            'is_thread_notification': bool(res_id) if (res_model and res_model != 'mail.thread') else False
         }
 
     @api.model
@@ -3862,6 +3872,7 @@ class MailThread(models.AbstractModel):
         if not self:
             res['hasReadAccess'] = False
             return res
+        res['canPostOnReadonly'] = self._mail_post_access == 'read'
 
         self.ensure_one()
         try:
