@@ -1608,3 +1608,10 @@ class Task(models.Model):
             datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
+
+    def action_redirect_to_project_task_form(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/web#model=project.task&id=%s&action=%s&view_type=form' % (self.id, self.env.ref('project.action_view_my_task').id),
+            'target': 'new',
+        }
