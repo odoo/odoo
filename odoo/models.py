@@ -1469,7 +1469,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def search_count(self, domain, limit=None):
-        """ search_count(domain) -> int
+        """ search_count(domain[, limit=None]) -> int
 
         Returns the number of records in the current model matching :ref:`the
         provided domain <reference/orm/domains>`.
@@ -3215,6 +3215,9 @@ class BaseModel(metaclass=MetaModel):
         by fetching what is necessary from the database.  Non-stored fields are
         mostly ignored, except for their stored dependencies. This method should
         be called to optimize code.
+
+        :param field_names: a collection of field names to fetch
+        :raise AccessError: if user is not allowed to access requested information
 
         This method is implemented thanks to methods :meth:`_search` and
         :meth:`_fetch_query`, and should not be overridden.
