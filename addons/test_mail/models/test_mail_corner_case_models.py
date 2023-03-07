@@ -145,13 +145,23 @@ class MailTestTrackAll(models.Model):
 # ------------------------------------------------------------
 
 class MailTestMultiCompany(models.Model):
-    """ This model can be used in multi company tests"""
+    """ This model can be used in multi company tests, with attachments support
+    for checking record update in MC """
     _name = 'mail.test.multi.company'
     _description = "Test Multi Company Mail"
-    _inherit = 'mail.thread'
+    _inherit = 'mail.thread.main.attachment'
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
+
+
+class MailTestMultiCompanyRead(models.Model):
+    """ Just mail.test.simple, but multi company and supporting posting
+    even if the user has no write access. """
+    _description = 'Simple Chatter Model '
+    _name = 'mail.test.multi.company.read'
+    _inherit = ['mail.test.multi.company']
+    _mail_post_access = 'read'
 
 
 class MailTestNotMailThread(models.Model):
