@@ -68,7 +68,8 @@ from .tools.translate import _, _lt
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.id)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
+regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.[a-z0-9]+)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -119,6 +120,12 @@ def check_method_name(name):
     """ Raise an ``AccessError`` if ``name`` is a private method name. """
     if regex_private.match(name):
         raise AccessError(_('Private methods (such as %s) cannot be called remotely.', name))
+
+
+def check_property_field_value_name(property_name):
+    if not regex_alphanumeric.match(property_name):
+        raise ValueError(_("Wrong property field value name %r.", property_name))
+
 
 def fix_import_export_id_paths(fieldname):
     """
@@ -3144,13 +3151,32 @@ class BaseModel(metaclass=MetaModel):
         The output format is the one expected from the `read` method, which uses
         this method as its implementation for formatting values.
 
+        For the properties fields, call convert_to_read_multi instead of convert_to_read
+        to prepare everything (record existences, display name, etc) in batch.
+
         The current method is different from `read` because it retrieves its
         values from the cache without doing a query when it is avoidable.
         """
         data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
         for name in fnames:
-            convert = self._fields[name].convert_to_read
+            field = self._fields[name]
+            if field.type == 'properties':
+                values_list = []
+                records = []
+                for record, vals in data:
+                    try:
+                        values_list.append(record[name])
+                        records.append(record.id)
+                    except MissingError:
+                        vals.clear()
+
+                results = field.convert_to_read_multi(values_list, self.browse(records), use_name_get)
+                for record_read_vals, convert_result in zip(data, results):
+                    record_read_vals[1][name] = convert_result
+                continue
+
+            convert = field.convert_to_read
             for record, vals in data:
                 # missing records have their vals empty
                 if not vals:
@@ -4544,6 +4570,12 @@ class BaseModel(metaclass=MetaModel):
         for order_part in order_spec.split(','):
             order_split = order_part.strip().split(' ')
             order_field = order_split[0].strip()
+
+            property_name = None
+            if "." in order_field:
+                order_field, property_name = order_field.split('.', 1)
+                check_property_field_value_name(property_name)
+
             order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
@@ -4567,6 +4599,8 @@ class BaseModel(metaclass=MetaModel):
                     qualifield_name = self._inherits_join_calc(alias, order_field, query)
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
+                    elif field.type == 'properties' and property_name:
+                        qualifield_name = f"({qualifield_name} -> '{property_name}')"
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
                 else:
                     _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
