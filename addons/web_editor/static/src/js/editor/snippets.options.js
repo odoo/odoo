@@ -4203,7 +4203,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const searchParams = Object.entries(colors)
             .map(([colorName, colorValue]) => {
-                const encodedCol = encodeURIComponent(colorValue);
+                const encodedCol = encodeURIComponent(normalizeColor(colorValue));
                 return `${colorName}=${encodedCol}`;
             });
         if (flip.length) {
