@@ -28,12 +28,17 @@ class AccountMove(models.Model):
     def is_purchase_document(self, include_receipts=False):
         return bool(include_receipts and self.sudo().expense_sheet_id) or super().is_purchase_document(include_receipts)
 
+    def is_entry(self):
+        if self.expense_sheet_id:
+            return False
+        return super().is_entry()
+
     # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
     def _check_journal_move_type(self):
         return super(AccountMove, self.filtered(lambda x: not x.expense_sheet_id))._check_journal_move_type()
 
     def _creation_message(self):
-        if self.line_ids.expense_id:
+        if self.expense_sheet_id:
             return _("Expense entry Created")
         return super()._creation_message()
 
@@ -51,7 +56,7 @@ class AccountMove(models.Model):
         super()._compute_needed_terms()
         for move in self:
             if move.expense_sheet_id:
-                balance = -sum(move.line_ids.filtered(lambda l: l.display_type != 'payment_term').mapped("balance"))
+                balance = -sum(move.line_ids.filtered(lambda l: l.display_type != 'payment_term').mapped("amount_currency"))
                 move.needed_terms = {
                     frozendict(
                         {
@@ -65,3 +70,16 @@ class AccountMove(models.Model):
                         "account_id": move.expense_sheet_id.expense_line_ids[0]._get_expense_account_destination(),
                     }
                 }
+
+    def _reverse_moves(self, default_values_list=None, cancel=False):
+        if self.expense_sheet_id:
+            self.expense_sheet_id.state = 'approve'
+            self.expense_sheet_id = False
+            self.ref = False # else, when restarting the expense flow we get duplicate issue on vendor.bill
+        return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+    def unlink(self):
+        if self.expense_sheet_id:
+            self.expense_sheet_id.state = 'approve'
+            self.expense_sheet_id.account_move_id = False # cannot change to delete='set null' in stable
+        return super().unlink()

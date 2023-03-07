@@ -714,6 +714,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "Expense Report"
 msgstr ""
 
@@ -1066,6 +1067,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_displayed_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Journal"
 msgstr ""
@@ -1415,6 +1417,18 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_state
 msgid "Payment Status"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/account_payment.py:0
+#, python-format
+msgid "Payment created for: %s"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment
+msgid "Payments"
 msgstr ""
 
 #. module: hr_expense
@@ -2165,6 +2179,13 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/account_payment.py:0
+#, python-format
+msgid "You cannot do this modification since the payment is linked to an expense report."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
@@ -2210,6 +2231,13 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You need to add a manual payment method on the journal (%s)"
 msgstr ""
 
 #. module: hr_expense
