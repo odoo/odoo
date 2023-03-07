@@ -179,7 +179,8 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
-                <attribute name="class">o_applicant_form o_applicant_interviewer_form</attribute>
+                <attribute name="js_class">hr_recruitment_interviewer</attribute>
+                <attribute name="class">o_applicant_form</attribute>
             </xpath>
             <xpath expr="//group[@name='recruitment_contract']" position="replace"/>
         </field>
