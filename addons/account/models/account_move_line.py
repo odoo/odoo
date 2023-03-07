@@ -2534,7 +2534,7 @@ class AccountMoveLine(models.Model):
         hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['debit', 'credit', 'account_id', 'partner_id']
-        elif hash_version == MAX_HASH_VERSION:
+        elif hash_version in (2, 3):
             return ['name', 'debit', 'credit', 'account_id', 'partner_id']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
