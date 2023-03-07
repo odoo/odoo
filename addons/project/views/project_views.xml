@@ -1461,13 +1461,13 @@
                                 <div class="o_kanban_record_bottom" t-if="!selection_mode">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
-                                        <field name="activity_ids" widget="kanban_activity"/>
+                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 2px;"/>
                                         <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
+                                            <span style="font-weight:bold; padding-top:2px; padding-right:3px; font-size:16px;" class="fa fa-fw fa-smile-o text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                            <span style="font-weight:bold; padding-top:2px; padding-right:3px; font-size:16px;" class="fa fa-fw fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
+                                            <span style="font-weight:bold; padding-top:2px; padding-right:3px; font-size:16px;" class="fa fa-fw fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
-                                        <a t-if="record.subtask_count.raw_value and record.allow_subtasks.raw_value" class="subtask_list_button" title="See Subtasks" style="padding: 0px 5px 0px 0px; box-sizing: border-box; font-size: 20px;"/>
+                                        <a t-if="record.subtask_count.raw_value and record.allow_subtasks.raw_value" class="subtask_list_button" title="See Subtasks" style="padding: 0px 5px 0px 0px; box-sizing: border-box; font-size: 23px;"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
