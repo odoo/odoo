@@ -16,9 +16,6 @@
     </t>
 
     <t t-extend="portal.chatter_messages">
-        <t t-jquery="div[class='o_portal_chatter_messages']">
-            this.attr('class', this.attr("class") + ' o_portal_rating_chatter_messages');
-        </t>
         <t t-jquery="t[t-out='message.body']" t-operation="before">
             <t t-if="message['rating_value']">
                 <t t-call="portal_rating.rating_stars_static">
