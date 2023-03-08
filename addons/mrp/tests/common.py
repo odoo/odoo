@@ -231,6 +231,18 @@ class TestMrpCommon(common2.TestStockCommon):
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
+        cls.production = cls.env['mrp.production'].create({
+            'product_id': cls.laptop.id
+        })
+
+        cls.workorder_1 = cls.env['mrp.workorder'].create({
+            'production_id': cls.production.id,
+            'name': 'test',
+            'product_id': cls.laptop.id,
+            'product_uom_id': cls.env.ref("uom.product_uom_unit").id,
+            'workcenter_id': cls.workcenter_1.id,
+        })
+
     @classmethod
     def make_prods(cls, n):
         return [

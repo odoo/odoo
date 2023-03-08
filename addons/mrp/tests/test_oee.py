@@ -15,7 +15,8 @@ class TestOee(TestMrpCommon):
             'date_start': date_start,
             'date_end': date_end,
             'loss_id': loss_reason.id,
-            'description': loss_reason.name
+            'description': loss_reason.name,
+            'workorder_id': self.workorder_1.id
         })
 
     def test_wrokcenter_oee(self):
@@ -45,7 +46,7 @@ class TestOee(TestMrpCommon):
 
         # Check working state is normal or not.
         end_time = time_to_string_utc_datetime(time(10, 48, 39))
-        workcenter_productivity_1.write({'date_end': end_time})
+        workcenter_productivity_1[0].write({'date_end': end_time})
         self.assertEqual(self.workcenter_1.working_state, 'normal', "Wrong working state of workcenter.")
 
         # Process Defect time duration (1.33 min)

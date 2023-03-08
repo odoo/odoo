@@ -8,6 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.resource.models.utils import Intervals
 from odoo.tools import float_compare, float_round, format_datetime
 
 
@@ -310,7 +311,7 @@ class MrpWorkorder(models.Model):
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
         for order in self:
-            order.duration = sum(order.time_ids.mapped('duration'))
+            order.duration = order.get_duration()
             order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
             if order.duration_expected:
                 order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
@@ -463,7 +464,19 @@ class MrpWorkorder(models.Model):
                         workorder.production_id.with_context(force_date=True).write({
                             'date_finished': fields.Datetime.to_datetime(values['date_finished'])
                         })
-        return super(MrpWorkorder, self).write(values)
+
+        if not values.get('time_ids'):
+            return super(MrpWorkorder, self).write(values)
+        to_link = {'time_ids': []}
+        others = {'time_ids': []}
+        for vals in values['time_ids']:
+            if vals[0] == 4:
+                to_link['time_ids'].append(vals)
+            else:
+                others['time_ids'].append(vals)
+
+        super(MrpWorkorder, self).write(to_link)
+        super(MrpWorkorder, self).write(others)
 
     @api.model_create_multi
     def create(self, values):
@@ -866,16 +879,48 @@ class MrpWorkorder(models.Model):
             self.qty_producing = quantity
 
     def get_working_duration(self):
-        """Get the additional duration for 'open times' i.e. productivity lines with no date_end."""
         self.ensure_one()
-        duration = 0
-        for time in self.time_ids.filtered(lambda time: not time.date_end):
-            duration += (datetime.now() - time.date_start).total_seconds() / 60
-        return duration
+        return self._intervals_duration([(t.date_start, datetime.now(), t) for t in self.time_ids if not t.date_end])
 
     def get_duration(self):
         self.ensure_one()
-        return sum(self.time_ids.mapped('duration')) + self.get_working_duration()
+        now = datetime.now()
+        loss_type_times = defaultdict(lambda: self.env['mrp.workcenter.productivity'])
+        for time in self.time_ids:
+            # here we need to check if
+            loss_type_times[time.loss_id.loss_type] |= time
+        duration = 0
+        for dummy, times in loss_type_times.items():
+            duration += self._intervals_duration([(t.date_start, t.date_end or now, t) for t in times])
+        return duration
+
+    def get_productive_duration(self):
+        self.ensure_one()
+        now = datetime.now()
+        productive_times = []
+        for time in self.time_ids:
+            if time.loss_id.loss_type == "productive":
+                productive_times.append(time)
+        duration = 0
+        duration += self._intervals_duration([(t.date_start, t.date_end or now, t) for t in productive_times])
+        return duration
+
+    def _intervals_duration(self, intervals):
+        """ Return the duration of the given intervals.
+        If intervals overlaps the duration is only counted once.
+
+        The timer could be share between several intervals. However it is not
+        an issue since the purpose is to make a difference between employee time and
+        blocking time.
+
+        :param list intervals: list of tuple (date_start, date_end, timer)
+        """
+        if not intervals:
+            return 0.0
+        duration = 0
+        for date_start, date_stop, timer in Intervals(intervals):
+            duration += timer.loss_id._convert_to_duration(date_start, date_stop, timer.workcenter_id)
+        return duration
 
     def action_mark_as_done(self):
         for wo in self:

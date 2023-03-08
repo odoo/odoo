@@ -643,11 +643,47 @@
         <!-- Run Scheduler -->
         <function model="procurement.group" name="run_scheduler"/>
 
+        <!-- Table Top MO's for workorders-->
+        <record id="mrp_production_5" model="mrp.production">
+            <field name="product_id" ref="product_product_computer_desk_head"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">2</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+        </record>
+
+        <record id="mrp_production_6" model="mrp.production">
+            <field name="product_id" ref="product_product_computer_desk_head"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">2</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+        </record>
+
+        <!-- Work orders-->
+        <record id="mrp_workorder_1" model="mrp.workorder">
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="production_id" ref="mrp_production_5"/>
+            <field name="duration_expected">120</field>
+            <field name="name">Machine Assembly</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_id" ref="product_product_computer_desk_head"/>
+        </record>
+
+        <record id="mrp_workorder_2" model="mrp.workorder">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="production_id" ref="mrp_production_6"/>
+            <field name="duration_expected">60</field>
+            <field name="name">Drilling</field>
+            <field name="product_id" ref="product_product_computer_desk"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        </record>
 
         <!-- OEE -->
 
         <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="workorder_id" ref="mrp_workorder_1"/>
             <field name="loss_id" ref="block_reason7"/>
             <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -655,6 +691,7 @@
 
         <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="workorder_id" ref="mrp_workorder_1"/>
             <field name="loss_id" ref="block_reason0"/>
             <field name="date_start" eval="(datetime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -662,6 +699,7 @@
 
         <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="workorder_id" ref="mrp_workorder_1"/>
             <field name="loss_id" ref="block_reason1"/>
             <field name="date_start" eval="(datetime.now() - timedelta(days=5, hours=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(days=5, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -669,6 +707,7 @@
 
         <record id="mrp_workcenter_efficiency_3" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="workorder_id" ref="mrp_workorder_2"/>
             <field name="loss_id" ref="block_reason7"/>
             <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -676,6 +715,7 @@
 
         <record id="mrp_workcenter_efficiency_4" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="workorder_id" ref="mrp_workorder_2"/>
             <field name="loss_id" ref="block_reason0"/>
             <field name="date_start" eval="(datetime.now() - timedelta(days=5,hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(days=5,hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -683,6 +723,7 @@
 
         <record id="mrp_workcenter_efficiency_5" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="workorder_id" ref="mrp_workorder_2"/>
             <field name="loss_id" ref="block_reason1"/>
             <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
