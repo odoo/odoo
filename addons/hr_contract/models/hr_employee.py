@@ -140,6 +140,10 @@ class Employee(models.Model):
         return res
 
     def _get_calendar_periods(self, start, stop):
+        """
+        :param datetime start: the start of the period
+        :param datetime stop: the stop of the period
+        """
         calendar_periods_by_employee = defaultdict(list)
         contracts_by_employee = self.env['hr.contract'].sudo()._read_group(domain=[
             '|',
@@ -157,12 +161,20 @@ class Employee(models.Model):
             for contract in contracts:
                 calendar_tz = timezone(contract.resource_calendar_id.tz)
                 utc = timezone('UTC')
-                date_start = datetime.combine(contract.date_start, time(0, 0, 0)).replace(tzinfo=calendar_tz).astimezone(utc)
+                date_start = datetime.combine(
+                    contract.date_start,
+                    time(0, 0, 0)
+                ).replace(tzinfo=calendar_tz).astimezone(utc)
                 if contract.date_end:
-                    date_end = datetime.combine(contract.date_end + relativedelta(days=1), time(0, 0, 0)).replace(tzinfo=calendar_tz).astimezone(utc)
+                    date_end = datetime.combine(
+                        contract.date_end + relativedelta(days=1),
+                        time(0, 0, 0)
+                    ).replace(tzinfo=calendar_tz).astimezone(utc)
                 else:
                     date_end = stop
-                calendar_periods_by_employee[employee].append((max(date_start, start), min(date_end, stop), contract.resource_calendar_id))
+                calendar_periods_by_employee[employee].append(
+                    (max(date_start, start), min(date_end, stop), contract.resource_calendar_id)
+                )
         return calendar_periods_by_employee
 
     @api.model

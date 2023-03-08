@@ -116,6 +116,8 @@
                     <field name="res_id" invisible="1" />
                     <field name="active" invisible="1"/>
                     <field name="user_can_edit" invisible="1"/>
+                    <field name="invalid_email_partner_ids" invisible="1"/> <!-- this field will be used in
+                        many2many_attendees widget -->
                     <div class="oe_title mb-3">
                         <div>
                             <label for="name"/>
@@ -239,10 +241,6 @@
                                     readonly="not user_can_edit"
                                 />
                             </div>
-                            <div class="alert alert-warning o_form_header mt-2" colspan="2" invisible="not invalid_email_partner_ids" role="status">
-                                <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
-                                <field name="invalid_email_partner_ids" widget="many2manyattendee" class="oe_inline"/>
-                            </div>
                         </group>
                     </group>
                     <notebook>
@@ -298,6 +296,8 @@
                     <field name="recurrence_update" invisible="1"/>
                     <field name="videocall_source" invisible="1"/>
                     <field name="access_token" invisible="1"/>
+                    <field name="invalid_email_partner_ids" invisible="1"/> <!-- this field will be used in
+                        many2many_attendees widget -->
                     <div class="o_row">
                         <h1 class="w-100"><field name="name" nolabel="1" placeholder="Add title" colspan="2"/></h1>
                     </div>
