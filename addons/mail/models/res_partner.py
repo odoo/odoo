@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 
@@ -20,6 +22,16 @@ class Partner(models.Model):
     vat = fields.Char(tracking=5)
     # channels
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_member', 'partner_id', 'channel_id', string='Channels', copy=False)
+    # tracked field used for chatter logging purposes
+    # we need this to be readable inline as tracking messages use inline HTML nodes
+    contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
+
+    @api.depends('contact_address')
+    def _compute_contact_address_inline(self):
+        """Compute an inline-friendly address based on contact_address."""
+        for partner in self:
+            # replace any successive \n with a single comma
+            partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
 
     def _compute_im_status(self):
         super()._compute_im_status()
