@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import random
 import uuid
 from collections import defaultdict
@@ -175,6 +174,8 @@ class Survey(models.Model):
     session_show_leaderboard = fields.Boolean("Show Session Leaderboard", compute='_compute_session_show_leaderboard',
         help="Whether or not we want to show the attendees leaderboard for this survey.")
     session_speed_rating = fields.Boolean("Reward quick answers", help="Attendees get more points if they answer quickly")
+    session_speed_rating_time_limit = fields.Integer(
+        "Time limit (seconds)", help="Default time given to receive additional points for right answers")
     # conditional questions management
     has_conditional_questions = fields.Boolean("Contains conditional questions", compute="_compute_has_conditional_questions")
 
@@ -190,6 +191,9 @@ class Survey(models.Model):
         ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
             'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
         ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
+        ('session_speed_rating_has_time_limit',
+         "CHECK (session_speed_rating != TRUE OR session_speed_rating_time_limit IS NOT NULL AND session_speed_rating_time_limit > 0)",
+         'A positive default time limit is required when the session rewards quick answers.'),
     ]
 
     @api.depends('background_image', 'access_token')
@@ -380,6 +384,13 @@ class Survey(models.Model):
                 'scoring_type': 'scoring_with_answers',
             })
 
+    @api.onchange('session_speed_rating', 'session_speed_rating_time_limit')
+    def _onchange_session_speed_rating(self):
+        """Show impact on questions in the form view (before survey is saved)."""
+        for survey in self.filtered('question_ids'):
+            survey.question_ids._update_time_limit_from_survey(
+                is_time_limited=survey.session_speed_rating, time_limit=survey.session_speed_rating_time_limit)
+
     @api.constrains('scoring_type', 'users_can_go_back')
     def _check_scoring_after_page_availability(self):
         failing = self.filtered(lambda survey: survey.scoring_type == 'scoring_with_answers_after_page' and survey.users_can_go_back)
@@ -401,9 +412,20 @@ class Survey(models.Model):
         return surveys
 
     def write(self, vals):
+        speed_rating, speed_limit = vals.get('session_speed_rating'), vals.get('session_speed_rating_time_limit')
+
+        surveys_to_update = self.filtered(lambda s: (
+            speed_rating is not None and s.session_speed_rating != speed_rating
+            or speed_limit is not None and s.session_speed_rating_time_limit != speed_limit
+        ))
+
         result = super(Survey, self).write(vals)
         if 'certification_give_badge' in vals:
             return self.sudo()._handle_certification_badges(vals)
+
+        if questions_to_update := surveys_to_update.question_ids:
+            questions_to_update._update_time_limit_from_survey(is_time_limited=speed_rating, time_limit=speed_limit)
+
         return result
 
     def copy(self, default=None):
