@@ -338,6 +338,17 @@ class MergePartnerAutomatic(models.TransientModel):
                 'company_id': dst_partner.company_id.id
             })
 
+        self._merge_internal(src_partners, dst_partner)
+
+    def _merge_internal(self, src_partners, dst_partner):
+        """ Internal method for merging src_partners into dst_partner.
+
+            It is not meant to be called directly but can be overridden
+            to perform task before and/or after the merge.
+
+            :param src_partners : recordset of source res.partner
+            :param dst_partner : record of destination res.partner
+        """
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)
