@@ -82,7 +82,7 @@ class MailActivity(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
         default=lambda self: self.env.user,
-        index=True, required=True)
+        index=True, required=True, ondelete='cascade')
     request_partner_id = fields.Many2one('res.partner', string='Requesting Partner')
     state = fields.Selection([
         ('overdue', 'Overdue'),
