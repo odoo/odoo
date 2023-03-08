@@ -7,7 +7,7 @@ import { FormController } from "@web/views/form/form_controller";
 export class AccountMoveSendController extends FormController {
 
     async beforeExecuteActionButton(clickParams) {
-        if (clickParams.name === "action_cancel" && this.model.root.isVirtual) {
+        if (clickParams.name === "action_cancel" && this.model.root.isNew) {
             clickParams.special = "cancel";
         }
         return super.beforeExecuteActionButton(...arguments);
