@@ -46,6 +46,7 @@ patch(ThreadService.prototype, "mail/web", {
                 originThread: this.insert(attachment.originThread[0][1]),
             }));
         }
+        thread.canPostOnReadonly = result.canPostOnReadonly;
         thread.hasReadAccess = result.hasReadAccess;
         thread.hasWriteAccess = result.hasWriteAccess;
         if ("activities" in result) {
