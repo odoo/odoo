@@ -215,6 +215,7 @@ export class Composer extends Component {
     get isSendButtonDisabled() {
         const attachments = this.props.composer.attachments;
         return (
+            !this.state.active ||
             (!this.props.composer.textInputContent && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
@@ -327,7 +328,8 @@ export class Composer extends Component {
                 }
                 break;
             case "Enter": {
-                if (isEventHandled(ev, "NavigableList.select")) {
+                if (isEventHandled(ev, "NavigableList.select") || !this.state.active) {
+                    ev.preventDefault();
                     return;
                 }
                 const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;
@@ -423,8 +425,8 @@ export class Composer extends Component {
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
-            this.state.active = true;
             this.clear();
+            this.state.active = true;
             el.focus();
         } else if (attachments.some(({ uploading }) => Boolean(uploading))) {
             this.env.services.notification.add(

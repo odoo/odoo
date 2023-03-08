@@ -43,7 +43,9 @@
                             t-on-focusout="() => this.props.composer.isFocused = false"
                             t-on-paste="onPaste"
                             t-model="props.composer.textInputContent"
-                            t-att-placeholder="placeholder"/>
+                            t-att-placeholder="placeholder"
+                            t-att-readOnly="!state.active"
+                        />
                         <!--
                              This is an invisible textarea used to compute the composer
                              height based on the text content. We need it to downsize

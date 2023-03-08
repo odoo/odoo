@@ -1012,3 +1012,18 @@ QUnit.test(
         assert.containsOnce(target, '.o-mail-attachment-card:contains("text1.txt")');
     }
 );
+
+QUnit.test("Message is sent only once when pressing enter twice in a row", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-composer-textarea", "Hello World!");
+    // Simulate user pressing enter twice in a row.
+    await afterNextRender(async () => {
+        triggerHotkey("Enter");
+        await nextTick();
+        triggerHotkey("Enter");
+    });
+    assert.containsOnce(target, ".o-mail-message:contains(Hello World!)");
+});
