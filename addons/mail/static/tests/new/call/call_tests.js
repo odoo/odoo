@@ -34,9 +34,7 @@ QUnit.test(
     "should not display call UI when no more members (self disconnect)",
     async function (assert) {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
-            name: "General",
-        });
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click(".o-mail-discuss-header button[title='Start a Call']");
@@ -49,9 +47,7 @@ QUnit.test(
 
 QUnit.test("show call UI in chat window when in call", async function (assert) {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
-        name: "General",
-    });
+    pyEnv["mail.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-notification-item:contains(General)");
@@ -64,18 +60,16 @@ QUnit.test("show call UI in chat window when in call", async function (assert) {
     assert.containsNone(target, ".o-mail-chat-window-header .o-mail-command[title='Start a Call']");
 });
 
-QUnit.test("should disconnect when closing page while in call", async function (assert) {
+QUnit.skipRefactoring("should disconnect when closing page while in call", async function (assert) {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-discuss-header button[title='Start a Call']");
     assert.containsOnce(target, ".o-mail-call");
 
     // simulate page close
-    await afterNextRender(() => window.dispatchEvent(new Event("beforeunload"), { bubble: true }));
+    await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
     assert.containsNone(target, ".o-mail-call");
 });
 

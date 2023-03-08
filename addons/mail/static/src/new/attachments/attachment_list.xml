@@ -60,7 +60,7 @@
                         <div t-if="attachment.name" class="text-truncate" t-esc="attachment.name"/>
                         <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
                     </div>
-                    <div class="o-mail-attachment-card-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': canDelete(attachment) and !env.inComposer }">
+                    <div class="o-mail-attachment-card-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachment.isDeletable and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
                         </div>

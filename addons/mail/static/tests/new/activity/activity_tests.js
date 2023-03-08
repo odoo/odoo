@@ -73,7 +73,6 @@ QUnit.test("activity can upload a document", async function (assert) {
     });
     const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.partner", fakeId);
-
     const file = await createFile({
         content: "hello, world",
         contentType: "text/plain",
