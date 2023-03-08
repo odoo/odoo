@@ -46,10 +46,11 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...super.wysiwygOptions,
             onIframeUpdated: () => this.onIframeUpdated(),
+            foldSnippets: device.isMobile,
             snippets: 'mass_mailing.email_designer_snippets',
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
-            toolbarTemplate: 'mass_mailing.web_editor_toolbar',
+            toolbarTemplate: device.isMobile ? 'web_editor.toolbar' : 'mass_mailing.web_editor_toolbar',
             ...this.props.wysiwygOptions,
         };
     }
@@ -226,11 +227,6 @@ export class MassMailingHtmlField extends HtmlField {
         // Overide `d-flex` class which style is `!important`
         $snippetsSideBar.find(`.o_we_website_top_actions > *:not(${selectorToKeep})`).attr('style', 'display: none!important');
 
-        if (device.isMobile) {
-            $snippetsSideBar.hide();
-            this.wysiwyg.$iframe.attr('style', 'padding-left: 0px !important');
-        }
-
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
@@ -269,7 +265,11 @@ export class MassMailingHtmlField extends HtmlField {
         if (!this._themeParams) {
             // Initialize theme parameters.
             this._themeClassNames = "";
-            this._themeParams = _.map($themes, (theme) => {
+            const displayableThemes =
+                device.isMobile ?
+                _.filter($themes, theme => !$(theme).data("hideFromMobile")) :
+                $themes;
+            this._themeParams = _.map(displayableThemes, (theme) => {
                 const $theme = $(theme);
                 const name = $theme.data("name");
                 const classname = "o_" + name + "_theme";
@@ -335,6 +335,8 @@ export class MassMailingHtmlField extends HtmlField {
         const editableAreaIsEmpty = value === "" || value === blankEditable;
 
         if (editableAreaIsEmpty) {
+            // unfold to prevent toolbar from going over the menu
+            this.wysiwyg.snippetsMenu.setFolded(false);
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
 
@@ -350,6 +352,9 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframeBody.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
+            if (device.isMobile) {
+                this.wysiwyg.snippetsMenu.setFolded(true);
+            }
 
             this._switchImages(themeParams, $snippets);
 
@@ -375,6 +380,8 @@ export class MassMailingHtmlField extends HtmlField {
                     selection.removeAllRanges();
                     selection.addRange(range);
                 }
+                // mark selection done for tour testing
+                $editable.addClass('theme_selection_done');
             }, 0);
         });
 
