@@ -3092,13 +3092,13 @@ class BaseModel(metaclass=MetaModel):
                 'records': read_main}
 
     def _read_main(self, specification: list | dict, limit: int | None = None, offset: int | None = None) -> list[dict]:
-        # todo vsc: replace _read_format
+        # TODO VSC: replace _read_format
         #  and remove load=_classic_read : the specification should be able to support it correctly
 
         if isinstance(specification, collections.abc.Sequence):
             specification = { field_name : {} for field_name in specification }
 
-        # todo vsc: only prefetch the fields for the records respecting the limit
+        # TODO VSC: only prefetch the fields for the records respecting the limit
         self.browse(self._prefetch_ids).fetch(specification.keys())
         records = []
 
@@ -3131,8 +3131,7 @@ class BaseModel(metaclass=MetaModel):
                         if 'fields' in field_spec and len(field_spec['fields']):
                             if len(field_spec["fields"]) == 1 and 'display_name' in field_spec["fields"]:
                                 # specificaton like 'many2one_id': {'fields': {'display_name':{}}
-                                vals[field_name] = field.convert_to_read(relational_record, self,
-                                                                         use_name_get=True) or False
+                                vals[field_name] = field.convert_to_read(relational_record, self, use_name_get=True)
                             else:
                                 # specification for more fields other than display_name on the many2one like
                                 # 'many2one_id' : {'fields':{'id':{}, 'write_date':{}}}
