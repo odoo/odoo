@@ -50,7 +50,7 @@ class SurveyUserInput(models.Model):
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
-    scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True, digits=(10, 2))  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
     survey_first_submitted = fields.Boolean(string='Survey First Submitted')
     # live sessions
@@ -889,7 +889,7 @@ class SurveyUserInputLine(models.Model):
         if compute_speed_score and answer_score > 0:
             user_input = self.env['survey.user_input'].browse(user_input_id)
             session_speed_rating = user_input.exists() and user_input.is_session_answer and user_input.survey_id.session_speed_rating
-            if session_speed_rating:
+            if session_speed_rating and question.is_time_limited:
                 max_score_delay = 2
                 time_limit = question.time_limit
                 now = fields.Datetime.now()
@@ -898,9 +898,8 @@ class SurveyUserInputLine(models.Model):
                 # if answered within the max_score_delay => leave score as is
                 if question_remaining_time < 0:  # if no time left
                     answer_score /= 2
-                elif seconds_to_answer > max_score_delay:
-                    time_limit -= max_score_delay  # we remove the max_score_delay to have all possible values
-                    score_proportion = (time_limit - seconds_to_answer) / time_limit
+                elif seconds_to_answer > max_score_delay:  # linear decrease in score after 2 sec
+                    score_proportion = (time_limit - seconds_to_answer) / (time_limit - max_score_delay)
                     answer_score = (answer_score / 2) * (1 + score_proportion)
 
         return {
