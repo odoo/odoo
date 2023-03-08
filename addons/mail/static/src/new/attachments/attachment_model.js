@@ -27,7 +27,7 @@ export class Attachment {
     }
 
     get isDeletable() {
-        if (this.message && this.originThread && this.originThread.model === "mail.channel") {
+        if (this.message && this.originThread?.model === "mail.channel") {
             return this.message.editable;
         }
         return true;
