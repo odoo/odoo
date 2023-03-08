@@ -34,6 +34,7 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
     const deferredByAttachmentId = new Map();
     const uploadingAttachmentIds = new Set();
     const state = useState({
+        thread,
         uploadData({ data, name, type }) {
             const file = new File([dataUrlToBlob(data, type)], name, { type });
             return this.uploadFile(file);
@@ -43,9 +44,9 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
             uploadingAttachmentIds.add(tmpId);
             await upload("/mail/attachment/upload", [file], {
                 buildFormData(formData) {
-                    formData.append("thread_id", thread.id);
+                    formData.append("thread_id", state.thread.id);
                     formData.append("tmp_url", URL.createObjectURL(file));
-                    formData.append("thread_model", thread.model);
+                    formData.append("thread_model", state.thread.model);
                     formData.append("is_pending", Boolean(composer));
                     formData.append("temporary_id", tmpId);
                 },

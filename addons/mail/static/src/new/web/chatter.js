@@ -101,12 +101,19 @@ export class Chatter extends Component {
         useChildSubEnv({ inChatter: true });
         useDropzone(
             this.rootRef,
-            (ev) => {
+            async (ev) => {
                 if (this.state.thread.composer.type) {
                     return;
                 }
                 if (isDragSourceExternalFile(ev.dataTransfer)) {
-                    [...ev.dataTransfer.files].forEach(this.attachmentUploader.uploadFile);
+                    const files = [...ev.dataTransfer.files];
+                    if (!this.threadId) {
+                        const saved = await this.props.saveRecord?.();
+                        if (!saved) {
+                            return;
+                        }
+                    }
+                    files.forEach(this.attachmentUploader.uploadFile);
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
@@ -134,6 +141,10 @@ export class Chatter extends Component {
             if (nextProps.threadId === false) {
                 this.state.thread.composer.type = false;
             }
+            this.attachmentUploader.thread = this.threadService.getThread(
+                nextProps.threadModel,
+                nextProps.threadId
+            );
             if (this.onNextUpdate) {
                 if (!this.onNextUpdate(nextProps)) {
                     this.onNextUpdate = null;
@@ -339,5 +350,15 @@ export class Chatter extends Component {
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
         this.scrollPosition.ref.el.scrollTop = 0;
+    }
+
+    async onClickAttachFile(ev) {
+        if (this.threadId) {
+            return;
+        }
+        const saved = await this.props.saveRecord?.();
+        if (!saved) {
+            return false;
+        }
     }
 }

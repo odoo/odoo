@@ -16,7 +16,7 @@
                     <span>Activities</span>
                 </button>
                 <span class="o-mail-chatter-topbar-grow flex-grow-1 border-start pe-2" t-att-class="{ 'ms-2': props.hasActivities }"/>
-                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-chatter-file-uploader'" multiUpload="true" onUploaded.bind="onUploaded">
+                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-chatter-file-uploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                     <t t-set-slot="toggler">
                         <t t-call="mail.chatter.add_attachment_button"/>
                     </t>
@@ -113,7 +113,7 @@
                         unlinkAttachment.bind="unlinkAttachment"
                         imagesHeight="160"
                     />
-                    <FileUploader multiUpload="true" fileUploadClass="'o-mail-chatter-file-uploader'" onUploaded.bind="onUploaded">
+                    <FileUploader multiUpload="true" fileUploadClass="'o-mail-chatter-file-uploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                         <t t-set-slot="toggler">
                             <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
                                 <i class="fa fa-plus-square"/>
@@ -148,7 +148,7 @@
 </t>
 
 <t t-name="mail.chatter.add_attachment_button" owl="1">
-    <button class="btn btn-light" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickAddAttachments">
+    <button class="btn btn-light" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
         <i class="fa fa-paperclip fa-lg me-1"/>
         <span t-if="attachments.length > 0 and !state.thread.isLoadingAttachments" t-esc="attachments.length"/>
         <i t-if="state.thread.isLoadingAttachments" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>

@@ -11,6 +11,7 @@ import {
     start,
     startServer,
     waitFormViewLoaded,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { editInput, getFixture, triggerHotkey } from "@web/../tests/helpers/utils";
@@ -753,7 +754,7 @@ QUnit.test(
     }
 );
 
-QUnit.skipRefactoring("upload attachment on draft record", async function (assert) {
+QUnit.test("upload attachment on draft record", async function (assert) {
     const views = {
         "res.partner,false,form": `
             <form string="Partners">
@@ -778,5 +779,5 @@ QUnit.skipRefactoring("upload attachment on draft record", async function (asser
     assert.containsNone(document.body, ".button[aria-label='Attach files']:contains(1)");
     await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
     await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), [file]));
-    assert.containsOnce(document.body, ".button[aria-label='Attach files']:contains(1)");
+    await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
