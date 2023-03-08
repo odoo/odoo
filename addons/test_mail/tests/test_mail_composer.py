@@ -130,6 +130,13 @@ class TestMailComposer(TestMailCommon, TestRecipients):
 @tagged('mail_composer')
 class TestComposerForm(TestMailComposer):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.template.write({
+            'email_layout_xmlid': 'mail.test_layout',
+        })
+
     def test_assert_initial_data(self):
         """ Ensure class initial data to ease understanding """
         self.assertTrue(self.template.auto_delete)
@@ -150,6 +157,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.env.user.email_formatted)
+        self.assertFalse(composer_form.email_layout_xmlid)
         self.assertTrue(composer_form.force_send, 'MailComposer: single record post send notifications right away')
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_record._name)
@@ -229,6 +237,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.user_employee_2.email_formatted)
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertTrue(composer_form.force_send, 'MailComposer: single record post send notifications right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
@@ -261,6 +270,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: comment in batch mode should have template raw email_from if template')
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertFalse(composer_form.force_send, 'MailComposer: batch record post use email queue for notifications')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
@@ -292,6 +302,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: comment in batch mode should have template raw email_from if template')
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertFalse(composer_form.force_send, 'MailComposer: batch record post use email queue for notifications')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
@@ -322,6 +333,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.env.user.partner_id.email_formatted)
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertTrue(composer_form.force_send)
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
@@ -350,6 +362,7 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.env.user.email_formatted)
+        self.assertFalse(composer_form.email_layout_xmlid)
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_records._name)
@@ -378,6 +391,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: mass mode should have template raw email_from if template')
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
@@ -410,6 +424,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: mass mode should have template raw email_from if template')
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
@@ -442,6 +457,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: mass mode should have template raw email_from if template')
+        self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
