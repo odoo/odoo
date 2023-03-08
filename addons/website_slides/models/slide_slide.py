@@ -70,11 +70,11 @@ class SlidePartnerRelation(models.Model):
 
         return res
 
-    def _recompute_completion(self):
+    def _recompute_completion(self, update_karma=True):
         self.env['slide.channel.partner'].search([
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
-        ])._recompute_completion()
+        ])._recompute_completion(update_karma=update_karma)
 
 
 class SlideTag(models.Model):

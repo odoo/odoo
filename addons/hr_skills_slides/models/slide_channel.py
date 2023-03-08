@@ -8,8 +8,8 @@ from odoo.tools import html2plaintext
 class SlideChannelPartner(models.Model):
     _inherit = 'slide.channel.partner'
 
-    def _recompute_completion(self):
-        res = super(SlideChannelPartner, self)._recompute_completion()
+    def _recompute_completion(self, update_karma=True):
+        res = super(SlideChannelPartner, self)._recompute_completion(update_karma=update_karma)
         partner_has_completed = {
             channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self
             if channel_partner.completed}
