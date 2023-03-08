@@ -642,7 +642,7 @@
             Your account does not have an email set up. Please set it up on <a class="alert-link" t-att-href="my_account_redirect">your account settings</a>.
         </div>
         <div t-elif="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
-            <button type="button" class="close validation_email_close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             Your Account has not yet been verified.<br/>
             Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-esc="additional_validation_email_message"/>!
         </div>
@@ -653,7 +653,7 @@
             or <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>Send Again</u></a>.
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
-            <button type="button" class="close validated_email_close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            <button type="button" class="btn-close validated_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
             <span t-esc="additional_validated_email_message"/>
         </div>
