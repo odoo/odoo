@@ -79,7 +79,7 @@
                                 </kanban>
                             </field>
                             <field name="crm_team_member_ids" mode="kanban"
-                                class="w-100"
+                                class="w-100 o_crm_team_member_kanban"
                                 attrs="{'invisible': ['|', ('is_membership_multi', '=', True), ('is_membership_multi', '=', False)]}"
                                 context="{
                                     'kanban_view_ref': 'sales_team.crm_team_member_view_kanban_from_team',
