@@ -76,7 +76,7 @@ class MrpProduction(models.Model):
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Quantity To Produce', digits='Product Unit of Measure',
-        readonly=False, required=True, tracking=True, default=1.0,
+        readonly=False, required=True, tracking=True, precompute=True,
         compute='_compute_product_qty', store=True, copy=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
@@ -377,6 +377,8 @@ class MrpProduction(models.Model):
                 continue
             if production.bom_id and production._origin.bom_id != production.bom_id:
                 production.product_qty = production.bom_id.product_qty
+            elif not production.bom_id:
+                production.product_qty = 1.0
 
     @api.depends('move_raw_ids')
     def _compute_production_capacity(self):
