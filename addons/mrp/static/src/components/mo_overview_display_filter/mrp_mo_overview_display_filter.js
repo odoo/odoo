@@ -3,10 +3,15 @@ import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom
 
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
     setup() {
+        if (!this.props.limited) {
+            this.displayOptions = {
+                replenishments: this.env._t("Replenishments"),
+                availabilities: this.env._t("Availabilities"),
+                receipts: this.env._t("Receipts"),
+            };
+        }
         this.displayOptions = {
-            replenishments: this.env._t("Replenishments"),
-            availabilities: this.env._t("Availabilities"),
-            receipts: this.env._t("Receipts"),
+            ...(this.displayOptions || {}),
             moCosts: this.env._t("MO Costs"),
             productCosts: this.env._t("Product Costs"),
         };
@@ -23,7 +28,11 @@ MoOverviewDisplayFilter.props = {
             receipts: Boolean,
             moCosts: Boolean,
             productCosts: Boolean,
-        }
+        },
     },
     changeDisplay: Function,
+    limited: { type: Boolean, optional: true },
+};
+MoOverviewDisplayFilter.defaultProps = {
+    limited: false,
 };
