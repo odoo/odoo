@@ -25,7 +25,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
     setup() {
         super.setup();
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.root = useRef("root");
         this.numberBuffer = useService("number_buffer");
         this.saleOrderFetcher = useService("sale_order_fetcher");
@@ -288,44 +288,37 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
     }
 
     async _getSaleOrder(id) {
-        const sale_order = await this.rpc({
-            model: "sale.order",
-            method: "read",
-            args: [
-                [id],
-                [
-                    "order_line",
-                    "partner_id",
-                    "pricelist_id",
-                    "fiscal_position_id",
-                    "amount_total",
-                    "amount_untaxed",
-                    "picking_ids",
-                ],
-            ],
-            context: this.env.session.user_context,
-        });
+        const [sale_order] = await this.orm.read(
+            "sale.order",
+            [id],
+            [
+                "order_line",
+                "partner_id",
+                "pricelist_id",
+                "fiscal_position_id",
+                "amount_total",
+                "amount_untaxed",
+                "picking_ids",
+            ]
+        );
 
-        const sale_lines = await this._getSOLines(sale_order[0].order_line);
-        sale_order[0].order_line = sale_lines;
+        const sale_lines = await this._getSOLines(sale_order.order_line);
+        sale_order.order_line = sale_lines;
 
-        const picking_id = await this.rpc({
-            model: "stock.picking",
-            method: "read",
-            args: [[sale_order[0].picking_ids[0]], ["scheduled_date"]],
-        });
-        sale_order[0].shipping_date = picking_id[0].scheduled_date;
+        if (sale_order.picking_ids[0]) {
+            const [picking] = await this.orm.read(
+                "stock.picking",
+                [sale_order.picking_ids[0]],
+                ["scheduled_date"]
+            );
+            sale_order.shipping_date = picking.scheduled_date;
+        }
 
-        return sale_order[0];
+        return sale_order;
     }
 
     async _getSOLines(ids) {
-        const so_lines = await this.rpc({
-            model: "sale.order.line",
-            method: "read_converted",
-            args: [ids],
-            context: this.env.session.user_context,
-        });
+        const so_lines = await this.orm.call("sale.order.line", "read_converted", [ids]);
         return so_lines;
     }
 }

@@ -10,21 +10,12 @@ export class SetSaleOrderButton extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.rpc = useService("rpc");
-    }
-    get currentOrder() {
-        return this.env.pos.get_order();
+        this.orm = useService("orm");
     }
     async click() {
-        // ping the server, if no error, show the screen
-        // Use rpc from services which resolves even when this
-        // component is destroyed (removed together with the popup).
-        await this.env.services.rpc({
-            model: "sale.order",
-            method: "browse",
-            args: [[]],
-            kwargs: { context: this.env.session.user_context },
-        });
+        // FIXME POSREF why are we calling browse for a ping?
+        // Why don't we let the order management screen deal with the offline error?
+        await this.orm.call("sale.order", "browse", [[]]);
         const screen = this.env.isMobile
             ? "MobileSaleOrderManagementScreen"
             : "SaleOrderManagementScreen";

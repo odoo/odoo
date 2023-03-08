@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
@@ -32,7 +31,7 @@ export class PartnerListScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.searchWordInputRef = useRef("search-word-input-partner");
 
@@ -157,11 +156,7 @@ export class PartnerListScreen extends Component {
         this.activateEditMode();
     }
     async saveChanges(processedChanges) {
-        const partnerId = await this.rpc({
-            model: "res.partner",
-            method: "create_from_ui",
-            args: [processedChanges],
-        });
+        const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
         await this.env.pos.load_new_partners();
         this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
         this.confirm();
@@ -181,23 +176,11 @@ export class PartnerListScreen extends Component {
                 ["parent_name", "ilike", this.state.query + "%"],
             ];
         }
-        const result = await this.env.services.rpc(
-            {
-                model: "pos.session",
-                method: "get_pos_ui_res_partner_by_params",
-                args: [
-                    [odoo.pos_session_id],
-                    {
-                        domain,
-                        limit: 10,
-                    },
-                ],
-                context: this.env.session.user_context,
-            },
-            {
-                timeout: 3000,
-                shadow: true,
-            }
+        // FIXME POSREF timeout
+        const result = await this.orm.silent.call(
+            "pos.session",
+            "get_pos_ui_res_partner_by_params",
+            [[odoo.pos_session_id], { domain, limit: 10 }]
         );
         return result;
     }

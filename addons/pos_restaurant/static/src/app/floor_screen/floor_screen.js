@@ -25,7 +25,7 @@ export class FloorScreen extends Component {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         const floor = this.props.floor ? this.props.floor : this.env.pos.floors[0];
         this.state = useState({
             selectedFloorId: floor.id,
@@ -78,7 +78,7 @@ export class FloorScreen extends Component {
         this.state.selectedTableId = null;
     }
     async _createTableHelper(copyTable) {
-        let existingTable = this.activeFloor.tables;
+        const existingTable = this.activeFloor.tables;
         let newTable;
         if (copyTable) {
             newTable = Object.assign({}, copyTable);
@@ -88,11 +88,11 @@ export class FloorScreen extends Component {
             let posV = 0;
             let posH = 10;
             const referenceScreenWidth = 1180;
-            const spaceBetweenTable = 15 * (screen.width/referenceScreenWidth);
+            const spaceBetweenTable = 15 * (screen.width / referenceScreenWidth);
             const h_min = spaceBetweenTable;
             const h_max = screen.width;
             const v_max = screen.height;
-            let potentialWidth = 100 * (h_max/referenceScreenWidth);
+            let potentialWidth = 100 * (h_max / referenceScreenWidth);
             if (potentialWidth > 130) {
                 potentialWidth = 130;
             } else if (potentialWidth < 75) {
@@ -100,11 +100,16 @@ export class FloorScreen extends Component {
             }
             const heightTable = potentialWidth;
             const widthTable = potentialWidth;
-            let positionTable = [];
+            const positionTable = [];
 
             existingTable.forEach((table) => {
-                positionTable.push([table.position_v, table.position_v + table.height, table.position_h, table.position_h + table.width])
-            })
+                positionTable.push([
+                    table.position_v,
+                    table.position_v + table.height,
+                    table.position_h,
+                    table.position_h + table.width,
+                ]);
+            });
 
             positionTable.sort((tableA, tableB) => {
                 if (tableA[0] < tableB[0]) {
@@ -118,18 +123,25 @@ export class FloorScreen extends Component {
                 }
             });
 
-            let actualHeight = 100
+            let actualHeight = 100;
             let impossible = true;
 
-            while(actualHeight <= (v_max - heightTable - spaceBetweenTable) && impossible) {
-                let tableIntervals = [[h_min, h_min, v_max], [h_max, h_max, v_max]];
+            while (actualHeight <= v_max - heightTable - spaceBetweenTable && impossible) {
+                const tableIntervals = [
+                    [h_min, h_min, v_max],
+                    [h_max, h_max, v_max],
+                ];
                 for (let i = 0; i < positionTable.length; i++) {
-                    if (positionTable[i][0] >= (actualHeight + heightTable + spaceBetweenTable)) {
+                    if (positionTable[i][0] >= actualHeight + heightTable + spaceBetweenTable) {
                         continue;
-                    } else if ((positionTable[i][1] + spaceBetweenTable) <= actualHeight) {
+                    } else if (positionTable[i][1] + spaceBetweenTable <= actualHeight) {
                         continue;
                     } else {
-                        tableIntervals.push([positionTable[i][2], positionTable[i][3], positionTable[i][1]]);
+                        tableIntervals.push([
+                            positionTable[i][2],
+                            positionTable[i][3],
+                            positionTable[i][1],
+                        ]);
                     }
                 }
 
@@ -151,7 +163,10 @@ export class FloorScreen extends Component {
                         nextHeight = tableIntervals[i][2];
                     }
 
-                    if (tableIntervals[i+1][0] - tableIntervals[i][1] > widthTable + spaceBetweenTable) {
+                    if (
+                        tableIntervals[i + 1][0] - tableIntervals[i][1] >
+                        widthTable + spaceBetweenTable
+                    ) {
                         impossible = false;
                         posV = actualHeight;
                         posH = tableIntervals[i][1] + spaceBetweenTable;
@@ -201,11 +216,7 @@ export class FloorScreen extends Component {
     async _save(table) {
         const tableCopy = { ...table };
         delete tableCopy.floor;
-        const tableId = await this.rpc({
-            model: "restaurant.table",
-            method: "create_from_ui",
-            args: [tableCopy],
-        });
+        const tableId = await this.orm.call("restaurant.table", "create_from_ui", [tableCopy]);
         table.id = tableId;
         this.env.pos.tables_by_id[tableId] = table;
     }
@@ -213,11 +224,9 @@ export class FloorScreen extends Component {
         if (this.state.isEditMode) {
             return;
         }
-        const result = await this.rpc({
-            model: "pos.config",
-            method: "get_tables_order_count",
-            args: [this.env.pos.config.id],
-        });
+        const result = await this.orm.call("pos.config", "get_tables_order_count", [
+            this.env.pos.config.id,
+        ]);
         result.forEach((table) => {
             const table_obj = this.env.pos.tables_by_id[table.id];
             const unsynced_orders = this.env.pos.getTableOrders(table_obj.id).filter(
@@ -366,10 +375,8 @@ export class FloorScreen extends Component {
     async setFloorColor(color) {
         this.state.floorBackground = color;
         this.activeFloor.background_color = color;
-        await this.rpc({
-            model: "restaurant.floor",
-            method: "write",
-            args: [[this.activeFloor.id], { background_color: color }],
+        await this.orm.write("restaurant.floor", [this.activeFloor.id], {
+            background_color: color,
         });
     }
     async deleteTable() {
@@ -385,11 +392,9 @@ export class FloorScreen extends Component {
         }
         const originalSelectedTableId = this.state.selectedTableId;
         this.env.pos.tables_by_id[originalSelectedTableId].active = false;
-        await this.rpc({
-            model: "restaurant.table",
-            method: "create_from_ui",
-            args: [{ active: false, id: originalSelectedTableId }],
-        });
+        await this.orm.call("restaurant.table", "create_from_ui", [
+            { active: false, id: originalSelectedTableId },
+        ]);
         this.activeFloor.tables = this.activeTables.filter(
             (table) => table.id !== originalSelectedTableId
         );

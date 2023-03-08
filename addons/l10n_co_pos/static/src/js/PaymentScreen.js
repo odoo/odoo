@@ -2,20 +2,17 @@
 
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
 import { patch } from "@web/core/utils/patch";
-import session from "web.session";
 
 patch(PaymentScreen.prototype, "l10n_co_pos.PaymentScreen", {
     async _postPushOrderResolve(order, order_server_ids) {
         const _super = this._super;
         try {
             if (this.env.pos.is_colombian_country()) {
-                const result = await this.rpc({
-                    model: "pos.order",
-                    method: "search_read",
-                    domain: [["id", "in", order_server_ids]],
-                    fields: ["name"],
-                    context: session.user_context,
-                });
+                const result = await this.orm.searchRead(
+                    "pos.order",
+                    [["id", "in", order_server_ids]],
+                    ["name"]
+                );
                 order.set_l10n_co_dian(result[0].name || false);
             }
         } catch {

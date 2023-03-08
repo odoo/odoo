@@ -11,18 +11,18 @@ export class SaleDetailsButton extends Component {
     setup() {
         super.setup(...arguments);
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
     }
 
     async onClick() {
         // IMPROVEMENT: Perhaps put this logic in a parent component
         // so that for unit testing, we can check if this simple
         // component correctly triggers an event.
-        const saleDetails = await this.rpc({
-            model: "report.point_of_sale.report_saledetails",
-            method: "get_sale_details",
-            args: [false, false, false, [this.env.pos.pos_session.id]],
-        });
+        const saleDetails = await this.orm.call(
+            "report.point_of_sale.report_saledetails",
+            "get_sale_details",
+            [false, false, false, [this.env.pos.pos_session.id]]
+        );
         const report = renderToString(
             "SaleDetailsReport",
             Object.assign({}, saleDetails, {
