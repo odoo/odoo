@@ -2,7 +2,6 @@
 
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
 import { patch } from "@web/core/utils/patch";
-import session from "web.session";
 import { PosLoyaltyCard } from "@pos_loyalty/js/Loyalty";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
@@ -36,12 +35,11 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
         // No need to do an rpc if no existing coupon is being used.
         if (!_.isEmpty(pointChanges) || newCodes.length) {
             try {
-                const { successful, payload } = await this.rpc({
-                    model: "pos.order",
-                    method: "validate_coupon_programs",
-                    args: [[], pointChanges, newCodes],
-                    kwargs: { context: session.user_context },
-                });
+                const { successful, payload } = await this.orm.call(
+                    "pos.order",
+                    "validate_coupon_programs",
+                    [[], pointChanges, newCodes]
+                );
                 // Payload may contain the points of the concerned coupons to be updated in case of error. (So that rewards can be corrected)
                 if (payload && payload.updated_points) {
                     for (const pointChange of Object.entries(payload.updated_points)) {
@@ -124,12 +122,10 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
             })
         );
         if (!_.isEmpty(couponData)) {
-            const payload = await this.rpc({
-                model: "pos.order",
-                method: "confirm_coupon_programs",
-                args: [server_ids, couponData],
-                kwargs: { context: session.user_context },
-            });
+            const payload = await this.orm.call("pos.order", "confirm_coupon_programs", [
+                server_ids,
+                couponData,
+            ]);
             if (payload.coupon_updates) {
                 for (const couponUpdate of payload.coupon_updates) {
                     let dbCoupon = this.env.pos.couponCache[couponUpdate.old_id];

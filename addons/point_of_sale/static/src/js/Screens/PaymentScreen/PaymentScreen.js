@@ -28,8 +28,8 @@ export class PaymentScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.orm = useService("orm");
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
         this.notification = useService("pos_notification");
         this.payment_methods_from_config = this.env.pos.payment_methods.filter((method) =>
             this.env.pos.config.payment_method_ids.includes(method.id)

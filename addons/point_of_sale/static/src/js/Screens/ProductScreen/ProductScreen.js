@@ -34,7 +34,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.numberBuffer = useService("number_buffer");
         onMounted(this.onMounted);
         // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
@@ -126,12 +126,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         if (!product) {
             // find the barcode in the backend
             let foundProductIds = [];
-            foundProductIds = await this.rpc({
-                model: "product.product",
-                method: "search",
-                args: [[["barcode", "=", code.base_code]]],
-                context: this.env.session.user_context,
-            });
+            foundProductIds = await this.orm.search("product.product", [
+                ["barcode", "=", code.base_code],
+            ]);
             if (foundProductIds.length) {
                 await this.env.pos._addProducts(foundProductIds);
                 // assume that the result is unique.

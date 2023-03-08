@@ -162,13 +162,10 @@ export class PosGlobalState extends PosModel {
         };
     }
     async load_product_uom_unit() {
-        const params = {
-            model: "ir.model.data",
-            method: "check_object_reference",
-            args: ["uom", "product_uom_unit"],
-        };
-
-        const uom_id = await this.env.services.rpc(params);
+        const uom_id = await this.env.services.orm.call("ir.model.data", "check_object_reference", [
+            "uom",
+            "product_uom_unit",
+        ]);
         this.uom_unit_id = uom_id[1];
     }
 
@@ -180,11 +177,9 @@ export class PosGlobalState extends PosModel {
     }
 
     async load_server_data() {
-        const loadedData = await this.env.services.rpc({
-            model: "pos.session",
-            method: "load_pos_data",
-            args: [[odoo.pos_session_id]],
-        });
+        const loadedData = await this.env.services.orm.call("pos.session", "load_pos_data", [
+            [odoo.pos_session_id],
+        ]);
         await this._processData(loadedData);
         return this.after_load_server_data();
     }
@@ -359,16 +354,11 @@ export class PosGlobalState extends PosModel {
                 search_params["limit"] = 1;
             }
         }
-        const partners = await this.env.services.rpc(
-            {
-                model: "pos.session",
-                method: "get_pos_ui_res_partner_by_params",
-                args: [[odoo.pos_session_id], search_params],
-            },
-            {
-                timeout: 3000,
-                shadow: true,
-            }
+        // FIXME POSREF TIMEOUT 3000
+        const partners = await this.env.services.orm.silent.call(
+            "pos.session",
+            "get_pos_ui_res_partner_by_params",
+            [[odoo.pos_session_id], search_params]
         );
         if (this.env.pos.config.partner_load_background) {
             this.loadPartnersBackground(
@@ -494,27 +484,21 @@ export class PosGlobalState extends PosModel {
                 }
             }
         }
-        const products = await this.env.services.rpc({
-            model: "pos.session",
-            method: "get_pos_ui_product_product_by_params",
-            args: [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }],
-        });
+        const products = await this.env.services.orm.call(
+            "pos.session",
+            "get_pos_ui_product_product_by_params",
+            [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
+        );
         this._loadProductProduct(products);
     }
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
         if (partnerIds.length > 0) {
-            var domain = [["id", "in", partnerIds]];
-            const fetchedPartners = await this.env.services.rpc(
-                {
-                    model: "pos.session",
-                    method: "get_pos_ui_res_partner_by_params",
-                    args: [[odoo.pos_session_id], { domain }],
-                },
-                {
-                    timeout: 3000,
-                    shadow: true,
-                }
+            // FIXME POSREF TIMEOUT
+            const fetchedPartners = await this.env.services.orm.silent.call(
+                "pos.session",
+                "get_pos_ui_res_partner_by_params",
+                [[odoo.pos_session_id], { domain: [["id", "in", partnerIds]] }]
             );
             this.addPartners(fetchedPartners);
         }
@@ -536,19 +520,16 @@ export class PosGlobalState extends PosModel {
         let page = 0;
         let products = [];
         do {
-            products = await this.env.services.rpc(
-                {
-                    model: "pos.session",
-                    method: "get_pos_ui_product_product_by_params",
-                    args: [
-                        odoo.pos_session_id,
-                        {
-                            offset: page * this.config.limited_products_amount,
-                            limit: this.config.limited_products_amount,
-                        },
-                    ],
-                },
-                { shadow: true }
+            products = await this.env.services.orm.silent.call(
+                "pos.session",
+                "get_pos_ui_product_product_by_params",
+                [
+                    odoo.pos_session_id,
+                    {
+                        offset: page * this.config.limited_products_amount,
+                        limit: this.config.limited_products_amount,
+                    },
+                ]
             );
             this._loadProductProduct(products);
             page += 1;
@@ -560,22 +541,18 @@ export class PosGlobalState extends PosModel {
         let i = 0;
         let partners = [];
         do {
-            partners = await this.env.services.rpc(
-                {
-                    model: "pos.session",
-                    method: "get_pos_ui_res_partner_by_params",
-                    args: [
-                        [odoo.pos_session_id],
-                        {
-                            domain: domain,
-                            limit: this.config.limited_partners_amount,
-                            offset: offset + this.config.limited_partners_amount * i,
-                            order: order,
-                        },
-                    ],
-                    context: this.env.session.user_context,
-                },
-                { shadow: true }
+            partners = await this.env.services.orm.silent.call(
+                "pos.session",
+                "get_pos_ui_res_partner_by_params",
+                [
+                    [odoo.pos_session_id],
+                    {
+                        order,
+                        domain,
+                        limit: this.config.limited_partners_amount,
+                        offset: offset + this.config.limited_partners_amount * i,
+                    },
+                ]
             );
             this.addPartners(partners);
             i += 1;
@@ -585,17 +562,11 @@ export class PosGlobalState extends PosModel {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
-        const productInfo = await this.env.services.rpc({
-            model: "product.product",
-            method: "get_product_info_pos",
-            args: [
-                [product.id],
-                product.get_price(order.pricelist, quantity),
-                quantity,
-                this.config.id,
-            ],
-            kwargs: { context: this.env.session.user_context },
-        });
+        const productInfo = await this.env.services.orm.call(
+            "product.product",
+            "get_product_info_pos",
+            [[product.id], product.get_price(order.pricelist, quantity), quantity, this.config.id]
+        );
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
         const margin = priceWithoutTax - product.standard_price;
@@ -626,11 +597,11 @@ export class PosGlobalState extends PosModel {
         };
     }
     async getClosePosInfo() {
-        const closingData = await this.env.services.rpc({
-            model: "pos.session",
-            method: "get_closing_control_data",
-            args: [[this.pos_session.id]],
-        });
+        const closingData = await this.env.services.orm.call(
+            "pos.session",
+            "get_closing_control_data",
+            [[this.pos_session.id]]
+        );
         const ordersDetails = closingData.orders_details;
         const paymentsAmount = closingData.payments_amount;
         const payLaterAmount = closingData.pay_later_amount;
@@ -903,35 +874,22 @@ export class PosGlobalState extends PosModel {
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
         // new orders may have been added to it.
         var order_ids_to_sync = _.pluck(orders, "id");
 
-        // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
+        for (const order of orders) {
+            order.to_invoice = options.to_invoice || false;
+        }
+        // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
-        var args = [
-            _.map(orders, function (order) {
-                order.to_invoice = options.to_invoice || false;
-                return order;
-            }),
-        ];
-        args.push(options.draft || false);
-        return this.env.services
-            .rpc(
-                {
-                    model: "pos.order",
-                    method: "create_from_ui",
-                    args: args,
-                    kwargs: { context: this.env.session.user_context },
-                },
-                {
-                    timeout: timeout,
-                    shadow: !options.to_invoice,
-                }
-            )
+        const orm = options.to_invoice ? this.env.services.orm : this.env.services.orm.silent;
+        // FIXME POSREF timeout
+        // const timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
+        return orm
+            .call("pos.order", "create_from_ui", [orders, options.draft || false])
             .then(function (server_ids) {
                 _.each(order_ids_to_sync, function (order_id) {
                     self.db.remove_order(order_id);
@@ -1425,27 +1383,21 @@ export class PosGlobalState extends PosModel {
      */
     async _addProducts(ids, setAvailable = true) {
         if (setAvailable) {
-            await this.env.services.rpc({
-                model: "product.product",
-                method: "write",
-                args: [ids, { available_in_pos: true }],
-                context: this.env.session.user_context,
-            });
+            await this.env.services.orm.write("product.product", ids, { available_in_pos: true });
         }
-        const product = await this.env.services.rpc({
-            model: "pos.session",
-            method: "get_pos_ui_product_product_by_params",
-            args: [odoo.pos_session_id, { domain: [["id", "in", ids]] }],
-        });
+        const product = await this.env.services.orm.call(
+            "pos.session",
+            "get_pos_ui_product_product_by_params",
+            [odoo.pos_session_id, { domain: [["id", "in", ids]] }]
+        );
         this._loadProductProduct(product);
     }
     async refreshTotalDueOfPartner(partner) {
-        const partnerWithUpdatedTotalDue = await this.env.services.rpc({
-            model: "res.partner",
-            method: "search_read",
-            fields: ["total_due"],
-            domain: [["id", "=", partner.id]],
-        });
+        const partnerWithUpdatedTotalDue = await this.env.services.orm.searchRead(
+            "res.partner",
+            [["id", "=", partner.id]],
+            ["total_due"]
+        );
         this.db.update_partners(partnerWithUpdatedTotalDue);
         return partnerWithUpdatedTotalDue;
     }
@@ -2896,7 +2848,9 @@ export class Order extends PosModel {
             },
             currency: this.pos.currency,
             pos_qr_code: this._get_qr_code_data(),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code ? this.ticketCode : false,
+            ticket_code: this.pos.company.point_of_sale_ticket_unique_code
+                ? this.ticketCode
+                : false,
             base_url: this.pos.base_url,
         };
 
@@ -3745,8 +3699,8 @@ export class Order extends PosModel {
      * @returns {string}
      */
     _generateTicketCode() {
-        let code = '';
-        while (code.length != 5){
+        let code = "";
+        while (code.length != 5) {
             code = Math.random().toString(36).slice(2, 7);
         }
         return code;

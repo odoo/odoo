@@ -17,7 +17,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         super.setup();
         this.notification = useService("pos_notification");
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.state = useState({
             /** @type {'in'|'out'} */
             type: "out",
@@ -55,11 +55,13 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         const translatedType = _t(type);
         const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
-        await this.rpc({
-            model: "pos.session",
-            method: "try_cash_in_out",
-            args: [[this.env.pos.pos_session.id], type, amount, reason, extras],
-        });
+        await this.orm.call("pos.session", "try_cash_in_out", [
+            [this.env.pos.pos_session.id],
+            type,
+            amount,
+            reason,
+            extras,
+        ]);
         if (this.env.proxy.printer) {
             const renderedReceipt = renderToString("point_of_sale.CashMoveReceipt", {
                 _receipt: {

@@ -17,7 +17,7 @@ export class TipScreen extends Component {
         this.pos = usePos();
         this.posReceiptContainer = useRef("pos-receipt-container");
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.get_total_with_tax();
 
@@ -61,11 +61,7 @@ export class TipScreen extends Component {
         }
 
         if (!amount) {
-            await this.rpc({
-                method: "set_no_tip",
-                model: "pos.order",
-                args: [serverId],
-            });
+            await this.orm.call("set_no_tip", "pos.order", [serverId]);
             this.goNextScreen();
             return;
         }
@@ -95,11 +91,7 @@ export class TipScreen extends Component {
 
         // set_tip calls add_product which sets the new line as the selected_orderline
         const tip_line = order.selected_orderline;
-        await this.rpc({
-            method: "set_tip",
-            model: "pos.order",
-            args: [serverId, tip_line.export_as_JSON()],
-        });
+        await this.orm.call("pos.order", "set_tip", [serverId, tip_line.export_as_JSON()]);
         this.goNextScreen();
     }
     goNextScreen() {
