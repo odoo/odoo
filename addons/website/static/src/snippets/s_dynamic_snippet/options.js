@@ -28,7 +28,8 @@ const dynamicSnippetOptions = options.Class.extend({
     onBuilt: function () {
         this._setOptionsDefaultValues();
         // TODO Remove in master: adapt dropped snippet template.
-        if (this.$target[0].classList.contains('d-none') && !this.$target[0].className.match(/(d-(md|lg)-block)/g)) {
+        const classList = [...this.$target[0].classList];
+        if (classList.includes('d-none') && !classList.some(className => className.match(/^d-(md|lg)-/))) {
             // Remove the 'd-none' of the old template if it is not related to
             // the visible on mobile option.
             this.$target[0].classList.remove('d-none');
