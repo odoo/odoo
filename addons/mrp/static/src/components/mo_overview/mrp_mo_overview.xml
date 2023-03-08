@@ -4,7 +4,7 @@
     <div t-name="mrp.MoOverview" class="o_action" owl="1">
         <Layout display="{ controlPanel: { 'top-right': false } }">
             <t t-set-slot="control-panel-bottom-right">
-                <MoOverviewDisplayFilter showOptions="state.showOptions" changeDisplay.bind="onChangeDisplay"/>
+                <MoOverviewDisplayFilter showOptions="state.showOptions" limited="state.isDone" changeDisplay.bind="onChangeDisplay"/>
             </t>
 
             <t t-set-slot="control-panel-bottom-left">

@@ -21,6 +21,7 @@ export class MoOverview extends Component {
 
         this.state = useState({
             data: {},
+            isDone: false,
             showOptions: this.getDefaultConfig(),
         });
 
@@ -40,6 +41,13 @@ export class MoOverview extends Component {
             [this.activeId],
         );
         this.state.data = reportValues.data;
+        this.state.isDone = ['done', 'cancel'].some(doneState => reportValues.data?.summary?.state === doneState);
+        if (this.state.isDone) {
+            // Hide Availabilities / Receipts / Status columns when the MO is done.
+            this.state.showOptions.availabilities = false;
+            this.state.showOptions.receipts = false;
+            this.state.showOptions.replenishments = false;
+        }
         this.state.showOptions.uom = reportValues.context.show_uom;
         this.context = reportValues.context;
         if (reportValues.data?.operations?.summary?.index) {
