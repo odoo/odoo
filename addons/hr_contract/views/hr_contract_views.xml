@@ -11,7 +11,7 @@
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
                         <field name="employee_type" invisible="1"/>
-                        <button name="action_open_contract_history"
+                        <button name="action_open_contract_list"
                             class="oe_stat_button"
                             icon="fa-book"
                             type="object"
@@ -108,10 +108,11 @@
                     <field name="job_id"/>
                     <field name="department_id" operator="child_of"/>
                     <field name="resource_calendar_id"/>
-                    <filter string="Running" name="running" domain="[('state', '=', 'open')]"/>
-                    <filter string="Not Running" name="not_running" domain="[('state', '!=', 'open')]"/>
+                    <filter string="Running Contracts" name="running" domain="[('state', '=', 'open')]"/>
+                    <filter string="Contracts to review" name="not_running" domain="[('state', '!=', 'open')]"/>
                     <separator />
-                    <filter string="Employed" name="current_employee" domain="[('employee_id.active', '=', True)]"/>
+                    <filter string="Start Date" name="starting_date" date="date_start"/>
+                    <filter string="End Date" name="ending_date" date="date_end"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
@@ -123,10 +124,11 @@
                     <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Status" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Employee" name="group_by_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Start Date" name="group_by_date_start" domain="[]" context="{'group_by': 'date_start'}"/>
                         <filter string="Job Position" name="group_by_job" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter string="Department" name="group_by_department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Status" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Start Date" name="group_by_date_start" domain="[]" context="{'group_by': 'date_start'}"/>
                         <filter string="Working Schedule" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
                         <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
                     </group>
@@ -234,17 +236,19 @@
             <field name="arch" type="xml">
                 <tree string="Contracts" multi_edit="1" sample="1" default_order='date_start ASC'>
                     <field name="company_id" invisible="1"/>
-                    <field name="name" readonly="1"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
-                    <field name="job_id"/>
+                    <field name="name" readonly="1"/>
+                    <field name="department_id" optional="hidden"/>
+                    <field name="job_id" optional="hidden"/>
+                    <field name="contract_type_id" optional="hidden"/>
                     <field name="date_start" readonly="1"/>
                     <field name="date_end" readonly="1"/>
-                    <field name="resource_calendar_id" optional="show"/>
-                    <field name="structure_type_id" optional="show"/>
+                    <field name="wage" widget="monetary" readonly="1" optional="hidden"/>
+                    <field name="resource_calendar_id" optional="hidden"/>
+                    <field name="structure_type_id" optional="hidden"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
-                    <field name="wage" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
                 </tree>
             </field>
         </record>
@@ -279,6 +283,25 @@
                                 <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_job_id">
                                     <field name="job_id"/>
                                 </div>
+                                <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_department_id">
+                                    <field name="department_id"/>
+                                </div>
+                                <div class="text-muted o_kanban_record_subtitle" name="div_date_id">
+                                    <span class="o_stat_text">
+                                        From
+                                    </span>
+                                    <span class="o_stat_value">
+                                        <field name="date_start"/>
+                                    </span>
+                                    <t t-if="record.date_end.raw_value">
+                                        <span class="o_stat_text">
+                                            To
+                                        </span>
+                                        <span class="o_stat_value">
+                                            <field name="date_end"/>
+                                        </span>
+                                    </t>
+                                </div>
                                 <div class="oe_kanban_bottom_right">
                                     <span class="float-end">
                                         <field name="employee_id" widget="many2one_avatar_employee"/>
@@ -286,6 +309,9 @@
                                     <span class="float-end mr4">
                                         <field name="kanban_state" widget="state_selection"/>
                                     </span>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
                             </div>
                             <div class="clearfix"></div>

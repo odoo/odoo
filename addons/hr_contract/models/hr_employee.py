@@ -107,3 +107,12 @@ class Employee(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.hr_contract_history_view_form_action')
         action['res_id'] = self.id
         return action
+
+    def action_open_contract_list(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.action_hr_contract')
+        action.update({'domain': [('employee_id', '=', self.id)],
+                      'views':  [[False, 'list'], [False, 'kanban'], [False, 'activity'], [False, 'form']],
+                       'context': {'default_employee_id': self.id}})
+
+        return action
