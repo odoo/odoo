@@ -24,13 +24,18 @@ export class DiscussPublic extends Component {
         useEffect(
             (welcome) => {
                 if (!welcome) {
-                    // Change the URL to avoid leaking the invitation link.
-                    window.history.replaceState(
-                        window.history.state,
-                        null,
-                        `/discuss/channel/${this.thread.id}${window.location.search}`
+                    if (this.props.data.discussPublicViewData.isChannelTokenSecret) {
+                        // Change the URL to avoid leaking the invitation link.
+                        window.history.replaceState(
+                            window.history.state,
+                            null,
+                            `/discuss/channel/${this.thread.id}${window.location.search}`
+                        );
+                    }
+                    this.threadService.setDiscussThread(
+                        this.thread,
+                        !this.props.data.discussPublicViewData.isChannelTokenSecret
                     );
-                    this.threadService.setDiscussThread(this.thread, false);
                     this.threadService.fetchChannelMembers(this.thread);
                     const video = browser.localStorage.getItem("mail_call_preview_join_video");
                     const mute = browser.localStorage.getItem("mail_call_preview_join_mute");
