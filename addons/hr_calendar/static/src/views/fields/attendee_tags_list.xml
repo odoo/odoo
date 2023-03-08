@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_calendar.AttendeeTagsList" t-inherit="calendar.AttendeeTagsList" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="after">
+            <div t-if="tag.unavailableIcon" title="unavailable" class="ms-1">
+                <i class="fa fa-moon-o position-relative" role="img"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

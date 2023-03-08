@@ -306,9 +306,12 @@ class HrEmployeeBase(models.AbstractModel):
         return working_now
 
     def _get_calendar_periods(self, start, stop):
-        # This method can be overridden in other modules where it's possible
-        # to have different resource calendars for an employee depending on the
-        # date.
+        """
+        :param datetime start: the start of the period
+        :param datetime stop: the stop of the period
+        This method can be overridden in other modules where it's possible to have different resource calendars for an
+        employee depending on the date.
+        """
         calendar_periods_by_employee = {}
         for employee in self:
             calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
