@@ -1313,3 +1313,40 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 line.product_uom_qty = 8
 
         self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+
+    def test_backorder_and_decrease_sol_qty(self):
+        """
+        2 steps delivery
+        SO with 10 x P
+        Process pickings of 6 x P with backorders
+        Update SO: 7 x P
+        Backorder should be updated: 1 x P
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        stock_location = warehouse.lot_stock_id
+        out_location = warehouse.wh_output_stock_loc_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        so = self._get_new_sale_order()
+        so.action_confirm()
+        pick01, ship01 = so.picking_ids
+
+        pick01.move_line_ids.qty_done = 6
+        pick01._action_done()
+        pick02 = pick01.backorder_ids
+
+        ship01.move_line_ids[0].qty_done = 6
+        ship01._action_done()
+        ship02 = ship01.backorder_ids
+
+        so.order_line.product_uom_qty = 7
+
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('id'), [
+            {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 6.0, 'quantity_done': 6.0, 'state': 'done'},
+            {'location_id': stock_location.id, 'location_dest_id': out_location.id, 'product_uom_qty': 6.0, 'quantity_done': 6.0, 'state': 'done'},
+            {'location_id': stock_location.id, 'location_dest_id': out_location.id, 'product_uom_qty': 1.0, 'quantity_done': 0.0, 'state': 'assigned'},
+            {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 1.0, 'quantity_done': 0.0, 'state': 'waiting'},
+        ])
+        self.assertEqual(ship01.move_ids.move_orig_ids, (pick01 | pick02).move_ids)
+        self.assertEqual(ship02.move_ids.move_orig_ids, (pick01 | pick02).move_ids)
