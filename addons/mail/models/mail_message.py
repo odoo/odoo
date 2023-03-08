@@ -841,7 +841,7 @@ class Message(models.Model):
 
     def _message_format(self, fnames, format_reply=True, legacy=False):
         """Reads values from messages and formats them for the web client."""
-        vals_list = self._read_format(fnames)
+        vals_list = self._read_main(fnames)
 
         thread_ids_by_model_name = defaultdict(set)
         for message in self:

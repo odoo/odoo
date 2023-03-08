@@ -1025,10 +1025,15 @@ class HrExpenseSheet(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    def _read_format(self, fnames, load='_classic_read'):
+    # def _read_format(self, fnames, load='_classic_read'):
+    #     # setting the context in the field on the view is not enough
+    #     self = self.with_context(show_payment_journal_id=True)
+    #     return super()._read_format(fnames, load)
+
+    def _read_main(self, specification, limit=None, offset=None):
         # setting the context in the field on the view is not enough
         self = self.with_context(show_payment_journal_id=True)
-        return super()._read_format(fnames, load)
+        return super()._read_main(specification, limit, offset)
 
     def onchange(self, values, field_name, field_onchange):
         # setting the context in the field on the view is not enough

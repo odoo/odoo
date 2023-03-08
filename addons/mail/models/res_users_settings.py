@@ -34,7 +34,7 @@ class ResUsersSettings(models.Model):
         self.ensure_one()
         if not fields_to_format:
             fields_to_format = [name for name, field in self._fields.items() if name == 'id' or not field.automatic]
-        res = self._read_format(fnames=fields_to_format)[0]
+        res = self._read_main(fields_to_format)[0]
         if 'user_id' in fields_to_format:
             res['user_id'] = {'id': self.user_id.id}
         if 'volume_settings_ids' in fields_to_format:
