@@ -443,7 +443,7 @@ class MailMail(models.Model):
         # First group the <mail.mail> per mail_server_id and per email_from
         group_per_email_from = defaultdict(list)
         for values in mail_values:
-            mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
+            mail_server_id = values['mail_server_id'] if values['mail_server_id'] else False
             group_per_email_from[(mail_server_id, values['email_from'])].append(values['id'])
 
         # Then find the mail server for each email_from and group the <mail.mail>

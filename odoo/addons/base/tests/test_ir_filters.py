@@ -21,8 +21,8 @@ def noid(seq):
 class FiltersCase(TransactionCaseWithUserDemo):
     def setUp(self):
         super(FiltersCase, self).setUp()
-        self.USER_NG = self.env['res.users'].search_read(['name', '=', 'demo'], {'id': {}, 'display_name': {}})[0]
-        self.USER_ID = self.USER_NG[0]
+        self.USER_NG = self.env['res.users'].search_read([('name', 'like', 'Demo')], {'id': {}, 'display_name': {}})[0]
+        self.USER_ID = self.USER_NG['id']
 
     def build(self, model, *args):
         Model = self.env[model].with_user(ADMIN_USER_ID)

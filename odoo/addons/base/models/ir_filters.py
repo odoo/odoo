@@ -76,7 +76,7 @@ class IrFilters(models.Model):
         action_domain = self._get_action_domain(action_id)
         return self.with_context(user_context).search_read(
             action_domain + [('model_id', '=', model), ('user_id', 'in', [self._uid, False])],
-            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort'],
+            {'name':{}, 'is_default':{}, 'domain':{}, 'context':{}, 'user_id':{'fields':{'display_name':{}}}, 'sort':{}},
         )
 
     @api.model
@@ -120,7 +120,7 @@ class IrFilters(models.Model):
                             # next line looks for matching user_ids (specific or global), i.e.
                             # f.user_id is False and vals.user_id is False or missing,
                             # or f.user_id.id == vals.user_id
-                            if (f['user_id'] and f['user_id'][0]) == vals.get('user_id')]
+                            if (f['user_id'] and f['user_id']['id']) == vals.get('user_id')]
 
         if vals.get('is_default'):
             if vals.get('user_id'):
