@@ -72,7 +72,7 @@
                             <tr>
                                 <td name="td_mrp_bom_byproducts_f" class="text-end" t-esc="byproduct['name']"/>
                                 <td class="text-end"><strong>Unit Cost</strong></td>
-                                <td class="text-start" groups="uom.group_uom" t-esc="byproduct['uom']"/>
+                                <td class="text-start" groups="uom.group_uom" t-esc="byproduct['uom_name']"/>
                                 <td t-if="data['show_availabilities']"/>
                                 <td t-if="data['show_availabilities']"/>
                                 <td t-if="data['show_availabilities']"/>
