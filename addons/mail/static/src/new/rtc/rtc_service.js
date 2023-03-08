@@ -225,9 +225,16 @@ export class Rtc {
             );
         });
 
-        browser.addEventListener("beforeunload", async (ev) => {
+        browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
-                await this.rpcLeaveCall(this.state.channel);
+                const data = JSON.stringify({
+                    params: { channel_id: this.state.channel.id },
+                });
+                const blob = new Blob([data], { type: "application/json" });
+                // using sendBeacon allows sending a post request even when the
+                // browser prevents async requests from firing when the browser
+                // is closed. Alternatives like synchronous XHR are not reliable.
+                browser.navigator.sendBeacon("/mail/rtc/channel/leave_call", blob);
             }
         });
         /**
