@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Component, useEffect, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { WelcomePage } from "./welcome_page";
 import { Discuss } from "./../discuss/discuss";
 import { useMessaging, useStore } from "../core/messaging_hook";
@@ -31,8 +32,14 @@ export class DiscussPublic extends Component {
                     );
                     this.threadService.setDiscussThread(this.thread, false);
                     this.threadService.fetchChannelMembers(this.thread);
+                    const video = browser.localStorage.getItem("mail_call_preview_join_video");
+                    const mute = browser.localStorage.getItem("mail_call_preview_join_mute");
                     if (this.thread.defaultDisplayMode === "video_full_screen") {
-                        this.rtc.toggleCall(this.thread, { video: true });
+                        this.rtc.toggleCall(this.thread, { video }).then(() => {
+                            if (mute) {
+                                this.rtc.toggleMicrophone();
+                            }
+                        });
                     }
                 }
             },
