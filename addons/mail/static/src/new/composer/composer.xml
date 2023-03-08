@@ -82,35 +82,35 @@
                     attachments="props.composer.attachments"
                     unlinkAttachment="attachmentUploader.unlink"
                     editable="true"
-                    imagesHeight="50" />
+                    imagesHeight="50"/>
                 <div t-if="thread and thread.type !== 'chatter' and !compact">
-                    <Typing channel="thread" size="'medium'" />
+                    <Typing channel="thread" size="'medium'"/>
                 </div>
             </div>
         </div>
         <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
     </div>
-    <NavigableList t-if="this.suggestion" class="'o-composer-suggestion-list'" t-props="navigableListProps" />
+    <NavigableList t-if="this.suggestion" class="'o-composer-suggestion-list'" t-props="navigableListProps"/>
 </t>
 
     <t t-name="mail.Composer.suggestionPartner" owl="1">
         <t t-set="partner" t-value="option.partner"/>
         <ImStatus t-if="partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="partner.name" />
+            <t t-esc="partner.name"/>
         </strong>
-        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email" />)</em>
+        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
     </t>
 
     <t t-name="mail.Composer.suggestionThread" owl="1">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            #<t t-esc="option.label" />
+            #<t t-esc="option.label"/>
         </strong>
     </t>
 
     <t t-name="mail.Composer.suggestionChannelCommand" owl="1">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.label" />
+            <t t-esc="option.label"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
             <t t-esc="option.help"/>
@@ -119,7 +119,7 @@
 
     <t t-name="mail.Composer.suggestionCannedResponse" owl="1">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.name" />
+            <t t-esc="option.name"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
             <t t-esc="option.label"/>

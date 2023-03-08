@@ -29,7 +29,7 @@
                             <img class="o-mail-message-author-avatar w-100 h-100 rounded-circle o_object_fit_cover"
                                 t-att-title="authorText"
                                 t-att-src="message.authorAvatarUrl"
-                                t-att-class="{ 'o_redirect cursor-pointer': hasAuthorClickable }" />
+                                t-att-class="{ 'o_redirect cursor-pointer': hasAuthorClickable }"/>
                             <ImStatus t-if="message.author" persona="message.author" className="imStatusClassName"/>
                         </div>
                         <t t-elif="!message.isTransient">
@@ -51,7 +51,7 @@
                             </span>
                             <small t-if="!message.isTransient" class="o-mail-message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
-                                <RelativeTime datetime="message.datetime" />
+                                <RelativeTime datetime="message.datetime"/>
                             </small>
                             <MessageSeenIndicator
                                 t-if="props.message.isSelfAuthored and !props.squashed and props.thread"
@@ -167,8 +167,8 @@
                             attachments="message.attachments"
                             unlinkAttachment.bind="onClickAttachmentUnlink"
                             editable="message.editable"
-                            imagesHeight="300" />
-                        <LinkPreviewList t-if="message.linkPreviews.length > 0" linkPreviews="message.linkPreviews" deletable="deletable" />
+                            imagesHeight="300"/>
+                        <LinkPreviewList t-if="message.linkPreviews.length > 0" linkPreviews="message.linkPreviews" deletable="deletable"/>
                         <MessageReactions message="message" t-if="message.reactions.length"/>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.message_in_reply_to" owl="1">
-        <t t-set="message" t-value="props.message" />
+        <t t-set="message" t-value="props.message"/>
         <div class="o-mail-message-in-reply" t-att-class="{
                 'me-5': store.discuss.isActive or (env.inChatWindow and !props.alignedRight),
                 'd-flex justify-content-end ms-5': env.inChatWindow and props.alignedRight,

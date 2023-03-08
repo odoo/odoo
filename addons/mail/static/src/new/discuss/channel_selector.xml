@@ -21,14 +21,14 @@
         <t t-if="option.channelId === '__create__'">
             Create: #
         </t>
-        <t t-esc="option.label" />
+        <t t-esc="option.label"/>
     </strong>
 </t>
 
 <t t-name="mail.channel_selector.chat" owl="1">
     <ImStatus t-if="option.partner" persona="option.partner"/>
     <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-        <t t-esc="option.label" />
+        <t t-esc="option.label"/>
     </strong>
 </t>
 

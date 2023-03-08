@@ -11,22 +11,22 @@
         <hr class="w-100 border-top"/>
         <div class="d-flex flex-column flex-grow-0">
             <t t-call="mail.discuss_mailbox">
-                <t t-set="mailbox" t-value="store.discuss.inbox" />
+                <t t-set="mailbox" t-value="store.discuss.inbox"/>
             </t>
             <t t-call="mail.discuss_mailbox">
-                <t t-set="mailbox" t-value="store.discuss.starred" />
+                <t t-set="mailbox" t-value="store.discuss.starred"/>
             </t>
             <t t-call="mail.discuss_mailbox">
-                <t t-set="mailbox" t-value="store.discuss.history" />
+                <t t-set="mailbox" t-value="store.discuss.history"/>
             </t>
         </div>
         <hr class="w-100 border-top"/>
         <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
         <t t-call="mail.discuss_category">
-            <t t-set="category" t-value="store.discuss.channels" />
+            <t t-set="category" t-value="store.discuss.channels"/>
         </t>
         <t name="chatCategory" t-call="mail.discuss_category">
-            <t t-set="category" t-value="store.discuss.chats" />
+            <t t-set="category" t-value="store.discuss.chats"/>
         </t>
     </div>
 </t>
