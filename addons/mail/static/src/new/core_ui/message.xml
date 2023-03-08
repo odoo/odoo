@@ -166,7 +166,6 @@
                             t-if="message.attachments.length > 0"
                             attachments="message.attachments"
                             unlinkAttachment.bind="onClickAttachmentUnlink"
-                            editable="message.editable"
                             imagesHeight="300"/>
                         <LinkPreviewList t-if="message.linkPreviews.length > 0" linkPreviews="message.linkPreviews" deletable="deletable"/>
                         <MessageReactions message="message" t-if="message.reactions.length"/>

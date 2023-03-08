@@ -18,10 +18,19 @@ export class Attachment {
     url;
     /** @type {boolean} */
     uploading;
+    /** @type {import('@mail/new/core/message_model').Message} */
+    message;
 
     /** @type {import("@mail/new/core/thread_model").Thread} */
     get originThread() {
         return this._store.threads[this.originThreadLocalId];
+    }
+
+    get isDeletable() {
+        if (this.message && this.originThread && this.originThread.model === "mail.channel") {
+            return this.message.editable;
+        }
+        return true;
     }
 
     get displayName() {

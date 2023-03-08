@@ -228,7 +228,9 @@ export class MessageService {
         } = data;
         assignDefined(message, remainingData);
         assignDefined(message, {
-            attachments: attachments.map((attachment) => this.attachmentService.insert(attachment)),
+            attachments: attachments.map((attachment) =>
+                this.attachmentService.insert({ message, ...attachment })
+            ),
             defaultSubject,
             isDiscussion,
             isNote,

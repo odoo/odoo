@@ -81,7 +81,6 @@
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment="attachmentUploader.unlink"
-                    editable="true"
                     imagesHeight="50"/>
                 <div t-if="thread and thread.type !== 'chatter' and !compact">
                     <Typing channel="thread" size="'medium'"/>

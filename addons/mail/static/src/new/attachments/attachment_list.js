@@ -14,11 +14,10 @@ import { _t } from "@web/core/l10n/translation";
  * @property {import("@mail/new/core/attachment_model").Attachment[]} attachments
  * @property {function} unlinkAttachment
  * @property {number} imagesHeight
- * @property {boolean} editable
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "editable?"];
+    static props = ["attachments", "unlinkAttachment", "imagesHeight"];
     static template = "mail.attachment_list";
 
     setup() {
@@ -28,10 +27,16 @@ export class AttachmentList extends Component {
         this.attachmentViewer = useAttachmentViewer();
     }
 
+    /**
+     * @return {import('@mail/new/attachments/attachment_model').Attachment[]}
+     */
     get nonImagesAttachments() {
         return this.props.attachments.filter((attachment) => !attachment.isImage);
     }
 
+    /**
+     * @return {import('@mail/new/attachments/attachment_model').Attachment[]}
+     */
     get imagesAttachments() {
         return this.props.attachments.filter((attachment) => attachment.isImage);
     }
@@ -56,14 +61,16 @@ export class AttachmentList extends Component {
         return `/web/image/${attachment.id}/${this.imagesWidth}x${imagesHeight}${accessToken}`;
     }
 
-    canDelete(attachment) {
-        return this.props.editable;
-    }
-
+    /**
+     * @param {import('@mail/new/attachments/attachment_model').Attachment} attachment
+     */
     canDownload(attachment) {
         return !attachment.uploading && !this.env.inComposer;
     }
 
+    /**
+     * @param {import('@mail/new/attachments/attachment_model').Attachment} attachment
+     */
     onClickDownload(attachment) {
         const downloadLink = document.createElement("a");
         downloadLink.setAttribute("href", attachment.downloadUrl);
@@ -74,6 +81,9 @@ export class AttachmentList extends Component {
         downloadLink.click();
     }
 
+    /**
+     * @param {import('@mail/new/attachments/attachment_model').Attachment} attachment
+     */
     onClickUnlink(attachment) {
         if (this.env.inComposer) {
             return this.props.unlinkAttachment(attachment);
@@ -85,6 +95,9 @@ export class AttachmentList extends Component {
         });
     }
 
+    /**
+     * @param {import('@mail/new/attachments/attachment_model').Attachment} attachment
+     */
     onConfirmUnlink(attachment) {
         this.props.unlinkAttachment(attachment);
     }
