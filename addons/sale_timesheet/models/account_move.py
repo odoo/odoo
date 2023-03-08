@@ -111,7 +111,7 @@ class AccountMoveLine(models.Model):
 
         sale_line_ids_per_move = defaultdict(lambda: self.env['sale.order.line'])
         for move_line in move_line_read_group:
-            sale_line_ids_per_move[move_line['move_id'][0]] += self.env['sale.order.line'].browse(move_line['sale_line_ids'])
+            sale_line_ids_per_move[move_line['move_id']] += self.env['sale.order.line'].browse(move_line['sale_line_ids'])
 
         timesheet_read_group = self.sudo().env['account.analytic.line']._read_group([
             ('timesheet_invoice_id.move_type', '=', 'out_invoice'),
@@ -123,8 +123,8 @@ class AccountMoveLine(models.Model):
 
         timesheet_ids = []
         for timesheet in timesheet_read_group:
-            move_id = timesheet['timesheet_invoice_id'][0]
-            if timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
+            move_id = timesheet['timesheet_invoice_id']
+            if timesheet['so_line'] in sale_line_ids_per_move[move_id].ids:
                 timesheet_ids += timesheet['ids']
 
         self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})

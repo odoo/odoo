@@ -27,6 +27,4 @@ class AccountInvoiceLine(models.Model):
             fields=['product_id'],
         )
 
-        # I only want product_ids, but search_read insists in giving me a list of
-        # (product_id: <id>, name: <product code> <template_name> <attributes>)
-        return [line['product_id'][0] for line in purchases]
+        return purchases
