@@ -90,6 +90,45 @@ class TestPartner(MailCommon):
             self.assertEqual(parsed[0], expected_name)
             self.assertEqual(parsed[1], expected_email)
 
+
+    def test_res_partner_address_tracking(self):
+        company_partner = self.env.company.partner_id
+        # use some wacky formatting to check inlining
+        company_partner.country_id.address_format = """%(street)s
+            \n\n\n%(street2)s
+            %(city)s %(state_code)s %(zip)s
+            \n%(country_name)s\n
+            \n   """
+        company_partner.write({
+            'city': 'Some City Name',
+            'street': 'Some Street Name',
+            'type': 'contact',
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Some Guy',
+            'parent_id': company_partner.id,
+        })
+        self.env.flush_all()
+        self.cr.precommit.run()
+        # keep track of setup messages
+        partners = (company_partner, child_partner)
+        partner_original_messages = (company_partner.message_ids, child_partner.message_ids)
+
+        company_partner.street = 'Some Other Street Name'
+        company_partner.city = 'Some Other City Name'
+        self.env.flush_all()
+        self.cr.precommit.run()
+        for partner, original_messages in zip(partners, partner_original_messages):
+            change_messages = partner.message_ids - original_messages
+            self.assertEqual(len(change_messages), 1)
+            tracking_values = change_messages.tracking_value_ids
+            self.assertIn('YourCompany, Some Street Name, Some City Name CA 94134, United States',
+                          tracking_values._get_old_display_value())
+            self.assertIn('YourCompany, Some Other Street Name, Some Other City Name CA 94134, United States',
+                          tracking_values._get_new_display_value())
+            # none of the address fields are logged at the same time
+            self.assertEqual(set(), set(partner._address_fields()) & set(tracking_values.sudo().field.mapped('name')))
+
     def test_res_partner_find_or_create(self):
         PartnerModel = self.env['res.partner']
 
