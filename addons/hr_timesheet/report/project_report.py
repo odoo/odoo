@@ -7,7 +7,7 @@ from odoo import fields, models, api
 class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
 
-    planned_hours = fields.Float('Initially Planned Hours', readonly=True)
+    planned_hours = fields.Float('Allocated Time', readonly=True)
     effective_hours = fields.Float('Hours Spent', readonly=True)
     remaining_hours = fields.Float('Remaining Hours', readonly=True)
     remaining_hours_percentage = fields.Float('Remaining Hours Percentage', readonly=True)
