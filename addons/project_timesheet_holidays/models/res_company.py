@@ -25,7 +25,7 @@ class Company(models.Model):
                         ('allow_timesheets', '=', True),
                         ('company_id', 'in', companies.ids),
                     ], ['company_id', 'id'])
-                    internal_projects_by_company_dict = {res['company_id'][0]: res['id'] for res in internal_projects_by_company_read}
+                    internal_projects_by_company_dict = {res['company_id']: res['id'] for res in internal_projects_by_company_read}
                 project_id = internal_projects_by_company_dict.get(company.id, False)
                 if not project_id:
                     project_id = Project.create({

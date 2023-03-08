@@ -198,14 +198,12 @@ class Goal(models.Model):
                             if field_name == 'id':
                                 user_values = Obj.search_read(subquery_domain, fields=['id', value_field_name])
                             else:
-                                user_values = Obj.read_group(subquery_domain, fields=[field_name, "%s:sum" % value_field_name], groupby=[field_name])
+                                user_values = Obj._read_group(subquery_domain, fields=[field_name, "%s:sum" % value_field_name], groupby=[field_name])
 
                         # user_values has format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
                         for goal in [g for g in goals if g.id in query_goals]:
                             for user_value in user_values:
                                 queried_value = field_name in user_value and user_value[field_name] or False
-                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], int):
-                                    queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(value_field_name, goal.current)
                                     goals_to_write.update(goal._get_write_values(new_value))

@@ -67,7 +67,10 @@ class AccountAnalyticLine(models.Model):
 
     def name_get(self):
         result = super().name_get()
-        timesheets_read = self.env[self._name].search_read([('project_id', '!=', False), ('id', 'in', self.ids)], ['id', 'project_id', 'task_id'])
+        timesheets_read = self.env[self._name].search_read([('project_id', '!=', False), ('id', 'in', self.ids)],
+                                                           {'id': {},
+                                                            'project_id': {'fields': {'display_name': {}}},
+                                                            'task_id': {'fields': {'display_name': {}}}})
         if not timesheets_read:
             return result
         def _get_display_name(project_id, task_id):
@@ -78,8 +81,8 @@ class AccountAnalyticLine(models.Model):
                 :returns: the display name of the timesheet
             """
             if task_id:
-                return '%s - %s' % (project_id[1], task_id[1])
-            return project_id[1]
+                return '%s - %s' % (project_id['display_name'], task_id['display_name'])
+            return project_id['display_name']
         timesheet_dict = {res['id']: _get_display_name(res['project_id'], res['task_id']) for res in timesheets_read}
         return list({**dict(result), **timesheet_dict}.items())
 

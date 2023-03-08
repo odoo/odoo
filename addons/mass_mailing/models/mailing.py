@@ -750,7 +750,7 @@ class MassMailing(models.Model):
 
         values_list = self.with_context(active_test=False).search_read(
             domain=domain,
-            fields=['id', 'subject', 'body_arch', 'user_id', 'mailing_model_id'],
+            fields={'id': {}, 'subject': {}, 'body_arch': {}, 'user_id': {'fields': {'display_name': {}}}, 'mailing_model_id':{'fields': {'display_name': {}}}},
             order='favorite_date DESC',
         )
 
@@ -762,7 +762,7 @@ class MassMailing(models.Model):
         # You see first the mailings without responsible, then your mailings and then the others
         values_list.sort(
             key=lambda values:
-            values['user_id'][0] != self.env.user.id if values['user_id'] else -1
+            values['user_id']['id'] != self.env.user.id if values['user_id'] else -1
         )
 
         return values_list

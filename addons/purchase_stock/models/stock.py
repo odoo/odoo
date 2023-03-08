@@ -123,7 +123,7 @@ class Orderpoint(models.Model):
     def _compute_show_suppplier(self):
         buy_route = []
         for res in self.env['stock.rule'].search_read([('action', '=', 'buy')], ['route_id']):
-            buy_route.append(res['route_id'][0])
+            buy_route.append(res['route_id'])
         for orderpoint in self:
             orderpoint.show_supplier = orderpoint.route_id.id in buy_route
 

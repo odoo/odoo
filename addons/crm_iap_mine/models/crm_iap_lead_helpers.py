@@ -1,5 +1,6 @@
 from math import floor, log10
 from odoo import api, models
+from odoo.tools import OrderedSet
 
 
 class CRMHelpers(models.Model):
@@ -19,11 +20,7 @@ class CRMHelpers(models.Model):
         iap_account = self.env['iap.account'].search([('service_name', '=', service_name)], limit=1)
         # Get the email address of the creators of the records
         res = self.env[model_name].search_read([], {'create_uid': {'fields': {'email'}}})
-        set(res['create_uid']['email'])
-
-        uids = set(r['create_uid'] for r in res if r.get('create_uid'))
-        res = self.env['res.users'].search_read([('id', 'in', list(uids))], ['email'])
-        emails = set(r['email'] for r in res if r.get('email'))
+        emails = OrderedSet(user['create_uid']['email'] for user in res)
 
         email_values = {
             'email_to': ','.join(emails)

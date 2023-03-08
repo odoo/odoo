@@ -217,7 +217,7 @@ class ResUsers(models.Model):
         # group by invited by
         invited_users = defaultdict(list)
         for user in res_users_with_details:
-            invited_users[user.get('create_uid')[0]].append("%s (%s)" % (user.get('name'), user.get('login')))
+            invited_users[user.get('create_uid')].append("%s (%s)" % (user.get('name'), user.get('login')))
 
         # For sending mail to all the invitors about their invited users
         for user in invited_users:

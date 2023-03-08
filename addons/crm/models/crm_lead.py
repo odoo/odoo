@@ -2412,7 +2412,7 @@ class Lead(models.Model):
                 ['&', ('variable', 'in', leads_pls_fields),
                       '|', ('team_id', 'in', pls_leads.mapped('team_id').ids), ('team_id', '=', False)])
             for frequency in existing_frequencies:
-                team_id = frequency['team_id'][0] if frequency.get('team_id') else 0
+                team_id = frequency['team_id'] if frequency.get('team_id') else 0
                 if team_id not in existing_frequencies_by_team:
                     existing_frequencies_by_team[team_id] = dict((field, {}) for field in leads_pls_fields)
 

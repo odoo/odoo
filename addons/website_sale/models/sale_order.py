@@ -91,7 +91,7 @@ class SaleOrder(models.Model):
             '&', '&',
             ('website_id', '=', website_id['id']),
             ('date_order', '<=', fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
-            ('partner_id', '!=', website_id['partner_id'][0])
+            ('partner_id', '!=', website_id['partner_id'])
         ] for website_id in website_ids]
         abandoned_domain = [
             ('state', '=', 'draft'),

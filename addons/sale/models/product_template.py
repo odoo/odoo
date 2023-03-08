@@ -69,9 +69,9 @@ class ProductTemplate(models.Model):
             subquery_products = self.env['product.product'].sudo().with_context(active_test=False)._search([('product_tmpl_id', 'in', self.ids)])
             so_lines = self.env['sale.order.line'].sudo().search_read(
                 [('product_id', 'in', subquery_products), ('company_id', '!=', target_company.id)],
-                fields=['id', 'product_id'],
+                fields={'id': {}, 'product_id': {'fields': {'display_name': {}}}},
             )
-            used_products = list(map(lambda sol: sol['product_id'][1], so_lines))
+            used_products = list(map(lambda sol: sol['product_id']['display_name'], so_lines))
             if so_lines:
                 raise ValidationError(_('The following products cannot be restricted to the company'
                                         ' %s because they have already been used in quotations or '

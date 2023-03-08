@@ -147,9 +147,9 @@ class PosOrder(models.Model):
         order_line = super(PosOrder, self)._prepare_order_line(order_line)
 
         if order_line.get("reward_id"):
-            order_line["reward_id"] = order_line["reward_id"][0]
+            order_line["reward_id"] = order_line["reward_id"]
         if order_line.get("coupon_id"):
-            order_line["coupon_id"] = order_line["coupon_id"][0]
+            order_line["coupon_id"] = order_line["coupon_id"]
 
         return order_line
 

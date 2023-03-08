@@ -76,7 +76,7 @@ class IrFilters(models.Model):
         action_domain = self._get_action_domain(action_id)
         return self.with_context(user_context).search_read(
             action_domain + [('model_id', '=', model), ('user_id', 'in', [self._uid, False])],
-            {'name':{}, 'is_default':{}, 'domain':{}, 'context':{}, 'user_id':{'fields':{'display_name':{}}}, 'sort':{}},
+            {'name': {}, 'is_default': {}, 'domain': {}, 'context': {}, 'user_id':{'fields':{'display_name': {}}}, 'sort': {}},
         )
 
     @api.model

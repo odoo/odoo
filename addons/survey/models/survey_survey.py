@@ -873,8 +873,8 @@ class Survey(models.Model):
                         ('question_id', '=', self.session_question_id.id)],
                     ['user_input_id', 'answer_score'])
             for input_line in input_lines:
-                question_scores[input_line['user_input_id'][0]] = \
-                    question_scores.get(input_line['user_input_id'][0], 0) + input_line['answer_score']
+                question_scores[input_line['user_input_id']] = \
+                    question_scores.get(input_line['user_input_id'], 0) + input_line['answer_score']
 
             score_position = 0
             for leaderboard_item in leaderboard:

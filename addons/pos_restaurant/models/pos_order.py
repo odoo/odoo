@@ -40,7 +40,7 @@ class PosOrder(models.Model):
                     'pos_order_line_id'
                     ])
         for pack_lot in pack_lots:
-            pack_lot['order_line'] = pack_lot['pos_order_line_id'][0]
+            pack_lot['order_line'] = pack_lot['pos_order_line_id']
             pack_lot['server_id'] = pack_lot['id']
 
             del pack_lot['pos_order_line_id']
@@ -74,7 +74,7 @@ class PosOrder(models.Model):
         :returns: dict -- dict representing the order line's values.
         """
         order_line = super(PosOrder, self)._prepare_order_line(order_line)
-        order_line["product_id"] = order_line["product_id"][0]
+        order_line["product_id"] = order_line["product_id"]
         order_line["server_id"] = order_line["id"]
 
         del order_line["id"]
@@ -126,7 +126,7 @@ class PosOrder(models.Model):
         extended_payment_lines = []
         for payment_line in payment_lines:
             payment_line['server_id'] = payment_line['id']
-            payment_line['payment_method_id'] = payment_line['payment_method_id'][0]
+            payment_line['payment_method_id'] = payment_line['payment_method_id']
 
             del payment_line['id']
             extended_payment_lines.append([0, 0, payment_line])
@@ -194,14 +194,6 @@ class PosOrder(models.Model):
             order['name'] = order['pos_reference']
             order['creation_date'] = order['create_date']
             order['server_id'] = order['id']
-            if order['fiscal_position_id']:
-                order['fiscal_position_id'] = order['fiscal_position_id'][0]
-            if order['pricelist_id']:
-                order['pricelist_id'] = order['pricelist_id'][0]
-            if order['partner_id']:
-                order['partner_id'] = order['partner_id'][0]
-            if order['table_id']:
-                order['table_id'] = order['table_id'][0]
 
             if not 'lines' in order:
                 order['lines'] = []

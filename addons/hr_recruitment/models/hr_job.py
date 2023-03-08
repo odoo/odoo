@@ -91,7 +91,7 @@ class Job(models.Model):
         ], ['interviewer_ids', 'job_id'])
         interviewers_by_job = defaultdict(set)
         for result_raw in results_raw:
-            interviewers_by_job[result_raw['job_id'][0]] |= set(result_raw['interviewer_ids'])
+            interviewers_by_job[result_raw['job_id']] |= set(result_raw['interviewer_ids'])
         for job in self:
             job.extended_interviewer_ids = [(6, 0, list(interviewers_by_job[job.id]))]
 

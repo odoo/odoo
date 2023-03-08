@@ -31,7 +31,7 @@ class WebsiteVisitor(models.Model):
             [('livechat_visitor_id', 'in', self.ids), ('livechat_active', '=', True)],
             ['livechat_visitor_id', 'livechat_operator_id']
         )
-        visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_operator_id'][0]) for result in results}
+        visitor_operator_map = {int(result['livechat_visitor_id']): int(result['livechat_operator_id']) for result in results}
         for visitor in self:
             visitor.livechat_operator_id = visitor_operator_map.get(visitor.id, False)
 

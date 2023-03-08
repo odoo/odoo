@@ -52,7 +52,7 @@ class StockPicking(models.Model):
             lazy=False, orderby='qty_done asc'
         )
         products_by_id = {
-            product_res['id']: (product_res['uom_id'][0], product_res['weight'])
+            product_res['id']: (product_res['uom_id'], product_res['weight'])
             for product_res in
             self.env['product.product'].with_context(active_test=False).search_read(
                 [('id', 'in', list(set(grp["product_id"][0] for grp in res_groups)))], ['uom_id', 'weight'])

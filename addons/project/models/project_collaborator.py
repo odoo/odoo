@@ -17,8 +17,10 @@ class ProjectCollaborator(models.Model):
     ]
 
     def name_get(self):
-        collaborator_search_read = self.search_read([('id', 'in', self.ids)], ['id', 'project_id', 'partner_id'])
-        return [(collaborator['id'], '%s - %s' % (collaborator['project_id'][1], collaborator['partner_id'][1])) for collaborator in collaborator_search_read]
+        collaborator_search_read = self.search_read([('id', 'in', self.ids)], {'id': {},
+                                                                               'project_id': {'fields': {'display_name': {}}},
+                                                                               'partner_id': {'fields': {'display_name': {}}}})
+        return [(collaborator['id'], '%s - %s' % (collaborator['project_id']['display_name'], collaborator['partner_id']['display_name'])) for collaborator in collaborator_search_read]
 
     @api.model_create_multi
     def create(self, vals_list):

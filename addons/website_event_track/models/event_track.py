@@ -314,7 +314,7 @@ class Track(models.Model):
             )
 
             wishlist_map = {
-                track_visitor['track_id'][0]: {
+                track_visitor['track_id']: {
                     'is_wishlisted': track_visitor['is_wishlisted'],
                     'is_blacklisted': track_visitor['is_blacklisted']
                 } for track_visitor in event_track_visitors

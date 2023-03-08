@@ -120,7 +120,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_last_activity(self):
         presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
         # transform the result to a dict with this format {user.id: last_presence}
-        presences = {p['user_id'][0]: p['last_presence'] for p in presences}
+        presences = {p['user_id']: p['last_presence'] for p in presences}
 
         for employee in self:
             tz = employee.tz

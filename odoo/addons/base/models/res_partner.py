@@ -1058,7 +1058,7 @@ class Partner(models.Model):
         state_to_country = States.search_read([('id', 'in', list(states_ids))], ['country_id'])
         for vals in vals_list:
             if vals.get('state_id'):
-                country_id = next(c['country_id'][0] for c in state_to_country if c['id'] == vals.get('state_id'))
+                country_id = next(c['country_id'] for c in state_to_country if c['id'] == vals.get('state_id'))
                 state = States.browse(vals['state_id'])
                 if state.country_id.id != country_id:
                     state_domain = [('code', '=', state.code),

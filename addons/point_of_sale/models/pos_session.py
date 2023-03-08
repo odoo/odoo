@@ -1682,7 +1682,7 @@ class PosSession(models.Model):
         params_country = self._loader_params_res_country()
         if company['country_id']:
             # TODO: this is redundant we have country_id and country
-            params_country['search_params']['domain'] = [('id', '=', company['country_id'][0])]
+            params_country['search_params']['domain'] = [('id', '=', company['country_id'])]
             company['country'] = self.env['res.country'].search_read(**params_country['search_params'])[0]
         else:
             company['country'] = None
@@ -1864,7 +1864,7 @@ class PosSession(models.Model):
         pricelist_by_id = {pricelist['id']: pricelist for pricelist in pricelists}
         pricelist_item_domain = [('pricelist_id', 'in', [p['id'] for p in pricelists])]
         for item in self.env['product.pricelist.item'].search_read(pricelist_item_domain, self._product_pricelist_item_fields()):
-            pricelist_by_id[item['pricelist_id'][0]]['items'].append(item)
+            pricelist_by_id[item['pricelist_id']]['items'].append(item)
 
         return pricelists
 
@@ -1875,7 +1875,7 @@ class PosSession(models.Model):
         categories = self.env['product.category'].search_read(**params['search_params'])
         category_by_id = {category['id']: category for category in categories}
         for category in categories:
-            category['parent'] = category_by_id[category['parent_id'][0]] if category['parent_id'] else None
+            category['parent'] = category_by_id[category['parent_id']] if category['parent_id'] else None
         return categories
 
     def _loader_params_res_currency(self):
@@ -1934,7 +1934,7 @@ class PosSession(models.Model):
         categories = self._get_pos_ui_product_category(self._loader_params_product_category())
         product_category_by_id = {category['id']: category for category in categories}
         for product in products:
-            product['categ'] = product_category_by_id[product['categ_id'][0]]
+            product['categ'] = product_category_by_id[product['categ_id']]
 
     def _get_pos_ui_product_product(self, params):
         self = self.with_context(**params['context'])

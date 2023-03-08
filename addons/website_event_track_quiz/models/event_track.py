@@ -58,7 +58,7 @@ class EventTrack(models.Model):
                 )
 
                 quiz_visitor_map = {
-                    track_visitor['track_id'][0]: {
+                    track_visitor['track_id']: {
                         'quiz_completed': track_visitor['quiz_completed'],
                         'quiz_points': track_visitor['quiz_points']
                     } for track_visitor in event_track_visitors

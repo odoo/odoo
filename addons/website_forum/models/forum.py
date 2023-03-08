@@ -426,7 +426,7 @@ class Post(models.Model):
 
     def _get_user_vote(self):
         votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
-        mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
+        mapped_vote = dict([(v['post_id'], v['vote']) for v in votes])
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
 
