@@ -8,7 +8,7 @@
             <span t-if="store.activityCounter" class="o-mail-activity-menu-counter badge"><t t-esc="store.activityCounter"/></span>
         </t>
         <t t-set-slot="default">
-            <div class="o-mail-activity-menu">
+            <div class="o-mail-activity-menu bg-view">
                 <div t-if="store.activityCounter === 0" class="o-mail-no-activity align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
                     <span>Congratulations, you're done with your activities.</span>
                 </div>
