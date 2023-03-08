@@ -16,7 +16,7 @@ export class ProductsWidgetControlPanel extends Component {
         super.setup();
         this.pos = usePos();
         this.notification = useService("pos_notification");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.updateSearch = debounce(this.updateSearch, 100);
         this.state = useState({ mobileSearchBarIsShown: false });
     }
@@ -63,22 +63,15 @@ export class ProductsWidgetControlPanel extends Component {
             return;
         }
 
-        const ProductIds = await this.rpc({
-            model: "product.product",
-            method: "search",
-            args: [
-                [
-                    "&",
-                    ["available_in_pos", "=", true],
-                    "|",
-                    "|",
-                    ["name", "ilike", this.env.pos.searchProductWord],
-                    ["default_code", "ilike", this.env.pos.searchProductWord],
-                    ["barcode", "ilike", this.env.pos.searchProductWord],
-                ],
-            ],
-            context: this.env.session.user_context,
-        });
+        const ProductIds = await this.orm.search("product.product", [
+            "&",
+            ["available_in_pos", "=", true],
+            "|",
+            "|",
+            ["name", "ilike", this.env.pos.searchProductWord],
+            ["default_code", "ilike", this.env.pos.searchProductWord],
+            ["barcode", "ilike", this.env.pos.searchProductWord],
+        ]);
         if (ProductIds.length) {
             await this.env.pos._addProducts(ProductIds, false);
         }

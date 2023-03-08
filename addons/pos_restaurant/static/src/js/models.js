@@ -7,7 +7,7 @@ import { Printer } from "@point_of_sale/js/printers";
 import { patch } from "@web/core/utils/patch";
 const QWeb = core.qweb;
 
-const TIMEOUT = 7500;
+// const TIMEOUT = 7500;
 
 patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     setup() {
@@ -112,16 +112,11 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     async _getTableOrdersFromServer(tableIds) {
         this.set_synch("connecting", 1);
         try {
-            const orders = await this.env.services.rpc(
-                {
-                    model: "pos.order",
-                    method: "get_table_draft_orders",
-                    args: [tableIds],
-                },
-                {
-                    timeout: TIMEOUT,
-                    shadow: true,
-                }
+            // FIXME POSREF timeout
+            const orders = await this.env.services.orm.silent.call(
+                "pos.order",
+                "get_table_draft_orders",
+                [tableIds]
             );
             this.set_synch("connected");
             return orders;
@@ -170,19 +165,14 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
             return;
         }
 
-        const timeout = TIMEOUT * removedOrdersIds.length;
         this.set_synch("connecting", removedOrdersIds.length);
         try {
-            const removeOrdersResponseData = await this.env.services.rpc(
-                {
-                    model: "pos.order",
-                    method: "remove_from_ui",
-                    args: [removedOrdersIds],
-                },
-                {
-                    timeout: timeout,
-                    shadow: true,
-                }
+            // FIXME POSREF timeout
+            // const timeout = TIMEOUT * removedOrdersIds.length;
+            const removeOrdersResponseData = await this.env.services.orm.silent.call(
+                "pos.order",
+                "remove_from_ui",
+                [removedOrdersIds]
             );
             this.set_synch("connected");
             this._postRemoveFromServer(removedOrdersIds, removeOrdersResponseData);

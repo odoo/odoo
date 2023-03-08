@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { Order, Orderline, PosGlobalState } from "@point_of_sale/js/models";
-import session from "web.session";
 import concurrency from "web.concurrency";
 import { round_decimals, round_precision } from "web.utils";
 import core from "web.core";
@@ -138,16 +137,12 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
      * @param {int} limit Default to 1
      */
     async fetchCoupons(domain, limit = 1) {
-        const result = await this.env.services.rpc({
-            model: "loyalty.card",
-            method: "search_read",
-            kwargs: {
-                domain: domain,
-                fields: ["id", "points", "code", "partner_id", "program_id"],
-                limit: limit,
-                context: session.user_context,
-            },
-        });
+        const result = await this.env.services.orm.searchRead(
+            "loyalty.card",
+            domain,
+            ["id", "points", "code", "partner_id", "program_id"],
+            { limit }
+        );
         if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
             this.couponCache = {};
             this.partnerId2CouponIds = {};
@@ -166,7 +161,8 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
                 dbCoupon.points
             );
             this.couponCache[coupon.id] = coupon;
-            this.partnerId2CouponIds[coupon.partner_id] = this.partnerId2CouponIds[coupon.partner_id] || new Set();
+            this.partnerId2CouponIds[coupon.partner_id] =
+                this.partnerId2CouponIds[coupon.partner_id] || new Set();
             this.partnerId2CouponIds[coupon.partner_id].add(coupon.id);
             couponList.push(coupon);
         }
@@ -196,7 +192,9 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
     getLoyaltyCards(partner) {
         const loyaltyCards = [];
         if (this.partnerId2CouponIds[partner.id]) {
-            this.partnerId2CouponIds[partner.id].forEach(couponId => loyaltyCards.push(this.couponCache[couponId]));
+            this.partnerId2CouponIds[partner.id].forEach((couponId) =>
+                loyaltyCards.push(this.couponCache[couponId])
+            );
         }
         return loyaltyCards;
     },
@@ -214,7 +212,8 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
                     partner.id,
                     points
                 );
-                this.partnerId2CouponIds[partner.id] = this.partnerId2CouponIds[partner.id] || new Set();
+                this.partnerId2CouponIds[partner.id] =
+                    this.partnerId2CouponIds[partner.id] || new Set();
                 this.partnerId2CouponIds[partner.id].add(couponId);
             }
         }
@@ -1558,17 +1557,11 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 return _t("That coupon code has already been scanned and activated.");
             }
             const customer = this.get_partner();
-            const { successful, payload } = await this.pos.env.services.rpc({
-                model: "pos.config",
-                method: "use_coupon_code",
-                args: [
-                    [this.pos.config.id],
-                    code,
-                    this.creation_date,
-                    customer ? customer.id : false,
-                ],
-                kwargs: { context: session.user_context },
-            });
+            const { successful, payload } = await this.pos.env.services.orm.call(
+                "pos.config",
+                "use_coupon_code",
+                [[this.pos.config.id], code, this.creation_date, customer ? customer.id : false]
+            );
             if (successful) {
                 // Allow rejecting a gift card that is not yet paid.
                 const program = this.pos.program_by_id[payload.program_id];

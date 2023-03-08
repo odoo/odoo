@@ -108,11 +108,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
                 order.set_tip(amount);
                 order.finalized = true;
                 const tip_line = order.selected_orderline;
-                await this.rpc({
-                    method: "set_tip",
-                    model: "pos.order",
-                    args: [serverId, tip_line.export_as_JSON()],
-                });
+                await this.orm.call("pos.order", "set_tip", [serverId, tip_line.export_as_JSON()]);
             }
             if (order === this.env.pos.get_order()) {
                 this._selectNextOrder(order);
@@ -128,11 +124,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     async setNoTip(serverId) {
-        await this.rpc({
-            method: "set_no_tip",
-            model: "pos.order",
-            args: [serverId],
-        });
+        await this.orm.call("set_no_tip", "pos.order", [serverId]);
     },
     _getOrderStates() {
         const result = this._super(...arguments);

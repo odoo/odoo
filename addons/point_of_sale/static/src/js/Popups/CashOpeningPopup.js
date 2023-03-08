@@ -18,17 +18,17 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
         });
         this.popup = useService("popup");
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
     }
     //@override
     async confirm() {
         this.env.pos.pos_session.cash_register_balance_start = this.state.openingCash;
         this.env.pos.pos_session.state = "opened";
-        this.rpc({
-            model: "pos.session",
-            method: "set_cashbox_pos",
-            args: [this.env.pos.pos_session.id, this.state.openingCash, this.state.notes],
-        });
+        this.orm.call("pos.session", "set_cashbox_pos", [
+            this.env.pos.pos_session.id,
+            this.state.openingCash,
+            this.state.notes,
+        ]);
         super.confirm();
     }
     async openDetailsPopup() {

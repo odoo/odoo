@@ -19,7 +19,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         super.setup();
         this.pos = usePos();
         useErrorHandlers();
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.orderReceipt = useRef("order-receipt");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
         this.buttonPrintReceipt = useRef("order-print-receipt-button");
@@ -112,7 +112,12 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         if (this._shouldAutoPrint()) {
             const currentOrder = this.currentOrder;
             await this.printReceipt();
-            if (this.currentOrder && this.currentOrder === currentOrder && currentOrder._printed && this._shouldCloseImmediately()) {
+            if (
+                this.currentOrder &&
+                this.currentOrder === currentOrder &&
+                currentOrder._printed &&
+                this._shouldCloseImmediately()
+            ) {
                 this.whenClosing();
             }
         }
@@ -171,11 +176,12 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             });
             return Promise.reject();
         }
-        await this.rpc({
-            model: "pos.order",
-            method: "action_receipt_to_customer",
-            args: [[order_server_id], orderName, orderPartner, ticketImage],
-        });
+        await this.orm.call("pos.order", "action_receipt_to_customer", [
+            [order_server_id],
+            orderName,
+            orderPartner,
+            ticketImage,
+        ]);
     }
 }
 
