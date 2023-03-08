@@ -6210,31 +6210,24 @@ class BaseModel(metaclass=MetaModel):
             domain and warning messages are put in dictionary ``result``.
         """
         onchange = onchange.strip()
+        if onchange not in ("1", "true"):
+            return
 
-        def process(res):
+        for method in self._onchange_methods.get(field_name, ()):
+            res = method(self)
             if not res:
-                return
+                continue
             if res.get('value'):
                 res['value'].pop('id', None)
-                self.update({key: val for key, val in res['value'].items() if key in self._fields})
-            if res.get('domain'):
-                _logger.warning(
-                    "onchange method %s returned a domain, this is deprecated",
-                    method.__qualname__
-                )
-                result.setdefault('domain', {}).update(res['domain'])
+                for key, val in res['value'].items():
+                    if key in self._fields and key != 'id':
+                        self[key] = val
             if res.get('warning'):
                 result['warnings'].add((
                     res['warning'].get('title') or _("Warning"),
                     res['warning'].get('message') or "",
                     res['warning'].get('type') or "",
                 ))
-
-        if onchange in ("1", "true"):
-            for method in self._onchange_methods.get(field_name, ()):
-                method_res = method(self)
-                process(method_res)
-            return
 
     def onchange(self, values, field_name, field_onchange):
         """ Perform an onchange on the given field.
