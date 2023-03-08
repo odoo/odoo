@@ -37,7 +37,7 @@
                    <button name="action_send_mail" states="draft" string="Send Quotation" type="object"/>
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                   <button name="action_repair_cancel" string="Cancel Repair" type="object" confirm="Draft invoices for this order will be cancelled. Do you confirm the action?" attrs="{'invisible':['|', ('state', '=', 'cancel'), ('invoice_state', '!=', 'draft')]}"/>
+                   <button name="action_repair_cancel" string="Cancel Repair" type="object" confirm="Draft invoices for this order will be cancelled. Do you confirm the action?" attrs="{'invisible':['|', ('state','in', ('cancel','done')), ('invoice_state', '!=', 'draft')]}"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','in', ('cancel','done')), ('invoice_state', '=', 'draft')]}"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
