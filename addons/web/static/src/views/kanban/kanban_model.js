@@ -85,12 +85,12 @@ class KanbanGroup extends Group {
             },
         });
 
-        this.model.addEventListener("record-updated", ({ detail }) => {
+        this.model.bus.addEventListener("record-updated", ({ detail }) => {
             const { record, relatedRecords } = detail;
             const localIds = this.records.map((r) => r.id);
             const updatedIds = [record, ...relatedRecords].map((r) => r.id);
             if (localIds.some((id) => updatedIds.includes(id))) {
-                this.model.trigger("group-updated", {
+                this.model.bus.trigger("group-updated", {
                     group: this,
                     withProgressBars: true,
                 });
@@ -114,7 +114,7 @@ class KanbanGroup extends Group {
      */
     async deleteRecords() {
         const records = await super.deleteRecords(...arguments);
-        this.model.trigger("group-updated", {
+        this.model.bus.trigger("group-updated", {
             group: this,
             withProgressBars: true,
         });
@@ -207,7 +207,7 @@ class KanbanGroup extends Group {
 
         // Do not update progress bars data when filtering on them.
         await Promise.all([this.list.load()]);
-        this.model.trigger("group-updated", { group: this, withProgressBars: false });
+        this.model.bus.trigger("group-updated", { group: this, withProgressBars: false });
     }
 
     /**
@@ -306,7 +306,7 @@ class KanbanGroup extends Group {
                 await this.model.reloadRecords(record);
                 record.switchMode("readonly");
                 this.addRecord(record, 0);
-                this.model.trigger("group-updated", {
+                this.model.bus.trigger("group-updated", {
                     group: this,
                     withProgressBars: true,
                 });

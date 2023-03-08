@@ -152,22 +152,21 @@ export class ListRenderer extends Component {
             });
         }
 
-        // FIXME: doesn't work as model is now reactive
-        // // not very beautiful but works: refactor at some point
-        // this.lastCellFocused;
-        // useBus(this.props.list.model, "list-confirmation-dialog-will-open", () => {
-        //     if (this.tableRef.el.contains(document.activeElement)) {
-        //         this.lastCellFocused = document.activeElement.closest("td");
-        //     }
-        // });
+        // not very beautiful but works: refactor at some point
+        this.lastCellFocused;
+        useBus(this.props.list.model.bus, "list-confirmation-dialog-will-open", () => {
+            if (this.tableRef.el.contains(document.activeElement)) {
+                this.lastCellFocused = document.activeElement.closest("td");
+            }
+        });
 
-        // useBus(this.props.list.model, "list-confirmation-dialog-closed", () => {
-        //     if (this.lastCellFocused) {
-        //         this.focus(this.lastCellFocused);
-        //     }
-        // });
+        useBus(this.props.list.model.bus, "list-confirmation-dialog-closed", () => {
+            if (this.lastCellFocused) {
+                this.focus(this.lastCellFocused);
+            }
+        });
 
-        useBus(this.props.list.model, "FIELD_IS_DIRTY", (ev) => (this.lastIsDirty = ev.detail));
+        useBus(this.props.list.model.bus, "FIELD_IS_DIRTY", (ev) => (this.lastIsDirty = ev.detail));
 
         useBounceButton(this.rootRef, () => {
             return this.showNoContentHelper;

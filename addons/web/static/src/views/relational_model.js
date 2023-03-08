@@ -558,7 +558,7 @@ export class Record extends DataPoint {
      */
     async urgentSave() {
         this._urgentSave = true;
-        this.model.trigger("WILL_SAVE_URGENTLY");
+        this.model.bus.trigger("WILL_SAVE_URGENTLY");
         return this._save({ stayInEdition: true, noReload: true });
     }
 
@@ -571,7 +571,7 @@ export class Record extends DataPoint {
 
     async askChanges() {
         const proms = [];
-        this.model.trigger("NEED_LOCAL_CHANGES", { proms });
+        this.model.bus.trigger("NEED_LOCAL_CHANGES", { proms });
         await Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
     }
 
@@ -1792,11 +1792,11 @@ class DynamicList extends DataPoint {
                 record,
                 fieldNodes: this.model.fieldNodes,
             };
-            this.model.trigger("list-confirmation-dialog-will-open");
+            this.model.bus.trigger("list-confirmation-dialog-will-open");
             await new Promise((resolve) => {
                 this.model.dialogService.add(ListConfirmationDialog, dialogProps, {
                     onClose: () => {
-                        this.model.trigger("list-confirmation-dialog-closed");
+                        this.model.bus.trigger("list-confirmation-dialog-closed");
                         resolve();
                     },
                 });

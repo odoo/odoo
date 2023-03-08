@@ -92,10 +92,10 @@ export class HtmlField extends Component {
         });
 
         const { model } = this.props.record;
-        useBus(model, "WILL_SAVE_URGENTLY", () =>
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () =>
             this.commitChanges({ urgent: true })
         );
-        useBus(model, "NEED_LOCAL_CHANGES", ({ detail }) =>
+        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
 
@@ -299,7 +299,7 @@ export class HtmlField extends Component {
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
             stripHistoryIds(value) !== stripHistoryIds(lastValue)
         ) {
-            this.props.record.model.trigger("FIELD_IS_DIRTY", false);
+            this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
             await this.props.record.update({ [this.props.name]: value });
         }
@@ -320,7 +320,7 @@ export class HtmlField extends Component {
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
         this.wysiwyg.odooEditor.editable.addEventListener("input", () =>
-            this.props.record.model.trigger("FIELD_IS_DIRTY", this._isDirty())
+            this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty())
         );
 
         this.isRendered = true;
