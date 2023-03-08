@@ -295,7 +295,7 @@ class Meeting(models.Model):
                 editor_candidates += event._origin.partner_ids.user_ids
             event.user_can_edit = self.env.user in editor_candidates
 
-    @api.depends('attendee_ids')
+    @api.depends('partner_ids')
     def _compute_invalid_email_partner_ids(self):
         for event in self:
             event.invalid_email_partner_ids = event.partner_ids.filtered(
