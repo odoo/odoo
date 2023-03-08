@@ -133,7 +133,7 @@ class TestUsers(TransactionCase):
         with self.assertRaises(UserError, msg='Internal users should not be able to deactivate their account'):
             user_internal._deactivate_portal_user()
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.sql_db', 'odoo.addons.base.models.res_users_deletion')
     def test_deactivate_portal_users_archive_and_remove(self):
         """Test that if the account can not be removed, it's archived instead
         and sensitive information are removed.

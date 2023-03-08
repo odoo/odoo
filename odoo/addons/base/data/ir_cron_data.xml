@@ -9,4 +9,14 @@
         <field name='interval_type'>days</field>
         <field name="numbercall">-1</field>
     </record>
+
+    <record id="ir_cron_res_users_deletion" model="ir.cron">
+        <field name="name">Base: Portal Users Deletion</field>
+        <field name="model_id" ref="base.model_res_users_deletion"/>
+        <field name="state">code</field>
+        <field name="code">model._gc_portal_users()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
 </odoo>
