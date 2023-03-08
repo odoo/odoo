@@ -57,6 +57,7 @@ class TestVendorBillISR(common.TransactionCase):
         The vendor bill can be saved.
         """
         self.env.company.country_id = self.env.ref('base.ch')
+        self.env.company.account_fiscal_country_id = self.env.company.country_id
         form = Form(self.env["account.move"].with_context(
             default_move_type="in_invoice"), view="l10n_ch.isr_invoice_form")
         form.partner_id = self.supplier1
@@ -75,6 +76,7 @@ class TestVendorBillISR(common.TransactionCase):
         The vendor bill can be saved.
         """
         self.env.company.country_id = self.env.ref('base.ch')
+        self.env.company.account_fiscal_country_id = self.env.company.country_id
         form = Form(self.env["account.move"].with_context(
             default_move_type="in_invoice"), view="l10n_ch.isr_invoice_form")
         form.partner_id = self.supplier1
@@ -94,6 +96,7 @@ class TestVendorBillISR(common.TransactionCase):
         The vendor bill can be saved.
         """
         self.env.company.country_id = self.env.ref('base.ch')
+        self.env.company.account_fiscal_country_id = self.env.company.country_id
         form = Form(self.env["account.move"].with_context(
             default_move_type="in_invoice"), view="l10n_ch.isr_invoice_form")
         form.partner_id = self.supplier1
@@ -109,6 +112,7 @@ class TestVendorBillISR(common.TransactionCase):
         Check it will show the warning
         """
         self.env.company.country_id = self.env.ref('base.ch')
+        self.env.company.account_fiscal_country_id = self.env.company.country_id
         form = Form(self.env["account.move"].with_context(
             default_move_type="in_invoice"), view="l10n_ch.isr_invoice_form")
         form.partner_id = self.supplier1
