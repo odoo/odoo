@@ -22,6 +22,7 @@
                         unfoldAll="state.unfoldAll"
                         components="replenishment.components"
                         operations="replenishment.operations"
+                        byproducts="replenishment.byproducts"
                         showOptions="props.showOptions"/>
                 </t>
             </t>
@@ -30,6 +31,11 @@
             unfoldAll="state.unfoldAll"
             summary="props.operations.summary"
             operations="props.operations.details"
+            showOptions="props.showOptions"/>
+        <MoOverviewByproductsBlock
+            unfoldAll="state.unfoldAll"
+            summary="props.byproducts.summary"
+            byproducts="props.byproducts.details"
             showOptions="props.showOptions"/>
     </t>
 

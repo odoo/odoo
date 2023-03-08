@@ -54,12 +54,16 @@ class ReportMoOverview(models.AbstractModel):
         production = self.env['mrp.production'].browse(production_id)
         components = self._get_components_data(production, level=1, current_index='')
         operations = self._get_operations_data(production, level=1, current_index='')
-        summary = self._get_mo_summary(production, components, operations)
+        initial_mo_cost = sum(component.get('summary', {}).get('mo_cost', 0.0) for component in components)\
+            + operations.get('summary', {}).get('mo_cost', 0.0)
+        byproducts_cost_portion, byproducts = self._get_byproducts_data(production, initial_mo_cost, level=1, current_index='')
+        summary = self._get_mo_summary(production, components, initial_mo_cost, byproducts_cost_portion)
         return {
             'id': production.id,
             'summary': summary,
             'components': components,
             'operations': operations,
+            'byproducts': byproducts,
             'extras': self._get_report_extra_lines(summary),
         }
 
@@ -73,10 +77,10 @@ class ReportMoOverview(models.AbstractModel):
             'unit_product_cost': unit_product_cost,
         }
 
-    def _get_mo_summary(self, production, components, operations):
+    def _get_mo_summary(self, production, components, current_mo_cost, byproducts_cost_portion):
         product = production.product_id
         company = production.company_id or self.env.company
-        mo_cost = sum(component.get('summary', {}).get('mo_cost', 0.0) for component in components)
+        byproducts_cost_share = float_round(1 - byproducts_cost_portion, precision_rounding=0.0001)
         return {
             'level': 0,
             'model': production._name,
@@ -93,7 +97,7 @@ class ReportMoOverview(models.AbstractModel):
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.type == 'product' else False,
             'quantity_reserved': 0.0,
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
-            'mo_cost': company.currency_id.round(mo_cost + operations.get('summary', {}).get('mo_cost', 0.0)),
+            'mo_cost': company.currency_id.round(current_mo_cost * byproducts_cost_share),
             'product_cost': company.currency_id.round(product.standard_price * production.product_uom_qty),
             'currency_id': company.currency_id.id,
             'currency': company.currency_id,
@@ -185,6 +189,48 @@ class ReportMoOverview(models.AbstractModel):
                 'currency': currency,
             },
             'details': operations,
+        }
+
+    def _get_byproducts_data(self, production, current_mo_cost, level=0, current_index=False):
+        currency = (production.company_id or self.env.company).currency_id
+        byproducts = []
+        byproducts_cost_portion = 0
+        total_mo_cost = 0
+        total_product_cost = 0
+        for index, move_bp in enumerate(production.move_byproduct_ids):
+            product = move_bp.product_id
+            cost_share = move_bp.cost_share / 100
+            byproducts_cost_portion += cost_share
+            mo_cost = current_mo_cost * cost_share
+            product_cost = product.standard_price * move_bp.product_uom._compute_quantity(move_bp.product_uom_qty, product.uom_id)
+            total_mo_cost += mo_cost
+            total_product_cost += product_cost
+            byproducts.append({
+                'level': level,
+                'index': f"{current_index}B{index}",
+                'model': product._name,
+                'id': product.id,
+                'name': product.display_name,
+                'quantity': move_bp.product_uom_qty,
+                'uom_name': move_bp.product_uom.display_name,
+                'uom_precision': self._get_uom_precision(move_bp.product_uom.rounding),
+                'mo_cost': currency.round(mo_cost),
+                'mo_cost_decorator': self._get_comparison_decorator(product_cost, mo_cost, currency.rounding),
+                'product_cost': currency.round(product_cost),
+                'currency_id': currency.id,
+                'currency': currency,
+            })
+
+        return byproducts_cost_portion, {
+            'summary': {
+                'index': f"{current_index}B",
+                'mo_cost': currency.round(total_mo_cost),
+                'mo_cost_decorator': self._get_comparison_decorator(total_product_cost, total_mo_cost, currency.rounding),
+                'product_cost': currency.round(total_product_cost),
+                'currency_id': currency.id,
+                'currency': currency,
+            },
+            'details': byproducts,
         }
 
     def _get_components_data(self, production, replenish_data=False, level=0, current_index=False):
@@ -315,7 +361,13 @@ class ReportMoOverview(models.AbstractModel):
             if doc_in._name == 'mrp.production':
                 replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
                 replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
-                replenishment['summary']['mo_cost'] = currency.round(sum(component.get('summary', {}).get('mo_cost', 0.0) for component in replenishment['components']) + replenishment['operations'].get('summary', {}).get('mo_cost', 0.0))
+                initial_mo_cost = sum(component.get('summary', {}).get('mo_cost', 0.0) for component in replenishment['components'])\
+                    + replenishment['operations'].get('summary', {}).get('mo_cost', 0.0)
+
+                byproducts_cost_portion, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, level + 2, replenishment_index)
+                byproducts_cost_share = float_round(1 - byproducts_cost_portion, precision_rounding=0.0001)
+                replenishment['byproducts'] = byproducts
+                replenishment['summary']['mo_cost'] = initial_mo_cost * byproducts_cost_share
             replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
             replenishments.append(replenishment)
             forecast_line['already_used'] = True
