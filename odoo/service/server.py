@@ -921,7 +921,10 @@ class PreforkServer(CommonServer):
         if config['http_enable']:
             # listen to socket
             _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            family = socket.AF_INET
+            if ':' in self.interface:
+                family = socket.AF_INET6
+            self.socket = socket.socket(family, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.setblocking(0)
             self.socket.bind((self.interface, self.port))
