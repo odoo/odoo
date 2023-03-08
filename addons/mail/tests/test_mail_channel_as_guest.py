@@ -77,3 +77,9 @@ class TestMailPublicPage(HttpCase):
 
     def test_mail_group_public_page_as_portal(self):
         self._open_group_page_as_user('portal')
+
+    def test_chat_from_token_as_guest(self):
+        self.env['ir.config_parameter'].set_param('mail.chat_from_token', True)
+        self.url_open('/chat/xyz')
+        channel = self.env['mail.channel'].search([('uuid', '=', 'xyz')])
+        self.assertEqual(len(channel), 1)
