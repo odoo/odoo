@@ -221,7 +221,8 @@
                                     <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/></div>
                                     <div t-if="task.milestone_id and task.allow_milestones"><strong>Milestone:</strong> <span t-field="task.milestone_id"/></div>
                                     <div name="portal_my_task_planned_hours">
-                                        <t t-call="project.portal_my_task_planned_hours_template"/>
+                                    <strong t-if="task.planned_hours > 0">Allocated Time:</strong>
+                                    <t t-call="project.portal_my_task_planned_hours_template"/>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6" name="portal_my_task_second_column"></div>
@@ -265,6 +266,6 @@
     </template>
 
     <template id="portal_my_task_planned_hours_template">
-        <strong>Allocated Hours:</strong> <span t-esc="task.planned_hours" t-options='{"widget": "float_time"}'/>
+        <span t-out="task.planned_hours" t-options='{"widget": "float_time"}'/>
     </template>
 </odoo>
