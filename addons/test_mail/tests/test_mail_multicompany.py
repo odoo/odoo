@@ -38,6 +38,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
              'company_id': cls.user_employee_c2.company_id.id},
         ])
 
+        cls.company_3 = cls.env['res.company'].create({'name': 'ELIT'})
         cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
@@ -80,7 +81,8 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
     @users('employee_c2')
     def test_notify_reply_to_computation_mc(self):
         """ Test reply-to computation in multi company mode. Add notably tests
-        depending on user company_id / company_ids. """
+        depending on user and records company_id / company_ids. """
+
         # Test1: no company_id field
         test_record = self.env['mail.test.gateway'].browse(self.test_record.ids)
         res = test_record._notify_get_reply_to()
@@ -91,7 +93,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                 "%s@%s" % (self.alias_catchall, self.alias_domain)))
         )
 
-        # Test2: company_id field, MC environment
+        # Test2: MC environment get default value from env
         self.user_employee_c2.write({'company_ids': [(4, self.user_employee.company_id.id)]})
         test_records = self.env['mail.test.multi.company'].create([
             {'name': 'Test',
@@ -105,6 +107,23 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                 res[test_record.id],
                 formataddr((
                     "%s %s" % (self.user_employee_c2.company_id.name, test_record.name),
+                    "%s@%s" % (self.alias_catchall, self.alias_domain)))
+            )
+
+        # Test3: get company from record (company_id field)
+        self.user_employee_c2.write({'company_ids': [(4, self.company_3.id)]})
+        test_records = self.env['mail.test.multi.company'].create([
+            {'name': 'Test1',
+            'company_id': self.company_3.id},
+            {'name': 'Test2',
+            'company_id': self.company_3.id},
+        ])
+        res = test_records._notify_get_reply_to()
+        for test_record in test_records:
+            self.assertEqual(
+                res[test_record.id],
+                formataddr((
+                    "%s %s" % (self.company_3.name, test_record.name),
                     "%s@%s" % (self.alias_catchall, self.alias_domain)))
             )
 
