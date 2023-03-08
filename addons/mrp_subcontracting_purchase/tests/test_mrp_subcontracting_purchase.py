@@ -60,6 +60,37 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po_action2 = self.env[action2['res_model']].browse(action2['res_id'])
         self.assertEqual(po_action2, po)
 
+    def test_receive_outside_stock(self):
+        """ Tests receiving a subcontracted product in 2-steps reception. The
+        first location is outside the warehouse. The quantity received should
+        be computed correctly. """
+
+        wh = self.env.ref('stock.warehouse0')
+        wh.reception_steps = "two_steps"
+        # set the input loc outside the warehouse
+        wh.wh_input_stock_loc_id.location_id = self.env.ref('stock.stock_location_locations')
+
+        product_qty = 5.0
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': 'finished',
+                'product_id': self.finished.id,
+                'product_qty': product_qty,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 50.0},
+            )],
+        })
+
+        po.button_confirm()
+        receipt = po.picking_ids
+
+        for move in receipt.move_lines:
+            move.move_line_ids.qty_done = move.product_qty
+        receipt.button_validate()
+        self.assertEqual(po.order_line.qty_received, sum(receipt.move_lines.mapped('product_uom_qty')))
+
+
     def test_decrease_qty(self):
         """ Tests when a PO for a subcontracted product has its qty decreased after confirmation
         """
@@ -102,6 +133,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         for move in receipt.move_lines:
             move.move_line_ids.qty_done = move.product_qty
         receipt.button_validate()
+        self.assertEqual(po.order_line.qty_received, sum(receipt.move_lines.mapped('product_uom_qty')))
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(sub_mos[0].state, 'done')
         self.assertEqual(sub_mos[1].state, 'done')
