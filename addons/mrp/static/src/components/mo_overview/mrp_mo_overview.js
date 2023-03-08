@@ -50,9 +50,12 @@ export class MoOverview extends Component {
         }
         this.state.showOptions.uom = reportValues.context.show_uom;
         this.context = reportValues.context;
+        // Main MO's operations & byproducts are always unfolded by default.
         if (reportValues.data?.operations?.summary?.index) {
-            // Main MO's operations are always unfolded by default.
             this.unfoldedIds.add(reportValues.data.operations.summary.index);
+        }
+        if (reportValues.data?.byproducts?.summary?.index) {
+            this.unfoldedIds.add(reportValues.data.byproducts.summary.index);
         }
     }
 
