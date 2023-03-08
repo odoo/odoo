@@ -417,6 +417,7 @@
                     <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Salesperson" widget="many2one_avatar_user"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
                     <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show"/>
