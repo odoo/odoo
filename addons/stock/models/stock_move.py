@@ -1543,10 +1543,15 @@ Please change the quantity done or the rounding precision of your unit of measur
                 to_update.with_context(reserved_quant=reserved_quant).reserved_uom_qty += uom_quantity
             else:
                 if self.product_id.tracking == 'serial':
-                    self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create([self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))])
+                    vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
+                    if vals_list:
+                        self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(vals_list)
                 else:
                     self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return taken_quantity
+
+    def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):
+        return [self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))]
 
     def _should_bypass_reservation(self, forced_location=False):
         self.ensure_one()
