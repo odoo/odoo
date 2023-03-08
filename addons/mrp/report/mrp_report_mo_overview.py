@@ -340,7 +340,7 @@ class ReportMoOverview(models.AbstractModel):
             if all_available:
                 return self._format_receipt_date('expected', doc_in.date_finished)
 
-            new_date = max_date_start + timedelta(days=doc_in.product_id.produce_delay)
+            new_date = max_date_start + timedelta(days=doc_in.bom_id.produce_delay)
             receipt_state = 'estimated' if some_estimated else 'expected'
             return self._format_receipt_date(receipt_state, new_date)
         return self._format_receipt_date('unavailable')
@@ -427,8 +427,11 @@ class ReportMoOverview(models.AbstractModel):
             wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=warehouse.route_ids)
             wh_manufacture_rules -= rules
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
+            related_bom = self.env['mrp.bom']._bom_find(product)[product]
+            if not related_bom:
+                return False
             return {
-                'delay': product.produce_delay + rules_delay,
+                'delay': related_bom.produce_delay + rules_delay,
                 'cost': product.standard_price * uom_id._compute_quantity(quantity, product.uom_id),
             }
         return False
