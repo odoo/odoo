@@ -107,7 +107,8 @@ class BaseModel(models.AbstractModel):
         :param records: DEPRECATED, self should be a valid record set or an
           empty recordset if a generic reply-to is required;
         :param company: used to compute company name part of the from name; provide
-          it if already known, otherwise fall back on user company;
+          it if already known, otherwise use records company it they all belong to the same company
+          and fall back on user's company in mixed companies environments;
         :param doc_names: dict(res_id, doc_name) used to compute doc name part of
           the from name; provide it if already known to avoid queries, otherwise
           name_get on document will be performed;
@@ -132,6 +133,9 @@ class BaseModel(models.AbstractModel):
                 if not doc_names:
                     doc_names = dict((rec.id, rec.display_name) for rec in _records)
 
+                if not company and 'company_id' in self and len(self.company_id) == 1:
+                    company = self.company_id
+
                 mail_aliases = self.env['mail.alias'].sudo().search([
                     ('alias_parent_model_id.model', '=', model),
                     ('alias_parent_thread_id', 'in', res_ids),
@@ -151,7 +155,7 @@ class BaseModel(models.AbstractModel):
                 result[res_id] = self._notify_get_reply_to_formatted_email(
                     result_email[res_id],
                     doc_names.get(res_id) or '',
-                    company or self.env.company
+                    company
                 )
 
         left_ids = set(_res_ids) - set(result_email)
