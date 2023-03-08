@@ -80,9 +80,6 @@
             <field name="inherit_id" ref="view_task_search_form_project_fsm_base"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <field name="description" position="after">
-                    <field string="Properties" name="task_properties"/>
-                </field>
                 <filter name="date_last_stage_update" position="after">
                     <filter string="Deadline" name="date_deadline" date="date_deadline"/>
                 </filter>
@@ -98,6 +95,9 @@
             <field name="inherit_id" ref="view_task_search_form_project_base"></field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <field name="description" position="after">
+                    <field string="Properties" name="task_properties"/>
+                </field>
                 <filter name="inactive" position="before">
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
