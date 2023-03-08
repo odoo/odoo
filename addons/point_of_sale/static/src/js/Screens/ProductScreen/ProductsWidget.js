@@ -4,7 +4,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -16,14 +16,13 @@ export class ProductsWidget extends Component {
      */
     setup() {
         super.setup();
-        this.state = useState({ searchWord: "" });
         this.pos = usePos();
     }
     get selectedCategoryId() {
         return this.env.pos.selectedCategoryId;
     }
     get searchWord() {
-        return this.state.searchWord.trim();
+        return this.env.pos.searchProductWord.trim();
     }
     get productsToDisplay() {
         let list = [];
@@ -63,10 +62,10 @@ export class ProductsWidget extends Component {
         this.env.pos.setSelectedCategoryId(categoryId);
     }
     updateSearch(searchWord) {
-        this.state.searchWord = searchWord;
+        this.env.pos.searchProductWord = searchWord;
     }
     clearSearch() {
-        this.state.searchWord = "";
+        this.env.pos.searchProductWord = "";
     }
     updateProductList(event) {
         this.render(true);

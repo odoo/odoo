@@ -4,12 +4,12 @@
     <t t-name="web.CopyClipboardField" owl="1">
         <div class="d-grid rounded-2 overflow-hidden">
             <Field t-props="fieldProps"/>
-            <CopyButton className="copyButtonClassName" content="props.value" copyText="copyText" successText="successText"/>
+            <CopyButton className="copyButtonClassName" content="props.record.data[props.name]" copyText="copyText" successText="successText"/>
         </div>
     </t>
 
     <t t-name="web.CopyClipboardButtonField" owl="1">
-        <CopyButton t-if="props.value" className="copyButtonClassName" content="props.value" copyText="copyText" disabled="disabled" successText="successText"/>
+        <CopyButton t-if="props.record.data[props.name]" className="copyButtonClassName" content="props.record.data[props.name]" copyText="copyText" disabled="disabled" successText="successText"/>
     </t>
 
 </templates>

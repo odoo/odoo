@@ -21,7 +21,7 @@ export class PercentageField extends Component {
     setup() {
         useInputField({
             getValue: () =>
-                formatPercentage(this.props.value, {
+                formatPercentage(this.props.record.data[this.props.name], {
                     digits: this.digits,
                     noSymbol: true,
                 }),
@@ -36,7 +36,7 @@ export class PercentageField extends Component {
         return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
     }
     get formattedValue() {
-        return formatPercentage(this.props.value, {
+        return formatPercentage(this.props.record.data[this.props.name], {
             digits: this.digits,
         });
     }

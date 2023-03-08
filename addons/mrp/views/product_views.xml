@@ -7,21 +7,6 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//label[@for='sale_delay']" position="before">
-                    <field name="bom_count" string="Bill of Materials" invisible="1" groups="mrp.group_mrp_user"/>
-                    <label for="produce_delay" string="Manuf. Lead Time" attrs="{'invisible':[('type','=','service')]}"/>
-                    <div attrs="{'invisible':[('type','=','service')]}">
-                        <field name="produce_delay" class="oe_inline"/> days
-                    </div>
-                    <label for="days_to_prepare_mo" attrs="{'invisible':[('type','=','service')]}"/>
-                    <div attrs="{'invisible':[('type','=','service')]}">
-                        <field name="days_to_prepare_mo" class="oe_inline"/> days
-                        <button name="action_compute_bom_days" string="Compute from BoM" type="object" attrs="{'invisible':['|', ('type', '=', 'service'), ('bom_count', '=', 0)]}"
-                                groups="mrp.group_mrp_user"
-                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
-                                class="oe_link pt-0"/>
-                    </div>
-                </xpath>
                 <xpath expr="//field[@name='product_variant_count']" position="after">
                     <field name="is_kits" invisible="1"/>
                 </xpath>

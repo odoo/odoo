@@ -25,9 +25,6 @@ to support In-App purchases inside Odoo. """,
             'iap/static/src/**/*.js',
             'iap/static/src/**/*.xml',
         ],
-        'web.tests_assets': [
-            'iap/static/tests/**/*',
-        ],
     },
     'license': 'LGPL-3',
 }

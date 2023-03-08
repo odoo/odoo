@@ -81,7 +81,9 @@ export class ImageField extends Component {
         return style;
     }
     get hasTooltip() {
-        return this.props.enableZoom && this.props.readonly && this.props.value;
+        return (
+            this.props.enableZoom && this.props.readonly && this.props.record.data[this.props.name]
+        );
     }
     get tooltipAttributes() {
         return {
@@ -91,8 +93,8 @@ export class ImageField extends Component {
     }
 
     getUrl(previewFieldName) {
-        if (this.state.isValid && this.props.value) {
-            if (isBinarySize(this.props.value)) {
+        if (this.state.isValid && this.props.record.data[this.props.name]) {
+            if (isBinarySize(this.props.record.data[this.props.name])) {
                 if (!this.rawCacheKey) {
                     this.rawCacheKey = this.props.record.data.write_date;
                 }
@@ -104,8 +106,9 @@ export class ImageField extends Component {
                 });
             } else {
                 // Use magic-word technique for detecting image type
-                const magic = fileTypeMagicWordMap[this.props.value[0]] || "png";
-                return `data:image/${magic};base64,${this.props.value}`;
+                const magic =
+                    fileTypeMagicWordMap[this.props.record.data[this.props.name][0]] || "png";
+                return `data:image/${magic};base64,${this.props.record.data[this.props.name]}`;
             }
         }
         return placeholder;

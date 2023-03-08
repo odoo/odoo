@@ -408,11 +408,11 @@ class ProductProduct(models.Model):
         return template.product_variant_id or template._create_first_product_variant()
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         # TDE FIXME: strange
         if self._context.get('search_default_categ_id'):
-            args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
-        return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+            domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.depends_context('display_default_code', 'seller_id')
     def _compute_display_name(self):
@@ -444,23 +444,21 @@ class ProductProduct(models.Model):
 
         result = []
 
-        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        # Use `load=False` to not call `name_get` for the `product_tmpl_id`
-        self.sudo().read(['name', 'default_code', 'product_tmpl_id'], load=False)
+        # prefetch the fields used by the `name_get`
+        self.sudo().fetch(['name', 'default_code', 'product_tmpl_id'])
 
-        product_template_ids = self.sudo().mapped('product_tmpl_id').ids
+        product_template_ids = self.sudo().product_tmpl_id.ids
 
         if partner_ids:
-            supplier_info = self.env['product.supplierinfo'].sudo().search([
-                ('product_tmpl_id', 'in', product_template_ids),
-                ('partner_id', 'in', partner_ids),
-            ])
-            # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-            # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
-            supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
+            # prefetch the fields used by the `name_get`
+            supplier_info = self.env['product.supplierinfo'].sudo().search_fetch(
+                [('product_tmpl_id', 'in', product_template_ids), ('partner_id', 'in', partner_ids)],
+                ['product_tmpl_id', 'product_id', 'company_id', 'product_name', 'product_code'],
+            )
             supplier_info_by_template = {}
             for r in supplier_info:
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
+
         for product in self.sudo():
             variant = product.product_template_attribute_value_ids._get_combination_name()
 
@@ -496,42 +494,42 @@ class ProductProduct(models.Model):
                           'default_code': product.default_code,
                           }
                 result.append(_name_get(mydict))
+
         return result
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if not args:
-            args = []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        domain = domain or []
         if name:
             positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
             product_ids = []
             if operator in positive_operators:
-                product_ids = list(self._search([('default_code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid))
+                product_ids = list(self._search([('default_code', '=', name)] + domain, limit=limit, order=order, access_rights_uid=name_get_uid))
                 if not product_ids:
-                    product_ids = list(self._search([('barcode', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid))
+                    product_ids = list(self._search([('barcode', '=', name)] + domain, limit=limit, order=order, access_rights_uid=name_get_uid))
             if not product_ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                product_ids = list(self._search(args + [('default_code', operator, name)], limit=limit))
+                product_ids = list(self._search(domain + [('default_code', operator, name)], limit=limit, order=order))
                 if not limit or len(product_ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(product_ids)) if limit else False
-                    product2_ids = self._search(args + [('name', operator, name), ('id', 'not in', product_ids)], limit=limit2, access_rights_uid=name_get_uid)
+                    product2_ids = self._search(domain + [('name', operator, name), ('id', 'not in', product_ids)], limit=limit2, order=order, access_rights_uid=name_get_uid)
                     product_ids.extend(product2_ids)
             elif not product_ids and operator in expression.NEGATIVE_TERM_OPERATORS:
-                domain = expression.OR([
+                domain2 = expression.OR([
                     ['&', ('default_code', operator, name), ('name', operator, name)],
                     ['&', ('default_code', '=', False), ('name', operator, name)],
                 ])
-                domain = expression.AND([args, domain])
-                product_ids = list(self._search(domain, limit=limit, access_rights_uid=name_get_uid))
+                domain2 = expression.AND([domain, domain2])
+                product_ids = list(self._search(domain2, limit=limit, order=order, access_rights_uid=name_get_uid))
             if not product_ids and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
-                    product_ids = list(self._search([('default_code', '=', res.group(2))] + args, limit=limit, access_rights_uid=name_get_uid))
+                    product_ids = list(self._search([('default_code', '=', res.group(2))] + domain, limit=limit, order=order, access_rights_uid=name_get_uid))
             # still no results, partner in context: search on supplier info as last hope to find something
             if not product_ids and self._context.get('partner_id'):
                 suppliers_ids = self.env['product.supplierinfo']._search([
@@ -540,9 +538,9 @@ class ProductProduct(models.Model):
                     ('product_code', operator, name),
                     ('product_name', operator, name)], access_rights_uid=name_get_uid)
                 if suppliers_ids:
-                    product_ids = self._search([('product_tmpl_id.seller_ids', 'in', suppliers_ids)], limit=limit, access_rights_uid=name_get_uid)
+                    product_ids = self._search([('product_tmpl_id.seller_ids', 'in', suppliers_ids)], limit=limit, order=order, access_rights_uid=name_get_uid)
         else:
-            product_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            product_ids = self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
         return product_ids
 
     @api.model

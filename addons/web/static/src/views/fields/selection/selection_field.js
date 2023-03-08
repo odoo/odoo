@@ -28,17 +28,19 @@ export class SelectionField extends Component {
     get string() {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
-                return this.props.value ? this.props.value[1] : "";
+                return this.props.record.data[this.props.name]
+                    ? this.props.record.data[this.props.name][1]
+                    : "";
             case "selection":
-                return this.props.value !== false
-                    ? this.options.find((o) => o[0] === this.props.value)[1]
+                return this.props.record.data[this.props.name] !== false
+                    ? this.options.find((o) => o[0] === this.props.record.data[this.props.name])[1]
                     : "";
             default:
                 return "";
         }
     }
     get value() {
-        const rawValue = this.props.value;
+        const rawValue = this.props.record.data[this.props.name];
         return this.props.record.fields[this.props.name].type === "many2one" && rawValue
             ? rawValue[0]
             : rawValue;

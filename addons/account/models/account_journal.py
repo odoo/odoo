@@ -37,7 +37,7 @@ class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
     _order = 'sequence, type, code'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _check_company_auto = True
     _rec_names_search = ['name', 'code']
 
@@ -709,44 +709,59 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def _create_document_from_attachment(self, attachment_ids=None):
+    def action_new_transaction(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_bank_statement_tree')
+        action['context'] = {'default_journal_id': self.id}
+        return action
+
+    def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""
-        context_move_type = self._context.get("default_move_type", "entry")
+        move_type = self._context.get("default_move_type", "entry")
         if not self:
-            if context_move_type in self.env['account.move'].get_sale_types():
+            if move_type in self.env['account.move'].get_sale_types():
                 journal_type = "sale"
-            elif context_move_type in self.env['account.move'].get_purchase_types():
+            elif move_type in self.env['account.move'].get_purchase_types():
                 journal_type = "purchase"
             else:
                 raise UserError(_("The journal in which to upload the invoice is not specified. "))
             self = self.env['account.journal'].search([
                 ('company_id', '=', self.env.company.id), ('type', '=', journal_type)
             ], limit=1)
+
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
 
-        invoices = self.env['account.move']
-        with invoices._disable_discount_precision():
-            for attachment in attachments:
-                decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
-                invoice = False
-                for decoder in sorted(decoders, key=lambda d: d[0]):
-                    invoice = decoder[1](attachment, journal=self)
-                    if invoice:
-                        break
-                if not invoice:
-                    invoice = self.env['account.move'].create({'journal_id': self.id})
-                invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
-                attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
-                invoices += invoice
-        return invoices
+        if not self:
+            raise UserError(_("No journal found"))
 
-    def create_document_from_attachment(self, attachment_ids=None):
+        # As we are coming from the journal, we assume that each attachments
+        # will create an invoice with a tentative to enhance with EDI / OCR..
+        all_invoices = self.env['account.move']
+        for attachment in attachments:
+            invoice = self.env['account.move'].create({
+                'journal_id': self.id,
+                'move_type': move_type,
+            })
+
+            invoice._extend_with_attachments(attachment, new=True)
+
+            all_invoices |= invoice
+
+            invoice.with_context(
+                account_predictive_bills_disable_prediction=True,
+                no_new_invoice=True,
+            ).message_post(attachment_ids=attachment.ids)
+
+            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+
+        return all_invoices
+
+    def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.
          :return: A action redirecting to account.move tree/form view.
         """
-        invoices = self._create_document_from_attachment(attachment_ids=attachment_ids)
+        invoices = self._create_document_from_attachment(attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],

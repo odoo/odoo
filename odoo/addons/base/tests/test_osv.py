@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import BaseCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import Query
 
 
@@ -99,3 +99,32 @@ class QueryTestCase(BaseCase):
         query.join('foo', 'bar_id', 'SELECT id FROM foo', 'id', 'bar')
         from_clause, where_clause, where_params = query.get_sql()
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
+
+
+class TestQuery(TransactionCase):
+    def test_auto(self):
+        model = self.env['res.partner.category']
+        query = model._search([])
+        self.assertIsInstance(query, Query)
+
+        ids = list(query)
+        self.assertGreater(len(ids), 1)
+
+    def test_records_as_query(self):
+        records = self.env['res.partner.category']
+        query = records._as_query()
+        self.assertEqual(list(query), records.ids)
+        self.cr.execute(*query.select())
+        self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
+
+        records = self.env['res.partner.category'].search([])
+        query = records._as_query()
+        self.assertEqual(list(query), records.ids)
+        self.cr.execute(*query.select())
+        self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
+
+        records = records.browse(reversed(records.ids))
+        query = records._as_query()
+        self.assertEqual(list(query), records.ids)
+        self.cr.execute(*query.select())
+        self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)

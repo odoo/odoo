@@ -114,6 +114,7 @@ start the server specifying the ``--unaccent`` flag.
 
 """
 import collections.abc
+import json
 import logging
 import reprlib
 import traceback
@@ -123,7 +124,7 @@ from datetime import date, datetime, time
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
-from ..models import BaseModel
+from ..models import BaseModel, check_property_field_value_name
 from odoo.tools import pycompat, Query, _generate_table_alias, sql
 
 
@@ -528,7 +529,7 @@ class expression(object):
                 return list({
                     rid
                     for name in names
-                    for rid in comodel._name_search(name, [], 'ilike', limit=None)
+                    for rid in comodel._name_search(name, [], 'ilike')
                 })
             return list(value)
 
@@ -555,7 +556,7 @@ class expression(object):
                     records = records.search([(parent_name, 'in', records.ids)], order='id')
                 domain = [('id', 'in', list(child_ids))]
             if prefix:
-                return [(left, 'in', left_model._search(domain, order='id'))]
+                return [(left, 'in', left_model._search(domain))]
             return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
@@ -583,7 +584,7 @@ class expression(object):
                     records = records[parent_name]
                 domain = [('id', 'in', list(parent_ids))]
             if prefix:
-                return [(left, 'in', left_model._search(domain, order='id'))]
+                return [(left, 'in', left_model._search(domain))]
             return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,
@@ -676,6 +677,58 @@ class expression(object):
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
 
+            elif field.type == 'properties':
+                if len(path) != 2 and "." in path[1]:
+                    raise ValueError(f"Wrong path {path}")
+                elif operator not in ('=', '!=', '>', '>=', '<', '<=', 'in', 'not in', 'like', 'ilike', 'not like', 'not ilike'):
+                    raise ValueError(f"Wrong search operator {operator!r}")
+                property_name = path[1]
+                check_property_field_value_name(property_name)
+
+                if (isinstance(right, bool) or right is None) and operator in ('=', '!='):
+                    # check for boolean value but also for key existence
+                    if right:
+                        # inverse the condition
+                        right = False
+                        operator = '!=' if operator == '=' else '='
+
+                    sql_path = f'"{alias}"."{field.name}"'
+                    key_existence_expr = ""
+                    if operator == '=':  # property == False
+                        key_existence_expr = (
+                            f"OR ({sql_path} IS NULL) "
+                            f"OR NOT ({sql_path} ? '{property_name}')"
+                        )
+
+                    expr = f"(({sql_path} -> '{property_name}') {operator} '%s' {key_existence_expr})"
+                    push_result(expr, [right])
+
+                else:
+                    if 'like' in operator:
+                        right = f'%{pycompat.to_text(right)}%'
+                        unaccent = self._unaccent(field)
+                    else:
+                        unaccent = lambda x: x
+
+                    inverse = ''
+                    arrow = '->'  # raw value
+                    if operator in ('in', 'not in'):
+                        if operator == 'not in':
+                            inverse = 'NOT'
+                        if isinstance(right, (list, tuple)):
+                            operator = '<@'
+                        else:
+                            operator = '@>'
+                        right = json.dumps(right)
+                    elif isinstance(right, str):
+                        arrow = '->>'  # JSONified value
+                    else:
+                        right = json.dumps(right)
+
+                    sql_path = f""""{alias}"."{field.name}" {arrow} '{property_name}'"""
+                    expr = f"""({inverse} ({unaccent(sql_path)}) {operator} ({unaccent('%s')}))"""
+                    push_result(expr, [right])
+
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
@@ -707,12 +760,12 @@ class expression(object):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)], order='id')
+                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)])
                 push((path[0], 'in', right_ids), model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)], order='id')
+                right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)])
                 push((path[0], 'in', right_ids), model, alias)
 
             elif not field.store:
@@ -727,10 +780,10 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        right = comodel._search([(path[1], operator, right)], order='id')
+                        right = comodel._search([(path[1], operator, right)])
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
-                    model._flush_search(domain, order='id')
+                    model._flush_search(domain)
 
                 for elem in normalize_domain(domain):
                     push(elem, model, alias, internal=True)
@@ -760,13 +813,13 @@ class expression(object):
                     if isinstance(right, str):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = comodel._name_search(right, domain or [], op2, limit=None)
+                        ids2 = comodel._name_search(right, domain or [], op2)
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
                     if inverse_is_int and domain:
-                        ids2 = comodel._search([('id', 'in', ids2)] + domain, order='id')
+                        ids2 = comodel._search([('id', 'in', ids2)] + domain)
 
                     if inverse_field.store:
                         # In the condition, one must avoid subqueries to return
@@ -782,8 +835,9 @@ class expression(object):
                             subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "id" IN %s'
                             if not inverse_field.required:
                                 subquery += f' AND "{inverse_field.name}" IS NOT NULL'
+                            subquery = f'({subquery})'
                             subparams = [tuple(ids2) or (None,)]
-                        push_result(f'("{alias}"."id" {in_} ({subquery}))', subparams)
+                        push_result(f'("{alias}"."id" {in_} {subquery})', subparams)
                     else:
                         # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
@@ -816,7 +870,7 @@ class expression(object):
                     # determine ids2 in comodel
                     ids2 = to_ids(right, comodel, leaf)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel._search(domain, order='id')
+                    ids2 = comodel._search(domain)
 
                     # rewrite condition in terms of ids2
                     if comodel == model:
@@ -837,7 +891,7 @@ class expression(object):
                         domain = field.get_domain_list(model)
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = comodel._name_search(right, domain or [], op2, limit=None)
+                        ids2 = comodel._name_search(right, domain or [], op2)
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
@@ -845,8 +899,7 @@ class expression(object):
 
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
-                        subquery, params = ids2.subselect()
-                        term_id2 = f"({subquery})"
+                        term_id2, params = ids2.subselect()
                     else:
                         # rewrite condition in terms of ids2
                         term_id2 = "%s"
@@ -857,7 +910,7 @@ class expression(object):
                     push_result(f"""
                         {exists} (
                             SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
-                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}"."id"
                             AND "{rel_alias}"."{rel_id2}" IN {term_id2}
                         )
                     """, params)
@@ -869,7 +922,7 @@ class expression(object):
                     push_result(f"""
                         {exists} (
                             SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
-                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}"."id"
                         )
                     """, [])
 
@@ -898,7 +951,7 @@ class expression(object):
                         operator = dict_op[operator]
                     elif isinstance(right, list) and operator in ('!=', '='):  # for domain (FIELD,'=',['value1','value2'])
                         operator = dict_op[operator]
-                    res_ids = comodel.with_context(active_test=False)._name_search(right, [], operator, limit=None)
+                    res_ids = comodel.with_context(active_test=False)._name_search(right, [], operator)
                     if operator in NEGATIVE_TERM_OPERATORS:
                         for dom_leaf in ('|', (left, 'in', res_ids), (left, '=', False)):
                             push(dom_leaf, model, alias)
@@ -1065,7 +1118,7 @@ class expression(object):
                 params = []
             elif isinstance(right, Query):
                 subquery, subparams = right.subselect()
-                query = '(%s."%s" %s (%s))' % (table_alias, left, operator, subquery)
+                query = '(%s."%s" %s %s)' % (table_alias, left, operator, subquery)
                 params = subparams
             elif isinstance(right, (list, tuple)):
                 if model._fields[left].type == "boolean":

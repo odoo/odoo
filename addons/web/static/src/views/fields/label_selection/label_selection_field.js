@@ -18,10 +18,10 @@ export class LabelSelectionField extends Component {
     };
 
     get className() {
-        return this.props.classesObj[this.props.value] || "primary";
+        return this.props.classesObj[this.props.record.data[this.props.name]] || "primary";
     }
     get string() {
-        return formatSelection(this.props.value, {
+        return formatSelection(this.props.record.data[this.props.name], {
             selection: Array.from(this.props.record.fields[this.props.name].selection),
         });
     }

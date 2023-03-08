@@ -143,13 +143,13 @@ class PartnerCategory(models.Model):
         return res
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        domain = domain or []
         if name:
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
-            args = [('name', operator, name)] + args
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            domain = [('name', operator, name)] + domain
+        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
 
 
 class PartnerTitle(models.Model):
@@ -374,7 +374,9 @@ class Partner(models.Model):
                 domain += [('company_id', 'in', [False, partner.company_id.id])]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
+            # For VAT number being only one character, we will skip the check just like the regular check_vat
+            should_check_vat = partner.vat and len(partner.vat) != 1
+            partner.same_vat_partner_id = should_check_vat and not partner.parent_id and Partner.search(domain, limit=1)
             # check company_registry
             domain = [
                 ('company_registry', '=', partner.company_registry),
@@ -886,15 +888,14 @@ class Partner(models.Model):
         return partner.name_get()[0]
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
         always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
         # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in') \
-                and args[0][2] != [False]:
+        if len(domain) == 1 and len(domain[0]) == 3 and domain[0][:2] == ('parent_id', 'in') \
+                and domain[0][2] != [False]:
             self = self.with_context(active_test=False)
-        return super(Partner, self)._search(args, offset=offset, limit=limit, order=order,
-                                            count=count, access_rights_uid=access_rights_uid)
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -1056,7 +1057,7 @@ class Partner(models.Model):
         """
         States = self.env['res.country.state']
         states_ids = {vals['state_id'] for vals in vals_list if vals.get('state_id')}
-        state_to_country = States.search([('id', 'in', list(states_ids))]).read(['country_id'])
+        state_to_country = States.search_read([('id', 'in', list(states_ids))], ['country_id'])
         for vals in vals_list:
             if vals.get('state_id'):
                 country_id = next(c['country_id'][0] for c in state_to_country if c['id'] == vals.get('state_id'))

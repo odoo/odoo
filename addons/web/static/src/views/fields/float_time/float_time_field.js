@@ -27,7 +27,7 @@ export class FloatTimeField extends Component {
     }
 
     get formattedValue() {
-        return formatFloatTime(this.props.value);
+        return formatFloatTime(this.props.record.data[this.props.name]);
     }
 }
 

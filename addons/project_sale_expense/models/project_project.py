@@ -15,7 +15,6 @@ class Project(models.Model):
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
         query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query.order = None
         query_string, query_param = query.select('sale_order_id', 'product_id', 'array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
         query_string = f"{query_string} GROUP BY sale_order_id, product_id"
         self._cr.execute(query_string, query_param)

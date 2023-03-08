@@ -223,7 +223,7 @@ export class FormCompiler extends ViewCompiler {
             ? `d-flex {{ __comp__.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
         const stateClasses =
-            "{{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}";
+            "{{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}";
         const form = createElement("div", {
             "t-att-class": "__comp__.props.class",
             "t-attf-class": `{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses} ${stateClasses}`,
@@ -673,14 +673,5 @@ export class FormCompiler extends ViewCompiler {
             append(sheetFG, compiled);
         }
         return sheetBG;
-    }
-
-    /**
-     * @override
-     */
-    compileWidget(el) {
-        const widget = super.compileWidget(el);
-        widget.setAttribute("readonly", `!__comp__.props.record.isInEdition`);
-        return widget;
     }
 }

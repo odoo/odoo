@@ -2,7 +2,7 @@
 
 from datetime import date
 
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -19,6 +19,12 @@ class TestPaymentToken(PaymentCommon):
         for user in users:
             with self.assertRaises(AccessError):
                 token.with_user(user).read()
+
+    def test_cannot_assign_token_to_public_partner(self):
+        """ Test that no token can be assigned to the public partner. """
+        token = self._create_token()
+        with self.assertRaises(ValidationError):
+            token.partner_id = self.public_user.partner_id
 
     def test_token_cannot_be_unarchived(self):
         """ Test that unarchiving disabled tokens is forbidden. """

@@ -145,6 +145,9 @@ export class PosGlobalState extends PosModel {
             selectedOrder: null,
             selectedPartner: null,
             selectedCategoryId: null,
+            // FIXME POSREF this piece of state should probably be private to the product screen
+            // but it currently needs to be available to the ProductInfo screen for dubious functional reasons
+            searchProductWord: "",
         });
 
         this.ready = new Promise((resolve) => {
@@ -2343,7 +2346,6 @@ export class Orderline extends PosModel {
         return {
             priceWithTax: all_taxes.total_included,
             priceWithoutTax: all_taxes.total_excluded,
-            priceSumTaxVoid: all_taxes.total_void,
             priceWithTaxBeforeDiscount: all_taxes_before_discount.total_included,
             tax: taxtotal,
             taxDetails: taxdetail,
@@ -2639,6 +2641,7 @@ export class Order extends PosModel {
         } else {
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.access_token = uuidv4(); // unique uuid used to identify the authenticity of the request from the QR code.
+            this.ticketCode = this._generateTicketCode(); // 5-digits alphanum code shown on the receipt
             this.uid = this.generate_unique_id();
             this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
@@ -2746,6 +2749,7 @@ export class Order extends PosModel {
         this.is_tipped = json.is_tipped || false;
         this.tip_amount = json.tip_amount || 0;
         this.access_token = json.access_token || "";
+        this.ticketCode = json.ticket_code || "";
     }
     export_as_JSON() {
         var orderLines, paymentLines;
@@ -2781,6 +2785,7 @@ export class Order extends PosModel {
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
             access_token: this.access_token || "",
+            ticket_code: this.ticketCode || "",
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -2889,6 +2894,8 @@ export class Order extends PosModel {
             },
             currency: this.pos.currency,
             pos_qr_code: this._get_qr_code_data(),
+            ticket_code: this.pos.company.point_of_sale_ticket_unique_code ? this.ticketCode : false,
+            base_url: this.pos.base_url,
         };
 
         if (is_html(this.pos.config.receipt_header)) {
@@ -3730,5 +3737,16 @@ export class Order extends PosModel {
         } else {
             return false;
         }
+    }
+    /**
+     * Returns a random 5 digits alphanumeric code
+     * @returns {string}
+     */
+    _generateTicketCode() {
+        let code = '';
+        while (code.length != 5){
+            code = Math.random().toString(36).slice(2, 7);
+        }
+        return code;
     }
 }

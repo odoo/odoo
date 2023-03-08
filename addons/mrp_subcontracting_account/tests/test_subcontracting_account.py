@@ -8,13 +8,20 @@ from odoo.tools.float_utils import float_round, float_compare
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 from odoo.addons.mrp_account.tests.test_bom_price import TestBomPriceCommon
 
+
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
+        # pylint: disable=bad-whitespace
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'fifo'
+        product_category_all.property_valuation = 'real_time'
+        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        stock_out_acc_id = product_category_all.property_stock_account_output_categ_id.id
+        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
@@ -44,6 +51,8 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         move2.move_line_ids.qty_done = 10.0
         move2._action_done()
 
+        all_amls_ids = self.env['account.move.line'].search([]).ids
+
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
@@ -70,6 +79,21 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(picking_receipt.move_ids.stock_valuation_layer_ids.value, 0)
         self.assertEqual(picking_receipt.move_ids.product_id.value_svl, 60)
 
+        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        all_amls_ids += amls.ids
+        self.assertRecordValues(amls, [
+            # Receipt from subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 60.0, 'credit': 0.0},
+            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
+            # Delivery com2 to subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
+            # Delivery com2 to subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
+        ])
+
         # Do the same without any additionnal cost
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
@@ -89,6 +113,19 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         # is the sum of the components' costs: 10 + 20 = 30
         self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 30)
         self.assertEqual(picking_receipt.move_ids.product_id.value_svl, 90)
+
+        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        self.assertRecordValues(amls, [
+            # Receipt from subcontractor
+            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 30.0,  'credit': 0.0},
+            # Delivery com2 to subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
+            # Delivery com2 to subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
+        ])
 
     def test_subcontracting_account_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product

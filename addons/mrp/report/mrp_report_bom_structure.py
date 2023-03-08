@@ -499,8 +499,8 @@ class ReportBomStructure(models.AbstractModel):
                 'route_type': 'manufacture',
                 'route_name': manufacture_rules[0].route_id.display_name,
                 'route_detail': bom.display_name,
-                'lead_time': product.produce_delay + rules_delay,
-                'manufacture_delay': product.produce_delay + rules_delay,
+                'lead_time': bom.produce_delay + rules_delay,
+                'manufacture_delay': bom.produce_delay + rules_delay,
             }
         return {}
 

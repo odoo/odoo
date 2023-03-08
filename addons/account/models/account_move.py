@@ -6,6 +6,8 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
 from json import dumps
+import logging
+from psycopg2 import OperationalError
 import re
 from textwrap import shorten
 from unittest.mock import patch
@@ -20,19 +22,20 @@ from odoo.tools import (
     email_split,
     float_compare,
     float_is_zero,
+    float_repr,
     format_amount,
     format_date,
     formatLang,
     frozendict,
     get_lang,
+    index_exists,
     is_html_empty,
-    sql
 )
 
+_logger = logging.getLogger(__name__)
 
-#forbidden fields
-INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+
+MAX_HASH_VERSION = 3
 
 TYPE_REVERSE_MAP = {
     'entry': 'entry',
@@ -77,7 +80,7 @@ class AccountMove(models.Model):
     # === Accounting fields === #
     name = fields.Char(
         string='Number',
-        compute='_compute_name', readonly=False, store=True,
+        compute='_compute_name', inverse='_inverse_name', readonly=False, store=True,
         copy=False,
         tracking=True,
         index='trigram',
@@ -319,6 +322,7 @@ class AccountMove(models.Model):
              "otherwise a Partner bank account number.",
         check_company=True,
         tracking=True,
+        ondelete='restrict',
     )
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
@@ -339,6 +343,7 @@ class AccountMove(models.Model):
         copy=False,
         help="The payment reference to set on journal items.",
         tracking=True,
+        compute='_compute_payment_reference', inverse='_inverse_payment_reference', store=True, readonly=False,
     )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
@@ -528,6 +533,17 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
+    invoice_pdf_report_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="PDF Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('invoice_pdf_report_id', 'invoice_pdf_report_file'),
+        depends=['invoice_pdf_report_file']
+    )
+    invoice_pdf_report_file = fields.Binary(
+        attachment=True,
+        string="PDF File",
+        copy=False,
+    )
 
     # === Display purpose fields === #
     # used to have a dynamic domain on journal / taxes in the form view.
@@ -559,18 +575,42 @@ class AccountMove(models.Model):
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
     show_discount_details = fields.Boolean(compute="_compute_show_payment_term_details")
 
+    _sql_constraints = [(
+        'unique_name', "", "Another entry with the same name already exists.",
+    )]
+
     def _auto_init(self):
         super()._auto_init()
-        self.env.cr.execute("""
-            CREATE INDEX IF NOT EXISTS account_move_to_check_idx
-            ON account_move(journal_id) WHERE to_check = true;
-            CREATE INDEX IF NOT EXISTS account_move_payment_idx
-            ON account_move(journal_id, state, payment_state, move_type, date);
-        """)
+        if not index_exists(self.env.cr, 'account_move_to_check_idx'):
+            self.env.cr.execute("""
+                CREATE INDEX account_move_to_check_idx
+                          ON account_move(journal_id)
+                       WHERE to_check = true
+            """)
+        if not index_exists(self.env.cr, 'account_move_payment_idx'):
+            self.env.cr.execute("""
+                CREATE INDEX account_move_payment_idx
+                          ON account_move(journal_id, state, payment_state, move_type, date)
+            """)
+        if not index_exists(self.env.cr, 'account_move_unique_name'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_move_unique_name
+                                 ON account_move(name, journal_id)
+                              WHERE (state = 'posted' AND name != '/')
+            """)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    def _compute_payment_reference(self):
+        for move in self.filtered(lambda m: (
+            m.state == 'posted'
+            and m.move_type == 'out_invoice'
+            and not m.payment_reference
+        )):
+            move.payment_reference = move._get_invoice_computed_reference()
+        self._inverse_payment_reference()
 
     @api.depends('invoice_date', 'company_id')
     def _compute_date(self):
@@ -693,11 +733,12 @@ class AccountMove(models.Model):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
+        self._inverse_name()
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
         for record in self:
-            record.highest_name = record._get_last_sequence(lock=False)
+            record.highest_name = record._get_last_sequence()
 
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
@@ -983,7 +1024,6 @@ class AccountMove(models.Model):
                             'discount_date': invoice_payment_terms.get('discount_date'),
                             'discount_balance': invoice_payment_terms.get('discount_balance') or 0.0,
                             'discount_amount_currency': invoice_payment_terms.get('discount_amount_currency') or 0.0,
-
                         }
                         if multiple_installments:
                             values['name'] = f'{values["name"]} installment #{i + 1}'.lstrip()
@@ -1002,7 +1042,6 @@ class AccountMove(models.Model):
                     })] = {
                         'balance': invoice.amount_total_signed,
                         'amount_currency': invoice.amount_total_in_currency_signed,
-                        'name': invoice.payment_reference or '',
                     }
 
     def _compute_payments_widget_to_reconcile_info(self):
@@ -1145,7 +1184,7 @@ class AccountMove(models.Model):
 
                 kwargs = {
                     'base_lines': base_line_values_list,
-                    'currency': move.currency_id or move.journal_id.currency_id or move.journal_id.company_id.currency_id,
+                    'currency': move.currency_id or move.journal_id.currency_id or move.company_id.currency_id,
                 }
 
                 if move.id:
@@ -1444,6 +1483,20 @@ class AccountMove(models.Model):
         for move in self:
             move.amount_total_words = move.currency_id.amount_to_text(move.amount_total).replace(',', '')
 
+    def _compute_linked_attachment_id(self, attachment_field, binary_field):
+        """Helper to retreive Attachment from Binary fields
+        This is needed because fields.Many2one('ir.attachment') makes all
+        attachments available to the user.
+        """
+        attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('res_field', '=', binary_field)
+        ])
+        move_vals = {att.res_id: att for att in attachments}
+        for move in self:
+            move[attachment_field] = move_vals.get(move.id, False)
+
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------
@@ -1517,6 +1570,16 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.journal_id.currency_id and invoice.journal_id.currency_id != invoice.currency_id:
                 self.env.add_to_compute(self._fields['journal_id'], invoice)
+
+    def _inverse_payment_reference(self):
+        self.line_ids._conditional_add_to_compute('name', lambda line: (
+            line.display_type == 'payment_term'
+        ))
+
+    def _inverse_name(self):
+        self._conditional_add_to_compute('payment_reference', lambda move: (
+            move.name and move.name != '/'
+        ))
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -1623,37 +1686,13 @@ class AccountMove(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
-        if not self.quick_edit_mode and self._get_last_sequence(lock=False):
+        if not self.quick_edit_mode and self._get_last_sequence():
             self.name = '/'
             self._compute_name()
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
-
-    @api.constrains('name', 'journal_id', 'state')
-    def _check_unique_sequence_number(self):
-        moves = self.filtered(lambda move: move.state == 'posted')
-        if not moves:
-            return
-
-        self.flush_model(['name', 'journal_id', 'move_type', 'state'])
-
-        # /!\ Computed stored fields are not yet inside the database.
-        self._cr.execute('''
-            SELECT move2.id, move2.name
-            FROM account_move move
-            INNER JOIN account_move move2 ON
-                move2.name = move.name
-                AND move2.journal_id = move.journal_id
-                AND move2.move_type = move.move_type
-                AND move2.id != move.id
-            WHERE move.id IN %s AND move2.state = 'posted'
-        ''', [tuple(moves.ids)])
-        res = self._cr.fetchall()
-        if res:
-            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
-                                    'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
 
     @contextmanager
     def _check_balanced(self, container):
@@ -2064,7 +2103,6 @@ class AccountMove(models.Model):
         def existing():
             return {
                 move: {
-                    'payment_reference': move.payment_reference,
                     'commercial_partner_id': move.commercial_partner_id,
                 }
                 for move in container['records'].filtered(lambda m: m.is_invoice(True))
@@ -2078,8 +2116,6 @@ class AccountMove(models.Model):
         after = existing()
 
         for move in after:
-            if changed('payment_reference'):
-                move.line_ids.filtered(lambda l: l.display_type == 'payment_term').name = after[move]['payment_reference']
             if changed('commercial_partner_id'):
                 move.line_ids.partner_id = after[move]['commercial_partner_id']
 
@@ -2205,8 +2241,8 @@ class AccountMove(models.Model):
             return True
         self._sanitize_vals(vals)
         for move in self:
-            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
-                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
+            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
+                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(move._get_integrity_hash_fields()))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
@@ -2255,6 +2291,7 @@ class AccountMove(models.Model):
 
                 # Hash the move
                 if vals.get('state') == 'posted':
+                    self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
                     for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
                         new_number = move.journal_id.secure_sequence_id.next_by_id()
                         res |= super(AccountMove, move).write({
@@ -2640,6 +2677,18 @@ class AccountMove(models.Model):
     # HASH
     # -------------------------------------------------------------------------
 
+    def _get_integrity_hash_fields(self):
+        # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['date', 'journal_id', 'company_id']
+        elif hash_version in (2, 3):
+            return ['name', 'date', 'journal_id', 'company_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
+
+    def _get_integrity_hash_fields_and_subfields(self):
+        return self._get_integrity_hash_fields() + [f'line_ids.{subfield}' for subfield in self.line_ids._get_integrity_hash_fields()]
+
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on journal entries when they get posted"""
         self.ensure_one()
@@ -2663,20 +2712,25 @@ class AccountMove(models.Model):
         hash_string = sha256((previous_hash + self.string_to_hash).encode('utf-8'))
         return hash_string.hexdigest()
 
+    @api.depends(lambda self: self._get_integrity_hash_fields_and_subfields())
+    @api.depends_context('hash_version')
     def _compute_string_to_hash(self):
         def _getattrstring(obj, field_str):
+            hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
             field_value = obj[field_str]
             if obj._fields[field_str].type == 'many2one':
                 field_value = field_value.id
+            if obj._fields[field_str].type == 'monetary' and hash_version >= 3:
+                return float_repr(field_value, obj.currency_id.decimal_places)
             return str(field_value)
 
         for move in self:
             values = {}
-            for field in INTEGRITY_HASH_MOVE_FIELDS:
+            for field in move._get_integrity_hash_fields():
                 values[field] = _getattrstring(move, field)
 
             for line in move.line_ids:
-                for field in INTEGRITY_HASH_LINE_FIELDS:
+                for field in line._get_integrity_hash_fields():
                     k = 'line_%d_%s' % (line.id, field)
                     values[k] = _getattrstring(line, field)
             #make the json serialization canonical
@@ -2725,6 +2779,88 @@ class AccountMove(models.Model):
             # no payment terms: maintain timedelta between due date and accounting date
             values.update({'invoice_date_due': values['date'] + (self.invoice_date_due - self.date)})
         return values
+
+    # -------------------------------------------------------------------------
+    # EDI
+    # -------------------------------------------------------------------------
+
+    @contextmanager
+    def _get_edi_creation(self):
+        """Get an environment to import documents from other sources.
+
+        Allow to edit the current move or create a new one.
+        This will prevent computing the dynamic lines at each invoice line added and only
+        compute everything at the end.
+        """
+        container = {'records': self}
+        with self._check_balanced(container),\
+             self._disable_discount_precision(),\
+             self._sync_dynamic_lines(container):
+            move = self or self.create({})
+            yield move
+            container['records'] = move
+
+    @contextmanager
+    def _disable_discount_precision(self):
+        """Disable the user defined precision for discounts.
+
+        This is useful for importing documents coming from other softwares and providers.
+        The reasonning is that if the document that we are importing has a discount, it
+        shouldn't be rounded to the local settings.
+        """
+        original_precision_get = DecimalPrecision.precision_get
+        def precision_get(self, application):
+            if application == 'Discount':
+                return 100
+            return original_precision_get(self, application)
+        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
+            yield
+
+    def _get_edi_decoder(self, file_data, new=False):
+        """To be extended with decoding capabilities.
+        :returns:  Function to be later used to import the file.
+                   Function' args:
+                   - invoice: account.move
+                   - file_data: attachemnt information / value
+                   - new: whether the invoice is newly created
+                   returns True if was able to process the invoice
+        """
+        return
+
+    def _extend_with_attachments(self, attachments, new=False):
+        """Main entry point to extend/enhance invoices with attachments.
+
+        Either coming from the chatter or the journal. It will unwrap all
+        attachemnts by priority then try to decode untill it succeed.
+
+        :returns: True if at least one doccument successfully imported
+        """
+        success = False
+
+        for file_data in attachments._unwrap_edi_attachments(): # sorted by priority
+
+            decoder = self._get_edi_decoder(file_data, new=new)
+
+            try:
+                if decoder and not success:
+                    with self._get_edi_creation() as invoice:
+                        # pylint: disable=not-callable
+                        success = decoder(invoice, file_data, new)
+
+            except RedirectWarning as rw:
+                raise rw
+            except Exception as e:
+                _logger.exception(
+                    "Error importing attachment '%s' as invoice: %s",
+                    file_data['filename'],
+                    str(e),
+                )
+
+            finally:
+                if file_data.get('on_close'):
+                    file_data['on_close']()
+
+        return success
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
@@ -3312,16 +3448,6 @@ class AccountMove(models.Model):
                 if p not in invoice.sudo().message_partner_ids
             ])
 
-            # Compute 'ref' for 'out_invoice'.
-            if invoice.move_type == 'out_invoice' and not invoice.payment_reference:
-                to_write = {
-                    'payment_reference': invoice._get_invoice_computed_reference(),
-                    'line_ids': []
-                }
-                for line in invoice.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable')):
-                    to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
-                invoice.write(to_write)
-
             if (
                 invoice.is_sale_document()
                 and invoice.journal_id.sale_activity_type_id
@@ -3446,19 +3572,6 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    def action_invoice_print(self):
-        """ Print the invoice and mark it as sent, so that we can see more
-            easily the next step of the workflow
-        """
-        if any(not move.is_invoice(include_receipts=True) for move in self):
-            raise UserError(_("Only invoices could be printed."))
-
-        self.filtered(lambda inv: not inv.is_move_sent).write({'is_move_sent': True})
-        if self.user_has_groups('account.group_account_invoice'):
-            return self.env.ref('account.account_invoices').report_action(self)
-        else:
-            return self.env.ref('account.account_invoices_without_payment').report_action(self)
-
     def action_duplicate(self):
         # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
         self.ensure_one()
@@ -3471,22 +3584,19 @@ class AccountMove(models.Model):
         return action
 
     def action_send_and_print(self):
+        template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
+
         return {
-            'name': _('Send Invoice'),
-            'res_model': 'account.invoice.send',
-            'view_mode': 'form',
-            'context': {
-                'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
-                'default_template_id': self.env.ref(self._get_mail_template()).id,
-                'mark_invoice_as_sent': True,
-                'active_model': 'account.move',
-                # Setting both active_id and active_ids is required, mimicking how direct call to
-                # ir.actions.act_window works
-                'active_id': self.ids[0],
-                'active_ids': self.ids,
-            },
-            'target': 'new',
+            'name': _("Send"),
             'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.move.send',
+            'target': 'new',
+            'context': {
+                'active_ids': self.ids,
+                'default_mail_template_id': template.id,
+            },
         }
 
     def action_invoice_sent(self):
@@ -3495,31 +3605,18 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
-        lang = False
-        if template:
-            lang = template._render_lang(self.ids)[self.id]
-        if not lang:
-            lang = get_lang(self.env).code
-        compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
-        ctx = dict(
-            default_model='account.move',
-            default_res_ids=self.ids,
-            default_template_id=template and template.id or False,
-            default_composition_mode='comment',
-            mark_invoice_as_sent=True,
-            default_email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
-            model_description=self.with_context(lang=lang).type_name,
-            force_email=True,
-            active_ids=self.ids,
-        )
 
         report_action = {
-            'name': _('Send Invoice'),
+            'name': _("Send"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.invoice.send',
-            'views': [(compose_form.id, 'form')],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.move.send',
             'target': 'new',
-            'context': ctx,
+            'context': {
+                'active_ids': self.ids,
+                'default_mail_template_id': template.id,
+            },
         }
 
         if self.env.is_admin() and not self.env.company.external_report_layout_id and not self.env.context.get('discard_logo_check'):
@@ -3656,6 +3753,43 @@ class AccountMove(models.Model):
         if len(records) == 100:  # assumes there are more whenever search hits limit
             self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
 
+    @api.model
+    def _cron_account_move_send(self, job_count=10, with_commit=True):
+        '''
+        :param job_count:   The maximum number of jobs to process if specified.
+        :param with_commit: Flag indicating a commit should be made between each job.
+        '''
+        # Clean already processed wizards.
+        self.env['account.move.send'].search([('mode', '=', 'done')]).unlink()
+
+        # Process.
+        limit = job_count + 1
+        to_process = self.env['account.move.send'].search([('mode', '!=', 'done')], limit=limit)
+
+        need_retrigger = len(to_process) > job_count
+
+        for wizard in to_process[:job_count]:
+            move_to_lock = wizard.move_ids
+            try:
+                with self.env.cr.savepoint(flush=False):
+                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
+
+            except OperationalError as e:
+                if e.pgcode == '55P03':
+                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                    if not with_commit:
+                        raise UserError(_('This document is being sent by another process already.'))
+                    continue
+                else:
+                    raise e
+            wizard.action_send_and_print(from_cron=True)
+
+            if with_commit:
+                self.env.cr.commit()
+
+        if need_retrigger:
+            self.env.ref('account.ir_cron_account_move_send')._trigger()
+
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
@@ -3711,7 +3845,7 @@ class AccountMove(models.Model):
         """
         lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
         today = fields.Date.today()
-        highest_name = self.highest_name or self._get_last_sequence(relaxed=True, lock=False)
+        highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
         number_reset = self._deduce_sequence_number_reset(highest_name)
         if lock_dates:
             invoice_date = lock_dates[-1][0] + timedelta(days=1)
@@ -3804,38 +3938,6 @@ class AccountMove(models.Model):
         self.qr_code_method = qr_code_method
 
         return rslt
-
-    @contextmanager
-    def _get_edi_creation(self):
-        """Get an environment to import documents from other sources.
-
-        Allow to edit the current move or create a new one.
-        This will prevent computing the dynamic lines at each invoice line added and only
-        compute everything at the end.
-        """
-        container = {'records': self}
-        with self._check_balanced(container),\
-             self._disable_discount_precision(),\
-             self._sync_dynamic_lines(container):
-            move = self or self.create({})
-            yield move
-            container['records'] = move
-
-    @contextmanager
-    def _disable_discount_precision(self):
-        """Disable the user defined precision for discounts.
-
-        This is useful for importing documents coming from other softwares and providers.
-        The reasonning is that if the document that we are importing has a discount, it
-        shouldn't be rounded to the local settings.
-        """
-        original_precision_get = DecimalPrecision.precision_get
-        def precision_get(self, application):
-            if application == 'Discount':
-                return 100
-            return original_precision_get(self, application)
-        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
-            yield
 
     # -------------------------------------------------------------------------
     # TOOLING
@@ -3974,7 +4076,7 @@ class AccountMove(models.Model):
         res = super()._message_post_after_hook(new_message, message_values)
 
         attachments = new_message.attachment_ids
-        if len(self) != 1 or not attachments or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
+        if not attachments or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
             return res
 
         odoobot = self.env.ref('base.partner_root')
@@ -3991,15 +4093,9 @@ class AccountMove(models.Model):
                               author_id=odoobot.id)
             return res
 
-        decoders = self.env['account.move']._get_update_invoice_from_attachment_decoders(self)
-        with self._disable_discount_precision():
-            for decoder in sorted(decoders, key=lambda d: d[0]):
-                # start with message_main_attachment_id, that way if OCR is installed, only that one will be parsed.
-                # this is based on the fact that the ocr will be the last decoder.
-                for attachment in attachments.sorted(lambda x: x != self.message_main_attachment_id):
-                    invoice = decoder[1](attachment, self)
-                    if invoice:
-                        return res
+        # As we are coming from the mail, we assume that ONE of the attachments
+        # will enhance the invoice thanks to EDI / OCR / .. capabilities
+        self._extend_with_attachments(attachments, new=False)
 
         return res
 
@@ -4057,23 +4153,23 @@ class AccountMove(models.Model):
         render_context['subtitles'] = subtitles
         return render_context
 
-    def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
-        """ This method extension ensures that, when using the "Send & Print" feature
-        if the user adds an attachment, the latter will be linked to the record. """
-        self.ensure_one()
-        message_values['model'] = self._name
-        message_values['res_id'] = self.id
+    def _get_mail_thread_data_attachments(self):
+        res = super()._get_mail_thread_data_attachments()
+        # else, attachments with 'res_field' get excluded
+        return res | self.env['account.move.send']._get_linked_attachments(self)
 
-        if attachment_ids:
-            # taking advantage of cache looks better in this case, to check
-            filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
-                lambda a: a.res_model == 'account.invoice.send' and a.create_uid.id == self._uid)
-            # link account.invoice.send attachments to mail.compose.message, so that it is then
-            # updated with respect to access rights records in base method
-            if filtered_attachment_ids:
-                filtered_attachment_ids.res_model = 'mail.compose.message'
+    # -------------------------------------------------------------------------
+    # TOOLING
+    # -------------------------------------------------------------------------
 
-        return super()._process_attachments_for_post(attachments, attachment_ids, message_values)
+    def _conditional_add_to_compute(self, fname, condition):
+        field = self._fields[fname]
+        to_reset = self.filtered(lambda move:
+            condition(move)
+            and not self.env.is_protected(field, move)
+        )
+        to_reset.invalidate_recordset([fname])
+        self.env.add_to_compute(field, to_reset)
 
     # -------------------------------------------------------------------------
     # HOOKS
@@ -4122,21 +4218,6 @@ class AccountMove(models.Model):
         the default one. For example please review the l10n_ar module """
         self.ensure_one()
         return 'account.report_invoice_document'
-
-    def _get_create_document_from_attachment_decoders(self):
-        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
-
-        :returns:   A list of tuples (priority, method) where method takes an attachment as parameter.
-        """
-        return []
-
-    def _get_update_invoice_from_attachment_decoders(self, invoice):
-        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
-
-        :param invoice: The invoice on which to update the data.
-        :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
-        """
-        return []
 
     def _is_downpayment(self):
         ''' Return true if the invoice is a downpayment.

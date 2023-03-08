@@ -2,11 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import warnings
 
 from odoo.tools.sql import make_identifier
-
-from .func import lazy_property
 
 IDENT_RE = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 
@@ -71,15 +68,20 @@ class Query(object):
         self.limit = None
         self.offset = None
 
+        # memoized result
+        self._ids = None
+
     def add_table(self, alias, table=None):
         """ Add a table with a given alias to the from clause. """
         assert alias not in self._tables and alias not in self._joins, "Alias %r already in %s" % (alias, str(self))
         self._tables[alias] = table or alias
+        self._ids = None
 
     def add_where(self, where_clause, where_params=()):
         """ Add a condition to the where clause. """
         self._where_clauses.append(where_clause)
         self._where_params.extend(where_params)
+        self._ids = None
 
     def join(self, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra=None, extra_params=()):
         """
@@ -144,15 +146,15 @@ class Query(object):
 
         if rhs_alias not in self._joins:
             condition = f'"{lhs_alias}"."{lhs_column}" = "{rhs_alias}"."{rhs_column}"'
-            condition_params = []
             if extra:
                 condition = condition + " AND " + extra.format(lhs=lhs_alias, rhs=rhs_alias)
-                condition_params = list(extra_params)
+            condition_params = list(extra_params)
             if kind:
                 self._joins[rhs_alias] = (kind, rhs_table, condition, condition_params)
             else:
                 self._tables[rhs_alias] = rhs_table
                 self.add_where(condition, condition_params)
+            self._ids = None
 
         return rhs_alias
 
@@ -160,7 +162,7 @@ class Query(object):
         """ Return the SELECT query as a pair ``(query_string, query_params)``. """
         from_clause, where_clause, params = self.get_sql()
         query_str = 'SELECT {} FROM {} WHERE {}{}{}{}'.format(
-            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+            ", ".join(args or [f'"{next(iter(self._tables))}"."id"']),
             from_clause,
             where_clause or "TRUE",
             (" ORDER BY %s" % self.order) if self.order else "",
@@ -171,19 +173,29 @@ class Query(object):
 
     def subselect(self, *args):
         """ Similar to :meth:`.select`, but for sub-queries.
-            This one avoids the ORDER BY clause when possible.
+            This one avoids the ORDER BY clause when possible,
+            and includes parentheses around the subquery.
         """
+        if self._ids is not None and not args:
+            # inject the known result instead of the subquery
+            return "%s", [self._ids or (None,)]
+
         if self.limit or self.offset:
             # in this case, the ORDER BY clause is necessary
-            return self.select(*args)
+            query_str, params = self.select(*args)
+            return f"({query_str})", params
 
         from_clause, where_clause, params = self.get_sql()
-        query_str = 'SELECT {} FROM {} WHERE {}'.format(
-            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+        query_str = '(SELECT {} FROM {} WHERE {})'.format(
+            ", ".join(args or [f'"{next(iter(self._tables))}"."id"']),
             from_clause,
             where_clause or "TRUE",
         )
         return query_str, params
+
+    def is_empty(self):
+        """ Return whether the query is known to return nothing. """
+        return self._ids == ()
 
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
@@ -198,33 +210,69 @@ class Query(object):
         where_clause = " AND ".join(self._where_clauses)
         return from_clause, where_clause, params + self._where_params
 
-    @lazy_property
-    def _result(self):
-        query_str, params = self.select()
-        self._cr.execute(query_str, params)
-        return [row[0] for row in self._cr.fetchall()]
+    def get_result_ids(self):
+        """ Return the result of ``self.select()`` as a tuple of ids. The result
+        is memoized for future use, which avoids making the same query twice.
+        """
+        if self._ids is None:
+            query_str, params = self.select()
+            self._cr.execute(query_str, params)
+            self._ids = tuple(row[0] for row in self._cr.fetchall())
+        return self._ids
+
+    def set_result_ids(self, ids, ordered=True):
+        """ Set up the query to return the lines given by ``ids``. The parameter
+        ``ordered`` tells whether the query must be ordered to match exactly the
+        sequence ``ids``.
+        """
+        assert not (self._joins or self._where_clauses or self.limit or self.offset), \
+            "Method set_result_ids() can only be called on a virgin Query"
+        ids = tuple(ids)
+        if not ids:
+            self.add_where("FALSE")
+        elif ordered:
+            # This guarantees that self.select() returns the results in the
+            # expected order of ids:
+            #   SELECT "stuff".id
+            #   FROM "stuff"
+            #   JOIN (SELECT * FROM unnest(%s) WITH ORDINALITY) AS "stuff__ids"
+            #       ON ("stuff"."id" = "stuff__ids"."unnest")
+            #   WHERE TRUE
+            #   ORDER BY "stuff__ids"."ordinality"
+            alias = self.join(
+                next(iter(self._tables)), 'id',
+                'SELECT * FROM unnest(%s) WITH ORDINALITY', 'unnest',
+                'ids', extra_params=[list(ids)],
+            )
+            self.order = f'"{alias}"."ordinality"'
+        else:
+            self.add_where(f'"{next(iter(self._tables))}"."id" IN %s', [ids])
+        self._ids = ids
 
     def __str__(self):
         return '<osv.Query: %r with params: %r>' % self.select()
 
     def __bool__(self):
-        return bool(self._result)
+        return bool(self.get_result_ids())
 
     def __len__(self):
-        return len(self._result)
+        if self._ids is None:
+            if self.limit or self.offset:
+                # optimization: generate a SELECT FROM, and then count the rows
+                query_str, params = self.select('')
+                query_str = f'SELECT COUNT(*) FROM ({query_str}) t'
+            else:
+                query_str, params = self.select('COUNT(*)')
+            self._cr.execute(query_str, params)
+            return self._cr.fetchone()[0]
+        return len(self.get_result_ids())
 
     def __iter__(self):
-        return iter(self._result)
+        return iter(self.get_result_ids())
 
     #
     # deprecated attributes and methods
     #
-    @property
-    def tables(self):
-        warnings.warn("deprecated Query.tables, use Query.get_sql() instead",
-                      DeprecationWarning)
-        return tuple(_from_table(table, alias) for alias, table in self._tables.items())
-
     @property
     def where_clause(self):
         return tuple(self._where_clauses)
@@ -232,11 +280,3 @@ class Query(object):
     @property
     def where_clause_params(self):
         return tuple(self._where_params)
-
-    def add_join(self, connection, implicit=True, outer=False, extra=None, extra_params=()):
-        warnings.warn("deprecated Query.add_join, use Query.join() or Query.left_join() instead",
-                      DeprecationWarning)
-        lhs_alias, rhs_table, lhs_column, rhs_column, link = connection
-        kind = '' if implicit else ('LEFT JOIN' if outer else 'JOIN')
-        rhs_alias = self._join(kind, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
-        return rhs_alias, _from_table(rhs_table, rhs_alias)

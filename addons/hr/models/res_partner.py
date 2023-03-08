@@ -32,10 +32,18 @@ class Partner(models.Model):
 
     def action_open_employees(self):
         self.ensure_one()
+        if len(self.employee_ids) > 1:
+            return {
+                'name': _('Related Employees'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'hr.employee',
+                'view_mode': 'form',
+                'domain': [('id', 'in', self.employee_ids.ids)],
+            }
         return {
-            'name': _('Related Employees'),
+            'name': _('Employee'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.employee',
-            'view_mode': 'kanban,tree,form',
-            'domain': [('id', 'in', self.employee_ids.ids)],
+            'res_id': self.employee_ids.id,
+            'view_mode': 'form',
         }

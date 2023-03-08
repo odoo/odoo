@@ -18,7 +18,9 @@ export class Many2ManyTagsAvatarUserField extends Many2ManyTagsAvatarField {
     setup() {
         super.setup();
         this.openChat = useOpenChat(this.relation);
-        useAssignUserCommand();
+        if (this.props.withCommand) {
+            useAssignUserCommand();
+        }
     }
 
     get tags() {
@@ -44,19 +46,29 @@ export const many2ManyTagsAvatarUserField = {
 registry.category("fields").add("many2many_avatar_user", many2ManyTagsAvatarUserField);
 
 export class KanbanMany2ManyTagsAvatarUserField extends ListKanbanMany2ManyTagsAvatarField {
+    static props = {
+        ...ListKanbanMany2ManyTagsAvatarField.props,
+        displayText: { type: Boolean, optional: true },
+    };
+
     setup() {
         super.setup();
         this.openChat = useOpenChat(this.relation);
-        useAssignUserCommand();
+        if (this.props.withCommand) {
+            useAssignUserCommand();
+        }
     }
 
     get displayText() {
-        const isList = this.props.record.activeFields[this.props.name].viewType === "list";
-        return (isList && this.props.value.records.length === 1) || !this.props.readonly;
+        return (
+            (this.props.displayText && this.props.record.data[this.props.name].records.length === 1) ||
+            !this.props.readonly
+        );
     }
 
     get tags() {
-        const recordFromId = (id) => this.props.value.records.find((rec) => rec.id === id);
+        const recordFromId = (id) =>
+            this.props.record.data[this.props.name].records.find((rec) => rec.id === id);
         return super.tags.map((tag) => ({
             ...tag,
             onImageClicked: () => {
@@ -75,6 +87,10 @@ export const kanbanMany2ManyTagsAvatarUserField = {
     ...listKanbanMany2ManyTagsAvatarField,
     component: KanbanMany2ManyTagsAvatarUserField,
     additionalClasses: ["o_field_many2many_tags_avatar"],
+    extractProps: (fieldInfo) => ({
+        ...listKanbanMany2ManyTagsAvatarField.extractProps(fieldInfo),
+        displayText: fieldInfo.viewType === "list",
+    }),
 };
 
 registry.category("fields").add("kanban.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);

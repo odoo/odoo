@@ -140,6 +140,11 @@ QUnit.module("Views", (hooks) => {
                                 ["event", "Event"],
                             ],
                         },
+                        properties: {
+                            type: "properties",
+                            definition_record: "m2o",
+                            definition_record_field: "definitions",
+                        },
                     },
                     records: [
                         {
@@ -157,6 +162,7 @@ QUnit.module("Views", (hooks) => {
                             date: "2017-01-25",
                             datetime: "2016-12-12 10:55:05",
                             reference: "bar,1",
+                            properties: [],
                         },
                         {
                             id: 2,
@@ -168,6 +174,7 @@ QUnit.module("Views", (hooks) => {
                             m2m: [1, 2, 3],
                             amount: 500,
                             reference: "res_currency,1",
+                            properties: [],
                         },
                         {
                             id: 3,
@@ -179,6 +186,7 @@ QUnit.module("Views", (hooks) => {
                             m2m: [],
                             amount: 300,
                             reference: "res_currency,2",
+                            properties: [],
                         },
                         {
                             id: 4,
@@ -189,15 +197,18 @@ QUnit.module("Views", (hooks) => {
                             m2o: 1,
                             m2m: [1],
                             amount: 0,
+                            properties: [],
                         },
                     ],
                 },
                 bar: {
-                    fields: {},
+                    fields: {
+                        definitions: { type: "properties_definitions" },
+                    },
                     records: [
-                        { id: 1, display_name: "Value 1" },
-                        { id: 2, display_name: "Value 2" },
-                        { id: 3, display_name: "Value 3" },
+                        { id: 1, display_name: "Value 1", definitions: [] },
+                        { id: 2, display_name: "Value 2", definitions: [] },
+                        { id: 3, display_name: "Value 3", definitions: [] },
                     ],
                 },
                 res_currency: {
@@ -6387,6 +6398,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("use default_order on editable tree: sort on demand", async function (assert) {
         serverData.models.foo.records[0].o2m = [1, 3];
         serverData.models.bar.fields = {
+            ...serverData.models.bar.fields,
             name: { string: "Name", type: "char", sortable: true },
         };
         serverData.models.bar.records[0].name = "Value 1";
@@ -6447,6 +6459,7 @@ QUnit.module("Views", (hooks) => {
         "use default_order on editable tree: sort on demand in page",
         async function (assert) {
             serverData.models.bar.fields = {
+                ...serverData.models.bar.fields,
                 name: { string: "Name", type: "char", sortable: true },
             };
 
@@ -9655,6 +9668,7 @@ QUnit.module("Views", (hooks) => {
         "grouped list with another grouped list parent, click unfold",
         async function (assert) {
             serverData.models.bar.fields = {
+                ...serverData.models.bar.fields,
                 cornichon: { string: "cornichon", type: "char" },
             };
 
@@ -17303,5 +17317,821 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_pager_value", "1-2");
 
         assert.containsN(target, ".o_data_row", 2);
+    });
+
+    QUnit.test("Properties: char", async (assert) => {
+        const definition = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "CHAR" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [
+                        [1],
+                        { properties: [{ ...definition, value: "TEST" }] },
+                    ]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_char']")
+                .textContent,
+            "Property char"
+        );
+        assert.containsN(target, ".o_field_cell.o_char_cell", 3);
+        assert.strictEqual(target.querySelector(".o_field_cell.o_char_cell").textContent, "CHAR");
+
+        await click(target.querySelector(".o_field_cell.o_char_cell"));
+        await editInput(target, ".o_field_cell.o_char_cell input", "TEST");
+        await clickSave(target);
+
+        assert.strictEqual(target.querySelector(".o_field_cell.o_char_cell").textContent, "TEST");
+    });
+
+    QUnit.test("Properties: boolean", async (assert) => {
+        const definition = {
+            type: "boolean",
+            name: "property_boolean",
+            string: "Property boolean",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: true }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [
+                        [1],
+                        { properties: [{ ...definition, value: false }] },
+                    ]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_boolean']")
+                .textContent,
+            "Property boolean"
+        );
+        assert.containsN(target, ".o_field_cell.o_boolean_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_boolean_cell"));
+        await click(target.querySelector(".o_field_cell.o_boolean_cell input"));
+        await clickSave(target);
+
+        assert.strictEqual(
+            target.querySelector(".o_field_cell.o_boolean_cell input").checked,
+            false
+        );
+    });
+
+    QUnit.test("Properties: integer", async (assert) => {
+        const definition = {
+            type: "integer",
+            name: "property_integer",
+            string: "Property integer",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: 123 }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [[1], { properties: [{ ...definition, value: 321 }] }]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_integer']");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_integer']")
+                .textContent,
+            "Property integer"
+        );
+        assert.containsN(target, ".o_field_cell.o_integer_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_integer_cell"));
+        await editInput(target, ".o_field_cell.o_integer_cell input", 321);
+        await clickSave(target);
+
+        assert.strictEqual(target.querySelector(".o_field_cell.o_integer_cell").textContent, "321");
+    });
+
+    QUnit.test("Properties: float", async (assert) => {
+        const definition = {
+            type: "float",
+            name: "property_float",
+            string: "Property float",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: 123.45 }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [[1], { properties: [{ ...definition, value: 3.21 }] }]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_float']");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_float']")
+                .textContent,
+            "Property float"
+        );
+        assert.containsN(target, ".o_field_cell.o_float_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_float_cell"));
+        await editInput(target, ".o_field_cell.o_float_cell input", 3.21);
+        await clickSave(target);
+
+        assert.strictEqual(target.querySelector(".o_field_cell.o_float_cell").textContent, "3.21");
+    });
+
+    QUnit.test("Properties: date", async (assert) => {
+        const definition = {
+            type: "date",
+            name: "property_date",
+            string: "Property date",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "2022-12-12" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [
+                        [1],
+                        { properties: [{ ...definition, value: "2022-12-19" }] },
+                    ]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_date']");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_date']")
+                .textContent,
+            "Property date"
+        );
+        assert.containsN(target, ".o_field_cell.o_date_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_date_cell"));
+        await click(target, ".o_datepicker input");
+        await click(document.querySelector(".datepicker-days td[data-day='12/19/2022']"));
+        await clickSave(target);
+
+        assert.strictEqual(
+            target.querySelector(".o_field_cell.o_date_cell").textContent,
+            "12/19/2022"
+        );
+    });
+
+    QUnit.test("Properties: datetime", async (assert) => {
+        patchTimeZone(0);
+        const definition = {
+            type: "datetime",
+            name: "property_datetime",
+            string: "Property datetime",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "2022-12-12 12:12:00" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [
+                        [1],
+                        { properties: [{ ...definition, value: "2022-12-19 12:12:00" }] },
+                    ]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(
+            target,
+            ".o_list_renderer th[data-name='properties.property_datetime']"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_datetime']")
+                .textContent,
+            "Property datetime"
+        );
+        assert.containsN(target, ".o_field_cell.o_datetime_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_datetime_cell"));
+        await click(target, ".o_datepicker input");
+        await click(document.querySelector(".datepicker-days td[data-day='12/19/2022']"));
+        await click(document, ".bootstrap-datetimepicker-widget a[data-action='close']");
+        await clickSave(target);
+
+        assert.strictEqual(
+            target.querySelector(".o_field_cell.o_datetime_cell").textContent,
+            "12/19/2022 12:12:00"
+        );
+    });
+
+    QUnit.test("Properties: selection", async (assert) => {
+        const definition = {
+            type: "selection",
+            name: "property_selection",
+            string: "Property selection",
+            selection: [
+                ["a", "A"],
+                ["b", "B"],
+                ["c", "C"],
+            ],
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "b" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [[1], { properties: [{ ...definition, value: "a" }] }]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(
+            target,
+            ".o_list_renderer th[data-name='properties.property_selection']"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_selection']")
+                .textContent,
+            "Property selection"
+        );
+        assert.containsN(target, ".o_field_cell.o_selection_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_selection_cell"));
+        await editSelect(target, ".o_field_cell.o_selection_cell select", `"a"`);
+        await clickSave(target);
+
+        assert.strictEqual(target.querySelector(".o_field_cell.o_selection_cell").textContent, "A");
+    });
+
+    QUnit.test("Properties: tags", async (assert) => {
+        const definition = {
+            type: "tags",
+            name: "property_tags",
+            string: "Property tags",
+            tags: [
+                ["a", "A", 1],
+                ["b", "B", 2],
+                ["c", "C", 3],
+            ],
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: ["a", "c"] }];
+            }
+        }
+
+        let expectedValue = null;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [
+                        [1],
+                        { properties: [{ ...definition, value: expectedValue }] },
+                    ]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_tags']");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_tags']")
+                .textContent,
+            "Property tags"
+        );
+        assert.containsN(target, ".o_field_cell.o_property_tags_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_property_tags_cell"));
+        await click(target.querySelectorAll(".o_field_cell.o_property_tags_cell .o_delete")[0]);
+        expectedValue = ["c"];
+        await clickSave(target);
+
+        assert.strictEqual(
+            target.querySelector(".o_field_cell.o_property_tags_cell").textContent,
+            "C"
+        );
+
+        await click(target.querySelector(".o_field_cell.o_property_tags_cell"));
+        await selectDropdownItem(target, "properties.property_tags", "B");
+        expectedValue = ["c", "b"];
+        await clickSave(target);
+
+        assert.strictEqual(
+            target.querySelector(".o_field_cell.o_property_tags_cell").textContent,
+            "BC"
+        );
+    });
+
+    QUnit.test("Properties: many2one", async (assert) => {
+        const definition = {
+            type: "many2one",
+            name: "property_many2one",
+            string: "Property many2one",
+            comodel: "res_currency",
+            domain: [],
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: [1, "USD"] }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [
+                        [1],
+                        { properties: [{ ...definition, value: [2, "EUR"] }] },
+                    ]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(
+            target,
+            ".o_list_renderer th[data-name='properties.property_many2one']"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_many2one']")
+                .textContent,
+            "Property many2one"
+        );
+        assert.containsN(target, ".o_field_cell.o_many2one_cell", 3);
+
+        await click(target.querySelector(".o_field_cell.o_many2one_cell"));
+        await selectDropdownItem(target, "properties.property_many2one", "EUR");
+        await clickSave(target);
+
+        assert.strictEqual(
+            target.querySelector(".o_field_cell.o_many2one_cell").textContent,
+            "EUR"
+        );
+    });
+
+    QUnit.test("Properties: many2many", async (assert) => {
+        const definition = {
+            type: "many2many",
+            name: "property_many2many",
+            string: "Property many2many",
+            comodel: "res_currency",
+            domain: [],
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: [[1, "USD"]] }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.deepEqual(args, [[1], { properties: [{ ...definition, value: [] }] }]);
+                }
+            },
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown input[type='checkbox']");
+
+        assert.containsOnce(
+            target,
+            ".o_list_renderer th[data-name='properties.property_many2many']"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer th[data-name='properties.property_many2many']")
+                .textContent,
+            "Property many2many"
+        );
+        assert.containsN(target, ".o_field_cell.o_many2many_tags_cell", 3);
+    });
+
+    QUnit.test("multiple sources of properties definitions", async (assert) => {
+        const definition0 = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        const definition1 = {
+            type: "boolean",
+            name: "property_boolean",
+            string: "Property boolean",
+        };
+        serverData.models.bar.records[0].definitions = [definition0];
+        serverData.models.bar.records[1].definitions = [definition1];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition0, value: "0" }];
+            } else if (record.m2o === 2) {
+                record.properties = [{ ...definition1, value: true }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(
+            target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[0]
+        );
+        await click(
+            target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[1]
+        );
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+        assert.containsN(target, ".o_field_cell.o_char_cell", 3);
+
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+        assert.containsOnce(target, ".o_field_cell.o_boolean_cell", 1);
+    });
+
+    QUnit.test("toggle properties", async (assert) => {
+        const definition0 = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        const definition1 = {
+            type: "boolean",
+            name: "property_boolean",
+            string: "Property boolean",
+        };
+        serverData.models.bar.records[0].definitions = [definition0];
+        serverData.models.bar.records[1].definitions = [definition1];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition0, value: "0" }];
+            } else if (record.m2o === 2) {
+                record.properties = [{ ...definition1, value: true }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+        });
+
+        await click(target, ".o_optional_columns_dropdown_toggle");
+
+        await click(
+            target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[0]
+        );
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+        assert.containsNone(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+
+        await click(
+            target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[1]
+        );
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_char']");
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+
+        await click(
+            target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[0]
+        );
+        assert.containsNone(target, ".o_list_renderer th[data-name='properties.property_char']");
+        assert.containsOnce(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+
+        await click(
+            target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[1]
+        );
+        assert.containsNone(target, ".o_list_renderer th[data-name='properties.property_char']");
+        assert.containsNone(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+    });
+
+    QUnit.test("reload properties definitions when domain change", async (assert) => {
+        const definition0 = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition0];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition0, value: "AA" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route) {
+                assert.step(route);
+            },
+            irFilters: [
+                {
+                    context: "{}",
+                    domain: "[['id', '=', 1]]",
+                    id: 7,
+                    name: "only one",
+                    sort: "[]",
+                    user_id: [2, "Mitchell Admin"],
+                },
+            ],
+        });
+
+        assert.verifySteps([
+            "/web/dataset/call_kw/foo/get_views",
+            "/web/dataset/call_kw/foo/web_search_read",
+        ]);
+
+        await toggleFavoriteMenu(target);
+        await toggleMenuItem(target, "only one");
+
+        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+    });
+
+    QUnit.test("do not reload properties definitions when page change", async (assert) => {
+        const definition0 = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition0];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition0, value: "0" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="2">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route) {
+                assert.step(route);
+            },
+        });
+
+        assert.verifySteps([
+            "/web/dataset/call_kw/foo/get_views",
+            "/web/dataset/call_kw/foo/web_search_read",
+        ]);
+
+        await pagerNext(target);
+
+        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+    });
+
+    QUnit.test("load properties definitions only once when grouped", async (assert) => {
+        const definition0 = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition0];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition0, value: "0" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" />
+                </tree>
+            `,
+            mockRPC(route) {
+                assert.step(route);
+            },
+            groupBy: ["m2o"],
+        });
+
+        assert.verifySteps([
+            "/web/dataset/call_kw/foo/get_views",
+            "/web/dataset/call_kw/foo/web_read_group",
+        ]);
+
+        await click(target.querySelector(".o_group_header"));
+        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+    });
+
+    QUnit.test("Invisible Properties", async (assert) => {
+        const definition = {
+            type: "integer",
+            name: "property_integer",
+            string: "Property integer",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: 123 }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties" invisible="1"/>
+                </tree>
+            `,
+            mockRPC(route, { method, args }) {
+                assert.step(method);
+            },
+        });
+
+        assert.containsNone(target, ".o_optional_columns_dropdown_toggle");
+        assert.verifySteps(["get_views", "web_search_read"]);
     });
 });

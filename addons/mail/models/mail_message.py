@@ -256,7 +256,7 @@ class Message(models.Model):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS mail_message_model_res_id_id_idx ON mail_message (model, res_id, id)""")
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
         check_access_rule for more details about those rules.
@@ -273,58 +273,53 @@ class Message(models.Model):
         """
         # Rules do not apply to administrator
         if self.env.is_superuser():
-            return super(Message, self)._search(
-                args, offset=offset, limit=limit, order=order,
-                count=count, access_rights_uid=access_rights_uid)
+            return super()._search(domain, offset, limit, order, access_rights_uid)
+
         # Non-employee see only messages with a subtype and not internal
         if not self.env['res.users'].has_group('base.group_user'):
-            args = expression.AND([self._get_search_domain_share(), args])
-        # Perform a super with count as False, to have the ids, not a counter
-        ids = super(Message, self)._search(
-            args, offset=offset, limit=limit, order=order,
-            count=False, access_rights_uid=access_rights_uid)
-        if not ids and count:
-            return 0
-        elif not ids:
-            return ids
+            domain = self._get_search_domain_share() + domain
 
-        pid = self.env.user.partner_id.id
-        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
-        model_ids = {}
+        # make the search query with the default rules
+        query = super()._search(domain, offset, limit, order, access_rights_uid)
 
-        # check read access rights before checking the actual rules on the given ids
-        super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
-
+        # retrieve matching records and determine which ones are truly accessible
         self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
-        for sub_ids in self._cr.split_for_in_conditions(ids):
-            self._cr.execute("""
-                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
-                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id)
-                FROM "%s" m
-                LEFT JOIN "mail_message_res_partner_rel" partner_rel
-                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_notification" needaction_rel
-                ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=list(sub_ids)))
-            for msg_id, rmod, rid, author_id, message_type, partner_id in self._cr.fetchall():
-                if author_id == pid:
-                    author_ids.add(msg_id)
-                elif partner_id == pid:
-                    partner_ids.add(msg_id)
-                elif rmod and rid and message_type != 'user_notification':
-                    model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(msg_id)
 
-        allowed_ids = self._find_allowed_doc_ids(model_ids)
+        pid = self.env.user.partner_id.id
+        ids = []
+        allowed_ids = set()
+        model_ids = defaultdict(lambda: defaultdict(set))
 
-        final_ids = author_ids | partner_ids | allowed_ids
+        rel_alias = query.left_join(
+            self._table, 'id', 'mail_message_res_partner_rel', 'mail_message_id', 'partner_ids',
+            '{rhs}.res_partner_id = %s', [pid],
+        )
+        notif_alias = query.left_join(
+            self._table, 'id', 'mail_notification', 'mail_message_id', 'notification_ids',
+            '{rhs}.res_partner_id = %s', [pid],
+        )
+        query_str, params = query.select(
+            f'"{self._table}"."id"',
+            f'"{self._table}"."model"',
+            f'"{self._table}"."res_id"',
+            f'"{self._table}"."author_id"',
+            f'"{self._table}"."message_type"',
+            f'COALESCE("{rel_alias}"."res_partner_id", "{notif_alias}"."res_partner_id")',
+        )
+        self.env.cr.execute(query_str, params)
+        for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
+            ids.append(id_)
+            if author_id == pid:
+                allowed_ids.add(id_)
+            elif partner_id == pid:
+                allowed_ids.add(id_)
+            elif model and res_id and message_type != 'user_notification':
+                model_ids[model][res_id].add(id_)
 
-        if count:
-            return len(final_ids)
-        else:
-            # re-construct a list based on ids, because set did not keep the original order
-            id_list = [id for id in ids if id in final_ids]
-            return id_list
+        allowed_ids.update(self._find_allowed_doc_ids(model_ids))
+        allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
+        return allowed._as_query(order)
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
@@ -382,6 +377,10 @@ class Message(models.Model):
 
         if self.env.is_superuser():
             return
+
+        # just in case there are ir.rules
+        super().check_access_rule(operation)
+
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
             self._cr.execute('''SELECT DISTINCT message.id, message.subtype_id, subtype.internal
@@ -613,20 +612,43 @@ class Message(models.Model):
 
         messages = super(Message, self).create(values_list)
 
-        check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values['attachment_ids']):
+        # link back attachments to records, to filter out attachments linked to
+        # the same records as the message (considered as ok if message is ok)
+        # and check rights on other documents
+        attachments_tocheck = self.env['ir.attachment']
+        doc_to_attachment_ids = defaultdict(set)
+        if all(isinstance(command, int) or command[0] in (4, 6)
+               for values in values_list
+               for command in values['attachment_ids']):
             for values in values_list:
+                message_attachment_ids = set()
                 for command in values['attachment_ids']:
                     if isinstance(command, int):
-                        check_attachment_access += [command]
+                        message_attachment_ids.add(command)
                     elif command[0] == 6:
-                        check_attachment_access += command[2]
+                        message_attachment_ids |= set(command[2])
                     else:  # command[0] == 4:
-                        check_attachment_access += [command[1]]
+                        message_attachment_ids.add(command[1])
+                if message_attachment_ids:
+                    key = (values.get('model'), values.get('res_id'))
+                    doc_to_attachment_ids[key] |= message_attachment_ids
+
+            attachment_ids_all = {
+                attachment_id
+                for doc_attachment_ids in doc_to_attachment_ids
+                for attachment_id in doc_attachment_ids
+            }
+            AttachmentSudo = self.env['ir.attachment'].sudo().with_prefetch(list(attachment_ids_all))
+            for (model, res_id), doc_attachment_ids in doc_to_attachment_ids.items():
+                # check only attachments belonging to another model, access already
+                # checked on message for other attachments
+                attachments_tocheck += AttachmentSudo.browse(doc_attachment_ids).filtered(
+                    lambda att: att.res_model != model or att.res_id != res_id
+                ).sudo(False)
         else:
-            check_attachment_access = messages.mapped('attachment_ids').ids  # fallback on read if any unknow command
-        if check_attachment_access:
-            self.env['ir.attachment'].browse(check_attachment_access).check(mode='read')
+            attachments_tocheck = messages.attachment_ids  # fallback on read if any unknown command
+        if attachments_tocheck:
+            attachments_tocheck.check('read')
 
         for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
             if tracking_values_cmd:
@@ -647,6 +669,15 @@ class Message(models.Model):
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access_rule('read')
         return super(Message, self).read(fields=fields, load=load)
+
+    def fetch(self, field_names):
+        # This freaky hack is aimed at reading data without the overhead of
+        # checking that "self" is accessible, which is already done above in
+        # methods read() and _search(). It reproduces the existing behavior
+        # before the introduction of method fetch(), where the low-lever
+        # reading method _read() did not enforce any actual permission.
+        self = self.sudo()
+        return super().fetch(field_names)
 
     def write(self, vals):
         record_changed = 'model' in vals or 'res_id' in vals
@@ -734,26 +765,23 @@ class Message(models.Model):
             messages.set_message_done()
             return messages.ids
 
-        notifications = self.env['mail.notification'].sudo().search(notif_domain)
+        notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
         notifications.write({'is_read': True})
 
-        ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
-
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/mark_as_read', {
-            'message_ids': [id[0] for id in ids],
+            'message_ids': notifications.mail_message_id.ids,
             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
         })
-
-        return ids
 
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id
 
-        notifications = self.env['mail.notification'].sudo().search([
+        notifications = self.env['mail.notification'].sudo().search_fetch([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', partner_id.id),
-            ('is_read', '=', False)])
+            ('is_read', '=', False),
+        ], ['mail_message_id'])
 
         if not notifications:
             return
@@ -774,9 +802,8 @@ class Message(models.Model):
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
         starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
-        ids = [m.id for m in starred_messages]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
-            'message_ids': ids,
+            'message_ids': starred_messages.ids,
             'starred': False,
         })
 
@@ -837,7 +864,6 @@ class Message(models.Model):
 
     def _message_format(self, fnames, format_reply=True, legacy=False):
         """Reads values from messages and formats them for the web client."""
-        self.check_access_rule('read')
         vals_list = self._read_format(fnames)
 
         thread_ids_by_model_name = defaultdict(set)
@@ -960,6 +986,7 @@ class Message(models.Model):
                     'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
                 }
         """
+        self.check_access_rule('read')
         vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
 
         com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')

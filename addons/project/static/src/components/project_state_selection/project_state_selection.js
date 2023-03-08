@@ -18,13 +18,6 @@ export class ProjectStateSelectionField extends StateSelectionField {
     /**
      * @override
      */
-    get showLabel() {
-        return !this.props.hideLabel;
-    }
-
-    /**
-     * @override
-     */
     get options() {
         return super.options.filter(o => o[0] !== 'to_define');
     }

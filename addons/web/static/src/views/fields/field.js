@@ -18,7 +18,7 @@ const fieldRegistry = registry.category("fields");
 class DefaultField extends Component {}
 DefaultField.template = xml``;
 
-function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
+export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
     const prefixes = jsClass ? [jsClass, viewType, ""] : [viewType, ""];
     const findInRegistry = (key) => {
         for (const prefix of prefixes) {
@@ -43,7 +43,7 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
     const inEdit = record.isInEdition;
 
-    let empty = !record.isVirtual;
+    let empty = !record.isNew;
     if ("isEmpty" in field) {
         empty = empty && field.isEmpty(record, fieldName);
     } else {
@@ -140,7 +140,6 @@ export class Field extends Component {
         delete props.type;
 
         return {
-            value: this.props.record.data[this.props.name],
             readonly: !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromNode,
             ...props,
@@ -166,30 +165,44 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
-    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
     const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
     const fieldInfo = {
         name,
         viewType,
         widget,
-        modifiers,
+        modifiers: {},
         field,
-        context: node.getAttribute("context") || "{}",
-        string: node.getAttribute("string") || fields[name].string,
-        help: node.getAttribute("help"),
-        onChange: archParseBoolean(node.getAttribute("on_change")),
-        forceSave: archParseBoolean(node.getAttribute("force_save")),
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
-        alwaysInvisible: modifiers.invisible === true || modifiers.column_invisible === true,
-        decorations: {}, // populated below
-        attrs: {}, // populated below
+        context: "{}",
+        string: fields[name].string,
+        help: undefined,
+        onChange: false,
+        forceSave: false,
+        options: {},
+        alwaysInvisible: false,
+        decorations: {},
+        attrs: {},
+        domain: undefined,
     };
-    if (node.getAttribute("domain")) {
-        // TODO WOWl: remove with new model?
-        fieldInfo.domain = node.getAttribute("domain");
-    }
+
     for (const { name, value } of node.attributes) {
-        if (name.startsWith("decoration-")) {
+        if (["name", "widget"].includes(name)) {
+            // avoid adding name and widget to attrs
+            continue;
+        }
+        if (["context", "string", "help", "domain"].includes(name)) {
+            fieldInfo[name] = value;
+        } else if (name === "modifiers") {
+            fieldInfo.modifiers = JSON.parse(value);
+            fieldInfo.alwaysInvisible =
+                fieldInfo.modifiers.invisible === true ||
+                fieldInfo.modifiers.column_invisible === true;
+        } else if (name === "on_change") {
+            fieldInfo.onChange = archParseBoolean(value);
+        } else if (name === "options") {
+            fieldInfo.options = evaluateExpr(value);
+        } else if (name === "force_save") {
+            fieldInfo.forceSave = archParseBoolean(value);
+        } else if (name.startsWith("decoration-")) {
             // prepare field decorations
             fieldInfo.decorations[name.replace("decoration-", "")] = value;
         } else if (!name.startsWith("t-att")) {
@@ -228,12 +241,12 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         fieldInfo.viewMode = viewMode;
         fieldInfo.views = views;
 
-        let fieldsToFetch = field.fieldsToFetch;
-        if (fieldsToFetch) {
-            if (fieldsToFetch instanceof Function) {
-                fieldsToFetch = fieldsToFetch(fieldInfo);
+        let relatedFields = field.relatedFields;
+        if (relatedFields) {
+            if (relatedFields instanceof Function) {
+                relatedFields = relatedFields(fieldInfo);
             }
-            fieldInfo.fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+            fieldInfo.relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
         }
     }
 

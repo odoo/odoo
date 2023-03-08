@@ -14,7 +14,6 @@ import {
     mapViews,
     mapActiveFieldsToFieldsInfo,
 } from "@web/views/legacy_utils";
-import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 
@@ -150,37 +149,11 @@ export class Record extends DataPoint {
         return this.model.__bm__.isDirty(this.__bm_handle__);
     }
 
-    get dirtyFields() {
-        const changes = this.model.__bm__.localData[this.__bm_handle__]._changes;
-        if (!changes) {
-            return [];
-        }
-        return Object.keys(changes).map((change) => this.activeFields[change]);
-    }
-
-    get translatableFields() {
-        if (!localization.multiLang) {
-            return [];
-        }
-        return Object.values(this.fields)
-            .filter((f) => f.translate)
-            .map((f) => this.activeFields[f.name]);
-    }
-
-    get dirtyTranslatableFields() {
-        return this.translatableFields.filter((f) => this.dirtyFields.includes(f));
-    }
-
     get isInEdition() {
         return this.mode === "edit";
     }
 
     get isNew() {
-        return this.model.__bm__.isNew(this.__bm_handle__);
-    }
-
-    get isVirtual() {
-        // FIXME: not sure about this virtual thing
         return !this.resId;
     }
 
@@ -207,7 +180,7 @@ export class Record extends DataPoint {
 
     async askChanges() {
         const proms = [];
-        this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+        this.model.trigger("NEED_LOCAL_CHANGES", { proms });
         return Promise.all([...proms, this._updatePromise]);
     }
 
@@ -293,6 +266,11 @@ export class Record extends DataPoint {
         this.mode = mode;
         this.model.notify();
         return true;
+    }
+
+    isFieldDirty(fieldName) {
+        const changes = this.model.__bm__.localData[this.__bm_handle__]._changes;
+        return changes && changes[fieldName];
     }
 
     /**
@@ -595,15 +573,17 @@ export class Record extends DataPoint {
      *  applicable, allowing to catch it.
      * @returns {Promise<boolean>}
      */
-    async save(
-        options = {
-            stayInEdition: true,
-            noReload: false,
-            savePoint: false,
-            useSaveErrorDialog: false,
-            throwOnError: false,
-        }
-    ) {
+    async save(options = {}) {
+        options = Object.assign(
+            {
+                stayInEdition: true,
+                noReload: false,
+                savePoint: false,
+                useSaveErrorDialog: false,
+                throwOnError: false,
+            },
+            options
+        );
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
         let resolveSavePromise;
         this._savePromise = new Promise((r) => {
@@ -694,7 +674,7 @@ export class Record extends DataPoint {
     async urgentSave() {
         this.model.__bm__.bypassMutex = true;
         this._urgentSave = true;
-        this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
+        this.model.trigger("WILL_SAVE_URGENTLY");
         await Promise.resolve();
         this.__syncData();
         let isValid = true;

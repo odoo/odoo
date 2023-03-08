@@ -9,15 +9,22 @@ import { useOpenChat } from "@mail/views/open_chat_hook";
 import { useAssignUserCommand } from "@mail/views/fields/assign_user_command_hook";
 
 export class Many2OneAvatarUserField extends Many2OneAvatarField {
+    static props = {
+        ...Many2OneAvatarField.props,
+        withCommand: { type: Boolean, optional: true },
+    };
+
     setup() {
         super.setup();
         const relation = this.props.record.fields[this.props.name].relation;
         this.openChat = useOpenChat(relation);
-        useAssignUserCommand();
+        if (this.props.withCommand) {
+            useAssignUserCommand();
+        }
     }
 
     onClickAvatar() {
-        this.openChat(this.props.value[0]);
+        this.openChat(this.props.record.data[this.props.name][0]);
     }
 }
 Many2OneAvatarUserField.template = "mail.Many2OneAvatarUserField";
@@ -26,21 +33,15 @@ export const many2OneAvatarUserField = {
     ...many2OneAvatarField,
     component: Many2OneAvatarUserField,
     additionalClasses: ["o_field_many2one_avatar"],
+    extractProps: (fieldInfo) => ({
+        ...many2OneAvatarField.extractProps(fieldInfo),
+        withCommand: fieldInfo.viewType === "form",
+    }),
 };
 
 registry.category("fields").add("many2one_avatar_user", many2OneAvatarUserField);
 
-export class KanbanMany2OneAvatarUserField extends Many2OneAvatarUserField {
-    /**
-     * All props are normally passed to the Many2OneField however since
-     * we add a new one, we need to filter it out.
-     */
-    get m2oFieldProps() {
-        return Object.fromEntries(
-            Object.entries(this.props).filter(([key, _val]) => key in Many2OneAvatarField.props)
-        );
-    }
-}
+export class KanbanMany2OneAvatarUserField extends Many2OneAvatarUserField {}
 KanbanMany2OneAvatarUserField.template = "mail.KanbanMany2OneAvatarUserField";
 KanbanMany2OneAvatarUserField.props = {
     ...Many2OneAvatarUserField.props,

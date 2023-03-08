@@ -5,7 +5,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -296,6 +296,9 @@ class IrActionsReport(models.Model):
             if paperformat_id.disable_shrinking:
                 command_args.extend(['--disable-smart-shrinking'])
 
+        # Add extra time to allow the page to render
+        command_args.extend(['--javascript-delay', '1000'])
+
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
 
@@ -450,6 +453,7 @@ class IrActionsReport(models.Model):
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
+            err = ustr(err)
 
             if process.returncode not in [0, 1]:
                 if process.returncode == -11:
@@ -807,6 +811,14 @@ class IrActionsReport(models.Model):
                 if stream_data['attachment']:
                     continue
 
+                # if res_id is false
+                # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
+                if not res_id:
+                    _logger.warning(
+                        "These documents were not saved as an attachment because the template of %s doesn't "
+                        "have any headers seperating different instances of it. If you want it saved,"
+                        "please print the documents separately", report_sudo.report_name)
+                    continue
                 record = self.env[report_sudo.model].browse(res_id)
                 attachment_name = safe_eval(report_sudo.attachment, {'object': record, 'time': time})
 

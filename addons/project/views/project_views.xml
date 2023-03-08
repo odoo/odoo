@@ -80,6 +80,9 @@
             <field name="inherit_id" ref="view_task_search_form_project_fsm_base"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <field name="description" position="after">
+                    <field string="Properties" name="task_properties"/>
+                </field>
                 <filter name="date_last_stage_update" position="after">
                     <filter string="Deadline" name="date_deadline" date="date_deadline"/>
                 </filter>
@@ -918,7 +921,7 @@
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection" options="{'hide_label': 1}"/>
+                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
                                         <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                         <field name="user_id" widget="many2one_avatar_user" t-if="record.user_id.raw_value"/>
                                     </div>
@@ -1369,7 +1372,7 @@
             <field name="arch" type="xml">
                 <form class="o_form_project_tasks">
                     <group>
-                        <field name="name" string = "Task Title" placeholder="e.g. Send Invitations"/>
+                        <field name="display_name" string = "Task Title" placeholder="e.g. Send Invitations" required="True"/>
                         <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)" placeholder="Private" class="o_project_task_project_field"/>
                         <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
                             widget="many2many_avatar_user"/>
@@ -1530,6 +1533,7 @@
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                         attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_last_text', '=', 'none')]}"
                         class="fw-bold" widget="badge" optional="hide" groups="project.group_project_rating"/>
+                    <field name="task_properties"/>
                 </field>
                 <tree position="inside">
                     <field name="recurrence_id" invisible="1" />
@@ -1618,7 +1622,6 @@
                     <field name="project_id"/>
                     <templates>
                         <div class="justify-content-between" t-name="activity-box">
-                            <field name="user_ids" widget="many2many_avatar_user" class="col-6"/>
                             <div class="text-end col-6">
                                 <span t-att-title="record.name.value">
                                     <field name="name" display="full" class="text-truncate"/>
@@ -1628,6 +1631,7 @@
                                     <span t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
+                            <field name="user_ids" widget="many2many_avatar_user"/>
                         </div>
                     </templates>
                 </activity>

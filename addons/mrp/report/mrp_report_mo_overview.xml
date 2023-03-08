@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mo_overview">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="data">
+                <div class="page">
+                    <t t-call="mrp.mo_overview_content"/>
+                </div>
+                <p style="page-break-before:always;"> </p>
+            </t>
+        </t>
+    </template>
+
+    <template id="mo_overview_content">
+        <t t-set="currency" t-value="data['summary']['currency']"/>
+        <div class="container bg-view">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th/>
+                        <th t-if="data['show_replenishments']" class="text-center">Status</th>
+                        <th t-attf-class="{{ 'text-center' if data['show_uom'] else 'text-end' }}" t-attf-colspan="{{ 2 if data['show_uom'] else 1 }}">Quantity</th>
+                        <th t-if="data['show_availabilities']" class="text-end">Free to use / On Hand</th>
+                        <th t-if="data['show_availabilities']" class="text-end">Reserved</th>
+                        <th t-if="data['show_receipts']" class="text-end">Receipt</th>
+                        <th t-if="data['show_mo_costs']" class="text-end">MO Cost</th>
+                        <th t-if="data['show_product_costs']" class="text-end">Product Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-call="mrp.mo_overview_line">
+                        <t t-set="line" t-value="data['summary']"/>
+                    </t>
+                    <t t-call="mrp.mo_overview_components">
+                        <t t-set="components" t-value="data['components']"/>
+                        <t t-set="operations" t-value="data['operations']"/>
+                    </t>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-start">Unit Cost</td>
+                        <td t-if="data['show_replenishments']"/>
+                        <td/>
+                        <td t-if="data['show_uom']"/>
+                        <td t-if="data['show_availabilities']"/>
+                        <td t-if="data['show_availabilities']"/>
+                        <td t-if="data['show_receipts']"/>
+                        <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + data['extras']['unit_mo_cost_decorator'] if data.get('extras', {}).get('unit_mo_cost_decorator') else '' }}" t-out="data['extras']['unit_mo_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        <td t-if="data['show_product_costs']" class="text-end" t-out="data['extras']['unit_product_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </template>
+
+    <template id="mo_overview_line">
+        <tr>
+            <td class="text-start">
+                <div t-attf-style="margin-left: {{ line['level'] * 20 }}px" class="d-inline-block" t-out="line['name']"/>
+            </td>
+            <td t-if="data['show_replenishments']" class="text-center" t-out="line.get('formatted_state', '')"/>
+            <td t-attf-class="text-end {{ 'text-' + line['quantity_decorator'] if line.get('quantity_decorator') else '' }}">
+                <t t-if="line.get('model') == 'mrp.workorder'" t-out="line['quantity']" t-options="{'widget': 'float_time'}"/>
+                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+            </td>
+            <td t-if="data['show_uom']" class="text-start" t-out="line['uom_name']"/>
+            <td t-if="data['show_availabilities']" class="text-end">
+                <t t-if="line.get('quantity_on_hand', False) is not False">
+                    <t t-out="line['quantity_free']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/> /
+                    <t t-out="line['quantity_on_hand']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                </t>
+            </td>
+            <td t-if="data['show_availabilities']" class="text-end">
+                <t t-if="line.get('quantity_reserved', False) is not False" t-out="line['quantity_reserved']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+            </td>
+            <td t-if="data['show_receipts']" t-attf-class="text-end {{ 'text-' + line['receipt']['decorator'] if line.get('receipt', {}).get('decorator') else '' }}">
+                <span t-if="line.get('receipt')" t-attf-class="{{ 'text-' + line['receipt']['decorator'] }}" t-out="line['receipt']['display']"/>
+            </td>
+            <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + line['mo_cost_decorator'] if line.get('mo_cost_decorator') else '' }}">
+                <t t-out="line['mo_cost']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/>
+            </td>
+            <td t-if="data['show_product_costs']" class="text-end">
+                <t t-if="line.get('product_cost', False) is not False" t-out="line['product_cost']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/>
+            </td>
+        </tr>
+    </template>
+
+    <template id="mo_overview_components">
+        <t t-foreach="components" t-as="component">
+            <t t-call="mrp.mo_overview_line">
+                <t t-set="line" t-value="component['summary']"/>
+            </t>
+            <t t-if="component['summary']['index'] in data['unfolded_ids'] and component.get('replenishments', [])" t-foreach="component['replenishments']" t-as="replenishment">
+                <t t-call="mrp.mo_overview_line">
+                    <t t-set="line" t-value="replenishment['summary']"/>
+                </t>
+                <t t-if="replenishment['summary']['index'] in data['unfolded_ids'] and (replenishment.get('components', []) or replenishment.get('operations', {}).get('details', []))">
+                    <t t-call="mrp.mo_overview_components">
+                        <t t-set="components" t-value="replenishment.get('components', [])"/>
+                        <t t-set="operations" t-value="replenishment.get('operations', {})"/>
+                    </t>
+                </t>
+            </t>
+        </t>
+        <t t-call="mrp.mo_overview_operations">
+            <t t-set="summary" t-value="operations.get('summary', {})"/>
+            <t t-set="operations" t-value="operations.get('details', [])"/>
+        </t>
+    </template>
+
+    <template id="mo_overview_operations">
+        <t t-if="operations">
+            <tr>
+                <td class="text-start">
+                    <span t-attf-style="margin-left: {{ (operations[0]['level'] - 1 if len(operations) else 0) * 20 }}px"/>
+                    Operations
+                </td>
+                <td t-if="data['show_replenishments']" class="text-center"/>
+                <td t-attf-class="text-end {{ 'text-' + summary['quantity_decorator'] if summary.get('quantity_decorator') else '' }}">
+                    <t t-out="summary['quantity']" t-options="{'widget': 'float_time'}"/>
+                </td>
+                
+                <td t-if="data['show_uom']" class="text-start" t-out="summary['uom_name']"/>
+                <td t-if="data['show_availabilities']" class="text-end"/>
+                <td t-if="data['show_availabilities']" class="text-end"/>
+                <td t-if="data['show_receipts']" class="text-end"/>
+                <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + summary['mo_cost_decorator'] if summary.get('mo_cost_decorator') else '' }}">
+                    <t t-out="summary['mo_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                </td>
+                <td t-if="data['show_product_costs']" class="text-end"/>
+            </tr>
+        </t>
+        <t t-if="summary['index'] in data['unfolded_ids']" t-foreach="operations" t-as="operation">
+            <t t-call="mrp.mo_overview_line">
+                <t t-set="line" t-value="operation"/>
+            </t>
+        </t>
+    </template>
+</odoo>

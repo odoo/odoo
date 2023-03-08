@@ -15,6 +15,7 @@ export class StatInfoField extends Component {
         labelField: { type: String, optional: true },
         noLabel: { type: Boolean, optional: true },
         digits: { type: Array, optional: true },
+        string: { type: String, optional: true },
     };
 
     get digits() {
@@ -23,12 +24,12 @@ export class StatInfoField extends Component {
     }
     get formattedValue() {
         const formatter = formatters.get(this.props.record.fields[this.props.name].type);
-        return formatter(this.props.value || 0, { digits: this.digits });
+        return formatter(this.props.record.data[this.props.name] || 0, { digits: this.digits });
     }
     get label() {
         return this.props.labelField
             ? this.props.record.data[this.props.labelField]
-            : this.props.record.activeFields[this.props.name].string;
+            : this.props.string;
     }
 }
 
@@ -37,7 +38,7 @@ export const statInfoField = {
     displayName: _lt("Stat Info"),
     supportedTypes: ["float", "integer", "monetary"],
     isEmpty: () => false,
-    extractProps: ({ attrs, options }) => {
+    extractProps: ({ attrs, options, string }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         let digits;
@@ -51,6 +52,7 @@ export const statInfoField = {
             digits,
             labelField: options.label_field,
             noLabel: archParseBoolean(attrs.nolabel),
+            string,
         };
     },
 };

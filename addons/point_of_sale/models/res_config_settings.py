@@ -35,6 +35,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_adyen = fields.Boolean(string="Adyen Payment Terminal", help="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.")
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")
     module_pos_six = fields.Boolean(string="Six Payment Terminal", help="The transactions are processed by Six. Set the IP address of the terminal on the related payment method.")
+    module_pos_preparation_display = fields.Boolean(string="Preparation Display", help="Show orders on the preparation display screen.")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
     is_default_pricelist_displayed = fields.Boolean(compute="_compute_pos_pricelist_id", compute_sudo=True)
@@ -104,6 +105,7 @@ class ResConfigSettings(models.TransientModel):
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
     pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
+    point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):

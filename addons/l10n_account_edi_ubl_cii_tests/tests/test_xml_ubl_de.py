@@ -8,11 +8,8 @@ import base64
 class TestUBLDE(TestUBLCommon):
 
     @classmethod
-    def setUpClass(cls,
-                   chart_template_ref="de_skr03",
-                   edi_format_ref="account_edi_ubl_cii.ubl_de",
-                   ):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    def setUpClass(cls, chart_template_ref="de_skr03"):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
@@ -24,6 +21,7 @@ class TestUBLDE(TestUBLCommon):
             'email': 'info@legoland.de',
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE48500105176424548921'})],
+            'ref': 'ref_partner_1',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -34,6 +32,7 @@ class TestUBLDE(TestUBLCommon):
             'vat': 'DE186775212',
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE50500105175653254743'})],
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -100,8 +99,8 @@ class TestUBLDE(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice,
-            xpaths='''
+            invoice.ubl_xml_id,
+            xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
                 </xpath>
@@ -116,6 +115,10 @@ class TestUBLDE(TestUBLCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
                     <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
             expected_file='from_odoo/xrechnung_ubl_out_invoice.xml',
@@ -154,8 +157,8 @@ class TestUBLDE(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund,
-            xpaths='''
+            refund.ubl_xml_id,
+            xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
                 </xpath>
@@ -170,6 +173,10 @@ class TestUBLDE(TestUBLCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
                     <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
             expected_file='from_odoo/xrechnung_ubl_out_refund.xml',
@@ -195,33 +202,35 @@ class TestUBLDE(TestUBLCommon):
             'acc_number': 'BE15001559627232',
             'partner_id': self.company_data['company'].partner_id.id,
         })
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'journal_id': self.journal.id,
-            'partner_id': self.partner_1.id,
-            'partner_bank_id': acc_bank.id,
-            'invoice_date': '2017-01-01',
-            'date': '2017-01-01',
-            'currency_id': self.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            partner_id=self.partner_1.id,
+            partner_bank_id=acc_bank.id,
+            invoice_date='2017-01-01',
+            date='2017-01-01',
+            invoice_line_ids=[{
                 'product_id': self.product_a.id,
                 'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
                 'price_unit': 275.0,
                 'quantity': 5,
                 'discount': 20.0,
                 'tax_ids': [(6, 0, self.tax_19.ids)],
-            })],
-        })
+            }],
+        )
 
         partner = invoice.commercial_partner_id
-        invoice.action_post()
-        attachment = invoice._get_edi_attachment(self.edi_format)
+        attachment = invoice.ubl_xml_id
+
         self.assertTrue(attachment)
+
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         # Export: BuyerReference is in the out_invoice xml
-        self.assertEqual(xml_etree.find('{*}BuyerReference').text, partner.name)
+        self.assertEqual(xml_etree.find('{*}BuyerReference').text, partner.ref)
         self.assertEqual(
             xml_etree.find('{*}CustomizationID').text,
             'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2#conformant#urn:xoev-de:kosit:extension:xrechnung_2.2'

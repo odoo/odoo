@@ -31,22 +31,22 @@ export class DateTimeField extends Component {
     }
 
     get formattedValue() {
-        return formatDateTime(this.props.value);
+        return formatDateTime(this.props.record.data[this.props.name]);
     }
 
     onDateTimeChanged(date) {
-        if (!areDateEquals(this.props.value || "", date)) {
+        if (!areDateEquals(this.props.record.data[this.props.name] || "", date)) {
             this.props.record.update({ [this.props.name]: date });
         }
     }
     onDatePickerInput(ev) {
-        this.props.record.model.env.bus.trigger(
-            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+        this.props.record.model.trigger(
+            "FIELD_IS_DIRTY",
             ev.target.value !== this.lastSetValue
         );
     }
     onUpdateInput(date) {
-        this.props.record.model.env.bus.trigger("RELATIONAL_MODEL:FIELD_IS_DIRTY", false);
+        this.props.record.model.trigger("FIELD_IS_DIRTY", false);
         this.lastSetValue = date;
     }
 }

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="1">
     <!--Karma-->
-    <record id="base.user_root" model="res.users">
-        <field name="karma">2500</field>
+    <record id="karma_tracking_user_root" model="gamification.karma.tracking" forcecreate="0">
+        <field name="user_id" ref="base.user_root"/>
+        <field name="new_value">2500</field>
+        <field name="reason">I am the Root!</field>
     </record>
-    <record id="base.user_admin" model="res.users">
-        <field name="karma">2500</field>
+    <record id="karma_tracking_user_admin" model="gamification.karma.tracking" forcecreate="0">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="new_value">2500</field>
+        <field name="reason">I am the Admin!</field>
     </record>
 
     <!--Ranks-->

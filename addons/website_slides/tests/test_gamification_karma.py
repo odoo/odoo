@@ -21,7 +21,6 @@ class TestKarmaGain(common.SlidesCase):
             'visibility': 'public',
             'is_published': True,
             'karma_gen_channel_finish': 100,
-            'karma_gen_slide_vote': 5,
             'karma_gen_channel_rank': 10,
         })
 
@@ -39,27 +38,6 @@ class TestKarmaGain(common.SlidesCase):
              'completion_time': 2.0,
             }
         ])
-
-    @mute_logger('odoo.models')
-    @users('user_emp')
-    def test_karma_change_vote(self):
-        """ Test like / dislike only karma changes """
-        channel = self.channel_2.with_user(self.env.user)
-        channel._action_add_member()
-
-        start_karma = self.env.user.karma
-
-        # join slide through like
-        slide_2_0 = self.slide_2_0.with_user(self.env.user)
-        self.assertFalse(slide_2_0.user_membership_id)
-        slide_2_0.action_like()
-        self.assertTrue(slide_2_0.user_membership_id)
-        self.assertEqual(self.env.user.karma, start_karma + channel.karma_gen_slide_vote)
-
-        # dislike: remove gained karma, then remove it again due to dislike
-        slide_2_0.action_dislike()
-        self.assertTrue(slide_2_0.user_membership_id)
-        self.assertEqual(self.env.user.karma, start_karma - channel.karma_gen_slide_vote)
 
     @mute_logger('odoo.models')
     @users('user_emp', 'user_portal', 'user_officer')
@@ -110,32 +88,12 @@ class TestKarmaGain(common.SlidesCase):
         computed_karma += self.channel_2.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)
 
-        # Vote for a slide
+        # Vote for a slide: Karma should not move
         slide_user = self.slide.with_user(user)
-        # up-voting for the first time should add karma
         slide_user.action_like()
-        computed_karma += self.channel.karma_gen_slide_vote
         self.assertEqual(user.karma, computed_karma)
 
-        # toggling the up-vote should reduce karma
-        slide_user.action_like()
-        computed_karma -= self.channel.karma_gen_slide_vote
-        self.assertEqual(user.karma, computed_karma)
-
-        slide_user.action_like()
-        computed_karma += self.channel.karma_gen_slide_vote
-        self.assertEqual(user.karma, computed_karma)
-
-        # down-voting the content that was already up-voted
-        # should reduce the karma two times
         slide_user.action_dislike()
-        computed_karma -= self.channel.karma_gen_slide_vote * 2
-        self.assertEqual(user.karma, computed_karma)
-
-        # up-voting the content that was already down-voted
-        # should add the karma two times
-        slide_user.action_like()
-        computed_karma += self.channel.karma_gen_slide_vote * 2
         self.assertEqual(user.karma, computed_karma)
 
         # Leave the finished course
@@ -157,3 +115,47 @@ class TestKarmaGain(common.SlidesCase):
         computed_karma += self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
         (self.slide | self.slide_2 | self.slide_3 | self.slide_2_0 | self.slide_2_1).with_user(user)._action_mark_completed()
         self.assertEqual(user.karma, computed_karma)
+
+    @mute_logger('odoo.models')
+    def test_karma_gain_multiple_course_multiple_users(self):
+        users = self.user_emp | self.user_portal
+        users.write({'karma': 0})
+
+        (self.channel | self.channel_2)._action_add_members(users.partner_id)
+        channel_partners = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
+        self.assertEqual(len(channel_partners), 4)
+
+        with self.assertQueryCount(53):
+            channel_partners._set_as_completed()
+
+        computed_karma = self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
+
+        for user in users:
+            self.assertEqual(user.karma, computed_karma)
+            user_trackings = user.karma_tracking_ids
+            self.assertEqual(len(user_trackings), 2)
+
+            self.assertEqual(user_trackings[0].new_value, computed_karma)
+            self.assertEqual(user_trackings[0].old_value, self.channel_2.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[0].origin_ref, self.channel_2)
+
+            self.assertEqual(user_trackings[1].new_value, self.channel.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[1].old_value, 0)
+            self.assertEqual(user_trackings[1].origin_ref, self.channel)
+
+        # now, remove the membership in batch, on multiple users
+        with self.assertQueryCount(43):
+            (self.channel | self.channel_2)._remove_membership(users.partner_id.ids)
+
+        for user in users:
+            self.assertEqual(user.karma, 0)
+            user_trackings = user.karma_tracking_ids
+            self.assertEqual(len(user_trackings), 4)
+
+            self.assertEqual(user_trackings[0].new_value, 0)
+            self.assertEqual(user_trackings[0].old_value, self.channel.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[0].origin_ref, self.channel_2)
+
+            self.assertEqual(user_trackings[1].new_value, self.channel.karma_gen_channel_finish)
+            self.assertEqual(user_trackings[1].old_value, computed_karma)
+            self.assertEqual(user_trackings[1].origin_ref, self.channel)

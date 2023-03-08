@@ -22,14 +22,14 @@ export class Many2ManyBinaryField extends Component {
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
-        this.operations = useX2ManyCrud(() => this.props.value, true);
+        this.operations = useX2ManyCrud(() => this.props.record.data[this.props.name], true);
     }
 
     get uploadText() {
         return this.props.record.fields[this.props.name].string;
     }
     get files() {
-        return this.props.value.records.map((record) => record.data);
+        return this.props.record.data[this.props.name].records.map((record) => record.data);
     }
 
     getUrl(id) {
@@ -53,7 +53,9 @@ export class Many2ManyBinaryField extends Component {
     }
 
     async onFileRemove(deleteId) {
-        const record = this.props.value.records.find((record) => record.data.id === deleteId);
+        const record = this.props.record.data[this.props.name].records.find(
+            (record) => record.data.id === deleteId
+        );
         this.operations.removeRecord(record);
     }
 }
@@ -62,7 +64,7 @@ export const many2ManyBinaryField = {
     component: Many2ManyBinaryField,
     supportedTypes: ["many2many"],
     isEmpty: () => false,
-    fieldsToFetch: [
+    relatedFields: [
         { name: "name", type: "char" },
         { name: "mimetype", type: "char" },
     ],

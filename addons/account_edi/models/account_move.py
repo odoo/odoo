@@ -398,22 +398,6 @@ class AccountMove(models.Model):
         return self._get_edi_document(edi_format).sudo().attachment_id
 
     ####################################################
-    # Import Electronic Document
-    ####################################################
-
-    def _get_create_document_from_attachment_decoders(self):
-        # OVERRIDE
-        res = super()._get_create_document_from_attachment_decoders()
-        res.append((10, self.env['account.edi.format'].search([])._create_document_from_attachment))
-        return res
-
-    def _get_update_invoice_from_attachment_decoders(self, invoice):
-        # OVERRIDE
-        res = super()._get_update_invoice_from_attachment_decoders(invoice)
-        res.append((10, self.env['account.edi.format'].search([])._update_invoice_from_attachment))
-        return res
-
-    ####################################################
     # Business operations
     ####################################################
 
@@ -487,16 +471,26 @@ class AccountMoveLine(models.Model):
         }
         return res
 
-    def reconcile(self):
-        # OVERRIDE
+    def _reconcile_pre_hook(self):
+        # EXTENDS 'account'
         # In some countries, the payments must be sent to the government under some condition. One of them could be
         # there is at least one reconciled invoice to the payment. Then, we need to update the state of the edi
         # documents during the reconciliation.
+        results = super()._reconcile_pre_hook()
         all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
-        payments = all_lines.move_id.filtered(lambda move: move.payment_id or move.statement_line_id)
+        results['edi_payments'] = all_lines.move_id\
+            .filtered(lambda move: move.payment_id or move.statement_line_id)
+        results['edi_invoices_per_payment_before'] = {
+            pay: pay._get_reconciled_invoices()
+            for pay in results['edi_payments']
+        }
+        return results
 
-        invoices_per_payment_before = {pay: pay._get_reconciled_invoices() for pay in payments}
-        res = super().reconcile()
+    def _reconcile_post_hook(self, data):
+        # EXTENDS 'account'
+        super()._reconcile_post_hook(data)
+        payments = data['edi_payments']
+        invoices_per_payment_before = data['edi_invoices_per_payment_before']
         invoices_per_payment_after = {pay: pay._get_reconciled_invoices() for pay in payments}
 
         changed_payments = self.env['account.move']
@@ -506,8 +500,6 @@ class AccountMoveLine(models.Model):
             if set(invoices_after.ids) != set(invoices_before.ids):
                 changed_payments |= payment
         changed_payments._update_payments_edi_documents()
-
-        return res
 
     def remove_move_reconcile(self):
         # OVERRIDE

@@ -19,7 +19,6 @@ class Project(models.Model):
         query = self.env['hr.expense']._search([])
         query.add_where('hr_expense.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
 
-        query.order = None
         query_string, query_param = query.select(
             'jsonb_object_keys(analytic_distribution) as account_id',
             'COUNT(DISTINCT(id)) as expense_count',
@@ -76,7 +75,6 @@ class Project(models.Model):
             ('move_id.expense_sheet_id', '!=', False),
             ('id', 'not in', move_line_ids),
         ])
-        query.order = None
         return move_line_ids + list(query)
 
     def _get_expenses_profitability_items(self, with_action=True):
@@ -84,7 +82,6 @@ class Project(models.Model):
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.order = None
         query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         query_string, query_param = query.select('array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
         self._cr.execute(query_string, query_param)

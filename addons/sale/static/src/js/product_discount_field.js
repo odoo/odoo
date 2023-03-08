@@ -37,7 +37,7 @@ export class ProductDiscountField extends FloatField {
                         return {
                             operation: "UPDATE",
                             record: line,
-                            data: {["discount"]: this.props.value},
+                            data: {["discount"]: this.props.record.data[this.props.name]},
                         };
                     });
 

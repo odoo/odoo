@@ -553,7 +553,7 @@ class HolidaysType(models.Model):
         return res
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """ Override _search to order the results, according to some employee.
         The order is the following
 
@@ -566,12 +566,13 @@ class HolidaysType(models.Model):
         to the method.
         """
         employee_id = self._get_contextual_employee_id()
-        post_sort = (not count and not order and employee_id)
-        leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=(None if post_sort else limit), order=order, count=count, access_rights_uid=access_rights_uid)
-        leaves = self.browse(leave_ids)
-        if post_sort:
-            return leaves.sorted(key=self._model_sorting_key, reverse=True).ids[:limit or None]
-        return leave_ids
+        if order == self._order and employee_id:
+            # retrieve all leaves, sort them, then apply offset and limit
+            leaves = self.browse(super()._search(domain, access_rights_uid=access_rights_uid))
+            leaves = leaves.sorted(key=self._model_sorting_key, reverse=True)
+            leaves = leaves[offset:(offset + limit) if limit else None]
+            return leaves._as_query()
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def action_see_days_allocated(self):
         self.ensure_one()

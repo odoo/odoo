@@ -83,8 +83,9 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 0.0,   'credit': 20.0},
             {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 20.0,  'credit': 0.0},
             # Receipt from subcontractor
-            {'account_id': stock_in_acc_id,     'product_id': self.product_a.id,    'debit': 0.0,   'credit': 220.0},
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 220.0, 'credit': 0.0},
+            {'account_id': stock_in_acc_id,     'product_id': self.product_a.id,    'debit': 0.0,   'credit': 200.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 0.0,   'credit': 20.0},
             # Delivery to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.product_b.id,    'debit': 0.0,   'credit': 20.0},
             {'account_id': stock_out_acc_id,    'product_id': self.product_b.id,    'debit': 20.0,  'credit': 0.0},

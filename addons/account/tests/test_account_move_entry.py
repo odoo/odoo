@@ -898,12 +898,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
         ])
         moves.action_post()
 
-        res = moves.line_ids\
+        moves.line_ids\
             .filtered(lambda x: x.account_id == self.company_data['default_account_receivable'])\
             .reconcile()
 
-        self.assertTrue(res.get('partials'))
-        exchange_diff = res['partials'].exchange_move_id
+        exchange_diff = moves.line_ids.matched_debit_ids.exchange_move_id
         self.assertTrue(exchange_diff)
         with self.assertRaises(UserError), self.cr.savepoint():
             exchange_diff.button_draft()

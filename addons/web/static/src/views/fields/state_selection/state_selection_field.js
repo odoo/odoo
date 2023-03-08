@@ -18,10 +18,11 @@ export class StateSelectionField extends Component {
     };
     static props = {
         ...standardFieldProps,
-        hideLabel: { type: Boolean, optional: true },
+        showLabel: { type: Boolean, optional: true },
+        withCommand: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        hideLabel: false,
+        showLabel: true,
     };
 
     setup() {
@@ -30,20 +31,19 @@ export class StateSelectionField extends Component {
             blocked: "red",
             done: "green",
         };
-        if (this.props.record.activeFields[this.props.name].viewType !== "form") {
-            return;
-        }
-        const hotkeys = ["D", "F", "G"];
-        for (const [index, [value, label]] of this.options.entries()) {
-            useCommand(
-                sprintf(this.env._t("Set kanban state as %s"), label),
-                () => this.updateRecord(value),
-                {
-                    category: "smart_action",
-                    hotkey: "alt+" + hotkeys[index],
-                    isAvailable: () => this.props.value !== value,
-                }
-            );
+        if (this.props.withCommand) {
+            const hotkeys = ["D", "F", "G"];
+            for (const [index, [value, label]] of this.options.entries()) {
+                useCommand(
+                    sprintf(this.env._t("Set kanban state as %s"), label),
+                    () => this.updateRecord(value),
+                    {
+                        category: "smart_action",
+                        hotkey: "alt+" + hotkeys[index],
+                        isAvailable: () => this.props.record.data[this.props.name] !== value,
+                    }
+                );
+            }
         }
     }
     get options() {
@@ -52,19 +52,16 @@ export class StateSelectionField extends Component {
         });
     }
     get currentValue() {
-        return this.props.value || this.options[0][0];
+        return this.props.record.data[this.props.name] || this.options[0][0];
     }
     get label() {
-        if (this.props.value && this.props.record.data[`legend_${this.props.value[0]}`]) {
-            return this.props.record.data[`legend_${this.props.value[0]}`];
+        if (
+            this.props.record.data[this.props.name] &&
+            this.props.record.data[`legend_${this.props.record.data[this.props.name][0]}`]
+        ) {
+            return this.props.record.data[`legend_${this.props.record.data[this.props.name][0]}`];
         }
         return formatSelection(this.currentValue, { selection: this.options });
-    }
-    get showLabel() {
-        return (
-            this.props.record.activeFields[this.props.name].viewType === "list" &&
-            !this.props.hideLabel
-        );
     }
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
@@ -91,8 +88,9 @@ export const stateSelectionField = {
     component: StateSelectionField,
     displayName: _lt("Label Selection"),
     supportedTypes: ["selection"],
-    extractProps: ({ options }) => ({
-        hideLabel: !!options.hide_label,
+    extractProps: ({ options, viewType }) => ({
+        showLabel: viewType === "list" && !options.hide_label,
+        withCommand: viewType === "form",
     }),
 };
 

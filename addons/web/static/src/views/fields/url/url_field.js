@@ -17,18 +17,20 @@ export class UrlField extends Component {
     };
 
     setup() {
-        useInputField({ getValue: () => this.props.value || "" });
+        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
     }
 
     get formattedHref() {
         let value = "";
-        if (typeof this.props.value === "string") {
+        if (typeof this.props.record.data[this.props.name] === "string") {
             const shouldaddPrefix = !(
                 this.props.websitePath ||
-                this.props.value.includes("://") ||
-                /^\//.test(this.props.value)
+                this.props.record.data[this.props.name].includes("://") ||
+                /^\//.test(this.props.record.data[this.props.name])
             );
-            value = shouldaddPrefix ? `http://${this.props.value}` : this.props.value;
+            value = shouldaddPrefix
+                ? `http://${this.props.record.data[this.props.name]}`
+                : this.props.record.data[this.props.name];
         }
         return value;
     }

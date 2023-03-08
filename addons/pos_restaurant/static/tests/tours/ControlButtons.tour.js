@@ -15,16 +15,16 @@ import { registry } from "@web/core/registry";
 startSteps();
 
 // Test TransferOrderButton
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.exec.addOrderline("Water", "5", "2", "10.0");
 ProductScreen.do.clickTransferButton();
-FloorScreen.do.clickTable("T4");
+FloorScreen.do.clickTable("4");
 ProductScreen.do.clickOrderline("Water", "5", "2");
 Chrome.do.backToFloor();
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.check.orderIsEmpty();
 Chrome.do.backToFloor();
-FloorScreen.do.clickTable("T4");
+FloorScreen.do.clickTable("4");
 ProductScreen.do.clickOrderline("Water", "5", "2");
 
 // Test SplitBillButton

@@ -2,6 +2,12 @@
 <odoo>
     <data>
         <!-- Manufacturing Order -->
+        <record id="action_report_mo_overview" model="ir.actions.client">
+            <field name="name">MO Overview</field>
+            <field name="tag">mrp_mo_overview</field>
+            <field name="context" eval="{'model': 'report.mrp.report_mo_overview'}" />
+        </record>
+
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
@@ -181,6 +187,7 @@
                         </button>
                         <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button name="%(action_report_mo_overview)d" type="action" class="oe_stat_button" icon="fa-bars" string="Overview"/>
                     </div>
                     <div class="oe_title">
                         <label class="o_form_label" for="name" string="MO Reference"/>
@@ -362,8 +369,8 @@
                                         domain="[('product_id','=',product_id)]"
                                     />
                                     <field name="group_id" invisible="1"/>
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '=','none')]}" options="{&quot;warn&quot;: true}"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '=','none')]}"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}"/>
                                 </tree>
                             </field>
                         </page>
@@ -406,8 +413,8 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '=','none'), ('show_details_visible', '=', False)]}"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}"/>
                                 </tree>
                             </field>
                         </page>

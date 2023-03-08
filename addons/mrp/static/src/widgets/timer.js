@@ -29,8 +29,9 @@ export class MrpTimer extends Component {
         this.state = useState({
             // duration is expected to be given in minutes
             duration:
-                this.props.value !== undefined ? this.props.value : this.props.record.data.duration,
+                this.props.record.data[this.props.name] !== undefined ? this.props.record.data[this.props.name] : this.props.record.data.duration,
         });
+        this.lastDateTime = Date.now();
         useInputField({
             getValue: () => this.durationFormatted,
             refName: "numpadDecimal",
@@ -49,6 +50,7 @@ export class MrpTimer extends Component {
             }
             if (this.ongoing) {
                 this._runTimer();
+                this._runSleepTimer();
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -59,16 +61,21 @@ export class MrpTimer extends Component {
             const rerun = !this.ongoing && newOngoing;
             this.ongoing = newOngoing;
             if (rerun) {
-                this.state.duration = nextProps.value;
+                this.state.duration = nextProps.record.data[nextProps.name];
                 this._runTimer();
+                this._runSleepTimer()
             }
         });
         onWillDestroy(() => clearTimeout(this.timer));
     }
 
     get durationFormatted() {
-        if(this.props.value!=this.state.duration && this.props.record && this.props.record.isDirty){
-            this.state.duration=this.props.value
+        if (
+            this.props.record.data[this.props.name] != this.state.duration &&
+            this.props.record &&
+            this.props.record.isDirty
+        ) {
+            this.state.duration = this.props.record.data[this.props.name];
         }
         return formatMinutes(this.state.duration);
     }
@@ -81,13 +88,24 @@ export class MrpTimer extends Component {
             }
         }, 1000);
     }
+
+    //updates the time when the computer wakes from sleep mode
+    _runSleepTimer() {
+        this.timer = setTimeout(async () => {
+            let diff = Date.now() - this.lastDateTime - 10000;
+            if (diff > 1000) {
+                this.state.duration += diff / (1000 * 60);
+            }
+            this.lastDateTime = Date.now();
+            this._runSleepTimer();
+        }, 10000);
+    }
 }
 
 MrpTimer.props = {
     ...standardFieldProps,
     duration: { type: Number, optional: true },
     ongoing: { type: Boolean, optional: true },
-    value: { optional: true },
 };
 MrpTimer.template = "mrp.MrpTimer";
 

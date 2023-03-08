@@ -82,7 +82,7 @@ class AccountJournal(models.Model):
 
             journal.edi_format_ids = enabled_edi_formats + protected_edi_formats
 
-    def _create_document_from_attachment(self, attachment_ids=None):
+    def _create_document_from_attachment(self, attachment_ids):
         # tries to match purchasing orders
         moves = super()._create_document_from_attachment(attachment_ids)
         for move in moves:

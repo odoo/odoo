@@ -36,6 +36,13 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    @template('lu', 'account.journal')
+    def _get_lu_account_journal(self):
+        return {
+            'sale': {'refund_sequence': True},
+            'purchase': {'refund_sequence': True},
+        }
+
     @template('lu', 'account.reconcile.model')
     def _get_lu_reconcile_model(self):
         return {

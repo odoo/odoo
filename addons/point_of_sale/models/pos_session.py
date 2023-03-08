@@ -1586,21 +1586,29 @@ class PosSession(models.Model):
         return loaded_data
 
     def _get_attributes_by_ptal_id(self):
-        product_attributes = self.env['product.attribute'].search([('create_variant', '=', 'no_variant')])
-        product_attributes_by_id = {product_attribute.id: product_attribute for product_attribute in product_attributes}
-        domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
-        product_template_attribute_values = self.env['product.template.attribute.value'].search(domain)
-        key = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
+        # performance trick: prefetch fields with search_fetch() and fetch()
+        product_attributes = self.env['product.attribute'].search_fetch(
+            [('create_variant', '=', 'no_variant')],
+            ['name', 'display_type'],
+        )
+        product_template_attribute_values = self.env['product.template.attribute.value'].search_fetch(
+            [('attribute_id', 'in', product_attributes.ids)],
+            ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra'],
+        )
+        product_template_attribute_values.product_attribute_value_id.fetch(['name', 'is_custom', 'html_color'])
+
+        key1 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
+        key2 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id)
         res = {}
-        for key, group in groupby(sorted(product_template_attribute_values, key=key), key=key):
-            attribute_line_id, attribute_id = key
+        for key, group in groupby(sorted(product_template_attribute_values, key=key1), key=key2):
+            attribute_line_id, attribute = key
             values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
                        'price_extra': ptav.price_extra} for ptav in list(group)]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
-                'name': product_attributes_by_id[attribute_id].name,
-                'display_type': product_attributes_by_id[attribute_id].display_type,
-                'values': values
+                'name': attribute.name,
+                'display_type': attribute.display_type,
+                'values': values,
             }
 
         return res
@@ -1665,6 +1673,7 @@ class PosSession(models.Model):
                 'fields': [
                     'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
                     'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
+                    'point_of_sale_ticket_unique_code',
                 ],
             }
         }

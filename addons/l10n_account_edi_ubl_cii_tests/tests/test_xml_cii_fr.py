@@ -7,11 +7,8 @@ from odoo.tests import tagged
 class TestCIIFR(TestUBLCommon):
 
     @classmethod
-    def setUpClass(cls,
-                   chart_template_ref="fr",
-                   edi_format_ref="account_edi_ubl_cii.edi_facturx_1_0_05",
-                   ):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    def setUpClass(cls, chart_template_ref="fr"):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
@@ -23,7 +20,7 @@ class TestCIIFR(TestUBLCommon):
             'bank_ids': [(0, 0, {'acc_number': 'FR15001559627230'})],
             'phone': '+1 (650) 555-0111',
             'email': "partner1@yourcompany.com",
-            'ref': 'seller_ref',
+            'ref': 'ref_partner_1',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -34,7 +31,7 @@ class TestCIIFR(TestUBLCommon):
             'vat': 'FR35562153452',
             'country_id': cls.env.ref('base.fr').id,
             'bank_ids': [(0, 0, {'acc_number': 'FR90735788866632'})],
-            'ref': 'buyer_ref',
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_21 = cls.env['account.tax'].create({
@@ -108,6 +105,8 @@ class TestCIIFR(TestUBLCommon):
             country_id=cls.env.ref("base.fr").id,
             phone='+1 (650) 555-0111',  # [BR-DE-6] "Seller contact telephone number" (BT-42) is required
             email="info@yourcompany.com",  # [BR-DE-7] The element "Seller contact email address" (BT-43) is required
+            vat='FR23334175221', # [BR-CO-26]-In order for the buyer to automatically ...
+            zip='123', # [BR-DE-4] The element "Seller post code" (BT-38) must be transmitted.
         )
         return res
 
@@ -120,25 +119,23 @@ class TestCIIFR(TestUBLCommon):
             'acc_number': 'FR15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
         })
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'journal_id': self.journal.id,
-            'partner_id': self.partner_1.id,
-            'partner_bank_id': acc_bank.id,
-            'invoice_date': '2017-01-01',
-            'date': '2017-01-01',
-            'currency_id': self.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            partner_bank_id=acc_bank.id,
+            invoice_line_ids=[{
                 'product_id': self.product_a.id,
                 'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
                 'price_unit': 275.0,
                 'quantity': 5,
                 'discount': 20.0,
                 'tax_ids': [(6, 0, self.tax_21.ids)],
-            })],
-        })
-        invoice.action_post()
-        pdf_attachment = invoice._get_edi_attachment(self.edi_format)
+            }],
+        )
+
+        pdf_attachment = invoice.cii_xml_id
         self.assertEqual(pdf_attachment['name'], 'factur-x.xml')
 
     def test_export_import_invoice(self):
@@ -172,7 +169,7 @@ class TestCIIFR(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice,
+            invoice.cii_xml_id,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
                         <ID>___ignore___</ID>
@@ -220,7 +217,7 @@ class TestCIIFR(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund,
+            refund.cii_xml_id,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
                         <ID>___ignore___</ID>
@@ -273,7 +270,7 @@ class TestCIIFR(TestUBLCommon):
             ],
         )
         self._assert_invoice_attachment(
-            invoice,
+            invoice.cii_xml_id,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
                         <ID>___ignore___</ID>
@@ -286,14 +283,26 @@ class TestCIIFR(TestUBLCommon):
         )
 
     def test_encoding_in_attachment_facturx(self):
-        self._test_encoding_in_attachment('facturx_1_0_05', 'factur-x.xml')
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        self._test_encoding_in_attachment(invoice.cii_xml_id, 'factur-x.xml')
 
     ####################################################
     # Test import
     ####################################################
 
     def test_import_partner_facturx(self):
-        self._test_import_partner('facturx_1_0_05', 'factur-x.xml')
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        self._test_import_partner(invoice.cii_xml_id, self.partner_1, self.partner_2)
 
     def test_import_tax_included(self):
         """

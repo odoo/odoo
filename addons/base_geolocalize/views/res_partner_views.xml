@@ -19,12 +19,14 @@
                                         <field name="date_localization" nolabel="1" readonly="1" class="oe_inline"/>
                                         <br/>
                                     </span>
-                                    <button attrs="{'invisible': ['|', ('partner_latitude', '!=', 0), ('partner_longitude', '!=', 0)]}"
-                                        icon="fa-gear" string="Compute based on address" title="Compute Localization"
-                                        name="geo_localize" type="object" class="btn btn-link p-0"/>
-                                    <button attrs="{'invisible': [('partner_latitude', '=', 0), ('partner_longitude', '=', 0)]}"
-                                        icon="fa-refresh" string="Refresh" title="Refresh Localization"
-                                        name="geo_localize" type="object" class="btn btn-link p-0"/>
+                                    <div name="geo_localize_button">
+                                        <button attrs="{'invisible': ['|', ('partner_latitude', '!=', 0), ('partner_longitude', '!=', 0)]}"
+                                                icon="fa-gear" string="Compute based on address" title="Compute Localization"
+                                                name="geo_localize" type="object" class="btn btn-link p-0"/>
+                                        <button attrs="{'invisible': [('partner_latitude', '=', 0), ('partner_longitude', '=', 0)]}"
+                                                icon="fa-refresh" string="Refresh" title="Refresh Localization"
+                                                name="geo_localize" type="object" class="btn btn-link p-0"/>
+                                    </div>
                                 </div>
                             </group>
                         </group>

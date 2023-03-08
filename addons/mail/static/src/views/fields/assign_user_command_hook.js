@@ -16,18 +16,15 @@ export function useAssignUserCommand() {
     const orm = useService("orm");
     const user = useService("user");
     const type = component.props.record.fields[component.props.name].type;
-    if (
-        component.relation !== "res.users" ||
-        component.props.record.activeFields[component.props.name].viewType !== "form"
-    ) {
+    if (component.relation !== "res.users") {
         return;
     }
 
     const getCurrentIds = () => {
-        if (type === "many2one" && component.props.value) {
-            return [component.props.value[0]];
+        if (type === "many2one" && component.props.record.data[component.props.name]) {
+            return [component.props.record.data[component.props.name][0]];
         } else if (type === "many2many") {
-            return component.props.value.currentIds;
+            return component.props.record.data[component.props.name].currentIds;
         }
         return [];
     };

@@ -17,7 +17,7 @@
                            style="color: inherit;"
                            t-esc="subTask.data.display_name"
                            t-on-click.prevent="() => this.goToSubtask(subTask.resId)"/>
-                        <Field value="subTask.data.user_ids"
+                        <Field
                                class="`subtask_user_widget_col justify-content-end align-items-center`"
                                name="'user_ids'"
                                record="subTask"

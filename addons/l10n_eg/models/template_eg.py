@@ -38,3 +38,23 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'egy_account_999001',
             },
         }
+
+    @template('eg', 'account.journal')
+    def _get_eg_account_journal(self):
+        """ If EGYPT chart, we add 2 new journals TA and IFRS"""
+        return {
+            "tax_adjustment": {
+                "name": "Tax Adjustments",
+                "code": "TA",
+                "type": "general",
+                "sequence": 1,
+                "show_on_dashboard": True,
+            },
+            "ifrs": {
+                "name": "IFRS 16",
+                "code": "IFRS",
+                "type": "general",
+                "show_on_dashboard": True,
+                "sequence": 10,
+            },
+        }

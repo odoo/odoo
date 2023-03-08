@@ -15,7 +15,7 @@ export class PhoneField extends Component {
     };
 
     setup() {
-        useInputField({ getValue: () => this.props.value || "" });
+        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
     }
 }
 

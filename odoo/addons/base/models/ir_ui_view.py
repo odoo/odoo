@@ -652,7 +652,7 @@ actual arch.
         from_clause, where_clause, where_params = e.query.get_sql()
         assert from_clause == '"ir_ui_view"', f"Unexpected from clause: {from_clause}"
 
-        self._flush_search(domain, fields=['inherit_id', 'priority', 'model', 'mode'], order='id')
+        self._flush_search(domain, fields=['inherit_id', 'priority', 'model', 'mode'])
         query = f"""
             WITH RECURSIVE ir_ui_view_inherits AS (
                 SELECT id, inherit_id, priority, mode, model
@@ -2744,7 +2744,7 @@ class Model(models.AbstractModel):
         :rtype: list
         """
         return [
-            'change_default', 'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups',
+            'change_default', 'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'domain', 'group_operator', 'groups',
             'help', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
             'sortable', 'store', 'string', 'translate', 'trim', 'type',
         ]

@@ -1618,22 +1618,19 @@
                         <div class="tab-content" id="o_tab_content_spam">
                             <div class="tab-pane fade show active" data-key="create_uid" id="spam_user" role="tabpanel" aria-labelledby="user-tab">
                                 <form class="row" >
-                                    <!-- Prevent the foreach loop to overide the `user` variable from the controller -->
-                                    <t t-set="env_user" t-value="user"/>
-                                    <div t-foreach="posts_ids.mapped('create_uid')" t-as="user" class="col-6">
+                                    <div t-foreach="posts_ids.mapped('create_uid')" t-as="create_user" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
                                                 <div class="form-check">
-                                                    <input type="checkbox" t-att-value="user.id" class="form-check-input" t-attf-id="user_#{user.id}"/>
-                                                    <label class="form-check-label" t-attf-for="user_#{user.id}">
+                                                    <input type="checkbox" t-att-value="create_user.id" class="form-check-input" t-attf-id="user_#{create_user.id}"/>
+                                                    <label class="form-check-label" t-attf-for="user_#{create_user.id}">
                                                         <img class="d-inline img o_forum_avatar" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
-                                                        <span t-esc="user.name" class="d-inline"/>
+                                                        <span t-esc="create_user.name" class="d-inline"/>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <t t-set="user" t-value="env_user"/>
                                 </form>
                             </div>
                             <div class="tab-pane fade" data-key="country_id" id="spam_country" role="tabpanel" aria-labelledby="country-tab">

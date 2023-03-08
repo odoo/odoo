@@ -61,7 +61,8 @@ function getElementToFocus(cell) {
 export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
-        this.allColumns = this.props.archInfo.columns;
+        this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
+        this.notificationService = useService("notification");
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
         this.cellClassByColumn = {};
@@ -102,7 +103,7 @@ export class ListRenderer extends Component {
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
         onWillUpdateProps((nextProps) => {
-            this.allColumns = nextProps.archInfo.columns;
+            this.allColumns = this.processAllColumn(nextProps.archInfo.columns, nextProps.list);
             this.state.columns = this.getActiveColumns(nextProps.list);
         });
         onPatched(() => {
@@ -166,8 +167,8 @@ export class ListRenderer extends Component {
         });
 
         useBus(
-            this.env.bus,
-            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+            this.props.list.model,
+            "FIELD_IS_DIRTY",
             (ev) => (this.lastIsDirty = ev.detail)
         );
 
@@ -208,6 +209,12 @@ export class ListRenderer extends Component {
         });
     }
 
+    displaySaveNotification() {
+        this.notificationService.add(this.env._t('Please click on the "save" button first'), {
+            type: "danger",
+        });
+    }
+
     getActiveColumns(list) {
         return this.allColumns.filter((col) => {
             if (list.isGrouped && col.widget === "handle") {
@@ -225,6 +232,39 @@ export class ListRenderer extends Component {
         if (this.canCreate) {
             this.props.onAdd(params);
         }
+    }
+
+    processAllColumn(allColumns, list) {
+        return allColumns.flatMap((column) => {
+            if (column.type === "field" && list.fields[column.name].type === "properties") {
+                return Object.values(list.activeFields)
+                    .filter(
+                        (activeField) =>
+                            activeField.relatedPropertyField &&
+                            activeField.relatedPropertyField.fieldName === column.name
+                    )
+                    .map((activeField) => ({
+                        ...activeField,
+                        id: `${column.id}_${activeField.name}`,
+                        classNames: column.classNames,
+                        optional: "hide",
+                        type: "field",
+                        hasLabel: true,
+                        label: activeField.string,
+                    }));
+            } else {
+                return [column];
+            }
+        });
+    }
+
+    getFieldProps(record, column) {
+        if (this.getCellReadonly(column, record)) {
+            return {
+                readonly: true,
+            };
+        }
+        return {};
     }
 
     // The following code manipulates the DOM directly to avoid having to wait for a
@@ -385,7 +425,11 @@ export class ListRenderer extends Component {
     }
 
     focusCell(column, forward = true) {
-        const index = this.state.columns.indexOf(column);
+        const index = column
+            ? this.state.columns.findIndex(
+                  (col) => col.id === column.id && col.name === column.name
+              )
+            : -1;
         let columns;
         if (index === -1 && !forward) {
             columns = this.state.columns.slice(0).reverse();
@@ -400,12 +444,11 @@ export class ListRenderer extends Component {
             if (column.type !== "field") {
                 continue;
             }
-            const fieldName = column.name;
             // in findNextFocusableOnRow test is done by using classList
             // refactor
-            if (!editedRecord.isReadonly(fieldName)) {
+            if (!this.getCellReadonly(column, editedRecord)) {
                 const cell = this.tableRef.el.querySelector(
-                    `.o_selected_row td[name=${fieldName}]`
+                    `.o_selected_row td[name='${column.name}']`
                 );
                 if (cell) {
                     const toFocus = getElementToFocus(cell);
@@ -477,18 +520,38 @@ export class ListRenderer extends Component {
         return viewIdentifier.join(",");
     }
 
-    get getOptionalFields() {
-        return this.allColumns
-            .filter((col) => col.optional)
-            .map((col) => ({
+    get optionalFieldGroups() {
+        const propertyGroups = {};
+        const optionalFields = [];
+        for (const col of this.allColumns.filter((col) => col.optional)) {
+            const optionalField = {
                 label: col.label,
                 name: col.name,
                 value: this.optionalActiveFields[col.name],
-            }));
+            };
+            if (!col.relatedPropertyField) {
+                optionalFields.push(optionalField);
+            } else {
+                const { displayName, id } = col.relatedPropertyField;
+                if (propertyGroups[id]) {
+                    propertyGroups[id].optionalFields.push(optionalField);
+                } else {
+                    propertyGroups[id] = { id, displayName, optionalFields: [optionalField] };
+                }
+            }
+        }
+        if (optionalFields.length) {
+            return [{ optionalFields }, ...Object.values(propertyGroups)];
+        }
+        return Object.values(propertyGroups);
+    }
+
+    get hasOptionalFields() {
+        return this.allColumns.some((c) => c.optional);
     }
 
     get displayOptionalFields() {
-        return this.getOptionalFields.length;
+        return this.hasOptionalFields;
     }
 
     nbRecordsInGroup(group) {
@@ -677,6 +740,10 @@ export class ListRenderer extends Component {
     }
 
     getCellClass(column, record) {
+        if (column.relatedPropertyField && !(column.name in record.data)) {
+            return "";
+        }
+
         if (!this.cellClassByColumn[column.id]) {
             const classNames = ["o_data_cell"];
             if (column.type === "button_group") {
@@ -704,7 +771,7 @@ export class ListRenderer extends Component {
             if (record.isInvalid(column.name)) {
                 classNames.push("o_invalid_cell");
             }
-            if (record.isReadonly(column.name)) {
+            if (this.getCellReadonly(column, record)) {
                 classNames.push("o_readonly_modifier");
             }
             if (this.canUseFormatter(column, record)) {
@@ -729,6 +796,13 @@ export class ListRenderer extends Component {
             }
         }
         return classNames.join(" ");
+    }
+
+    getCellReadonly(column, record) {
+        return (
+            record.isReadonly(column.name) ||
+            (column.relatedPropertyField && record.selected && record.model.multiEdit)
+        );
     }
 
     getCellTitle(column, record) {
@@ -759,7 +833,9 @@ export class ListRenderer extends Component {
             digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : field.digits,
             field: record.fields[fieldName],
         };
-        return formatter(record.data[fieldName], formatOptions);
+        return record.data[fieldName] !== undefined
+            ? formatter(record.data[fieldName], formatOptions)
+            : "";
     }
 
     evalModifier(modifier, record) {
@@ -870,15 +946,17 @@ export class ListRenderer extends Component {
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
         const optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
-        const optionalColumns = this.allColumns.filter((col) => col.optional);
+        const optionalColumn = this.allColumns.filter(
+            (col) => col.type === "field" && col.optional
+        );
         if (optionalActiveFields) {
-            optionalColumns.forEach((col) => {
+            optionalColumn.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
         } else {
-            optionalColumns.forEach((col) => {
+            for (const col of optionalColumn) {
                 this.optionalActiveFields[col.name] = col.optional === "show";
-            });
+            }
         }
     }
 
@@ -1628,6 +1706,27 @@ export class ListRenderer extends Component {
         );
     }
 
+    toggleOptionalFieldGroup(groupId) {
+        const fieldNames = this.allColumns
+            .filter(
+                (col) =>
+                    col.type === "field" &&
+                    col.relatedPropertyField &&
+                    col.relatedPropertyField.id === groupId
+            )
+            .map((col) => col.name);
+
+        const active = !fieldNames.every((fieldName) => this.optionalActiveFields[fieldName]);
+        for (const fieldName of fieldNames) {
+            this.optionalActiveFields[fieldName] = active;
+        }
+
+        this.state.columns = this.getActiveColumns(this.props.list);
+        this.saveOptionalActiveFields(
+            this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
+        );
+    }
+
     onGlobalClick(ev) {
         if (!this.props.list.editedRecord) {
             return; // there's no row in edition
@@ -1664,7 +1763,7 @@ export class ListRenderer extends Component {
             return { type: "relative", value: 1 };
         }
 
-        const type = column.widget || this.props.list.fields[column.name].type;
+        const type = column.widget || this.fields[column.name].type;
         if (type in FIXED_FIELD_COLUMN_WIDTHS) {
             return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[type] };
         }
@@ -1680,7 +1779,7 @@ export class ListRenderer extends Component {
         return getTooltipInfo({
             viewMode: "list",
             resModel: this.props.list.resModel,
-            field: this.props.list.fields[column.name],
+            field: this.fields[column.name],
             fieldInfo: this.props.list.activeFields[column.name],
         });
     }

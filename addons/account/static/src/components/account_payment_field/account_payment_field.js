@@ -24,7 +24,7 @@ export class AccountPaymentField extends Component {
     }
 
     formatData(props) {
-        const info = props.value || {
+        const info = props.record.data[props.name] || {
             content: [],
             outstanding: false,
             title: "",

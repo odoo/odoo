@@ -9,9 +9,9 @@ const { Component, onWillStart, onWillUpdateProps } = owl;
 export class JsonPopOver extends Component {
     
     setup(){
-        this.jsonValue = JSON.parse(this.props.value);
+        this.jsonValue = JSON.parse(this.props.record.data[this.props.name]);
         onWillUpdateProps(nextProps => {
-            this.jsonValue = JSON.parse(nextProps.value);
+            this.jsonValue = JSON.parse(nextProps.record.data[nextProps.name]);
         });
     }
 }

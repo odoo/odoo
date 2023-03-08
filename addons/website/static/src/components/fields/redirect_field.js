@@ -7,7 +7,7 @@ const { Component } = owl;
 
 class RedirectField extends Component {
     get info() {
-        return this.props.value ? this.env._t("Published") : this.env._t("Unpublished");
+        return this.props.record.data[this.props.name] ? this.env._t("Published") : this.env._t("Unpublished");
     }
 
     onClick() {

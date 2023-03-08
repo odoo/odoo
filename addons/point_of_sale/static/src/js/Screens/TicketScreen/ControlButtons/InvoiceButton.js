@@ -56,6 +56,9 @@ export class InvoiceButton extends Component {
             }
         }
     }
+    async onWillInvoiceOrder(order) {
+        return true;
+    }
     async _invoiceOrder() {
         const order = this.props.order;
         if (!order) {
@@ -93,6 +96,11 @@ export class InvoiceButton extends Component {
                 args: [[orderId], { partner_id: newPartner.id }],
                 kwargs: { context: this.env.session.user_context },
             });
+        }
+
+        const confirmed = await this.onWillInvoiceOrder(order);
+        if (!confirmed){
+            return;
         }
 
         // Part 2: Invoice the order.

@@ -1420,13 +1420,20 @@
                         font-family: $o-we-sidebar-content-field-input-font-family;
                     }
                     tr {
+                        // Since the sortable list's <tr> loses its connection with
+                        // the table when dragged, the <td> with the input no longer
+                        // takes up the full width, causing a visual issue. To solve
+                        // this problem, we added the 'flex' display property.
+                        display: flex;
+                        align-items: center;
                         border: none;
                     }
                     td {
+                        flex-grow: 1;
                         padding-bottom: $o-we-sidebar-content-field-spacing / 2;
 
                         &:not(.o_we_list_record_name) {
-                            width: 1px;
+                            flex-grow: 0;
                         }
 
                         we-button.o_we_checkbox_wrapper {
@@ -1719,8 +1726,14 @@
 
             &::after {
                 content: "";
-                @include o-position-absolute(0, 0, 0, 0);
+                // We use a "sticky" position because it ensures that the
+                // backdrop covers the entire "customize panel" element, even
+                // when it has a vertical scrollbar and is scrolled to the
+                // bottom.
+                @include o-position-sticky(auto, 0, 0, 0);
                 display: block;
+                height: 100vh;
+                margin-top: -100vh;
                 pointer-events: none;
                 background: $o-we-sidebar-content-backdrop-bg;
             }

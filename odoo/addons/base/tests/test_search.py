@@ -166,7 +166,7 @@ class test_search(TransactionCase):
             'ttype': 'boolean',
         })
         self.assertEqual('x_active', model_country._active_name)
-        country_ussr = model_country.create({'name': 'USSR', 'x_active': False})
+        country_ussr = model_country.create({'name': 'USSR', 'x_active': False, 'code': 'ZV'})
         ussr_search = model_country.search([('name', '=', 'USSR')])
         self.assertFalse(ussr_search)
         ussr_search = model_country.with_context(active_test=False).search([('name', '=', 'USSR')])
@@ -203,7 +203,4 @@ class test_search(TransactionCase):
             {'name': 'runbot'},
         ])
         self.assertEqual(len(partners) + count_partner_before, Partner.search_count([]))
-        self.assertEqual(len(partners) + count_partner_before, Partner.search([], count=True))
-
         self.assertEqual(3, Partner.search_count([], limit=3))
-        self.assertEqual(3, Partner.search([], count=True, limit=3))

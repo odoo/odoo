@@ -8999,6 +8999,58 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        'add a line with a context depending on the parent record, created a second record with "Save & New"',
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="p" context="{'default_display_name': display_name}" >
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            });
+
+            assert.containsNone(target, ".o_data_row");
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                []
+            );
+            await editInput(target, "[name='display_name'] input", "Jack");
+
+            await addRow(target);
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "Jack"
+            );
+
+            await click(target, ".modal .o_form_button_save_new");
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "Jack"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                ["Jack"]
+            );
+
+            await clickSave(target.querySelector(".modal"));
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                ["Jack", "Jack"]
+            );
+        }
+    );
+
     QUnit.test("o2m add a line custom control create editable", async function (assert) {
         await makeView({
             type: "form",

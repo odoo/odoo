@@ -3,11 +3,11 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict
+from odoo.tools import frozendict, mute_logger
 
 import re
 from collections import defaultdict
-from psycopg2 import sql
+from psycopg2 import sql, DatabaseError
 
 
 class SequenceMixin(models.AbstractModel):
@@ -138,7 +138,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -171,21 +171,12 @@ class SequenceMixin(models.AbstractModel):
             param['with_prefix'] = with_prefix
 
         query = f"""
-                SELECT {{field}} FROM {self._table}
+                SELECT {self._sequence_field} FROM {self._table}
                 {where_string}
                 AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
                 ORDER BY sequence_number DESC
                 LIMIT 1
         """
-        if lock:
-            query = f"""
-            UPDATE {self._table} SET write_date = write_date WHERE id = (
-                {query.format(field='id')}
-            )
-            RETURNING {self._sequence_field};
-            """
-        else:
-            query = query.format(field=self._sequence_field)
 
         self.flush_model([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)
@@ -242,15 +233,32 @@ class SequenceMixin(models.AbstractModel):
         if new:
             last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
 
-        format, format_values = self._get_sequence_format_param(last_sequence)
+        format_string, format_values = self._get_sequence_format_param(last_sequence)
         if new:
             format_values['seq'] = 0
             format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
             format_values['month'] = self[self._sequence_date_field].month
-        format_values['seq'] = format_values['seq'] + 1
 
-        self[self._sequence_field] = format.format(**format_values)
+        # before flushing inside the savepoint (which may be rolled back!), make sure everything
+        # is already flushed, otherwise we could lose non-sequence fields values, as the ORM believes
+        # them to be flushed.
+        self.flush_recordset()
+        while True:
+            format_values['seq'] = format_values['seq'] + 1
+            sequence = format_string.format(**format_values)
+            try:
+                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
+                    self[self._sequence_field] = sequence
+                    self.flush_recordset([self._sequence_field])
+                    break
+            except DatabaseError as e:
+                # 23P01 ExclusionViolation
+                # 23505 UniqueViolation
+                if e.pgcode not in ('23P01', '23505'):
+                    raise e
         self._compute_split_sequence()
+        self.flush_recordset(['sequence_prefix', 'sequence_number'])
+
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.

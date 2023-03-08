@@ -33,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'chart_at_template_7860',
                 'account_journal_early_pay_discount_loss_account_id': 'chart_at_template_5800',
                 'account_journal_early_pay_discount_gain_account_id': 'chart_at_template_8350',
+                'external_report_layout_id': 'l10n_din5008.external_layout_din5008',
+                'paperformat_id': 'l10n_din5008.paperformat_euro_din',
             },
         }

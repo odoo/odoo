@@ -47,8 +47,9 @@ export class AceField extends Component {
             () => [this.editorRef.el]
         );
 
-        useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges());
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({ detail }) =>
+        const { model } = this.props.record;
+        useBus(model, "WILL_SAVE_URGENTLY", () => this.commitChanges());
+        useBus(model, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
     }
@@ -75,7 +76,7 @@ export class AceField extends Component {
         this.aceEditor.on("blur", this.commitChanges.bind(this));
     }
 
-    updateAce({ mode, readonly, value }) {
+    updateAce({ mode, readonly, record }) {
         if (!this.aceEditor) {
             return;
         }
@@ -97,7 +98,7 @@ export class AceField extends Component {
 
         this.aceEditor.renderer.$cursorLayer.element.style.display = readonly ? "none" : "block";
 
-        const formattedValue = formatText(value);
+        const formattedValue = formatText(record.data[this.props.name]);
         if (this.aceSession.getValue() !== formattedValue) {
             this.aceSession.setValue(formattedValue);
         }
@@ -112,7 +113,7 @@ export class AceField extends Component {
     commitChanges() {
         if (!this.props.readonly) {
             const value = this.aceSession.getValue();
-            if (this.props.value !== value) {
+            if (this.props.record.data[this.props.name] !== value) {
                 return this.props.record.update({ [this.props.name]: value });
             }
         }

@@ -30,3 +30,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'base_diferencias_de_cambio',
             },
         }
+
+    @template('ar_base', 'account.journal')
+    def _get_ar_account_journal(self):
+        """ In case of an Argentinean CoA, we modify the default values of the sales journal to be a preprinted journal"""
+        return {
+            'sale': {
+                "name": "Ventas Preimpreso",
+                "code": "0001",
+                "l10n_ar_afip_pos_number": 1,
+                "l10n_ar_afip_pos_partner_id": self.env.company.partner_id.id,
+                "l10n_ar_afip_pos_system": 'II_IM',
+                "refund_sequence": False,
+            },
+        }

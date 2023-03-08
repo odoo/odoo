@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.X2ManyField" owl="1">
-        <div t-attf-class="o_field_x2many o_field_x2many_{{viewMode}}">
+        <div t-attf-class="o_field_x2many o_field_x2many_{{props.viewMode}}">
             <div class="o_x2m_control_panel">
                 <t t-if="displayControlPanelButtons">
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
@@ -21,7 +21,7 @@
                                 className="`${create.className}`"
                                 clickParams="create.clickParams"
                                 icon="create.icon"
-                                record="props.value"
+                                record="props.record.data[props.name]"
                                 string="create.string"
                                 title="create.title"
                             />
@@ -29,11 +29,11 @@
                     </div>
                 </t>
                 <div class="o_cp_pager" role="search">
-                    <Pager t-if="props.value.count > props.value.limit" t-props="pagerProps"/>
+                    <Pager t-if="props.record.data[props.name].count > props.record.data[props.name].limit" t-props="pagerProps"/>
                 </div>
             </div>
-            <ListRenderer t-if="viewMode === 'list'" t-props="rendererProps" />
-            <KanbanRenderer t-elif="viewMode" t-props="rendererProps" />
+            <ListRenderer t-if="props.viewMode === 'list'" t-props="rendererProps" />
+            <KanbanRenderer t-elif="props.viewMode" t-props="rendererProps" />
         </div>
     </t>
 

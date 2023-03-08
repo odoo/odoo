@@ -45,7 +45,7 @@ export class FloorScreen extends Component {
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
     }
     onMounted() {
-        this.env.posbus.trigger("start-cash-control");
+        this.pos.openCashControl();
         this.floorMapRef.el.style.background = this.state.floorBackground;
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
         // call _tableLongpolling once then set interval of 5sec.
@@ -78,17 +78,99 @@ export class FloorScreen extends Component {
         this.state.selectedTableId = null;
     }
     async _createTableHelper(copyTable) {
+        let existingTable = this.activeFloor.tables;
         let newTable;
         if (copyTable) {
             newTable = Object.assign({}, copyTable);
             newTable.position_h += 10;
             newTable.position_v += 10;
         } else {
+            let posV = 0;
+            let posH = 10;
+            const referenceScreenWidth = 1180;
+            const spaceBetweenTable = 15 * (screen.width/referenceScreenWidth);
+            const h_min = spaceBetweenTable;
+            const h_max = screen.width;
+            const v_max = screen.height;
+            let potentialWidth = 100 * (h_max/referenceScreenWidth);
+            if (potentialWidth > 130) {
+                potentialWidth = 130;
+            } else if (potentialWidth < 75) {
+                potentialWidth = 75;
+            }
+            const heightTable = potentialWidth;
+            const widthTable = potentialWidth;
+            let positionTable = [];
+
+            existingTable.forEach((table) => {
+                positionTable.push([table.position_v, table.position_v + table.height, table.position_h, table.position_h + table.width])
+            })
+
+            positionTable.sort((tableA, tableB) => {
+                if (tableA[0] < tableB[0]) {
+                    return -1;
+                } else if (tableA[0] > tableB[0]) {
+                    return 1;
+                } else if (tableA[2] < tableB[2]) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+
+            let actualHeight = 100
+            let impossible = true;
+
+            while(actualHeight <= (v_max - heightTable - spaceBetweenTable) && impossible) {
+                let tableIntervals = [[h_min, h_min, v_max], [h_max, h_max, v_max]];
+                for (let i = 0; i < positionTable.length; i++) {
+                    if (positionTable[i][0] >= (actualHeight + heightTable + spaceBetweenTable)) {
+                        continue;
+                    } else if ((positionTable[i][1] + spaceBetweenTable) <= actualHeight) {
+                        continue;
+                    } else {
+                        tableIntervals.push([positionTable[i][2], positionTable[i][3], positionTable[i][1]]);
+                    }
+                }
+
+                tableIntervals.sort((a, b) => {
+                    if (a[0] < b[0]) {
+                        return -1;
+                    } else if (a[0] > b[0]) {
+                        return 1;
+                    } else if (a[1] < b[1]) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
+
+                let nextHeight = v_max;
+                for (let i = 0; i < tableIntervals.length - 1; i++) {
+                    if (tableIntervals[i][2] < nextHeight) {
+                        nextHeight = tableIntervals[i][2];
+                    }
+
+                    if (tableIntervals[i+1][0] - tableIntervals[i][1] > widthTable + spaceBetweenTable) {
+                        impossible = false;
+                        posV = actualHeight;
+                        posH = tableIntervals[i][1] + spaceBetweenTable;
+                        break;
+                    }
+                }
+                actualHeight = nextHeight + spaceBetweenTable;
+            }
+
+            if (impossible) {
+                posV = positionTable[0][0] + 10;
+                posH = positionTable[0][2] + 10;
+            }
+
             newTable = {
-                position_v: 100,
-                position_h: 100,
-                width: 75,
-                height: 75,
+                position_v: posV,
+                position_h: posH,
+                width: widthTable,
+                height: heightTable,
                 shape: "square",
                 seats: 1,
                 color: "rgb(53, 211, 116)",
@@ -112,7 +194,7 @@ export class FloorScreen extends Component {
         } else if (this._lastName) {
             this._lastName.num += 1;
         } else {
-            this._lastName = { num: 1, str: "T" };
+            this._lastName = { num: 1, str: "" };
         }
         return "" + this._lastName.str + this._lastName.num;
     }

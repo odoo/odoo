@@ -15,13 +15,13 @@ startSteps();
 
 // Create order that is synced when draft.
 // order 1
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.exec.addOrderline("Minute Maid", "1", "2");
 ProductScreen.check.totalAmountIs("2.0");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("T2", "1");
-FloorScreen.do.clickTable("T2");
+FloorScreen.check.orderCountSyncedInTableIs("2", "1");
+FloorScreen.do.clickTable("2");
 ProductScreen.check.totalAmountIs("2.0");
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod("Bank");
@@ -33,14 +33,14 @@ TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Coca-Cola", "2", "2");
 ProductScreen.check.totalAmountIs("4.0");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("T2", "1");
+FloorScreen.check.orderCountSyncedInTableIs("2", "1");
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains("2", "Tipping");
 TicketScreen.do.clickDiscard();
 
 // Create without syncing the draft.
 // order 3
-FloorScreen.do.clickTable("T5");
+FloorScreen.do.clickTable("5");
 ProductScreen.exec.addOrderline("Minute Maid", "3", "2");
 ProductScreen.check.totalAmountIs("6.0");
 ProductScreen.do.clickPayButton();
@@ -53,7 +53,7 @@ TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Coca-Cola", "4", "2");
 ProductScreen.check.totalAmountIs("8.0");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("T5", "1");
+FloorScreen.check.orderCountSyncedInTableIs("5", "1");
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains("3", "Tipping");
 

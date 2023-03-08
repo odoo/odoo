@@ -645,7 +645,7 @@ export function makeDraggableHook(hookParams) {
                 const { container, element, scrollParent } = current;
                 // Container rect
                 current.containerRect = dom.getRect(container, { adjust: true });
-                if (scrollParent) {
+                if (scrollParent && ctx.edgeScrolling.enabled) {
                     // Adjust container rect according to scrollparent
                     const parentRect = dom.getRect(scrollParent, { adjust: true });
                     current.containerRect.x = Math.max(current.containerRect.x, parentRect.x);

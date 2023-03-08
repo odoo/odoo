@@ -47,6 +47,8 @@ export class AnalyticDistribution extends Component {
         this.focusSelector = false;
         this.activeGroup = false;
 
+        this.currentValue = this.props.record.data[this.props.name];
+
         onWillStart(this.willStart);
         onWillUpdateProps(this.willUpdate);
         onPatched(this.patched);
@@ -87,7 +89,9 @@ export class AnalyticDistribution extends Component {
         // and thus different applicabilities apply
         // or a model applies that contains unavailable plans
         // This should only execute when these fields have changed, therefore we use the `_field` props.
-        const valueChanged = JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value);
+        const valueChanged =
+            JSON.stringify(this.currentValue) !==
+            JSON.stringify(nextProps.record.data[nextProps.name]);
         const currentAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
         const currentProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
         const accountChanged = !shallowEqual(this.lastAccount, currentAccount);
@@ -100,6 +104,7 @@ export class AnalyticDistribution extends Component {
             this.lastProduct = productChanged && currentProduct || this.lastProduct;
             await this.formatData(nextProps);
         }
+        this.currentValue = nextProps.record.data[nextProps.name];
     }
 
     patched() {
@@ -107,7 +112,7 @@ export class AnalyticDistribution extends Component {
     }
 
     async formatData(nextProps) {
-        const data = nextProps.value;
+        const data = nextProps.record.data[nextProps.name];
         const analytic_account_ids = Object.keys(data).map((id) => parseInt(id));
         const records = analytic_account_ids.length ? await this.fetchAnalyticAccounts([["id", "in", analytic_account_ids]]) : [];
         if (records.length < data.length) {
@@ -150,7 +155,7 @@ export class AnalyticDistribution extends Component {
         if (this.props.force_applicability) {
             args['applicability'] = this.props.force_applicability;
         }
-        const existing_account_ids = Object.keys(nextProps.value).map((i) => parseInt(i));
+        const existing_account_ids = Object.keys(nextProps.record.data[nextProps.name]).map((i) => parseInt(i));
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
         }

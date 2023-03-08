@@ -54,16 +54,22 @@
                                     <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
                                 </t>
 
-                                <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
-                                    <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
-                                        <CheckBox
-                                            onChange="() => this.toggleOptionalField(field.name)"
-                                            value="field.value"
-                                            name="field.name"
-                                        >
-                                            <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
-                                        </CheckBox>
+                                <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
+                                    <div t-if="!group_first" role="separator" class="dropdown-divider"/>
+                                    <DropdownItem t-if="group.displayName" parentClosingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
+                                        <div class="fw-bold" t-esc="group.displayName"/>
                                     </DropdownItem>
+                                    <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
+                                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                                            <CheckBox
+                                                onChange="() => this.toggleOptionalField(field.name)"
+                                                value="field.value"
+                                                name="field.name"
+                                            >
+                                                <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
+                                            </CheckBox>
+                                        </DropdownItem>
+                                    </t>
                                 </t>
                             </Dropdown>
                         </th>
@@ -223,7 +229,7 @@
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
-                    <t t-set="isInvisible" t-value="evalModifier(column.modifiers.invisible, record)"/>
+                    <t t-set="isInvisible" t-value="evalModifier(column.modifiers.invisible, record) or !(column.name in record.data)"/>
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="getCellClass(column, record)"
@@ -234,7 +240,7 @@
                         t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
                         <t t-if="!isInvisible">
                             <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
-                            <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]"/>
+                            <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.activeFields[column.name]" t-props="getFieldProps(record, column)"/>
                         </t>
                     </td>
                 </t>
@@ -251,6 +257,7 @@
                                 string="button.string"
                                 title="button.title"
                                 tabindex="props.list.editedRecord ? '-1' : '0'"
+                                onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
                             />
                         </t>
                     </td>

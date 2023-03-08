@@ -27,6 +27,7 @@ from psycopg2.sql import SQL, Identifier
 from difflib import get_close_matches
 from hashlib import sha256
 
+from .models import check_property_field_value_name
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
@@ -1161,6 +1162,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 try:
                     recs._fetch_field(self)
                 except AccessError:
+                    if len(recs) == 1:
+                        raise
                     record._fetch_field(self)
                 if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
@@ -3016,9 +3019,8 @@ class Many2one(_Relational):
         return value.display_name
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records
@@ -3194,6 +3196,7 @@ class Properties(Field):
     column_type = ('jsonb', 'jsonb')
     copy = False
     prefetch = False
+    unaccent = True
     write_sequence = 10              # because it must be written after the definition field
 
     # the field is computed editable by design (see the compute method below)
@@ -3288,7 +3291,6 @@ class Properties(Field):
 
         assert isinstance(value, dict), f"Wrong type {value!r}"
         value = self._dict_to_list(value, definition)
-        self._parse_json_types(value, record.env)
 
         return value
 
@@ -3310,10 +3312,22 @@ class Properties(Field):
     #       }]
     #
     def convert_to_read(self, value, record, use_name_get=True):
+        return self.convert_to_read_multi([value], record, use_name_get)[0]
+
+    def convert_to_read_multi(self, values, records, use_name_get=True):
+        assert len(values) == len(records)
+
+        res_ids_per_model = self._get_res_ids_per_model(records, values, use_name_get)
+
         # value is in record format
+        for value in values:
+            self._parse_json_types(value, records.env, res_ids_per_model)
+
         if use_name_get:
-            self._add_display_name(value, record.env)
-        return value
+            for value in values:
+                self._add_display_name(value, records.env)
+
+        return values
 
     def convert_to_write(self, value, record):
         """If we write a list on the child, update the definition record."""
@@ -3328,37 +3342,29 @@ class Properties(Field):
         self._add_display_name(value, record.env)
         return value
 
-    def read(self, records):
+    def _get_res_ids_per_model(self, records, values_list, use_name_get=True):
         """Read everything needed in batch for the given records.
 
         To retrieve relational properties names, or to check their existence,
         we need to do some SQL queries. To reduce the number of queries when we read
-        in batch, we put in cache everything needed before calling
+        in batch, we prefetch everything needed before calling
         convert_to_record / convert_to_read.
-        """
-        definition_records_map = {
-            record: record[self.definition_record][self.definition_record_field]
-            for record in records
-        }
 
+        Return a dict {model: record_ids} that contains
+        the existing ids for each needed models.
+        """
         # ids per model we need to fetch in batch to put in cache
         ids_per_model = defaultdict(OrderedSet)
 
-        records_cached_values = list(records.env.cache.get_values(records, self))
-
-        for record, record_values in zip(records, records_cached_values):
-            definition = definition_records_map.get(record)
-            if not record_values or not definition:
-                continue
-            for property_definition in definition:
+        for record, record_values in zip(records, values_list):
+            for property_definition in record_values:
                 comodel = property_definition.get('comodel')
                 type_ = property_definition.get('type')
-                name = property_definition.get('name')
-                if not comodel or type_ not in ('many2one', 'many2many') or name not in record_values:
-                    continue
-
+                property_value = property_definition.get('value') or []
                 default = property_definition.get('default') or []
-                property_value = record_values[name] or []
+
+                if type_ not in ('many2one', 'many2many') or comodel not in records.env:
+                    continue
 
                 if type_ == 'many2one':
                     default = [default] if default else []
@@ -3368,38 +3374,20 @@ class Properties(Field):
                 ids_per_model[comodel].update(property_value)
 
         # check existence and pre-fetch in batch
-        existing_ids_per_model = {}
+        res_ids_per_model = {}
         for model, ids in ids_per_model.items():
             recs = records.env[model].browse(ids).exists()
-            existing_ids_per_model[model] = set(recs.ids)
-            for record in recs:
-                # read a field to pre-fetch the recordset
-                try:
-                    record.display_name
-                except AccessError:
-                    pass
+            res_ids_per_model[model] = set(recs.ids)
 
-        # update the cache and remove non-existing ids
-        for record, record_values in zip(records, records_cached_values):
-            definition = definition_records_map.get(record)
-            if not record_values or not definition:
-                continue
+            if use_name_get:
+                for record in recs:
+                    # read a field to pre-fetch the recordset
+                    try:
+                        record.display_name
+                    except AccessError:
+                        pass
 
-            for property_definition in definition:
-                comodel = property_definition.get('comodel')
-                type_ = property_definition.get('type')
-                name = property_definition.get('name')
-                if not comodel or type_ not in ('many2one', 'many2many') or not record_values.get(name):
-                    continue
-
-                property_value = record_values[name]
-
-                if type_ == 'many2one':
-                    record_values[name] = property_value if property_value in existing_ids_per_model[comodel] else False
-                else:
-                    record_values[name] = [id_ for id_ in property_value if id_ in existing_ids_per_model[comodel]]
-
-            records.env.cache.update(record, self, [record_values], check_dirty=False)
+        return res_ids_per_model
 
     def write(self, records, value):
         """Check if the properties definition has been changed.
@@ -3431,6 +3419,7 @@ class Properties(Field):
             ]
             for definition in value:
                 definition.pop('definition_changed', None)
+                check_property_field_value_name(definition.get('name', ''))
 
             # update the properties definition on the container
             container = records[self.definition_record]
@@ -3589,7 +3578,7 @@ class Properties(Field):
                 definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
 
     @classmethod
-    def _parse_json_types(cls, values_list, env):
+    def _parse_json_types(cls, values_list, env, res_ids_per_model):
         """Parse the value stored in the JSON.
 
         Check for records existence, if we removed a selection option, ...
@@ -3631,6 +3620,9 @@ class Properties(Field):
                 if not isinstance(property_value, int):
                     raise ValueError(f'Wrong many2one value: {property_value!r}.')
 
+                if property_value not in res_ids_per_model[res_model]:
+                    property_value = False
+
             elif property_type == 'many2many' and property_value and res_model in env:
                 if not is_list_of(property_value, int):
                     raise ValueError(f'Wrong many2many value: {property_value!r}.')
@@ -3638,6 +3630,11 @@ class Properties(Field):
                 if len(property_value) != len(set(property_value)):
                     # remove duplicated value and preserve order
                     property_value = list(dict.fromkeys(property_value))
+
+                property_value = [
+                    id_ for id_ in property_value
+                    if id_ in res_ids_per_model[res_model]
+                ]
 
             property_definition['value'] = property_value
 
@@ -4293,20 +4290,18 @@ class One2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
-        domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
-        lines = comodel.search(domain)
 
-        if len(records) == 1:
-            # optimization: all lines have the same value for 'inverse_field',
-            # so we don't need to fetch it from database
-            records.env.cache.insert_missing(records, self, [lines._ids])
-            records.env.cache.insert_missing(lines, inverse_field, itertools.repeat(records.id))
-            return
+        # optimization: fetch the inverse and active fields with search()
+        domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
+        field_names = [inverse]
+        if comodel._active_name:
+            field_names.append(comodel._active_name)
+        lines = comodel.search_fetch(domain, field_names)
 
         # group lines by inverse field (without prefetching other fields)
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         group = defaultdict(list)
-        for line in lines.with_context(prefetch_fields=False):
+        for line in lines:
             # line[inverse] may be a record or an integer
             group[get_id(line[inverse])].append(line.id)
 
@@ -4659,7 +4654,7 @@ class Many2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
         domain = self.get_domain_list(records)
-        comodel._flush_search(domain)
+        comodel._flush_search(domain, order=comodel._order)
         wquery = comodel._where_calc(domain)
         comodel._apply_ir_rules(wquery, 'read')
         order_by = comodel._generate_order_by(None, wquery)

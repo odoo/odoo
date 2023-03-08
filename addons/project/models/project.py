@@ -3,6 +3,7 @@
 
 import ast
 import json
+import re
 from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
@@ -672,18 +673,20 @@ class Project(models.Model):
         return result
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        if not order:
+            return super()._search(domain, offset, limit, order, access_rights_uid)
         new_order, item_index, desc = [], -1, False
-        for index, order_item in enumerate((order or self._order).split(',')):
+        for index, order_item in enumerate(order.split(',')):
             order_item_list = order_item.strip().lower().split(' ')
             if order_item_list[0] == 'is_favorite':
                 item_index = index
                 desc = order_item_list[-1] == 'desc'
             else:
                 new_order.append(order_item)
-        query = super()._search(args, offset, limit, ', '.join(new_order), count, access_rights_uid)
+        query = super()._search(domain, offset, limit, ', '.join(new_order), access_rights_uid)
         if item_index != -1:
-            query_order_list = query.order.split(',')
+            query_order_list = query.order.split(',') if query.order else []
             query_order_list.insert(item_index, f"""
                 "project_project"."id" IN (
                     SELECT project_id
@@ -1220,6 +1223,7 @@ class Task(models.Model):
         readonly=False,
         store=True,
         tracking=True,
+        index='btree_not_null',
         help="Deliver your services automatically when a milestone is reached by linking it to a sales order item."
     )
     has_late_and_unreached_milestone = fields.Boolean(
@@ -1332,6 +1336,15 @@ class Task(models.Model):
         help="Analytic account to which this task and its timesheets are linked.\n"
             "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
+
+    # Quick creation shortcuts
+    display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name',
+        help="""Use these keywords in the title to set new tasks:\n
+            #tags Set tags on the task
+            @user Assign the task to a user
+            ! Set the task a high priority\n
+            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
+    )
 
     _sql_constraints = [
         ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent.")
@@ -1680,10 +1693,10 @@ class Task(models.Model):
             can normally see.
             (In other words, this compute is only used in project sharing views to see all assignees for each task)
         """
-        if self.ids:
+        if self._origin:
             # fetch 'user_ids' in superuser mode (and override value in cache
             # browse is useful to avoid miscache because of the newIds contained in self
-            self.browse(self.ids)._read(['user_ids'])
+            self._origin.fetch(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
             task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
 
@@ -1704,6 +1717,70 @@ class Task(models.Model):
         accessible_parent_tasks = self.parent_id.with_user(self.env.user)._filter_access_rules('read')
         for task in self:
             task.display_parent_task_button = task.parent_id in accessible_parent_tasks
+
+    def _get_group_pattern(self):
+        return {
+            'tags_and_users': r'\s([#@]%s[^\s]+)',
+            'priority': r'\s(!)$',
+        }
+
+    def _get_groups_patterns(self):
+        group_pattern = self._get_group_pattern()
+        return [
+            r'(?:%s)*' % (group_pattern['tags_and_users'] % ''),
+            r'(?:%s)?' % group_pattern['priority'],
+        ]
+
+    def _get_cannot_start_with_patterns(self):
+        return [r'(?![#!@\s])']
+
+    def _extract_tags_and_users(self):
+        tags = []
+        users = []
+        tags_and_users_group = self._get_group_pattern()['tags_and_users']
+        for word in re.findall(tags_and_users_group % '', self.display_name):
+            (tags if word.startswith('#') else users).append(word[1:])
+        users_to_keep = []
+        user_ids = []
+        for user in users:
+            matched_users = self.env['res.users'].name_search(user)
+            if len(matched_users) == 1:
+                user_ids.append(Command.link(matched_users[0][0]))
+            else:
+                users_to_keep.append(r'%s\b' % user)
+        self.user_ids = user_ids
+        if tags:
+            domain = expression.OR([[('name', '=ilike', tag)] for tag in tags])
+            existing_tags = self.env['project.tags'].search(domain)
+            existing_tags_names = {tag.name.lower() for tag in existing_tags}
+            new_tags_names = {tag for tag in tags if tag.lower() not in existing_tags_names}
+            self.tag_ids = [Command.set(existing_tags.ids)] + [Command.create({'name': name}) for name in new_tags_names]
+        pattern = tags_and_users_group % ('(?!%s)' % ('|').join(users_to_keep) if users_to_keep else '')
+        self.display_name, dummy = re.subn(pattern, '', self.display_name)
+
+    def _extract_priority(self):
+        self.priority = "1"
+        priority_group = self._get_group_pattern()['priority']
+        self.display_name, dummy = re.subn(priority_group, '', self.display_name)
+
+    def _get_groups(self):
+        return [
+            lambda task: task._extract_tags_and_users(),
+            lambda task: task._extract_priority(),
+        ]
+
+    def _inverse_display_name(self):
+        for task in self:
+            pattern = re.compile(r'^%s.+?%s$' % (
+                ('').join(task._get_cannot_start_with_patterns()),
+                ('').join(task._get_groups_patterns()))
+            )
+            match = pattern.match(task.display_name)
+            if match:
+                for group, extract_data in enumerate(task._get_groups(), start=1):
+                    if match.group(group):
+                        extract_data(task)
+                task.name = task.display_name.strip()
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -1889,10 +1966,10 @@ class Task(models.Model):
         return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        fields_list = {term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
-        return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def mapped(self, func):
         # Note: This will protect the filtered method too
@@ -1946,6 +2023,8 @@ class Task(models.Model):
         default_stage = dict()
         recurrences = self.env['project.task.recurrence']
         for vals in vals_list:
+            if not vals.get('name') and vals.get('display_name'):
+                vals['name'] = vals['display_name']
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
@@ -2680,11 +2759,10 @@ class ProjectTags(models.Model):
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
 
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        domain = args
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
         if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
-        return super()._name_search(name, domain, operator, limit, name_get_uid)
+            domain = self._get_project_tags_domain(domain or [], self.env.context['project_id'])
+        return super()._name_search(name, domain, operator, limit, order, name_get_uid)
 
     @api.model
     def name_create(self, name):

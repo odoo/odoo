@@ -23,18 +23,20 @@ class Partner(models.Model):
 
     def _compute_meeting(self):
         if self.ids:
-            all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+            # prefetch 'parent_id'
+            all_partners = self.with_context(active_test=False).search_fetch(
+                [('id', 'child_of', self.ids)], ['parent_id'],
+            )
 
-            event_id = self.env['calendar.event']._search([])  # ir.rules will be applied
-            subquery_string, subquery_params = event_id.select()
-            subquery = self.env.cr.mogrify(subquery_string, subquery_params).decode()
+            query = self.env['calendar.event']._search([])  # ir.rules will be applied
+            query_str, params = query.subselect()
 
-            self.env.cr.execute("""
+            self.env.cr.execute(f"""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
-                 WHERE res_partner_id IN %s AND calendar_event_id IN ({})
+                 WHERE res_partner_id IN %s AND calendar_event_id IN {query_str}
               GROUP BY res_partner_id, calendar_event_id
-            """.format(subquery), [tuple(all_partners.ids)])
+            """, [tuple(all_partners.ids)] + params)
 
             meeting_data = self.env.cr.fetchall()
 
@@ -44,7 +46,6 @@ class Partner(models.Model):
                 meetings[m[0]].add(m[1])
 
             # Add the events linked to the children of the partner
-            all_partners.read(['parent_id'])
             for p in all_partners:
                 partner = p
                 while partner:

@@ -11,6 +11,7 @@ export class RadioField extends Component {
     static props = {
         ...standardFieldProps,
         orientation: { type: String, optional: true },
+        label: { type: String, optional: true },
     };
     static defaultProps = {
         orientation: "vertical",
@@ -38,15 +39,14 @@ export class RadioField extends Component {
     get items() {
         return RadioField.getItems(this.props.name, this.props.record);
     }
-    get string() {
-        return this.props.record.activeFields[this.props.name].string;
-    }
     get value() {
         switch (this.props.record.fields[this.props.name].type) {
             case "selection":
-                return this.props.value;
+                return this.props.record.data[this.props.name];
             case "many2one":
-                return Array.isArray(this.props.value) ? this.props.value[0] : this.props.value;
+                return Array.isArray(this.props.record.data[this.props.name])
+                    ? this.props.record.data[this.props.name][0]
+                    : this.props.record.data[this.props.name];
             default:
                 return null;
         }
@@ -72,8 +72,9 @@ export const radioField = {
     displayName: _lt("Radio"),
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps: ({ options }) => ({
+    extractProps: ({ options, string }) => ({
         orientation: options.horizontal ? "horizontal" : "vertical",
+        label: string,
     }),
     legacySpecialData: "_fetchSpecialMany2ones",
 };

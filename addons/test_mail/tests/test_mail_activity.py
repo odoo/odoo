@@ -82,13 +82,13 @@ class TestActivityRights(TestActivityCommon):
 
         # can _search activities if access to the document
         self.env['mail.activity'].with_user(self.user_employee)._search(
-            [('id', '=', test_activity.id)], count=False)
+            [('id', '=', test_activity.id)])
 
         # cannot _search activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
                 searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
-                    [('id', '=', test_activity.id)], count=False)
+                    [('id', '=', test_activity.id)])
 
         # can read_group activities if access to the document
         read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(

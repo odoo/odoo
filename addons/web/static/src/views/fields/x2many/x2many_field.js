@@ -27,31 +27,29 @@ export class X2ManyField extends Component {
         ...standardFieldProps,
         addLabel: { type: String, optional: true },
         editable: { type: String, optional: true },
+        viewMode: { type: String, optional: true },
+        widget: { type: String, optional: true },
+        crudOptions: { type: Object, optional: true },
+        string: { type: String, optional: true },
+        views: { type: Object, optional: true },
+    };
+    static defaultProps = {
+        archInfo: {},
     };
 
     setup() {
-        this.activeField = this.props.record.activeFields[this.props.name];
         this.field = this.props.record.fields[this.props.name];
-
-        this.isMany2Many =
-            this.field.type === "many2many" || this.activeField.widget === "many2many";
-
-        this.viewMode = this.activeField.viewMode;
-
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(
             () => this.list,
             this.isMany2Many
         );
 
-        let archInfo;
-        if (this.viewMode) {
-            archInfo = this.activeField.views[this.viewMode];
-        } else {
-            archInfo = {};
-        }
-        if (this.viewMode === "kanban") {
-            this.creates = archInfo.creates.length
-                ? archInfo.creates
+        this.archInfo = this.props.views[this.props.viewMode] || {};
+
+        const { activeActions, creates } = this.archInfo;
+        if (this.props.viewMode === "kanban") {
+            this.creates = creates.length
+                ? creates
                 : [
                       {
                           type: "create",
@@ -60,9 +58,9 @@ export class X2ManyField extends Component {
                       },
                   ];
         }
-        const subViewActiveActions = archInfo.activeActions;
+        const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
-            crudOptions: Object.assign({}, this.activeField.options, {
+            crudOptions: Object.assign({}, this.props.crudOptions, {
                 onDelete: removeRecord,
             }),
             fieldType: this.isMany2Many ? "many2many" : "one2many",
@@ -86,7 +84,7 @@ export class X2ManyField extends Component {
             getList: () => this.list,
             saveRecord,
             updateRecord,
-            withParentId: this.activeField.widget !== "many2many",
+            withParentId: this.props.widget !== "many2many",
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;
@@ -100,10 +98,12 @@ export class X2ManyField extends Component {
             });
         };
         this.canOpenRecord =
-            this.viewMode === "list" ? !(archInfo.editable || this.props.editable) : true;
+            this.props.viewMode === "list"
+                ? !(this.archInfo.editable || this.props.editable)
+                : true;
 
         const selectCreate = useSelectCreate({
-            resModel: this.props.value.resModel,
+            resModel: this.props.record.data[this.props.name].resModel,
             activeActions: this.activeActions,
             onSelected: (resIds) => saveRecord(resIds),
             onCreateEdit: ({ context }) => this._openRecord({ context }),
@@ -112,21 +112,37 @@ export class X2ManyField extends Component {
 
         this.selectCreate = (params) => {
             const p = Object.assign({}, params);
-            p.domain = [...(p.domain || []), "!", ["id", "in", this.props.value.currentIds]];
+            p.domain = [
+                ...(p.domain || []),
+                "!",
+                ["id", "in", this.props.record.data[this.props.name].currentIds],
+            ];
             return selectCreate(p);
+        };
+    }
+
+    get activeField() {
+        return {
+            views: this.props.views,
+            viewMode: this.props.viewMode,
+            string: this.props.string,
         };
     }
 
     get displayControlPanelButtons() {
         return (
-            this.viewMode === "kanban" &&
+            this.props.viewMode === "kanban" &&
             ("link" in this.activeActions ? this.activeActions.link : this.activeActions.create) &&
             !this.props.readonly
         );
     }
 
+    get isMany2Many() {
+        return this.field.type === "many2many" || this.props.widget === "many2many";
+    }
+
     get list() {
-        return this.props.value;
+        return this.props.record.data[this.props.name];
     }
 
     get nestedKeyOptionalFieldsData() {
@@ -165,14 +181,14 @@ export class X2ManyField extends Component {
     }
 
     get rendererProps() {
-        const archInfo = this.activeField.views[this.viewMode];
+        const { archInfo } = this;
         const props = {
             archInfo,
             list: this.list,
             openRecord: this.openRecord.bind(this),
         };
 
-        if (this.viewMode === "kanban") {
+        if (this.props.viewMode === "kanban") {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
             props.readonly = this.props.readonly;
@@ -227,14 +243,14 @@ export class X2ManyField extends Component {
         const domain = record.getFieldDomain(this.props.name).toList();
         context = makeContext([record.getFieldContext(this.props.name), context]);
         if (this.isMany2Many) {
-            const { string } = this.props.record.activeFields[this.props.name];
+            const { string } = this.props;
             const title = sprintf(this.env._t("Add: %s"), string);
             return this.selectCreate({ domain, context, title });
         }
         if (editable) {
             if (this.list.editedRecord) {
                 const proms = [];
-                this.list.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+                this.list.model.trigger("NEED_LOCAL_CHANGES", { proms });
                 await Promise.all([...proms, this.list.editedRecord._updatePromise]);
                 await this.list.editedRecord.switchMode("readonly", { checkValidity: true });
             }
@@ -258,9 +274,19 @@ export const x2ManyField = {
     displayName: _lt("Relational table"),
     supportedTypes: ["one2many", "many2many"],
     useSubView: true,
-    extractProps: ({ attrs }) => ({
-        addLabel: attrs["add-label"],
-    }),
+    extractProps: ({ attrs, viewMode, views, widget, options, string }) => {
+        const props = {
+            addLabel: attrs["add-label"],
+            viewMode,
+            views,
+            crudOptions: options,
+            string,
+        };
+        if (widget) {
+            props.widget = widget;
+        }
+        return props;
+    },
 };
 
 registry.category("fields").add("one2many", x2ManyField);

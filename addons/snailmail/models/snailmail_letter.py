@@ -139,7 +139,6 @@ class SnailmailLetter(models.Model):
                     return False
                 else:
                     self.write({'report_template': report.id})
-                # report = self.env.ref('account.account_invoices')
             if report.print_report_name:
                 report_name = safe_eval(report.print_report_name, {'object': obj})
             elif report.attachment:
@@ -218,6 +217,14 @@ class SnailmailLetter(models.Model):
 
         batch = len(self) > 1
         for letter in self:
+            recipient_name = letter.partner_id.name or letter.partner_id.parent_id and letter.partner_id.parent_id.name
+            if not recipient_name:
+                letter.write({
+                    'info_msg': _('Invalid recipient name.'),
+                    'state': 'error',
+                    'error_code': 'MISSING_REQUIRED_FIELDS'
+                    })
+                continue
             document = {
                 # generic informations to send
                 'letter_id': letter.id,
@@ -225,7 +232,7 @@ class SnailmailLetter(models.Model):
                 'res_id': letter.res_id,
                 'contact_address': letter.partner_id.with_context(snailmail_layout=True, show_address=True).name_get()[0][1],
                 'address': {
-                    'name': letter.partner_id.name,
+                    'name': recipient_name,
                     'street': letter.partner_id.street,
                     'street2': letter.partner_id.street2,
                     'zip': letter.partner_id.zip,
@@ -445,7 +452,9 @@ class SnailmailLetter(models.Model):
         return all(record[key] for key in required_keys)
 
     def _append_cover_page(self, invoice_bin: bytes):
-        address = self.partner_id.with_context(show_address=True, lang='en_US')._get_name().replace('\n', '<br/>')
+        address_split = self.partner_id.with_context(show_address=True, lang='en_US')._get_name().split('\n')
+        address_split[0] = self.partner_id.name or self.partner_id.parent_id and self.partner_id.parent_id.name or address_split[0]
+        address = '<br/>'.join(address_split)
         address_x = 118 * mm
         address_y = 60 * mm
         frame_width = 85.5 * mm

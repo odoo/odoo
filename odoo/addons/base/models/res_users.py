@@ -188,14 +188,14 @@ class Groups(models.Model):
         return where
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
-            groups = super(Groups, self).search(args)
+            groups = super().search(domain)
             groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
             groups = groups[offset:offset+limit] if limit else groups[offset:]
-            return len(groups) if count else groups.ids
-        return super(Groups, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+            return groups._as_query(order)
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def copy(self, default=None):
         self.ensure_one()
@@ -458,19 +458,14 @@ class Users(models.Model):
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
 
-    def _read(self, fields):
-        super(Users, self)._read(fields)
-        if set(USER_PRIVATE_FIELDS).intersection(fields):
+    def _fetch_query(self, query, fields):
+        records = super()._fetch_query(query, fields)
+        if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
             if self.check_access_rights('write', raise_exception=False):
-                return
-            for record in self:
-                for f in USER_PRIVATE_FIELDS:
-                    try:
-                        record._cache[f]
-                        record._cache[f] = '********'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
+                return records
+            for fname in USER_PRIVATE_FIELDS:
+                self.env.cache.update(records, self._fields[fname], repeat('********'))
+        return records
 
     @api.constrains('company_id', 'company_ids', 'active')
     def _check_company(self):
@@ -561,13 +556,12 @@ class Users(models.Model):
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        if not self.env.su and args:
-            domain_fields = {term[0] for term in args if isinstance(term, (tuple, list))}
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        if not self.env.su and domain:
+            domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
             if domain_fields.intersection(USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))
-        return super(Users, self)._search(args, offset=offset, limit=limit, order=order, count=count,
-                                          access_rights_uid=access_rights_uid)
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -652,17 +646,17 @@ class Users(models.Model):
         self.clear_caches()
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        domain = domain or []
         user_ids = []
         if operator not in expression.NEGATIVE_TERM_OPERATORS:
             if operator == 'ilike' and not (name or '').strip():
-                domain = []
+                name_domain = []
             else:
-                domain = [('login', '=', name)]
-            user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+                name_domain = [('login', '=', name)]
+            user_ids = self._search(expression.AND([name_domain, domain]), limit=limit, order=order, access_rights_uid=name_get_uid)
         if not user_ids:
-            user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([[('name', operator, name)], domain]), limit=limit, order=order, access_rights_uid=name_get_uid)
         return user_ids
 
     def copy(self, default=None):

@@ -92,7 +92,10 @@ class MailComposer(models.TransientModel):
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', string='Attachments',
         compute='_compute_attachment_ids', readonly=False, store=True)
-    email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
+    email_layout_xmlid = fields.Char(
+        'Email Notification Layout',
+        compute='_compute_email_layout_xmlid', readonly=False, store=True,
+        copy=False)
     email_add_signature = fields.Boolean(
         'Add signature',
         compute='_compute_email_add_signature', readonly=False, store=True)
@@ -274,6 +277,17 @@ class MailComposer(models.TransientModel):
                 composer.email_add_signature = False  # not supported
             else:
                 composer.email_add_signature = not bool(composer.template_id)
+
+    @api.depends('template_id')
+    def _compute_email_layout_xmlid(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, set it on composer.When removing
+        the template, reset it. """
+        for composer in self:
+            if composer.template_id.email_layout_xmlid:
+                composer.email_layout_xmlid = composer.template_id.email_layout_xmlid
+            if not composer.template_id:
+                composer.email_layout_xmlid = False
 
     @api.depends('composition_mode', 'email_from', 'model',
                  'res_domain', 'res_ids', 'template_id')
@@ -1104,10 +1118,11 @@ class MailComposer(models.TransientModel):
             self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
             blacklist = {x[0] for x in self._cr.fetchall()}
             if blacklist:
-                targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
+                targets = self.env[self.model].browse(mail_values_dict.keys())
+                targets.fetch(['email_normalized'])
                 # First extract email from recipient before comparing with blacklist
-                blacklisted_rec_ids.update(target['id'] for target in targets
-                                           if target['email_normalized'] in blacklist)
+                blacklisted_rec_ids.update(target.id for target in targets
+                                           if target.email_normalized in blacklist)
         return blacklisted_rec_ids
 
     def _get_done_emails(self, mail_values_dict):

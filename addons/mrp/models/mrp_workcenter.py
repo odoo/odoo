@@ -419,6 +419,21 @@ class MrpWorkcenterProductivity(models.Model):
             else:
                 blocktime.duration = 0.0
 
+    @api.onchange('duration')
+    def _duration_changed(self):
+        self.date_end = self.date_start + timedelta(minutes=self.duration)
+        self._loss_type_change()
+
+    @api.onchange('date_start')
+    def _date_start_changed(self):
+        self.date_end = self.date_start + timedelta(minutes=self.duration)
+        self._loss_type_change()
+
+    @api.onchange('date_end')
+    def _date_end_changed(self):
+        self.date_start = self.date_end - timedelta(minutes=self.duration)
+        self._loss_type_change()
+
     @api.constrains('workorder_id')
     def _check_open_time_ids(self):
         for workorder in self.workorder_id:
@@ -429,6 +444,13 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+
+    def _loss_type_change(self):
+        self.ensure_one()
+        if self.workorder_id.duration > self.workorder_id.duration_expected:
+            self.loss_id = self.env.ref("mrp.block_reason4").id
+        else:
+            self.loss_id = self.env.ref("mrp.block_reason7").id
 
     def _close(self):
         underperformance_timers = self.env['mrp.workcenter.productivity']

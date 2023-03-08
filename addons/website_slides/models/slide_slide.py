@@ -850,31 +850,18 @@ class Slide(models.Model):
         ])
         slide_id = slide_partners.mapped('slide_id')
         new_slides = self_sudo - slide_id
-        channel = slide_id.channel_id
-        karma_to_add = 0
 
         for slide_partner in slide_partners:
             if upvote:
-                new_vote = 0 if slide_partner.vote == 1 else 1
+                slide_partner.vote = 0 if slide_partner.vote == 1 else 1
             else:
-                new_vote = 0 if slide_partner.vote == -1 else -1
-            # 2 if the disliked slide was liked by the user
-            # 1 if the slide was liked OR if the dislike was removed
-            # -1 if the slide was disliked OR if the like was removed
-            # -2 if the liked slide was disliked by the user
-            vote_diff = new_vote - slide_partner.vote
-            karma_to_add += channel.karma_gen_slide_vote * vote_diff
-            slide_partner.vote = new_vote
+                slide_partner.vote = 0 if slide_partner.vote == -1 else -1
 
         for new_slide in new_slides:
             new_vote = 1 if upvote else -1
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
-            karma_to_add += new_slide.channel_id.karma_gen_slide_vote * (1 if upvote else -1)
-
-        if karma_to_add:
-            self.env.user.add_karma(karma_to_add)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
         if any(not slide.channel_id.is_member for slide in self):
@@ -968,12 +955,16 @@ class Slide(models.Model):
                      slide.quiz_second_attempt_reward,
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
-            points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
+            points = gains[min(user_membership_sudo.quiz_attempts_count, len(gains)) - 1]
+            if points:
+                if completed:
+                    reason = _('Quiz Completed')
+                else:
+                    points *= -1
+                    reason = _('Quiz Set Uncompleted')
+                self.env.user.sudo()._add_karma(points, slide, reason)
 
-        if not completed:
-            points *= -1
-
-        return self.env.user.sudo().add_karma(points)
+        return True
 
     def action_view_embeds(self):
         self.ensure_one()

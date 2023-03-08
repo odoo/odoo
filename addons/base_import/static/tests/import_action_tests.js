@@ -129,9 +129,29 @@ function parsePreview(opts) {
     });
 }
 
+function customParsePreview(opts, { fields, headers, rowCount, matches, preview }) {
+    totalRows = rowCount;
+
+    return Promise.resolve({
+        advanced_mode: opts.advanced,
+        batch: false,
+        fields: fields,
+        file_length: opts.has_headers ? totalRows - 1 : totalRows,
+        header_types: false,
+        headers: headers,
+        matches: matches,
+        options: {
+            ...opts,
+            sheet: opts.sheet.length ? opts.sheet : "Template",
+            sheets: ["Template", "Template 2"],
+        },
+        preview: preview,
+    });
+}
+
 // since executing a real import would be difficult, this method simply returns
 // some error messages to help testing the UI
-function executeFailingImport(field, isMultiline) {
+function executeFailingImport(field, isMultiline, field_path = "") {
     let moreInfo = [];
     if (serverData.models.partner.fields[field].type === "selection") {
         moreInfo = serverData.models.partner.fields[field].selection;
@@ -140,70 +160,70 @@ function executeFailingImport(field, isMultiline) {
         ids: false,
         messages: isMultiline
             ? [
-                  {
-                      field,
-                      field_name: serverData.models.partner.fields[field].string,
-                      field_path: "",
-                      message: "Invalid value",
-                      moreInfo,
-                      record: 0,
-                      rows: { from: 0, to: 0 },
-                      value: "Invalid value",
-                      priority: "info",
-                  },
-                  {
-                      field,
-                      field_name: serverData.models.partner.fields[field].string,
-                      field_path: "",
-                      message: "Duplicate value",
-                      moreInfo,
-                      record: 0,
-                      rows: { from: 1, to: 1 },
-                      priority: "error",
-                  },
-                  {
-                      field,
-                      field_name: serverData.models.partner.fields[field].string,
-                      field_path: "",
-                      message: "Wrong values",
-                      moreInfo,
-                      record: 0,
-                      rows: { from: 2, to: 3 },
-                      priority: "warning",
-                  },
-                  {
-                      field,
-                      field_name: serverData.models.partner.fields[field].string,
-                      field_path: "",
-                      message: "Bad value here",
-                      moreInfo,
-                      record: 0,
-                      rows: { from: 4, to: 4 },
-                      value: "Bad value",
-                      priority: "warning",
-                  },
-                  {
-                      field,
-                      field_name: serverData.models.partner.fields[field].string,
-                      field_path: "",
-                      message: "Duplicate value",
-                      moreInfo,
-                      record: 0,
-                      rows: { from: 5, to: 5 },
-                      priority: "error",
-                  },
-              ]
+                {
+                    field,
+                    field_name: serverData.models.partner.fields[field].string,
+                    field_path,
+                    message: "Invalid value",
+                    moreInfo,
+                    record: 0,
+                    rows: { from: 0, to: 0 },
+                    value: "Invalid value",
+                    priority: "info",
+                },
+                {
+                    field,
+                    field_name: serverData.models.partner.fields[field].string,
+                    field_path,
+                    message: "Duplicate value",
+                    moreInfo,
+                    record: 0,
+                    rows: { from: 1, to: 1 },
+                    priority: "error",
+                },
+                {
+                    field,
+                    field_name: serverData.models.partner.fields[field].string,
+                    field_path,
+                    message: "Wrong values",
+                    moreInfo,
+                    record: 0,
+                    rows: { from: 2, to: 3 },
+                    priority: "warning",
+                },
+                {
+                    field,
+                    field_name: serverData.models.partner.fields[field].string,
+                    field_path,
+                    message: "Bad value here",
+                    moreInfo,
+                    record: 0,
+                    rows: { from: 4, to: 4 },
+                    value: "Bad value",
+                    priority: "warning",
+                },
+                {
+                    field,
+                    field_name: serverData.models.partner.fields[field].string,
+                    field_path,
+                    message: "Duplicate value",
+                    moreInfo,
+                    record: 0,
+                    rows: { from: 5, to: 5 },
+                    priority: "error",
+                },
+            ]
             : [
-                  {
-                      field,
-                      field_name: serverData.models.partner.fields[field].string,
-                      field_path: "",
-                      message: "Incorrect value",
-                      moreInfo,
-                      record: 0,
-                      rows: { from: 0, to: 0 },
-                  },
-              ],
+                {
+                    field,
+                    field_name: serverData.models.partner.fields[field].string,
+                    field_path,
+                    message: "Incorrect value",
+                    moreInfo,
+                    record: 0,
+                    rows: { from: 0, to: 0 },
+                },
+            ],
         name: ["Some invalid content", "Wrong content", "Bad content"],
         nextrow: 0,
     };
@@ -559,7 +579,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             registerFakeHTTPService();
             const notificationMock = (message) => {
                 assert.step(message);
-                return () => {};
+                return () => { };
             };
             registry
                 .category("services")
@@ -904,8 +924,8 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
         // Check that errors have been sorted and grouped
         assert.strictEqual(
-            target.querySelector(".o_import_report p").textContent.trim(),
-            "Multiple errors occurred  in field foo:"
+            target.querySelector(".o_import_report p").textContent.trim().toLowerCase(),
+            "multiple errors occurred  in field foo:"
         );
         assert.strictEqual(
             target.querySelector(".o_import_report li:first-child").textContent.trim(),
@@ -1159,5 +1179,120 @@ QUnit.module("Base Import Tests", (hooks) => {
             "1",
             "the import will resume at line 1"
         );
+    });
+
+    QUnit.test("Import view: relational fields correctly mapped on preview", async function (assert) {
+        assert.expect(4);
+
+        registerFakeHTTPService();
+        await createImportAction({
+            "base_import.import/parse_preview": async (route, args) => {
+                return customParsePreview(args[1], {
+                    fields: [
+                        { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
+                        { id: "display_name", name: "display_name", string: "Display Name", fields: [], type: "id" },
+                        {
+                            id: "many2many_field", name: "many2many_field", string: "Many2Many", fields: [
+                                { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
+                            ], type: "id"
+                        },
+                    ],
+                    headers: ["id", "display_name", "many2many_field/id"],
+                    rowCount: 5,
+                    matches: {
+                        0: ["id"],
+                        1: ["display_name"],
+                        2: ["many2many_field", "id"]
+                    },
+                    preview: [
+                        ["0", "1", "2"],
+                        ["Name 1", "Name 2", "Name 3",],
+                        ["", "1", "2"],
+                    ],
+                });
+            },
+            "base_import.import/execute_import": (route, args) => {
+                assert.deepEqual(args[1], ["id", "display_name", "many2many_field/id"],
+                    "The proper arguments are given for the import");
+                assert.deepEqual(args[2], ["id", "display_name", "many2many_field/id"],
+                    "The proper arguments are given for the import");
+                return executeImport(args);
+            },
+        });
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await editInput(target, "input[type='file']", file);
+
+        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_file_column_cell span.text-truncate").innerText, "many2many_field/id",
+            "The third row should be the relational field");
+
+        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_select_menu_toggler_slot span").innerText, "Many2Many / External ID",
+            "The relational field should be selected by default and the name should be the full path.");
+
+        await click(target.querySelector(".o_control_panel button:first-child"));
+    });
+
+    QUnit.test("Import view: import errors with relational fields", async function (assert) {
+        registerFakeHTTPService();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        await createImportAction({
+            "base_import.import/parse_preview": async (route, args) => {
+                return customParsePreview(args[1], {
+                    fields: [
+                        { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
+                        { id: "display_name", name: "display_name", string: "Display Name", fields: [], type: "id" },
+                        {
+                            id: "many2many_field", name: "many2many_field", string: "Many2Many", fields: [
+                                { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
+                            ], type: "id"
+                        },
+                    ],
+                    headers: ["id", "display_name", "many2many_field/id"],
+                    rowCount: 5,
+                    matches: {
+                        0: ["id"],
+                        1: ["display_name"],
+                        2: ["many2many_field", "id"]
+                    },
+                    preview: [
+                        ["0", "1", "2"],
+                        ["Name 1", "Name 2", "Name 3",],
+                        ["", "1", "2"],
+                    ],
+                });
+            },
+            "base_import.import/execute_import": (route, args) => {
+                return executeFailingImport(args[1][0], true, ["many2many_field", "id"]);
+            },
+        });
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await editInput(target, "input[type='file']", file);
+        // For this test, we force the display of an error message if this field is set
+        await editSelectMenu(target, ".o_import_data_content .o_select_menu", "Many2Many");
+        await click(target.querySelector(".o_control_panel button:nth-child(2)"));
+
+        assert.strictEqual(
+            target.querySelector(".o_import_data_content .alert-danger").textContent,
+            "The file contains blocking errors (see below)",
+            "A message is shown if the import was blocked"
+        );
+
+        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_file_column_cell span.text-truncate").innerText, "many2many_field/id",
+            "The third row should be the relational field");
+
+        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_select_menu_toggler_slot span").innerText, "Many2Many / External ID",
+            "The relational field is properly mapped");
+
+        assert.containsOnce(target, "tr:nth-child(3) .o_import_report.alert",
+            "The relational field should have error messages on his row");
+
+        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_report.alert p b").innerText, "Many2Many / External ID",
+            "The error should contain the full path of the relational field");
     });
 });
