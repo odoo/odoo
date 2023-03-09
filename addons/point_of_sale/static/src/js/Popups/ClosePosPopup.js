@@ -21,6 +21,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.popup = useService("popup");
         this.pos = useService("pos");
         this.orm = useService("orm");
+        this.hardwareProxy = useService("hardware_proxy");
         this.manualInputCashCount = false;
         this.cashControl = this.env.pos.config.cash_control;
         this.closeSessionClicked = false;

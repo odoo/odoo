@@ -155,9 +155,9 @@ export const PaymentSix = PaymentInterface.extend({
         _.forEach(receipts, (receipt) => {
             if (
                 receipt.recipient === timapi.constants.Recipient.merchant &&
-                this.pos.env.proxy.printer
+                this.pos.hardwareProxy.printer
             ) {
-                this.pos.env.proxy.printer.print_receipt(
+                this.pos.hardwareProxy.printer.print_receipt(
                     "<div class='pos-receipt'><div class='pos-payment-terminal-receipt'>" +
                         escape(receipt.value).replace(/\n/g, "<br />") +
                         "</div></div>"

@@ -13,7 +13,8 @@ import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfig
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { markRaw, reactive } from "@odoo/owl";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { escape }  from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
+import { Mutex } from "@web/core/utils/concurrency";
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -97,6 +98,7 @@ export class PosGlobalState extends PosModel {
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.debug = config.isDebug(); //debug mode
         this.unwatched = markRaw({});
+        this.pushOrderMutex = new Mutex();
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -461,19 +463,15 @@ export class PosGlobalState extends PosModel {
         const ordersToSync = this.db.get_unpaid_orders_to_sync(ordersUidsToSync);
         const ordersResponse = await this._save_to_server(ordersToSync, { draft: true });
         const orders = [...this.ordersToUpdateSet].map((order) => order);
-        ordersResponse.forEach((orderResponseData) =>
-                this._updateOrder(orderResponseData, orders)
-        );
+        ordersResponse.forEach((orderResponseData) => this._updateOrder(orderResponseData, orders));
         this.ordersToUpdateSet.clear();
     }
     addOrderToUpdateSet() {
-        this.ordersToUpdateSet.add(this.selectedOrder)
+        this.ordersToUpdateSet.add(this.selectedOrder);
     }
     // created this hook for modularity
     _updateOrder(ordersResponseData, orders) {
-        const order = orders.find(
-            (order) => order.name === ordersResponseData.pos_reference
-        );
+        const order = orders.find((order) => order.name === ordersResponseData.pos_reference);
         if (order) {
             order.server_id = ordersResponseData.id;
             return order;
@@ -654,7 +652,7 @@ export class PosGlobalState extends PosModel {
         });
         let removeSelected = true;
         newOrdersJsons.forEach((json) => {
-            let isSelectedOrder = this._createOrder(json);
+            const isSelectedOrder = this._createOrder(json);
             if (removeSelected && isSelectedOrder) {
                 removeSelected = false;
             }
@@ -664,7 +662,11 @@ export class PosGlobalState extends PosModel {
         }
     }
     _shouldRemoveOrder(order) {
-        return (!this.selectedOrder || (this.selectedOrder.uid != order.uid)) && order.server_id && !order.finalized;
+        return (
+            (!this.selectedOrder || this.selectedOrder.uid != order.uid) &&
+            order.server_id &&
+            !order.finalized
+        );
     }
     _shouldRemoveSelectedOrder(removeSelected) {
         return removeSelected && this.selectedOrder.server_id && !this.selectedOrder.finalized;
@@ -714,10 +716,10 @@ export class PosGlobalState extends PosModel {
         });
     }
     async _addPricelists(ordersJson) {
-        let pricelistsToGet = [];
+        const pricelistsToGet = [];
         ordersJson.forEach((order) => {
             let found = false;
-            for (let pricelist of this.pricelists) {
+            for (const pricelist of this.pricelists) {
                 if (pricelist.id === order.pricelist_id) {
                     found = true;
                     break;
@@ -735,10 +737,11 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getPricelistJson(pricelistsToGet) {
-        return await this.env.services.orm.call("pos.session", "get_pos_ui_product_pricelists_by_ids", [
-            [odoo.pos_session_id],
-            pricelistsToGet,
-        ]);
+        return await this.env.services.orm.call(
+            "pos.session",
+            "get_pos_ui_product_pricelists_by_ids",
+            [[odoo.pos_session_id], pricelistsToGet]
+        );
     }
     _addPosPricelists(pricelistsJson) {
         if (!this.config.use_pricelist) {
@@ -748,15 +751,18 @@ export class PosGlobalState extends PosModel {
         let message = "";
         const pricelistsNames = pricelistsJson.map((pricelist) => {
             return pricelist.display_name;
-        })
-        message = _.str.sprintf(_t("%s fiscal position(s) added to the configuration."), pricelistsNames.join(", "));
+        });
+        message = _.str.sprintf(
+            _t("%s fiscal position(s) added to the configuration."),
+            pricelistsNames.join(", ")
+        );
         return message;
     }
     async _addFiscalPositions(ordersJson) {
-        let fiscalPositionToGet = [];
+        const fiscalPositionToGet = [];
         ordersJson.forEach((order) => {
             let found = false;
-            for (let fp of this.fiscal_positions) {
+            for (const fp of this.fiscal_positions) {
                 if (fp.id === order.fiscal_position_id) {
                     found = true;
                     break;
@@ -774,22 +780,26 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getFiscalPositionJson(fiscalPositionToGet) {
-        return await this.env.services.orm.call("pos.session", "get_pos_ui_account_fiscal_positions_by_ids", [
-            [odoo.pos_session_id],
-            fiscalPositionToGet,
-        ]);
+        return await this.env.services.orm.call(
+            "pos.session",
+            "get_pos_ui_account_fiscal_positions_by_ids",
+            [[odoo.pos_session_id], fiscalPositionToGet]
+        );
     }
     _addPosFiscalPosition(fiscalPositionJson) {
         this.fiscal_positions.push(...fiscalPositionJson);
         let message = "";
         const fiscalPositionNames = fiscalPositionJson.map((fp) => {
             return fp.display_name;
-        })
-        message = _.str.sprintf(_t("%s fiscal position(s) added to the configuration."), fiscalPositionNames.join(", "));
+        });
+        message = _.str.sprintf(
+            _t("%s fiscal position(s) added to the configuration."),
+            fiscalPositionNames.join(", ")
+        );
         return message;
     }
     sortOrders() {
-        this.orders.sort((a, b) => (a.name > b.name) ? 1 : -1)
+        this.orders.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
     async getProductInfo(product, quantity) {
         const order = this.get_order();
@@ -951,9 +961,9 @@ export class PosGlobalState extends PosModel {
                 orderlines.scrollTop(orderlines.prop("scrollHeight"));
             } else if (
                 this.config.iface_customer_facing_display_via_proxy &&
-                this.env.proxy.posbox_supports_display
+                this.hardwareProxy.customerDisplayAvailable
             ) {
-                this.env.proxy.update_customer_facing_display(rendered_html);
+                this.hardwareProxy.updateCustomerDisplay(rendered_html);
             }
         });
     }
@@ -1006,42 +1016,13 @@ export class PosGlobalState extends PosModel {
         });
     }
 
-    // saves the order locally and try to send it to the backend.
-    // it returns a promise that succeeds after having tried to send the order and all the other pending orders.
-    push_orders(order, opts) {
-        opts = opts || {};
-        var self = this;
-
-        if (order) {
-            this.db.add_order(order.export_as_JSON());
-        }
-
-        return new Promise((resolve, reject) => {
-            this.env.posMutex.exec(async () => {
-                try {
-                    resolve(await self._flush_orders(self.db.get_orders(), opts));
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        });
+    push_orders(opts = {}) {
+        return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
     }
 
-    push_single_order(order, opts) {
-        opts = opts || {};
-        const self = this;
-        const order_id = self.db.add_order(order.export_as_JSON());
-
-        return new Promise((resolve, reject) => {
-            this.env.posMutex.exec(async () => {
-                const order = self.db.get_order(order_id);
-                try {
-                    resolve(await self._flush_orders([order], opts));
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        });
+    push_single_order(order) {
+        const order_id = this.db.add_order(order.export_as_JSON());
+        return this.pushOrderMutex.exec(() => this._flush_orders([this.db.get_order(order_id)]));
     }
 
     // Send validated orders to the backend.
@@ -2783,7 +2764,7 @@ export class Payment extends PosModel {
         };
     }
     //exports as JSON for receipt printing
-    export_for_printing(){
+    export_for_printing() {
         const ticket = escape(this.ticket).replace(/\n/g, "<br />"); // formatting
         return {
             cid: this.cid,

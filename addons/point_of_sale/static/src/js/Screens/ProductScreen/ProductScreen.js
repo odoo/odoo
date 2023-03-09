@@ -14,6 +14,7 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
 
 import { MobileOrderWidget } from "../../Misc/MobileOrderWidget";
 import { NumpadWidget } from "./NumpadWidget";
@@ -142,7 +143,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 // assume that the result is unique.
                 product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
             } else {
-                return this._barcodeErrorAction(code);
+                return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
             }
         }
         const options = await product.getAddProductOptions(code);
@@ -181,10 +182,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 this.currentOrder.set_partner(partner);
                 this.currentOrder.updatePricelist(partner);
             }
-            return true;
+            return;
         }
-        this._barcodeErrorAction(code);
-        return false;
+        return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
     }
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.get_last_orderline();

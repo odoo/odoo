@@ -12,7 +12,7 @@ import { Navbar } from "@point_of_sale/app/navbar/navbar";
 // ChromeAdapter imports
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { registry } from "@web/core/registry";
-import { pos_env as env } from "@point_of_sale/js/pos_env";
+import env from "web.env";
 
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 
@@ -48,7 +48,8 @@ export class Chrome extends Component {
         env.legacyActionManager = legacyActionManager;
 
         // The proxy requires the instance of PosGlobalState to function properly.
-        env.proxy.set_pos(reactivePos);
+        this.hardwareProxy = useService("hardware_proxy");
+        this.hardwareProxy.pos = reactivePos;
 
         // TODO: Should we continue on exposing posmodel as global variable?
         // Expose only the reactive version of `pos` when in debug mode.

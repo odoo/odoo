@@ -32,6 +32,7 @@ export class Navbar extends Component {
         this.debug = useService("debug");
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
+        this.hardwareProxy = useService("hardware_proxy");
     }
     get customerFacingDisplayButtonIsShown() {
         return this.env.pos.config.iface_customer_facing_display;

@@ -1,12 +1,14 @@
 /** @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class CustomerFacingDisplayButton extends Component {
     static template = "CustomerFacingDisplayButton";
 
     setup() {
         super.setup();
+        this.hardwareProxy = useService("hardware_proxy");
         this.local =
             this.env.pos.config.iface_customer_facing_display_local &&
             !this.env.pos.config.iface_customer_facing_display_via_proxy;
@@ -42,7 +44,7 @@ export class CustomerFacingDisplayButton extends Component {
     async onClickProxy() {
         try {
             const renderedHtml = await this.env.pos.render_html_for_customer_facing_display();
-            let ownership = await this.env.proxy.take_ownership_over_customer_screen(renderedHtml);
+            let ownership = await this.hardwareProxy.takeControlOfCustomerDisplay(renderedHtml);
             if (typeof ownership === "string") {
                 ownership = JSON.parse(ownership);
             }
@@ -51,8 +53,8 @@ export class CustomerFacingDisplayButton extends Component {
             } else {
                 this.state.status = "warning";
             }
-            if (!this.env.proxy.posbox_supports_display) {
-                this.env.proxy.posbox_supports_display = true;
+            if (!this.hardwareProxy.customerDisplayAvailable) {
+                this.hardwareProxy.customerDisplayAvailable = true;
                 this._start();
             }
         } catch (error) {
@@ -68,35 +70,33 @@ export class CustomerFacingDisplayButton extends Component {
             return;
         }
 
-        const self = this;
-        async function loop() {
-            if (self.env.proxy.posbox_supports_display) {
+        const loop = async () => {
+            if (this.hardwareProxy.customerDisplayAvailable) {
                 try {
-                    let ownership = await self.env.proxy.test_ownership_of_customer_screen();
+                    let ownership = await this.hardwareProxy.testOwnershipOfCustomerDisplay();
                     if (typeof ownership === "string") {
                         ownership = JSON.parse(ownership);
                     }
                     if (ownership.status === "OWNER") {
-                        self.state.status = "success";
+                        this.state.status = "success";
                     } else {
-                        self.state.status = "warning";
+                        this.state.status = "warning";
                     }
-                    setTimeout(loop, 3000);
                 } catch (error) {
                     if (error.abort) {
                         // Stop the loop
                         return;
                     }
                     if (typeof error == "undefined") {
-                        self.state.status = "failure";
+                        this.state.status = "failure";
                     } else {
-                        self.state.status = "not_found";
-                        self.env.proxy.posbox_supports_display = false;
+                        this.state.status = "not_found";
+                        this.hardwareProxy.customerDisplayAvailable = false;
                     }
-                    setTimeout(loop, 3000);
                 }
+                setTimeout(loop, 3000);
             }
-        }
+        };
         loop();
     }
 }

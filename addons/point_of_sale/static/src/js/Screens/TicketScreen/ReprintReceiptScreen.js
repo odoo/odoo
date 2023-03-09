@@ -21,7 +21,7 @@ export class ReprintReceiptScreen extends AbstractReceiptScreen {
         this.pos.showScreen("TicketScreen", { reuseSavedUIState: true });
     }
     async printReceipt() {
-        if (this.env.proxy.printer && this.env.pos.config.iface_print_skip_screen) {
+        if (this.hardwareProxy.printer && this.env.pos.config.iface_print_skip_screen) {
             const result = await this._printReceipt();
             if (result) {
                 this.pos.showScreen("TicketScreen", { reuseSavedUIState: true });

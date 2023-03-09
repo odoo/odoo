@@ -1,6 +1,9 @@
 /** @odoo-module */
 
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 // Previously ProxyStatusWidget
 export class ProxyStatus extends Component {
@@ -8,63 +11,45 @@ export class ProxyStatus extends Component {
 
     setup() {
         super.setup();
-        const initialProxyStatus = this.env.proxy.get("status");
-        this.state = useState({
-            status: initialProxyStatus.status,
-            msg: initialProxyStatus.msg,
-        });
-        this.statuses = ["connected", "connecting", "disconnected", "warning"];
-        this.index = 0;
-
-        onMounted(() => {
-            this.env.proxy.on("change:status", this, this._onChangeStatus);
-        });
-
-        onWillUnmount(() => {
-            this.env.proxy.off("change:status", this, this._onChangeStatus);
-        });
+        this.pos = usePos();
+        const hardwareProxy = useService("hardware_proxy");
+        this.connectionInfo = useState(hardwareProxy.connectionInfo);
     }
-    _onChangeStatus(posProxy, statusChange) {
-        this._setStatus(statusChange.newValue);
-    }
-    _setStatus(newStatus) {
-        if (newStatus.status === "connected") {
-            var warning = false;
-            var msg = "";
-            if (this.env.pos.config.iface_scan_via_proxy) {
-                var scannerStatus = newStatus.drivers.scanner
-                    ? newStatus.drivers.scanner.status
-                    : false;
-                if (scannerStatus != "connected" && scannerStatus != "connecting") {
-                    warning = true;
-                    msg += this.env._t("Scanner");
-                }
-            }
-            if (this.env.pos.config.iface_print_via_proxy || this.env.pos.config.iface_cashdrawer) {
-                var printerStatus = newStatus.drivers.printer
-                    ? newStatus.drivers.printer.status
-                    : false;
-                if (printerStatus != "connected" && printerStatus != "connecting") {
-                    warning = true;
-                    msg = msg ? msg + " & " : msg;
-                    msg += this.env._t("Printer");
-                }
-            }
-            if (this.env.pos.config.iface_electronic_scale) {
-                var scaleStatus = newStatus.drivers.scale ? newStatus.drivers.scale.status : false;
-                if (scaleStatus != "connected" && scaleStatus != "connecting") {
-                    warning = true;
-                    msg = msg ? msg + " & " : msg;
-                    msg += this.env._t("Scale");
-                }
-            }
-            msg = msg ? msg + " " + this.env._t("Offline") : msg;
 
-            this.state.status = warning ? "warning" : "connected";
-            this.state.msg = msg;
-        } else {
-            this.state.status = newStatus.status;
-            this.state.msg = newStatus.msg || "";
+    get message() {
+        if (this.connectionInfo.status === "connected") {
+            const { drivers } = this.connectionInfo;
+            const {
+                iface_scan_via_proxy,
+                iface_print_via_proxy,
+                iface_cashdrawer,
+                iface_electronic_scale,
+            } = this.env.pos.config;
+            const devices = [
+                {
+                    name: _t("Scanner"),
+                    driver: drivers.scanner,
+                    enabled: iface_scan_via_proxy,
+                },
+                {
+                    name: _t("Printer"),
+                    driver: drivers.printer,
+                    enabled: iface_print_via_proxy || iface_cashdrawer,
+                },
+                {
+                    name: _t("Scale"),
+                    driver: drivers.scale,
+                    enabled: iface_electronic_scale,
+                },
+            ];
+            const disconnectedDevices = devices.filter(({ enabled, driver }) => {
+                return enabled && !["connected", "connecting"].includes(driver?.status);
+            });
+            if (disconnectedDevices.length) {
+                return `${disconnectedDevices.map((d) => d.name).join(" & ")} ${_t("Offline")}`;
+            }
+            return "";
         }
+        return this.connectionInfo.message || "";
     }
 }

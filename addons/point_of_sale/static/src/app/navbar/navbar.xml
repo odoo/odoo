@@ -20,7 +20,7 @@
             <div class="pos-rightheader">
                 <div class="status-buttons">
                     <CashierName />
-                    <SaleDetailsButton t-if="env.proxy.printer" isHeaderButton="true"/>
+                    <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
                     <ProxyStatus t-if="env.pos.config.use_proxy" />
                     <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
                     <SyncNotification />

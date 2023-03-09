@@ -16,10 +16,11 @@ export class AbstractReceiptScreen extends Component {
         super.setup();
         this.orderReceipt = useRef("order-receipt");
         this.popup = useService("popup");
+        this.hardwareProxy = useService("hardware_proxy");
     }
     async _printReceipt() {
-        if (this.env.proxy.printer) {
-            const printResult = await this.env.proxy.printer.print_receipt(
+        if (this.hardwareProxy.printer) {
+            const printResult = await this.hardwareProxy.printer.print_receipt(
                 this.orderReceipt.el.innerHTML
             );
             if (printResult.successful) {

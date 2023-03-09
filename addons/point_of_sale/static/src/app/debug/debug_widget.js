@@ -18,6 +18,7 @@ export class DebugWidget extends Component {
         this.debug = useService("debug");
         this.popup = useService("popup");
         this.barcodeReader = useService("barcode_reader");
+        this.hardwareProxy = useService("hardware_proxy");
         const numberBuffer = useService("number_buffer");
         useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
@@ -49,29 +50,15 @@ export class DebugWidget extends Component {
             },
         });
 
-        // NOTE: Perhaps this can still be improved.
-        // What we do here is loop thru the `event` elements
-        // then we assign animation that happens when the event is triggered
-        // in the proxy. E.g. if open_cashbox is sent, the open_cashbox element
-        // changes color from '#6CD11D' to '#1E1E1E' for a duration of 2sec.
-        this.eventElementsRef = {};
-        this.animations = {};
+        // Make the background of the "hardware events" section flash when a corresponding message
+        // is sent to the proxy.
         for (const eventName of ["open_cashbox", "print_receipt", "scale_read"]) {
-            this.eventElementsRef[eventName] = useRef(eventName);
-            this.env.proxy.add_notification(
-                eventName,
-                (() => {
-                    if (this.animations[eventName]) {
-                        this.animations[eventName].cancel();
-                    }
-                    const eventElement = this.eventElementsRef[eventName].el;
-                    eventElement.style.backgroundColor = "#6CD11D";
-                    this.animations[eventName] = eventElement.animate(
-                        { backgroundColor: ["#6CD11D", "#1E1E1E"] },
-                        2000
-                    );
-                }).bind(this)
-            );
+            const ref = useRef(eventName);
+            let animation;
+            useBus(this.hardwareProxy, `send_message:${eventName}`, () => {
+                animation?.cancel();
+                animation = ref.el?.animate({ backgroundColor: ["#6CD11D", "#1E1E1E"] }, 2000);
+            });
         }
     }
     toggleWidget() {
@@ -80,12 +67,12 @@ export class DebugWidget extends Component {
     setWeight() {
         var weightInKg = parse.float(this.state.weightInput);
         if (!isNaN(weightInKg)) {
-            this.env.proxy.debug_set_weight(weightInKg);
+            this.hardwareProxy.setDebugWeight(weightInKg);
         }
     }
     resetWeight() {
         this.state.weightInput = "";
-        this.env.proxy.debug_reset_weight();
+        this.hardwareProxy.resetDebugWeight();
     }
     async barcodeScan() {
         if (!this.barcodeReader) {
@@ -172,7 +159,7 @@ export class DebugWidget extends Component {
         }
     }
     refreshDisplay() {
-        this.env.proxy.message("display_refresh", {});
+        this.hardwareProxy.message("display_refresh", {});
     }
     _onBufferUpdate({ detail: value }) {
         this.state.buffer = value;

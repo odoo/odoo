@@ -8,9 +8,11 @@ import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
 import BarcodeParser from "barcodes.BarcodeParser";
 
 export class BarcodeReader {
-    constructor({ parser, popup }) {
+    static serviceDependencies = ["popup", "hardware_proxy"];
+    constructor(parser, { popup, hardware_proxy }) {
         this.parser = parser;
         this.popup = popup;
+        this.hardwareProxy = hardware_proxy;
         this.setup();
     }
 
@@ -75,33 +77,22 @@ export class BarcodeReader {
 
     // the barcode scanner will listen on the hw_proxy/scanner interface for
     // scan events until disconnectFromProxy is called
-    connectToProxy(hwProxy) {
+    connectToProxy() {
         this.remoteScanning = true;
         if (this.remoteActive >= 1) {
             return;
         }
         this.remoteActive = 1;
-        this.waitForBarcode(hwProxy);
+        this.waitForBarcode();
     }
 
-    async waitForBarcode(hwProxy) {
-        try {
-            const barcode = await hwProxy.connection.rpc(
-                "/hw_proxy/scanner",
-                {},
-                { shadow: true, timeout: 7500 }
-            );
-            if (!this.remoteScanning) {
-                this.remoteActive = 0;
-                return;
-            }
-            this.scan(barcode);
-        } catch {
-            if (!this.remoteScanning) {
-                this.remoteActive = 0;
-                return;
-            }
+    async waitForBarcode() {
+        const barcode = await this.hardwareProxy.message("scanner").catch(() => {});
+        if (!this.remoteScanning) {
+            this.remoteActive = 0;
+            return;
         }
+        this.scan(barcode);
         this.waitForBarcode();
     }
 
@@ -112,14 +103,15 @@ export class BarcodeReader {
 }
 
 export const barcodeReader = {
-    dependencies: ["barcode", "popup"],
-    async start(env, { barcode, popup }) {
+    dependencies: [...BarcodeReader.serviceDependencies, "popup", "barcode"],
+    async start(env, deps) {
+        const { popup, barcode } = deps;
         let barcodeReader = null;
 
         if (session.nomenclature_id) {
             const parser = new BarcodeParser({ nomenclature_id: [session.nomenclature_id] });
             await parser.is_loaded();
-            barcodeReader = new BarcodeReader({ parser, popup });
+            barcodeReader = new BarcodeReader(parser, deps);
         }
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
