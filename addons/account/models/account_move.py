@@ -2852,9 +2852,9 @@ class AccountMove(models.Model):
         """Main entry point to extend/enhance invoices with attachments.
 
         Either coming from the chatter or the journal. It will unwrap all
-        attachemnts by priority then try to decode untill it succeed.
+        attachments by priority then try to decode until it succeed.
 
-        :returns: True if at least one doccument successfully imported
+        :returns: True if at least one document is successfully imported
         """
         success = False
 
@@ -2864,9 +2864,11 @@ class AccountMove(models.Model):
 
             try:
                 if decoder and not success:
-                    with self._get_edi_creation() as invoice:
+                    with self.env.cr.savepoint(), self._get_edi_creation() as invoice:
                         # pylint: disable=not-callable
                         success = decoder(invoice, file_data, new)
+                        if success:
+                            invoice._link_bill_origin_to_purchase_orders(timeout=4)
 
             except RedirectWarning as rw:
                 raise rw
@@ -3502,6 +3504,12 @@ class AccountMove(models.Model):
     def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, prefer_purchase_line=False, timeout=10):
         # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders
         self.ensure_one()
+
+    def _link_bill_origin_to_purchase_orders(self, timeout=10):
+        for move in self.filtered(lambda m: m.move_type in self.get_purchase_types()):
+            references = [move.invoice_origin] if move.invoice_origin else []
+            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout)
+        return self
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
