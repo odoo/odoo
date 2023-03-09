@@ -467,7 +467,7 @@ class ProductProduct(models.Model):
                 'remaining_qty': 0,
                 'stock_move_id': move.id,
                 'company_id': move.company_id.id,
-                'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
+                'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
                 'stock_valuation_layer_id': svl_to_vacuum.id,
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
