@@ -803,7 +803,7 @@ export class Rtc {
             },
             { silent: true }
         );
-        if (this.state.channel) {
+        if (this.state.channel && rtcSessions) {
             const activeSessionsData = rtcSessions[0][1];
             for (const sessionData of activeSessionsData) {
                 const session = this.insertSession(sessionData);
@@ -858,7 +858,50 @@ export class Rtc {
     }
 
     disconnect(session) {
-        this.clearSession(session);
+        closeStream(session.audioStream);
+        if (session.audioElement) {
+            session.audioElement.pause();
+            try {
+                session.audioElement.srcObject = undefined;
+            } catch {
+                // ignore error during remove, the value will be overwritten at next usage anyway
+            }
+        }
+        delete session.audioStream;
+        delete session.connectionState;
+        delete session.localCandidateType;
+        delete session.remoteCandidateType;
+        delete session.dataChannelState;
+        delete session.packetsReceived;
+        delete session.packetsSent;
+        delete session.dtlsState;
+        delete session.iceState;
+        delete session.logStep;
+        session.isAudioInError = false;
+        session.isTalking = false;
+        this.removeVideoFromSession(session);
+        session.dataChannel?.close();
+        delete session.dataChannel;
+        const peerConnection = session.peerConnection;
+        if (peerConnection) {
+            const RTCRtpSenders = peerConnection.getSenders();
+            for (const sender of RTCRtpSenders) {
+                try {
+                    peerConnection.removeTrack(sender);
+                } catch {
+                    // ignore error
+                }
+            }
+            for (const transceiver of peerConnection.getTransceivers()) {
+                try {
+                    transceiver.stop();
+                } catch {
+                    // transceiver may already be stopped by the remote.
+                }
+            }
+            peerConnection.close();
+            delete session.peerConnection;
+        }
         browser.clearTimeout(this.state.recoverTimeouts.get(session.id));
         this.state.recoverTimeouts.delete(session.id);
         this.state.outgoingSessions.delete(session.id);
@@ -1298,9 +1341,12 @@ export class Rtc {
     deleteSession(id) {
         const session = this.store.rtcSessions[id];
         if (session) {
+            if (this.state.selfSession && session.id === this.state.selfSession.id) {
+                this.endCall();
+            }
             delete this.store.threads[createLocalId("mail.channel", session.channelId)]
                 ?.rtcSessions[id];
-            this.clearSession(session);
+            this.disconnect(session);
         }
         delete this.store.rtcSessions[id];
     }
@@ -1345,53 +1391,6 @@ export class Rtc {
         }
         if (track.kind === "video") {
             session.videoStream = stream;
-        }
-    }
-
-    clearSession(session) {
-        closeStream(session.audioStream);
-        if (session.audioElement) {
-            session.audioElement.pause();
-            try {
-                session.audioElement.srcObject = undefined;
-            } catch {
-                // ignore error during remove, the value will be overwritten at next usage anyway
-            }
-        }
-        delete session.audioStream;
-        delete session.connectionState;
-        delete session.localCandidateType;
-        delete session.remoteCandidateType;
-        delete session.dataChannelState;
-        delete session.packetsReceived;
-        delete session.packetsSent;
-        delete session.dtlsState;
-        delete session.iceState;
-        delete session.logStep;
-        session.isAudioInError = false;
-        session.isTalking = false;
-        this.removeVideoFromSession(session);
-        session.dataChannel?.close();
-        delete session.dataChannel;
-        const peerConnection = session.peerConnection;
-        if (peerConnection) {
-            const RTCRtpSenders = peerConnection.getSenders();
-            for (const sender of RTCRtpSenders) {
-                try {
-                    peerConnection.removeTrack(sender);
-                } catch {
-                    // ignore error
-                }
-            }
-            for (const transceiver of peerConnection.getTransceivers()) {
-                try {
-                    transceiver.stop();
-                } catch {
-                    // transceiver may already be stopped by the remote.
-                }
-            }
-            peerConnection.close();
-            delete session.peerConnection;
         }
     }
 

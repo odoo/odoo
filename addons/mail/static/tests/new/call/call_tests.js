@@ -1,7 +1,13 @@
 /** @odoo-module **/
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { editInput, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    editInput,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 
 QUnit.module("call");
 
@@ -52,17 +58,36 @@ QUnit.test("show call UI in chat window when in call", async (assert) => {
     assert.containsNone($, ".o-ChatWindow-header .o-ChatWindow-command[title='Start a Call']");
 });
 
-QUnit.skipRefactoring("should disconnect when closing page while in call", async (assert) => {
+QUnit.test("should disconnect when closing page while in call", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    const { openDiscuss, env } = await start();
     await openDiscuss(channelId);
+    patchWithCleanup(browser, {
+        navigator: {
+            ...browser.navigator,
+            sendBeacon: async (route, data) => {
+                if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
+                    assert.step("sendBeacon_leave_call");
+                    const blobText = await data.text();
+                    const blobData = JSON.parse(blobText);
+                    assert.strictEqual(blobData.params.channel_id, channelId);
+                }
+            },
+        },
+    });
+
     await click(".o-Discuss-header button[title='Start a Call']");
     assert.containsOnce($, ".o-Call");
-
     // simulate page close
     await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
-    assert.containsNone($, ".o-Call");
+    await nextTick();
+    assert.verifySteps(["sendBeacon_leave_call"]);
+    /**
+     * during the tests, the browser is not really closed,
+     * so we need to end the call manually to avoid memory leaks.
+     */
+    env.services["mail.rtc"]?.endCall();
 });
 
 QUnit.test("no default rtc after joining a chat conversation", async (assert) => {
