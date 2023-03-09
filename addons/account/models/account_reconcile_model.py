@@ -593,18 +593,37 @@ class AccountReconcileModel(models.Model):
         """
         self.ensure_one()
 
+        # On big databases, it is possible that some setups will create huge queries when trying to apply reconciliation models.
+        # In such cases, this query might take a very long time to run, essentially eating up all the available CPU, and proof
+        # impossible to kill, because of the type of operations ran by SQL. To alleviate that, we introduce the config parameter below,
+        # which essentially allows cutting the list of statement lines to match into slices, and running the matching in multiple queries.
+        # This way, we avoid server overload, giving the ability to kill the process if takes too long.
+        slice_size = len(st_lines_with_partner)
+        slice_size_param = self.env['ir.config_parameter'].sudo().get_param('account.reconcile_model_forced_slice_size')
+        if slice_size_param:
+            converted_param = int(slice_size_param)
+            if converted_param > 0:
+                slice_size = converted_param
+
+        treatment_slices = []
+        slice_start = 0
+        while slice_start < len(st_lines_with_partner):
+            slice_end = slice_start + slice_size
+            treatment_slices.append(st_lines_with_partner[slice_start:slice_end])
+            slice_start = slice_end
+
         treatment_map = {
-            'invoice_matching': lambda x: x._get_invoice_matching_query(st_lines_with_partner, excluded_ids),
-            'writeoff_suggestion': lambda x: x._get_writeoff_suggestion_query(st_lines_with_partner, excluded_ids),
+            'invoice_matching': lambda rec_model, slice: rec_model._get_invoice_matching_query(slice, excluded_ids),
+            'writeoff_suggestion': lambda rec_model, slice: rec_model._get_writeoff_suggestion_query(slice, excluded_ids),
         }
-
-        query_generator = treatment_map[self.rule_type]
-        query, params = query_generator(self)
-        self._cr.execute(query, params)
-
         rslt = defaultdict(lambda: [])
-        for candidate_dict in self._cr.dictfetchall():
-            rslt[candidate_dict['id']].append(candidate_dict)
+        for treatment_slice in treatment_slices:
+            query_generator = treatment_map[self.rule_type]
+            query, params = query_generator(self, treatment_slice)
+            self._cr.execute(query, params)
+
+            for candidate_dict in self._cr.dictfetchall():
+                rslt[candidate_dict['id']].append(candidate_dict)
 
         return rslt
 
