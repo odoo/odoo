@@ -33,7 +33,7 @@ class AccountAnalyticAccount(models.Model):
     def _compute_invoice_count(self):
         sale_types = self.env['account.move'].get_sale_types()
         domain = [
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('move_id.move_type', 'in', sale_types),
             ('analytic_account_id', 'in', self.ids)
         ]
@@ -46,7 +46,7 @@ class AccountAnalyticAccount(models.Model):
     def _compute_vendor_bill_count(self):
         purchase_types = self.env['account.move'].get_purchase_types()
         domain = [
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('move_id.move_type', 'in', purchase_types),
             ('analytic_account_id', 'in', self.ids)
         ]
