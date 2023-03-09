@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import ActionModel from "@web/legacy/js/views/action_model";
-import { makeContext } from "@web/core/context";
 
 /**
  * @param {string} state
@@ -17,13 +16,8 @@ function searchModelStateFromLegacy(state) {
     const newState = {};
 
     if (parsedState.ControlPanelModelExtension) {
-        const {
-            query,
-            filters,
-            nextGroupId,
-            nextGroupNumber,
-            nextId,
-        } = parsedState.ControlPanelModelExtension;
+        const { query, filters, nextGroupId, nextGroupNumber, nextId } =
+            parsedState.ControlPanelModelExtension;
 
         newState.nextGroupId = nextGroupId;
         newState.nextGroupNumber = nextGroupNumber;
@@ -112,97 +106,7 @@ function searchModelStateFromLegacy(state) {
     return JSON.stringify(newState);
 }
 
-/**
- * @param {string} state
- * @returns {string}
- */
-export function searchModelStateToLegacy(state) {
-    if (!state) {
-        return;
-    }
-
-    const parsedState = JSON.parse(state);
-    const query = [];
-    for (const queryElem of parsedState.query) {
-        const searchItemId = queryElem.searchItemId;
-        const searchItem = parsedState.searchItems[searchItemId];
-        const groupId = searchItem.groupId;
-        const legacyQueryElem = { filterId: searchItemId, groupId };
-        switch (searchItem.type) {
-            case "dateFilter":
-                legacyQueryElem.optionId = queryElem.generatorId;
-                break;
-            case "dateGroupBy":
-                legacyQueryElem.optionId = queryElem.intervalId;
-                break;
-            case "comparison":
-                legacyQueryElem.type = "comparison";
-                legacyQueryElem.dateFilterId = searchItem.dateFilterId;
-                break;
-            case "field":
-                legacyQueryElem.value = queryElem.autocompleteValue.value;
-                legacyQueryElem.label = queryElem.autocompleteValue.label;
-                legacyQueryElem.operator = queryElem.autocompleteValue.operator;
-                break;
-        }
-        query.push(legacyQueryElem);
-    }
-
-    const filters = {};
-    for (const item of Object.values(parsedState.searchItems)) {
-        const filter = Object.assign({}, item);
-        switch (item.type) {
-            case "dateGroupBy":
-                filter.type = "groupBy";
-                filter.hasOptions = true;
-                filter.defaultOptionId = item.defaultIntervalId;
-                delete filter.defaultIntervalId;
-                break;
-            case "dateFilter":
-                filter.type = "filter";
-                filter.isDateFilter = true;
-                filter.hasOptions = true;
-                filter.defaultOptionId = item.defaultGeneratorId;
-                delete filter.defaultGeneratorId;
-                break;
-            case "favorite":
-                filter.orderedBy = item.orderBy;
-                delete filter.orderBy;
-                break;
-            case "filter": {
-                let context = item.context;
-                try {
-                    context = makeContext([context]);
-                } catch {
-                    // pass
-                }
-                filter.context = context;
-            }
-        }
-        filters[item.id] = filter;
-    }
-
-    const { nextGroupId, nextGroupNumber, nextId, sections, searchPanelInfo } = parsedState;
-    const legacyState = {};
-    legacyState.ControlPanelModelExtension = {
-        query,
-        filters,
-        nextGroupId,
-        nextGroupNumber,
-        nextId,
-    };
-    legacyState.SearchPanelModelExtension = { sections, searchPanelInfo };
-
-    for (const [key, extension] of Object.entries(ActionModel.registry.entries())) {
-        if (!["ControlPanel", "SearchPanel"].includes(key) && parsedState[key] !== undefined) {
-            legacyState[extension.name] = parsedState[key];
-        }
-    }
-
-    return JSON.stringify(legacyState);
-}
-
-export function getGlobalState(legacyControllerState) {
+function getGlobalState(legacyControllerState) {
     const { resIds, searchModel, searchPanel } = legacyControllerState;
     const globalState = {};
     if (searchPanel) {
@@ -216,18 +120,6 @@ export function getGlobalState(legacyControllerState) {
         globalState.searchModel = newSearchModel;
     }
     return globalState;
-}
-
-export function getLocalState(legacyControllerState) {
-    const state = Object.assign({}, legacyControllerState);
-    if ("currentId" in state) {
-        state.resId = state.currentId;
-        delete state.currentId;
-    }
-    delete state.searchModel;
-    delete state.searchPanel;
-    delete state.resIds;
-    return state;
 }
 
 export function mapDoActionOptionAPI(legacyOptions) {

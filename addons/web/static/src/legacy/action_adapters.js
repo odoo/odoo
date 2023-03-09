@@ -7,7 +7,6 @@ import { objectToQuery } from "../core/browser/router_service";
 import { useDebugCategory } from "../core/debug/debug_context";
 import { Dialog } from "../core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { ViewNotFoundError } from "@web/views/view";
 import { cleanDomFromBootstrap, wrapSuccessOrFail, useLegacyRefs } from "./utils";
 import { mapDoActionOptionAPI } from "./backend_utils";
 
@@ -16,10 +15,8 @@ import {
     onMounted,
     onWillUnmount,
     onWillUpdateProps,
-    status,
     useEffect,
     useExternalListener,
-    useComponent,
     xml,
 } from "@odoo/owl";
 
@@ -243,181 +240,5 @@ export class ClientActionAdapter extends ActionAdapter {
 
     do_push_state(state) {
         this.pushState(state);
-    }
-}
-
-const magicReloadSymbol = Symbol("magicReload");
-
-function useMagicLegacyReload() {
-    const comp = useComponent();
-    if (comp.props.widget && comp.props.widget[magicReloadSymbol]) {
-        return comp.props.widget[magicReloadSymbol];
-    }
-    let legacyReloadProm = null;
-    const getReloadProm = () => legacyReloadProm;
-    let manualReload;
-    useEffect(
-        () => {
-            const widget = comp.widget;
-            const controllerReload = widget.reload;
-            widget.reload = function (...args) {
-                manualReload = true;
-                legacyReloadProm = controllerReload.call(widget, ...args);
-                return legacyReloadProm.finally(() => {
-                    if (manualReload) {
-                        legacyReloadProm = null;
-                        manualReload = false;
-                    }
-                });
-            };
-            const controllerUpdate = widget.update;
-            widget.update = function (...args) {
-                const updateProm = controllerUpdate.call(widget, ...args);
-                const manualUpdate = !manualReload;
-                if (manualUpdate) {
-                    legacyReloadProm = updateProm;
-                }
-                return updateProm.finally(() => {
-                    if (manualUpdate) {
-                        legacyReloadProm = null;
-                    }
-                });
-            };
-            widget[magicReloadSymbol] = getReloadProm;
-        },
-        () => []
-    );
-    return getReloadProm;
-}
-
-export class ViewAdapter extends ActionAdapter {
-    setup() {
-        super.setup();
-        this.actionService = useService("action");
-        this.vm = useService("view");
-        this.shouldUpdateWidget = true;
-        this.magicReload = useMagicLegacyReload();
-        const debugContext = {
-            action: this.props.viewParams.action,
-            component: this,
-        };
-        useDebugCategory("action", debugContext);
-        useDebugCategory("view", debugContext);
-        this.env = Component.env;
-    }
-
-    get actionId() {
-        return this.props.viewParams.action.jsId;
-    }
-
-    async onWillStart() {
-        if (this.props.widget) {
-            this.widget = this.props.widget;
-            this.widget.setParent(this);
-            if (this.props.onReverseBreadcrumb) {
-                await this.props.onReverseBreadcrumb();
-            }
-            return this.updateWidget(this.props.viewParams);
-        } else {
-            const view = new this.props.View(this.props.viewInfo, this.props.viewParams);
-            this.widget = await view.getController(this);
-            if (status(this) === "destroyed") {
-                // the component might have been destroyed meanwhile, but if so, `this.widget` wasn't
-                // destroyed by OwlCompatibility layer as it wasn't set yet, so destroy it now
-                if (!this.actionService.__legacy__isActionInStack(this.actionId)) {
-                    this.widget.destroy();
-                }
-                return Promise.resolve();
-            }
-            return this.widget._widgetRenderAndInsert(() => {});
-        }
-    }
-
-    /**
-     * @override
-     */
-    async updateWidget(nextProps) {
-        const shouldUpdateWidget = this.shouldUpdateWidget;
-        this.shouldUpdateWidget = true;
-        if (!shouldUpdateWidget) {
-            return this.magicReload();
-        }
-        await this.widget.willRestore();
-        const options = {
-            ...this.props.viewParams,
-            ...nextProps.viewParams,
-            shouldUpdateSearchComponents: true,
-        };
-        if (!this.magicReload()) {
-            this.widget.reload(options);
-        }
-        return this.magicReload();
-    }
-
-    async renderWidget() {}
-
-    /**
-     * Override to add the state of the legacy controller in the exported state.
-     */
-    exportState() {
-        const state = super.exportState();
-        const widgetState = this.__widget.exportState();
-        return Object.assign({}, state, widgetState);
-    }
-
-    async loadViews(resModel, context, views) {
-        return (await this.vm.loadViews({ resModel, views, context }, {})).__legacy__.fields_views;
-    }
-
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    async _trigger_up(ev) {
-        const payload = ev.data;
-        if (ev.name === "switch_view") {
-            if (payload.view_type === "form") {
-                if (payload.res_id) {
-                    const activeIds = this.__widget.model.get(this.__widget.handle).res_ids;
-                    return this.props.selectRecord(payload.res_id, {
-                        mode: payload.mode,
-                        activeIds,
-                    });
-                } else {
-                    return this.props.createRecord();
-                }
-            } else {
-                try {
-                    await this.actionService.switchView(payload.view_type);
-                } catch (e) {
-                    if (typeof e === "object" && e instanceof ViewNotFoundError) {
-                        return;
-                    }
-                    throw e;
-                }
-            }
-        } else if (ev.name === "execute_action") {
-            const buttonContext = new Context(payload.action_data.context).eval();
-            const envContext = new Context(payload.env.context).eval();
-            wrapSuccessOrFail(
-                this.actionService.doActionButton({
-                    args: payload.action_data.args,
-                    buttonContext: buttonContext,
-                    context: envContext,
-                    close: payload.action_data.close,
-                    resModel: payload.env.model,
-                    name: payload.action_data.name,
-                    resId: payload.env.currentID || null,
-                    resIds: payload.env.resIDs,
-                    special: payload.action_data.special,
-                    type: payload.action_data.type,
-                    onClose: payload.on_closed,
-                    effect: payload.action_data.effect,
-                }),
-                payload
-            );
-        } else {
-            super._trigger_up(ev);
-        }
     }
 }

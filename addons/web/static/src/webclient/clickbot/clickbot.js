@@ -47,18 +47,6 @@
             actionCount++;
         });
 
-        const AbstractController = odoo.__DEBUG__.services["web.AbstractController"];
-        AbstractController.include({
-            start() {
-                this.$el.attr("data-view-type", this.viewType);
-                return this._super.apply(this, arguments);
-            },
-            async update() {
-                await this._super(...arguments);
-                viewUpdateCount++;
-            },
-        });
-
         const { patch } = odoo.__DEBUG__.services["@web/core/utils/patch"];
         const { WithSearch } = odoo.__DEBUG__.services["@web/search/with_search/with_search"];
 
