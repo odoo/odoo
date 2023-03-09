@@ -647,7 +647,7 @@ class SaleOrder(models.Model):
     def _nothing_to_invoice_error(self):
         msg = _("""There is nothing to invoice!\n
 Reason(s) of this behavior could be:
-- You should deliver your products before invoicing them: Click on the "truck" icon (top-right of your screen) and follow instructions.
+- You should deliver your products before invoicing them.
 - You should modify the invoicing policy of your product: Open the product, go to the "Sales tab" and modify invoicing policy from "delivered quantities" to "ordered quantities".
         """)
         return UserError(msg)
