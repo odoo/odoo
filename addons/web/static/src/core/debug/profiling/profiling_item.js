@@ -15,7 +15,7 @@ export class ProfilingItem extends Component {
         this.profiling.setParam(param, ev.target.value);
     }
     toggleParam(param) {
-        const value = this.profiling.state.params.execution_context_qweb;
+        const value = this.profiling.state.params[param];
         this.profiling.setParam(param, !value);
     }
     openProfiles() {

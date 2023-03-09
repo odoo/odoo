@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ProfilingSQLLine" owl="1">
+        <tr class="profiling-line" t-ref="root">
+            <td>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar"
+                         t-att-style="'width: ' + props.query.time/props.totalTime*100 + '%;'"
+                         t-att-aria-valuenow="props.query.time/props.totalTime*100"
+                         aria-valuemin="0" aria-valuemax="100"/>
+                </div>
+                <time t-esc="(props.query.time*1000).toPrecision(4) + 'ms'"/>
+            </td>
+            <td t-on-click="toggleState"><span class="query"><t t-esc="props.query.query"/></span></td>
+            <td>
+                <div class="btn-group-vertical" role="group" aria-label="Controls">
+                    <button type="button" class="btn btn-link" title="Full Query" t-on-click="showFullQuery">
+                        <i class="fa fa-plus" aria-hidden="true"/>
+                    </button>
+                    <button type="button" class="btn btn-link" title="EXPLAIN" t-if="props.query.explain" t-on-click="showExplain">
+                        <i class="fa fa-search" aria-hidden="true"/>
+                    </button>
+                    <button type="button" class="btn btn-link" title="EXPLAIN Visualizer" t-if="props.query.explain" t-on-click="showExplainVisualizer">
+                        <i class="fa fa-search-plus" aria-hidden="true"/>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="web.ProfilingSQL" owl="1">
+        <table class="table table-striped table-bordered table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Query</th>
+                    <th/>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="queries" t-as="query" t-key="query_index">
+                    <ProfilingSQLLine query="query" totalTime="totalTime"/>
+                </t>
+            </tbody>
+        </table>
+    </t>
+</template>

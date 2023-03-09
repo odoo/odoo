@@ -42,6 +42,9 @@
                     <field name="sql_count" attrs="{'invisible': [('sql_count', '=', 0)]}"/>
                     <field name="speedscope_url" widget="url"/>
                 </group>
+                <group string="SQL" attrs="{'invisible': [('sql_count','=', 0)]}">
+                    <field name="sql" widget="profiling_sql" nolabel="1" colspan="2"/>
+                </group>
                 <group attrs="{'invisible': [('qweb','=', False)]}">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1" colspan="2"/>
                 </group>

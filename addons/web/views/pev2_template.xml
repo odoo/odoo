@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="view_pev2_index">
+        &lt;!DOCTYPE html&gt;
+        <html lang="en">
+            <head>
+                <script t-attf-src="{{cdn}}/vue@3.2.37/dist/vue.global.prod.js"></script>
+                <script t-attf-src="{{cdn}}/pev2/dist/pev2.umd.js"></script>
+                <link rel="stylesheet" t-attf-href="{{cdn}}/bootstrap@4.5.0/dist/css/bootstrap.min.css"/>
+                <link rel="stylesheet" t-attf-href="{{cdn}}/pev2/dist/style.css" />
+                <style>
+                    #app .plan-container {
+                        height: 100vh;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="app">
+                    <pev2 t-att="{':plan-source': 'plan', ':plan-query': 'query'}"/>
+                </div>
+
+                <script>
+                    const { createApp } = Vue
+
+                    const query = <t t-out="query"/>
+
+                    const app = createApp({
+                        data() {
+                            return {
+                                plan: query.explain,
+                                query: query.full_query,
+                            }
+                        },
+                    })
+                    app.component("pev2", pev2.Plan)
+                    app.mount("#app")
+                </script>
+            </body>
+        </html>
+    </template>
+</odoo>

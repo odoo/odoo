@@ -148,12 +148,24 @@ class SQLCollector(Collector):
 
     def start(self):
         init_thread = self.profiler.init_thread
+        self.profiler._last_explain = None
         if not hasattr(init_thread, 'query_hooks'):
             init_thread.query_hooks = []
+            init_thread.pre_query_hooks = []
         init_thread.query_hooks.append(self.hook)
+        if self.profiler.params.get('explain_sql'):
+            init_thread.pre_query_hooks.append(self.pre_hook)
 
     def stop(self):
         self.profiler.init_thread.query_hooks.remove(self.hook)
+        if self.profiler.params.get('explain_sql'):
+            self.profiler.init_thread.pre_query_hooks.remove(self.pre_hook)
+
+    def pre_hook(self, cr, query, params):
+        cr._obj.execute("SAVEPOINT profiler_analyze")
+        cr._obj.execute("EXPLAIN (ANALYZE, VERBOSE, BUFFERS, COSTS) " + query, params)
+        self.profiler._last_explain = '\n'.join(r[0] for r in cr.fetchall())
+        cr._obj.execute("ROLLBACK TO SAVEPOINT profiler_analyze")
 
     def hook(self, cr, query, params, query_start, query_time):
         self.add({
@@ -161,6 +173,7 @@ class SQLCollector(Collector):
             'full_query': str(cr._format(query, params)),
             'start': query_start,
             'time': query_time,
+            'explain': self.profiler._last_explain,
         })
 
 
