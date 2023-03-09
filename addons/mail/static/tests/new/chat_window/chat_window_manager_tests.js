@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
+import { start, startServer, click, waitUntil } from "@mail/../tests/helpers/test_utils";
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -128,6 +128,9 @@ QUnit.test(
         await click(".o-mail-notification-item:contains(channel-C)");
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-notification-item:contains(channel-D)");
+        await waitUntil(
+            ".o-mail-chat-window-header:contains(channel-D) .o-mail-command[title='Close chat window']"
+        );
         assert.containsN(target, ".o-mail-chat-window", 2);
         assert.containsOnce(target, ".o-mail-chat-window:eq(0):contains(channel-A)");
         assert.containsOnce(target, ".o-mail-chat-window:eq(1):contains(channel-D)");

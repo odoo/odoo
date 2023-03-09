@@ -11,6 +11,7 @@ import {
     insertText,
     start,
     startServer,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import {
     editInput,
@@ -921,8 +922,8 @@ QUnit.test(
         assert.containsNone(target, ".o-mail-message");
 
         await click("button:contains(History)");
-        await afterNextRender(() => (target.querySelector(".o-mail-thread").scrollTop = 0));
-        assert.containsN(target, ".o-mail-message", 40);
+        target.querySelector(".o-mail-thread").scrollTop = 0;
+        await waitUntil(".o-mail-message", 40);
     }
 );
 
