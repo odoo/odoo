@@ -68,7 +68,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
 
         useEffect(() => {
             const initWysiwyg = async () => {
-                this.$editable.on('click.odoo-website-editor', '*', this, this._preventDefault);
                 // Disable OdooEditor observer's while setting up classes
                 this.widget.odooEditor.observerUnactive();
                 this._addEditorMessages();
@@ -98,10 +97,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             };
 
             initWysiwyg();
-
-            return () => {
-                this.$editable.off('click.odoo-website-editor', '*');
-            };
         }, () => []);
 
         useEffect(() => {
@@ -474,6 +469,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return websiteRootInstance.trigger_up(type, {...eventData});
     }
     _preventDefault(e) {
+        // TODO: Remove this method in master.
         e.preventDefault();
     }
     /**
