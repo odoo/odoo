@@ -4041,7 +4041,7 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(
             [...target.querySelectorAll(".o_menu_item")].map((el) => el.textContent),
             ["Duplicate", "Delete"],
-            "Should not contain an Archive action",
+            "Should not contain an Archive action"
         );
     });
 
@@ -8956,10 +8956,20 @@ QUnit.module("Views", (hooks) => {
                     assert.step(`translate context ${JSON.stringify(args.kwargs.context)}`);
                     return Promise.resolve([
                         [
-                            { lang: "CUST", source: "yop", value: "yop" },
-                            { lang: "CUST2", source: "yop", value: "valeur français" },
+                            { lang: "en_US", source: "yop", value: "yop", is_translated: true },
+                            { lang: "CUST", source: "yop", value: "yop", is_translated: false },
+                            {
+                                lang: "CUST2",
+                                source: "yop",
+                                value: "valeur français",
+                                is_translated: true,
+                            },
                         ],
-                        { translation_type: "char", translation_show_source: false },
+                        {
+                            field_type: "char",
+                            translate_type: "model",
+                            en_US_activated: false,
+                        },
                     ]);
                 }
             },
@@ -9004,10 +9014,20 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/get_field_translations") {
                     return Promise.resolve([
                         [
-                            { lang: "CUST", source: "yop", value: "yop" },
-                            { lang: "CUST2", source: "yop", value: "valeur français" },
+                            { lang: "en_US", source: "yop", value: "yop", translated: true },
+                            { lang: "CUST", source: "yop", value: "yop", translated: false },
+                            {
+                                lang: "CUST2",
+                                source: "yop",
+                                value: "valeur français",
+                                translated: true,
+                            },
                         ],
-                        { translation_type: "char", translation_show_source: false },
+                        {
+                            field_type: "char",
+                            translate_type: "model",
+                            en_US_activated: false,
+                        },
                     ]);
                 }
             },
@@ -9024,7 +9044,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".o_field_translate.btn-link");
         await click(target.querySelectorAll(".modal-footer button")[0]); // save
-        assert.verifySteps(["create", "read", "get_installed", "get_field_translations"]);
+        assert.verifySteps(["create", "read", "get_field_translations", "get_installed"]);
         assert.containsOnce(target, ".modal");
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
     });
@@ -9162,10 +9182,19 @@ QUnit.module("Views", (hooks) => {
                         nbTranslateCalls++;
                         return Promise.resolve([
                             [
-                                { lang: "en_US", source: "yop", value: "yop" },
-                                { lang: "fr_BE", source: "yop", value: "valeur français" },
+                                { lang: "en_US", source: "yop", value: "yop", translated: true },
+                                {
+                                    lang: "fr_BE",
+                                    source: "yop",
+                                    value: "valeur français",
+                                    translated: true,
+                                },
                             ],
-                            { translation_type: "char", translation_show_source: false },
+                            {
+                                field_type: "char",
+                                translate_type: "model",
+                                en_US_activated: true,
+                            },
                         ]);
                     }
                 },
@@ -12596,27 +12625,30 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange", "create", "read"]);
     });
 
-    QUnit.test("save a form view with a duplicated invisible required field", async function (assert) {
-        serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
+    QUnit.test(
+        "save a form view with a duplicated invisible required field",
+        async function (assert) {
+            serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <group>
                         <field name="text"/>
                         <field name="text" invisible="1"/>
                     </group>
                 </form>`,
-        });
+            });
 
-        await clickSave(target);
+            await clickSave(target);
 
-        assert.containsOnce(target, ".o_form_label.o_field_invalid");
-        assert.containsOnce(target, ".o_field_char.o_field_invalid");
-    });
+            assert.containsOnce(target, ".o_form_label.o_field_invalid");
+            assert.containsOnce(target, ".o_field_char.o_field_invalid");
+        }
+    );
 
     QUnit.test(
         "save a form view with an invisible required field in a x2many",

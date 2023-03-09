@@ -3,9 +3,10 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { loadLanguages } from "@web/core/l10n/translation";
+import { loadLanguages, _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     setup() {
@@ -15,53 +16,53 @@ export class TranslationDialog extends Component {
         this.orm = useService("orm");
         this.user = useService("user");
 
-        this.terms = [];
-        this.updatedTerms = {};
+        this.state = useState({ terms: [] });
 
         onWillStart(async () => {
-            const languages = await loadLanguages(this.orm);
-            const [translations, context] = await this.loadTranslations(languages);
+            const [translations, context] = await this.loadTranslations();
             let id = 1;
             translations.forEach((t) => (t.id = id++));
-            this.props.isText = context.translation_type === "text";
-            this.props.showSource = context.translation_show_source;
+            this.props.languages = await loadLanguages(this.orm);
+            if (!this.props.languages.find((l) => l[0] === "en_US")) {
+                this.props.languages.push(["en_US", _t("Source Value")]);
+            }
+            this.props.isText = ["text", "html"].includes(context.field_type);
+            this.props.translateType = context.translate_type;
 
-            this.terms = translations.map((term) => {
-                const relatedLanguage = languages.find((l) => l[0] === term.lang);
-                const termInfo = {
-                    ...term,
-                    langName: relatedLanguage[1],
-                    value: term.value || "",
-                };
-                // we set the translation value coming from the database, except for the language
-                // the user is currently utilizing. Then we set the translation value coming
-                // from the value of the field in the form
-                if (
-                    term.lang === this.user.lang &&
-                    !this.props.showSource &&
-                    !this.props.isComingFromTranslationAlert
-                ) {
-                    this.updatedTerms[term.id] = this.props.userLanguageValue;
-                    termInfo.value = this.props.userLanguageValue;
-                }
-                return termInfo;
-            });
-            this.terms.sort((a, b) => a.langName.localeCompare(b.langName));
+            this.state.terms.push(
+                ...translations.map((term) => {
+                    const relatedLanguage = this.props.languages.find((l) => l[0] === term.lang);
+                    const termInfo = {
+                        ...term,
+                        isTranslated: term.is_translated,
+                        langName: relatedLanguage[1],
+                        oldValue: term.value,
+                        isModified: false,
+                    };
+                    delete termInfo.is_translated;
+                    // we set the translation value coming from the database, except for the language
+                    // the user is currently utilizing. Then we set the translation value coming
+                    // from the value of the field in the form
+                    if (
+                        term.lang === this.user.lang &&
+                        this.props.translateType === "model" &&
+                        !this.props.isComingFromTranslationAlert
+                    ) {
+                        termInfo.value = this.props.userLanguageValue;
+                        termInfo.isModified = true;
+                        termInfo.isTranslated = true;
+                    }
+                    return termInfo;
+                })
+            );
+            this.state.terms.sort((a, b) => a.langName.localeCompare(b.langName));
         });
-    }
-
-    get domain() {
-        const domain = this.props.domain;
-        if (this.props.searchName) {
-            domain.push(["name", "=", `${this.props.searchName}`]);
-        }
-        return domain;
     }
 
     /**
      * Load the translation terms for the installed language, for the current model and res_id
      */
-    async loadTranslations(languages) {
+    async loadTranslations() {
         return this.orm.call(this.props.resModel, "get_field_translations", [
             [this.props.resId],
             this.props.fieldName,
@@ -74,17 +75,27 @@ export class TranslationDialog extends Component {
     async onSave() {
         const translations = {};
 
-        this.terms.map((term) => {
-            const updatedTermValue = this.updatedTerms[term.id];
-            if (term.id in this.updatedTerms && term.value !== updatedTermValue) {
-                if (this.props.showSource) {
+        const resetLangs = [];
+        this.props.languages.forEach(([language, languageName]) => {
+            if (
+                !this.state.terms.some(
+                    (t) => t.lang === language && (t.isTranslated || !t.isModified)
+                )
+            ) {
+                resetLangs.push(language);
+            }
+        });
+
+        this.state.terms.map((term) => {
+            if (term.isModified && !resetLangs.includes(term.lang)) {
+                if (this.props.translateType === "model_terms") {
                     if (!translations[term.lang]) {
                         translations[term.lang] = {};
                     }
-                    const oldTermValue = term.value ? term.value : term.source;
-                    translations[term.lang][oldTermValue] = updatedTermValue || term.source;
+                    translations[term.lang][term.oldValue] = term.value;
                 } else {
-                    translations[term.lang] = updatedTermValue || false;
+                    // this.props.translateType === "model"
+                    translations[term.lang] = term.value;
                 }
             }
         });
@@ -93,10 +104,64 @@ export class TranslationDialog extends Component {
             [this.props.resId],
             this.props.fieldName,
             translations,
+            resetLangs,
         ]);
 
         await this.props.onSave();
         this.props.close();
+    }
+
+    onUpdate(term, ev) {
+        const newValue = ev.target.value;
+        if (!this.checkValue(term, newValue)) {
+            ev.target.value = term.value;
+            return;
+        }
+        if (newValue) {
+            term.isModified = true;
+            term.isTranslated = true;
+            term.value = newValue;
+            if (term.lang === "en_US") {
+                // update source and other fallback value
+                this.state.terms.forEach((t) => {
+                    if (t.source === term.source) {
+                        t.source = newValue;
+                        if (!t.isTranslated) {
+                            t.value = newValue;
+                        }
+                    }
+                });
+            }
+        } else {
+            term.isModified = term.isModified || term.isTranslated;
+            term.isTranslated = false;
+            ev.target.value = term.value = term.source;
+        }
+    }
+
+    checkValue(term, value) {
+        if (
+            value &&
+            term.lang === "en_US" &&
+            this.state.terms.some(
+                (t) => t.value === value && t.id != term.id && t.lang === term.lang
+            )
+        ) {
+            this.props.addDialog(AlertDialog, {
+                body: _t("Two sources cannot be the same"),
+            });
+            return false;
+        }
+        if (!value && term.lang === "en_US") {
+            this.props.addDialog(AlertDialog, {
+                body: sprintf(
+                    _t("%s cannot be assigned to empty in the translation dialog"),
+                    term.langName
+                ),
+            });
+            return false;
+        }
+        return true;
     }
 }
 TranslationDialog.template = "web.TranslationDialog";

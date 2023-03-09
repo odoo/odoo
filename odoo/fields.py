@@ -1764,20 +1764,21 @@ class _String(Field):
 
         dirty = self.store and any(records._ids)
         lang = records.env.lang or 'en_US'
+        is_single_lang = len(records.env['res.lang'].get_installed()) == 1
 
         # not dirty fields
         if not dirty:
             cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
             return records
 
-        # model translation
+        # model translation and single language for model_terms
         if not callable(self.translate):
             # invalidate clean fields because them may contain fallback value
             clean_records = records - cache.get_dirty_records(records, self)
             clean_records.invalidate_recordset([self.name])
             cache.update(records, self, itertools.repeat(cache_value), dirty=True)
-            if lang != 'en_US' and not records.env['res.lang']._lang_get_id('en_US'):
-                # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
+            if lang != 'en_US' and is_single_lang:
+                # if is_single_lang, we always write en_US to make sure value_en is meaningful
                 cache.update(records.with_context(lang='en_US'), self, itertools.repeat(cache_value), dirty=True)
             return records
 
@@ -1788,7 +1789,7 @@ class _String(Field):
         new_terms = set(self.get_trans_terms(cache_value))
         for record in records:
             # shortcut when no term needs to be translated
-            if not new_terms:
+            if not new_terms or is_single_lang:
                 new_translations_list.append({'en_US': cache_value, lang: cache_value})
                 continue
             # _get_stored_translations can be refactored and prefetches translations for multi records,

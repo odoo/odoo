@@ -54,6 +54,7 @@ export function useTranslationDialog() {
                 await record.load({}, { keepChanges: true });
                 record.model.notify();
             },
+            addDialog: record.model.dialogService.add,
         });
     }
 

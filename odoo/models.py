@@ -2976,7 +2976,7 @@ class BaseModel(metaclass=MetaModel):
 
         return self._read_format(fnames=fields, load=load)
 
-    def update_field_translations(self, field_name, translations):
+    def update_field_translations(self, field_name, translations, reset_langs=None):
         """ Update the values of a translated field.
 
         :param str field_name: field name
@@ -2984,9 +2984,9 @@ class BaseModel(metaclass=MetaModel):
             like ``{lang: new_value}``; if ``translate`` is a callable, it should be like
             ``{lang: {old_term: new_term}}``
         """
-        return self._update_field_translations(field_name, translations)
+        return self._update_field_translations(field_name, translations, reset_langs=reset_langs)
 
-    def _update_field_translations(self, field_name, translations, digest=None):
+    def _update_field_translations(self, field_name, translations, digest=None, reset_langs=None):
         """ Private implementation of :meth:`~update_field_translations`.
         The main difference comes from the extra function ``digest``, which may
         be used to make identifiers for old terms.
@@ -2994,11 +2994,11 @@ class BaseModel(metaclass=MetaModel):
         :param dict translations:
             if the field has ``translate=True``, it should be a dictionary like ``{lang: new_value}``
                 new_value: str: the new translation for lang
-                new_value: False: void the current translation for lang and fallback to current en_US value
             if ``translate`` is a callable, it should be like
             ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when ``digest`` is callable
-                new_value: str: the new translation of old_term for lang
+                new_value: str: the new non-empty translation of old_term for lang
         :param digest: an optional digest function for the old_term
+        :param list reset_langs: languages to reset translations
         """
         self.ensure_one()
 
@@ -3011,7 +3011,7 @@ class BaseModel(metaclass=MetaModel):
             # a non-related non-stored computed field cannot be translated, even if it has inverse function
             return False
 
-        # Strictly speaking, a translated related/computed field cannot be stored
+        # Strictly speaking, a translated related field cannot be stored
         # because the compute function only support one language
         # `not field.store` is a redundant logic.
         # But some developers store translated related fields.
@@ -3024,17 +3024,17 @@ class BaseModel(metaclass=MetaModel):
         self.check_field_access_rights('write', [field_name])
         self.check_access_rule('write')
 
+        translations_reset = {lang: None for lang in reset_langs or []}
+        if 'en_US' in translations_reset:
+            raise UserError(_("English translations cannot be reset"))
+        translations = {lang: v for lang, v in translations.items() if lang not in translations_reset}
+
+        if not translations and not translations_reset:
+            return True
+
         if field.translate is True:
-            # falsy values (except emtpy str) are used to void the corresponding translation
-            if any(translation and not isinstance(translation, str) for translation in translations.values()):
-                raise UserError(_("Translations for model translated fields only accept falsy values and str"))
-            value_en = translations.get('en_US', True)
-            if not value_en and value_en != '':
-                translations.pop('en_US')
-            translations = {
-                lang: translation if isinstance(translation, str) else None
-                for lang, translation in translations.items()
-            }
+            translations = {lang: str(value) for lang, value in translations.items()}
+            translations.update(translations_reset)
             self.invalidate_recordset([field_name])
             self._cr.execute(f'''
                 UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
@@ -3050,58 +3050,98 @@ class BaseModel(metaclass=MetaModel):
             # assert record_fr.with_context(lang='fr_FR') == '<div>English 1</div><div>French 2<div/>'
             # assert record_nl.with_context(lang='nl_NL') == '<div>English 3</div><div>English 2<div/>'
 
-            old_translations = field._get_stored_translations(self)
-            if not old_translations:
-                return False
-            new_translations = old_translations
-            for lang, translation in translations.items():
-                old_value = new_translations.get(lang) or new_translations.get('en_US')
-                if digest:
-                    old_terms = field.get_trans_terms(old_value)
-                    old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
-                    translation = {
-                        old_terms_digested2value[key]: value
-                        for key, value in translation.items()
-                        if key in old_terms_digested2value
-                    }
-                new_translations[lang] = field.translate(translation.get, old_value)
-            self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+            if translations:
+                old_translations = field._get_stored_translations(self)
+                if not old_translations:
+                    return False
+                new_translations = old_translations
+                for lang, translation in translations.items():
+                    old_value = new_translations.get(lang) or new_translations.get('en_US')
+                    if digest:
+                        old_terms = field.get_trans_terms(old_value)
+                        old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
+                        translation = {
+                            old_terms_digested2value[key]: value
+                            for key, value in translation.items()
+                            if key in old_terms_digested2value
+                        }
+                    new_translations[lang] = field.translate(translation.get, old_value)
+                self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+            if translations_reset:
+                self.invalidate_recordset([field_name])
+                self._cr.execute(f'''
+                    UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
+                ''', (Json(translations_reset), self.id))
             self.modified([field_name])
+
         return True
 
-    def get_field_translations(self, field_name, langs=None):
+    def get_field_translations(self, field_name):
         """ get model/model_term translations for records
         :param str field_name: field name
         :param list langs: languages
 
         :return: (translations, context) where
-            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
-            context: {"translation_type": "text"/"char", "translation_show_source": True/False}
+            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term, is_translated: True/False}]
+            context: {"field_type": field.type, "translate_type": "model"/"model_terms"}
         """
         self.ensure_one()
         field = self._fields[field_name]
-        # We don't forbid reading inactive/non-existing languages,
-        langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
-        val_en = self.with_context(lang='en_US')[field_name]
-        if not callable(field.translate):
-            translations = [{
-                'lang': lang,
-                'source': val_en,
-                'value': self.with_context(lang=lang)[field_name]
-            } for lang in langs]
+
+        if not field.store and not field.related and field.compute:
+            # a non-related non-stored computed field cannot be translated, even if it has inverse function
+            return [], {}
+
+        if field.related and not field.store:
+            related_path, field_name = field.related.rsplit(".", 1)
+            return self.mapped(related_path).get_field_translations(field_name)
+
+        self.check_access_rights('read')
+        self.check_field_access_rights('read', [field_name])
+        self.check_access_rule('read')
+
+        values = field._get_stored_translations(self)
+        langs = set([l[0] for l in self.env['res.lang'].get_installed()])
+        langs.add('en_US')
+
+        context = {
+            'field_type': field.type,
+            'translate_type': False if not field.translate else 'model_terms' if callable(field.translate) else 'model',
+        }
+
+        if not values:
+            return [], context
+
+        val_en = values.get('en_US')
+        if field.translate is True:
+            translations = [
+                {
+                    'lang': lang,
+                    'source': val_en,
+                    'value': values.get(lang, val_en),  # can be empty str
+                    'is_translated': lang in values,
+                }
+                for lang in langs
+            ]
         else:
             translation_dictionary = field.get_translation_dictionary(
-                val_en, {lang: self.with_context(lang=lang)[field_name] for lang in langs}
+                val_en, {lang: values.get(lang, val_en) for lang in langs}
             )
             translations = [{
                 'lang': lang,
                 'source': term_en,
-                'value': term_lang if term_lang != term_en else ''
+                'value': term_lang,
+                # for model terms, the ORM cannot tell if a term is really translated or not,
+                # for example, a user write '<div>Pomme</div><div>Banane</div>' in fr_FR
+                # and then only translate 'Banane' to 'Banana' for en_US
+                # in the database we have
+                # {"en_US": "<div>Pomme</div><div>Banana</div>", "fr_FR": "<div>Pomme</div><div>Banane</div>"}
+                # while parsing terms, from en_US and fr_FR value, the ORM doesn't know if 'Pomme' is en_US or fr_FR
+                #
+                # here the ORM always assumes the 'Pomme' has been translated in 'en_US'
+                'is_translated': lang in values,
             } for term_en, translations in translation_dictionary.items()
                 for lang, term_lang in translations.items()]
-        context = {}
-        context['translation_type'] = 'text' if field.type in ['text', 'html'] else 'char'
-        context['translation_show_source'] = callable(field.translate)
 
         return translations, context
 

@@ -255,11 +255,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const textarea = target.querySelector("textarea");
-        assert.strictEqual(
-            textarea.rows,
-            4,
-            "rowCount should be the one set on the field",
-        );
+        assert.strictEqual(textarea.rows, 4, "rowCount should be the one set on the field");
     });
 
     QUnit.test(
@@ -388,10 +384,19 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/get_field_translations") {
                     return Promise.resolve([
                         [
-                            { lang: "en_US", source: "yop", value: "yop" },
-                            { lang: "fr_BE", source: "yop", value: "valeur français" },
+                            { lang: "en_US", source: "yop", value: "yop", is_translated: true },
+                            {
+                                lang: "fr_BE",
+                                source: "yop",
+                                value: "valeur français",
+                                is_translated: true,
+                            },
                         ],
-                        { translation_type: "text", translation_show_source: false },
+                        {
+                            field_type: "char",
+                            translate_type: "model",
+                            en_US_activated: true,
+                        },
                     ]);
                 }
             },
@@ -470,7 +475,11 @@ QUnit.module("Fields", (hooks) => {
                             { lang: "en_US", source: "yop", value: "yop" },
                             { lang: "fr_BE", source: "yop", value: "valeur français" },
                         ],
-                        { translation_type: "text", translation_show_source: false },
+                        {
+                            field_type: "text",
+                            translate_type: "model",
+                            en_US_activated: true,
+                        },
                     ]);
                 }
             },

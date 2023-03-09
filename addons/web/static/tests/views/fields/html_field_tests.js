@@ -169,24 +169,36 @@ QUnit.module("Fields", ({ beforeEach }) => {
                     );
                     return Promise.resolve([
                         [
-                            { lang: "en_US", source: "first paragraph", value: "first paragraph" },
+                            {
+                                lang: "en_US",
+                                source: "first paragraph",
+                                value: "first paragraph",
+                                is_translated: true,
+                            },
                             {
                                 lang: "en_US",
                                 source: "second paragraph",
                                 value: "second paragraph",
+                                is_translated: true,
                             },
                             {
                                 lang: "fr_BE",
                                 source: "first paragraph",
-                                value: "",
+                                value: "first paragraph",
+                                is_translated: true,
                             },
                             {
                                 lang: "fr_BE",
                                 source: "second paragraph",
                                 value: "deuxième paragraphe",
+                                is_translated: true,
                             },
                         ],
-                        { translation_type: "char", translation_show_source: true },
+                        {
+                            field_type: "html",
+                            translate_type: "model_terms",
+                            en_US_activated: true,
+                        },
                     ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
@@ -208,6 +220,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
                                     "deuxième paragraphe": "deuxième paragraphe modifié",
                                 },
                             },
+                            [],
                         ],
                         "the new translation value should be written"
                     );
@@ -234,7 +247,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.containsN(target, ".translation", 4, "four rows should be visible");
 
         const translations = target.querySelectorAll(
-            ".modal .o_translation_dialog .translation input"
+            ".modal .o_translation_dialog .translation textarea"
         );
 
         const enField1 = translations[0];
@@ -248,8 +261,8 @@ QUnit.module("Fields", ({ beforeEach }) => {
         const frField1 = translations[2];
         assert.strictEqual(
             frField1.value,
-            "",
-            "first part of french translation should not be filled"
+            "first paragraph",
+            "first part of french translation should be filled"
         );
         await editInput(frField1, null, "premier paragraphe modifié");
 

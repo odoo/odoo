@@ -665,10 +665,6 @@ class TestTranslationWrite(TransactionCase):
     def test_cresate_emtpy_false(self):
         self._test_create_empty(False)
 
-    # feature removed
-    # def test_cresate_emtpy_empty_string(self):
-    #     self._test_create_empty('')
-
     def _test_create_empty(self, empty_value):
         self.env['res.lang']._activate_lang('fr_FR')
         langs = self.env['res.lang'].get_installed()
@@ -697,7 +693,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(categoryFR.name, 'French Name')
 
         # void fr_FR translation and fallback to en_US
-        self.category.update_field_translations('name', {'fr_FR': False})
+        self.category.update_field_translations('name', {}, reset_langs=['fr_FR'])
         self.assertEqual(categoryEN.name, 'English Name')
         self.assertEqual(categoryFR.name, 'English Name')
 
@@ -707,9 +703,8 @@ class TestTranslationWrite(TransactionCase):
 
         # cannot void en_US
         self.category.update_field_translations('name', {'en_US': 'English Name', 'fr_FR': 'French Name'})
-        self.category.update_field_translations('name', {'en_US': False})
-        self.assertEqual(categoryEN.name, 'English Name')
-        self.assertEqual(categoryFR.name, 'French Name')
+        with self.assertRaises(UserError):
+            self.category.update_field_translations('name', {}, reset_langs=['en_US', 'fr_FR'])
 
         # empty str is a valid translation
         self.category.update_field_translations('name', {'fr_FR': ''})
@@ -719,10 +714,6 @@ class TestTranslationWrite(TransactionCase):
         self.category.update_field_translations('name', {'en_US': '', 'fr_FR': 'French Name'})
         self.assertEqual(categoryEN.name, '')
         self.assertEqual(categoryFR.name, 'French Name')
-
-        # raise error when the translations are in the form for model_terms translated fields
-        with self.assertRaises(UserError):
-            self.category.update_field_translations('name', {'fr_FR': {'English Name': 'French Name'}})
 
     def test_field_selection(self):
         """ Test translations of field selections. """
