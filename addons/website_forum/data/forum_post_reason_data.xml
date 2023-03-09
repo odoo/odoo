@@ -1,35 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="forum_help" model="forum.forum">
-            <field name="name">Help</field>
-            <field name="description">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</field>
-        </record>
-
-        <record id="menu_website_forums" model="website.menu">
-            <field name="name">Forum</field>
-            <field name="url">/forum</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">35</field>
-        </record>
-    </data>
-    <data>
-        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
-
-        <!-- JUMP TO FORUM AT INSTALL -->
-        <record id="action_open_forum" model="ir.actions.act_url">
-            <field name="name">Forum</field>
-            <field name="target">self</field>
-            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
-        </record>
-
-    </data>
-    <data noupdate="1">
-         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_open_forum"/>
-            <field name="state">open</field>
-        </record>
-
         <!-- Reasons for closing Post -->
         <record id="reason_1" model="forum.post.reason">
             <field name="name">Duplicate post</field>
