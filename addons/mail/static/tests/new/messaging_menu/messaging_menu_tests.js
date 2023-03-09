@@ -117,6 +117,20 @@ QUnit.test("respond to notification prompt (denied)", async function (assert) {
     assert.containsNone(target, ".o-mail-notification-item");
 });
 
+QUnit.test("respond to notification prompt (granted)", async function (assert) {
+    patchBrowserNotification("default", "granted");
+    await start({
+        services: {
+            notification: makeFakeNotificationService(() => {
+                assert.step("confirmation_granted_toast");
+            }),
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-notification-item");
+    assert.verifySteps(["confirmation_granted_toast"]);
+});
+
 QUnit.test("Is closed after clicking on new message", async function (assert) {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
