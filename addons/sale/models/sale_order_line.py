@@ -129,7 +129,8 @@ class SaleOrderLine(models.Model):
         string="Taxes",
         compute='_compute_tax_id',
         store=True, readonly=False, precompute=True,
-        context={'active_test': False})
+        context={'active_test': False},
+        check_company=True)
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
