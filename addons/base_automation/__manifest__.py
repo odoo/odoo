@@ -23,8 +23,7 @@ trigger an automatic reminder email.
     ],
     'assets': {
         'web.assets_backend': [
-            'base_automation/static/src/js/**/*',
-            'base_automation/static/src/xml/*.xml',
+            'base_automation/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
             'base_automation/static/tests/**/*',
