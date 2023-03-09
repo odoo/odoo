@@ -22,18 +22,12 @@ class BaseImportModule(models.TransientModel):
         zip_data = base64.decodebytes(self.module_file)
         fp = BytesIO()
         fp.write(zip_data)
-        res = IrModule.import_zipfile(fp, force=self.force)
+        res = IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
         self.write({'state': 'done', 'import_message': res[0]})
-        context = dict(self.env.context, module_name=res[1])
-        # Return wizard otherwise it will close wizard and will not show result message to user.
         return {
-            'name': 'Import Module',
-            'view_mode': 'form',
-            'target': 'new',
-            'res_id': self.id,
-            'res_model': 'base.import.module',
-            'type': 'ir.actions.act_window',
-            'context': context,
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/web',
         }
 
     def action_module_open(self):
