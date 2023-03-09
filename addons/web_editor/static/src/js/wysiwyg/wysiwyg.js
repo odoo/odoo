@@ -75,6 +75,7 @@ const Wysiwyg = Widget.extend({
         allowCommandImage: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
+        onHistoryResetFromSteps: () => {},
         autostart: true,
     },
     init: function (parent, options) {
@@ -559,6 +560,7 @@ const Wysiwyg = Widget.extend({
                                     if (remoteSelection) {
                                         this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
                                     }
+                                    this.options.onHistoryResetFromSteps();
                                 }
                                 // In case there are steps received in the meantime, process them.
                                 if (historyStepsBuffer.length) {
