@@ -152,11 +152,12 @@ class Location(models.Model):
         view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
         self.warehouse_id = False
         for loc in self:
-            path = set(int(loc_id) for loc_id in loc.parent_path.split('/')[:-1])
-            for view_location_id in view_by_wh:
-                if view_location_id in path:
-                    loc.warehouse_id = view_by_wh[view_location_id]
-                    break
+            if loc.parent_path:
+                path = set(int(loc_id) for loc_id in loc.parent_path.split('/')[:-1])
+                for view_location_id in view_by_wh:
+                    if view_location_id in path:
+                        loc.warehouse_id = view_by_wh[view_location_id]
+                        break
 
     @api.depends('child_ids.usage', 'child_ids.child_internal_location_ids')
     def _compute_child_internal_location_ids(self):
