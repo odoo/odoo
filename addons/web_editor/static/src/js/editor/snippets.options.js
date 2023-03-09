@@ -4424,8 +4424,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 return;
             }
 
-            // If we are in grid mode, add a background grid and place the
-            // element we are resizing in front of it.
+            // If we are in grid mode, add a background grid and place it in
+            // front of the other elements.
             const rowEl = self.$target[0].parentNode;
             let backgroundGridEl;
             if (rowEl.classList.contains('o_grid_mode')) {
@@ -5312,12 +5312,15 @@ registry.layout_column = SnippetOptionWidget.extend({
             gridUtils._reloadLazyImages(columnEl);
 
             // Removing the grid properties.
-            columnEl.classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
+            const gridSizeClasses = columnEl.className.match(/(g-col-lg|g-height)-[0-9]+/g);
+            columnEl.classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain', ...gridSizeClasses);
             columnEl.style.removeProperty('grid-area');
             columnEl.style.removeProperty('z-index');
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
+        rowEl.style.removeProperty('--grid-item-padding-x');
+        rowEl.style.removeProperty('--grid-item-padding-y');
     },
     /**
      * Removes the padding highlights that were added when changing the grid
