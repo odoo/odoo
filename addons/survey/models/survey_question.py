@@ -311,7 +311,8 @@ class SurveyQuestion(models.Model):
         for question in conditional_questions:
             question_id = question._origin.id
             if not question_id:  # New question
-                conditional_questions.allowed_triggering_question_ids = possible_trigger_questions
+                question.allowed_triggering_question_ids = possible_trigger_questions.filtered(
+                    lambda q: q.survey_id.id == question.survey_id._origin.id)
                 question.is_placed_before_trigger = False
                 continue
 
