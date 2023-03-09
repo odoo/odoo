@@ -140,7 +140,7 @@ class DiscussController(http.Controller):
         if channel_member_sudo and channel_member_sudo.env['mail.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', '=', partner_id)], limit=1):
             return request.env['ir.binary']._get_image_stream_from(partner_sudo, field_name='avatar_128', placeholder=placeholder).get_response()
         if request.env.user.share:
-            return request.env['ir.binary']._get_placeholder_stream(placeholder)
+            return request.env['ir.binary']._get_placeholder_stream(placeholder).get_response()
         return request.env['ir.binary']._get_image_stream_from(partner_sudo.sudo(False), field_name='avatar_128', placeholder=placeholder).get_response()
 
     @http.route('/mail/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128', methods=['GET'], type='http', auth='public')
@@ -151,7 +151,7 @@ class DiscussController(http.Controller):
         if channel_member_sudo and channel_member_sudo.env['mail.channel.member'].search([('channel_id', '=', channel_id), ('guest_id', '=', guest_id)], limit=1):
             return request.env['ir.binary']._get_image_stream_from(guest_sudo, field_name='avatar_128', placeholder=placeholder).get_response()
         if request.env.user.share:
-            return request.env['ir.binary']._get_placeholder_stream(placeholder)
+            return request.env['ir.binary']._get_placeholder_stream(placeholder).get_response()
         return request.env['ir.binary']._get_image_stream_from(guest_sudo.sudo(False), field_name='avatar_128', placeholder=placeholder).get_response()
 
     @http.route('/mail/channel/<int:channel_id>/attachment/<int:attachment_id>', methods=['GET'], type='http', auth='public')
