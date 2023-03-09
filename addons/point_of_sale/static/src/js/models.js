@@ -1521,7 +1521,7 @@ export class Product extends PosModel {
             if (isAllowOnlyOneLot) {
                 packLotLinesToEdit = [];
             } else {
-                const orderline = this.currentOrder
+                const orderline = this.pos.selectedOrder
                     .get_orderlines()
                     .filter((line) => !line.get_discount())
                     .find((line) => line.product.id === this.id);
