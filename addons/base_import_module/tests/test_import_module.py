@@ -25,7 +25,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         with ZipFile(archive, 'w') as zipf:
             for path, data in files:
                 zipf.writestr(path, data)
-        return self.env['ir.module.module'].import_zipfile(archive)
+        return self.env['ir.module.module']._import_zipfile(archive)
 
     def test_import_zip(self):
         """Assert the behaviors expected by the module import feature using a ZIP archive"""
@@ -187,7 +187,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             archive.writestr('test_module/static/src/js/test.js', "console.log('AAA');")
 
         # Import test module
-        self.env['ir.module.module'].import_zipfile(stream)
+        self.env['ir.module.module']._import_zipfile(stream)
 
         attachment = self.env['ir.attachment'].search([('url', '=', path)])
         self.assertEqual(attachment.name, 'test.js')
@@ -240,7 +240,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             archive.writestr(path, "console.log('AAA');")
 
         # Import test module
-        self.env['ir.module.module'].with_user(self.test_user).import_zipfile(stream)
+        self.env['ir.module.module'].with_user(self.test_user)._import_zipfile(stream)
 
         attachment = self.env['ir.attachment'].search([('url', '=', f'/{path}')])
         self.assertEqual(attachment.name, 'test.js')
@@ -264,7 +264,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             archive.writestr(path, "console.log('BBB');")
 
         # Import test module
-        self.env['ir.module.module'].with_user(self.test_user).import_zipfile(stream)
+        self.env['ir.module.module'].with_user(self.test_user)._import_zipfile(stream)
 
         attachment = self.env['ir.attachment'].search([('url', '=', f'/{path}')])
         self.assertEqual(attachment.name, 'test.js')

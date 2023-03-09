@@ -7,10 +7,14 @@
             <field name="arch" type="xml">
                 <form string="Install the application">
                     <field name="state" invisible="1"/>
-                    <p class="alert alert-warning" role="alert" invisible="state == 'done'">Note: you can only import data modules (.xml files and static assets)</p>
+                    <p class="alert alert-warning" role="alert" invisible="state == 'done' or context.get('data_module')">Note: you can only import data modules (.xml files and static assets)</p>
+                    <group col="4">
+                    <field name="modules_dependencies" readonly="1" colspan="4" nolabel="1" invisible="state == 'done'"/>
+                    </group>
                     <group invisible="state != 'init'" col="4">
-                        <field name="module_file" string="Module file (.zip)" colspan="4" options="{'accepted_file_extensions': '.zip'}"/>
-                        <field name="force" colspan="4" groups="base.group_no_one"/>
+                        <field name="module_file" string="Module file (.zip)" colspan="4" options="{'accepted_file_extensions': '.zip'}" invisible="context.get('data_module')"/>
+                        <field name="force" groups="base.group_no_one"/>
+                        <field name="with_demo" string="Import demo data"/>
                     </group>
                     <group invisible="state != 'done'" col="4">
                         <field name="import_message" colspan="4" nolabel="1" readonly="1"/>
