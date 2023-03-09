@@ -199,11 +199,6 @@ export class Composer extends Component {
         return this.props.composer.thread ?? null;
     }
 
-    get composerAvatarUrl() {
-        return this.thread.channelMembers.find((m) => m.personaLocalId === this.store.self.localId)
-            ?.avatarUrl;
-    }
-
     get allowUpload() {
         return true;
     }
