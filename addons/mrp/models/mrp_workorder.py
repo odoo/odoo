@@ -881,3 +881,14 @@ class MrpWorkorder(models.Model):
                 wo.duration = wo.duration_expected
                 wo.duration_percent = 100
         wo.state = 'done'
+
+    def action_mass_start(self):
+        for wo in self:
+            if wo.working_state == 'blocked':
+                raise UserError(_('Some workorders require another workorder to be completed first'))
+        for wo in self:
+            wo.button_start()
+
+    def action_mass_pause(self):
+        for wo in self:
+            wo.button_pending()
