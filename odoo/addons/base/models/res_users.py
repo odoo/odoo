@@ -1990,7 +1990,7 @@ class APIKeys(models.Model):
         CREATE TABLE IF NOT EXISTS {table} (
             id serial primary key,
             name varchar not null,
-            user_id integer not null REFERENCES res_users(id),
+            user_id integer not null REFERENCES res_users(id) ON DELETE CASCADE,
             scope varchar,
             index varchar({index_size}) not null CHECK (char_length(index) = {index_size}),
             key varchar not null,
