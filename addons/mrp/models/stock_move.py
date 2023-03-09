@@ -149,8 +149,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state != 'draft':
                 continue
-            move.manual_consumption = (move.has_tracking != 'none' and not move.raw_material_production_id.use_auto_consume_components_lots) or \
-                (move.has_tracking == 'none' and move.bom_line_id.manual_consumption)
+            move.manual_consumption = move._is_manual_consumption()
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
@@ -444,7 +443,7 @@ class StockMove(models.Model):
             'state': 'confirmed',
             'reservation_date': self.reservation_date,
             'date_deadline': self.date_deadline,
-            'manual_consumption': self.bom_line_id.manual_consumption or self.product_id.tracking != 'none',
+            'manual_consumption': self._is_manual_consumption(),
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
             'procure_method': self.procure_method,
@@ -593,3 +592,12 @@ class StockMove(models.Model):
                 'res_id': source.id,
             }
         return res
+
+    def _is_manual_consumption(self):
+        self.ensure_one()
+        return self._determine_is_manual_consumption(self.product_id, self.raw_material_production_id, self.bom_line_id)
+
+    @api.model
+    def _determine_is_manual_consumption(self, product, production, bom_line):
+        return (product.product_tmpl_id.tracking != 'none' and not production.use_auto_consume_components_lots) or \
+               (product.product_tmpl_id.tracking == 'none' and bom_line and bom_line.manual_consumption)
