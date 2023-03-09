@@ -36,7 +36,7 @@ EditInBackendSystray.template = "website.EditInBackendSystray";
 
 export const systrayItem = {
     Component: EditInBackendSystray,
-    isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.editableInBackend,
+    isDisplayed: env => env.services.website.currentWebsite.metadata.editableInBackend,
 };
 
 registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 9 });

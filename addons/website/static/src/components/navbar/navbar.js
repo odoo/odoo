@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { NavBar } from '@web/webclient/navbar/navbar';
-import { useService, useBus } from '@web/core/utils/hooks';
+import { useService } from '@web/core/utils/hooks';
 import { registry } from "@web/core/registry";
 import { patch } from 'web.utils';
+import { useState, useEffect } from '@odoo/owl';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -12,24 +13,28 @@ patch(NavBar.prototype, 'website_navbar', {
         this._super();
         this.websiteService = useService('website');
         this.websiteCustomMenus = useService('website_custom_menus');
+        this.currentWebsite = useState(this.websiteService.currentWebsite);
+        this.websiteContext = useState(this.websiteService.context);
 
-        // The navbar is rerendered with an event, as it can not naturally be
-        // with props/state (the WebsitePreview client action and the navbar
-        // are not related).
-        useBus(websiteSystrayRegistry, 'EDIT-WEBSITE', () => this.render(true));
+        useEffect(() => {
+            // Need a re-render when the metadata is changed as systray items
+            // use it to know if they should be displayed or not.
+            if (this.websiteContext.displaySystray) {
+                this.adapt();
+            }
+        }, () => [this.currentWebsite.metadata]);
 
         if (this.env.debug && !websiteSystrayRegistry.contains('web.debug_mode_menu')) {
             websiteSystrayRegistry.add('web.debug_mode_menu', registry.category('systray').get('web.debug_mode_menu'), {sequence: 100});
         }
 
-        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.render(true));
     },
 
     /**
      * @override
      */
     get systrayItems() {
-        if (this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor) {
+        if (this.websiteContext.displaySystray && this.websiteService.isRestrictedEditor) {
             return websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
