@@ -13,11 +13,11 @@ import time
 
 import odoo
 import odoo.modules.db
-import odoo.modules.graph
 import odoo.modules.migration
 import odoo.modules.registry
 from .. import SUPERUSER_ID, api, tools
 from .module import adapt_version, initialize_sys_path, load_openerp_module
+from odoo.modules.graph import PackageGraph
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -44,7 +44,7 @@ def load_data(env, idref, mode, kind, package):
             keys = [kind]
         files = []
         for k in keys:
-            for f in package.data[k]:
+            for f in package.manifest[k]:
                 if f in files:
                     _logger.warning("File %s is imported twice in module %s %s", f, package.name, kind)
                 files.append(f)
@@ -79,45 +79,47 @@ def load_demo(env, package, idref, mode):
     """
     Loads demo data for the specified package.
     """
-    if not package.should_have_demo():
-        return False
+    loaded = False
+    if package.demo_installable():
+        try:
+            if package.manifest.get('demo') or package.manifest.get('demo_xml'):
+                _logger.info("Module %s: loading demo", package.name)
+                with env.cr.savepoint(flush=False):
+                    load_data(env, idref, mode, kind='demo', package=package)
+            loaded = True
+        except Exception as e:
+            # If we could not install demo data for this module
+            _logger.warning(
+                "Module %s demo data failed to install, installed without demo data",
+                package.name, exc_info=True)
 
-    try:
-        if package.data.get('demo') or package.data.get('demo_xml'):
-            _logger.info("Module %s: loading demo", package.name)
-            with env.cr.savepoint(flush=False):
-                load_data(env, idref, mode, kind='demo', package=package)
-        return True
-    except Exception as e:
-        # If we could not install demo data for this module
-        _logger.warning(
-            "Module %s demo data failed to install, installed without demo data",
-            package.name, exc_info=True)
+            todo = env.ref('base.demo_failure_todo', raise_if_not_found=False)
+            Failure = env.get('ir.demo_failure')
+            if todo and Failure is not None:
+                todo.state = 'open'
+                Failure.create({'module_id': package.id, 'error': str(e)})
 
-        todo = env.ref('base.demo_failure_todo', raise_if_not_found=False)
-        Failure = env.get('ir.demo_failure')
-        if todo and Failure is not None:
-            todo.state = 'open'
-            Failure.create({'module_id': package.id, 'error': str(e)})
-        return False
+    if loaded != package.dbdemo:
+        package.dbdemo = loaded
+        env['ir.module.module'].invalidate_model(['demo'])
+        env.cr.execute('UPDATE ir_module_module SET demo = %s WHERE id = %s', (loaded, package.id))
 
 
 def force_demo(env):
     """
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
-    graph = odoo.modules.graph.Graph()
+    graph = PackageGraph(env.cr)
     env.cr.execute('UPDATE ir_module_module SET demo=True')
     env.cr.execute(
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
     )
     module_list = [name for (name,) in env.cr.fetchall()]
-    graph.add_modules(env.cr, module_list, ['demo'])
+    graph.add(module_list)
 
     for package in graph:
         load_demo(env, package, {}, 'init')
 
-    env['ir.module.module'].invalidate_model(['demo'])
     env['res.groups']._update_user_groups_view()
 
 
@@ -163,11 +165,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
         module_cursor_query_count = env.cr.sql_log_count
         module_extra_query_count = odoo.sql_db.sql_counter
 
-        needs_update = (
-            hasattr(package, "init")
-            or hasattr(package, "update")
-            or package.state in ("to install", "to upgrade")
-        )
+        needs_update = package.state in ("to install", "to upgrade")
         module_log_level = logging.DEBUG
         if needs_update:
             module_log_level = logging.INFO
@@ -186,14 +184,14 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
 
         if new_install:
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
-            pre_init = package.info.get('pre_init_hook')
+            pre_init = package.manifest.get('pre_init_hook')
             if pre_init:
                 getattr(py_module, pre_init)(env)
 
         model_names = registry.load(env.cr, package)
 
         mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
+        if package.state == 'to install':
             mode = 'init'
 
         loaded_modules.append(package.name)
@@ -222,11 +220,10 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
 
             if package.state == 'to upgrade':
                 # upgrading the module information
-                module.write(module.get_values_from_terp(package.data))
+                module.write(module.get_values_from_terp(package.manifest))
             load_data(env, idref, mode, kind='data', package=package)
-            demo_loaded = package.dbdemo = load_demo(env, package, idref, mode)
-            env.cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
-            module.invalidate_model(['demo'])
+            if (not tools.config['without_demo'] and mode == 'init') or package.dbdemo:
+                load_demo(env, package, idref, mode)
 
             migrations.migrate_module(package, 'post')
 
@@ -239,7 +236,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
 
         if needs_update:
             if new_install:
-                post_init = package.info.get('post_init_hook')
+                post_init = package.manifest.get('post_init_hook')
                 if post_init:
                     getattr(py_module, post_init)(env)
 
@@ -292,16 +289,11 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
         if needs_update:
             processed_modules.append(package.name)
 
-            ver = adapt_version(package.data['version'])
-            # Set new modules and dependencies
-            module.write({'state': 'installed', 'latest_version': ver})
-
-            package.load_state = package.state
-            package.load_version = package.installed_version
+            package.installed_version = adapt_version(package.manifest['version'])
             package.state = 'installed'
-            for kind in ('init', 'demo', 'update'):
-                if hasattr(package, kind):
-                    delattr(package, kind)
+
+            # Set new modules and dependencies
+            module.write({'state': 'installed', 'latest_version': package.installed_version})
             module.env.flush_all()
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
@@ -334,10 +326,9 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
 
 def _check_module_names(cr, module_names):
     mod_names = set(module_names)
-    if 'base' in mod_names:
-        # ignore dummy 'all' module
-        if 'all' in mod_names:
-            mod_names.remove('all')
+    # ignore dummy 'all' module
+    if 'all' in mod_names:
+        mod_names.remove('all')
     if mod_names:
         cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
         if cr.dictfetchone()['count'] != len(mod_names):
@@ -346,7 +337,7 @@ def _check_module_names(cr, module_names):
             incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
-def load_marked_modules(env, graph, states, force, progressdict, report,
+def load_marked_modules(env, graph, states, progressdict, report,
                         loaded_modules, perform_checks, models_to_check=None):
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
@@ -360,7 +351,7 @@ def load_marked_modules(env, graph, states, force, progressdict, report,
         module_list = [name for (name,) in env.cr.fetchall() if name not in graph]
         if not module_list:
             break
-        graph.add_modules(env.cr, module_list, force)
+        graph.add(module_list)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(
             env, graph, progressdict, report=report, skip_modules=loaded_modules,
@@ -372,15 +363,11 @@ def load_marked_modules(env, graph, states, force, progressdict, report,
             break
     return processed_modules
 
-def load_modules(registry, force_demo=False, status=None, update_module=False):
+def load_modules(registry, _force_demo=False, status=None, update_module=False):
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
     """
     initialize_sys_path()
-
-    force = []
-    if force_demo:
-        force.append('demo')
 
     models_to_check = set()
 
@@ -397,16 +384,13 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules
-            tools.config["init"]["all"] = 1
-            if not tools.config['without_demo']:
-                tools.config["demo"]['all'] = 1
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
-            cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
+            cr.execute("UPDATE ir_module_module SET state = %s WHERE name = %s AND state = %s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
-        graph = odoo.modules.graph.Graph()
-        graph.add_module(cr, 'base', force)
+        graph = PackageGraph(cr)
+        graph.add(['base'])
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
@@ -438,6 +422,8 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             Module = env['ir.module.module']
             _logger.info('updating modules list')
             Module.update_list()
+            if _force_demo:
+                force_demo(env)
 
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
@@ -476,10 +462,10 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             previously_processed = len(processed_modules)
             processed_modules += load_marked_modules(env, graph,
                 ['installed', 'to upgrade', 'to remove'],
-                force, status, report, loaded_modules, update_module, models_to_check)
+                status, report, loaded_modules, update_module, models_to_check)
             if update_module:
                 processed_modules += load_marked_modules(env, graph,
-                    ['to install'], force, status, report,
+                    ['to install'], status, report,
                     loaded_modules, update_module, models_to_check)
 
         if update_module:
@@ -537,7 +523,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             env['ir.model.data']._process_end(processed_modules)
             env.flush_all()
 
-        for kind in ('init', 'demo', 'update'):
+        for kind in ('init', 'update'):
             tools.config[kind] = {}
 
         # STEP 5: Uninstall modules to remove
@@ -549,7 +535,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             if modules_to_remove:
                 pkgs = reversed([p for p in graph if p.name in modules_to_remove])
                 for pkg in pkgs:
-                    uninstall_hook = pkg.info.get('uninstall_hook')
+                    uninstall_hook = pkg.manifest.get('uninstall_hook')
                     if uninstall_hook:
                         py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
                         getattr(py_module, uninstall_hook)(env)
@@ -561,7 +547,8 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 registry = odoo.modules.registry.Registry.new(
-                    cr.dbname, force_demo, status, update_module
+                    # force_demo has been persisted in database, don't need to force_demo again
+                    cr.dbname, False, status, update_module
                 )
                 cr.reset()
                 registry.check_tables_exist(cr)
