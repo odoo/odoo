@@ -34,8 +34,13 @@ export class CountedQuantityWidgetField extends FloatField {
 
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        if (["enter", "tab", "shift+tab"].includes(hotkey))
-            this.onInput(ev)
+        if (["enter", "tab", "shift+tab"].includes(hotkey)) {
+            try {
+                const val = this.parse(ev.target.value);
+                this.props.update(val);
+            } catch {} // ignore since it will be handled later
+            this.onInput(ev);
+        }
     }
 
     get formattedValue() {
