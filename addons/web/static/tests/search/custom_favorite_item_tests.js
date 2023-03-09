@@ -345,6 +345,45 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
+    QUnit.test("undefined name for filter shows notification and not error", async function (assert) {
+        assert.expect(2);
+
+        serviceRegistry.add(
+            "notification",
+            {
+                start() {
+                    return {
+                        add(message, options) {
+                            assert.strictEqual(
+                                message,
+                                "A name for your favorite filter is required.",
+                                "The notification should match: A name for your favorite filter is required."
+                            );
+                            assert.deepEqual(options, { type: "danger" });
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+
+        await makeWithSearch({
+            serverData,
+            mockRPC: (_, args) => {
+                if (args.model === "ir.filters" && args.method === "create_or_replace") {
+                    return 7; // fake serverSideId
+                }
+            },
+            resModel: "foo",
+            Component: FavoriteMenu,
+            searchViewId: false,
+        });
+
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await saveFavorite(target);
+    });
+
     QUnit.skip("save search filter in modal", async function (assert) {
         /** @todo I don't know yet how to convert this test */
         // assert.expect(5);
