@@ -325,7 +325,7 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
-                    return res
+                    return res._link_invoice_origin_to_purchase_orders(timeout=4)
         return self.env['account.move']
 
     def _update_invoice_from_attachment(self, attachment, invoice):
@@ -352,7 +352,7 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
-                    return res
+                    return res._link_invoice_origin_to_purchase_orders(timeout=4)
         return self.env['account.move']
 
     ####################################################
