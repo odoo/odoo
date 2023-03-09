@@ -524,8 +524,6 @@ class configmanager(object):
         )
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
-        self.options['demo'] = (dict(self.options['init'])
-                                if not self.options['without_demo'] else {})
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and [m.strip() for m in opt.translate_modules.split(',')] or ['all']
         self.options['translate_modules'].sort()

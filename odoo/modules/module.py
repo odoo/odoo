@@ -34,7 +34,7 @@ _DEFAULT_MANIFEST = {
     'data': [],
     'demo': [],
     'demo_xml': [],
-    'depends': [],
+    'depends': ['base'],
     'description': '',
     'external_dependencies': {},
     #icon: f'/{module}/static/description/icon.png',  # automatic
@@ -322,6 +322,12 @@ def load_manifest(module, mod_path=None):
     if not manifest.get('license'):
         manifest['license'] = 'LGPL-3'
         _logger.warning("Missing `license` key in manifest for %r, defaulting to LGPL-3", module)
+
+    if module == 'base':
+        manifest['depends'] = []
+    elif not manifest['depends']:
+        # prevent the hack `'depends': []` except 'base' module
+        manifest['depends'] = _DEFAULT_MANIFEST['depends'].copy()
 
     # auto_install is either `False` (by default) in which case the module
     # is opt-in, either a list of dependencies in which case the module is

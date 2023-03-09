@@ -123,8 +123,7 @@ class MigrationManager(object):
             }
 
         for pkg in self.graph:
-            if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade' or
-                    getattr(pkg, 'load_state', None) == 'to upgrade'):
+            if pkg.load_state != 'to upgrade':
                 continue
 
             self.migrations[pkg.name] = {
@@ -145,9 +144,11 @@ class MigrationManager(object):
             'post': '[%s>]',
             'end': '[$%s]',
         }
-        state = pkg.state if stage in ('pre', 'post') else getattr(pkg, 'load_state', None)
 
-        if not (hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
+        if not (
+                (stage in ('pre', 'post') and pkg.state == 'to upgrade') or
+                (stage == 'end' and pkg.load_state == 'to upgrade')
+        ):
             return
 
         def convert_version(version):
@@ -188,9 +189,9 @@ class MigrationManager(object):
                 key=os.path.basename,
             )
 
-        installed_version = getattr(pkg, 'load_version', pkg.installed_version) or ''
+        installed_version = pkg.load_version or ''
         parsed_installed_version = parse_version(installed_version)
-        current_version = parse_version(convert_version(pkg.data['version']))
+        current_version = parse_version(convert_version(pkg.manifest['version']))
 
         def compare(version):
             if version == "0.0.0" and parsed_installed_version < current_version:

@@ -2943,7 +2943,7 @@ class BaseModel(metaclass=MetaModel):
                 for field in klass._field_definitions:
                     definitions[field.name].append(field)
         for name, fields_ in definitions.items():
-            if f'{cls._name}.{name}' in cls.pool._database_translated_fields:
+            if cls.pool._database_translated_fields and f'{cls._name}.{name}' in cls.pool._database_translated_fields:
                 # the field is currently translated in the database; ensure the
                 # field is translated to avoid converting its column to varchar
                 # and losing data
