@@ -2087,46 +2087,48 @@ td {
     opacity: 0.3;
 }
 
-@media screen and (max-width: 768px) {
-    .pos .partnerlist-screen .partner-details-box {
+@media screen and (max-width: 767px) {
+    .partner-list thead {
+        display: none;
+    }
+
+    .partner-list-contents {
+        margin-top: 10px;
+    }
+
+    .partner-line {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
+        padding: 12px 24px;
     }
-    .pos .partnerlist-screen .partner-details-left{
-        width: auto;
-        float: none;
-        flex-grow: 1;
+    .partner-line td {
+        flex-basis: 100%;
+        padding: 5px;
     }
-    .pos .partnerlist-screen .partner-details-right{
-        width: auto;
-        float: none;
-        flex-grow: 1;
-    }
-    .pos .partnerlist-screen .partner-detail{
+    .partner-line-email {
+        order: 2;
         display: flex;
         flex-direction: column;
+        gap: 8px;
     }
-    .pos .partnerlist-screen .partner-details input,
-    .pos .partnerlist-screen .partner-details select
-    {
-        width: 100%;
+    .edit-partner-button-cell {
+        order: 3;
+        margin-top: 10px;
     }
-    .pos .partnerlist-screen .partner-details input.partner-name {
-        width: 100%;
+    .partner-list-contents {
+        margin-top: 10px;
     }
-    .pos .partnerlist-screen .partner-detail > .label{
-        width: auto;
-        text-align: left;
+
+    .partner-list td {
+        padding: 8px 0px !important;
     }
-    .pos .partnerlist-screen .partner-list td {
-        overflow: hidden;
-        white-space: nowrap;
+
+    .partner-line-last-column-placeholder {
+        display: none;
     }
+    
 }
-
-
-
-
 
 /*  ********* The OrderWidget  ********* */
 

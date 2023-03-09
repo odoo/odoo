@@ -16,10 +16,10 @@
                     <span> unselect </span>
                 </div>
             </td>
-            <td t-if="!env.isMobile">
+            <td>
                 <t t-esc="props.partner.address" />
             </td>
-            <td class="partner-line-email" t-if="!env.isMobile">
+            <td class="partner-line-email">
                 <div t-if="props.partner.phone">
                     <i class="fa fa-fw fa-phone"/><t t-esc="props.partner.phone"/>
                 </div>
@@ -29,10 +29,6 @@
                 <div t-if="props.partner.email" class="email-field">
                     <i class="fa fa-fw fa-paper-plane-o"/><t t-esc="props.partner.email" />
                 </div>
-            </td>
-            <td t-if="env.isMobile">
-                <t t-esc="props.partner.zip or ''" />
-                <span t-if="highlight"><br/></span>
             </td>
             <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
             <td class="edit-partner-button-cell">
