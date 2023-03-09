@@ -17,10 +17,15 @@ Ask questions, get answers, no distractions
         'website_profile',
     ],
     'data': [
-        'data/forum_default_faq.xml',
-        'data/forum_data.xml',
+        'data/ir_config_parameter_data.xml',
+        'data/forum_forum_template_faq.xml',
+        'data/forum_forum_data.xml',
+        'data/forum_post_reason_data.xml',
+        'data/ir_actions_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
+        'data/website_menu_data.xml',
+
         'views/forum.xml',
         'views/res_users_views.xml',
         'views/website_forum.xml',
@@ -30,15 +35,18 @@ Ask questions, get answers, no distractions
         'views/website_pages_views.xml',
         'views/forum_forum_add.xml',
         'views/gamification_karma_tracking_views.xml',
+
         'security/ir.model.access.csv',
         'security/website_forum_security.xml',
-        'data/badges_question.xml',
-        'data/badges_answer.xml',
-        'data/badges_participation.xml',
-        'data/badges_moderation.xml',
+
+        'data/gamification_badge_data_question.xml',
+        'data/gamification_badge_data_answer.xml',
+        'data/gamification_badge_data_participation.xml',
+        'data/gamification_badge_data_moderation.xml',
     ],
     'demo': [
-        'data/forum_demo.xml',
+        'data/forum_tag_demo.xml',
+        'data/forum_post_demo.xml',
     ],
     'installable': True,
     'assets': {
