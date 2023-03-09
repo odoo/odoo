@@ -276,7 +276,12 @@ class MrpProduction(models.Model):
         ]
         picking_types = self.env['stock.picking.type'].search_read(domain, ['company_id'], load=False, limit=1)
         picking_type_by_company = {pt['company_id']: pt['id'] for pt in picking_types}
+        default_picking_type_id = self._context.get('default_picking_type_id')
+        default_picking_type = default_picking_type_id and self.env['stock.picking.type'].browse(default_picking_type_id)
         for mo in self:
+            if default_picking_type and default_picking_type.company_id == mo.company_id:
+                mo.picking_type_id = default_picking_type_id
+                continue
             if mo.bom_id and mo.bom_id.picking_type_id:
                 mo.picking_type_id = mo.bom_id.picking_type_id
                 continue
@@ -339,21 +344,24 @@ class MrpProduction(models.Model):
             ):
                 production.product_id = bom.product_id or bom.product_tmpl_id.product_variant_id
 
-    @api.depends('product_id', 'picking_type_id')
+    @api.depends('product_id')
     def _compute_bom_id(self):
-        mo_by_picking_type_and_company_id = defaultdict(lambda: self.env['mrp.production'])
+        mo_by_company_id = defaultdict(lambda: self.env['mrp.production'])
         for mo in self:
             if not mo.product_id and not mo.bom_id:
                 mo.bom_id = False
                 continue
-            mo_by_picking_type_and_company_id[(mo.picking_type_id, mo.company_id.id)] |= mo
+            mo_by_company_id[mo.company_id.id] |= mo
 
-        for (picking_type, company_id), productions in mo_by_picking_type_and_company_id.items():
+        for company_id, productions in mo_by_company_id.items():
+            picking_type_id = self._context.get('default_picking_type_id')
+            picking_type = picking_type_id and self.env['stock.picking.type'].browse(picking_type_id)
             boms_by_product = self.env['mrp.bom'].with_context(active_test=True)._bom_find(productions.product_id, picking_type=picking_type, company_id=company_id, bom_type='normal')
             for production in productions:
                 if not production.bom_id or production.bom_id.product_tmpl_id != production.product_tmpl_id or (production.bom_id.product_id and production.bom_id.product_id != production.product_id):
                     bom = boms_by_product[production.product_id]
                     production.bom_id = bom.id or False
+                    self.env.add_to_compute(production._fields['picking_type_id'], production)
 
     @api.depends('bom_id')
     def _compute_product_qty(self):
