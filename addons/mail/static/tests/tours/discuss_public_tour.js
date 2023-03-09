@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
             trigger: ".o-mail-thread",
             run() {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
-                    console.error("Did not automatically redirect to channel page");
+                    console.error("Channel secret token is still present in URL.");
                 }
                 // Wait for modules to be loaded or failed for the next step
                 odoo.__DEBUG__.didLogInfo.then(() => {

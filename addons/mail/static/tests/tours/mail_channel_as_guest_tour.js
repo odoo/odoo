@@ -7,6 +7,15 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_channel_as
     test: true,
     steps: [
         {
+            content: "Channel secret token has been hidden on welcome page",
+            trigger: ".o-mail-welcome-page",
+            run() {
+                if (!window.location.pathname.startsWith("/discuss/channel")) {
+                    console.error("Channel secret token is still present in URL.");
+                }
+            },
+        },
+        {
             content: "Click join",
             trigger: "button[title='Join Channel']",
             extraTrigger: ".o-mail-thread",
@@ -15,9 +24,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_channel_as
             content: "Check that we are on channel page",
             trigger: ".o-mail-thread",
             run() {
-                if (!window.location.pathname.startsWith("/discuss/channel")) {
-                    console.error("Clicking on join button did not redirect to channel page");
-                }
                 // Wait for modules to be loaded or failed for the next step
                 odoo.__DEBUG__.didLogInfo.then(() => {
                     const { missing, failed, unloaded } = odoo.__DEBUG__.jsModules;
