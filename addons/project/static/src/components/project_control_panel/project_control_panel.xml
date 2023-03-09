@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectControlPanelContentBadge" owl="1">
-        <t t-tag="isProjectUser ? 'button' : 'span'" class="badge border d-flex p-2 ms-2 bg-view" data-hotkey="y">
+        <button class="btn border badge d-flex p-2 bg-view align-items-center" data-hotkey="y">
             <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}}"/>
             <span t-att-class="'fw-normal ms-1' + (data.color === 0 ? ' text-muted' : '')" t-esc="data.status"/>
-        </t>
+        </button>
     </t>
 
     <t t-name="project.ProjectControlPanelContent" owl="1">
         <t t-if="showProjectUpdate">
-            <li t-if="isProjectUser" class="o_project_updates_breadcrumb ps-3" t-on-click="onStatusClick">
+            <li t-if="isProjectUser" class="o_project_updates_breadcrumb d-flex mb-lg-1" t-on-click="onStatusClick">
                 <t t-call="project.ProjectControlPanelContentBadge"></t>
             </li>
             <li t-else="" class="o_project_updates_breadcrumb ps-3">
@@ -23,11 +23,8 @@
         <xpath expr="//ol" position="inside">
             <t t-call="project.ProjectControlPanelContent"/>
         </xpath>
-    </t>
-
-    <t t-name="project.Breadcrumbs.Small" t-inherit="web.Breadcrumbs.Small" t-inherit-mode="primary" owl="1">
-        <xpath expr="//ol" position="inside">
-            <t t-call="project.ProjectControlPanelContent"/>
+        <xpath expr='//t[@t-foreach="breadcrumbs"]/li[last()]/span' position="attributes">
+            <attribute name="class">text-truncate me-2</attribute>
         </xpath>
     </t>
 
@@ -38,8 +35,8 @@
     </t>
 
     <t t-name="project.ProjectControlPanel.Small" t-inherit="web.ControlPanel.Small" t-inherit-mode="primary" owl="1">
-        <xpath expr="//t[@t-call='web.Breadcrumbs.Small']" position="replace">
-            <t t-call="project.Breadcrumbs.Small"/>
+        <xpath expr="//div[hasclass('o_cp_bottom_left')]" position="inside">
+            <t t-call="project.ProjectControlPanelContent"/>
         </xpath>
     </t>
 
