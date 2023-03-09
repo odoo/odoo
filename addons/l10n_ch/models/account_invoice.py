@@ -310,6 +310,9 @@ class AccountMove(models.Model):
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
         self.ensure_one()
+        # l10n_ch_isr_number is not always computed at this stage, and could change value when the invoice is posted.
+        # We manually compute here it to avoid this conflict.
+        self._compute_l10n_ch_isr_number()
         return self.l10n_ch_isr_number
 
     def _get_invoice_reference_ch_partner(self):
