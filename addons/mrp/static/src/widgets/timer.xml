@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="mrp.MrpTimer" owl="1">
-        <span t-if="props.readonly" t-esc="durationFormatted"/>
+        <span t-esc="durationFormatted"/>
+    </t>
+
+    <t t-name="mrp.MrpTimerField" owl="1">
+        <MrpTimer t-if="props.readonly" value="duration" ongoing="ongoing"/>
         <input t-else="" t-att-id="props.id" t-ref="numpadDecimal" t-att-placeholder="props.placeholder" inputmode="numeric" class="o_input" />
     </t>
 </templates>
