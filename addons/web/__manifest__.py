@@ -19,7 +19,6 @@ This module provides the core of the Odoo Web Client.
         'views/report_templates.xml',
         'views/base_document_layout_views.xml',
         'views/speedscope_template.xml',
-        'views/lazy_assets.xml',
         'views/neutralize_views.xml',
         'data/ir_attachment.xml',
         'data/report_layout.xml',
@@ -171,8 +170,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/xml/colorpicker.xml',
-            'web/static/src/legacy/js/widgets/translation_dialog.js',
-            'web/static/src/legacy/xml/translation_dialog.xml',
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -230,7 +227,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_client_actions.js',
             'web/static/src/legacy/legacy_dialog.js',
             'web/static/src/legacy/legacy_load_views.js',
-            'web/static/src/legacy/legacy_views.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/root_widget.js',
@@ -254,7 +250,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/widgets/domain_selector_dialog.js',
             'web/static/src/legacy/js/widgets/domain_selector.js',
-            'web/static/src/legacy/js/widgets/iframe_widget.js',
             'web/static/src/legacy/js/widgets/model_field_selector.js',
             'web/static/src/legacy/js/widgets/model_field_selector_popover.js',
             'web/static/src/legacy/js/env.js',
@@ -264,14 +259,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/base.xml',
             'web/static/src/legacy/xml/control_panel.xml',
             'web/static/src/legacy/xml/fields.xml',
-            'web/static/src/legacy/xml/search_panel.xml',
             'web/static/src/legacy/xml/week_days.xml',
-        ],
-        "web.assets_backend_legacy_lazy": [
-            ("include", "web._assets_helpers"),
-            ('include', 'web._assets_backend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/promise_extension.js',
@@ -415,8 +403,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/xml/colorpicker.xml',
-            'web/static/src/legacy/js/widgets/translation_dialog.js',
-            'web/static/src/legacy/xml/translation_dialog.xml',
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files

@@ -30,120 +30,40 @@
 
 import fieldUtils from 'web.field_utils';
 import mvc from 'web.mvc';
-import SampleServer from 'web.SampleServer';
 
 
 var AbstractModel = mvc.Model.extend({
-    /**
-     * @param {Widget} parent
-     * @param {Object} [params={}]
-     * @param {Object} [params.fields]
-     * @param {string} [params.modelName]
-     * @param {boolean} [params.isSampleModel=false] if true, will fetch data
-     *   from a SampleServer instead of doing RPCs
-     * @param {boolean} [params.useSampleModel=false] if true, will use a sample
-     *   model to generate sample data when there is no "real" data in database
-     * @param {AbstractModel} [params.SampleModel] the AbstractModel class
-     *   to instantiate as sample model. This model won't do any rpc, but will
-     *   rather call a SampleServer that will generate sample data. This param
-     *   must be set when params.useSampleModel is true.
-     */
-    init(parent, params = {}) {
-        this._super(...arguments);
-        this.useSampleModel = params.useSampleModel || false;
-        if (params.isSampleModel) {
-            this.isSampleModel = true;
-            this.sampleServer = new SampleServer(params.modelName, params.fields);
-        } else if (this.useSampleModel) {
-            const sampleModelParams = Object.assign({}, params, {
-                isSampleModel: true,
-                SampleModel: null,
-                useSampleModel: false,
-            });
-            this.sampleModel = new params.SampleModel(this, sampleModelParams);
-            this._isInSampleMode = false;
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
-     * Override to call get on the sampleModel when we are in sample mode, and
-     * option 'withSampleData' is set to true.
-     *
      * @override
      * @param {any} _
      * @param {Object} [options]
-     * @param {boolean} [options.withSampleData=false]
      */
     get(_, options) {
-        let state;
-        if (options && options.withSampleData && this._isInSampleMode) {
-            state = this.sampleModel.__get(...arguments);
-        } else {
-            state = this.__get(...arguments);
-        }
-        return state;
+        return this.__get(...arguments);
     },
     /**
-     * Under some conditions, the model is designed to generate sample data if
-     * there is no real data in database. This function returns a boolean which
-     * indicates the mode of the model: if true, we are in "sample" mode.
-     *
-     * @returns {boolean}
-     */
-    isInSampleMode() {
-        return !!this._isInSampleMode;
-    },
-    /**
-     * Disables the sample data (forever) on this model instance.
-     */
-    leaveSampleMode() {
-        if (this.useSampleModel) {
-            this.useSampleModel = false;
-            this._isInSampleMode = false;
-            this.sampleModel.destroy();
-        }
-    },
-    /**
-     * Override to check if we need to call the sample model (and if so, to do
-     * it) after loading the data, in the case where there is no real data to
-     * display.
-     *
      * @override
      */
-    async load(params) {
+    load(params) {
         this.loadParams = params;
-        const handle = await this.__load(...arguments);
-        await this._callSampleModel('__load', handle, ...arguments);
-        return handle;
+        return this.__load(...arguments);
     },
     /**
      * When something changes, the data may need to be refetched.  This is the
      * job for this method: reloading (only if necessary) all the data and
      * making sure that they are ready to be redisplayed.
-     * Sometimes, we reload the data with the "same" params as the initial load
-     * params (see '_haveParamsChanged'). When we do, if we were in "sample" mode,
-     * we call again the sample server after the reload if there is still no data
-     * to display. When the parameters change, we automatically leave "sample"
-     * mode.
      *
      * @param {any} _
      * @param {Object} [params]
      * @returns {Promise}
      */
     async reload(_, params) {
-        const handle = await this.__reload(...arguments);
-        if (this._isInSampleMode) {
-            if (!this._haveParamsChanged(params)) {
-                await this._callSampleModel('__reload', handle, ...arguments);
-            } else {
-                this.leaveSampleMode();
-            }
-        }
-        return handle;
+        return this.__reload(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -152,49 +72,10 @@ var AbstractModel = mvc.Model.extend({
 
     /**
      * @private
-     * @param {string} method
-     * @param {any} handle
-     * @param  {...any} args
-     * @returns {Promise}
-     */
-    async _callSampleModel(method, handle, ...args) {
-        if (this.useSampleModel && this._isEmpty(handle)) {
-            try {
-                if (method === '__load') {
-                    await this.sampleModel.__load(...args);
-                } else if (method === '__reload') {
-                    await this.sampleModel.__reload(...args);
-                }
-                this._isInSampleMode = true;
-            } catch (error) {
-                if (error instanceof SampleServer.UnimplementedRouteError) {
-                    this.leaveSampleMode();
-                } else {
-                    throw error;
-                }
-            }
-        } else {
-            this.leaveSampleMode();
-        }
-    },
-    /**
-     * @private
      * @returns {Object}
      */
     __get() {
         return {};
-    },
-    /**
-     * This function can be overriden to determine if the result of a load or
-     * a reload is empty. In the affirmative, we will try to generate sample
-     * data to prevent from having an empty state to display.
-     *
-     * @private
-     * @params {any} handle, the value returned by a load or a reload
-     * @returns {boolean}
-     */
-    _isEmpty(/* handle */) {
-        return false;
     },
     /**
      * To override to do the initial load of the data (this function is supposed
@@ -239,44 +120,6 @@ var AbstractModel = mvc.Model.extend({
      */
     async __reload() {
         return Promise.resolve();
-    },
-    /**
-     * Determines whether or not the given params (reload params) differ from
-     * the initial ones (this.loadParams). This is used to leave "sample" mode
-     * as soon as a parameter (e.g. domain) changes.
-     *
-     * @private
-     * @param {Object} [params={}]
-     * @param {Object} [params.context]
-     * @param {Array[]} [params.domain]
-     * @param {Object} [params.timeRanges]
-     * @param {string[]} [params.groupBy]
-     * @returns {boolean}
-     */
-    _haveParamsChanged(params = {}) {
-        for (const key of ['context', 'domain', 'timeRanges']) {
-            if (key in params) {
-                const diff = JSON.stringify(params[key]) !== JSON.stringify(this.loadParams[key]);
-                if (diff) {
-                    return true;
-                }
-            }
-        }
-        if (this.useSampleModel && 'groupBy' in params) {
-            return JSON.stringify(params.groupBy) !== JSON.stringify(this.loadParams.groupedBy);
-        }
-    },
-    /**
-     * Override to redirect all rpcs to the SampleServer if this.isSampleModel
-     * is true.
-     *
-     * @override
-     */
-    async _rpc() {
-        if (this.isSampleModel) {
-            return this.sampleServer.mockRpc(...arguments);
-        }
-        return this._super(...arguments);
     },
 });
 

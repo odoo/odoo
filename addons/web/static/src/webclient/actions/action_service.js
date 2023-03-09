@@ -507,17 +507,6 @@ function makeActionManager(env) {
             viewProps.resId = action.res_id;
         }
 
-        // LEGACY CODE COMPATIBILITY: remove when all views will be written in owl
-        if (view.isLegacy) {
-            const legacyActionInfo = { ...action, ...viewProps.action };
-            Object.assign(viewProps, {
-                action: legacyActionInfo,
-                View: view,
-                views: action.views,
-            });
-        }
-        // END LEGACY CODE COMPATIBILITY
-
         viewProps.noBreadcrumbs = action.context.no_breadcrumbs;
         delete action.context.no_breadcrumbs;
         return {
@@ -712,16 +701,7 @@ function makeActionManager(env) {
                     const toDestroy = new Set();
                     for (const c of controllerStack) {
                         if (!nextStackActionIds.includes(c.action.jsId)) {
-                            if (c.action.type === "ir.actions.act_window") {
-                                for (const viewType in c.action.controllers) {
-                                    const controller = c.action.controllers[viewType];
-                                    if (controller.view.isLegacy) {
-                                        toDestroy.add(controller);
-                                    }
-                                }
-                            } else {
-                                toDestroy.add(c);
-                            }
+                            toDestroy.add(c);
                         }
                     }
                     for (const c of toDestroy) {
@@ -877,42 +857,12 @@ function makeActionManager(env) {
      * @param {ActionOptions} options
      */
     async function _executeActWindowAction(action, options) {
-        // LEGACY CODE COMPATIBILITY: load views to determine js_class if any, s.t.
-        // we know if the view to use is legacy or not
-        // When all views will be converted, this will be done exclusively by View
-        // #action-serv-leg-compat-js-class
-        const loadViewParams = {
-            context: action.context || {},
-            views: action.views,
-            resModel: action.res_model,
-        };
-        const loadViewOptions = {
-            actionId: action.id,
-            loadActionMenus: action.target !== "new" && action.target !== "inline",
-            loadIrFilters: action.views.some((v) => v[1] === "search"),
-        };
-        const prom = env.services.view.loadViews(loadViewParams, loadViewOptions);
-        const { views: viewDescriptions } = await keepLast.add(prom);
-        const domParser = new DOMParser();
         const views = [];
         for (const [, type] of action.views) {
-            if (type !== "search") {
-                const arch = viewDescriptions[type].arch;
-                const archDoc = domParser.parseFromString(arch, "text/xml").documentElement;
-                const jsClass = archDoc.getAttribute("js_class");
-                const view = viewRegistry.get(jsClass, false) || viewRegistry.get(type, false);
-                if (view) {
-                    views.push(view);
-                }
+            if (type !== "search" && viewRegistry.contains(type)) {
+                views.push(viewRegistry.get(type));
             }
         }
-        // END LEGACY CODE COMPATIBILITY
-        // const views = [];
-        // for (const [, type] of action.views) {
-        //     if (type !== "search" && viewRegistry.contains(type)) {
-        //         views.push(viewRegistry.get(key));
-        //     }
-        // }
         if (!views.length) {
             throw new Error(`No view found for act_window action ${action.id}`);
         }
@@ -937,7 +887,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            Component: view.isLegacy ? view.Controller : View,
+            Component: View,
             action,
             view,
             views,
@@ -954,7 +904,7 @@ function makeActionManager(env) {
         if (lazyView) {
             updateUIOptions.lazyController = {
                 jsId: `controller_${++id}`,
-                Component: lazyView.isLegacy ? lazyView.Controller : View,
+                Component: View,
                 action,
                 view: lazyView,
                 views,
@@ -1376,23 +1326,11 @@ function makeActionManager(env) {
         }
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
-            Component: view.isLegacy ? view.Controller : View,
+            Component: View,
             action: controller.action,
             views: controller.views,
             view,
         };
-
-        // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
-        if (view.isLegacy && newController.jsId === controller.jsId) {
-            // case where a legacy view is reloaded via the view switcher
-            const { __legacy_widget__ } = controller.getLocalState();
-            const params = {};
-            if ("resId" in props) {
-                params.currentId = props.resId;
-            }
-            return __legacy_widget__.reload(params);
-        }
-        // END LEGACY CODE COMPATIBILITY
 
         const canProceed = await clearUncommittedChanges(env);
         if (!canProceed) {
@@ -1540,7 +1478,6 @@ export const actionService = {
         "router",
         "rpc",
         "title",
-        "view", // for legacy view compatibility #action-serv-leg-compat-js-class
         "ui",
         "user",
     ],

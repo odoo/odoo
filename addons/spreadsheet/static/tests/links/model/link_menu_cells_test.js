@@ -3,8 +3,6 @@ import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { registry } from "@web/core/registry";
 import { actionService } from "@web/webclient/actions/action_service";
-import { ormService } from "@web/core/orm_service";
-import { viewService } from "@web/views/view_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
@@ -19,8 +17,6 @@ function beforeEach() {
         .add("menu", menuService)
         .add("action", actionService)
         .add("spreadsheetLinkMenuCell", spreadsheetLinkMenuCellService);
-    registry.category("services").add("view", viewService, { force: true }); // #action-serv-leg-compat-js-class
-    registry.category("services").add("orm", ormService, { force: true }); // #action-serv-leg-compat-js-class
 }
 
 QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {

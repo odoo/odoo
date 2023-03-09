@@ -164,7 +164,6 @@
             'web/static/src/legacy/js/fields/relational_fields.js',
             'web/static/src/legacy/js/fields/field_registry.js',
             'web/static/src/legacy/js/fields/field_utils.js',
-            'web/static/src/legacy/js/views/sample_server.js',
             'web/static/src/legacy/js/views/abstract_model.js',
             'web/static/src/legacy/js/views/basic/basic_model.js',
             'web/static/src/legacy/js/views/action_model.js',
