@@ -7,16 +7,10 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("discuss", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("discuss");
 
-QUnit.test("No call buttons", async function (assert) {
+QUnit.test("No call buttons", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -29,11 +23,11 @@ QUnit.test("No call buttons", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone(target, ".o-mail-discuss-header button[title='Start a Call']");
-    assert.containsNone(target, ".o-mail-discuss-header button[title='Show Call Settings']");
+    assert.containsNone($, ".o-mail-discuss-header button[title='Start a Call']");
+    assert.containsNone($, ".o-mail-discuss-header button[title='Show Call Settings']");
 });
 
-QUnit.test("No reaction button", async function (assert) {
+QUnit.test("No reaction button", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -49,10 +43,10 @@ QUnit.test("No reaction button", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-message");
-    assert.containsNone(document.body, "i[aria-label='Add a Reaction']");
+    assert.containsNone($, "i[aria-label='Add a Reaction']");
 });
 
-QUnit.test("No reply button", async function (assert) {
+QUnit.test("No reply button", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -68,10 +62,10 @@ QUnit.test("No reply button", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-message");
-    assert.containsNone(document.body, "i[aria-label='Reply']");
+    assert.containsNone($, "i[aria-label='Reply']");
 });
 
-QUnit.test("add livechat in the sidebar on visitor sending first message", async function (assert) {
+QUnit.test("add livechat in the sidebar on visitor sending first message", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([pyEnv.currentUserId], { im_status: "online" });
     const countryId = pyEnv["res.country"].create({ code: "be", name: "Belgium" });
@@ -91,7 +85,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone(target, ".o-mail-category-livechat");
+    assert.containsNone($, ".o-mail-category-livechat");
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
     await afterNextRender(async () =>
@@ -101,15 +95,15 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
             message_content: "new message",
         })
     );
-    assert.containsOnce(target, ".o-mail-category-livechat");
-    assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item");
+    assert.containsOnce($, ".o-mail-category-livechat");
+    assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-category-livechat + .o-mail-category-item:contains(Visitor (Belgium))"
     );
 });
 
-QUnit.test("reaction button should not be present on livechat", async function (assert) {
+QUnit.test("reaction button should not be present on livechat", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -122,10 +116,10 @@ QUnit.test("reaction button should not be present on livechat", async function (
     await insertText(".o-mail-composer-textarea", "Test");
     await click(".o-mail-composer-send-button");
     await click(".o-mail-message");
-    assert.containsNone(target, ".i[title='Add a Reaction']");
+    assert.containsNone($, ".i[title='Add a Reaction']");
 });
 
-QUnit.test("invite button should be present on livechat", async function (assert) {
+QUnit.test("invite button should be present on livechat", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -138,12 +132,12 @@ QUnit.test("invite button should be present on livechat", async function (assert
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-discuss button[title='Add Users']");
+    assert.containsOnce($, ".o-mail-discuss button[title='Add Users']");
 });
 
 QUnit.test(
     "livechats are sorted by last activity time in the sidebar: most recent at the top",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         pyEnv["mail.channel"].create([
             {
@@ -181,16 +175,14 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        const initialLivechats = document.querySelectorAll(".o-mail-category-item");
-        assert.strictEqual(initialLivechats[0].textContent, "Visitor 12");
-        assert.strictEqual(initialLivechats[1].textContent, "Visitor 11");
+        assert.strictEqual($(".o-mail-category-item:eq(0)").text(), "Visitor 12");
+        assert.strictEqual($(".o-mail-category-item:eq(1)").text(), "Visitor 11");
         // post a new message on the last channel
-        await click($(initialLivechats[1]));
+        await click(".o-mail-category-item:eq(1)");
         await insertText(".o-mail-composer-textarea", "Blabla");
         await click(".o-mail-composer-send-button");
-        const newLivechats = document.querySelectorAll(".o-mail-category-item");
-        assert.strictEqual(newLivechats.length, 2, "should have 2 livechat items");
-        assert.strictEqual(newLivechats[0].textContent, "Visitor 11");
-        assert.strictEqual(newLivechats[1].textContent, "Visitor 12");
+        assert.containsN($, ".o-mail-category-item", 2);
+        assert.strictEqual($(".o-mail-category-item:eq(0)").text(), "Visitor 11");
+        assert.strictEqual($(".o-mail-category-item:eq(1)").text(), "Visitor 12");
     }
 );

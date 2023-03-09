@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { click, clickSave, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
-let target;
 
 QUnit.module("radio image field", {
     beforeEach() {
@@ -28,12 +27,11 @@ QUnit.module("radio image field", {
                 },
             },
         };
-        target = getFixture();
         setupViewRegistries();
     },
 });
 
-QUnit.test("field is correctly renderered", async function (assert) {
+QUnit.test("field is correctly renderered", async (assert) => {
     await makeView({
         type: "form",
         resModel: "partner",
@@ -41,16 +39,16 @@ QUnit.test("field is correctly renderered", async function (assert) {
         serverData,
         arch: '<form><field name="product_id" widget="hr_holidays_radio_image"/></form>',
     });
-    assert.containsOnce(target, ".o_field_widget.o_field_hr_holidays_radio_image");
-    assert.containsN(target, ".o_radio_input", 3);
-    assert.containsNone(target, ".o_radio_input:checked");
-    assert.containsN(target, "img", 3);
+    assert.containsOnce($, ".o_field_widget.o_field_hr_holidays_radio_image");
+    assert.containsN($, ".o_radio_input", 3);
+    assert.containsNone($, ".o_radio_input:checked");
+    assert.containsN($, "img", 3);
 
-    await click(target.querySelector("img"));
-    assert.containsOnce(target, ".o_radio_input:checked");
+    await click($("img")[0]);
+    assert.containsOnce($, ".o_radio_input:checked");
 
-    await clickSave(target);
-    assert.containsOnce(target, ".o_field_widget.o_field_hr_holidays_radio_image");
-    assert.containsN(target, ".o_radio_input", 3);
-    assert.containsN(target, "img", 3);
+    await clickSave(document.body);
+    assert.containsOnce($, ".o_field_widget.o_field_hr_holidays_radio_image");
+    assert.containsN($, ".o_radio_input", 3);
+    assert.containsN($, "img", 3);
 });

@@ -4,7 +4,7 @@ import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("activity");
 
-QUnit.test("grant course access", async function (assert) {
+QUnit.test("grant course access", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["slide.channel"].create({});
@@ -32,14 +32,14 @@ QUnit.test("grant course access", async function (assert) {
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
-    assert.containsOnce(document.body, ".o-mail-activity");
-    assert.containsOnce(document.body, "button:contains(Grant Access)");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, "button:contains(Grant Access)");
 
     await click("button:contains(Grant Access)");
     assert.verifySteps(["access_grant"]);
 });
 
-QUnit.test("refuse course access", async function (assert) {
+QUnit.test("refuse course access", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["slide.channel"].create({});
@@ -67,8 +67,8 @@ QUnit.test("refuse course access", async function (assert) {
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
-    assert.containsOnce(document.body, ".o-mail-activity");
-    assert.containsOnce(document.body, "button:contains(Refuse Access)");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, "button:contains(Refuse Access)");
 
     await click("button:contains(Refuse Access)");
     assert.verifySteps(["access_refuse"]);

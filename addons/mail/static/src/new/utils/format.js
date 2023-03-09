@@ -178,7 +178,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
         const attClass = `class='${mention.class}'`;
         const dataOeId = `data-oe-id='${mention.id}'`;
         const dataOeModel = `data-oe-model='${mention.model}'`;
-        const target = `target='_blank'`;
+        const target = "target='_blank'";
         const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
         body = body.replace(mention.placeholder, link);
     }

@@ -9,36 +9,25 @@ import {
     createFile,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import {
-    getFixture,
-    patchDate,
-    patchWithCleanup,
-    triggerHotkey,
-} from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { date_to_str } from "web.time";
 
 const { inputFiles } = file;
 
-let target;
-
 const views = {
     "res.fake,false,form": `
-    <form string="Fake">
-        <sheet></sheet>
-        <div class="oe_chatter">
-            <field name="activity_ids"/>
-            <field name="message_ids"/>
-        </div>
-    </form>`,
+        <form string="Fake">
+            <sheet></sheet>
+            <div class="oe_chatter">
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+        </form>`,
 };
 
-QUnit.module("activity", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("activity");
 
-QUnit.test("activity upload document is available", async function (assert) {
+QUnit.test("activity upload document is available", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const [activityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Upload Document"]]);
@@ -55,12 +44,12 @@ QUnit.test("activity upload document is available", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity-info:contains('Upload Document')");
-    assert.containsOnce(target, ".btn .fa-upload");
-    assert.containsOnce(target, ".o-mail-activity .o_input_file");
+    assert.containsOnce($, ".o-mail-activity-info:contains('Upload Document')");
+    assert.containsOnce($, ".btn .fa-upload");
+    assert.containsOnce($, ".o-mail-activity .o_input_file");
 });
 
-QUnit.test("activity can upload a document", async function (assert) {
+QUnit.test("activity can upload a document", async (assert) => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.partner"].create({});
     const [activityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Upload Document"]]);
@@ -78,13 +67,13 @@ QUnit.test("activity can upload a document", async function (assert) {
         contentType: "text/plain",
         name: "text.txt",
     });
-    assert.containsOnce(target, ".o-mail-activity-info:contains('Upload Document')");
-    inputFiles(target.querySelector(".o-mail-activity .o_input_file"), [file]);
+    assert.containsOnce($, ".o-mail-activity-info:contains('Upload Document')");
+    inputFiles($(".o-mail-activity .o_input_file")[0], [file]);
     await waitUntil(".o-mail-activity-info:contains('Upload Document')", 0);
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
 
-QUnit.test("activity simplest layout", async function (assert) {
+QUnit.test("activity simplest layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -97,20 +86,20 @@ QUnit.test("activity simplest layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-sidebar");
-    assert.containsOnce(target, ".o-mail-activity-user");
-    assert.containsOnce(target, ".o-mail-activity-info");
-    assert.containsNone(target, ".o-activity-note");
-    assert.containsNone(target, ".o-mail-activity-details");
-    assert.containsNone(target, ".o-mail-activity-mail-templates");
-    assert.containsNone(target, ".btn:contains('Edit')");
-    assert.containsNone(target, ".o-mail-activity span:contains(Cancel)");
-    assert.containsNone(target, ".btn:contains('Mark Done')");
-    assert.containsNone(target, ".o-mail-activity-info:contains('Upload Document')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity-sidebar");
+    assert.containsOnce($, ".o-mail-activity-user");
+    assert.containsOnce($, ".o-mail-activity-info");
+    assert.containsNone($, ".o-activity-note");
+    assert.containsNone($, ".o-mail-activity-details");
+    assert.containsNone($, ".o-mail-activity-mail-templates");
+    assert.containsNone($, ".btn:contains('Edit')");
+    assert.containsNone($, ".o-mail-activity span:contains(Cancel)");
+    assert.containsNone($, ".btn:contains('Mark Done')");
+    assert.containsNone($, ".o-mail-activity-info:contains('Upload Document')");
 });
 
-QUnit.test("activity with note layout", async function (assert) {
+QUnit.test("activity with note layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -124,12 +113,12 @@ QUnit.test("activity with note layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-activity-note");
-    assert.strictEqual($(target).find(".o-activity-note").text(), "There is no good or bad note");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-activity-note");
+    assert.strictEqual($(".o-activity-note").text(), "There is no good or bad note");
 });
 
-QUnit.test("activity info layout when planned after tomorrow", async function (assert) {
+QUnit.test("activity info layout when planned after tomorrow", async (assert) => {
     patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const fiveDaysFromNow = new Date();
@@ -148,12 +137,12 @@ QUnit.test("activity info layout when planned after tomorrow", async function (a
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity .text-success");
-    assert.containsOnce(target, ".o-mail-activity:contains('Due in 5 days:')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity .text-success");
+    assert.containsOnce($, ".o-mail-activity:contains('Due in 5 days:')");
 });
 
-QUnit.test("activity info layout when planned tomorrow", async function (assert) {
+QUnit.test("activity info layout when planned tomorrow", async (assert) => {
     patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const tomorrow = new Date();
@@ -172,12 +161,12 @@ QUnit.test("activity info layout when planned tomorrow", async function (assert)
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity .text-success");
-    assert.containsOnce(target, ".o-mail-activity:contains('Tomorrow:')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity .text-success");
+    assert.containsOnce($, ".o-mail-activity:contains('Tomorrow:')");
 });
 
-QUnit.test("activity info layout when planned today", async function (assert) {
+QUnit.test("activity info layout when planned today", async (assert) => {
     patchDate(2023, 0, 11, 12, 0, 0);
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -193,12 +182,12 @@ QUnit.test("activity info layout when planned today", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity .text-warning");
-    assert.containsOnce(target, ".o-mail-activity:contains('Today:')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity .text-warning");
+    assert.containsOnce($, ".o-mail-activity:contains('Today:')");
 });
 
-QUnit.test("activity info layout when planned yesterday", async function (assert) {
+QUnit.test("activity info layout when planned yesterday", async (assert) => {
     patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const yesterday = new Date();
@@ -217,12 +206,12 @@ QUnit.test("activity info layout when planned yesterday", async function (assert
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity .text-danger");
-    assert.containsOnce(target, ".o-mail-activity:contains('Yesterday:')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity .text-danger");
+    assert.containsOnce($, ".o-mail-activity:contains('Yesterday:')");
 });
 
-QUnit.test("activity info layout when planned before yesterday", async function (assert) {
+QUnit.test("activity info layout when planned before yesterday", async (assert) => {
     patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const fiveDaysBeforeNow = new Date();
@@ -241,12 +230,12 @@ QUnit.test("activity info layout when planned before yesterday", async function 
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity .text-danger");
-    assert.containsOnce(target, ".o-mail-activity:contains('5 days overdue:')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity .text-danger");
+    assert.containsOnce($, ".o-mail-activity:contains('5 days overdue:')");
 });
 
-QUnit.test("activity with a summary layout", async function (assert) {
+QUnit.test("activity with a summary layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -260,10 +249,10 @@ QUnit.test("activity with a summary layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity-info:contains('test summary')");
+    assert.containsOnce($, ".o-mail-activity-info:contains('test summary')");
 });
 
-QUnit.test("activity without summary layout", async function (assert) {
+QUnit.test("activity without summary layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -277,10 +266,10 @@ QUnit.test("activity without summary layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity-info:contains('Email')");
+    assert.containsOnce($, ".o-mail-activity-info:contains('Email')");
 });
 
-QUnit.test("activity details toggle", async function (assert) {
+QUnit.test("activity details toggle", async (assert) => {
     patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const tomorrow = new Date();
@@ -301,18 +290,18 @@ QUnit.test("activity details toggle", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsNone(target, ".o-mail-activity-details");
-    assert.containsOnce(target, ".o-mail-activity-toggle");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsNone($, ".o-mail-activity-details");
+    assert.containsOnce($, ".o-mail-activity-toggle");
 
     await click(".o-mail-activity-toggle");
-    assert.containsOnce(target, ".o-mail-activity-details");
+    assert.containsOnce($, ".o-mail-activity-details");
 
     await click(".o-mail-activity-toggle");
-    assert.containsNone(target, ".o-mail-activity-details");
+    assert.containsNone($, ".o-mail-activity-details");
 });
 
-QUnit.test("activity with mail template layout", async function (assert) {
+QUnit.test("activity with mail template layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
@@ -329,19 +318,16 @@ QUnit.test("activity with mail template layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-sidebar");
-    assert.containsOnce(target, ".o-mail-activity-mail-templates");
-    assert.containsOnce(target, ".o-mail-activity-mail-template-name");
-    assert.strictEqual(
-        $(target).find(".o-mail-activity-mail-template-name").text(),
-        "Dummy mail template"
-    );
-    assert.containsOnce(target, ".o-mail-activity-mail-template-preview");
-    assert.containsOnce(target, ".o-mail-activity-mail-template-send");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity-sidebar");
+    assert.containsOnce($, ".o-mail-activity-mail-templates");
+    assert.containsOnce($, ".o-mail-activity-mail-template-name");
+    assert.strictEqual($(".o-mail-activity-mail-template-name").text(), "Dummy mail template");
+    assert.containsOnce($, ".o-mail-activity-mail-template-preview");
+    assert.containsOnce($, ".o-mail-activity-mail-template-send");
 });
 
-QUnit.test("activity with mail template: preview mail", async function (assert) {
+QUnit.test("activity with mail template: preview mail", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
@@ -368,14 +354,14 @@ QUnit.test("activity with mail template: preview mail", async function (assert) 
             assert.strictEqual(action.res_model, "mail.compose.message");
         },
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-mail-template-preview");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity-mail-template-preview");
 
-    document.querySelector(".o-mail-activity-mail-template-preview").click();
+    $(".o-mail-activity-mail-template-preview")[0].click();
     assert.verifySteps(["do_action"]);
 });
 
-QUnit.test("activity with mail template: send mail", async function (assert) {
+QUnit.test("activity with mail template: send mail", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
@@ -403,14 +389,14 @@ QUnit.test("activity with mail template: send mail", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-mail-template-send");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity-mail-template-send");
 
     click(".o-mail-activity-mail-template-send").catch(() => {});
     assert.verifySteps(["activity_send_mail"]);
 });
 
-QUnit.test("activity click on mark as done", async function (assert) {
+QUnit.test("activity click on mark as done", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -427,19 +413,19 @@ QUnit.test("activity click on mark as done", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".btn:contains('Mark Done')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".btn:contains('Mark Done')");
 
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done");
 
     await click(".btn:contains('Mark Done')");
-    assert.containsNone(target, ".o-mail-activity-mark-as-done");
+    assert.containsNone($, ".o-mail-activity-mark-as-done");
 });
 
 QUnit.test(
     "activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -456,20 +442,18 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsOnce(target, ".o-mail-activity");
-        assert.containsOnce(target, ".btn:contains('Mark Done')");
+        assert.containsOnce($, ".o-mail-activity");
+        assert.containsOnce($, ".btn:contains('Mark Done')");
 
         await click(".btn:contains('Mark Done')");
         assert.strictEqual(
-            document.querySelector(
-                ".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']"
-            ),
+            $(".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']")[0],
             document.activeElement
         );
     }
 );
 
-QUnit.test("activity click on edit", async function (assert) {
+QUnit.test("activity click on edit", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
@@ -498,14 +482,14 @@ QUnit.test("activity click on edit", async function (assert) {
             return this._super(...arguments);
         },
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(document.body, ".btn:contains('Edit')");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".btn:contains('Edit')");
 
     await click(".btn:contains('Edit')");
     assert.verifySteps(["do_action"]);
 });
 
-QUnit.test("activity click on cancel", async function (assert) {
+QUnit.test("activity click on cancel", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -529,15 +513,15 @@ QUnit.test("activity click on cancel", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity span:contains(Cancel)");
+    assert.containsOnce($, ".o-mail-activity");
+    assert.containsOnce($, ".o-mail-activity span:contains(Cancel)");
 
     await click(".o-mail-activity span:contains(Cancel)");
     assert.verifySteps(["unlink"]);
-    assert.containsNone(target, ".o-mail-activity");
+    assert.containsNone($, ".o-mail-activity");
 });
 
-QUnit.test("activity mark done popover close on ESCAPE", async function (assert) {
+QUnit.test("activity mark done popover close on ESCAPE", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -556,13 +540,13 @@ QUnit.test("activity mark done popover close on ESCAPE", async function (assert)
     });
 
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done");
 
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone(target, ".o-mail-activity-mark-as-done");
+    assert.containsNone($, ".o-mail-activity-mark-as-done");
 });
 
-QUnit.test("activity mark done popover click on discard", async function (assert) {
+QUnit.test("activity mark done popover click on discard", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -581,8 +565,8 @@ QUnit.test("activity mark done popover click on discard", async function (assert
     });
 
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done button:contains(Discard)");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done button:contains(Discard)");
     await click(".o-mail-activity-mark-as-done button:contains(Discard)");
-    assert.containsNone(target, ".o-mail-activity-mark-as-done");
+    assert.containsNone($, ".o-mail-activity-mark-as-done");
 });

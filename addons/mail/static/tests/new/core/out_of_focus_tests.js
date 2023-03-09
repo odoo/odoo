@@ -7,7 +7,7 @@ import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("out of focus");
 
-QUnit.test("Spaces in notifications are not encoded", async function (assert) {
+QUnit.test("Spaces in notifications are not encoded", async (assert) => {
     const { env, openDiscuss, pyEnv } = await start({
         services: {
             notification: makeFakeNotificationService((message) => assert.step(message)),

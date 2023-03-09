@@ -2,16 +2,11 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { afterNextRender, click, dragenterFiles, start } from "@mail/../tests/helpers/test_utils";
-import { editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
+import { editInput, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("composer", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("composer");
 
-QUnit.test("No add attachments button", async function (assert) {
+QUnit.test("No add attachments button", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         name: "Livechat 1",
@@ -19,11 +14,11 @@ QUnit.test("No add attachments button", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-composer");
-    assert.containsNone(target, "button[title='Attach files']");
+    assert.containsOnce($, ".o-mail-composer");
+    assert.containsNone($, "button[title='Attach files']");
 });
 
-QUnit.test("Attachment upload via drag and drop disabled", async function (assert) {
+QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -33,13 +28,13 @@ QUnit.test("Attachment upload via drag and drop disabled", async function (asser
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-composer");
-    dragenterFiles(target.querySelector(".o-mail-composer-textarea"));
+    assert.containsOnce($, ".o-mail-composer");
+    dragenterFiles($(".o-mail-composer-textarea")[0]);
     await nextTick();
-    assert.containsNone(target, ".o-dropzone");
+    assert.containsNone($, ".o-dropzone");
 });
 
-QUnit.test("Can execute help command on livechat channels", async function (assert) {
+QUnit.test("Can execute help command on livechat channels", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -61,13 +56,13 @@ QUnit.test("Can execute help command on livechat channels", async function (asse
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-notification-item");
-    await editInput(target, ".o-mail-composer-textarea", "/help");
+    await editInput(document.body, ".o-mail-composer-textarea", "/help");
     triggerHotkey("Enter");
     await nextTick();
     assert.verifySteps(["execute_command_help"]);
 });
 
-QUnit.test('Receives visitor typing status "is typing"', async function (assert) {
+QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 20",
@@ -80,11 +75,7 @@ QUnit.test('Receives visitor typing status "is typing"', async function (assert)
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual(
-        document.querySelector(".o-mail-typing").textContent,
-        "",
-        "Should display no one is currently typing"
-    );
+    assert.strictEqual($(".o-mail-typing").text(), "");
     const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
@@ -94,5 +85,5 @@ QUnit.test('Receives visitor typing status "is typing"', async function (assert)
             uuid: channel.uuid,
         })
     );
-    assert.containsOnce(target, ".o-mail-typing:contains(Visitor 20 is typing...)");
+    assert.containsOnce($, ".o-mail-typing:contains(Visitor 20 is typing...)");
 });

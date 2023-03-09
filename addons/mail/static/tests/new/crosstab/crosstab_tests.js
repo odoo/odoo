@@ -2,16 +2,11 @@
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { triggerHotkey, patchWithCleanup, getFixture } from "@web/../tests/helpers/utils";
+import { triggerHotkey, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("crosstab", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("crosstab");
 
-QUnit.test("Messages are received cross-tab", async function (assert) {
+QUnit.test("Messages are received cross-tab", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         name: "General",
@@ -26,7 +21,7 @@ QUnit.test("Messages are received cross-tab", async function (assert) {
     assert.containsOnce(tab2.target, ".o-mail-message:contains(Hello World!)");
 });
 
-QUnit.test("Delete starred message updates counter", async function (assert) {
+QUnit.test("Delete starred message updates counter", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         name: "General",
@@ -52,7 +47,7 @@ QUnit.test("Delete starred message updates counter", async function (assert) {
     assert.containsNone(tab2.target, "button:contains(Starred1)");
 });
 
-QUnit.test("Thread rename", async function (assert) {
+QUnit.test("Thread rename", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });
@@ -65,7 +60,7 @@ QUnit.test("Thread rename", async function (assert) {
     assert.containsOnce(tab2.target, ".o-mail-category-item:contains(Sales)");
 });
 
-QUnit.test("Thread description update", async function (assert) {
+QUnit.test("Thread description update", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });
@@ -82,7 +77,7 @@ QUnit.test("Thread description update", async function (assert) {
     );
 });
 
-QUnit.test("Channel subscription is renewed when channel is added", async function (assert) {
+QUnit.test("Channel subscription is renewed when channel is added", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "Sales", channel_member_ids: [] });
     const { env, openDiscuss } = await start();
@@ -100,7 +95,7 @@ QUnit.test("Channel subscription is renewed when channel is added", async functi
     assert.verifySteps(["update-channels"]);
 });
 
-QUnit.test("Channel subscription is renewed when channel is left", async function (assert) {
+QUnit.test("Channel subscription is renewed when channel is left", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({ name: "Sales" });
     const { env, openDiscuss } = await start();
@@ -114,7 +109,7 @@ QUnit.test("Channel subscription is renewed when channel is left", async functio
     assert.verifySteps(["update-channels"]);
 });
 
-QUnit.test("Adding attachments", async function (assert) {
+QUnit.test("Adding attachments", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "Hogwarts Legacy" });
     const messageId = pyEnv["mail.message"].create({
@@ -141,7 +136,7 @@ QUnit.test("Adding attachments", async function (assert) {
     assert.containsOnce(tab2.target, ".o-mail-attachment-card:contains(test.txt)");
 });
 
-QUnit.test("Remove attachment from message", async function (assert) {
+QUnit.test("Remove attachment from message", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const attachmentId = pyEnv["ir.attachment"].create({
@@ -165,7 +160,7 @@ QUnit.test("Remove attachment from message", async function (assert) {
     assert.containsNone(tab1.target, ".o-mail-attachment-card:contains(test.txt)");
 });
 
-QUnit.test("Add member to channel", async function (assert) {
+QUnit.test("Add member to channel", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
@@ -173,14 +168,14 @@ QUnit.test("Add member to channel", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsOnce(target, ".o-mail-channel-member:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-mail-channel-member:contains(Mitchell Admin)");
     await click("button[title='Add Users']");
     await click(".o-mail-channel-invitation-selectablePartner:contains(Harry)");
     await click("button[title='Invite to Channel']");
-    assert.containsOnce(target, ".o-mail-channel-member:contains(Harry)");
+    assert.containsOnce($, ".o-mail-channel-member:contains(Harry)");
 });
 
-QUnit.test("Remove member from channel", async function (assert) {
+QUnit.test("Remove member from channel", async (assert) => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     const partnerId = pyEnv["res.partner"].create({
@@ -197,7 +192,7 @@ QUnit.test("Remove member from channel", async function (assert) {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsOnce(target, ".o-mail-channel-member:contains(Harry)");
+    assert.containsOnce($, ".o-mail-channel-member:contains(Harry)");
     env.services.orm.call("mail.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });

@@ -1,15 +1,9 @@
 /** @odoo-module **/
 
 import { startServer, start, click } from "@mail/../tests/helpers/test_utils";
-import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-let target;
-
-QUnit.module("sms_message", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("sms_message");
 
 QUnit.test("Notification Sent", async function (assert) {
     const pyEnv = await startServer();
@@ -28,16 +22,16 @@ QUnit.test("Notification Sent", async function (assert) {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-notification");
-    assert.containsOnce(target, ".o-mail-message-notification i");
-    assert.hasClass(target.querySelector(".o-mail-message-notification i"), "fa-mobile");
+    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message-notification");
+    assert.containsOnce($, ".o-mail-message-notification i");
+    assert.hasClass($(".o-mail-message-notification i"), "fa-mobile");
 
     await click(".o-mail-message-notification");
-    assert.containsOnce(target, ".o-mail-message-notification-popover");
-    assert.containsOnce(target, ".o-mail-message-notification-popover i");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-popover i"), "fa-check");
-    assert.containsOnce(target, ".o-mail-message-notification-popover:contains(Someone)");
+    assert.containsOnce($, ".o-mail-message-notification-popover");
+    assert.containsOnce($, ".o-mail-message-notification-popover i");
+    assert.hasClass($(".o-mail-message-notification-popover i"), "fa-check");
+    assert.containsOnce($, ".o-mail-message-notification-popover:contains(Someone)");
 });
 
 QUnit.test("Notification Error", async function (assert) {
@@ -67,10 +61,10 @@ QUnit.test("Notification Error", async function (assert) {
         },
     });
 
-    assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-notification");
-    assert.containsOnce(target, ".o-mail-message-notification i");
-    assert.hasClass(target.querySelector(".o-mail-message-notification i"), "fa-mobile");
+    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message-notification");
+    assert.containsOnce($, ".o-mail-message-notification i");
+    assert.hasClass($(".o-mail-message-notification i"), "fa-mobile");
     click(".o-mail-message-notification").catch(() => {});
     await openResendActionDef;
     assert.verifySteps(["do_action"]);

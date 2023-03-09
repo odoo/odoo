@@ -192,20 +192,19 @@ export class AttachmentViewer extends Component {
         if (ty === 0) {
             this.translate.y = 0;
         }
-        this.zoomerRef.el.style = `transform: ` + `translate(${tx}px, ${ty}px)`;
+        this.zoomerRef.el.style = "transform: " + `translate(${tx}px, ${ty}px)`;
     }
 
     get imageStyle() {
         let style =
-            `transform: ` +
+            "transform: " +
             `scale3d(${this.state.scale}, ${this.state.scale}, 1) ` +
             `rotate(${this.state.angle}deg);`;
 
         if (this.state.angle % 180 !== 0) {
-            style +=
-                `` + `max-height: ${window.innerWidth}px; ` + `max-width: ${window.innerHeight}px;`;
+            style += `max-height: ${window.innerWidth}px; max-width: ${window.innerHeight}px;`;
         } else {
-            style += `` + `max-height: 100%; ` + `max-width: 100%;`;
+            style += "max-height: 100%; max-width: 100%;";
         }
         return style;
     }

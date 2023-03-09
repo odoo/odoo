@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { triggerEvent } from "@web/../tests/helpers/utils";
 
-let target;
+QUnit.module("messaging menu");
 
-QUnit.module("messaging menu", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("rating value displayed on the preview", async function (assert) {
+QUnit.test("rating value displayed on the preview", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["mail.channel"].create({});
@@ -26,16 +20,16 @@ QUnit.test("rating value displayed on the preview", async function (assert) {
         rating_text: "top",
     });
     await start();
-    await triggerEvent(target, ".o_menu_systray i[aria-label='Messages']", "click");
-    assert.containsOnce(target, ".o-mail-notification-item-inlineText:contains(Rating:)");
-    assert.containsOnce(target, ".o-rating-preview-image[data-alt='top']");
+    await triggerEvent(document.body, ".o_menu_systray i[aria-label='Messages']", "click");
+    assert.containsOnce($, ".o-mail-notification-item-inlineText:contains(Rating:)");
+    assert.containsOnce($, ".o-rating-preview-image[data-alt='top']");
     assert.containsOnce(
-        target,
+        $,
         ".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']"
     );
 });
 
-QUnit.test("rating value displayed on the needaction preview", async function (assert) {
+QUnit.test("rating value displayed on the needaction preview", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const ratingId = pyEnv["mail.test.rating"].create({ name: "Test rating" });
@@ -61,11 +55,11 @@ QUnit.test("rating value displayed on the needaction preview", async function (a
         },
     ]);
     await start();
-    await triggerEvent(target, ".o_menu_systray i[aria-label='Messages']", "click");
-    assert.containsOnce(target, ".o-mail-notification-item-inlineText:contains(Rating:)");
-    assert.containsOnce(target, ".o-rating-preview-image[data-alt='top']");
+    await triggerEvent(document.body, ".o_menu_systray i[aria-label='Messages']", "click");
+    assert.containsOnce($, ".o-mail-notification-item-inlineText:contains(Rating:)");
+    assert.containsOnce($, ".o-rating-preview-image[data-alt='top']");
     assert.containsOnce(
-        target,
+        $,
         ".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']"
     );
 });

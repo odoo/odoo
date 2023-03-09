@@ -2,16 +2,11 @@
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("message reply", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("message reply");
 
-QUnit.test("click on message in reply to highlight the parent message", async function (assert) {
+QUnit.test("click on message in reply to highlight the parent message", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -30,10 +25,10 @@ QUnit.test("click on message in reply to highlight the parent message", async fu
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-message:contains(Reply to Hey) .o-mail-message-in-reply-body");
-    assert.containsOnce(target, ".o-mail-message:contains(Hey lol).o-highlighted");
+    assert.containsOnce($, ".o-mail-message:contains(Hey lol).o-highlighted");
 });
 
-QUnit.test("click on message in reply to scroll to the parent message", async function (assert) {
+QUnit.test("click on message in reply to scroll to the parent message", async (assert) => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {

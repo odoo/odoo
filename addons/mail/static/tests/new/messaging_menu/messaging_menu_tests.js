@@ -8,45 +8,36 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { getFixture, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 
 import { browser } from "@web/core/browser/browser";
 
-let target;
-
-QUnit.module("messaging menu", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("messaging menu");
 
 QUnit.test("should have messaging menu button in systray", async (assert) => {
     await start();
-    assert.containsOnce(target, ".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-messaging-menu", "messaging menu closed by default");
-    assert.hasClass(
-        target.querySelector(".o_menu_systray i[aria-label='Messages']"),
-        "fa-comments"
-    );
+    assert.containsOnce($, ".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone($, ".o-mail-messaging-menu", "messaging menu closed by default");
+    assert.hasClass($(".o_menu_systray i[aria-label='Messages']"), "fa-comments");
 });
 
-QUnit.test("messaging menu should have topbar buttons", async function (assert) {
+QUnit.test("messaging menu should have topbar buttons", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-messaging-menu");
-    assert.containsN(target, ".o-mail-messaging-menu-topbar button", 4);
-    assert.containsOnce(target, "button:contains(All)");
-    assert.containsOnce(target, "button:contains(Chat)");
-    assert.containsOnce(target, "button:contains(Channel)");
-    assert.containsOnce(target, "button:contains(New Message)");
-    assert.hasClass($(target).find("button:contains(All)"), "fw-bolder");
-    assert.doesNotHaveClass($(target).find("button:contains(Chat)"), "fw-bolder");
-    assert.doesNotHaveClass($(target).find("button:contains(Channel)"), "fw-bolder");
+    assert.containsOnce($, ".o-mail-messaging-menu");
+    assert.containsN($, ".o-mail-messaging-menu-topbar button", 4);
+    assert.containsOnce($, "button:contains(All)");
+    assert.containsOnce($, "button:contains(Chat)");
+    assert.containsOnce($, "button:contains(Channel)");
+    assert.containsOnce($, "button:contains(New Message)");
+    assert.hasClass($("button:contains(All)"), "fw-bolder");
+    assert.doesNotHaveClass($("button:contains(Chat)"), "fw-bolder");
+    assert.doesNotHaveClass($("button:contains(Channel)"), "fw-bolder");
 });
 
-QUnit.test("counter is taking into account failure notification", async function (assert) {
+QUnit.test("counter is taking into account failure notification", async (assert) => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({});
@@ -67,40 +58,37 @@ QUnit.test("counter is taking into account failure notification", async function
         notification_type: "email",
     });
     await start();
-    assert.containsOnce(target, ".o-mail-messaging-menu-counter");
-    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter.badge").text(), "1");
+    assert.containsOnce($, ".o-mail-messaging-menu-counter");
+    assert.strictEqual($(".o-mail-messaging-menu-counter.badge").text(), "1");
 });
 
-QUnit.test("rendering with OdooBot has a request (default)", async function (assert) {
+QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
     patchBrowserNotification("default");
     await start();
-    assert.containsOnce(target, ".o-mail-messaging-menu-counter");
-    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "1");
+    assert.containsOnce($, ".o-mail-messaging-menu-counter");
+    assert.strictEqual($(".o-mail-messaging-menu-counter").text(), "1");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item");
-    assert.strictEqual(
-        target.querySelector(".o-mail-notification-item-name").textContent.trim(),
-        "OdooBot has a request"
-    );
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.strictEqual($(".o-mail-notification-item-name").text().trim(), "OdooBot has a request");
 });
 
-QUnit.test("rendering without OdooBot has a request (denied)", async function (assert) {
+QUnit.test("rendering without OdooBot has a request (denied)", async (assert) => {
     patchBrowserNotification("denied");
     await start();
-    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "0");
+    assert.strictEqual($(".o-mail-messaging-menu-counter").text(), "0");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-notification-item");
+    assert.containsNone($, ".o-mail-notification-item");
 });
 
-QUnit.test("rendering without OdooBot has a request (accepted)", async function (assert) {
+QUnit.test("rendering without OdooBot has a request (accepted)", async (assert) => {
     patchBrowserNotification("granted");
     await start();
-    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "0");
+    assert.strictEqual($(".o-mail-messaging-menu-counter").text(), "0");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-notification-item");
+    assert.containsNone($, ".o-mail-notification-item");
 });
 
-QUnit.test("respond to notification prompt (denied)", async function (assert) {
+QUnit.test("respond to notification prompt (denied)", async (assert) => {
     patchBrowserNotification("default", "denied");
     await start({
         services: {
@@ -112,12 +100,12 @@ QUnit.test("respond to notification prompt (denied)", async function (assert) {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-notification-item");
     assert.verifySteps(["confirmation_denied_toast"]);
-    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "0");
+    assert.strictEqual($(".o-mail-messaging-menu-counter").text(), "0");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-notification-item");
+    assert.containsNone($, ".o-mail-notification-item");
 });
 
-QUnit.test("respond to notification prompt (granted)", async function (assert) {
+QUnit.test("respond to notification prompt (granted)", async (assert) => {
     patchBrowserNotification("default", "granted");
     await start({
         services: {
@@ -131,32 +119,32 @@ QUnit.test("respond to notification prompt (granted)", async function (assert) {
     assert.verifySteps(["confirmation_granted_toast"]);
 });
 
-QUnit.test("Is closed after clicking on new message", async function (assert) {
+QUnit.test("Is closed after clicking on new message", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-messaging-menu-new-message");
-    assert.containsNone(target, ".o-mail-messaging-menu");
+    assert.containsNone($, ".o-mail-messaging-menu");
 });
 
-QUnit.test("no 'New Message' button when discuss is open", async function (assert) {
+QUnit.test("no 'New Message' button when discuss is open", async (assert) => {
     const { openDiscuss, openView } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, "button:contains(New Message)");
+    assert.containsOnce($, "button:contains(New Message)");
 
     await openDiscuss();
-    assert.containsNone(target, "button:contains(New Message)");
+    assert.containsNone($, "button:contains(New Message)");
 
     await openView({
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, "button:contains(New Message)");
+    assert.containsOnce($, "button:contains(New Message)");
 
     await openDiscuss();
-    assert.containsNone(target, "button:contains(New Message)");
+    assert.containsNone($, "button:contains(New Message)");
 });
 
-QUnit.test("grouped notifications by document", async function (assert) {
+QUnit.test("grouped notifications by document", async (assert) => {
     const pyEnv = await startServer();
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -186,15 +174,15 @@ QUnit.test("grouped notifications by document", async function (assert) {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(Partner (2))");
-    assert.containsNone(target, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Partner (2))");
+    assert.containsNone($, ".o-mail-chat-window");
 
     await click(".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-chat-window");
 });
 
-QUnit.test("grouped notifications by document model", async function (assert) {
+QUnit.test("grouped notifications by document model", async (assert) => {
     const pyEnv = await startServer();
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -246,15 +234,15 @@ QUnit.test("grouped notifications by document model", async function (assert) {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(Partner (2))");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Partner (2))");
 
-    document.querySelector(".o-mail-notification-item").click();
+    $(".o-mail-notification-item")[0].click();
     assert.verifySteps(["do_action"]);
 });
 
 QUnit.test(
     "multiple grouped notifications by document model, sorted by the most recent message of each group",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
             {
@@ -294,14 +282,13 @@ QUnit.test(
         ]);
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsN(target, ".o-mail-notification-item", 2);
-        const items = target.querySelectorAll(".o-mail-notification-item");
-        assert.ok(items[0].textContent.includes("Company"));
-        assert.ok(items[1].textContent.includes("Partner"));
+        assert.containsN($, ".o-mail-notification-item", 2);
+        assert.ok($(".o-mail-notification-item:eq(0)").text().includes("Company"));
+        assert.ok($(".o-mail-notification-item:eq(1)").text().includes("Partner"));
     }
 );
 
-QUnit.test("non-failure notifications are ignored", async function (assert) {
+QUnit.test("non-failure notifications are ignored", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -316,10 +303,10 @@ QUnit.test("non-failure notifications are ignored", async function (assert) {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-notification-item");
+    assert.containsNone($, ".o-mail-notification-item");
 });
 
-QUnit.test("mark unread channel as read", async function (assert) {
+QUnit.test("mark unread channel as read", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["mail.channel"].create({
@@ -345,16 +332,16 @@ QUnit.test("mark unread channel as read", async function (assert) {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item i[title='Mark As Read']");
+    assert.containsOnce($, ".o-mail-notification-item i[title='Mark As Read']");
 
     await click(".o-mail-notification-item i[title='Mark As Read']");
     assert.verifySteps(["set_last_seen_message"]);
-    assert.hasClass(target.querySelector(".o-mail-notification-item"), "o-muted");
-    assert.containsNone(target, ".o-mail-notification-item i[title='Mark As Read']");
-    assert.containsNone(target, ".o-mail-chat-window");
+    assert.hasClass($(".o-mail-notification-item"), "o-muted");
+    assert.containsNone($, ".o-mail-notification-item i[title='Mark As Read']");
+    assert.containsNone($, ".o-mail-chat-window");
 });
 
-QUnit.test("mark failure as read", async function (assert) {
+QUnit.test("mark failure as read", async (assert) => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
@@ -373,25 +360,22 @@ QUnit.test("mark failure as read", async function (assert) {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(Channel)");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Channel)");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-notification-item:contains(An error occurred when sending an email)"
     );
-    assert.containsOnce(
-        target,
-        ".o-mail-notification-item:contains(Channel) i[title='Mark As Read']"
-    );
+    assert.containsOnce($, ".o-mail-notification-item:contains(Channel) i[title='Mark As Read']");
 
     await click(".o-mail-notification-item i[title='Mark As Read']");
-    assert.containsNone(target, ".o-mail-notification-item:contains(Channel)");
+    assert.containsNone($, ".o-mail-notification-item:contains(Channel)");
     assert.containsNone(
-        target,
+        $,
         ".o-mail-notification-item:contains(An error occurred when sending an email)"
     );
 });
 
-QUnit.test("different mail.channel are not grouped", async function (assert) {
+QUnit.test("different mail.channel are not grouped", async (assert) => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
         { name: "Channel_1" },
@@ -435,68 +419,65 @@ QUnit.test("different mail.channel are not grouped", async function (assert) {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN(target, ".o-mail-notification-item", 4);
+    assert.containsN($, ".o-mail-notification-item", 4);
 
     const group_1 = $(".o-mail-notification-item:contains(Channel (2)):first");
     await click(group_1);
-    assert.containsOnce(target, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-chat-window");
 });
 
-QUnit.test("mobile: active icon is highlighted", async function (assert) {
+QUnit.test("mobile: active icon is highlighted", async (assert) => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-messaging-menu-tab:contains(Chat)");
-    assert.hasClass($(target).find(".o-mail-messaging-menu-tab:contains(Chat)"), "fw-bolder");
+    assert.hasClass($(".o-mail-messaging-menu-tab:contains(Chat)"), "fw-bolder");
 });
 
-QUnit.test("open chat window from preview", async function (assert) {
+QUnit.test("open chat window from preview", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({ name: "test" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-chat-window");
 });
 
 QUnit.test(
     '"Start a conversation" in mobile shows channel selector (+ click away)',
-    async function (assert) {
+    async (assert) => {
         patchUiSize({ height: 360, width: 640 });
         const { openDiscuss } = await start();
         await openDiscuss();
         await click("button:contains(Chat)");
-        assert.containsOnce(target, "button:contains(Start a conversation)");
-        assert.containsNone(target, "input[placeholder='Start a conversation']");
+        assert.containsOnce($, "button:contains(Start a conversation)");
+        assert.containsNone($, "input[placeholder='Start a conversation']");
 
         await click("button:contains(Start a conversation)");
-        assert.containsNone(target, "button:contains(Start a conversation)");
-        assert.containsOnce(target, "input[placeholder='Start a conversation']");
+        assert.containsNone($, "button:contains(Start a conversation)");
+        assert.containsOnce($, "input[placeholder='Start a conversation']");
 
         await click(".o-mail-messaging-menu");
-        assert.containsOnce(target, "button:contains(Start a conversation)");
-        assert.containsNone(target, "input[placeholder='Start a conversation']");
+        assert.containsOnce($, "button:contains(Start a conversation)");
+        assert.containsNone($, "input[placeholder='Start a conversation']");
     }
 );
-QUnit.test(
-    '"New Channel" in mobile shows channel selector (+ click away)',
-    async function (assert) {
-        patchUiSize({ height: 360, width: 640 });
-        const { openDiscuss } = await start();
-        await openDiscuss();
-        await click("button:contains(Channel)");
-        assert.containsOnce(target, "button:contains(New Channel)");
-        assert.containsNone(target, "input[placeholder='Add or join a channel']");
+QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', async (assert) => {
+    patchUiSize({ height: 360, width: 640 });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Channel)");
+    assert.containsOnce($, "button:contains(New Channel)");
+    assert.containsNone($, "input[placeholder='Add or join a channel']");
 
-        await click("button:contains(New Channel)");
-        assert.containsNone(target, "button:contains(New Channel)");
-        assert.containsOnce(target, "input[placeholder='Add or join a channel']");
+    await click("button:contains(New Channel)");
+    assert.containsNone($, "button:contains(New Channel)");
+    assert.containsOnce($, "input[placeholder='Add or join a channel']");
 
-        await click(".o-mail-messaging-menu");
-        assert.containsOnce(target, "button:contains(New Channel)");
-        assert.containsNone(target, "input[placeholder='Add or join a channel']");
-    }
-);
+    await click(".o-mail-messaging-menu");
+    assert.containsOnce($, "button:contains(New Channel)");
+    assert.containsNone($, "input[placeholder='Add or join a channel']");
+});
 
 QUnit.test('"Start a conversation" item selection opens chat', async (assert) => {
     patchUiSize({ height: 360, width: 640 });
@@ -510,7 +491,7 @@ QUnit.test('"Start a conversation" item selection opens chat', async (assert) =>
     await insertText("input[placeholder='Start a conversation']", "Gandalf");
     await click(".o-mail-channel-selector-suggestion");
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(target, ".o-mail-chat-window-header-name[title='Gandalf']");
+    assert.containsOnce($, ".o-mail-chat-window-header-name[title='Gandalf']");
 });
 
 QUnit.test('"New channel" item selection opens channel (existing)', async (assert) => {
@@ -523,7 +504,7 @@ QUnit.test('"New channel" item selection opens channel (existing)', async (asser
     await click("button:contains(New Channel)");
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
     await click(".o-mail-channel-selector-suggestion");
-    assert.containsOnce(target, ".o-mail-chat-window-header-name[title='Gryffindors']");
+    assert.containsOnce($, ".o-mail-chat-window-header-name[title='Gryffindors']");
 });
 
 QUnit.test('"New channel" item selection opens channel (new)', async (assert) => {
@@ -534,18 +515,18 @@ QUnit.test('"New channel" item selection opens channel (new)', async (assert) =>
     await click("button:contains(New Channel)");
     await insertText("input[placeholder='Add or join a channel']", "slytherins");
     await click(".o-mail-channel-selector-suggestion");
-    assert.containsOnce(target, ".o-mail-chat-window-header-name[title='slytherins']");
+    assert.containsOnce($, ".o-mail-chat-window-header-name[title='slytherins']");
 });
 
-QUnit.test("'New Message' button should open a chat window in mobile", async function (assert) {
+QUnit.test("'New Message' button should open a chat window in mobile", async (assert) => {
     patchUiSize({ height: 360, width: 640 });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:contains(New Message)");
-    assert.containsOnce(target, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-chat-window");
 });
 
-QUnit.test("Counter is updated when receiving new message", async function (assert) {
+QUnit.test("Counter is updated when receiving new message", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Albert" });
@@ -562,10 +543,10 @@ QUnit.test("Counter is updated when receiving new message", async function (asse
             context: { partnerId },
         })
     );
-    assert.containsOnce(target, ".o-mail-messaging-menu-counter.badge:contains(1)");
+    assert.containsOnce($, ".o-mail-messaging-menu-counter.badge:contains(1)");
 });
 
-QUnit.test("basic rendering", async function (assert) {
+QUnit.test("basic rendering", async (assert) => {
     patchWithCleanup(browser, {
         Notification: {
             ...browser.Notification,
@@ -573,27 +554,27 @@ QUnit.test("basic rendering", async function (assert) {
         },
     });
     await start();
-    assert.containsOnce(target, ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    assert.containsOnce($, ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.doesNotHaveClass(
         $('.o_menu_systray .dropdown-toggle:has(i[aria-label="Messages"])'),
         "show"
     );
-    assert.containsOnce(target, ".o_menu_systray i[aria-label='Messages']");
+    assert.containsOnce($, ".o_menu_systray i[aria-label='Messages']");
     assert.hasClass($('.o_menu_systray i[aria-label="Messages"]'), "fa-comments");
-    assert.containsNone(target, ".o-mail-messaging-menu");
+    assert.containsNone($, ".o-mail-messaging-menu");
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.hasClass($('.o_menu_systray .dropdown:has(i[aria-label="Messages"])'), "show");
-    assert.containsOnce(target, ".o-mail-messaging-menu");
-    assert.containsOnce(target, ".o-mail-messaging-menu-topbar");
-    assert.strictEqual($(`.o-mail-messaging-menu-topbar button`).length, 4);
-    assert.containsOnce(target, `.o-mail-messaging-menu button:contains("All")`);
-    assert.containsOnce(target, `.o-mail-messaging-menu button:contains("Chats")`);
-    assert.containsOnce(target, `.o-mail-messaging-menu button:contains("Channels")`);
+    assert.containsOnce($, ".o-mail-messaging-menu");
+    assert.containsOnce($, ".o-mail-messaging-menu-topbar");
+    assert.containsN($, ".o-mail-messaging-menu-topbar button", 4);
+    assert.containsOnce($, '.o-mail-messaging-menu button:contains("All")');
+    assert.containsOnce($, '.o-mail-messaging-menu button:contains("Chats")');
+    assert.containsOnce($, '.o-mail-messaging-menu button:contains("Channels")');
     assert.hasClass($('.o-mail-messaging-menu button:contains("All")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Chats")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Channels")'), "fw-bolder");
-    assert.containsOnce(target, `.o-mail-messaging-menu-new-message`);
-    assert.containsOnce(target, `.o-mail-messaging-menu:contains("No conversation yet...")`);
+    assert.containsOnce($, ".o-mail-messaging-menu-new-message");
+    assert.containsOnce($, '.o-mail-messaging-menu:contains("No conversation yet...")');
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.doesNotHaveClass(
         $('.o_menu_systray .dropdown-toggle:has(i[aria-label="Messages"])'),
@@ -601,39 +582,39 @@ QUnit.test("basic rendering", async function (assert) {
     );
 });
 
-QUnit.test("switch tab", async function (assert) {
+QUnit.test("switch tab", async (assert) => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    assert.containsOnce(target, '.o-mail-messaging-menu button:contains("All")');
-    assert.containsOnce(target, '.o-mail-messaging-menu button:contains("Chats")');
-    assert.containsOnce(target, '.o-mail-messaging-menu button:contains("Channels")');
+    assert.containsOnce($, '.o-mail-messaging-menu button:contains("All")');
+    assert.containsOnce($, '.o-mail-messaging-menu button:contains("Chats")');
+    assert.containsOnce($, '.o-mail-messaging-menu button:contains("Channels")');
     assert.hasClass($('.o-mail-messaging-menu button:contains("All")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Chats")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Channels")'), "fw-bolder");
-    await click(`.o-mail-messaging-menu button:contains("Chats")`);
+    await click('.o-mail-messaging-menu button:contains("Chats")');
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("All")'), "fw-bolder");
     assert.hasClass($('.o-mail-messaging-menu button:contains("Chats")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Channels")'), "fw-bolder");
-    await click(`.o-mail-messaging-menu button:contains("Channels")`);
+    await click('.o-mail-messaging-menu button:contains("Channels")');
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("All")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Chats")'), "fw-bolder");
     assert.hasClass($('.o-mail-messaging-menu button:contains("Channels")'), "fw-bolder");
-    await click(`.o-mail-messaging-menu button:contains("All")`);
+    await click('.o-mail-messaging-menu button:contains("All")');
     assert.hasClass($('.o-mail-messaging-menu button:contains("All")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Chats")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Channels")'), "fw-bolder");
 });
 
-QUnit.test("new message [REQUIRE FOCUS]", async function (assert) {
+QUnit.test("new message [REQUIRE FOCUS]", async (assert) => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await click(`.o-mail-messaging-menu button:contains("New Message")`);
-    assert.containsOnce(target, ".o-mail-chat-window");
-    assert.containsOnce(target, ".o-mail-chat-window .o-mail-channel-selector");
-    assert.containsOnce(target, ".o-mail-channel-selector input:focus");
+    await click('.o-mail-messaging-menu button:contains("New Message")');
+    assert.containsOnce($, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-chat-window .o-mail-channel-selector");
+    assert.containsOnce($, ".o-mail-channel-selector input:focus");
 });
 
-QUnit.test("channel preview: basic rendering", async function (assert) {
+QUnit.test("channel preview: basic rendering", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["mail.channel"].create({
@@ -647,13 +628,13 @@ QUnit.test("channel preview: basic rendering", async function (assert) {
     });
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    assert.containsOnce(target, ".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-notification-item img");
-    assert.containsOnce(target, '.o-mail-notification-item:contains("General")');
-    assert.containsOnce(target, '.o-mail-notification-item:contains("Demo: test")');
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item img");
+    assert.containsOnce($, '.o-mail-notification-item:contains("General")');
+    assert.containsOnce($, '.o-mail-notification-item:contains("Demo: test")');
 });
 
-QUnit.test("filtered previews", async function (assert) {
+QUnit.test("filtered previews", async (assert) => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
         { channel_type: "chat" },
@@ -671,21 +652,21 @@ QUnit.test("filtered previews", async function (assert) {
     ]);
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    assert.strictEqual(document.querySelectorAll(`.o-mail-notification-item`).length, 2);
-    assert.containsOnce(target, '.o-mail-notification-item:contains("Mitchell Admin")');
-    assert.containsOnce(target, '.o-mail-notification-item:contains("mailChannel1")');
+    assert.containsN($, ".o-mail-notification-item", 2);
+    assert.containsOnce($, '.o-mail-notification-item:contains("Mitchell Admin")');
+    assert.containsOnce($, '.o-mail-notification-item:contains("mailChannel1")');
     await click('.o-mail-messaging-menu button:contains("Chats")');
-    assert.containsOnce(target, '.o-mail-notification-item:contains("Mitchell Admin")');
+    assert.containsOnce($, '.o-mail-notification-item:contains("Mitchell Admin")');
     await click('.o-mail-messaging-menu button:contains("Channels")');
-    assert.containsOnce(target, '.o-mail-notification-item:contains("mailChannel1")');
+    assert.containsOnce($, '.o-mail-notification-item:contains("mailChannel1")');
     await click('.o-mail-messaging-menu button:contains("All")');
-    assert.strictEqual(document.querySelectorAll(`.o-mail-notification-item`).length, 2);
-    assert.containsOnce(target, '.o-mail-notification-item:contains("Mitchell Admin")');
+    assert.containsN($, ".o-mail-notification-item", 2);
+    assert.containsOnce($, '.o-mail-notification-item:contains("Mitchell Admin")');
     await click('.o-mail-messaging-menu button:contains("Channels")');
-    assert.containsOnce(target, '.o-mail-notification-item:contains("mailChannel1")');
+    assert.containsOnce($, '.o-mail-notification-item:contains("mailChannel1")');
 });
 
-QUnit.test("no code injection in message body preview", async function (assert) {
+QUnit.test("no code injection in message body preview", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({});
     pyEnv["mail.message"].create({
@@ -695,44 +676,34 @@ QUnit.test("no code injection in message body preview", async function (assert) 
     });
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    assert.containsOnce(target, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item");
     assert.strictEqual(
-        document
-            .querySelector(".o-mail-notification-item-inlineText")
-            .textContent.replace(/\s/g, ""),
+        $(".o-mail-notification-item-inlineText").text().replace(/\s/g, ""),
         "You:&shoulnotberaisedthrownewError('CodeInjectionError');"
     );
-    assert.containsNone(document.querySelector(".o-mail-notification-item-inlineText"), "script");
+    assert.containsNone($(".o-mail-notification-item-inlineText"), "script");
 });
 
-QUnit.test(
-    "no code injection in message body preview from sanitized message",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({});
-        pyEnv["mail.message"].create({
-            body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
-            model: "mail.channel",
-            res_id: channelId,
-        });
-        await start();
-        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        assert.containsOnce(target, ".o-mail-notification-item");
-        assert.containsOnce(target, ".o-mail-notification-item-inlineText");
-        assert.strictEqual(
-            document
-                .querySelector(".o-mail-notification-item-inlineText")
-                .textContent.replace(/\s/g, ""),
-            "You:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>"
-        );
-        assert.containsNone(
-            document.querySelector(".o-mail-notification-item-inlineText"),
-            "script"
-        );
-    }
-);
+QUnit.test("no code injection in message body preview from sanitized message", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({});
+    pyEnv["mail.message"].create({
+        body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item-inlineText");
+    assert.strictEqual(
+        $(".o-mail-notification-item-inlineText").text().replace(/\s/g, ""),
+        "You:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>"
+    );
+    assert.containsNone($(".o-mail-notification-item-inlineText"), "script");
+});
 
-QUnit.test("<br/> tags in message body preview are transformed in spaces", async function (assert) {
+QUnit.test("<br/> tags in message body preview are transformed in spaces", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({});
     pyEnv["mail.message"].create({
@@ -742,27 +713,24 @@ QUnit.test("<br/> tags in message body preview are transformed in spaces", async
     });
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    assert.containsOnce(target, ".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-notification-item-inlineText");
-    assert.strictEqual(
-        document.querySelector(".o-mail-notification-item-inlineText").textContent,
-        "You: a b c d"
-    );
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item-inlineText");
+    assert.strictEqual($(".o-mail-notification-item-inlineText").text(), "You: a b c d");
 });
 
 QUnit.test(
     "Group chat should be displayed inside the chat section of the messaging menu",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         pyEnv["mail.channel"].create({ channel_type: "group" });
         await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        await click(`.o-mail-messaging-menu button:contains("Chats")`);
-        assert.containsOnce(target, ".o-mail-notification-item");
+        await click('.o-mail-messaging-menu button:contains("Chats")');
+        assert.containsOnce($, ".o-mail-notification-item");
     }
 );
 
-QUnit.test("click on preview should mark as read and open the thread", async function (assert) {
+QUnit.test("click on preview should mark as read and open the thread", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     const messageId = pyEnv["mail.message"].create({
@@ -781,17 +749,17 @@ QUnit.test("click on preview should mark as read and open the thread", async fun
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(document.body, ".o-mail-notification-item:contains(Frodo Baggins)");
-    assert.containsNone(document.body, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Frodo Baggins)");
+    assert.containsNone($, ".o-mail-chat-window");
     await click(".o-mail-notification-item:contains(Frodo Baggins)");
-    assert.containsOnce(document.body, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-mail-chat-window");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(document.body, ".o-mail-notification-item:contains(Frodo Baggins)");
+    assert.containsNone($, ".o-mail-notification-item:contains(Frodo Baggins)");
 });
 
 QUnit.test(
     "click on expand from chat window should close the chat window and open the form view",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
         const messageId = pyEnv["mail.message"].create({
@@ -819,17 +787,17 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-notification-item:contains(Frodo Baggins)");
         await click(".o-mail-command i.fa-expand");
-        assert.containsNone(document.body, ".o-mail-chat-window");
+        assert.containsNone($, ".o-mail-chat-window");
         assert.verifySteps(["do_action"], "should have done an action to open the form view");
     }
 );
 
 QUnit.test(
     "preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Stranger" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             author_id: partnerId,
             body: "I am the oldest but needaction",
             model: "res.partner",
@@ -844,7 +812,7 @@ QUnit.test(
             res_id: partnerId,
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -852,7 +820,7 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         assert.containsOnce(
-            document.body,
+            $,
             ".o-mail-notification-item:contains(I am the oldest but needaction)"
         );
     }
@@ -860,7 +828,7 @@ QUnit.test(
 
 QUnit.test(
     "two previews for channel if it has non needaction and needaction messages",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
         const channelId = pyEnv["mail.channel"].create({ name: "Test" });
@@ -887,16 +855,16 @@ QUnit.test(
 
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsN(target, ".o-mail-notification-item", 2);
-        const items = target.querySelectorAll(".o-mail-notification-item");
-        assert.ok(items[0].textContent.includes("Test (2)"));
-        assert.ok(items[0].textContent.includes("Message without needaction"));
-        assert.ok(items[1].textContent.includes("Test"));
-        assert.ok(items[1].textContent.includes("Message with needaction"));
+        assert.containsN($, ".o-mail-notification-item", 2);
+        const $items = $(".o-mail-notification-item");
+        assert.ok($items[0].textContent.includes("Test (2)"));
+        assert.ok($items[0].textContent.includes("Message without needaction"));
+        assert.ok($items[1].textContent.includes("Test"));
+        assert.ok($items[1].textContent.includes("Message with needaction"));
     }
 );
 
-QUnit.test("preview for channel should show latest non-deleted message", async function (assert) {
+QUnit.test("preview for channel should show latest non-deleted message", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const channelId = pyEnv["mail.channel"].create({ name: "Test" });
@@ -916,7 +884,7 @@ QUnit.test("preview for channel should show latest non-deleted message", async f
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-notification-item");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(message-2)");
+    assert.containsOnce($, ".o-mail-notification-item:contains(message-2)");
     // Simulate deletion of message-2
     await afterNextRender(() =>
         env.services.rpc("/mail/message/update_content", {
@@ -925,10 +893,10 @@ QUnit.test("preview for channel should show latest non-deleted message", async f
             attachment_ids: [],
         })
     );
-    assert.containsOnce(target, ".o-mail-notification-item:contains(message-1)");
+    assert.containsOnce($, ".o-mail-notification-item:contains(message-1)");
 });
 
-QUnit.test("failure notifications are shown before channel preview", async function (assert) {
+QUnit.test("failure notifications are shown before channel preview", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const failedMessageId = pyEnv["mail.message"].create({
@@ -956,12 +924,12 @@ QUnit.test("failure notifications are shown before channel preview", async funct
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-notification-item:contains(An error occurred when sending an email)"
     );
-    assert.containsOnce(target, ".o-mail-notification-item:contains(message)");
+    assert.containsOnce($, ".o-mail-notification-item:contains(message)");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-notification-item:contains(An error occurred when sending an email) ~ .o-mail-notification-item:contains(message)"
     );
 });

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { nextTick } from "@web/../tests/helpers/utils";
 import {
     afterNextRender,
     insertText,
@@ -11,14 +11,9 @@ import {
 import { LONG_TYPING, SHORT_TYPING } from "@mail/new/composer/composer";
 import { OTHER_LONG_TYPING } from "@mail/new/core/messaging_service";
 
-let target;
-QUnit.module("typing", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("typing");
 
-QUnit.test('receive other member typing status "is typing"', async function (assert) {
+QUnit.test('receive other member typing status "is typing"', async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["mail.channel"].create({
@@ -30,7 +25,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+    assert.strictEqual($(".o-mail-typing").text(), "");
 
     // simulate receive typing notification from demo
     await afterNextRender(() =>
@@ -40,12 +35,12 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             is_typing: true,
         })
     );
-    assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
+    assert.strictEqual($(".o-mail-typing").text(), "Demo is typing...");
 });
 
 QUnit.test(
     'receive other member typing status "is typing" then "no longer is typing"',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const channelId = pyEnv["mail.channel"].create({
@@ -57,7 +52,7 @@ QUnit.test(
         });
         const { env, openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -67,7 +62,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-typing").text(), "Demo is typing...");
 
         // simulate receive typing notification from demo "is no longer typing"
         await afterNextRender(() =>
@@ -77,13 +72,13 @@ QUnit.test(
                 is_typing: false,
             })
         );
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
     }
 );
 
 QUnit.test(
     'assume other member typing status becomes "no longer is typing" after long without any updated typing status',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const channelId = pyEnv["mail.channel"].create({
@@ -96,7 +91,7 @@ QUnit.test(
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
 
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -106,16 +101,16 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-typing").text(), "Demo is typing...");
 
         await afterNextRender(() => advanceTime(OTHER_LONG_TYPING));
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
     }
 );
 
 QUnit.test(
     'other member typing status "is typing" refreshes of assuming no longer typing',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const channelId = pyEnv["mail.channel"].create({
@@ -127,7 +122,7 @@ QUnit.test(
         });
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -139,7 +134,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-typing").text(), "Demo is typing...");
 
         // simulate receive typing notification from demo "is typing" again after long time.
         await advanceTime(LONG_TYPING);
@@ -151,13 +146,13 @@ QUnit.test(
         await nextTick();
         await advanceTime(LONG_TYPING);
         await nextAnimationFrame();
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-typing").text(), "Demo is typing...");
         await afterNextRender(() => advanceTime(OTHER_LONG_TYPING - LONG_TYPING));
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
     }
 );
 
-QUnit.test('receive several other members typing status "is typing"', async function (assert) {
+QUnit.test('receive several other members typing status "is typing"', async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Other 10" },
@@ -175,7 +170,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+    assert.strictEqual($(".o-mail-typing").text(), "");
 
     // simulate receive typing notification from other 10 (is typing)
     await afterNextRender(() =>
@@ -185,7 +180,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             is_typing: true,
         })
     );
-    assert.strictEqual($(target).find(".o-mail-typing").text(), "Other 10 is typing...");
+    assert.strictEqual($(".o-mail-typing").text(), "Other 10 is typing...");
 
     // simulate receive typing notification from other 11 (is typing)
     await afterNextRender(() =>
@@ -196,7 +191,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         })
     );
     assert.strictEqual(
-        $(target).find(".o-mail-typing").text(),
+        $(".o-mail-typing").text(),
         "Other 10 and Other 11 are typing...",
         "Should display longer typer named first"
     );
@@ -209,10 +204,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             is_typing: true,
         })
     );
-    assert.strictEqual(
-        $(target).find(".o-mail-typing").text(),
-        "Other 10, Other 11 and more are typing..."
-    );
+    assert.strictEqual($(".o-mail-typing").text(), "Other 10, Other 11 and more are typing...");
 
     // simulate receive typing notification from other 10 (no longer is typing)
     await afterNextRender(() =>
@@ -222,10 +214,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             is_typing: false,
         })
     );
-    assert.strictEqual(
-        $(target).find(".o-mail-typing").text(),
-        "Other 11 and Other 12 are typing..."
-    );
+    assert.strictEqual($(".o-mail-typing").text(), "Other 11 and Other 12 are typing...");
 
     // simulate receive typing notification from other 10 (is typing again)
     await afterNextRender(() =>
@@ -236,13 +225,13 @@ QUnit.test('receive several other members typing status "is typing"', async func
         })
     );
     assert.strictEqual(
-        $(target).find(".o-mail-typing").text(),
+        $(".o-mail-typing").text(),
         "Other 11, Other 12 and more are typing...",
         "Should order by longer typer ('Other 10' just recently restarted typing)"
     );
 });
 
-QUnit.test("current partner notify is typing to other thread members", async function (assert) {
+QUnit.test("current partner notify is typing to other thread members", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const { openDiscuss } = await start({
@@ -259,7 +248,7 @@ QUnit.test("current partner notify is typing to other thread members", async fun
 
 QUnit.test(
     "current partner notify is typing again to other members for long continuous typing",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "general" });
         const { advanceTime, openDiscuss } = await start({
@@ -288,7 +277,7 @@ QUnit.test(
 
 QUnit.test(
     "current partner notify no longer is typing to thread members after 5 seconds inactivity",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "general" });
         const { advanceTime, openDiscuss } = await start({
@@ -310,7 +299,7 @@ QUnit.test(
 
 QUnit.test(
     "current partner is typing should not translate on textual typing status",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "general" });
         const { openDiscuss } = await start({
@@ -326,11 +315,11 @@ QUnit.test(
         assert.verifySteps(["notify_typing:true"]);
 
         await nextAnimationFrame();
-        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
+        assert.strictEqual($(".o-mail-typing").text(), "");
     }
 );
 
-QUnit.test("chat: correspondent is typing", async function (assert) {
+QUnit.test("chat: correspondent is typing", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         im_status: "online",
@@ -345,11 +334,8 @@ QUnit.test("chat: correspondent is typing", async function (assert) {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(
-        document.body.querySelector(".o-mail-category-item"),
-        ".o-mail-discuss-sidebar-threadIcon"
-    );
-    assert.containsOnce(document.body, ".o-mail-thread-icon-online");
+    assert.containsOnce($(".o-mail-category-item"), ".o-mail-discuss-sidebar-threadIcon");
+    assert.containsOnce($, ".o-mail-thread-icon-online");
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() =>
@@ -359,8 +345,8 @@ QUnit.test("chat: correspondent is typing", async function (assert) {
             is_typing: true,
         })
     );
-    assert.containsOnce(document.body, ".o-mail-typing-icon");
-    assert.strictEqual(document.querySelector(".o-mail-typing-icon").title, "Demo is typing...");
+    assert.containsOnce($, ".o-mail-typing-icon");
+    assert.strictEqual($(".o-mail-typing-icon")[0].title, "Demo is typing...");
 
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() =>
@@ -370,5 +356,5 @@ QUnit.test("chat: correspondent is typing", async function (assert) {
             is_typing: false,
         })
     );
-    assert.containsOnce(document.body, ".o-mail-thread-icon-online");
+    assert.containsOnce($, ".o-mail-thread-icon-online");
 });

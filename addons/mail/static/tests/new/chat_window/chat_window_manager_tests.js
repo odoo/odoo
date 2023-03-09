@@ -7,17 +7,10 @@ import {
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/new/web/chat_window/chat_window_service";
-import { getFixture } from "@web/../tests/helpers/utils";
 
-let target;
+QUnit.module("chat window manager");
 
-QUnit.module("chat window manager", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("chat window does not fetch messages if hidden", async function (assert) {
+QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create([
         {
@@ -51,12 +44,12 @@ QUnit.test("chat window does not fetch messages if hidden", async function (asse
             }
         },
     });
-    assert.containsN(target, ".o-mail-chat-window", 2);
-    assert.containsOnce(target, ".o-mail-chat-window-hidden-button");
+    assert.containsN($, ".o-mail-chat-window", 2);
+    assert.containsOnce($, ".o-mail-chat-window-hidden-button");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
 });
 
-QUnit.test("click on hidden chat window should fetch its messages", async function (assert) {
+QUnit.test("click on hidden chat window should fetch its messages", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create([
         {
@@ -90,8 +83,8 @@ QUnit.test("click on hidden chat window should fetch its messages", async functi
             }
         },
     });
-    assert.containsN(target, ".o-mail-chat-window", 2);
-    assert.containsOnce(target, ".o-mail-chat-window-hidden-button");
+    assert.containsN($, ".o-mail-chat-window", 2);
+    assert.containsOnce($, ".o-mail-chat-window-hidden-button");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-chat-window-hidden-button");
     await click(".o-mail-chat-window-hidden-menu-item .o-mail-chat-window-header");
@@ -100,7 +93,7 @@ QUnit.test("click on hidden chat window should fetch its messages", async functi
 
 QUnit.test(
     "closing the last visible chat window should unhide the first hidden one",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         pyEnv["mail.channel"].create([
             { name: "channel-A" },
@@ -131,14 +124,14 @@ QUnit.test(
         await waitUntil(
             ".o-mail-chat-window-header:contains(channel-D) .o-mail-command[title='Close chat window']"
         );
-        assert.containsN(target, ".o-mail-chat-window", 2);
-        assert.containsOnce(target, ".o-mail-chat-window:eq(0):contains(channel-A)");
-        assert.containsOnce(target, ".o-mail-chat-window:eq(1):contains(channel-D)");
-        assert.containsOnce(target, ".o-mail-chat-window-hidden-button:contains(2)");
+        assert.containsN($, ".o-mail-chat-window", 2);
+        assert.containsOnce($, ".o-mail-chat-window:eq(0):contains(channel-A)");
+        assert.containsOnce($, ".o-mail-chat-window:eq(1):contains(channel-D)");
+        assert.containsOnce($, ".o-mail-chat-window-hidden-button:contains(2)");
         await click(
             ".o-mail-chat-window-header:contains(channel-D) .o-mail-command[title='Close chat window']"
         );
-        assert.containsOnce(target, ".o-mail-chat-window:eq(0):contains(channel-A)");
-        assert.containsOnce(target, ".o-mail-chat-window:eq(1):contains(channel-C)");
+        assert.containsOnce($, ".o-mail-chat-window:eq(0):contains(channel-A)");
+        assert.containsOnce($, ".o-mail-chat-window:eq(1):contains(channel-C)");
     }
 );

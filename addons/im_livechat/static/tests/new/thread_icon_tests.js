@@ -2,16 +2,9 @@
 
 import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture } from "@web/../tests/helpers/utils";
+QUnit.module("thread icon");
 
-let target;
-QUnit.module("thread icon", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("Public website visitor is typing", async function (assert) {
+QUnit.test("Public website visitor is typing", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 20",
@@ -24,7 +17,7 @@ QUnit.test("Public website visitor is typing", async function (assert) {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-thread-icon .fa.fa-comments");
+    assert.containsOnce($, ".o-mail-thread-icon .fa.fa-comments");
     const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
@@ -34,9 +27,9 @@ QUnit.test("Public website visitor is typing", async function (assert) {
             uuid: channel.uuid,
         })
     );
-    assert.containsOnce(target, ".o-mail-discuss-header .o-mail-typing-icon");
+    assert.containsOnce($, ".o-mail-discuss-header .o-mail-typing-icon");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-discuss-header .o-mail-typing-icon[title='Visitor 20 is typing...']"
     );
 });

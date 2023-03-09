@@ -2,16 +2,10 @@
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("attachment box", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("attachment box");
 
-QUnit.test("base empty rendering", async function (assert) {
+QUnit.test("base empty rendering", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const views = {
@@ -30,12 +24,12 @@ QUnit.test("base empty rendering", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-attachment-box");
-    assert.containsOnce(target, "button:contains('Attach files')");
-    assert.containsNone(target, ".o-mail-chatter .o-mail-attachment-image");
+    assert.containsOnce($, ".o-mail-attachment-box");
+    assert.containsOnce($, "button:contains('Attach files')");
+    assert.containsNone($, ".o-mail-chatter .o-mail-attachment-image");
 });
 
-QUnit.test("base non-empty rendering", async function (assert) {
+QUnit.test("base non-empty rendering", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -68,13 +62,13 @@ QUnit.test("base non-empty rendering", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-attachment-box");
-    assert.containsOnce(target, "button:contains('Attach files')");
-    assert.containsOnce(target, ".o-mail-chatter input[type='file']");
-    assert.containsOnce(target, ".o-mail-attachment-list");
+    assert.containsOnce($, ".o-mail-attachment-box");
+    assert.containsOnce($, "button:contains('Attach files')");
+    assert.containsOnce($, ".o-mail-chatter input[type='file']");
+    assert.containsOnce($, ".o-mail-attachment-list");
 });
 
-QUnit.test("remove attachment should ask for confirmation", async function (assert) {
+QUnit.test("remove attachment should ask for confirmation", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create({
@@ -99,21 +93,18 @@ QUnit.test("remove attachment should ask for confirmation", async function (asse
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-attachment-card");
-    assert.containsOnce(target, "button[title='Remove']");
+    assert.containsOnce($, ".o-mail-attachment-card");
+    assert.containsOnce($, "button[title='Remove']");
 
     await click("button[title='Remove']");
-    assert.containsOnce(
-        target,
-        ".modal-body:contains('Do you really want to delete \"Blah.txt\"?')"
-    );
+    assert.containsOnce($, ".modal-body:contains('Do you really want to delete \"Blah.txt\"?')");
 
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
-    assert.containsNone(target, ".o-mail-attachment-images");
+    assert.containsNone($, ".o-mail-attachment-images");
 });
 
-QUnit.test("view attachments", async function (assert) {
+QUnit.test("view attachments", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -145,19 +136,19 @@ QUnit.test("view attachments", async function (assert) {
         views: [[false, "form"]],
     });
     await click('.o-mail-attachment-card[aria-label="Blah.txt"] .o-mail-attachment-card-image');
-    assert.containsOnce(target, ".o-mail-attachment-viewer");
-    assert.containsOnce(target, ".o-mail-attachment-viewer-header:contains(Blah.txt)");
-    assert.containsOnce(target, ".o-mail-attachment-viewer div[aria-label='Next']");
+    assert.containsOnce($, ".o-mail-attachment-viewer");
+    assert.containsOnce($, ".o-mail-attachment-viewer-header:contains(Blah.txt)");
+    assert.containsOnce($, ".o-mail-attachment-viewer div[aria-label='Next']");
 
     await click(".o-mail-attachment-viewer div[aria-label='Next']");
-    assert.containsOnce(target, ".o-mail-attachment-viewer-header:contains(Blu.txt)");
-    assert.containsOnce(target, ".o-mail-attachment-viewer div[aria-label='Next']");
+    assert.containsOnce($, ".o-mail-attachment-viewer-header:contains(Blu.txt)");
+    assert.containsOnce($, ".o-mail-attachment-viewer div[aria-label='Next']");
 
     await click(".o-mail-attachment-viewer div[aria-label='Next']");
-    assert.containsOnce(target, ".o-mail-attachment-viewer-header:contains(Blah.txt)");
+    assert.containsOnce($, ".o-mail-attachment-viewer-header:contains(Blah.txt)");
 });
 
-QUnit.test("scroll to attachment box when toggling on", async function (assert) {
+QUnit.test("scroll to attachment box when toggling on", async (assert) => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -186,7 +177,7 @@ QUnit.test("scroll to attachment box when toggling on", async function (assert) 
     assert.strictEqual($(".o-mail-chatter-scrollable").scrollTop(), 0);
 });
 
-QUnit.test("scroll to attachment box when toggling on", async function (assert) {
+QUnit.test("scroll to attachment box when toggling on", async (assert) => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});

@@ -2,17 +2,11 @@
 
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-let target;
+QUnit.module("activity mark as done popover");
 
-QUnit.module("activity mark as done popover", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("activity mark done popover simplest layout", async function (assert) {
+QUnit.test("activity mark done popover simplest layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -28,21 +22,18 @@ QUnit.test("activity mark done popover simplest layout", async function (assert)
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done-buttons");
     assert.containsOnce(
-        target,
-        ".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']"
-    );
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done-buttons");
-    assert.containsOnce(
-        target,
+        $,
         ".o-mail-activity-mark-as-done button[aria-label='Done and Schedule Next']"
     );
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done button[aria-label='Done']");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done button:contains(Discard)");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done button[aria-label='Done']");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done button:contains(Discard)");
 });
 
-QUnit.test("activity with force next mark done popover simplest layout", async function (assert) {
+QUnit.test("activity with force next mark done popover simplest layout", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -59,21 +50,18 @@ QUnit.test("activity with force next mark done popover simplest layout", async f
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done-buttons");
     assert.containsOnce(
-        target,
-        ".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']"
-    );
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done-buttons");
-    assert.containsOnce(
-        target,
+        $,
         ".o-mail-activity-mark-as-done button[aria-label='Done and Schedule Next']"
     );
-    assert.containsNone(target, ".o-mail-activity-mark-as-done button[aria-label='Done']");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done button:contains(Discard)");
+    assert.containsNone($, ".o-mail-activity-mark-as-done button[aria-label='Done']");
+    assert.containsOnce($, ".o-mail-activity-mark-as-done button:contains(Discard)");
 });
 
-QUnit.test("activity mark done popover mark done without feedback", async function (assert) {
+QUnit.test("activity mark done popover mark done without feedback", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -112,7 +100,7 @@ QUnit.test("activity mark done popover mark done without feedback", async functi
     assert.verifySteps(["action_feedback"]);
 });
 
-QUnit.test("activity mark done popover mark done with feedback", async function (assert) {
+QUnit.test("activity mark done popover mark done with feedback", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -156,7 +144,7 @@ QUnit.test("activity mark done popover mark done with feedback", async function 
     assert.verifySteps(["action_feedback"]);
 });
 
-QUnit.test("activity mark done popover mark done and schedule next", async function (assert) {
+QUnit.test("activity mark done popover mark done and schedule next", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -206,41 +194,38 @@ QUnit.test("activity mark done popover mark done and schedule next", async funct
     assert.verifySteps(["action_feedback_schedule_next"]);
 });
 
-QUnit.test(
-    "[technical] activity mark done & schedule next with new action",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        pyEnv["mail.activity"].create({
-            activity_category: "not_upload_file",
-            can_write: true,
-            res_id: partnerId,
-            res_model: "res.partner",
-        });
-        const { env, openView } = await start({
-            async mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
-                    return { type: "ir.actions.act_window" };
-                }
-            },
-        });
-        await openView({
-            res_model: "res.partner",
-            res_id: partnerId,
-            views: [[false, "form"]],
-        });
-        patchWithCleanup(env.services.action, {
-            doAction(action) {
-                assert.step("activity_action");
-                assert.deepEqual(
-                    action,
-                    { type: "ir.actions.act_window" },
-                    "The content of the action should be correct"
-                );
-            },
-        });
-        await click(".btn:contains('Mark Done')");
-        await click(".o-mail-activity-mark-as-done button[aria-label='Done and Schedule Next']");
-        assert.verifySteps(["activity_action"]);
-    }
-);
+QUnit.test("[technical] activity mark done & schedule next with new action", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        activity_category: "not_upload_file",
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const { env, openView } = await start({
+        async mockRPC(route, args) {
+            if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
+                return { type: "ir.actions.act_window" };
+            }
+        },
+    });
+    await openView({
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            assert.step("activity_action");
+            assert.deepEqual(
+                action,
+                { type: "ir.actions.act_window" },
+                "The content of the action should be correct"
+            );
+        },
+    });
+    await click(".btn:contains('Mark Done')");
+    await click(".o-mail-activity-mark-as-done button[aria-label='Done and Schedule Next']");
+    assert.verifySteps(["activity_action"]);
+});

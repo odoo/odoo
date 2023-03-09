@@ -1,16 +1,10 @@
 /** @odoo-module */
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("thread", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("thread");
 
-QUnit.test("Rendering of visitor banner", async function (assert) {
+QUnit.test("Rendering of visitor banner", async (assert) => {
     const pyEnv = await startServer();
     const countryId = pyEnv["res.country"].create({ code: "BE" });
     const visitorId = pyEnv["website.visitor"].create({
@@ -33,23 +27,20 @@ QUnit.test("Rendering of visitor banner", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-visitor-banner-avatar");
+    assert.containsOnce($, ".o-mail-visitor-banner-avatar");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-visitor-banner-avatar[data-src='/mail/static/src/img/smiley/avatar.jpg']"
     );
-    assert.containsOnce(target, ".o-mail-visitor-banner-avatar-container .o-mail-im-status");
-    assert.containsOnce(
-        target,
-        ".o_country_flag[data-src='/base/static/img/country_flags/be.png']"
-    );
-    assert.containsOnce(target, "span:contains(Visitor #11)");
-    assert.containsOnce(target, "span:contains(English)");
-    assert.containsOnce(target, "span>:contains(General website)");
-    assert.containsOnce(target, "span:contains(Home → Contact)");
+    assert.containsOnce($, ".o-mail-visitor-banner-avatar-container .o-mail-im-status");
+    assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
+    assert.containsOnce($, "span:contains(Visitor #11)");
+    assert.containsOnce($, "span:contains(English)");
+    assert.containsOnce($, "span>:contains(General website)");
+    assert.containsOnce($, "span:contains(Home → Contact)");
 });
 
-QUnit.test("Livechat with non-logged visitor should show visitor banner", async function (assert) {
+QUnit.test("Livechat with non-logged visitor should show visitor banner", async (assert) => {
     const pyEnv = await startServer();
     const countryId = pyEnv["res.country"].create({ code: "BE" });
     const visitorId = pyEnv["website.visitor"].create({
@@ -72,10 +63,10 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-visitor-banner");
+    assert.containsOnce($, ".o-mail-visitor-banner");
 });
 
-QUnit.test("Livechat with logged visitor should show visitor banner", async function (assert) {
+QUnit.test("Livechat with logged visitor should show visitor banner", async (assert) => {
     const pyEnv = await startServer();
     const resCountryId1 = pyEnv["res.country"].create({ code: "BE" });
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Visitor" });
@@ -99,11 +90,11 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async func
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-visitor-banner");
-    assert.containsOnce(target, ".o-mail-visitor-banner:contains(Partner Visitor)");
+    assert.containsOnce($, ".o-mail-visitor-banner");
+    assert.containsOnce($, ".o-mail-visitor-banner:contains(Partner Visitor)");
 });
 
-QUnit.test("Livechat without visitor should not show visitor banner", async function (assert) {
+QUnit.test("Livechat without visitor should not show visitor banner", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
     const channelId = pyEnv["mail.channel"].create({
@@ -117,15 +108,15 @@ QUnit.test("Livechat without visitor should not show visitor banner", async func
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-thread");
-    assert.containsNone(target, ".o-mail-visitor-banner");
+    assert.containsOnce($, ".o-mail-thread");
+    assert.containsNone($, ".o-mail-visitor-banner");
 });
 
-QUnit.test("Non-livechat channel should not show visitor banner", async function (assert) {
+QUnit.test("Non-livechat channel should not show visitor banner", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-thread");
-    assert.containsNone(target, ".o-mail-visitor-banner");
+    assert.containsOnce($, ".o-mail-thread");
+    assert.containsNone($, ".o-mail-visitor-banner");
 });

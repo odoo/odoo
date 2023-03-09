@@ -1,15 +1,13 @@
 /** @odoo-module **/
 
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { nextTick } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { dom } from "web.test_utils";
 
-let target;
 let serverData;
 
 QUnit.module("onchange on keydown", {
     async beforeEach() {
-        target = getFixture();
         serverData = {
             models: {
                 "res.partner": {
@@ -35,7 +33,7 @@ QUnit.module("onchange on keydown", {
 
 QUnit.test(
     "Test that onchange_on_keydown option triggers the onchange properly",
-    async function (assert) {
+    async (assert) => {
         assert.expect(3);
         await makeView({
             type: "form",
@@ -60,7 +58,7 @@ QUnit.test(
                 }
             },
         });
-        const textarea = target.querySelector('textarea[id="description"]');
+        const textarea = $('textarea[id="description"]')[0];
         await dom.click(textarea);
         for (const key of "testing the keydown event") {
             // trigger each key separately to simulate a user typing

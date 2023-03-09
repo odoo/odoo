@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { nextTick } from "@web/../tests/helpers/utils";
 
-let target;
+QUnit.module("attachment list");
 
-QUnit.module("attachment list", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("simplest layout", async function (assert) {
+QUnit.test("simplest layout", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -30,17 +24,17 @@ QUnit.test("simplest layout", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-message .o-mail-attachment-list");
-    assert.hasAttrValue($(target).find(".o-mail-attachment-card"), "title", "test.txt");
-    assert.containsOnce(target, ".o-mail-attachment-card-image");
+    assert.containsOnce($, ".o-mail-message .o-mail-attachment-list");
+    assert.hasAttrValue($(".o-mail-attachment-card"), "title", "test.txt");
+    assert.containsOnce($, ".o-mail-attachment-card-image");
     assert.hasClass($(".o-mail-attachment-card-image"), "o_image"); // required for mimetype.scss style
     assert.hasAttrValue($(".o-mail-attachment-card-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
-    assert.containsN(target, ".o-mail-attachment-card-aside button", 2);
-    assert.containsOnce(target, ".o-mail-attachment-card-aside-unlink");
-    assert.containsOnce(target, ".o-mail-attachment-card-aside button[title='Download']");
+    assert.containsN($, ".o-mail-attachment-card-aside button", 2);
+    assert.containsOnce($, ".o-mail-attachment-card-aside-unlink");
+    assert.containsOnce($, ".o-mail-attachment-card-aside button[title='Download']");
 });
 
-QUnit.test("layout with card details and filename and extension", async function (assert) {
+QUnit.test("layout with card details and filename and extension", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -59,13 +53,13 @@ QUnit.test("layout with card details and filename and extension", async function
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-attachment-card:contains('test.txt')");
-    assert.containsOnce(target, ".o-mail-attachment-card small:contains('txt')");
+    assert.containsOnce($, ".o-mail-attachment-card:contains('test.txt')");
+    assert.containsOnce($, ".o-mail-attachment-card small:contains('txt')");
 });
 
 QUnit.test(
     "clicking on the delete attachment button multiple times should do the rpc only once",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
@@ -92,15 +86,15 @@ QUnit.test(
         await openDiscuss(channelId);
         await click(".o-mail-attachment-card-aside-unlink");
         await afterNextRender(() => {
-            document.querySelector(".modal-footer .btn-primary").click();
-            document.querySelector(".modal-footer .btn-primary").click();
-            document.querySelector(".modal-footer .btn-primary").click();
+            $(".modal-footer .btn-primary")[0].click();
+            $(".modal-footer .btn-primary")[0].click();
+            $(".modal-footer .btn-primary")[0].click();
         });
         assert.verifySteps(["attachment_unlink"], "The unlink method must be called once");
     }
 );
 
-QUnit.test("view attachment", async function (assert) {
+QUnit.test("view attachment", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -119,12 +113,12 @@ QUnit.test("view attachment", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-attachment-image img");
+    assert.containsOnce($, ".o-mail-attachment-image img");
     await click(".o-mail-attachment-image");
-    assert.containsOnce(target, ".o-mail-attachment-viewer");
+    assert.containsOnce($, ".o-mail-attachment-viewer");
 });
 
-QUnit.test("close attachment viewer", async function (assert) {
+QUnit.test("close attachment viewer", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -143,22 +137,22 @@ QUnit.test("close attachment viewer", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-attachment-image img");
+    assert.containsOnce($, ".o-mail-attachment-image img");
 
     await click(".o-mail-attachment-image");
-    assert.containsOnce(target, ".o-mail-attachment-viewer");
+    assert.containsOnce($, ".o-mail-attachment-viewer");
 
     await click(".o-mail-attachment-viewer div[aria-label='Close']");
-    assert.containsNone(target, ".o-mail-attachment-viewer");
+    assert.containsNone($, ".o-mail-attachment-viewer");
 });
 
 QUnit.test(
     "[technical] does not crash when the viewer is closed before image load",
-    async function (assert) {
+    async (assert) => {
         /**
-         * When images are displayed using `src` attribute for the 1st time, it fetches the resource.
+         * When images are displayed using "src" attribute for the 1st time, it fetches the resource.
          * In this case, images are actually displayed (fully fetched and rendered on screen) when
-         * `<image>` intercepts `load` event.
+         * "<image>" intercepts "load" event.
          *
          * Current code needs to be aware of load state of image, to display spinner when loading
          * and actual image when loaded. This test asserts no crash from mishandling image becoming
@@ -183,12 +177,12 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click(".o-mail-attachment-image");
-        const imageEl = document.querySelector(".o-mail-attachment-viewer-viewImage");
+        const image = $(".o-mail-attachment-viewer-viewImage")[0];
         await click(".o-mail-attachment-viewer div[aria-label='Close']");
         // Simulate image becoming loaded.
         let successfulLoad;
         try {
-            imageEl.dispatchEvent(new Event("load", { bubbles: true }));
+            image.dispatchEvent(new Event("load", { bubbles: true }));
             successfulLoad = true;
         } catch {
             successfulLoad = false;
@@ -198,7 +192,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("plain text file is viewable", async function (assert) {
+QUnit.test("plain text file is viewable", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -217,10 +211,10 @@ QUnit.test("plain text file is viewable", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.hasClass($(target).find(".o-mail-attachment-card"), "o-mail-viewable");
+    assert.hasClass($(".o-mail-attachment-card"), "o-mail-viewable");
 });
 
-QUnit.test("HTML file is viewable", async function (assert) {
+QUnit.test("HTML file is viewable", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -239,10 +233,10 @@ QUnit.test("HTML file is viewable", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.hasClass($(target).find(".o-mail-attachment-card"), "o-mail-viewable");
+    assert.hasClass($(".o-mail-attachment-card"), "o-mail-viewable");
 });
 
-QUnit.test("ODT file is not viewable", async function (assert) {
+QUnit.test("ODT file is not viewable", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -261,10 +255,10 @@ QUnit.test("ODT file is not viewable", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.doesNotHaveClass($(target).find(".o-mail-attachment-card"), "o-mail-viewable");
+    assert.doesNotHaveClass($(".o-mail-attachment-card"), "o-mail-viewable");
 });
 
-QUnit.test("DOCX file is not viewable", async function (assert) {
+QUnit.test("DOCX file is not viewable", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -283,12 +277,12 @@ QUnit.test("DOCX file is not viewable", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.doesNotHaveClass($(target).find(".o-mail-attachment-card"), "o-mail-viewable");
+    assert.doesNotHaveClass($(".o-mail-attachment-card"), "o-mail-viewable");
 });
 
 QUnit.test(
     "should not view attachment from click on non-viewable attachment in list containing a viewable attachment",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
@@ -313,27 +307,21 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, ".o-mail-attachment-image[title='test.png']");
-        assert.containsOnce(target, ".o-mail-attachment-card:contains(test.odt)");
-        assert.hasClass(
-            $(target).find(".o-mail-attachment-image[title='test.png'] img"),
-            "o-mail-viewable"
-        );
-        assert.doesNotHaveClass(
-            $(target).find(".o-mail-attachment-card:contains(test.odt)"),
-            "o-mail-viewable"
-        );
+        assert.containsOnce($, ".o-mail-attachment-image[title='test.png']");
+        assert.containsOnce($, ".o-mail-attachment-card:contains(test.odt)");
+        assert.hasClass($(".o-mail-attachment-image[title='test.png'] img"), "o-mail-viewable");
+        assert.doesNotHaveClass($(".o-mail-attachment-card:contains(test.odt)"), "o-mail-viewable");
 
         click(".o-mail-attachment-card:contains(test.odt)").catch(() => {});
         await nextTick();
-        assert.containsNone(target, ".o-mail-attachment-viewer");
+        assert.containsNone($, ".o-mail-attachment-viewer");
 
         await click(".o-mail-attachment-image[title='test.png']");
-        assert.containsOnce(target, ".o-mail-attachment-viewer");
+        assert.containsOnce($, ".o-mail-attachment-viewer");
     }
 );
 
-QUnit.test("img file has proper src in mail.channel", async function (assert) {
+QUnit.test("img file has proper src in mail.channel", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
@@ -355,8 +343,7 @@ QUnit.test("img file has proper src in mail.channel", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.ok(
-        $(target)
-            .find(".o-mail-attachment-image[title='test.png'] img")
+        $(".o-mail-attachment-image[title='test.png'] img")
             .data("src")
             .includes(`/mail/channel/${channelId}/image`)
     );

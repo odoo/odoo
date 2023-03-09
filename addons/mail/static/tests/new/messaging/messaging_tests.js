@@ -1,18 +1,12 @@
 /** @odoo-module **/
 
 import { afterNextRender, start } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("messaging", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("messaging");
 
 QUnit.test(
     "Posting a message to a partner out of discuss should open a chat window",
-    async function (assert) {
+    async (assert) => {
         const { env, pyEnv } = await start();
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -31,13 +25,13 @@ QUnit.test(
                 uuid: channel.uuid,
             })
         );
-        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Dumbledore)");
+        assert.containsOnce($, ".o-mail-chat-window-header:contains(Dumbledore)");
     }
 );
 
 QUnit.test(
     "Posting a message to a partner should open a chat window after leaving discuss",
-    async function (assert) {
+    async (assert) => {
         const { env, openDiscuss, openFormView, pyEnv } = await start();
         await openDiscuss();
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
@@ -57,6 +51,6 @@ QUnit.test(
         });
         // leaving discuss.
         await openFormView("res.partner", partnerId);
-        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Dumbledore)");
+        assert.containsOnce($, ".o-mail-chat-window-header:contains(Dumbledore)");
     }
 );

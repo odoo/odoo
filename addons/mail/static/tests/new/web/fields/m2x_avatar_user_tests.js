@@ -1,28 +1,16 @@
 /** @odoo-module **/
 
 import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
-import {
-    click,
-    getFixture,
-    mouseEnter,
-    patchWithCleanup,
-    triggerHotkey,
-} from "@web/../tests/helpers/utils";
+import { click, mouseEnter, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { nextTick } from "web.test_utils";
 import { popoverService } from "@web/core/popover/popover_service";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 
-let target;
+QUnit.module("M2XAvatarUser");
 
-QUnit.module("M2XAvatarUser", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("many2many_avatar_user in kanban view", async function (assert) {
+QUnit.test("many2many_avatar_user in kanban view", async (assert) => {
     const pyEnv = await startServer();
     const userIds = pyEnv["res.users"].create([
         { name: "Mario" },
@@ -57,30 +45,27 @@ QUnit.test("many2many_avatar_user in kanban view", async function (assert) {
         res_model: "m2x.avatar.user",
         views: [[false, "kanban"]],
     });
-    assert.containsOnce(
-        target,
-        ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty"
-    );
+    assert.containsOnce($, ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty");
     assert.strictEqual(
-        target
-            .querySelector(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty")
-            .innerText.trim(),
+        $(
+            ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty"
+        )[0].innerText.trim(),
         "+2"
     );
 
     await afterNextRender(async () => {
         await mouseEnter(
-            target,
+            document.body,
             ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty"
         );
     });
-    assert.containsOnce(target, ".popover .o-tooltip > div:contains(Luigi)");
-    assert.containsOnce(target, ".popover .o-tooltip > div:contains(Tapu)");
+    assert.containsOnce($, ".popover .o-tooltip > div:contains(Luigi)");
+    assert.containsOnce($, ".popover .o-tooltip > div:contains(Tapu)");
 });
 
 QUnit.test(
     'many2one_avatar_user widget edited by the smart action "Assign to..."',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [userId_1] = pyEnv["res.users"].create([
             { name: "Mario" },
@@ -101,36 +86,30 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        assert.strictEqual(
-            target.querySelector(".o_field_many2one_avatar_user input").value,
-            "Mario"
-        );
+        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Mario");
 
         triggerHotkey("control+k");
         await nextTick();
-        const idx = [...target.querySelectorAll(".o_command")]
+        const idx = [...document.querySelectorAll(".o_command")]
             .map((el) => el.textContent)
             .indexOf("Assign to ...ALT + I");
         assert.ok(idx >= 0);
 
-        await click([...target.querySelectorAll(".o_command")][idx]);
+        await click([...document.querySelectorAll(".o_command")][idx]);
         await nextTick();
         assert.deepEqual(
-            [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+            [...document.querySelectorAll(".o_command")].map((el) => el.textContent),
             ["Your Company, Mitchell Admin", "Public user", "Mario", "Luigi", "Yoshi"]
         );
-        await click(target, "#o_command_3");
+        await click(document.body, "#o_command_3");
         await nextTick();
-        assert.strictEqual(
-            target.querySelector(".o_field_many2one_avatar_user input").value,
-            "Luigi"
-        );
+        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Luigi");
     }
 );
 
 QUnit.test(
     'many2one_avatar_user widget edited by the smart action "Assign to me"',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [userId_1, userId_2] = pyEnv["res.users"].create([
             { name: "Mario" },
@@ -151,13 +130,10 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        assert.strictEqual(
-            target.querySelector(".o_field_many2one_avatar_user input").value,
-            "Mario"
-        );
+        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Mario");
         triggerHotkey("control+k");
         await nextTick();
-        const idx = [...target.querySelectorAll(".o_command")]
+        const idx = [...document.querySelectorAll(".o_command")]
             .map((el) => el.textContent)
             .indexOf("Assign/Unassign to meALT + SHIFT + I");
         assert.ok(idx >= 0);
@@ -165,23 +141,20 @@ QUnit.test(
         // Assign me (Luigi)
         triggerHotkey("alt+shift+i");
         await nextTick();
-        assert.strictEqual(
-            target.querySelector(".o_field_many2one_avatar_user input").value,
-            "Luigi"
-        );
+        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Luigi");
 
         // Unassign me
         triggerHotkey("control+k");
         await nextTick();
-        await click([...target.querySelectorAll(".o_command")][idx]);
+        await click([...document.querySelectorAll(".o_command")][idx]);
         await nextTick();
-        assert.strictEqual(target.querySelector(".o_field_many2one_avatar_user input").value, "");
+        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "");
     }
 );
 
 QUnit.test(
     'many2many_avatar_user widget edited by the smart action "Assign to..."',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [userId_1, userId_2] = pyEnv["res.users"].create([
             { name: "Mario" },
@@ -204,35 +177,35 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        let userNames = [...target.querySelectorAll(".o_tag_badge_text")].map(
+        let userNames = [...document.querySelectorAll(".o_tag_badge_text")].map(
             (el) => el.textContent
         );
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
 
         triggerHotkey("control+k");
         await nextTick();
-        const idx = [...target.querySelectorAll(".o_command")]
+        const idx = [...document.querySelectorAll(".o_command")]
             .map((el) => el.textContent)
             .indexOf("Assign to ...ALT + I");
         assert.ok(idx >= 0);
 
-        await click([...target.querySelectorAll(".o_command")][idx]);
+        await click([...document.querySelectorAll(".o_command")][idx]);
         await nextTick();
         assert.deepEqual(
-            [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+            [...document.querySelectorAll(".o_command")].map((el) => el.textContent),
             ["Your Company, Mitchell Admin", "Public user", "Luigi"]
         );
 
-        await click(target, "#o_command_2");
+        await click(document.body, "#o_command_2");
         await nextTick();
-        userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el) => el.textContent);
+        userNames = [...document.querySelectorAll(".o_tag_badge_text")].map((el) => el.textContent);
         assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
     }
 );
 
 QUnit.test(
     'many2many_avatar_user widget edited by the smart action "Assign to me"',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [userId_1, userId_2] = pyEnv["res.users"].create([
             { name: "Mario" },
@@ -254,14 +227,14 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        let userNames = [...target.querySelectorAll(".o_tag_badge_text")].map(
+        let userNames = [...document.querySelectorAll(".o_tag_badge_text")].map(
             (el) => el.textContent
         );
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
 
         triggerHotkey("control+k");
         await nextTick();
-        const idx = [...target.querySelectorAll(".o_command")]
+        const idx = [...document.querySelectorAll(".o_command")]
             .map((el) => el.textContent)
             .indexOf("Assign/Unassign to meALT + SHIFT + I");
         assert.ok(idx >= 0);
@@ -269,22 +242,22 @@ QUnit.test(
         // Assign me
         triggerHotkey("alt+shift+i");
         await nextTick();
-        userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el) => el.textContent);
+        userNames = [...document.querySelectorAll(".o_tag_badge_text")].map((el) => el.textContent);
         assert.deepEqual(userNames, ["Mario", "Yoshi", "Your Company, Mitchell Admin"]);
 
         // Unassign me
         triggerHotkey("control+k");
         await nextTick();
-        await click([...target.querySelectorAll(".o_command")][idx]);
+        await click([...document.querySelectorAll(".o_command")][idx]);
         await nextTick();
-        userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el) => el.textContent);
+        userNames = [...document.querySelectorAll(".o_tag_badge_text")].map((el) => el.textContent);
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
     }
 );
 
 QUnit.test(
     "avatar_user widget displays the appropriate user image in list view",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const userId = pyEnv["res.users"].create({ name: "Mario" });
         const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
@@ -299,7 +272,7 @@ QUnit.test(
             views: [[false, "list"]],
         });
         assert.strictEqual(
-            target.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
+            $(".o_m2o_avatar > img")[0].getAttribute("data-src"),
             `/web/image/res.users/${userId}/avatar_128`
         );
     }
@@ -307,12 +280,13 @@ QUnit.test(
 
 QUnit.test(
     "avatar_user widget displays the appropriate user image in kanban view",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const userId = pyEnv["res.users"].create({ name: "Mario" });
         const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
         const views = {
-            "m2x.avatar.user,false,kanban": `<kanban>
+            "m2x.avatar.user,false,kanban": `
+                <kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
@@ -329,7 +303,7 @@ QUnit.test(
             views: [[false, "kanban"]],
         });
         assert.strictEqual(
-            target.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
+            $(".o_m2o_avatar > img")[0].getAttribute("data-src"),
             `/web/image/res.users/${userId}/avatar_128`
         );
     }
@@ -337,7 +311,7 @@ QUnit.test(
 
 QUnit.test(
     "avatar_user widget displays the appropriate user image in form view",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const userId = pyEnv["res.users"].create({ name: "Mario" });
         const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
@@ -354,15 +328,15 @@ QUnit.test(
             views: [[false, "form"]],
         });
         assert.strictEqual(
-            target
-                .querySelector(".o_field_many2many_avatar_user.o_field_widget .badge img")
-                .getAttribute("data-src"),
+            $(".o_field_many2many_avatar_user.o_field_widget .badge img")[0].getAttribute(
+                "data-src"
+            ),
             `/web/image/res.users/${userId}/avatar_128`
         );
     }
 );
 
-QUnit.test("many2one_avatar_user widget in list view", async function (assert) {
+QUnit.test("many2one_avatar_user widget in list view", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
     const userId = pyEnv["res.users"].create({ name: "Mario", partner_id: partnerId });
@@ -376,22 +350,21 @@ QUnit.test("many2one_avatar_user widget in list view", async function (assert) {
         res_model: "m2x.avatar.user",
         views: [[false, "list"]],
     });
-    await click(target, ".o_data_cell .o_m2o_avatar > img");
-    assert.containsOnce(target, ".o-mail-chat-window");
-    assert.strictEqual(
-        target.querySelector(".o-mail-chat-window-header-name").textContent,
-        "Partner 1"
-    );
+    await click(document.body, ".o_data_cell .o_m2o_avatar > img");
+    assert.containsOnce($, ".o-mail-chat-window");
+    assert.strictEqual($(".o-mail-chat-window-header-name").text(), "Partner 1");
 });
 
-QUnit.test("many2many_avatar_user widget in form view", async function (assert) {
+QUnit.test("many2many_avatar_user widget in form view", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
     const userId = pyEnv["res.users"].create({ name: "Mario", partner_id: partnerId });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
     const views = {
-        "m2x.avatar.user,false,form":
-            '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+        "m2x.avatar.user,false,form": `
+            <form>
+                <field name="user_ids" widget="many2many_avatar_user"/>
+            </form>`,
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
@@ -399,10 +372,7 @@ QUnit.test("many2many_avatar_user widget in form view", async function (assert) 
         res_id: avatarUserId,
         views: [[false, "form"]],
     });
-    await click(target, ".o_field_many2many_avatar_user .badge .o_m2m_avatar");
-    assert.containsOnce(target, ".o-mail-chat-window");
-    assert.strictEqual(
-        document.querySelector(".o-mail-chat-window-header-name").textContent,
-        "Partner 1"
-    );
+    await click(document.body, ".o_field_many2many_avatar_user .badge .o_m2m_avatar");
+    assert.containsOnce($, ".o-mail-chat-window");
+    assert.strictEqual($(".o-mail-chat-window-header-name").text(), "Partner 1");
 });

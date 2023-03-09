@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
-let target;
-QUnit.module("follower subtype", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("follower subtype");
 
-QUnit.test("simplest layout of a followed subtype", async function (assert) {
+QUnit.test("simplest layout of a followed subtype", async (assert) => {
     const pyEnv = await startServer();
     const subtypeId = pyEnv["mail.message.subtype"].create({
         default: true,
@@ -43,9 +37,9 @@ QUnit.test("simplest layout of a followed subtype", async function (assert) {
     });
     await click(".o-mail-chatter-topbar-follower-list-button");
     await click("button[title='Edit subscription']");
-    assert.containsOnce(target, ".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype)");
+    assert.containsOnce($, ".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype)");
     assert.containsOnce(
-        document.querySelector(".o-mail-follower-subtype-dialog-subtype"),
+        $(".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype)"),
         ".o-mail-follower-subtype-dialog-subtype-label"
     );
     assert.containsOnce(
@@ -55,7 +49,7 @@ QUnit.test("simplest layout of a followed subtype", async function (assert) {
     assert.strictEqual(
         $(
             ".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype) .o-mail-follower-subtype-dialog-subtype-label"
-        )[0].textContent,
+        ).text(),
         "TestSubtype"
     );
     assert.ok(
@@ -64,7 +58,7 @@ QUnit.test("simplest layout of a followed subtype", async function (assert) {
     );
 });
 
-QUnit.test("simplest layout of a not followed subtype", async function (assert) {
+QUnit.test("simplest layout of a not followed subtype", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.message.subtype"].create({
         default: true,
@@ -102,7 +96,7 @@ QUnit.test("simplest layout of a not followed subtype", async function (assert) 
     );
 });
 
-QUnit.test("toggle follower subtype checkbox", async function (assert) {
+QUnit.test("toggle follower subtype checkbox", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.message.subtype"].create({
         default: true,
@@ -156,7 +150,7 @@ QUnit.test("toggle follower subtype checkbox", async function (assert) {
     );
 });
 
-QUnit.test("follower subtype apply", async function (assert) {
+QUnit.test("follower subtype apply", async (assert) => {
     const pyEnv = await startServer();
     const subtypeId = pyEnv["mail.message.subtype"].create({
         default: true,

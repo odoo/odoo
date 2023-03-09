@@ -1,16 +1,14 @@
 /** @odoo-module */
 
-import { selectDropdownItem, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { selectDropdownItem, editInput } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
-let target;
 
 QUnit.module("leave stats", {
     beforeEach() {
         setupViewRegistries();
 
-        target = getFixture();
         serverData = {
             models: {
                 department: {
@@ -131,8 +129,8 @@ QUnit.test("leave stats renders correctly", async (assert) => {
             }
         },
     });
-    const $leaveTypeBody = target.querySelector(".o_leave_stats #o_leave_stats_employee");
-    const $leavesDepartmentBody = target.querySelector(".o_leave_stats #o_leave_stats_department");
+    const $leaveTypeBody = $(".o_leave_stats #o_leave_stats_employee");
+    const $leavesDepartmentBody = $(".o_leave_stats #o_leave_stats_department");
     assert.containsOnce($leaveTypeBody, "span:contains(Legal Leave)");
     assert.containsOnce($leaveTypeBody, "span:contains(6)");
     assert.containsN($leavesDepartmentBody, "span:contains(Richard)", 2);
@@ -165,9 +163,9 @@ QUnit.test("leave stats reload when employee/department changes", async (assert)
     });
 
     // Set date => shouldn't load data yet (no employee nor department defined)
-    await editInput(target, "div[name='date_from'] input", "2016-10-12 09:00:00");
+    await editInput(document.body, "div[name='date_from'] input", "2016-10-12 09:00:00");
     // Set employee => should load employee's date
-    await selectDropdownItem(target, "employee_id", "Jesus");
+    await selectDropdownItem(document.body, "employee_id", "Jesus");
     // Set department => should load department's data
-    await selectDropdownItem(target, "department_id", "R&D");
+    await selectDropdownItem(document.body, "department_id", "R&D");
 });

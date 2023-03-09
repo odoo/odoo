@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
-let target;
+QUnit.module("snail message menu");
 
-QUnit.module("snail message menu", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("mark as read", async function (assert) {
+QUnit.test("mark as read", async (assert) => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create([
         {
@@ -28,17 +22,17 @@ QUnit.test("mark as read", async function (assert) {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-notification-item i[title='Mark As Read']");
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item i[title='Mark As Read']");
     assert.containsOnce(
-        target,
+        $,
         ".o-mail-notification-item:contains(An error occurred when sending a letter with Snailmail.)"
     );
     await click(".o-mail-notification-item i[title='Mark As Read']");
-    assert.containsNone(target, ".o-mail-notification-item");
+    assert.containsNone($, ".o-mail-notification-item");
 });
 
-QUnit.test("notifications grouped by notification_type", async function (assert) {
+QUnit.test("notifications grouped by notification_type", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = await pyEnv["res.partner"].create({});
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
@@ -79,17 +73,22 @@ QUnit.test("notifications grouped by notification_type", async function (assert)
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN(target, ".o-mail-notification-item", 2);
-    const items = target.querySelectorAll(".o-mail-notification-item");
-    assert.ok(items[0].textContent.includes("Partner (2)"));
-    assert.ok(items[0].textContent.includes("An error occurred when sending an email"));
-    assert.ok(items[1].textContent.includes("Partner (2)"));
+    assert.containsN($, ".o-mail-notification-item", 2);
+    assert.ok($(".o-mail-notification-item:eq(0)").text().includes("Partner (2)"));
     assert.ok(
-        items[1].textContent.includes("An error occurred when sending a letter with Snailmail.")
+        $(".o-mail-notification-item:eq(0)")
+            .text()
+            .includes("An error occurred when sending an email")
+    );
+    assert.ok($(".o-mail-notification-item:eq(1)").text().includes("Partner (2)"));
+    assert.ok(
+        $(".o-mail-notification-item:eq(1)")
+            .text()
+            .includes("An error occurred when sending a letter with Snailmail.")
     );
 });
 
-QUnit.test("grouped notifications by document model", async function (assert) {
+QUnit.test("grouped notifications by document model", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = await pyEnv["res.partner"].create([{}, {}]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
@@ -142,8 +141,8 @@ QUnit.test("grouped notifications by document model", async function (assert) {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-notification-item");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(Partner (2))");
+    assert.containsOnce($, ".o-mail-notification-item");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Partner (2))");
     await click(".o-mail-notification-item");
     assert.verifySteps(["do_action"]);
 });

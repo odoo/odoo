@@ -2,18 +2,12 @@
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { getFixture } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("Form renderer", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("Form renderer");
 
 QUnit.test(
     "schedule activities on draft record should prompt with scheduling an activity (proceed with action)",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         const views = {
@@ -34,11 +28,11 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await click("button:contains(Activities)");
-        assert.containsOnce(target, ".o_dialog:contains(Schedule Activity)");
+        assert.containsOnce($, ".o_dialog:contains(Schedule Activity)");
     }
 );
 
-QUnit.test("Form view not scrolled when switching record", async function (assert) {
+QUnit.test("Form view not scrolled when switching record", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         {
@@ -76,22 +70,21 @@ QUnit.test("Form view not scrolled when switching record", async function (asser
         },
         { resIds: [partnerId_1, partnerId_2] }
     );
-    const controllerContentEl = target.querySelector(".o_content");
-    assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "Partner 1");
-    assert.strictEqual(controllerContentEl.scrollTop, 0);
-    controllerContentEl.scrollTop = 150;
+    assert.strictEqual($(".breadcrumb-item.active").text(), "Partner 1");
+    assert.strictEqual($(".o_content")[0].scrollTop, 0);
+    $(".o_content")[0].scrollTop = 150;
 
     await click(".o_pager_next");
-    assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "Partner 2");
-    assert.strictEqual(controllerContentEl.scrollTop, 0);
+    assert.strictEqual($(".breadcrumb-item.active").text(), "Partner 2");
+    assert.strictEqual($(".o_content")[0].scrollTop, 0);
 
     await click(".o_pager_previous");
-    assert.strictEqual(controllerContentEl.scrollTop, 0);
+    assert.strictEqual($(".o_content")[0].scrollTop, 0);
 });
 
 QUnit.test(
     "Attachments that have been unlinked from server should be visually unlinked from record",
-    async function (assert) {
+    async (assert) => {
         // Attachments that have been fetched from a record at certain time and then
         // removed from the server should be reflected on the UI when the current
         // partner accesses this record again.
@@ -135,7 +128,7 @@ QUnit.test(
                 resIds: [partnerId_1, partnerId_2],
             }
         );
-        assert.containsOnce(target, ".o-mail-chatter button:contains(2)");
+        assert.containsOnce($, ".o-mail-chatter button:contains(2)");
 
         // The attachment links are updated on (re)load,
         // so using pager is a way to reload the record "Partner1".
@@ -143,13 +136,13 @@ QUnit.test(
         // Simulate unlinking attachment 1 from Partner 1.
         pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
         await click(".o_pager_previous");
-        assert.containsOnce(target, ".o-mail-chatter button:contains(1)");
+        assert.containsOnce($, ".o-mail-chatter button:contains(1)");
     }
 );
 
 QUnit.test(
     "read more/less links are not duplicated when switching from read to edit mode",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         pyEnv["mail.message"].create({
@@ -187,13 +180,13 @@ QUnit.test(
             views: [[false, "form"]],
         };
         await openView(openViewAction);
-        assert.containsOnce(target, ".o-mail-chatter");
-        assert.containsOnce(target, ".o-mail-message");
-        assert.containsOnce(target, ".o-mail-read-more-less");
+        assert.containsOnce($, ".o-mail-chatter");
+        assert.containsOnce($, ".o-mail-message");
+        assert.containsOnce($, ".o-mail-read-more-less");
     }
 );
 
-QUnit.test("read more links becomes read less after being clicked", async function (assert) {
+QUnit.test("read more links becomes read less after being clicked", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create([
@@ -201,30 +194,30 @@ QUnit.test("read more links becomes read less after being clicked", async functi
             author_id: partnerId,
             // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
             body: `
-                    <div>
-                        Dear Joel Willis,<br>
-                        Thank you for your enquiry.<br>
-                        If you have any questions, please let us know.
-                        <br><br>
-                        Thank you,<br>
-                        <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
-                            System
-                        </span>
-                    </div>`,
+                <div>
+                    Dear Joel Willis,<br>
+                    Thank you for your enquiry.<br>
+                    If you have any questions, please let us know.
+                    <br><br>
+                    Thank you,<br>
+                    <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                        System
+                    </span>
+                </div>`,
             model: "res.partner",
             res_id: partnerId,
         },
     ]);
     const views = {
         "res.partner,false,form": `
-                <form string="Partners">
-                    <sheet>
-                        <field name="name"/>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_ids"/>
-                    </div>
-                </form>`,
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
     };
     const { openView } = await start({ serverData: { views } });
     const openViewAction = {
@@ -233,17 +226,17 @@ QUnit.test("read more links becomes read less after being clicked", async functi
         views: [[false, "form"]],
     };
     await openView(openViewAction);
-    assert.containsOnce(target, ".o-mail-chatter");
-    assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-read-more-less:contains(Read More)");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-read-more-less:contains(Read More)");
 
     await click(".o-mail-read-more-less");
-    assert.containsOnce(target, ".o-mail-read-more-less:contains(Read Less)");
+    assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
 });
 
 QUnit.test(
     "[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links",
-    async function (assert) {
+    async (assert) => {
         // message click triggers a re-render. Before writing of this test, the
         // insertion of read more/less links were done during render. This meant
         // any re-render would re-insert the read more/less links. If some button
@@ -289,12 +282,12 @@ QUnit.test(
             res_id: partnerId,
             views: [[false, "form"]],
         });
-        assert.containsOnce(target, ".o-mail-read-more-less:contains(Read More)");
+        assert.containsOnce($, ".o-mail-read-more-less:contains(Read More)");
 
         await click(".o-mail-read-more-less");
-        assert.containsOnce(target, ".o-mail-read-more-less:contains(Read Less)");
+        assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
 
         await click(".o-mail-message");
-        assert.containsOnce(target, ".o-mail-read-more-less:contains(Read Less)");
+        assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
     }
 );

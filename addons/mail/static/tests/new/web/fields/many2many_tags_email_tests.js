@@ -3,16 +3,11 @@
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import testUtils from "web.test_utils";
-import { getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
+import { selectDropdownItem } from "@web/../tests/helpers/utils";
 
-let target;
-QUnit.module("FieldMany2ManyTagsEmail", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("FieldMany2ManyTagsEmail");
 
-QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
+QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "gold", email: "coucou@petite.perruche" },
@@ -27,8 +22,11 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
                     <field name="partner_ids" widget="many2many_tags_email"/>
                 </sheet>
             </form>`,
-        "res.partner,false,form":
-            '<form string="Types"><field name="name"/><field name="email"/></form>',
+        "res.partner,false,form": `
+            <form string="Types">
+                <field name="name"/>
+                <field name="email"/>
+            </form>`,
     };
     const { openView } = await start({
         serverData: { views },
@@ -52,23 +50,23 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
 
     assert.verifySteps([`[${partnerId_1}]`]);
     assert.containsOnce(
-        target,
+        $,
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0'
     );
 
     // add an other existing tag
-    await selectDropdownItem(target, "partner_ids", "silver");
+    await selectDropdownItem(document.body, "partner_ids", "silver");
     assert.containsOnce(
-        target,
+        $,
         ".modal-content .o_form_view",
         "there should be one modal opened to edit the empty email"
     );
     assert.strictEqual(
-        document.querySelector(".modal-content .o_form_view .o_input#name").value,
+        $(".modal-content .o_form_view .o_input#name").val(),
         "silver",
         "the opened modal in edit mode should be a form view dialog with the res.partner 14"
     );
-    assert.containsOnce(target, ".modal-content .o_form_view .o_input#email");
+    assert.containsOnce($, ".modal-content .o_form_view .o_input#email");
 
     // set the email and save the modal (will rerender the form view)
     await testUtils.fields.editInput(
@@ -77,13 +75,11 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
     );
     await testUtils.dom.click($(".modal-content .o_form_button_save"));
     assert.containsN(
-        target,
+        $,
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0',
         2
     );
-    const firstTag = document.querySelector(
-        '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0'
-    );
+    const firstTag = $('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0')[0];
     assert.strictEqual(
         firstTag.querySelector(".o_badge_text").innerText,
         "gold",
@@ -95,7 +91,7 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
     assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_2}]`]);
 });
 
-QUnit.test("many2many_tags_email widget can load more than 40 records", async function (assert) {
+QUnit.test("many2many_tags_email widget can load more than 40 records", async (assert) => {
     const pyEnv = await startServer();
     const partnerIds = [];
     for (let i = 100; i < 200; i++) {
@@ -113,10 +109,10 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async fu
         views: [[false, "form"]],
     });
 
-    assert.containsN(target, '.o_field_widget[name="partner_ids"] .badge', 100);
-    assert.containsOnce(target, ".o_form_editable");
+    assert.containsN($, '.o_field_widget[name="partner_ids"] .badge', 100);
+    assert.containsOnce($, ".o_form_editable");
 
     // add a record to the relation
-    await selectDropdownItem(target, "partner_ids", "Public user");
-    assert.containsN(target, '.o_field_widget[name="partner_ids"] .badge', 101);
+    await selectDropdownItem(document.body, "partner_ids", "Public user");
+    assert.containsN($, '.o_field_widget[name="partner_ids"] .badge', 101);
 });

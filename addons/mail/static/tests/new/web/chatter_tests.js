@@ -14,18 +14,12 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { editInput, getFixture, triggerHotkey } from "@web/../tests/helpers/utils";
+import { editInput, triggerHotkey } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
 
 const { createFile } = file;
 
-let target;
-
-QUnit.module("chatter", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("chatter");
 
 QUnit.test("simple chatter on a record", async (assert) => {
     const { openFormView, pyEnv } = await start({
@@ -37,8 +31,8 @@ QUnit.test("simple chatter on a record", async (assert) => {
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.containsOnce(target, ".o-mail-thread");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsOnce($, ".o-mail-thread");
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
@@ -52,7 +46,7 @@ QUnit.test("displayname is used when sending a message", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
-    assert.containsOnce(target, '.o-mail-chatter:contains(To followers of:  "John Doe")');
+    assert.containsOnce($, '.o-mail-chatter:contains(To followers of:  "John Doe")');
 });
 
 QUnit.test("can post a message on a record thread", async (assert) => {
@@ -78,16 +72,16 @@ QUnit.test("can post a message on a record thread", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsNone(target, ".o-mail-composer");
+    assert.containsNone($, ".o-mail-composer");
 
     await click("button:contains(Send message)");
-    assert.containsOnce(target, ".o-mail-composer");
+    assert.containsOnce($, ".o-mail-composer");
 
-    await editInput(target, ".o-mail-composer-textarea", "hey");
-    assert.containsNone(target, ".o-mail-message");
+    await editInput(document.body, ".o-mail-composer-textarea", "hey");
+    assert.containsNone($, ".o-mail-message");
 
     await click(".o-mail-composer button:contains(Send)");
-    assert.containsOnce(target, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message");
     assert.verifySteps(["/mail/message/post"]);
 });
 
@@ -114,24 +108,24 @@ QUnit.test("can post a note on a record thread", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsNone(target, ".o-mail-composer");
+    assert.containsNone($, ".o-mail-composer");
 
     await click("button:contains(Log note)");
-    assert.containsOnce(target, ".o-mail-composer");
+    assert.containsOnce($, ".o-mail-composer");
 
-    await editInput(target, ".o-mail-composer-textarea", "hey");
-    assert.containsNone(target, ".o-mail-message");
+    await editInput(document.body, ".o-mail-composer-textarea", "hey");
+    assert.containsNone($, ".o-mail-message");
 
     await click(".o-mail-composer button:contains(Send)");
-    assert.containsOnce(target, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message");
     assert.verifySteps(["/mail/message/post"]);
 });
 
 QUnit.test("No attachment loading spinner when creating records", async (assert) => {
     const { openFormView } = await start();
     await openFormView("res.partner");
-    assert.containsOnce(target, "button[aria-label='Attach files']");
-    assert.containsNone(target, "button[aria-label='Attach files'] .fa-spin");
+    assert.containsOnce($, "button[aria-label='Attach files']");
+    assert.containsNone($, "button[aria-label='Attach files'] .fa-spin");
 });
 
 QUnit.test(
@@ -146,45 +140,42 @@ QUnit.test(
         });
         const partnerId = pyEnv["res.partner"].create({ name: "John" });
         await openFormView("res.partner", partnerId, { waitUntilDataLoaded: false });
-        assert.containsOnce(target, "button[aria-label='Attach files'] .fa-spin");
+        assert.containsOnce($, "button[aria-label='Attach files'] .fa-spin");
         await click(".o_form_button_create");
-        assert.containsNone(target, "button[aria-label='Attach files'] .fa-spin");
+        assert.containsNone($, "button[aria-label='Attach files'] .fa-spin");
     }
 );
 
-QUnit.test(
-    "Composer toggle state is kept when switching from aside to bottom",
-    async function (assert) {
-        patchUiSize({ size: SIZES.XXL });
-        const { openFormView, pyEnv } = await start();
-        const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-        await openFormView("res.partner", partnerId);
-        await click("button:contains(Send message)");
-        patchUiSize({ size: SIZES.LG });
-        await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
-            resId: partnerId,
-            resModel: "res.partner",
-        });
-        assert.containsOnce(target, ".o-mail-composer-textarea");
-    }
-);
-
-QUnit.test("Textarea content is kept when switching from aside to bottom", async function (assert) {
+QUnit.test("Composer toggle state is kept when switching from aside to bottom", async (assert) => {
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
-    await editInput(target, ".o-mail-composer-textarea", "Hello world !");
     patchUiSize({ size: SIZES.LG });
     await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
         resId: partnerId,
         resModel: "res.partner",
     });
-    assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "Hello world !");
+    assert.containsOnce($, ".o-mail-composer-textarea");
 });
 
-QUnit.test("Composer type is kept when switching from aside to bottom", async function (assert) {
+QUnit.test("Textarea content is kept when switching from aside to bottom", async (assert) => {
+    patchUiSize({ size: SIZES.XXL });
+    const { openFormView, pyEnv } = await start();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    await openFormView("res.partner", partnerId);
+    await click("button:contains(Send message)");
+    await editInput(document.body, ".o-mail-composer-textarea", "Hello world !");
+    patchUiSize({ size: SIZES.LG });
+    await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
+        resId: partnerId,
+        resModel: "res.partner",
+    });
+    assert.strictEqual($(".o-mail-composer-textarea").val(), "Hello world !");
+});
+
+QUnit.test("Composer type is kept when switching from aside to bottom", async (assert) => {
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -196,14 +187,14 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async fu
         resModel: "res.partner",
     });
     assert.hasClass(
-        $(target).find("button:contains(Log note)"),
+        $("button:contains(Log note)"),
         "btn-odoo",
         "Active button should be the log note button"
     );
-    assert.doesNotHaveClass($(target).find("button:contains(Send message)"), "btn-odoo");
+    assert.doesNotHaveClass($("button:contains(Send message)"), "btn-odoo");
 });
 
-QUnit.test("chatter: drop attachments", async function (assert) {
+QUnit.test("chatter: drop attachments", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
@@ -224,14 +215,14 @@ QUnit.test("chatter: drop attachments", async function (assert) {
             name: "text2.txt",
         }),
     ];
-    await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
-    assert.containsOnce(target, ".o-dropzone");
-    assert.containsNone(target, ".o-mail-attachment-card");
+    await afterNextRender(() => dragenterFiles($(".o-mail-chatter")[0]));
+    assert.containsOnce($, ".o-dropzone");
+    assert.containsNone($, ".o-mail-attachment-card");
 
-    await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), files));
-    assert.containsN(target, ".o-mail-attachment-card", 2);
+    await afterNextRender(() => dropFiles($(".o-dropzone")[0], files));
+    assert.containsN($, ".o-mail-attachment-card", 2);
 
-    await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
+    await afterNextRender(() => dragenterFiles($(".o-mail-chatter")[0]));
     files = [
         await createFile({
             content: "hello, world",
@@ -239,32 +230,29 @@ QUnit.test("chatter: drop attachments", async function (assert) {
             name: "text3.txt",
         }),
     ];
-    await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), files));
-    assert.containsN(target, ".o-mail-attachment-card", 3);
+    await afterNextRender(() => dropFiles($(".o-dropzone")[0], files));
+    assert.containsN($, ".o-mail-attachment-card", 3);
 });
 
-QUnit.test(
-    "should display subject when subject isn't infered from the record",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        pyEnv["mail.message"].create({
-            body: "not empty",
-            model: "res.partner",
-            res_id: partnerId,
-            subject: "Salutations, voyageur",
-        });
-        const { openView } = await start();
-        await openView({
-            res_id: partnerId,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
-        assert.containsOnce(target, ".o-mail-message:contains(Subject: Salutations, voyageur)");
-    }
-);
+QUnit.test("should display subject when subject isn't infered from the record", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        res_id: partnerId,
+        subject: "Salutations, voyageur",
+    });
+    const { openView } = await start();
+    await openView({
+        res_id: partnerId,
+        res_model: "res.partner",
+        views: [[false, "form"]],
+    });
+    assert.containsOnce($, ".o-mail-message:contains(Subject: Salutations, voyageur)");
+});
 
-QUnit.test("should not display user notification messages in chatter", async function (assert) {
+QUnit.test("should not display user notification messages in chatter", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -278,10 +266,10 @@ QUnit.test("should not display user notification messages in chatter", async fun
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsNone(target, ".o-mail-message");
+    assert.containsNone($, ".o-mail-message");
 });
 
-QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async function (assert) {
+QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
@@ -290,15 +278,15 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsNone(target, ".o-mail-message");
+    assert.containsNone($, ".o-mail-message");
 
     await click("button:contains(Send message)");
     await insertText(".o-mail-composer-textarea", "Test");
     await afterNextRender(() => triggerHotkey("control+Enter"));
-    assert.containsOnce(target, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message");
 });
 
-QUnit.test("base rendering when chatter has no attachment", async function (assert) {
+QUnit.test("base rendering when chatter has no attachment", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     for (let i = 0; i < 60; i++) {
@@ -314,31 +302,31 @@ QUnit.test("base rendering when chatter has no attachment", async function (asse
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-chatter");
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.containsNone(target, ".o-mail-attachment-box");
-    assert.containsOnce(target, ".o-mail-thread");
-    assert.containsN(target, ".o-mail-message", 30);
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsNone($, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-mail-thread");
+    assert.containsN($, ".o-mail-message", 30);
 });
 
-QUnit.test("base rendering when chatter has no record", async function (assert) {
+QUnit.test("base rendering when chatter has no record", async (assert) => {
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-chatter");
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.containsNone(target, ".o-mail-attachment-box");
-    assert.containsOnce(target, ".o-mail-chatter .o-mail-thread");
-    assert.containsOnce(target, ".o-mail-message");
-    assert.strictEqual($(target).find(".o-mail-message-body").text(), "Creating a new record...");
-    assert.containsNone(target, "button:contains(Load More)");
-    assert.containsOnce(target, ".o-mail-message-actions");
-    assert.containsNone(target, ".o-mail-message-actions i");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsNone($, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-mail-chatter .o-mail-thread");
+    assert.containsOnce($, ".o-mail-message");
+    assert.strictEqual($(".o-mail-message-body").text(), "Creating a new record...");
+    assert.containsNone($, "button:contains(Load More)");
+    assert.containsOnce($, ".o-mail-message-actions");
+    assert.containsNone($, ".o-mail-message-actions i");
 });
 
-QUnit.test("base rendering when chatter has attachments", async function (assert) {
+QUnit.test("base rendering when chatter has attachments", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -361,12 +349,12 @@ QUnit.test("base rendering when chatter has attachments", async function (assert
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-chatter");
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.containsNone(target, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsNone($, ".o-mail-attachment-box");
 });
 
-QUnit.test("show attachment box", async function (assert) {
+QUnit.test("show attachment box", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -389,17 +377,17 @@ QUnit.test("show attachment box", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-chatter");
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.containsOnce(target, "button[aria-label='Attach files']");
-    assert.containsOnce(target, "button[aria-label='Attach files']:contains(2)");
-    assert.containsNone(target, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsOnce($, "button[aria-label='Attach files']");
+    assert.containsOnce($, "button[aria-label='Attach files']:contains(2)");
+    assert.containsNone($, ".o-mail-attachment-box");
 
     await click("button[aria-label='Attach files']");
-    assert.containsOnce(target, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-mail-attachment-box");
 });
 
-QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async function (assert) {
+QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
@@ -408,29 +396,29 @@ QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, "button:contains(Send message)");
-    assert.containsOnce(target, "button:contains(Log note)");
-    assert.containsNone(target, ".o-mail-composer");
+    assert.containsOnce($, "button:contains(Send message)");
+    assert.containsOnce($, "button:contains(Log note)");
+    assert.containsNone($, ".o-mail-composer");
 
     await click("button:contains(Send message)");
-    assert.containsOnce(target, ".o-mail-composer");
-    assert.strictEqual(document.activeElement, target.querySelector(".o-mail-composer-textarea"));
+    assert.containsOnce($, ".o-mail-composer");
+    assert.strictEqual(document.activeElement, $(".o-mail-composer-textarea")[0]);
 
     await click("button:contains(Log note)");
-    assert.containsOnce(target, ".o-mail-composer");
-    assert.strictEqual(document.activeElement, target.querySelector(".o-mail-composer-textarea"));
+    assert.containsOnce($, ".o-mail-composer");
+    assert.strictEqual(document.activeElement, $(".o-mail-composer-textarea")[0]);
 
     await click("button:contains(Log note)");
-    assert.containsNone(target, ".o-mail-composer");
+    assert.containsNone($, ".o-mail-composer");
 
     await click("button:contains(Send message)");
-    assert.containsOnce(target, ".o-mail-composer");
+    assert.containsOnce($, ".o-mail-composer");
 
     await click("button:contains(Send message)");
-    assert.containsNone(target, ".o-mail-composer");
+    assert.containsNone($, ".o-mail-composer");
 });
 
-QUnit.test('do not post message with "Enter" keyboard shortcut', async function (assert) {
+QUnit.test('do not post message with "Enter" keyboard shortcut', async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
@@ -439,17 +427,17 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsNone(target, ".o-mail-message");
+    assert.containsNone($, ".o-mail-message");
 
     await click("button:contains(Send message)");
     await insertText(".o-mail-composer-textarea", "Test");
     await triggerHotkey("Enter");
-    assert.containsNone(target, ".o-mail-message");
+    assert.containsNone($, ".o-mail-message");
 });
 
 QUnit.test(
     "should not display subject when subject is the same as the thread name",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({
             name: "Salutations, voyageur",
@@ -466,44 +454,41 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsNone(target, ".o-mail-message:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-mail-message:contains(Salutations, voyageur)");
     }
 );
 
-QUnit.test(
-    "scroll position is kept when navigating from one record to another",
-    async function (assert) {
-        patchUiSize({ size: SIZES.XXL });
-        const pyEnv = await startServer();
-        const partnerId_1 = pyEnv["res.partner"].create({ name: "Harry Potter" });
-        const partnerId_2 = pyEnv["res.partner"].create({ name: "Ron Weasley" });
-        // Fill both channels with random messages in order for the scrollbar to
-        // appear.
-        pyEnv["mail.message"].create(
-            Array(40)
-                .fill(0)
-                .map((_, index) => ({
-                    body: "Non Empty Body ".repeat(25),
-                    model: "res.partner",
-                    res_id: index & 1 ? partnerId_1 : partnerId_2,
-                }))
-        );
-        const { openFormView } = await start();
-        await openFormView("res.partner", partnerId_1);
-        const scrolltop_1 = target.querySelector(".o-mail-chatter-scrollable").scrollHeight / 2;
-        target.querySelector(".o-mail-chatter-scrollable").scrollTo({ top: scrolltop_1 });
-        await openFormView("res.partner", partnerId_2);
-        const scrolltop_2 = target.querySelector(".o-mail-chatter-scrollable").scrollHeight / 3;
-        target.querySelector(".o-mail-chatter-scrollable").scrollTo({ top: scrolltop_2 });
-        await openFormView("res.partner", partnerId_1);
-        assert.ok(isScrolledTo(target.querySelector(".o-mail-chatter-scrollable"), scrolltop_1));
+QUnit.test("scroll position is kept when navigating from one record to another", async (assert) => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Harry Potter" });
+    const partnerId_2 = pyEnv["res.partner"].create({ name: "Ron Weasley" });
+    // Fill both channels with random messages in order for the scrollbar to
+    // appear.
+    pyEnv["mail.message"].create(
+        Array(40)
+            .fill(0)
+            .map((_, index) => ({
+                body: "Non Empty Body ".repeat(25),
+                model: "res.partner",
+                res_id: index & 1 ? partnerId_1 : partnerId_2,
+            }))
+    );
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId_1);
+    const scrolltop_1 = $(".o-mail-chatter-scrollable")[0].scrollHeight / 2;
+    $(".o-mail-chatter-scrollable")[0].scrollTo({ top: scrolltop_1 });
+    await openFormView("res.partner", partnerId_2);
+    const scrolltop_2 = $(".o-mail-chatter-scrollable")[0].scrollHeight / 3;
+    $(".o-mail-chatter-scrollable")[0].scrollTo({ top: scrolltop_2 });
+    await openFormView("res.partner", partnerId_1);
+    assert.ok(isScrolledTo($(".o-mail-chatter-scrollable")[0], scrolltop_1));
 
-        await openFormView("res.partner", partnerId_2);
-        assert.ok(isScrolledTo(target.querySelector(".o-mail-chatter-scrollable"), scrolltop_2));
-    }
-);
+    await openFormView("res.partner", partnerId_2);
+    assert.ok(isScrolledTo($(".o-mail-chatter-scrollable")[0], scrolltop_2));
+});
 
-QUnit.test("basic chatter rendering", async function (assert) {
+QUnit.test("basic chatter rendering", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
     const views = {
@@ -521,10 +506,10 @@ QUnit.test("basic chatter rendering", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter");
 });
 
-QUnit.test("basic chatter rendering without activities", async function (assert) {
+QUnit.test("basic chatter rendering without activities", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
     const views = {
@@ -545,17 +530,17 @@ QUnit.test("basic chatter rendering without activities", async function (assert)
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-chatter");
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.containsOnce(target, "button[aria-label='Attach files']");
-    assert.containsNone(target, "button:contains(Activities)");
-    assert.containsOnce(target, ".o-mail-chatter-topbar-follower-list");
-    assert.containsOnce(target, ".o-mail-thread");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsOnce($, "button[aria-label='Attach files']");
+    assert.containsNone($, "button:contains(Activities)");
+    assert.containsOnce($, ".o-mail-chatter-topbar-follower-list");
+    assert.containsOnce($, ".o-mail-thread");
 });
 
 QUnit.test(
     'chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record',
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         const views = {
@@ -576,14 +561,14 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await click(".o_form_button_create");
-        assert.containsOnce(target, ".o-mail-message");
-        assert.containsOnce(target, ".o-mail-message-body:contains(Creating a new record...)");
+        assert.containsOnce($, ".o-mail-message");
+        assert.containsOnce($, ".o-mail-message-body:contains(Creating a new record...)");
     }
 );
 
 QUnit.test(
     "should not display subject when subject is the same as the default subject",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
         pyEnv["mail.message"].create({
@@ -594,13 +579,13 @@ QUnit.test(
         });
         const { openFormView } = await start();
         await openFormView("res.fake", fakeId);
-        assert.containsNone(target, ".o-mail-message:contains(Custom Default Subject)");
+        assert.containsNone($, ".o-mail-message:contains(Custom Default Subject)");
     }
 );
 
 QUnit.test(
     "should not display subject when subject is the same as the thread name with custom default subject",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
         pyEnv["mail.message"].create({
@@ -611,23 +596,24 @@ QUnit.test(
         });
         const { openFormView } = await start();
         await openFormView("res.fake", fakeId);
-        assert.containsNone(target, ".o-mail-message:contains(Custom Default Subject)");
+        assert.containsNone($, ".o-mail-message:contains(Custom Default Subject)");
     }
 );
 
-QUnit.test("basic chatter rendering without followers", async function (assert) {
+QUnit.test("basic chatter rendering without followers", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
     const views = {
-        "res.partner,false,form": `<form string="Partners">
-        <sheet>
-            <field name="name"/>
-        </sheet>
-        <div class="oe_chatter">
-            <field name="activity_ids"/>
-            <field name="message_ids"/>
-        </div>
-    </form>`,
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
@@ -635,31 +621,32 @@ QUnit.test("basic chatter rendering without followers", async function (assert) 
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(document.body, ".o-mail-chatter");
-    assert.containsOnce(document.body, ".o-mail-chatter-topbar");
-    assert.containsOnce(document.body, "button[aria-label='Attach files']");
-    assert.containsOnce(document.body, "button:contains(Activities)");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsOnce($, "button[aria-label='Attach files']");
+    assert.containsOnce($, "button:contains(Activities)");
     assert.containsNone(
-        document.body,
+        $,
         ".o-mail-chatter-topbar-follower-list",
         "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
     );
-    assert.containsOnce(document.body, ".o-mail-chatter .o-mail-thread");
+    assert.containsOnce($, ".o-mail-chatter .o-mail-thread");
 });
 
-QUnit.test("basic chatter rendering without messages", async function (assert) {
+QUnit.test("basic chatter rendering without messages", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
     const views = {
-        "res.partner,false,form": `<form string="Partners">
-        <sheet>
-            <field name="name"/>
-        </sheet>
-        <div class="oe_chatter">
-            <field name="message_follower_ids"/>
-            <field name="activity_ids"/>
-        </div>
-    </form>`,
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>`,
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
@@ -667,19 +654,19 @@ QUnit.test("basic chatter rendering without messages", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(document.body, ".o-mail-chatter");
-    assert.containsOnce(document.body, ".o-mail-chatter-topbar");
-    assert.containsOnce(document.body, "button[aria-label='Attach files']");
-    assert.containsOnce(document.body, "button:contains(Activities)");
-    assert.containsOnce(document.body, ".o-mail-chatter-topbar-follower-list");
+    assert.containsOnce($, ".o-mail-chatter");
+    assert.containsOnce($, ".o-mail-chatter-topbar");
+    assert.containsOnce($, "button[aria-label='Attach files']");
+    assert.containsOnce($, "button:contains(Activities)");
+    assert.containsOnce($, ".o-mail-chatter-topbar-follower-list");
     assert.containsNone(
-        document.body,
+        $,
         ".o-mail-chatter .o-mail-thread",
         "there should be no thread because the 'message_ids' field is not present in 'oe_chatter'"
     );
 });
 
-QUnit.test("chatter updating", async function (assert) {
+QUnit.test("chatter updating", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
@@ -706,10 +693,10 @@ QUnit.test("chatter updating", async function (assert) {
         props: { resIds: [partnerId_1, partnerId_2] },
     });
     await click(".o_pager_next");
-    assert.containsOnce(target, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message");
 });
 
-QUnit.test("post message on draft record", async function (assert) {
+QUnit.test("post message on draft record", async (assert) => {
     const views = {
         "res.partner,false,form": `
             <form string="Partners">
@@ -727,15 +714,15 @@ QUnit.test("post message on draft record", async function (assert) {
         views: [[false, "form"]],
     });
     await click("button:contains(Send message)");
-    await editInput(target, ".o-mail-composer-textarea", "Test");
+    await editInput(document.body, ".o-mail-composer-textarea", "Test");
     await click(".o-mail-composer button:contains(Send)");
-    assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message:contains(Test)");
+    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-mail-message:contains(Test)");
 });
 
 QUnit.test(
     "schedule activities on draft record should prompt with scheduling an activity (proceed with action)",
-    async function (assert) {
+    async (assert) => {
         const views = {
             "res.partner,false,form": `
                 <form string="Partners">
@@ -750,11 +737,11 @@ QUnit.test(
         const { openView } = await start({ serverData: { views } });
         await openView({ res_model: "res.partner", views: [[false, "form"]] });
         await click("button:contains(Activities)");
-        assert.containsOnce(document.body, ".o_dialog:contains(Schedule Activity)");
+        assert.containsOnce($, ".o_dialog:contains(Schedule Activity)");
     }
 );
 
-QUnit.test("upload attachment on draft record", async function (assert) {
+QUnit.test("upload attachment on draft record", async (assert) => {
     const views = {
         "res.partner,false,form": `
             <form string="Partners">
@@ -776,8 +763,8 @@ QUnit.test("upload attachment on draft record", async function (assert) {
         contentType: "text/plain",
         name: "text.txt",
     });
-    assert.containsNone(document.body, ".button[aria-label='Attach files']:contains(1)");
-    await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
-    await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), [file]));
+    assert.containsNone($, ".button[aria-label='Attach files']:contains(1)");
+    await afterNextRender(() => dragenterFiles($(".o-mail-chatter")[0]));
+    await afterNextRender(() => dropFiles($(".o-dropzone")[0], [file]));
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });

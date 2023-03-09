@@ -8,26 +8,18 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture } from "@web/../tests/helpers/utils";
-
-let target;
-
 const views = {
     "res.fake,false,form": `
-    <form string="Fake">
-        <sheet></sheet>
-        <div class="oe_chatter">
-            <field name="message_ids"/>
-            <field name="message_follower_ids"/>
-        </div>
-    </form>`,
+        <form string="Fake">
+            <sheet></sheet>
+            <div class="oe_chatter">
+                <field name="message_ids"/>
+                <field name="message_follower_ids"/>
+            </div>
+        </form>`,
 };
 
-QUnit.module("suggested_recipients", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("suggested_recipients");
 
 QUnit.test("with 3 or less suggested recipients: no 'show more' button", async function (assert) {
     const pyEnv = await startServer();
@@ -42,7 +34,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
     const { openFormView } = await start();
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    assert.containsNone(target, "button:contains(Show more)");
+    assert.containsNone($, "button:contains(Show more)");
 });
 
 QUnit.test(
@@ -61,7 +53,7 @@ QUnit.test(
         const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
-        assert.containsOnce(target, "button:contains(Show more)");
+        assert.containsOnce($, "button:contains(Show more)");
     }
 );
 
@@ -82,7 +74,7 @@ QUnit.test(
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
-        assert.containsN(target, ".o-mail-suggested-recipient", 4);
+        assert.containsN($, ".o-mail-suggested-recipient", 4);
     }
 );
 
@@ -103,7 +95,7 @@ QUnit.test(
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
-        assert.containsOnce(target, "button:contains(Show less)");
+        assert.containsOnce($, "button:contains(Show less)");
     }
 );
 
@@ -125,8 +117,8 @@ QUnit.test(
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
         await click("button:contains(Show less)");
-        assert.containsN(target, ".o-mail-suggested-recipient", 3);
-        assert.containsOnce(target, "button:contains(Show more)");
+        assert.containsN($, ".o-mail-suggested-recipient", 3);
+        assert.containsOnce($, "button:contains(Show more)");
     }
 );
 
@@ -143,7 +135,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
     const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    assert.containsOnce(target, ".o-mail-suggested-recipient input:checked");
+    assert.containsOnce($, ".o-mail-suggested-recipient input:checked");
 });
 
 QUnit.test("display reason for suggested recipient on mouse over", async function (assert) {
@@ -156,9 +148,9 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
     const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    const partnerTitle = target
-        .querySelector(`.o-mail-suggested-recipient[data-partner-id="${partnerId}"]`)
-        .getAttribute("title");
+    const partnerTitle = $(
+        `.o-mail-suggested-recipient[data-partner-id="${partnerId}"]`
+    )[0].getAttribute("title");
     assert.strictEqual(partnerTitle, "Add as recipient and follower (reason: Email partner)");
 });
 
@@ -168,9 +160,9 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
     const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    const checkboxUnchecked = target.querySelector(
+    const checkboxUnchecked = $(
         ".o-mail-suggested-recipient:not([data-partner-id]) input[type=checkbox]"
-    );
+    )[0];
     assert.notOk(checkboxUnchecked.checked);
 });
 
@@ -184,10 +176,10 @@ QUnit.test("suggested recipient with partner are checked by default", async func
     const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    const checkboxChecked = document.querySelector(
-        `.o-mail-suggested-recipient[data-partner-id="${partnerId}"] input[type=checkbox]`
+    assert.ok(
+        $(`.o-mail-suggested-recipient[data-partner-id="${partnerId}"] input[type=checkbox]`)[0]
+            .checked
     );
-    assert.ok(checkboxChecked.checked);
 });
 
 QUnit.test(
@@ -225,6 +217,6 @@ QUnit.test(
         await click("label:contains(john@test.be (john@test.be))");
         await waitUntil(".modal-header");
         await click(".modal-header > button.btn-close");
-        assert.containsNone(target, ".form-check-input:checked");
+        assert.containsNone($, ".form-check-input:checked");
     }
 );

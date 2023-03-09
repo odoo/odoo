@@ -1,17 +1,10 @@
 /** @odoo-module */
 
-import { getFixture } from "@web/../tests/helpers/utils";
-
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-let target;
-QUnit.module("messaging menu", {
-    beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("messaging menu");
 
-QUnit.test('livechats should be in "chat" filter', async function (assert) {
+QUnit.test('livechats should be in "chat" filter', async (assert) => {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({
         anonymous_name: "Visitor 11",
@@ -24,10 +17,10 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(target, ".o-mail-messaging-menu button:contains(All)");
+    assert.containsOnce($, ".o-mail-messaging-menu button:contains(All)");
     assert.hasClass($(".o-mail-messaging-menu button:contains(All)"), "fw-bolder");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(Visitor 11)");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Visitor 11)");
     await click(".o-mail-messaging-menu button:contains(Chat)");
     assert.hasClass($(".o-mail-messaging-menu button:contains(Chat)"), "fw-bolder");
-    assert.containsOnce(target, ".o-mail-notification-item:contains(Visitor 11)");
+    assert.containsOnce($, ".o-mail-notification-item:contains(Visitor 11)");
 });

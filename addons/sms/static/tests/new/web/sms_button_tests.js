@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, editInput, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let serverData;
-let target;
 
 QUnit.module("sms button field", {
     beforeEach() {
@@ -39,10 +38,9 @@ QUnit.module("sms button field", {
             },
         };
         setupViewRegistries();
-        target = getFixture();
     },
 });
-QUnit.test("Sms button in form view", async function (assert) {
+QUnit.test("Sms button in form view", async (assert) => {
     await makeView({
         type: "form",
         resModel: "visitor",
@@ -55,10 +53,10 @@ QUnit.test("Sms button in form view", async function (assert) {
                 </sheet>
             </form>`,
     });
-    assert.containsOnce(target.querySelector(".o_field_phone"), ".o_field_phone_sms");
+    assert.containsOnce($(".o_field_phone"), ".o_field_phone_sms");
 });
 
-QUnit.test("Sms button with option enable_sms set as False", async function (assert) {
+QUnit.test("Sms button with option enable_sms set as False", async (assert) => {
     await makeView({
         type: "form",
         resModel: "visitor",
@@ -72,42 +70,39 @@ QUnit.test("Sms button with option enable_sms set as False", async function (ass
                 </sheet>
             </form>`,
     });
-    assert.containsNone(target.querySelector(".o_field_phone"), ".o_field_phone_sms");
+    assert.containsNone($(".o_field_phone"), ".o_field_phone_sms");
+});
+
+QUnit.test("click on the sms button while creating a new record in a FormView", async (assert) => {
+    const form = await makeView({
+        type: "form",
+        resModel: "partner",
+        serverData,
+        arch: `
+            <form>
+                <sheet>
+                    <field name="foo"/>
+                    <field name="mobile" widget="phone"/>
+                </sheet>
+            </form>`,
+    });
+    patchWithCleanup(form.env.services.action, {
+        doAction: (action, options) => {
+            assert.strictEqual(action.type, "ir.actions.act_window");
+            assert.strictEqual(action.res_model, "sms.composer");
+            options.onClose();
+        },
+    });
+    await editInput(document.body, "[name='foo'] input", "John");
+    await editInput(document.body, "[name='mobile'] input", "+32494444411");
+    await click(document.body, ".o_field_phone_sms", true);
+    assert.strictEqual($("[name='foo'] input").val(), "John");
+    assert.strictEqual($("[name='mobile'] input").val(), "+32494444411");
 });
 
 QUnit.test(
-    "click on the sms button while creating a new record in a FormView",
-    async function (assert) {
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <field name="foo"/>
-                        <field name="mobile" widget="phone"/>
-                    </sheet>
-                </form>`,
-        });
-        patchWithCleanup(form.env.services.action, {
-            doAction: (action, options) => {
-                assert.strictEqual(action.type, "ir.actions.act_window");
-                assert.strictEqual(action.res_model, "sms.composer");
-                options.onClose();
-            },
-        });
-        await editInput(target, "[name='foo'] input", "John");
-        await editInput(target, "[name='mobile'] input", "+32494444411");
-        await click(target, ".o_field_phone_sms", true);
-        assert.strictEqual(target.querySelector("[name='foo'] input").value, "John");
-        assert.strictEqual(target.querySelector("[name='mobile'] input").value, "+32494444411");
-    }
-);
-
-QUnit.test(
     "click on the sms button in a FormViewDialog has no effect on the main form view",
-    async function (assert) {
+    async (assert) => {
         serverData.models.partner.fields.partner_ids = {
             string: "one2many partners field",
             type: "one2many",
@@ -142,20 +137,19 @@ QUnit.test(
                 options.onClose();
             },
         });
-        await editInput(target, "[name='foo'] input", "John");
-        await editInput(target, "[name='mobile'] input", "+32494444411");
-        await click(target, "[name='partner_ids'] .o-kanban-button-new");
-        assert.containsOnce(target, ".modal");
+        await editInput(document.body, "[name='foo'] input", "John");
+        await editInput(document.body, "[name='mobile'] input", "+32494444411");
+        await click(document.body, "[name='partner_ids'] .o-kanban-button-new");
+        assert.containsOnce(document.body, ".modal");
 
-        const modal = target.querySelector(".modal");
-        await editInput(modal, "[name='foo'] input", "Max");
-        await editInput(modal, "[name='mobile'] input", "+324955555");
-        await click(modal, ".o_field_phone_sms", true);
-        assert.strictEqual(modal.querySelector("[name='foo'] input").value, "Max");
-        assert.strictEqual(modal.querySelector("[name='mobile'] input").value, "+324955555");
+        await editInput($(".modal")[0], "[name='foo'] input", "Max");
+        await editInput($(".modal")[0], "[name='mobile'] input", "+324955555");
+        await click($(".modal")[0], ".o_field_phone_sms", true);
+        assert.strictEqual($(".modal [name='foo'] input").val(), "Max");
+        assert.strictEqual($(".modal [name='mobile'] input").val(), "+324955555");
 
-        await click(modal, ".o_form_button_cancel");
-        assert.strictEqual(target.querySelector("[name='foo'] input").value, "John");
-        assert.strictEqual(target.querySelector("[name='mobile'] input").value, "+32494444411");
+        await click($(".modal")[0], ".o_form_button_cancel");
+        assert.strictEqual($("[name='foo'] input").val(), "John");
+        assert.strictEqual($("[name='mobile'] input").val(), "+32494444411");
     }
 );

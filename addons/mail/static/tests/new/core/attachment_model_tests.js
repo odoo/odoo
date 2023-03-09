@@ -4,7 +4,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("attachment model test", {});
 
-QUnit.test("Attachment model properties", async function (assert) {
+QUnit.test("Attachment model properties", async (assert) => {
     const { env } = await start();
 
     const attachment = env.services["mail.attachment"].insert({

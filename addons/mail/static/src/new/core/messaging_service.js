@@ -186,8 +186,8 @@ export class Messaging {
                     if (channelsLeft.has(notif.payload.id)) {
                         // Do not handle new message notification if the channel
                         // was just left. This issue occurs because the
-                        // `mail.channel/leave` and the
-                        // `mail.channel/new_message` notifications come from
+                        // "mail.channel/leave" and the
+                        // "mail.channel/new_message" notifications come from
                         // the bus as a batch.
                         return;
                     }
@@ -465,7 +465,7 @@ export class Messaging {
 
             if (channel.type !== "channel" && !this.store.guest) {
                 // disabled on non-channel threads and
-                // on `channel` channels for performance reasons
+                // on "channel" channels for performance reasons
                 this.threadService.markAsFetched(channel);
             }
         }

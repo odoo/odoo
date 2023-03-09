@@ -1,15 +1,12 @@
 /** @odoo-module */
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { click } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
-let target;
 
 QUnit.module("SlideCategoryOneToManyField", {
     beforeEach() {
-        target = getFixture();
-
         serverData = {
             models: {
                 partner: {
@@ -70,14 +67,13 @@ QUnit.test("basic rendering", async (assert) => {
                 </field>
             </form>`,
     });
-    assert.containsOnce(target, ".o_field_x2many .o_list_renderer table.o_section_list_view");
-    assert.containsN(target, ".o_data_row", 2);
-    assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_is_section fw-bold");
-    const rows = target.querySelectorAll(".o_data_row");
-    assert.strictEqual(rows[0].textContent, "firstSectionTitle");
-    assert.strictEqual(rows[1].textContent, "recordTitlerecordName5");
-    assert.strictEqual(rows[0].querySelector("td[name=name]").getAttribute("colspan"), "3");
-    assert.strictEqual(rows[1].querySelector("td[name=name]").getAttribute("colspan"), null);
+    assert.containsOnce($, ".o_field_x2many .o_list_renderer table.o_section_list_view");
+    assert.containsN($, ".o_data_row", 2);
+    assert.hasClass($(".o_data_row:eq(0)"), "o_is_section fw-bold");
+    assert.strictEqual($(".o_data_row:eq(0)").text(), "firstSectionTitle");
+    assert.strictEqual($(".o_data_row:eq(1)").text(), "recordTitlerecordName5");
+    assert.strictEqual($(".o_data_row:eq(0) td[name=name]")[0].getAttribute("colspan"), "3");
+    assert.strictEqual($(".o_data_row:eq(1) td[name=name]")[0].getAttribute("colspan"), null);
 });
 
 QUnit.test("click on section behaves as usual in readonly mode", async (assert) => {
@@ -98,9 +94,9 @@ QUnit.test("click on section behaves as usual in readonly mode", async (assert) 
                 </field>
             </form>`,
     });
-    await click(target.querySelector(".o_data_cell"));
-    assert.containsNone(target, ".o_selected_row");
-    assert.containsOnce(target, ".modal .o_form_view");
+    await click($(".o_data_cell")[0]);
+    assert.containsNone($, ".o_selected_row");
+    assert.containsOnce($, ".modal .o_form_view");
 });
 
 QUnit.test("click on section edit the section in place", async (assert) => {
@@ -120,9 +116,9 @@ QUnit.test("click on section edit the section in place", async (assert) => {
                 </field>
             </form>`,
     });
-    await click(target.querySelector(".o_data_cell"));
-    assert.hasClass(target.querySelector(".o_is_section"), "o_selected_row");
-    assert.containsNone(target, ".modal .o_form_view");
+    await click($(".o_data_cell")[0]);
+    assert.hasClass($(".o_is_section"), "o_selected_row");
+    assert.containsNone($, ".modal .o_form_view");
 });
 
 QUnit.test("click on real line opens a dialog", async (assert) => {
@@ -142,9 +138,9 @@ QUnit.test("click on real line opens a dialog", async (assert) => {
                 </field>
             </form>`,
     });
-    await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
-    assert.containsNone(target, ".o_selected_row");
-    assert.containsOnce(target, ".modal .o_form_view");
+    await click($(".o_data_row:nth-child(2) .o_data_cell")[0]);
+    assert.containsNone($, ".o_selected_row");
+    assert.containsOnce($, ".modal .o_form_view");
 });
 
 QUnit.test("can create section inline", async (assert) => {
@@ -168,11 +164,11 @@ QUnit.test("can create section inline", async (assert) => {
                 </field>
             </form>`,
     });
-    assert.containsNone(target, ".o_selected_row.o_is_section");
+    assert.containsNone($, ".o_selected_row.o_is_section");
 
-    await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
-    assert.containsOnce(target, ".o_selected_row.o_is_section");
-    assert.containsNone(target, ".modal .o_form_view");
+    await click($(".o_field_x2many_list_row_add a")[1]);
+    assert.containsOnce($, ".o_selected_row.o_is_section");
+    assert.containsNone($, ".modal .o_form_view");
 });
 
 QUnit.test("creates real record in form dialog", async (assert) => {
@@ -197,7 +193,7 @@ QUnit.test("creates real record in form dialog", async (assert) => {
             </form>`,
     });
 
-    await click(target.querySelector(".o_field_x2many_list_row_add a"));
-    assert.containsNone(target, ".o_selected_row");
-    assert.containsOnce(target, ".modal .o_form_view");
+    await click($(".o_field_x2many_list_row_add a")[0]);
+    assert.containsNone($, ".o_selected_row");
+    assert.containsOnce($, ".modal .o_form_view");
 });

@@ -101,7 +101,7 @@ export class Attachment {
             return `/web/image/${this.id}?signature=${this.checksum}`;
         }
         if (this.isPdf) {
-            const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`;
+            const pdf_lib = "/web/static/lib/pdfjs/web/viewer.html?file=";
             if (!this.accessToken && this.originThread?.model === "mail.channel") {
                 return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
             }

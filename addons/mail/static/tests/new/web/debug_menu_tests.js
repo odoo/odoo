@@ -16,7 +16,7 @@ import { registry } from "@web/core/registry";
 
 QUnit.module("debug menu");
 
-QUnit.test("Manage Messages", async function (assert) {
+QUnit.test("Manage Messages", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     const serverData = getActionManagerServerData();
     // Add fake "mail.message" model and arch
@@ -25,9 +25,9 @@ QUnit.test("Manage Messages", async function (assert) {
         records: [],
     };
     Object.assign(serverData.views, {
-        "mail.message,false,list": `<tree/>`,
-        "mail.message,false,form": `<form/>`,
-        "mail.message,false,search": `<search/>`,
+        "mail.message,false,list": "<tree/>",
+        "mail.message,false,form": "<form/>",
+        "mail.message,false,search": "<search/>",
     });
     registry.category("debug").category("form").add("manageMessages", manageMessages);
     async function mockRPC(route, { method, model, kwargs }) {
@@ -54,8 +54,5 @@ QUnit.test("Manage Messages", async function (assert) {
     await click(dropdownItems[0]);
     await legacyExtraNextTick();
     assert.verifySteps(["message_read"]);
-    assert.strictEqual(
-        target.querySelector(".breadcrumb-item.active").innerText.trim(),
-        "Manage Messages"
-    );
+    assert.strictEqual($(".breadcrumb-item.active")[0].innerText.trim(), "Manage Messages");
 });

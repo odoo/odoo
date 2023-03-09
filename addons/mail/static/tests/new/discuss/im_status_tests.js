@@ -3,17 +3,11 @@
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 import { start, startServer, afterNextRender } from "@mail/../tests/helpers/test_utils";
 import { createLocalId } from "@mail/new/utils/misc";
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { nextTick } from "@web/../tests/helpers/utils";
 
-let target;
+QUnit.module("im status");
 
-QUnit.module("im status", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("initially online", async function (assert) {
+QUnit.test("initially online", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "online" });
     const channelId = pyEnv["mail.channel"].create({ name: "TestChanel" });
@@ -26,10 +20,10 @@ QUnit.test("initially online", async function (assert) {
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Online']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Online']");
 });
 
-QUnit.test("initially offline", async function (assert) {
+QUnit.test("initially offline", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "offline" });
     const channelId = pyEnv["mail.channel"].create({ name: "TestChannel" });
@@ -42,10 +36,10 @@ QUnit.test("initially offline", async function (assert) {
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Offline']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Offline']");
 });
 
-QUnit.test("initially away", async function (assert) {
+QUnit.test("initially away", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "away" });
     const channelId = pyEnv["mail.channel"].create({ name: "TestChanel" });
@@ -58,10 +52,10 @@ QUnit.test("initially away", async function (assert) {
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Idle']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Idle']");
 });
 
-QUnit.test("change icon on change partner im_status", async function (assert) {
+QUnit.test("change icon on change partner im_status", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "online" });
     const channelId = pyEnv["mail.channel"].create({ name: "TestChannel" });
@@ -74,22 +68,22 @@ QUnit.test("change icon on change partner im_status", async function (assert) {
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Online']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Online']");
 
     pyEnv["res.partner"].write([partnerId], { im_status: "offline" });
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Offline']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Offline']");
 
     pyEnv["res.partner"].write([partnerId], { im_status: "away" });
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Idle']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Idle']");
 
     pyEnv["res.partner"].write([partnerId], { im_status: "online" });
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce(target, ".o-mail-im-status i[title='Online']");
+    assert.containsOnce($, ".o-mail-im-status i[title='Online']");
 });
 
-QUnit.test("Can handle im_status of unknown partner", async function (assert) {
+QUnit.test("Can handle im_status of unknown partner", async (assert) => {
     const { env, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
     pyEnv["bus.bus"]._sendone("channel-1", "mail.record/insert", {

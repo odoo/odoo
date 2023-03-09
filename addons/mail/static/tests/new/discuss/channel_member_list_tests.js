@@ -2,19 +2,13 @@
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { createLocalId } from "@mail/new/utils/misc";
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { nextTick } from "@web/../tests/helpers/utils";
 
-let target;
-
-QUnit.module("channel member list", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("channel member list");
 
 QUnit.test(
     "there should be a button to show member list in the thread view topbar initially",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const channelId = pyEnv["mail.channel"].create({
@@ -27,13 +21,13 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, "[title='Show Member List']");
+        assert.containsOnce($, "[title='Show Member List']");
     }
 );
 
 QUnit.test(
     "should show member list when clicking on show member list button in thread view topbar",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const channelId = pyEnv["mail.channel"].create({
@@ -47,11 +41,11 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[title='Show Member List']");
-        assert.containsOnce(target, ".o-mail-channel-member-list");
+        assert.containsOnce($, ".o-mail-channel-member-list");
     }
 );
 
-QUnit.test("should have correct members in member list", async function (assert) {
+QUnit.test("should have correct members in member list", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["mail.channel"].create({
@@ -65,14 +59,14 @@ QUnit.test("should have correct members in member list", async function (assert)
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsN(target, ".o-mail-channel-member", 2);
-    assert.containsOnce(target, `.o-mail-channel-member:contains("${pyEnv.currentPartner.name}")`);
-    assert.containsOnce(target, ".o-mail-channel-member:contains('Demo')");
+    assert.containsN($, ".o-mail-channel-member", 2);
+    assert.containsOnce($, `.o-mail-channel-member:contains("${pyEnv.currentPartner.name}")`);
+    assert.containsOnce($, ".o-mail-channel-member:contains('Demo')");
 });
 
 QUnit.test(
     "there should be a button to hide member list in the thread view topbar when the member list is visible",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const channelId = pyEnv["mail.channel"].create({
@@ -86,35 +80,32 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[title='Show Member List']");
-        assert.containsOnce(target, "[title='Hide Member List']");
+        assert.containsOnce($, "[title='Hide Member List']");
     }
 );
 
-QUnit.test(
-    "chat with member should be opened after clicking on channel member",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
-            name: "TestChanel",
-            channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
-            ],
-            channel_type: "channel",
-        });
-        const { openDiscuss } = await start();
-        await openDiscuss(channelId);
-        await click("button[title='Show Member List']");
-        await click(".o-mail-channel-member.cursor-pointer");
-        assert.containsOnce(target, ".o-mail-autoresize-input[title='Demo']");
-    }
-);
+QUnit.test("chat with member should be opened after clicking on channel member", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["mail.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[title='Show Member List']");
+    await click(".o-mail-channel-member.cursor-pointer");
+    assert.containsOnce($, ".o-mail-autoresize-input[title='Demo']");
+});
 
 QUnit.test(
     "should show a button to load more members if they are not all loaded",
-    async function (assert) {
+    async (assert) => {
         // Test assumes at most 100 members are loaded at once.
         const pyEnv = await startServer();
         const channel_member_ids = [];
@@ -130,11 +121,11 @@ QUnit.test(
         await openDiscuss(channelId);
         pyEnv["mail.channel"].write([channelId], { channel_member_ids });
         await click("button[title='Show Member List']");
-        assert.containsOnce(target, "button:contains(Load more)");
+        assert.containsOnce($, "button:contains(Load more)");
     }
 );
 
-QUnit.test("Load more button should load more members", async function (assert) {
+QUnit.test("Load more button should load more members", async (assert) => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
@@ -151,10 +142,10 @@ QUnit.test("Load more button should load more members", async function (assert) 
     pyEnv["mail.channel"].write([channelId], { channel_member_ids });
     await click("button[title='Show Member List']");
     await click("button[title='Load more']");
-    assert.containsN(target, ".o-mail-channel-member", 102);
+    assert.containsN($, ".o-mail-channel-member", 102);
 });
 
-QUnit.test("Channel member count update after user joined", async function (assert) {
+QUnit.test("Channel member count update after user joined", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
@@ -170,7 +161,7 @@ QUnit.test("Channel member count update after user joined", async function (asse
     assert.strictEqual(thread.memberCount, 2);
 });
 
-QUnit.test("Channel member count update after user left", async function (assert) {
+QUnit.test("Channel member count update after user left", async (assert) => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });

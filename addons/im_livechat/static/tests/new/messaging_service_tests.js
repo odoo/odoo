@@ -8,7 +8,7 @@ import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging service");
 
-QUnit.test("Notify message received out of focus", async function (assert) {
+QUnit.test("Notify message received out of focus", async (assert) => {
     const pyEnv = await startServer();
     const senderId = pyEnv["res.users"].create({ name: "Bob" });
     const channelId = pyEnv["mail.channel"].create({

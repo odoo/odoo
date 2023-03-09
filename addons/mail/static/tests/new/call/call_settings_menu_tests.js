@@ -1,17 +1,12 @@
 /* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 
-let target;
-QUnit.module("call setting", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
+QUnit.module("call setting");
 
-QUnit.test("Renders the call settings", async function (assert) {
+QUnit.test("Renders the call settings", async (assert) => {
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -37,17 +32,17 @@ QUnit.test("Renders the call settings", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-discuss-header .fa-gear");
-    assert.containsOnce(target, ".o-mail-call-settings", "Should have a call settings menu");
-    assert.containsOnce(target, "label[aria-label='Input device']");
-    assert.containsOnce(target, "option[value=mockAudioDeviceId]");
-    assert.containsNone(target, "option[value=mockVideoDeviceId]");
-    assert.containsOnce(target, "input[title='toggle push-to-talk']");
-    assert.containsOnce(target, "label[aria-label='Voice detection threshold']");
-    assert.containsOnce(target, "input[title='Show video participants only']");
-    assert.containsOnce(target, "input[title='Blur video background']");
+    assert.containsOnce($, ".o-mail-call-settings", "Should have a call settings menu");
+    assert.containsOnce($, "label[aria-label='Input device']");
+    assert.containsOnce($, "option[value=mockAudioDeviceId]");
+    assert.containsNone($, "option[value=mockVideoDeviceId]");
+    assert.containsOnce($, "input[title='toggle push-to-talk']");
+    assert.containsOnce($, "label[aria-label='Voice detection threshold']");
+    assert.containsOnce($, "input[title='Show video participants only']");
+    assert.containsOnce($, "input[title='Blur video background']");
 });
 
-QUnit.test("activate push to talk", async function (assert) {
+QUnit.test("activate push to talk", async (assert) => {
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -62,12 +57,12 @@ QUnit.test("activate push to talk", async function (assert) {
     await openDiscuss(channelId);
     await click(".o-mail-discuss-header .fa-gear");
     await click("input[title='toggle push-to-talk']");
-    assert.containsOnce(target, "i[aria-label='Register new key']");
-    assert.containsOnce(target, "label[aria-label='Delay after releasing push-to-talk']");
-    assert.containsNone(target, "label[aria-label='Voice detection threshold']");
+    assert.containsOnce($, "i[aria-label='Register new key']");
+    assert.containsOnce($, "label[aria-label='Delay after releasing push-to-talk']");
+    assert.containsNone($, "label[aria-label='Voice detection threshold']");
 });
 
-QUnit.test("activate blur", async function (assert) {
+QUnit.test("activate blur", async (assert) => {
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -82,6 +77,6 @@ QUnit.test("activate blur", async function (assert) {
     await openDiscuss(channelId);
     await click(".o-mail-discuss-header .fa-gear");
     await click("input[title='Blur video background']");
-    assert.containsOnce(target, "label[aria-label='Background blur intensity']");
-    assert.containsOnce(target, "label[aria-label='Edge blur intensity']");
+    assert.containsOnce($, "label[aria-label='Background blur intensity']");
+    assert.containsOnce($, "label[aria-label='Edge blur intensity']");
 });

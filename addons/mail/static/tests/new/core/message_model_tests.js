@@ -5,7 +5,7 @@ import { str_to_datetime } from "web.time";
 
 QUnit.module("message model test", {});
 
-QUnit.test("Message model properties", async function (assert) {
+QUnit.test("Message model properties", async (assert) => {
     const { env } = await start();
     /** @type {import("@mail/new/core/store_service").Store} */
     const store = env.services["mail.store"];
