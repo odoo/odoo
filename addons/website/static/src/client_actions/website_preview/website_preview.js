@@ -341,6 +341,14 @@ export class WebsitePreview extends Component {
                 // Forward clicks to close backend client action's navbar
                 // dropdowns.
                 this.iframe.el.dispatchEvent(new MouseEvent('click', ev));
+            } else {
+                // When in edit mode, prevent the default behaviours of clicks
+                // as to avoid DOM changes not handled by the editor.
+                // (Such as clicking on a link that triggers navigating to
+                // another page.)
+                if (!ev.target.closest('#oe_manipulators')) {
+                    ev.preventDefault();
+                }
             }
 
             const linkEl = ev.target.closest('[href]');
