@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    task_id = fields.Many2one('project.task', string='Task')
+    task_id = fields.Many2one('project.task', string='Task', readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):

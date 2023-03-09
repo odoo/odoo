@@ -11,9 +11,9 @@ class Project(models.Model):
 
     def _compute_purchase_order_count(self):
         purchase_orders_per_task = {purchase_order['task_id'][0]: purchase_order['task_id_count']
-        for purchase_order in self.env['purchase.order']._read_group([
-            ('task_id', 'in', self.ids),
-        ], ['task_id'], ['task_id'])}
+            for purchase_order in self.env['purchase.order']._read_group([
+                ('task_id', 'in', self.ids),
+            ], ['task_id'], ['task_id'])}
         for task in self:
             task.purchase_order_count = purchase_orders_per_task.get(task.id, 0)
 
@@ -32,13 +32,7 @@ class Project(models.Model):
         }
 
     def action_open_task_purchase_orders(self):
-        """ Return the action for the views of the purchase order linked to the task.
-
-        Note: self.ensure_one()
-
-        :return: The action
-        :rtype: dict
-        """
+        """ Return the action for the views of the purchase order linked to the task."""
         self.ensure_one()
         purchase_order_ids = self.env['purchase.order'].search([('task_id', '=', self.id)])
         action = {

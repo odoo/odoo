@@ -11,9 +11,9 @@ class ProjectTask(models.Model):
 
     def _compute_mrp_order_count(self):
         mrp_orders_per_task = {order['task_id'][0]: order['task_id_count']
-        for order in self.env['mrp.production']._read_group([
-            ('task_id', 'in', self.ids),
-        ], ['task_id'], ['task_id'])}
+            for order in self.env['mrp.production']._read_group([
+                ('task_id', 'in', self.ids),
+            ], ['task_id'], ['task_id'])}
         for task in self:
             task.mrp_order_count = mrp_orders_per_task.get(task.id, 0)
 
@@ -28,13 +28,7 @@ class ProjectTask(models.Model):
         }
 
     def action_open_task_mrp_orders(self):
-        """ Return the action for the views of the mrp_orders linked to the task.
-
-        Note: self.ensure_one()
-
-        :return: The action
-        :rtype: dict
-        """
+        """ Return the action for the views of the mrp_orders linked to the task."""
         self.ensure_one()
         mrp_order_ids = self.env['mrp.production'].search([('task_id', '=', self.id)])
         action = {
