@@ -8,9 +8,15 @@ export class ForecastedDetails extends Component {
     setup() {
         this.orm = useService("orm");
 
+<<<<<<< HEAD
         this.onHandCondition =
             this.props.docs.lines.length &&
             !this.props.docs.lines.some((line) => line.document_in || line.replenishment_filled);
+||||||| parent of e91083032d9 (temp)
+        this.onHandCondition = this.props.docs.lines && !this.props.docs.lines.some(line => line.document_in || line.replenishment_filled);
+=======
+        this.onHandCondition = this.props.docs.lines.length && !this.props.docs.lines.some(line => line.document_in || line.replenishment_filled);
+>>>>>>> e91083032d9 (temp)
 
         this._formatFloat = (num) => {
             return formatFloat(num, { digits: this.props.docs.precision });
