@@ -280,32 +280,6 @@
             }
         }
     }
-    function makePropSetter(name) {
-        return function setProp(value) {
-            // support 0, fallback to empty string for other falsy values
-            this[name] = value === 0 ? 0 : value ? value.valueOf() : "";
-        };
-    }
-    function isProp(tag, key) {
-        switch (tag) {
-            case "input":
-                return (key === "checked" ||
-                    key === "indeterminate" ||
-                    key === "value" ||
-                    key === "readonly" ||
-                    key === "disabled");
-            case "option":
-                return key === "selected" || key === "disabled";
-            case "textarea":
-                return key === "value" || key === "readonly" || key === "disabled";
-            case "select":
-                return key === "value" || key === "disabled";
-            case "button":
-            case "optgroup":
-                return key === "disabled";
-        }
-        return false;
-    }
 
     function createEventHandler(rawEvent) {
         const eventName = rawEvent.split(".")[0];
@@ -608,6 +582,12 @@
     const nodeGetFirstChild = getDescriptor$1(nodeProto$2, "firstChild").get;
     const nodeGetNextSibling = getDescriptor$1(nodeProto$2, "nextSibling").get;
     const NO_OP = () => { };
+    function makePropSetter(name) {
+        return function setProp(value) {
+            // support 0, fallback to empty string for other falsy values
+            this[name] = value === 0 ? 0 : value ? value.valueOf() : "";
+        };
+    }
     const cache$1 = {};
     /**
      * Compiling blocks is a multi-step process:
@@ -720,6 +700,15 @@
                             const idx = parseInt(attrName.slice(16), 10);
                             info.push({
                                 type: "attribute",
+                                idx,
+                                name: attrValue,
+                                tag: tagName,
+                            });
+                        }
+                        else if (attrName.startsWith("block-property-")) {
+                            const idx = parseInt(attrName.slice(15), 10);
+                            info.push({
+                                type: "property",
                                 idx,
                                 name: attrValue,
                                 tag: tagName,
@@ -871,16 +860,22 @@
                         };
                     }
                     break;
+                case "property": {
+                    const refIdx = info.refIdx;
+                    const setProp = makePropSetter(info.name);
+                    ctx.locations.push({
+                        idx: info.idx,
+                        refIdx,
+                        setData: setProp,
+                        updateData: setProp,
+                    });
+                    break;
+                }
                 case "attribute": {
                     const refIdx = info.refIdx;
                     let updater;
                     let setter;
-                    if (isProp(info.tag, info.name)) {
-                        const setProp = makePropSetter(info.name);
-                        setter = setProp;
-                        updater = setProp;
-                    }
-                    else if (info.name === "class") {
+                    if (info.name === "class") {
                         setter = setClass;
                         updater = updateClass;
                     }
@@ -2485,6 +2480,18 @@
                 this.fiber = null;
             }
         }
+        /**
+         * Sets a ref to a given HTMLElement.
+         *
+         * @param name the name of the ref to set
+         * @param el the HTMLElement to set the ref to. The ref is not set if the el
+         *  is null, but useRef will not return elements that are not in the DOM
+         */
+        setRef(name, el) {
+            if (el) {
+                this.refs[name] = el;
+            }
+        }
         // ---------------------------------------------------------------------------
         // Block DOM methods
         // ---------------------------------------------------------------------------
@@ -3020,45 +3027,6 @@
         }
         return toggler(safeKey, block);
     }
-    let boundFunctions = new WeakMap();
-    const WeakMapGet = WeakMap.prototype.get;
-    const WeakMapSet = WeakMap.prototype.set;
-    function bind(component, fn) {
-        let boundFnMap = WeakMapGet.call(boundFunctions, component);
-        if (!boundFnMap) {
-            boundFnMap = new WeakMap();
-            WeakMapSet.call(boundFunctions, component, boundFnMap);
-        }
-        let boundFn = WeakMapGet.call(boundFnMap, fn);
-        if (!boundFn) {
-            boundFn = fn.bind(component);
-            WeakMapSet.call(boundFnMap, fn, boundFn);
-        }
-        return boundFn;
-    }
-    function multiRefSetter(refs, name) {
-        let count = 0;
-        return (el) => {
-            if (el) {
-                count++;
-                if (count > 1) {
-                    throw new OwlError("Cannot have 2 elements with same ref name at the same time");
-                }
-            }
-            if (count === 0 || el) {
-                refs[name] = el;
-            }
-        };
-    }
-    function singleRefSetter(refs, name) {
-        let _el = null;
-        return (el) => {
-            if (el || refs[name] === _el) {
-                refs[name] = el;
-                _el = el;
-            }
-        };
-    }
     /**
      * Validate the component props (or next props) against the (static) props
      * description.  This is potentially an expensive operation: it may needs to
@@ -3097,6 +3065,16 @@
             throw new OwlError(`Invalid props for component '${ComponentClass.name}': ` + errors.join(", "));
         }
     }
+    function makeRefWrapper(node) {
+        let refNames = new Set();
+        return (name, fn) => {
+            if (refNames.has(name)) {
+                throw new OwlError(`Cannot set the same ref more than once in the same component, ref "${name}" was set multiple times in ${node.name}`);
+            }
+            refNames.add(name);
+            return fn;
+        };
+    }
     const helpers = {
         withDefault,
         zero: Symbol("zero"),
@@ -3106,17 +3084,15 @@
         withKey,
         prepareList,
         setContextValue,
-        multiRefSetter,
-        singleRefSetter,
         shallowEqual,
         toNumber,
         validateProps,
         LazyValue,
         safeOutput,
-        bind,
         createCatcher,
         markRaw,
         OwlError,
+        makeRefWrapper,
     };
 
     const bdom = { text, createBlock, list, multi, html, toggler, comment };
@@ -3543,6 +3519,7 @@
         return replaceDynamicParts(s, compileExpr);
     }
 
+    const whitespaceRE = /\s+/g;
     // using a non-html document so that <inner/outer>HTML serializes as XML instead
     // of HTML (as we will parse it as xml later)
     const xmlDoc = document.implementation.createDocument(null, null, null);
@@ -3551,6 +3528,27 @@
     function generateId(prefix = "") {
         nextDataIds[prefix] = (nextDataIds[prefix] || 0) + 1;
         return prefix + nextDataIds[prefix];
+    }
+    function isProp(tag, key) {
+        switch (tag) {
+            case "input":
+                return (key === "checked" ||
+                    key === "indeterminate" ||
+                    key === "value" ||
+                    key === "readonly" ||
+                    key === "readOnly" ||
+                    key === "disabled");
+            case "option":
+                return key === "selected" || key === "disabled";
+            case "textarea":
+                return key === "value" || key === "readonly" || key === "readOnly" || key === "disabled";
+            case "select":
+                return key === "value" || key === "disabled";
+            case "button":
+            case "optgroup":
+                return key === "disabled";
+        }
+        return false;
     }
     // -----------------------------------------------------------------------------
     // BlockDescription
@@ -3627,10 +3625,8 @@
             this.code = [];
             this.hasRoot = false;
             this.hasCache = false;
-            this.hasRef = false;
-            // maps ref name to [id, expr]
-            this.refInfo = {};
             this.shouldProtectScope = false;
+            this.hasRefWrapper = false;
             this.name = name;
             this.on = on || null;
         }
@@ -3646,16 +3642,12 @@
         generateCode() {
             let result = [];
             result.push(`function ${this.name}(ctx, node, key = "") {`);
-            if (this.hasRef) {
-                result.push(`  const refs = this.__owl__.refs;`);
-                for (let name in this.refInfo) {
-                    const [id, expr] = this.refInfo[name];
-                    result.push(`  const ${id} = ${expr};`);
-                }
-            }
             if (this.shouldProtectScope) {
                 result.push(`  ctx = Object.create(ctx);`);
                 result.push(`  ctx[isBoundary] = 1`);
+            }
+            if (this.hasRefWrapper) {
+                result.push(`  let refWrapper = makeRefWrapper(this.__owl__);`);
             }
             if (this.hasCache) {
                 result.push(`  let cache = ctx.cache || {};`);
@@ -3938,6 +3930,9 @@
                 const match = translationRE.exec(value);
                 value = match[1] + this.translateFn(match[2]) + match[3];
             }
+            if (!ctx.inPreTag) {
+                value = value.replace(whitespaceRE, " ");
+            }
             if (!block || forceNewBlock) {
                 block = this.createBlock(block, "text", ctx);
                 this.insertBlock(`text(\`${value}\`)`, block, {
@@ -4002,21 +3997,29 @@
                     attrName = key === "t-att" ? null : key.slice(6);
                     expr = compileExpr(ast.attrs[key]);
                     if (attrName && isProp(ast.tag, attrName)) {
+                        if (attrName === "readonly") {
+                            // the property has a different name than the attribute
+                            attrName = "readOnly";
+                        }
                         // we force a new string or new boolean to bypass the equality check in blockdom when patching same value
                         if (attrName === "value") {
-                            // When the expression is falsy, fall back to an empty string
-                            expr = `new String((${expr}) || "")`;
+                            // When the expression is falsy (except 0), fall back to an empty string
+                            expr = `new String((${expr}) === 0 ? 0 : ((${expr}) || ""))`;
                         }
                         else {
                             expr = `new Boolean(${expr})`;
                         }
-                    }
-                    const idx = block.insertData(expr, "attr");
-                    if (key === "t-att") {
-                        attrs[`block-attributes`] = String(idx);
+                        const idx = block.insertData(expr, "prop");
+                        attrs[`block-property-${idx}`] = attrName;
                     }
                     else {
-                        attrs[`block-attribute-${idx}`] = attrName;
+                        const idx = block.insertData(expr, "attr");
+                        if (key === "t-att") {
+                            attrs[`block-attributes`] = String(idx);
+                        }
+                        else {
+                            attrs[`block-attribute-${idx}`] = attrName;
+                        }
                     }
                 }
                 else if (this.translatableAttributes.includes(key)) {
@@ -4053,8 +4056,8 @@
                             targetExpr = compileExpr(dynamicTgExpr);
                         }
                     }
-                    idx = block.insertData(`${fullExpression} === ${targetExpr}`, "attr");
-                    attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
+                    idx = block.insertData(`${fullExpression} === ${targetExpr}`, "prop");
+                    attrs[`block-property-${idx}`] = specialInitTargetAttr;
                 }
                 else if (hasDynamicChildren) {
                     const bValueId = generateId("bValue");
@@ -4062,8 +4065,8 @@
                     this.define(tModelSelectedExpr, fullExpression);
                 }
                 else {
-                    idx = block.insertData(`${fullExpression}`, "attr");
-                    attrs[`block-attribute-${idx}`] = targetAttr;
+                    idx = block.insertData(`${fullExpression}`, "prop");
+                    attrs[`block-property-${idx}`] = targetAttr;
                 }
                 this.helpers.add("toNumber");
                 let valueCode = `ev.target.${targetAttr}`;
@@ -4081,32 +4084,21 @@
             }
             // t-ref
             if (ast.ref) {
-                this.target.hasRef = true;
+                if (this.dev) {
+                    this.helpers.add("makeRefWrapper");
+                    this.target.hasRefWrapper = true;
+                }
                 const isDynamic = INTERP_REGEXP.test(ast.ref);
+                let name = `\`${ast.ref}\``;
                 if (isDynamic) {
-                    this.helpers.add("singleRefSetter");
-                    const str = replaceDynamicParts(ast.ref, (expr) => this.captureExpression(expr, true));
-                    const idx = block.insertData(`singleRefSetter(refs, ${str})`, "ref");
-                    attrs["block-ref"] = String(idx);
+                    name = replaceDynamicParts(ast.ref, (expr) => this.captureExpression(expr, true));
                 }
-                else {
-                    let name = ast.ref;
-                    if (name in this.target.refInfo) {
-                        // ref has already been defined
-                        this.helpers.add("multiRefSetter");
-                        const info = this.target.refInfo[name];
-                        const index = block.data.push(info[0]) - 1;
-                        attrs["block-ref"] = String(index);
-                        info[1] = `multiRefSetter(refs, \`${name}\`)`;
-                    }
-                    else {
-                        let id = generateId("ref");
-                        this.helpers.add("singleRefSetter");
-                        this.target.refInfo[name] = [id, `singleRefSetter(refs, \`${name}\`)`];
-                        const index = block.data.push(id) - 1;
-                        attrs["block-ref"] = String(index);
-                    }
+                let setRefStr = `(el) => this.__owl__.setRef((${name}), el)`;
+                if (this.dev) {
+                    setRefStr = `refWrapper(${name}, ${setRefStr})`;
                 }
+                const idx = block.insertData(setRefStr, "ref");
+                attrs["block-ref"] = String(idx);
             }
             const dom = xmlDoc.createElement(ast.tag);
             for (const [attr, val] of Object.entries(attrs)) {
@@ -4129,6 +4121,7 @@
                         tKeyExpr: ctx.tKeyExpr,
                         nameSpace,
                         tModelSelectedExpr,
+                        inPreTag: ctx.inPreTag || ast.tag === "pre",
                     });
                     this.compileAST(child, subCtx);
                 }
@@ -4513,13 +4506,15 @@
             value = this.captureExpression(value);
             if (name.includes(".")) {
                 let [_name, suffix] = name.split(".");
-                if (suffix === "bind") {
-                    this.helpers.add("bind");
-                    name = _name;
-                    value = `bind(this, ${value || undefined})`;
-                }
-                else {
-                    throw new OwlError("Invalid prop suffix");
+                name = _name;
+                switch (suffix) {
+                    case "bind":
+                        value = `(${value}).bind(this)`;
+                        break;
+                    case "alike":
+                        break;
+                    default:
+                        throw new OwlError("Invalid prop suffix");
                 }
             }
             name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
@@ -4606,9 +4601,16 @@
                 keyArg = `${ctx.tKeyExpr} + ${keyArg}`;
             }
             let id = generateId("comp");
+            const propList = [];
+            for (let p in ast.props || {}) {
+                let [name, suffix] = p.split(".");
+                if (!suffix) {
+                    propList.push(`"${name}"`);
+                }
+            }
             this.staticDefs.push({
                 id,
-                expr: `app.createComponent(${ast.isDynamic ? null : expr}, ${!ast.isDynamic}, ${!!ast.slots}, ${!!ast.dynamicProps}, ${!ast.props && !ast.dynamicProps})`,
+                expr: `app.createComponent(${ast.isDynamic ? null : expr}, ${!ast.isDynamic}, ${!!ast.slots}, ${!!ast.dynamicProps}, [${propList}])`,
             });
             if (ast.isDynamic) {
                 // If the component class changes, this can cause delayed renders to go
@@ -4786,15 +4788,11 @@
     // Text and Comment Nodes
     // -----------------------------------------------------------------------------
     const lineBreakRE = /[\r\n]/;
-    const whitespaceRE = /\s+/g;
     function parseTextCommentNode(node, ctx) {
         if (node.nodeType === Node.TEXT_NODE) {
             let value = node.textContent || "";
-            if (!ctx.inPreTag) {
-                if (lineBreakRE.test(value) && !value.trim()) {
-                    return null;
-                }
-                value = value.replace(whitespaceRE, " ");
+            if (!ctx.inPreTag && lineBreakRE.test(value) && !value.trim()) {
+                return null;
             }
             return { type: 0 /* Text */, value };
         }
@@ -5482,50 +5480,8 @@
         return new Function("app, bdom, helpers", code);
     }
 
-    const mainEventHandler = (data, ev, currentTarget) => {
-        const { data: _data, modifiers } = filterOutModifiersFromData(data);
-        data = _data;
-        let stopped = false;
-        if (modifiers.length) {
-            let selfMode = false;
-            const isSelf = ev.target === currentTarget;
-            for (const mod of modifiers) {
-                switch (mod) {
-                    case "self":
-                        selfMode = true;
-                        if (isSelf) {
-                            continue;
-                        }
-                        else {
-                            return stopped;
-                        }
-                    case "prevent":
-                        if ((selfMode && isSelf) || !selfMode)
-                            ev.preventDefault();
-                        continue;
-                    case "stop":
-                        if ((selfMode && isSelf) || !selfMode)
-                            ev.stopPropagation();
-                        stopped = true;
-                        continue;
-                }
-            }
-        }
-        // If handler is empty, the array slot 0 will also be empty, and data will not have the property 0
-        // We check this rather than data[0] being truthy (or typeof function) so that it crashes
-        // as expected when there is a handler expression that evaluates to a falsy value
-        if (Object.hasOwnProperty.call(data, 0)) {
-            const handler = data[0];
-            if (typeof handler !== "function") {
-                throw new OwlError(`Invalid handler (expected a function, received: '${handler}')`);
-            }
-            let node = data[1] ? data[1].__owl__ : null;
-            if (node ? node.status === 1 /* MOUNTED */ : true) {
-                handler.call(node ? node.component : null, ev);
-            }
-        }
-        return stopped;
-    };
+    // do not modify manually. This value is updated by the release script.
+    const version = "2.0.9";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5610,6 +5566,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             super(config);
             this.scheduler = new Scheduler();
             this.root = null;
+            this.name = config.name || "";
             this.Root = Root;
             window.__OWL_DEVTOOLS__.apps.add(this);
             if (config.test) {
@@ -5670,21 +5627,36 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             }
             window.__OWL_DEVTOOLS__.apps.delete(this);
         }
-        createComponent(name, isStatic, hasSlotsProp, hasDynamicPropList, hasNoProp) {
+        createComponent(name, isStatic, hasSlotsProp, hasDynamicPropList, propList) {
             const isDynamic = !isStatic;
-            function _arePropsDifferent(props1, props2) {
-                for (let k in props1) {
-                    if (props1[k] !== props2[k]) {
-                        return true;
-                    }
-                }
-                return hasDynamicPropList && Object.keys(props1).length !== Object.keys(props2).length;
+            let arePropsDifferent;
+            const hasNoProp = propList.length === 0;
+            if (hasSlotsProp) {
+                arePropsDifferent = (_1, _2) => true;
             }
-            const arePropsDifferent = hasSlotsProp
-                ? (_1, _2) => true
-                : hasNoProp
-                    ? (_1, _2) => false
-                    : _arePropsDifferent;
+            else if (hasDynamicPropList) {
+                arePropsDifferent = function (props1, props2) {
+                    for (let k in props1) {
+                        if (props1[k] !== props2[k]) {
+                            return true;
+                        }
+                    }
+                    return Object.keys(props1).length !== Object.keys(props2).length;
+                };
+            }
+            else if (hasNoProp) {
+                arePropsDifferent = (_1, _2) => false;
+            }
+            else {
+                arePropsDifferent = function (props1, props2) {
+                    for (let p of propList) {
+                        if (props1[p] !== props2[p]) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+            }
             const updateAndRender = ComponentNode.prototype.updateAndRender;
             const initiateRender = ComponentNode.prototype.initiateRender;
             return (props, key, ctx, parent, C) => {
@@ -5728,9 +5700,55 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         }
     }
     App.validateTarget = validateTarget;
+    App.version = version;
     async function mount(C, target, config = {}) {
         return new App(C, config).mount(target, config);
     }
+
+    const mainEventHandler = (data, ev, currentTarget) => {
+        const { data: _data, modifiers } = filterOutModifiersFromData(data);
+        data = _data;
+        let stopped = false;
+        if (modifiers.length) {
+            let selfMode = false;
+            const isSelf = ev.target === currentTarget;
+            for (const mod of modifiers) {
+                switch (mod) {
+                    case "self":
+                        selfMode = true;
+                        if (isSelf) {
+                            continue;
+                        }
+                        else {
+                            return stopped;
+                        }
+                    case "prevent":
+                        if ((selfMode && isSelf) || !selfMode)
+                            ev.preventDefault();
+                        continue;
+                    case "stop":
+                        if ((selfMode && isSelf) || !selfMode)
+                            ev.stopPropagation();
+                        stopped = true;
+                        continue;
+                }
+            }
+        }
+        // If handler is empty, the array slot 0 will also be empty, and data will not have the property 0
+        // We check this rather than data[0] being truthy (or typeof function) so that it crashes
+        // as expected when there is a handler expression that evaluates to a falsy value
+        if (Object.hasOwnProperty.call(data, 0)) {
+            const handler = data[0];
+            if (typeof handler !== "function") {
+                throw new OwlError(`Invalid handler (expected a function, received: '${handler}')`);
+            }
+            let node = data[1] ? data[1].__owl__ : null;
+            if (node ? node.status === 1 /* MOUNTED */ : true) {
+                handler.call(node ? node.component : null, ev);
+            }
+        }
+        return stopped;
+    };
 
     function status(component) {
         switch (component.__owl__.status) {
@@ -5755,7 +5773,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         const refs = node.refs;
         return {
             get el() {
-                return refs[name] || null;
+                const el = refs[name];
+                return (el === null || el === void 0 ? void 0 : el.ownerDocument.contains(el)) ? el : null;
             },
         };
     }
@@ -5860,7 +5879,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         html,
         comment,
     };
-    const __info__ = {};
+    const __info__ = {
+        version: App.version,
+    };
 
     TemplateSet.prototype._compileTemplate = function _compileTemplate(name, template) {
         return compile(template, {
@@ -5909,9 +5930,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.7';
-    __info__.date = '2023-02-20T08:44:56.632Z';
-    __info__.hash = '276c8a0';
+    __info__.date = '2023-03-13T09:56:54.968Z';
+    __info__.hash = '8893e02';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -159,10 +159,10 @@ odoo.define('web.OwlCompatibility', function (require) {
         }
 
         onWillUnmount() {
-            this.removeEl();
             if (this.widget && this.widget.on_detach_callback) {
                 this.widget.on_detach_callback();
             }
+            this.removeEl();
         }
 
         removeEl() {
