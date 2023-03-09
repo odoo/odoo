@@ -17,6 +17,7 @@
                     <field name="default_account_id" optional="show"/>
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
         </record>
