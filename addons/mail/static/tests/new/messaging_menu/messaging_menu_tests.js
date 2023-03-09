@@ -895,3 +895,35 @@ QUnit.test(
         assert.ok(items[1].textContent.includes("Message with needaction"));
     }
 );
+
+QUnit.test("preview for channel should show latest non-deleted message", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    const channelId = pyEnv["mail.channel"].create({ name: "Test" });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "message-1",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const messageId_2 = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "message-2",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const { env } = await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-notification-item");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsOnce(target, ".o-mail-notification-item:contains(message-2)");
+    // Simulate deletion of message-2
+    await afterNextRender(() =>
+        env.services.rpc("/mail/message/update_content", {
+            message_id: messageId_2,
+            body: "",
+            attachment_ids: [],
+        })
+    );
+    assert.containsOnce(target, ".o-mail-notification-item:contains(message-1)");
+});

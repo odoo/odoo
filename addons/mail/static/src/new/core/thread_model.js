@@ -246,7 +246,7 @@ export class Thread {
         if (this.messages.length === 0) {
             return undefined;
         }
-        return this._store.messages[Math.max(...this.messages.map((m) => m.id))];
+        return this._store.messages[Math.max(...this.nonEmptyMessages.map((m) => m.id))];
     }
 
     get mostRecentNeedactionMsg() {
