@@ -604,3 +604,6 @@ class StockMove(models.Model):
 
     def _get_all_related_aml(self):
         return self.account_move_ids.line_ids
+
+    def _get_all_related_sm(self, product):
+        return self.filtered(lambda m: m.product_id == product)
