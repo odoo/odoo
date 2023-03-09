@@ -108,11 +108,17 @@ class AccountMove(models.Model):
                 price_unit = line.price_unit
 
             description = line.name
-            if not is_downpayment:
-                if line.price_subtotal < 0:
-                    moves = line._get_downpayment_lines().move_id
-                    if moves:
-                        description += ', '.join([move.name for move in moves])
+
+            # Down payment lines:
+            # If there was a down payed amount that's been deducted from this move,
+            # we need to put a reference to the down payment invoice in the DatiFattureCollegate tag
+            downpayment_moves = self.env['account.move']
+            if not is_downpayment and line.price_subtotal < 0:
+                downpayment_moves = line._get_downpayment_lines().mapped("move_id")
+                if downpayment_moves:
+                    downpayment_moves_description = ', '.join([move.name for move in downpayment_moves])
+                    sep = ', ' if description else ''
+                    description = f"{description}{sep}{downpayment_moves_description}"
 
             line_dict = {
                 'line': line,
@@ -120,6 +126,7 @@ class AccountMove(models.Model):
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
+                'downpayment_moves': downpayment_moves,
             }
             invoice_lines.append(line_dict)
         return invoice_lines
@@ -263,6 +270,12 @@ class AccountMove(models.Model):
         invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(reverse_charge_refund, is_downpayment, convert_to_euros)
         tax_details = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, reverse_charge_refund)
 
+        # Reduce eventual downpayment_moves coming from the lines
+        downpayment_moves = self.env['account.move']
+        for line in invoice_lines:
+            for downpayment_move in line.get('downpayment_moves', []):
+                downpayment_moves += downpayment_move
+
         # Create file content.
         template_values = {
             'record': self,
@@ -282,6 +295,7 @@ class AccountMove(models.Model):
             'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
             'is_self_invoice': is_self_invoice,
             'partner_bank': self.partner_bank_id,
+            'downpayment_moves': downpayment_moves,
             'format_date': format_date,
             'format_monetary': format_monetary,
             'format_numbers': format_numbers,
