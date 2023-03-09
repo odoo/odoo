@@ -17,7 +17,7 @@ class FleetVehicle(models.Model):
             return
 
         moves = self.env['account.move.line'].read_group(
-            domain=[('vehicle_id', 'in', self.ids), ('move_id.state', '!=', 'cancel')],
+            domain=[('vehicle_id', 'in', self.ids), ('parent_state', '!=', 'cancel')],
             fields=['vehicle_id', 'move_id:array_agg'],
             groupby=['vehicle_id'],
         )
