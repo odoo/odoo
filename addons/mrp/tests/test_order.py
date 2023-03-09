@@ -2506,3 +2506,65 @@ class TestMrpOrder(TestMrpCommon):
                 raw.product_uom_qty = 1.25
 
         self.assertEqual(mo.move_raw_ids.quantity_done, 1.25)
+
+    def test_onchange_bom_ids_and_picking_type(self):
+        warehouse01 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse02, warehouse03 = self.env['stock.warehouse'].create([
+            {'name': 'Second Warehouse', 'code': 'WH02'},
+            {'name': 'Third Warehouse', 'code': 'WH03'},
+        ])
+
+        finished_product = self.env['product.product'].create({'name': 'finished product'})
+        bom_wh01, bom_wh02 = self.env['mrp.bom'].create([{
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_0.id, 'product_qty': 1})],
+            'picking_type_id': wh.manu_type_id.id,
+            'sequence': wh.id,
+        } for wh in [warehouse01, warehouse02]])
+
+        # Prioritize BoM of WH02
+        bom_wh01.sequence = bom_wh02.sequence + 1
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        self.assertEqual(mo_form.bom_id, bom_wh02, 'Should select the first BoM in the list, whatever the picking type is')
+        self.assertEqual(mo_form.picking_type_id, warehouse02.manu_type_id)
+
+        mo_form.bom_id = bom_wh01
+        self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the found BoM')
+
+        mo_form.bom_id = bom_wh02
+        self.assertEqual(mo_form.picking_type_id, warehouse02.manu_type_id, 'Should be adapted because of the found BoM')
+
+        mo_form.picking_type_id = warehouse01.manu_type_id
+        self.assertEqual(mo_form.bom_id, bom_wh02, 'Should not change')
+        self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should not change')
+
+        mo_form.picking_type_id = warehouse03.manu_type_id
+        mo_form.bom_id = bom_wh01
+        self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the found BoM '
+                                                                            '(the selected picking type should be ignored)')
+
+        mo_form = Form(self.env['mrp.production'].with_context(default_picking_type_id=warehouse03.manu_type_id.id))
+        mo_form.product_id = finished_product
+        self.assertFalse(mo_form.bom_id, 'Should not find any BoM, because of the defined picking type')
+        self.assertEqual(mo_form.picking_type_id, warehouse03.manu_type_id)
+
+        mo_form = Form(self.env['mrp.production'].with_context(default_picking_type_id=warehouse01.manu_type_id.id))
+        mo_form.product_id = finished_product
+        self.assertEqual(mo_form.bom_id, bom_wh01, 'Should select the BoM that matches the default picking type')
+        self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be the default one')
+
+        mo_form.bom_id = bom_wh02
+        self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should not change, because of default value')
+
+        mo_form.picking_type_id = warehouse02.manu_type_id
+        self.assertEqual(mo_form.bom_id, bom_wh02, 'Should not change')
+        self.assertEqual(mo_form.picking_type_id, warehouse02.manu_type_id, 'Should not change')
+
+        mo_form.picking_type_id = warehouse02.manu_type_id
+        mo_form.bom_id = bom_wh02
+        self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the default value')
