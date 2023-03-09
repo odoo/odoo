@@ -341,10 +341,12 @@ class PurchaseOrder(models.Model):
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
         return super(PurchaseOrder, self.with_context(**po_ctx)).message_post(**kwargs)
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Tweak 'view document' button for portal customers, calling directly
         routes for confirm specific to PO model. """
-        groups = super(PurchaseOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 
