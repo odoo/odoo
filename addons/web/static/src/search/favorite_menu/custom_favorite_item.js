@@ -24,7 +24,7 @@ export class CustomFavoriteItem extends Component {
      * @param {Event} ev
      */
     saveFavorite(ev) {
-        if (!this.state.description.length) {
+        if (!this.state.description) {
             this.notificationService.add(
                 this.env._t("A name for your favorite filter is required."),
                 { type: "danger" }
