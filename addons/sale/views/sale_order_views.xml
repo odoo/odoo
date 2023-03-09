@@ -155,6 +155,7 @@
                 <field name="team_id" optional="hide"/>
                 <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                 <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
                 <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
                 <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>

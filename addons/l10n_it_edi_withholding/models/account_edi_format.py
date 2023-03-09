@@ -11,6 +11,14 @@ _logger = logging.getLogger(__name__)
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, vat_only=True):
+        """ In case no withholding_type or pension_fund is specified, exclude taxes that have it.
+            It means that we're searching for VAT taxes, especially in the base l10n_it_edi module
+        """
+        if vat_only:
+            extra_domain += [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
+        return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain)
+
     def _l10n_it_edi_check_taxes_configuration(self, invoice):
         """
             Override to also allow pension_fund, withholding taxes.
@@ -38,9 +46,12 @@ class AccountEdiFormat(models.Model):
             withholding_type = tipo_ritenuta.text if tipo_ritenuta is not None else "RT02"
             withholding_reason = reason.text if reason is not None else "A"
             withholding_percentage = -float(percentage.text if percentage is not None else "0.0")
-            withholding_tax = self._l10n_it_edi_search_tax_for_import(company, withholding_percentage,
+            withholding_tax = self._l10n_it_edi_search_tax_for_import(
+                company,
+                withholding_percentage,
                 [('l10n_it_withholding_type', '=', withholding_type),
-                 ('l10n_it_withholding_reason', '=', withholding_reason)])
+                 ('l10n_it_withholding_reason', '=', withholding_reason)],
+                vat_only=False)
             if withholding_tax:
                 withholding_taxes.append(withholding_tax)
             else:
@@ -59,8 +70,11 @@ class AccountEdiFormat(models.Model):
             pension_fund_type = pension_fund_type.text if pension_fund_type is not None else ""
             tax_factor_percent = float(tax_factor_percent.text or "0.0")
             vat_tax_factor_percent = float(vat_tax_factor_percent.text or "0.0")
-            pension_fund_tax = self._l10n_it_edi_search_tax_for_import(company, tax_factor_percent,
-                [('l10n_it_pension_fund_type', '=', pension_fund_type)])
+            pension_fund_tax = self._l10n_it_edi_search_tax_for_import(
+                company,
+                tax_factor_percent,
+                [('l10n_it_pension_fund_type', '=', pension_fund_type)],
+                vat_only=False)
             if pension_fund_tax:
                 pension_fund_taxes.append(pension_fund_tax)
             else:
@@ -100,9 +114,11 @@ class AccountEdiFormat(models.Model):
                 continue
             enasarco_amount = float(number_text)
             enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
-            enasarco_tax = self._l10n_it_edi_search_tax_for_import(company, enasarco_percentage, [
-                ('l10n_it_pension_fund_type', '=', 'TC07'),
-            ])
+            enasarco_tax = self._l10n_it_edi_search_tax_for_import(
+                company,
+                enasarco_percentage,
+                [('l10n_it_pension_fund_type', '=', 'TC07')],
+                vat_only=False)
             if enasarco_tax:
                 invoice_line_form.tax_ids |= enasarco_tax
             else:
