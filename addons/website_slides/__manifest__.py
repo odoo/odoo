@@ -247,8 +247,6 @@ Featuring
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/xml/colorpicker.xml',
-            'web/static/src/legacy/js/widgets/translation_dialog.js',
-            'web/static/src/legacy/xml/translation_dialog.xml',
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
             'web/static/src/legacy/js/services/session.js',

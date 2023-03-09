@@ -6,8 +6,6 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { viewService } from "@web/views/view_service";
-import { ormService } from "@web/core/orm_service";
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { getEvaluatedCell } from "../utils/getters";
@@ -21,8 +19,6 @@ function beforeEach() {
         .add("menu", menuService)
         .add("action", actionService)
         .add("spreadsheetLinkMenuCell", spreadsheetLinkMenuCellService);
-    registry.category("services").add("view", viewService, { force: true }); // #action-serv-leg-compat-js-class
-    registry.category("services").add("orm", ormService, { force: true }); // #action-serv-leg-compat-js-class
 }
 
 QUnit.module("spreadsheet > link", { beforeEach });

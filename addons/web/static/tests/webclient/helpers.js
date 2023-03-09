@@ -50,7 +50,7 @@ import session from "web.session";
 import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
 import { uiService } from "@web/core/ui/ui_service";
-import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
+import { ClientActionAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
@@ -260,14 +260,6 @@ export async function createWebClient(params) {
     // to be destroyed. We thus need to manually destroy them here.
     const controllers = [];
     patchWithCleanup(ClientActionAdapter.prototype, {
-        setup() {
-            this._super();
-            onMounted(() => {
-                controllers.push(this.widget);
-            });
-        },
-    });
-    patchWithCleanup(ViewAdapter.prototype, {
         setup() {
             this._super();
             onMounted(() => {
