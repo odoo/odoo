@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="pg_indexes_tree">
+        <field name="name">pg.indexes.tree</field>
+        <field name="model">pg.indexes</field>
+        <field name="arch" type="xml">
+            <tree string="PG Indexes">
+                <field name="tablename" optional="hide"/>
+                <field name="indexname"/>
+                <field name="indexdef"/>
+                <field name="indexsize" widget="integer_size"/>
+                <field name="idx_scan"/>
+                <field name="idx_tup_read"/>
+                <field name="idx_tup_fetch"/>
+                <button name="drop_index" type="object" string="Drop"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="pg_indexes_search">
+        <field name="name">pg.indexes.search</field>
+        <field name="model">pg.indexes</field>
+        <field name="arch" type="xml">
+            <search string="PG Indexes">
+                <field name="tablename"/>
+                <field name="indexname"/>
+                <group expand="0" string="Group By">
+                    <filter string="Table Name" name="group_by_tablename" domain="[]" context="{'group_by': 'tablename'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pg_indexes_action">
+        <field name="name">PG Indexes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pg.indexes</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_group_by_tablename': 1}</field>
+    </record>
+
+
+    <record model="ir.ui.view" id="pg_create_index_form">
+        <field name="name">pg.create.index.form</field>
+        <field name="model">pg.create.index</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="unique"/>
+                            <field name="index_type"/>
+                            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="field_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                            <field name="domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                            <field name="domain_is_valid" invisible="1"/>
+                            <div colspan="2" class="text-warning" attrs="{'invisible': ['|', ('model_id', '=', False), ('domain_is_valid', '=', True)]}">
+                                The domain is not valid: it should only contain direct attributes of the indexed table.
+                                It will be ignored when creating the index.
+                            </div>
+                        </group>
+                    </group>
+                    <code><field name="query"/></code>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pg_create_index_action">
+        <field name="name">PG Create Index</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pg.create.index</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

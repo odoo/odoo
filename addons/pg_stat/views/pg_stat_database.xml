@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="pg_stat_database_tree">
+        <field name="name">pg.stat.database.tree</field>
+        <field name="model">pg.stat.database</field>
+        <field name="arch" type="xml">
+            <tree string="PG Database Stat">
+                <field name="numbackends" optional="show"/>
+                <field name="xact_commit" optional="show"/>
+                <field name="xact_rollback" optional="show"/>
+                <field name="blks_read" optional="show"/>
+                <field name="blks_hit" optional="show"/>
+                <field name="tup_returned" optional="hide"/>
+                <field name="tup_fetched" optional="hide"/>
+                <field name="tup_inserted" optional="hide"/>
+                <field name="tup_updated" optional="hide"/>
+                <field name="tup_deleted" optional="hide"/>
+                <field name="conflicts" optional="hide"/>
+                <field name="temp_files" optional="hide"/>
+                <field name="temp_bytes" optional="hide"/>
+                <field name="deadlocks" optional="show"/>
+                <field name="checksum_failures" optional="show"/>
+                <field name="checksum_last_failure" optional="show"/>
+                <field name="blk_read_time" optional="show"/>
+                <field name="blk_write_time" optional="show"/>
+                <field name="stats_reset" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pg_stat_database_action">
+       <field name="name">PG Database Stat</field>
+       <field name="type">ir.actions.act_window</field>
+       <field name="res_model">pg.stat.database</field>
+       <field name="view_mode">tree</field>
+    </record>
+</odoo>

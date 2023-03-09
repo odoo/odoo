@@ -289,6 +289,10 @@ export function formatInteger(value, options = {}) {
     return insertThousandsSep(value.toFixed(0), thousandsSep, grouping);
 }
 
+export function formatIntegerSize(value) {
+    return formatInteger(value, {humanReadableSize: true})
+}
+
 /**
  * Returns a string representing a many2one value. The value is expected to be
  * either `false` or an array in the form [id, display_name]. The returned
@@ -472,7 +476,7 @@ registry
     .add("float_time", formatFloatTime)
     .add("html", (value) => value)
     .add("integer", formatInteger)
-    .add('integer_size', (value) => formatInteger(value, {humanReadableSize: true}))
+    .add('integer_size', formatIntegerSize)
     .add("json", formatJson)
     .add("many2one", formatMany2one)
     .add("many2one_reference", formatInteger)
