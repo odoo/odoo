@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+from odoo import sql_db
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import Query
 
@@ -128,3 +130,38 @@ class TestQuery(TransactionCase):
         self.assertEqual(list(query), records.ids)
         self.cr.execute(*query.select())
         self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
+
+
+class TestSqlFormat(TransactionCase):
+    def test_sqlformat_without_sqlparse(self):
+        self.patch(sql_db, 'sqlparse', None)
+        query = "select name from ir_module_module where state IN ('to install', 'to upgrade')"
+        self.assertEqual(sql_db.sqlformat(query), query)
+
+    @unittest.skipUnless(sql_db.sqlparse, "sqlparse optional lib not installed")
+    def test_sqlformat_simple(self):
+        query = "select name from ir_module_module where state IN ('to install', 'to upgrade')"
+        self.assertEqual(sql_db.sqlformat(query), (
+            "    SELECT name\n"
+            "    FROM ir_module_module\n"
+            "    WHERE state IN ('to install', 'to upgrade')"
+        ))
+
+    @unittest.skipUnless(sql_db.sqlparse, "sqlparse optional lib not installed")
+    def test_sqlformat_word_wrap(self):
+        query = ' '.join('''
+            SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version
+            FROM ir_module_module
+            WHERE name IN (
+                'base', 'web', 'web_kanban_gauge', 'web_gantt', 'web_grid',
+                'base_import', 'base_setup', 'web_cohort', 'auth_totp', 'bus', 'web_tour',
+                'web_enterprise', 'iap', 'web_map', 'web_editor', 'web_unsplash', 'web_mobile'
+            )
+        '''.split())
+        self.assertEqual(sql_db.sqlformat(query), (
+            "    SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version\n"
+            "    FROM ir_module_module\n"
+            "    WHERE name IN ('base', 'web', 'web_kanban_gauge', 'web_gantt', 'web_grid', 'base_import',\n"
+            "                   'base_setup', 'web_cohort', 'auth_totp', 'bus', 'web_tour', 'web_enterprise',\n"
+            "                   'iap', 'web_map', 'web_editor', 'web_unsplash', 'web_mobile')"
+        ))

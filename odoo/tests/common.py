@@ -56,7 +56,7 @@ from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, sqlformat
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
@@ -445,15 +445,17 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         self.assertEqual(
             len(actual_queries), len(expected),
             "\n---- actual queries:\n%s\n---- expected queries:\n%s" % (
-                "\n".join(actual_queries), "\n".join(expected),
+                "\n".join(map(sqlformat, actual_queries)),
+                "\n".join(map(sqlformat, expected)),
             )
         )
         for actual_query, expect_query in zip(actual_queries, expected):
-            self.assertEqual(
-                "".join(actual_query.lower().split()),
-                "".join(expect_query.lower().split()),
-                "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
-            )
+            if ("".join(actual_query.lower().split()) !=
+                "".join(expect_query.lower().split())):
+                self.fail("\n---- actual query:\n{}\n\n---- not like:\n{}\n".format(
+                    sqlformat(actual_query).strip(),
+                    sqlformat(expect_query).strip(),
+                ))
 
     @contextmanager
     def assertQueryCount(self, default=0, flush=True, **counters):

@@ -11,6 +11,7 @@ the ORM does, in fact.
 import logging
 import os
 import re
+import textwrap
 import threading
 import time
 import uuid
@@ -29,12 +30,35 @@ from werkzeug import urls
 from . import tools
 from .tools.func import frame_codeinfo, locked
 
+try:
+    import sqlparse
+except ImportError:
+    sqlparse = None
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 def undecimalize(value, cr):
     if value is None:
         return None
     return float(value)
+
+
+def sqlformat(query):
+    if not sqlparse:
+        return query
+
+    indent_width = 4
+    return textwrap.indent(
+        sqlparse.format(
+            query.strip(),
+            indent_width=indent_width,
+            keyword_case='upper',
+            reindent=True,
+            truncate_strings=1024,
+            wrap_after=79 - indent_width,
+        ),
+        ' ' * indent_width
+    )
 
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700), 'float', undecimalize))
 
@@ -297,7 +321,7 @@ class Cursor(BaseCursor):
 
     def _format(self, query, params=None):
         encoding = psycopg2.extensions.encodings[self.connection.encoding]
-        return self._obj.mogrify(query, params).decode(encoding, 'replace')
+        return sqlformat(self._obj.mogrify(query, params).decode(encoding, 'replace'))
 
     def execute(self, query, params=None, log_exceptions=True):
         global sql_counter
@@ -316,7 +340,12 @@ class Cursor(BaseCursor):
         finally:
             delay = real_time() - start
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
+                _logger.debug(
+                    "[%.3f ms] query:%s%s",
+                    1000 * delay,
+                    '\n' if sqlparse else ' ',
+                    self._format(query, params)
+                )
 
         # simple query count is always computed
         self.sql_log_count += 1
