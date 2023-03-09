@@ -1,8 +1,10 @@
 /* @odoo-module */
 
+import { markup } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
-import { isNumeric, isX2Many } from "@web/views/utils";
+import { _t } from "@web/core/l10n/translation";
+import { evalDomain, isNumeric, isX2Many } from "@web/views/utils";
 import { DataPoint } from "./datapoint";
 
 export class Record extends DataPoint {
@@ -30,6 +32,7 @@ export class Record extends DataPoint {
         }
         this.selected = false; // TODO: rename into isSelected?
         this.isDirty = false;
+        this._invalidFields = new Set();
     }
 
     // -------------------------------------------------------------------------
@@ -48,9 +51,8 @@ export class Record extends DataPoint {
     // Public
     // -------------------------------------------------------------------------
 
-    // TODO: remove?
     isInvalid(fieldName) {
-        return false;
+        return this._invalidFields.has(fieldName);
     }
 
     // TODO: remove?
@@ -79,6 +81,8 @@ export class Record extends DataPoint {
         Object.assign(this._changes, changes);
         Object.assign(this.data, changes);
         this._setEvalContext();
+        this._removeInvalidFields(Object.keys(changes));
+        // FIXME: should we remove this from model? Only for standalone case
         this.model.bus.trigger("RELATIONAL_MODEL:RECORD_UPDATED", {
             record: this,
             changes: this._getChanges(),
@@ -114,13 +118,22 @@ export class Record extends DataPoint {
         this._changes = {};
         this.data = { ...this._values };
         this._setEvalContext();
+        this._invalidFields.clear();
     }
 
     async save({ noReload } = {}) {
         // TODO: mutexify
         // TODO: handle errors
-        // TODO: prevent saving if no changes?
-        // TODO: check validity
+        if (!this._checkValidity()) {
+            const items = [...this._invalidFields].map((fieldName) => {
+                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+            }, this);
+            this.model.notificationService.add(markup(`<ul>${items.join("")}</ul>`), {
+                title: _t("Invalid fields: "),
+                type: "danger",
+            });
+            return false;
+        }
         const changes = this._getChanges();
         if (!Object.keys(changes).length) {
             return true;
@@ -169,6 +182,11 @@ export class Record extends DataPoint {
         this.data = { ...this._values, ...this._changes };
         this.resId = resId;
         this._setEvalContext();
+        this._invalidFields.clear();
+    }
+
+    async setInvalidField(fieldName) {
+        this._invalidFields.add(fieldName);
     }
 
     toggleSelection(selected) {
@@ -183,14 +201,43 @@ export class Record extends DataPoint {
     // Protected
     // -------------------------------------------------------------------------
 
+    _checkValidity() {
+        for (const fieldName in this.activeFields) {
+            const fieldType = this.fields[fieldName].type;
+            const activeField = this.activeFields[fieldName];
+            if (activeField.alwaysInvisible || !this._isRequired(fieldName)) {
+                this._removeInvalidFields([fieldName]);
+                continue;
+            }
+            switch (fieldType) {
+                case "boolean":
+                case "float":
+                case "integer":
+                case "monetary":
+                    continue;
+                case "one2many":
+                case "many2many":
+                    if (!this.isX2ManyValid(fieldName)) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
+                default:
+                    if (!this.data[fieldName]) {
+                        this.setInvalidField(fieldName);
+                    }
+            }
+        }
+        return !this._invalidFields.size;
+    }
+
     _getChanges() {
         const changes = {};
         for (const [fieldName, value] of Object.entries(this._changes)) {
             const type = this.fields[fieldName].type;
             if (type === "date") {
-                changes[fieldName] =  value ? serializeDate(value) : false;
+                changes[fieldName] = value ? serializeDate(value) : false;
             } else if (type === "datetime") {
-                changes[fieldName] =  value ? serializeDateTime(value) : false;
+                changes[fieldName] = value ? serializeDateTime(value) : false;
             } else if (type === "many2one") {
                 changes[fieldName] = value ? value[0] : false;
             } else {
@@ -250,6 +297,21 @@ export class Record extends DataPoint {
         //     evalContext.parent = this.getParentRecordContext();
         // }
         return evalContext;
+    }
+
+    _isRequired(fieldName) {
+        const required = this.activeFields[fieldName].required;
+        return required ? evalDomain(required, this.evalContext) : false;
+    }
+
+    _isX2ManyValid(fieldName) {
+        return this.data[fieldName].records.every((r) => r._checkValidity());
+    }
+
+    _removeInvalidFields(fieldNames) {
+        for (const fieldName of fieldNames) {
+            this._invalidFields.delete(fieldName);
+        }
     }
 
     /**

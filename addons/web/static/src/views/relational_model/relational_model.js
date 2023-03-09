@@ -19,9 +19,11 @@ export class RelationalModel extends Model {
         return "Object";
     }
 
-    setup(params, { user, company }) {
+    setup(params, { user, company, notification }) {
         this.user = user;
         this.company = company;
+        this.notificationService = notification;
+
         this.bus = new EventBus();
 
         this.keepLast = markRaw(new KeepLast());
@@ -240,7 +242,7 @@ export class RelationalModel extends Model {
     }
 }
 
-RelationalModel.services = ["user", "company"];
+RelationalModel.services = ["user", "company", "notification"];
 RelationalModel.Record = Record;
 RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;

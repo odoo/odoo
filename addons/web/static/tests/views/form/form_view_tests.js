@@ -2230,7 +2230,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("two occurrences of invalid field in form view", async function (assert) {
+    QUnit.test("two occurrences of invalid field in form view", async function (assert) {
         serverData.models.partner.fields.trululu.required = true;
 
         await makeView({
@@ -2250,6 +2250,33 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_form_label.o_field_invalid", 2);
         assert.containsN(target, ".o_field_many2one.o_field_invalid", 2);
+    });
+
+    QUnit.test("two occurrences of invalid integer fields in form view", async function (assert) {
+        serverData.models.partner.fields.trululu.required = true;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="int_field" class="a"/>
+                        <field name="int_field" class="b"/>
+                    </group>
+                </form>`,
+        });
+
+        await editInput(target, ".a input", "abc");
+
+        assert.containsN(target, ".o_form_label.o_field_invalid", 2);
+        assert.containsN(target, ".o_field_integer.o_field_invalid", 2);
+
+        await editInput(target, ".b input", "10");
+
+        assert.containsNone(target, ".o_form_label.o_field_invalid");
+        assert.containsNone(target, ".o_field_integer.o_field_invalid");
     });
 
     QUnit.tttt("required field computed by another field in a form view", async function (assert) {
