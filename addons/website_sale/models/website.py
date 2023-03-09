@@ -372,7 +372,10 @@ class Website(models.Model):
             previous_fiscal_position = sale_order_sudo.fiscal_position_id
             previous_pricelist = sale_order_sudo.pricelist_id
 
+            # Reset the session pricelist according to logged partner pl
+            request.session.pop('website_sale_current_pl', None)
             pricelist_id = self._get_current_pricelist_id(partner_sudo)
+            request.session['website_sale_current_pl'] = pricelist_id
 
             # change the partner, and trigger the computes (fpos)
             sale_order_sudo.write({
