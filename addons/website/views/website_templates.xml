@@ -76,7 +76,20 @@
     </xpath>
 
     <xpath expr="//head" position="attributes">
-        <attribute name="t-cache">('assets' in request.session.debug, main_object) if main_object and main_object._name == 'website.page' and not (editable or translatable) else None</attribute>
+        <!--
+        Cache the <head> of the website.layout:
+        - For each individual website.page record (their css/js might be the
+          same but their title will not for example). Arguably we could do this
+          for any record (not only website.page) but this t-cache was originally
+          added to replace the website.page own cache system. For other records,
+          it could probably depend on each individual access right.
+        - Only for non-designers (especially visitors) (hence the "editable or
+          translatable" check).
+        - Only if not in any debug mode (we want any correct value of debug mode
+          to correctly appear in the `odoo` object + assets may depend on this
+          (e.g. debug=assets or debug=tests)).
+        -->
+        <attribute name="t-cache">main_object if main_object and main_object._name == 'website.page' and not request.session.debug and not editable and not translatable else None</attribute>
     </xpath>
     <xpath expr="//head/*[1]" position="before">
         <t t-if="not title">
