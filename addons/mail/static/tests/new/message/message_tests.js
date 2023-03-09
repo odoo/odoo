@@ -1412,3 +1412,22 @@ QUnit.test("message with body 'test' should not be considered empty", async func
     await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-message");
 });
+
+QUnit.test("Can reply to chatter messages from history", async function (assert) {
+    const pyEnv = await startServer();
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello World!",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        is_read: true,
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss("mail.box_history");
+    assert.containsOnce(target, ".o-mail-message-actions [title='Reply']");
+});

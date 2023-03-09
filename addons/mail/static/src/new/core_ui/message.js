@@ -198,11 +198,7 @@ export class Message extends Component {
     }
 
     get canReplyTo() {
-        return (
-            this.message.originThread?.allowReplies &&
-            this.props.messageToReplyTo &&
-            (this.message.isNeedaction || this.message.resModel === "mail.channel")
-        );
+        return this.message.originThread?.allowReplies && this.props.messageToReplyTo;
     }
 
     /**
