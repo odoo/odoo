@@ -4,6 +4,7 @@ import { round_precision as round_pr } from "web.utils";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, onMounted, onWillUnmount, useExternalListener, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class ScaleScreen extends Component {
     static template = "ScaleScreen";
@@ -14,6 +15,7 @@ export class ScaleScreen extends Component {
      */
     setup() {
         super.setup();
+        this.hardwareProxy = useService("hardware_proxy");
         useExternalListener(document, "keyup", this._onHotkeys);
         this.state = useState({ weight: 0 });
         onMounted(this.onMounted);
@@ -26,7 +28,7 @@ export class ScaleScreen extends Component {
     }
     onWillUnmount() {
         // stop the scale reading
-        this.env.proxy_queue.clear();
+        this.shouldRead = false;
     }
     back() {
         this.props.resolve({ confirmed: false, payload: null });
@@ -47,14 +49,15 @@ export class ScaleScreen extends Component {
         }
     }
     _readScale() {
-        this.env.proxy_queue.schedule(this._setWeight.bind(this), {
-            duration: 500,
-            repeat: true,
-        });
+        this.shouldRead = true;
+        this._setWeight();
     }
     async _setWeight() {
-        const reading = await this.env.proxy.scale_read();
-        this.state.weight = reading.weight;
+        if (!this.shouldRead) {
+            return;
+        }
+        this.state.weight = await this.hardwareProxy.readScale();
+        setTimeout(() => this._setWeight(), 500);
     }
     get _activePricelist() {
         const current_order = this.env.pos.get_order();

@@ -9,7 +9,7 @@ patch(PosGlobalState.prototype, "pos_epson_printer.PosGlobalState", {
         var self = this;
         return this._super(...arguments).then(function () {
             if (self.config.other_devices && self.config.epson_printer_ip) {
-                self.env.proxy.printer = new EpsonPrinter(self.config.epson_printer_ip, self);
+                self.hardwareProxy.printer = new EpsonPrinter(self.config.epson_printer_ip, self);
             }
         });
     },

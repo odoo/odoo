@@ -31,6 +31,7 @@ export class PaymentScreen extends Component {
         this.orm = useService("orm");
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
+        this.hardwareProxy = useService("hardware_proxy");
         this.payment_methods_from_config = this.env.pos.payment_methods.filter((method) =>
             this.env.pos.config.payment_method_ids.includes(method.id)
         );
@@ -132,7 +133,7 @@ export class PaymentScreen extends Component {
         this.render(true);
     }
     openCashbox() {
-        this.env.proxy.printer.open_cashbox();
+        this.hardwareProxy.printer.open_cashbox();
     }
     async addTip() {
         // click_tip
@@ -217,7 +218,7 @@ export class PaymentScreen extends Component {
             (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
             this.env.pos.config.iface_cashdrawer
         ) {
-            this.env.proxy.printer.open_cashbox();
+            this.hardwareProxy.printer.open_cashbox();
         }
 
         this.currentOrder.initialize_validation_date();
