@@ -4,20 +4,24 @@ import base64
 import logging
 import lxml
 import os
+import requests
 import sys
 import tempfile
 import zipfile
 from collections import defaultdict
+from io import BytesIO
 from os.path import join as opj
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessDenied, UserError
 from odoo.modules.module import MANIFEST_NAMES
+from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory
 
 _logger = logging.getLogger(__name__)
 
+APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
 
@@ -41,7 +45,7 @@ class IrModule(models.Model):
             module.installed_version = module.latest_version
         super(IrModule, self - imported_modules)._get_latest_version()
 
-    def _import_module(self, module, path, force=False):
+    def _import_module(self, module, path, force=False, with_demo=False):
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -68,10 +72,8 @@ class IrModule(models.Model):
                     _is_studio_custom(path)):
                 err = _("Studio customizations require Studio")
             else:
-                err = _("Unmet module dependencies: \n\n - %s", '\n - '.join(
-                    known_mods.filtered(lambda mod: mod.name in unmet_dependencies).mapped('shortdesc')
-                ))
-            raise UserError(err)
+                to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+                to_install.button_immediate_install()
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -84,7 +86,10 @@ class IrModule(models.Model):
             self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
-        for kind in ['data', 'init_xml', 'update_xml']:
+        kind_of_files = ['data', 'init_xml', 'update_xml']
+        if with_demo:
+            kind_of_files.append('demo')
+        for kind in kind_of_files:
             for filename in terp.get(kind, []):
                 ext = os.path.splitext(filename)[1].lower()
                 if ext not in ('.xml', '.csv', '.sql'):
@@ -177,7 +182,7 @@ class IrModule(models.Model):
         return True
 
     @api.model
-    def import_zipfile(self, module_file, force=False):
+    def _import_zipfile(self, module_file, force=False, with_demo=False):
         if not module_file:
             raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
@@ -207,7 +212,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []):
+                    files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
+                    if with_demo:
+                        files_to_import += terp.get('demo', [])
+                    for filename in files_to_import:
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
@@ -225,7 +233,7 @@ class IrModule(models.Model):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        if self._import_module(mod_name, path, force=force):
+                        if self._import_module(mod_name, path, force=force, with_demo=with_demo):
                             success.append(mod_name)
                     except Exception as e:
                         _logger.exception('Error while importing module')
@@ -257,6 +265,132 @@ class IrModule(models.Model):
                          ", ".join(deleted_modules_names))
             modules_to_delete.unlink()
         return res
+
+    @api.model
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        res = super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
+        if any(dom[0] == 'module_type' and dom[-1] == 'industries' for dom in domain):
+            fields_name = list(specification.keys())
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False)
+            res['length'] += len(modules_list)
+            res['records'].extend(modules_list)
+        return res
+
+    def more_info(self):
+        return {
+            'name': _('Apps'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.module.module',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'context': self.env.context,
+        }
+
+    def web_read(self, specification):
+        fields = list(specification.keys())
+        module_type = self.env.context.get('module_type', 'official')
+        if module_type != 'official':
+            modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
+            return modules_list
+        else:
+            return super().web_read(specification)
+
+    @api.model
+    def _get_modules_from_apps(self, fields, module_type, module_name):
+        payload = {
+            'series': major_version,
+            'module_fields': fields,
+            'module_type':module_type,
+            'module_name': module_name
+        }
+        try:
+            resp = requests.post(
+                f"{APPS_URL}/loempia/listdatamodules",
+                json={'params': payload},
+                timeout=5.0,
+            )
+            if resp.status_code == 200:
+                modules_list = resp.json().get('result', [])
+                for mod in modules_list:
+                    mod['id'] = -1
+                    module_name = mod.get('name', module_name)
+                    if 'icon' in fields:
+                        mod['icon'] = f"{APPS_URL}{mod['icon']}"
+                    if 'state' in fields:
+                        existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
+                        if existing_mod:
+                            mod['state'] = 'installed'
+                        else:
+                            mod['state'] = 'uninstalled'
+                    if 'module_type' in fields:
+                        mod['module_type'] = module_type
+                    if 'website' in fields:
+                        mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
+                return modules_list
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError:
+            raise UserError(_('The list of industry applications cannot be fetched. Please try again later'))
+        except requests.exceptions.ConnectionError:
+            raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
+
+    def button_immediate_install_app(self):
+        if not self.env.is_admin():
+            raise AccessDenied()
+        module_name = self.env.context.get('module_name')
+        try:
+            resp = requests.get(
+                f"{APPS_URL}/loempia/download/data_app/{module_name}/{major_version}",
+                timeout=5.0,
+            )
+            if resp.status_code == 200:
+                import_module = self.env['base.import.module'].create({
+                    'module_file': base64.b64encode(resp.content),
+                    'state': 'init',
+                    'modules_dependencies': self._get_missing_dependencies(resp.content)
+                })
+                return {
+                    'name': 'Install an App',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'res_id': import_module.id,
+                    'res_model': 'base.import.module',
+                    'type': 'ir.actions.act_window',
+                    'context': {'data_module': True}
+                }
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError:
+            raise UserError(_('The module %s cannot be downloaded') % module_name)
+        except requests.exceptions.ConnectionError:
+            raise UserError(_('Connection to %s failed, the module %s cannot be downloaded.', APPS_URL, module_name))
+
+    @api.model
+    def _get_missing_dependencies(self, zip_data):
+        dependencies_to_install = self.env['ir.module.module']
+        known_mods = self.search([])
+        installed_mods = [m.name for m in known_mods if m.state == 'installed']
+        with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
+            manifest_files = [
+                file
+                for file in z.filelist
+                if file.filename.count('/') == 1
+                and file.filename.split('/')[1] in MANIFEST_NAMES
+            ]
+            for manifest_file in manifest_files:
+                if manifest_file.file_size > MAX_FILE_SIZE:
+                    raise UserError(_("File '%s' exceed maximum allowed file size", manifest_file.filename))
+                try:
+                    with z.open(manifest_file) as manifest:
+                        terp = ast.literal_eval(manifest.read().decode())
+                except Exception:
+                    continue
+                unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
+                dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
+        description = ''
+        if dependencies_to_install:
+            description = _('The following modules will be also installed:\n')
+            for mod in dependencies_to_install:
+                description += "- " + mod.shortdesc + "\n"
+        return description
 
 
 def _is_studio_custom(path):
