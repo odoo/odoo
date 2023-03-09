@@ -58,7 +58,7 @@ class Survey(models.Model):
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
     description = fields.Html(
-        "Description", translate=True, sanitize=False,  # TDE FIXME: find a way to authorize videos
+        "Description", translate=True, sanitize=True, sanitize_overridable=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     description_done = fields.Html(
         "End Message", translate=True,
