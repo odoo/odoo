@@ -146,7 +146,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
             archive.writestr('test_imported_module/static/src/js/test.xml', VALID_XML)
 
         # Import test module
-        self.env['ir.module.module'].import_zipfile(stream)
+        self.env['ir.module.module']._import_zipfile(stream)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('test_imported_module', 0), 35)
@@ -201,7 +201,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
         ]
 
         # Import test module
-        self.env['ir.module.module'].import_zipfile(stream)
+        self.env['ir.module.module']._import_zipfile(stream)
         # Create exclude xml_id
         for name in id_names:
             rec = self.env.ref(f'test_imported_module.{name}')
