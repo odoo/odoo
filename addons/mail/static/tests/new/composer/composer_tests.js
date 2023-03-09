@@ -25,6 +25,7 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { Composer } from "@mail/new/composer/composer";
+import { patchUiSize, SIZES } from "../../helpers/patch_ui_size";
 
 let target;
 
@@ -333,6 +334,18 @@ QUnit.test('send button on mail.channel should have "Send" as label', async func
         target.querySelector(".o-mail-composer-send-button").textContent.trim(),
         "Send"
     );
+});
+
+QUnit.test("Show send button in mobile", async function (assert) {
+    const pyEnv = await startServer();
+    patchUiSize({ size: SIZES.SM });
+    pyEnv["mail.channel"].create({ name: "minecraft-wii-u" });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Channel)");
+    await click(".o-mail-notification-item:contains(minecraft-wii-u)");
+    assert.containsOnce(target, ".o-mail-composer button[aria-label='Send']");
+    assert.containsOnce(target, ".o-mail-composer button[aria-label='Send'] i.fa-paper-plane-o");
 });
 
 QUnit.test(

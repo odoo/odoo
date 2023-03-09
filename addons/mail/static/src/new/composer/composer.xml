@@ -75,8 +75,16 @@
                         <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
                 </div>
-
-                <t t-if="!compact" t-call="mail.Composer.actionButtons"/>
+                <button t-if="!compact or store.isSmall" class="o-mail-composer-send-button btn btn-primary o-last border-start-0"
+                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended}"
+                    t-on-click="sendMessage"
+                    type="button"
+                    t-att-disabled="isSendButtonDisabled"
+                    aria-label="Send"
+                >
+                    <t t-if="this.store.isSmall"><i class="fa fa-paper-plane-o"/></t>
+                    <t t-else="">Send</t>
+                </button>
             </div>
             <div class="o-mail-composer-footer overflow-auto">
                 <AttachmentList
@@ -126,26 +134,4 @@
             <t t-esc="option.label"/>
         </em>
     </t>
-
-    <t t-name="mail.Composer.actionButtons" owl="1">
-        <div class="d-flex"
-            t-att-class="{
-                'border-end border-start border-bottom': compact,
-                'rounded-end-3 bg-view align-self-stretch' : normal,
-                'flex-column' : extended,
-            }"
-        >
-            <button class="o-mail-composer-send-button btn btn-primary o-last border-start-0"
-                t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended}"
-                t-on-click="sendMessage"
-                type="button"
-                t-att-disabled="isSendButtonDisabled"
-            >
-                Send
-            </button>
-        </div>
-    </t>
-
-
-
 </templates>
