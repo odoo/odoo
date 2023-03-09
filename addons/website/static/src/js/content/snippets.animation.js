@@ -1232,16 +1232,25 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     start() {
         this.lastScroll = 0;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
-        // By default, elements are hidden by the css of o_animate.
-        // Render elements and trigger the animation then pause it in state 0.
-        this.$animatedElements = this.$target.find('.o_animate');
+        this.$animatedElements = this.$('.o_animate');
+
         // Fix for "transform: none" not overriding keyframe transforms on
-        // iPhone 8 and lower.
+        // some iPhone using Safari. Note that all animated elements are checked
+        // (not only one) as the bug is not systematic and may depend on some
+        // other conditions (for example: an animated image in a block which is
+        // hidden on mobile would not have the issue).
+        const couldOverflowBecauseOfSafariBug = [...this.$animatedElements].some(el => {
+            return window.getComputedStyle(el).transform !== 'none';
+        });
         this.forceOverflowXHidden = false;
-        if (this.$animatedElements[0] && window.getComputedStyle(this.$animatedElements[0]).transform !== 'none') {
+        if (couldOverflowBecauseOfSafariBug) {
             this._toggleOverflowXHidden(true);
+            // Now prevent any call to _toggleOverflowXHidden to have an effect
             this.forceOverflowXHidden = true;
         }
+
+        // By default, elements are hidden by the css of o_animate.
+        // Render elements and trigger the animation then pause it in state 0.
         _.each(this.$animatedElements, el => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
