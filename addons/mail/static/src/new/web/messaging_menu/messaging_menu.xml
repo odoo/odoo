@@ -60,6 +60,20 @@
                     <ImStatus className="'position-absolute bottom-0 end-0'" persona="notificationRequest.partner"/>
                 </t>
             </NotificationItem>
+            <t t-if="store.discuss.activeTab === 'all'">
+                <NotificationItem
+                    t-foreach="failures" t-as="failure" t-key="failure.id"
+                    body="failure.body"
+                    count="failure.notifications.length"
+                    datetime="failure.datetime"
+                    displayName="failure.modelName"
+                    iconSrc="failure.iconSrc"
+                    isLast="failure_last"
+                    hasMarkAsReadButton="true"
+                    onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
+                    onSwipeRight="hasTouch ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                />
+            </t>
             <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
                 <NotificationItem
                     body="preview.message?.inlineBody"
@@ -85,20 +99,6 @@
                         </t>
                     </t>
                 </NotificationItem>
-            </t>
-            <t t-if="store.discuss.activeTab === 'all'">
-                <NotificationItem
-                    t-foreach="failures" t-as="failure" t-key="failure.id"
-                    body="failure.body"
-                    count="failure.notifications.length"
-                    datetime="failure.datetime"
-                    displayName="failure.modelName"
-                    iconSrc="failure.iconSrc"
-                    isLast="failure_last"
-                    hasMarkAsReadButton="true"
-                    onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
-                    onSwipeRight="hasTouch ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
-                />
             </t>
         </div>
     </div>

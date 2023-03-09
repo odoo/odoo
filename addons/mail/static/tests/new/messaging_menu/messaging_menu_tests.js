@@ -927,3 +927,41 @@ QUnit.test("preview for channel should show latest non-deleted message", async f
     );
     assert.containsOnce(target, ".o-mail-notification-item:contains(message-1)");
 });
+
+QUnit.test("failure notifications are shown before channel preview", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    const failedMessageId = pyEnv["mail.message"].create({
+        message_type: "email",
+        res_model_name: "Channel",
+    });
+    const channelId = pyEnv["mail.channel"].create({ name: "Test" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "message",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.channel"].write([channelId], { message_ids: [messageId, failedMessageId] });
+    pyEnv["mail.notification"].create({
+        mail_message_id: failedMessageId,
+        notification_status: "exception",
+        notification_type: "email",
+    });
+    const [memberId] = pyEnv["mail.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", pyEnv.currentPartnerId],
+    ]);
+    pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsOnce(
+        target,
+        ".o-mail-notification-item:contains(An error occurred when sending an email)"
+    );
+    assert.containsOnce(target, ".o-mail-notification-item:contains(message)");
+    assert.containsOnce(
+        target,
+        ".o-mail-notification-item:contains(An error occurred when sending an email) ~ .o-mail-notification-item:contains(message)"
+    );
+});
