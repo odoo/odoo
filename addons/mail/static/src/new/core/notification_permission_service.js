@@ -9,17 +9,36 @@ import { registry } from "@web/core/registry";
 export const notificationPermissionService = {
     dependencies: ["notification"],
 
+    _normalizePermission(permission) {
+        switch (permission) {
+            case "default":
+                return "prompt";
+            case undefined:
+                return "denied";
+            default:
+                return permission;
+        }
+    },
+
     async start(env, { notification }) {
-        const permission = await browser.navigator?.permissions?.query({
-            name: "notifications",
-        });
+        let permission;
+        try {
+            permission = await browser.navigator?.permissions?.query({
+                name: "notifications",
+            });
+        } catch {
+            // noop
+        }
         const state = reactive({
             /** @type {"prompt" | "granted" | "denied"} */
-            permission: permission?.state ?? "denied",
-            async requestPermission() {
+            permission: this._normalizePermission(
+                permission?.state ?? browser.Notification?.permission
+            ),
+            requestPermission: async () => {
                 if (browser.Notification && state.permission === "prompt") {
-                    const newPermission = await browser.Notification.requestPermission();
-                    state.permission = newPermission === "default" ? "prompt" : newPermission;
+                    state.permission = this._normalizePermission(
+                        await browser.Notification.requestPermission()
+                    );
                     if (state.permission === "denied") {
                         notification.add(
                             _t(
