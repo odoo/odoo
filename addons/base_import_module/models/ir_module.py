@@ -4,10 +4,13 @@ import base64
 import logging
 import lxml
 import os
+import requests
 import sys
 import tempfile
 import zipfile
 from collections import defaultdict
+from io import BytesIO
+from json import dumps
 from os.path import join as opj
 
 from odoo import api, fields, models, _
@@ -25,6 +28,13 @@ class IrModule(models.Model):
     _inherit = "ir.module.module"
 
     imported = fields.Boolean(string="Imported Module")
+    module_type = fields.Selection([
+        ('official', 'Official Apps'),
+        ('modules', 'Community Apps'),
+        ('themes', 'Themes'),
+        ('industries', 'Industries'),
+    ], default='official')
+    app_iframe = fields.Html(string="App iframe", store=False)
 
     def _get_modules_to_load_domain(self):
         # imported modules are not expected to be loaded as regular modules
@@ -37,7 +47,7 @@ class IrModule(models.Model):
             module.installed_version = module.latest_version
         super(IrModule, self - imported_modules)._get_latest_version()
 
-    def _import_module(self, module, path, force=False):
+    def _import_module(self, module, path, force=False, with_demo=False):
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -64,10 +74,8 @@ class IrModule(models.Model):
                     _is_studio_custom(path)):
                 err = _("Studio customizations require Studio")
             else:
-                err = _("Unmet module dependencies: \n\n - %s", '\n - '.join(
-                    known_mods.filtered(lambda mod: mod.name in unmet_dependencies).mapped('shortdesc')
-                ))
-            raise UserError(err)
+                to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+                to_install.button_immediate_install()
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -80,7 +88,10 @@ class IrModule(models.Model):
             self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
-        for kind in ['data', 'init_xml', 'update_xml']:
+        kind_of_files = ['data', 'init_xml', 'update_xml']
+        if with_demo:
+            kind_of_files.append('demo')
+        for kind in kind_of_files:
             for filename in terp.get(kind, []):
                 ext = os.path.splitext(filename)[1].lower()
                 if ext not in ('.xml', '.csv', '.sql'):
@@ -173,7 +184,7 @@ class IrModule(models.Model):
         return True
 
     @api.model
-    def import_zipfile(self, module_file, force=False):
+    def import_zipfile(self, module_file, force=False, with_demo=False):
         if not module_file:
             raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
@@ -203,7 +214,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []):
+                    files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
+                    if with_demo:
+                        files_to_import += terp.get('demo', [])
+                    for filename in files_to_import:
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
@@ -221,7 +235,7 @@ class IrModule(models.Model):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        if self._import_module(mod_name, path, force=force):
+                        if self._import_module(mod_name, path, force=force, with_demo=with_demo):
                             success.append(mod_name)
                     except Exception as e:
                         _logger.exception('Error while importing module')
@@ -253,6 +267,115 @@ class IrModule(models.Model):
                          ", ".join(deleted_modules_names))
             modules_to_delete.unlink()
         return res
+
+    @api.model
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        res = super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
+        if any(dom for dom in domain if dom[0] == 'module_type' and dom[-1] != 'official'):
+            module_type = [dom for dom in domain if dom[0] == 'module_type'][0][-1]
+            fields = list(specification.keys())
+            modules_list = self._get_modules_from_apps(fields, module_type, False)
+            res['length'] += len(modules_list)
+            res['records'].extend(modules_list)
+        return res
+
+    def more_info(self):
+        return {
+            'name': _('Apps'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.module.module',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'context': self.env.context,
+        }
+
+    def web_read(self, specification):
+        fields = list(specification.keys())
+        module_type = self.env.context.get('module_type', 'official')
+        if module_type != 'official':
+            modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
+            return modules_list
+        else:
+            return super().web_read(specification)
+
+    @api.model
+    def _get_modules_from_apps(self, fields, module_type, module_name):
+        payload = {'series': '16.0', 'module_fields': fields, 'module_type':module_type, 'module_name': module_name}
+        headers = {'Content-Type': 'application/json'}
+        resp = requests.post(
+            'http://apps.test.odoo.com/loempia/listdatamodules',
+            data=dumps({'params': payload}),
+            headers=headers,
+        )
+        modules_list = resp.json().get('result', [])
+        for mod in modules_list:
+            mod['id'] = -1
+            if 'icon' in fields:
+                mod['icon'] = 'http://apps.test.odoo.com' + mod['icon']
+            if 'state' in fields:
+                mod['state'] = 'uninstalled'
+            if 'module_type' in fields:
+                mod['module_type'] = module_type
+            if 'website' in fields:
+                mod['website'] = 'https://apps.test.odoo.com/apps/modules/16.0/%s/' % mod['name']
+            if 'app_iframe' in fields:
+                mod['app_iframe'] = '<iframe src="%s/?no_header=1" title="Apps Page"></iframe>' % mod['website']
+        return modules_list
+
+    def button_immediate_install_app(self):
+        module_name = self.env.context.get('module_name')
+        resp = requests.get(
+            'http://apps.test.odoo.com/loempia/download/data_app/%(name)s/%(version)s' % {'name': module_name, 'version': '16.0'}
+        )
+        import_module = self.env['base.import.module'].create({
+            'module_file': base64.b64encode(resp.content),
+            'state': 'init',
+            'modules_dependencies': self._get_missing_dependencies(resp.content)
+        })
+
+        return {
+            'name': 'Import Module',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': import_module.id,
+            'res_model': 'base.import.module',
+            'type': 'ir.actions.act_window',
+            'context': {'data_module': True}
+        }
+
+    @api.model
+    def _get_missing_dependencies(self, zip_data):
+        fp = BytesIO()
+        fp.write(zip_data)
+        dependencies_to_install = self.env['ir.module.module']
+        known_mods = self.search([])
+        installed_mods = [m.name for m in known_mods if m.state == 'installed']
+        with zipfile.ZipFile(fp, "r") as z:
+            for zf in z.filelist:
+                if zf.file_size > MAX_FILE_SIZE:
+                    raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
+            with file_open_temporary_directory(self.env) as module_dir:
+                manifest_files = [
+                    file
+                    for file in z.filelist
+                    if file.filename.count('/') == 1
+                    and file.filename.split('/')[1] in MANIFEST_NAMES
+                ]
+                for manifest in manifest_files:
+                    manifest_path = z.extract(manifest, module_dir)
+                    try:
+                        with file_open(manifest_path, 'rb', env=self.env) as f:
+                            terp = ast.literal_eval(f.read().decode())
+                    except Exception:
+                        continue
+                    unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
+                    dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
+        description = ''
+        if dependencies_to_install:
+            description = 'The following modules will be also installed:\n'
+            for mod in dependencies_to_install:
+                description += "- " + mod.shortdesc + "\n"
+        return description
 
 
 def _is_studio_custom(path):
