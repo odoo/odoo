@@ -32,10 +32,7 @@ export class DiscussPublic extends Component {
                             `/discuss/channel/${this.thread.id}${window.location.search}`
                         );
                     }
-                    this.threadService.setDiscussThread(
-                        this.thread,
-                        !this.props.data.discussPublicViewData.isChannelTokenSecret
-                    );
+                    this.threadService.setDiscussThread(this.thread, false);
                     this.threadService.fetchChannelMembers(this.thread);
                     const video = browser.localStorage.getItem("mail_call_preview_join_video");
                     const mute = browser.localStorage.getItem("mail_call_preview_join_mute");

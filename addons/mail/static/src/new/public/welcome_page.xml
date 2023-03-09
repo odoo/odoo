@@ -9,8 +9,7 @@
         </h1>
         <h2 class="m-5" t-esc="store.companyName"/>
         <div class="d-flex justify-content-center">
-            <!-- <div t-if="props.data.channelData.defaultDisplayMode === 'video_full_screen'" class="position-relative d-flex justify-content-center me-5" t-ref="root"> -->
-            <div class="position-relative d-flex justify-content-center me-5" t-ref="root">
+            <div t-if="props.data.channelData.defaultDisplayMode === 'video_full_screen'" class="position-relative d-flex justify-content-center me-5" t-ref="root">
                 <video class="shadow rounded bg-dark" height="480" width="640" autoplay="" t-ref="video"/>
                 <p t-if="hasRtcSupport and !state.videoStream" class="position-absolute bottom-50 text-light">
                     Camera is off
