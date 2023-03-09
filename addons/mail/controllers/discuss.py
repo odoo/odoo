@@ -56,6 +56,7 @@ class DiscussController(http.Controller):
                 channel_sudo = channel_sudo.create({
                     'channel_type': 'channel',
                     'default_display_mode': default_display_mode,
+                    'group_public_id': None,
                     'name': channel_name or create_token,
                     'uuid': create_token,
                 })

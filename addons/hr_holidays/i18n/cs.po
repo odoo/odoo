@@ -13,8 +13,9 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Marek Reichstädter, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
 # Martin Trigaux, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -557,6 +558,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        Zaměstnanec má jiné časové pásmo než vy! Tady se datumy a časy zobrazují v časovém pásmu zaměstnance\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        Společnost tohoto oddělení má jiné časové pásmo než vy! Tady se datumy a časy zobrazují v časovém pásmu společnosti\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        Společnost má jiné časové pásmo než vy! Tady se datumy a časy zobrazují v časovém pásmu společnosti\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_employees_kanban
@@ -1100,6 +1111,11 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
+"Povolit vytváření požadavků v dávkách:\n"
+"- Podle zaměstnance: pro konkrétního zaměstnance\n"
+"- Podle společnosti: všichni zaměstnanci zadané společnosti\n"
+"- Podle oddělení: všichni zaměstnanci zadaného oddělení\n"
+"- Podle značky zaměstnance: všichni zaměstnanci konkrétní kategorie skupiny zaměstnanců"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -3519,9 +3535,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
-"The accrual starts after a defined period from the employee start date. This"
-" field defines the number of days, months or years after which accrual is "
-"used."
+"The accrual starts after a defined period from the allocation start date. "
+"This field defines the number of days, months or years after which accrual "
+"is used."
 msgstr ""
 
 #. module: hr_holidays
@@ -3607,6 +3623,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Když je vytvořena žádost o volno, je stav nastaven na „Odeslat“.\n"
+"Stav je „Schválit“, když uživatel potvrdí žádost o volno.\n"
+"Stav je „Odmítnuto“, když manažer zamítne žádost o volno.\n"
+"Stav je „Schváleno“, když manažer schválí žádost o volno."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -3616,6 +3636,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Když je vytvořena žádost o přidělení, je stav nastaven na „Odeslat“.\n"
+"Stav je „Schválit“, když uživatel potvrdí žádost o přidělení.\n"
+"Stav je „Odmítnuto“, když manažer zamítne žádost o přidělení.\n"
+"Stav je „Schváleno“, když manažer schválí žádost o přidělení."
 
 #. module: hr_holidays
 #. odoo-python
