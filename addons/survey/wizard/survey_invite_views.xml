@@ -16,7 +16,8 @@
                             <field name="existing_mode" widget="radio" invisible="1" />
                             <field name="lang" invisible="1"/>
                             <field name="render_model" invisible="1"/>
-                            <label class="o_survey_label_survey_start_url" for="survey_start_url" string="Survey Link"/>
+                            <label class="o_survey_label_survey_start_url" for="survey_start_url" string="Survey Link"
+                                 attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
                             <field name="survey_start_url" nolabel="1" readonly="1" widget="CopyClipboardChar"
                                  attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
                             <field string="Send by Email" name="send_email" widget="boolean_toggle"
