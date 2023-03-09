@@ -162,7 +162,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             ? this.currentOrder.finalized
             : true;
         return (
-            this.env.proxy.printer &&
+            this.hardwareProxy.printer &&
             this.env.pos.config.iface_print_skip_screen &&
             invoiced_finalized
         );

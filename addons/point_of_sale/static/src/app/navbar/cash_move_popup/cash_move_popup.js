@@ -18,6 +18,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         this.notification = useService("pos_notification");
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.hardwareProxy = useService("hardware_proxy");
         this.state = useState({
             /** @type {'in'|'out'} */
             type: "out",
@@ -62,7 +63,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             reason,
             extras,
         ]);
-        if (this.env.proxy.printer) {
+        if (this.hardwareProxy.printer) {
             const renderedReceipt = renderToString("point_of_sale.CashMoveReceipt", {
                 _receipt: {
                     type,
@@ -74,7 +75,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
                     company: this.env.pos.company,
                 },
             });
-            const printResult = await this.env.proxy.printer.print_receipt(renderedReceipt);
+            const printResult = await this.hardwareProxy.printer.print_receipt(renderedReceipt);
             if (!printResult.successful) {
                 this.popup.add(ErrorPopup, {
                     title: printResult.message.title,

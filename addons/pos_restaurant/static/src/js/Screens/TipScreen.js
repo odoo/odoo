@@ -18,6 +18,7 @@ export class TipScreen extends Component {
         this.posReceiptContainer = useRef("pos-receipt-container");
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.hardwareProxy = useService("hardware_proxy");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.get_total_with_tax();
 
@@ -124,7 +125,7 @@ export class TipScreen extends Component {
                 total: this.env.pos.format_currency(this.totalAmount),
             });
 
-            if (this.env.proxy.printer) {
+            if (this.hardwareProxy.printer) {
                 await this._printIoT(receipt);
             } else {
                 await this._printWeb(receipt);
@@ -133,7 +134,7 @@ export class TipScreen extends Component {
     }
 
     async _printIoT(receipt) {
-        const printResult = await this.env.proxy.printer.print_receipt(receipt);
+        const printResult = await this.hardwareProxy.printer.print_receipt(receipt);
         if (!printResult.successful) {
             await this.popup.add(ErrorPopup, {
                 title: printResult.message.title,

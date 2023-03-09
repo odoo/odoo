@@ -12,6 +12,7 @@ export class SaleDetailsButton extends Component {
         super.setup(...arguments);
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.hardwareProxy = useService("hardware_proxy");
     }
 
     async onClick() {
@@ -30,11 +31,11 @@ export class SaleDetailsButton extends Component {
                 pos: this.env.pos,
             })
         );
-        const printResult = await this.env.proxy.printer.print_receipt(report);
-        if (!printResult.successful) {
+        const { successful, message } = await this.hardwareProxy.printer.print_receipt(report);
+        if (!successful) {
             await this.popup.add(ErrorPopup, {
-                title: printResult.message.title,
-                body: printResult.message.body,
+                title: message.title,
+                body: message.body,
             });
         }
     }

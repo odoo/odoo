@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { PosGlobalState } from "@point_of_sale/js/models";
-import { pos_env as legacyEnv } from "@point_of_sale/js/pos_env";
+import legacyEnv from "web.env";
 
 import { registry } from "@web/core/registry";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -19,19 +19,30 @@ export class PosStore extends Reactive {
     mainScreen = { name: null, component: null };
     tempScreen = null;
     legacyEnv = legacyEnv;
-    globalState = new PosGlobalState({ env: markRaw(legacyEnv) });
 
-    static serviceDependencies = ["popup", "orm", "number_buffer", "barcode_reader"];
-    constructor({ popup, orm, number_buffer, barcode_reader }) {
+    static serviceDependencies = [
+        "popup",
+        "orm",
+        "number_buffer",
+        "barcode_reader",
+        "hardware_proxy",
+    ];
+    constructor() {
         super();
+        this.setup(...arguments);
+    }
+    // use setup instead of constructor because setup can be patched.
+    setup({ popup, orm, number_buffer, hardware_proxy, barcode_reader }) {
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
-        this.setup();
+        this.hardwareProxy = hardware_proxy;
+        this.globalState = new PosGlobalState({
+            env: markRaw(legacyEnv),
+            hardwareProxy: hardware_proxy,
+        });
     }
-    // use setup instead of constructor because setup can be patched.
-    setup() {}
 
     showScreen(name, props) {
         const component = registry.category("pos_screens").get(name);
@@ -51,38 +62,34 @@ export class PosStore extends Reactive {
         return new Promise((resolve, reject) => {
             this.barcodeReader?.disconnectFromProxy();
             this.globalState.loadingSkipButtonIsShown = true;
-            this.globalState.env.proxy
-                .autoconnect({
-                    force_ip: this.globalState.config.proxy_ip || undefined,
-                    progress: function (prog) {},
-                })
-                .then(
-                    () => {
-                        if (this.globalState.config.iface_scan_via_proxy) {
-                            this.barcodeReader?.connectToProxy(this.globalState.env.proxy);
-                        }
-                        resolve();
-                    },
-                    (statusText, url) => {
-                        // this should reject so that it can be captured when we wait for pos.ready
-                        // in the chrome component.
-                        // then, if it got really rejected, we can show the error.
-                        if (statusText == "error" && window.location.protocol == "https:") {
-                            reject({
-                                title: _t("HTTPS connection to IoT Box failed"),
-                                body: _.str.sprintf(
-                                    _t(
-                                        "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box."
-                                    ),
-                                    url
-                                ),
-                                popup: "alert",
-                            });
-                        } else {
-                            resolve();
-                        }
+            this.hardwareProxy.autoconnect({ force_ip: this.globalState.config.proxy_ip }).then(
+                () => {
+                    if (this.globalState.config.iface_scan_via_proxy) {
+                        this.barcodeReader?.connectToProxy();
                     }
-                );
+                    resolve();
+                },
+                (statusText, url) => {
+                    // this should reject so that it can be captured when we wait for pos.ready
+                    // in the chrome component.
+                    // then, if it got really rejected, we can show the error.
+                    if (statusText == "error" && window.location.protocol == "https:") {
+                        // FIXME POSREF this looks like it's dead code.
+                        reject({
+                            title: _t("HTTPS connection to IoT Box failed"),
+                            body: _.str.sprintf(
+                                _t(
+                                    "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box."
+                                ),
+                                url
+                            ),
+                            popup: "alert",
+                        });
+                    } else {
+                        resolve();
+                    }
+                }
+            );
         });
     }
 

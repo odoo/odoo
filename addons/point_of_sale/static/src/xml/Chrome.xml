@@ -33,9 +33,6 @@
                         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                         <t t-if="pos.loadingSkipButtonIsShown">
                             <h1 class="message">Connecting to devices</h1>
-                            <div class="button skip" t-on-click="() => this.env.proxy.stop_searching()">
-                                Skip
-                            </div>
                         </t>
                     </div>
                 </div>
