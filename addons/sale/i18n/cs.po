@@ -9,8 +9,10 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# Jiří Podhorecký <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2022
+# Petr Hemza, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Michal Veselý <michal@veselyberanek.net>, 2022\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +33,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid " / Month"
-msgstr ""
+msgstr " / měsíc"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -41,7 +43,7 @@ msgstr "Data načtena"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# Prodejní objednávky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -382,6 +384,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
 "'percentage')]}\" class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
+"'percentage')]}\" class=\"oe_inline\">%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -440,7 +444,7 @@ msgstr "<span class=\"o_stat_text\">Prodáno</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"oe_read_only\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"oe_read_only\">/ měsíc</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1510,6 +1514,12 @@ msgstr "Záloha: %s"
 #, python-format
 msgid "Down Payments"
 msgstr "Zálohy"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr "Záloha"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -2767,7 +2777,7 @@ msgstr "Snížení ceny bez DPH"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Snížení ceny vč. daně"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
@@ -3407,7 +3417,7 @@ msgstr ""
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
-msgstr ""
+msgstr "Vzorový produkt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3451,7 +3461,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr ""
+msgstr "Vyberte konkrétní fakturu a dodací adresy"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3716,7 +3726,7 @@ msgstr "Mezisoučet"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Součet celkem"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -3732,7 +3742,7 @@ msgstr "Tagy"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Daň země"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3785,6 +3795,8 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
+"Technická oblast pro filtrování dostupných daní v závislosti na fiskální "
+"zemi a fiskální pozici."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3804,7 +3816,7 @@ msgstr "Formát Podmínek"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Podmínky: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4307,7 +4319,7 @@ msgstr "UoM"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "Aktualizovat ceny"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4405,7 +4417,7 @@ msgstr "Napište název společnosti a vytvořte jej, nebo si přečtěte návrh
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Před dodáním je můžete fakturovat."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4444,6 +4456,16 @@ msgstr ""
 "Zde můžete nastavit typ komunikace, který se objeví na prodejních "
 "objednávkách. Komunikace bude zákazníkovi poskytnuta při výběru způsobu "
 "platby."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Typ produktu nelze změnit, protože se již používá v prodejních objednávkách."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4534,7 +4556,7 @@ msgstr "prodejní objednávka"
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -4543,6 +4565,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Čekající objednávka' or 'Objednávka' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4551,3 +4576,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Nabídka') or 'Objednávka' }} (Ref {{"
+" object.name or 'n/a' }})"

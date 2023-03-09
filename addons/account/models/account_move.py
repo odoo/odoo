@@ -4,6 +4,7 @@ from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, html_escape, is_html_empty
 from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.osv import expression
 
 from datetime import date, timedelta
 from collections import defaultdict
@@ -17,10 +18,7 @@ import json
 import re
 import warnings
 
-
-#forbidden fields
-INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+MAX_HASH_VERSION = 2
 
 
 def calc_check_digits(number):
@@ -213,6 +211,7 @@ class AccountMove(models.Model):
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)
     payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
+        compute='_compute_payment_reference', store=True, readonly=False,
         help="The payment reference to set on journal items.")
     payment_id = fields.Many2one(
         index=True,
@@ -266,6 +265,7 @@ class AccountMove(models.Model):
         comodel_name='account.move',
         string="Cash Basis Origin",
         readonly=1,
+        index=True,
         help="The journal entry from which this tax cash basis journal entry has been created.")
     tax_cash_basis_created_move_ids = fields.One2many(
         string="Cash Basis Entries",
@@ -286,7 +286,7 @@ class AccountMove(models.Model):
 
     # ==== Reverse feature fields ====
     reversed_entry_id = fields.Many2one('account.move', string="Reversal of", readonly=True, copy=False,
-        check_company=True)
+        check_company=True, index=True)
     reversal_move_id = fields.One2many('account.move', 'reversed_entry_id')
 
     # =========================================================
@@ -367,7 +367,7 @@ class AccountMove(models.Model):
 
     # ==== Hash Fields ====
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
-    secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
+    secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False, index=True)
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
 
@@ -1332,6 +1332,14 @@ class AccountMove(models.Model):
                     'message': "%s\n\n%s" % (changed, detected)
                 }}
 
+    @api.depends('state')
+    def _compute_payment_reference(self):
+        for move in self.filtered(lambda m: (
+            m.state == 'posted'
+            and m._auto_compute_invoice_reference()
+        )):
+            move.payment_reference = move._get_invoice_computed_reference()
+
     def _get_last_sequence_domain(self, relaxed=False):
         self.ensure_one()
         if not self.date or not self.journal_id:
@@ -1435,6 +1443,32 @@ class AccountMove(models.Model):
         'line_ids.payment_id.state',
         'line_ids.full_reconcile_id')
     def _compute_amount(self):
+        in_invoices = self.filtered(lambda m: m.move_type == 'in_invoice')
+        out_invoices = self.filtered(lambda m: m.move_type == 'out_invoice')
+        entries = self.filtered(lambda m: m.move_type == 'entry')
+        reversed_mapping = defaultdict(lambda: self.env['account.move'])
+        if in_invoices or out_invoices or entries:
+            for reverse_move in self.env['account.move'].search([
+                ('state', '=', 'posted'),
+                '|', '|',
+                '&', ('reversed_entry_id', 'in', in_invoices.ids), ('move_type', '=', 'in_refund'),
+                '&', ('reversed_entry_id', 'in', out_invoices.ids), ('move_type', '=', 'out_refund'),
+                '&', ('reversed_entry_id', 'in', entries.ids), ('move_type', '=', 'entry'),
+            ]):
+                reversed_mapping[reverse_move.reversed_entry_id] += reverse_move
+
+        caba_mapping = defaultdict(lambda: self.env['account.move'])
+        caba_company_ids = self.company_id.filtered(lambda c: c.tax_exigibility)
+        if caba_company_ids:
+            reverse_moves_ids = [move.id for moves in reversed_mapping.values() for move in moves]
+            for caba_move in self.env['account.move'].search([
+                ('tax_cash_basis_origin_move_id', 'in', self.ids + reverse_moves_ids),
+                ('state', '=', 'posted'),
+                ('move_type', '=', 'entry'),
+                ('company_id', 'in', caba_company_ids.ids)
+            ]):
+                caba_mapping[caba_move.tax_cash_basis_origin_move_id] += caba_move
+
         for move in self:
 
             if move.payment_state == 'invoicing_legacy':
@@ -1513,9 +1547,10 @@ class AccountMove(models.Model):
                     new_pmt_state = 'partial'
 
             if new_pmt_state == 'paid' and move.move_type in ('in_invoice', 'out_invoice', 'entry'):
-                reverse_type = move.move_type == 'in_invoice' and 'in_refund' or move.move_type == 'out_invoice' and 'out_refund' or 'entry'
-                reverse_moves = self.env['account.move'].search([('reversed_entry_id', '=', move.id), ('state', '=', 'posted'), ('move_type', '=', reverse_type)])
-                caba_moves = self.env['account.move'].search([('tax_cash_basis_origin_move_id', 'in', move.ids + reverse_moves.ids), ('state', '=', 'posted')])
+                reverse_moves = reversed_mapping[move]
+                caba_moves = caba_mapping[move]
+                for reverse_move in reverse_moves:
+                    caba_moves |= caba_mapping[reverse_move]
 
                 # We only set 'reversed' state in cas of 1 to 1 full reconciliation with a reverse entry; otherwise, we use the regular 'paid' state
                 # We ignore potentials cash basis moves reconciled because the transition account of the tax is reconcilable
@@ -1586,7 +1621,7 @@ class AccountMove(models.Model):
     @api.depends('currency_id')
     def _compute_display_inactive_currency_warning(self):
         for move in self.with_context(active_test=False):
-            move.display_inactive_currency_warning = not move.currency_id.active
+            move.display_inactive_currency_warning = move.currency_id and not move.currency_id.active
 
     def _compute_payments_widget_to_reconcile_info(self):
         for move in self:
@@ -1709,7 +1744,7 @@ class AccountMove(models.Model):
 
             move.tax_totals_json = json.dumps({
                 **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, move.amount_untaxed, move.currency_id),
-                'allow_tax_edition': move.is_purchase_document(include_receipts=False) and move.state == 'draft',
+                'allow_tax_edition': move.is_purchase_document(include_receipts=True) and move.state == 'draft',
             })
 
     def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
@@ -2309,8 +2344,8 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         for move in self:
-            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
-                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
+            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
+                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(move._get_integrity_hash_fields()))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
@@ -2923,9 +2958,11 @@ class AccountMove(models.Model):
         if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice'):
             return super().message_new(msg_dict, custom_values=custom_values)
 
+        company = self.env['res.company'].browse(custom_values['company_id']) if custom_values.get('company_id') else self.env.company
+
         def is_internal_partner(partner):
             # Helper to know if the partner is an internal one.
-            return partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids)
+            return partner == company.partner_id or (partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids))
 
         extra_domain = False
         if custom_values.get('company_id'):
@@ -2948,11 +2985,10 @@ class AccountMove(models.Model):
             if is_internal_partner(partners[0]):
                 # Search for partners in the mail's body.
                 body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
-                company_id = custom_values.get('company_id', self.env.company.id)
                 partners = [
                     partner
                     for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain)
-                    if not is_internal_partner(partner) and partner.company_id.id in (False, company_id)
+                    if not is_internal_partner(partner) and partner.company_id.id in (False, company.id)
                 ]
 
         # Little hack: Inject the mail's subject in the body.
@@ -3038,6 +3074,9 @@ class AccountMove(models.Model):
                 raise UserError(_("You cannot validate an invoice with an inactive currency: %s",
                                   move.currency_id.name))
 
+            if move.line_ids.account_id.filtered(lambda account: account.deprecated):
+                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
+
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
@@ -3077,15 +3116,6 @@ class AccountMove(models.Model):
         for move in to_post:
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
-            # Compute 'ref' for 'out_invoice'.
-            if move._auto_compute_invoice_reference():
-                to_write = {
-                    'payment_reference': move._get_invoice_computed_reference(),
-                    'line_ids': []
-                }
-                for line in move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-                    to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
-                move.write(to_write)
 
         for move in to_post:
             if move.is_sale_document() \
@@ -3271,11 +3301,23 @@ class AccountMove(models.Model):
 
         return report_action
 
+    def _get_integrity_hash_fields(self):
+        # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['date', 'journal_id', 'company_id']
+        elif hash_version == MAX_HASH_VERSION:
+            return ['name', 'date', 'journal_id', 'company_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
+
+    def _get_integrity_hash_fields_and_subfields(self):
+        return self._get_integrity_hash_fields() + [f'line_ids.{subfield}' for subfield in self.line_ids._get_integrity_hash_fields()]
+
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on journal entries when they get posted"""
         self.ensure_one()
         #get the only one exact previous move in the securisation sequence
-        prev_move = self.search([('state', '=', 'posted'),
+        prev_move = self.sudo().search([('state', '=', 'posted'),
                                  ('company_id', '=', self.company_id.id),
                                  ('journal_id', '=', self.journal_id.id),
                                  ('secure_sequence_number', '!=', 0),
@@ -3294,6 +3336,8 @@ class AccountMove(models.Model):
         hash_string = sha256((previous_hash + self.string_to_hash).encode('utf-8'))
         return hash_string.hexdigest()
 
+    @api.depends(lambda self: self._get_integrity_hash_fields_and_subfields())
+    @api.depends_context('hash_version')
     def _compute_string_to_hash(self):
         def _getattrstring(obj, field_str):
             field_value = obj[field_str]
@@ -3303,11 +3347,11 @@ class AccountMove(models.Model):
 
         for move in self:
             values = {}
-            for field in INTEGRITY_HASH_MOVE_FIELDS:
+            for field in move._get_integrity_hash_fields():
                 values[field] = _getattrstring(move, field)
 
             for line in move.line_ids:
-                for field in INTEGRITY_HASH_LINE_FIELDS:
+                for field in line._get_integrity_hash_fields():
                     k = 'line_%d_%s' % (line.id, field)
                     values[k] = _getattrstring(line, field)
             #make the json serialization canonical
@@ -3406,7 +3450,7 @@ class AccountMove(models.Model):
     def _compute_display_qr_code(self):
         for record in self:
             record.display_qr_code = (
-                record.move_type in ('out_invoice', 'out_receipt')
+                record.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
                 and record.company_id.qr_code
             )
 
@@ -3636,7 +3680,7 @@ class AccountMoveLine(models.Model):
     account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Label', tracking=True)
+    name = fields.Char(string='Label', tracking=True, compute='_compute_name', store=True, readonly=False)
     quantity = fields.Float(string='Quantity',
         default=lambda self: 0 if self._context.get('default_display_type') else 1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
@@ -3707,7 +3751,7 @@ class AccountMoveLine(models.Model):
         string="Originator Tax Distribution Line", ondelete='restrict', readonly=True,
         check_company=True,
         help="Tax distribution line that caused the creation of this move line, if any")
-    tax_tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict',
+    tax_tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict', context={'active_test': False},
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
         help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
@@ -3819,6 +3863,15 @@ class AccountMoveLine(models.Model):
         else:
             account = repartition_line.account_id
         return account
+
+    def _get_integrity_hash_fields(self):
+        # Use the new hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['debit', 'credit', 'account_id', 'partner_id']
+        elif hash_version == MAX_HASH_VERSION:
+            return ['name', 'debit', 'credit', 'account_id', 'partner_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
     def _get_computed_name(self):
         self.ensure_one()
@@ -3970,6 +4023,11 @@ class AccountMoveLine(models.Model):
                 )
                 if rec:
                     record.analytic_tag_ids = rec.analytic_tag_ids
+
+    @api.depends('move_id.payment_reference')
+    def _compute_name(self):
+        for line in self.filtered(lambda l: not l.name and l.account_id.user_type_id.type in ('receivable', 'payable')):
+            line.name = line.move_id.payment_reference
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
@@ -4497,6 +4555,18 @@ class AccountMoveLine(models.Model):
                 if line.reconciled:
                     raise UserError(_('Lines from "Off-Balance Sheet" accounts cannot be reconciled'))
 
+    @api.constrains('product_uom_id')
+    def _check_product_uom_category_id(self):
+        for line in self:
+            if line.product_uom_id and line.product_id and line.product_uom_id.category_id != line.product_id.product_tmpl_id.uom_id.category_id:
+                raise UserError(_(
+                    "The Unit of Measure (UoM) '%s' you have selected for product '%s', "
+                    "is incompatible with its category : %s.",
+                    line.product_uom_id.name,
+                    line.product_id.name,
+                    line.product_id.product_tmpl_id.uom_id.category_id.name
+                ))
+
     def _affect_tax_report(self):
         self.ensure_one()
         return self.tax_ids or self.tax_line_id or self.tax_tag_ids.filtered(lambda x: x.applicability == "taxes")
@@ -4679,10 +4749,18 @@ class AccountMoveLine(models.Model):
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
 
+        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash', 'secure_sequence_number'})
+        hashed_moves = self.move_id.filtered('inalterable_hash')
+        violated_fields = set(vals) & inalterable_fields
+        if hashed_moves and violated_fields:
+            raise UserError(_(
+                "You cannot edit the following fields: %s.\n"
+                "The following entries are already hashed:\n%s",
+                ', '.join(f['string'] for f in self.fields_get(violated_fields).values()),
+                '\n'.join(hashed_moves.mapped('name')),
+            ))
         for line in self:
             if line.parent_state == 'posted':
-                if line.move_id.restrict_mode_hash_table and set(vals).intersection(INTEGRITY_HASH_LINE_FIELDS):
-                    raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_LINE_FIELDS))
                 if any(key in vals for key in ('tax_ids', 'tax_line_id')):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
@@ -4873,11 +4951,11 @@ class AccountMoveLine(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator == 'ilike':
-            args = ['|', '|',
+            domain = ['|', '|',
                     ('name', 'ilike', name),
                     ('move_id', 'ilike', name),
                     ('product_id', 'ilike', name)]
-            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
         return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 

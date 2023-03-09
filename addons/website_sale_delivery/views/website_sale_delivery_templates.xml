@@ -31,14 +31,16 @@
             <div t-if="delivery_nb == 1" id="delivery_carrier" class="mt4">
                 <b>Shipping Method: </b>
                 <t t-foreach="deliveries" t-as="delivery">
-                    <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                    <div class="o_delivery_carrier_select d-inline">
+                        <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                    </div>
                 </t>
             </div>
         </xpath>
     </template>
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
-        <xpath expr="//div[@id='payment_method']" position="before">
+        <xpath expr="//t[@t-if='website_sale_order.amount_total']" position="before">
             <div t-if="deliveries" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>
                 <h3 t-if="delivery_nb &gt; 1" class="mb24">Choose a delivery method</h3>

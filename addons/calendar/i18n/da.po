@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Mads Søndergaard, 2021
 # Mads Søndergaard, 2021
+# Sanne Kristensen <sanne@vkdata.dk>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Mads Søndergaard, 2021\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,18 +219,9 @@ msgid ""
 "                        <strong>Details of the event</strong>\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <t t-if=\"not is_online and object.display_description\">\n"
-"                            <li>Description: <t t-out=\"object.description or ''\"/></li>\n"
-"                        </t>\n"
-"                        <t t-elif=\"is_online and object.description\">\n"
-"                            <t t-set=\"splitted_description\" t-value=\"object.description_to_html_lines()\"/>\n"
+"                        <t t-if=\"not is_html_empty(object.description)\">\n"
 "                            <li>Description:\n"
-"                                <ul>\n"
-"                                    <t t-foreach=\"splitted_description\" t-as=\"description_line\">\n"
-"                                        <li t-out=\"description_line or ''\"/>\n"
-"                                    </t>\n"
-"                                </ul>\n"
-"                            </li>\n"
+"                            <t t-out=\"object.description\">Internal meeting for discussion for new pricing for product and services.</t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"object.videocall_location\">\n"
 "                            <li>Meeting URL:\n"
@@ -632,7 +624,7 @@ msgstr "Til rådighed"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "Ledig/Optaget"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -724,7 +716,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Kalender: Påmindelse"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -871,7 +863,7 @@ msgstr "Detaljer:"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
 msgid "Display Description"
-msgstr ""
+msgstr "Vis beskrivelse"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -1314,7 +1306,7 @@ msgstr "Møde typer"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "Møde URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -1444,7 +1436,7 @@ msgstr "Notifikation - 30 minutter"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr ""
+msgstr "Beskeder sendt til alle deltagere for at minde om mødet."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1487,7 +1479,7 @@ msgstr "Ok"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "Kun interne brugere"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
@@ -1528,7 +1520,7 @@ msgstr "Partner-relaterede data fra brugeren"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "Personer, for hvem denne begivenhed vil være synlig."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -1668,7 +1660,7 @@ msgstr "Lørdag"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "Planlagt af"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1689,12 +1681,12 @@ msgstr "Vælg deltagere..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Send e-mail til deltagere"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Send invitationer"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1704,7 +1696,7 @@ msgstr "Send e-mail"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
-msgstr ""
+msgstr "Vis som"
 
 #. module: calendar
 #. openerp-web
@@ -1793,7 +1785,7 @@ msgstr "Tags"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "Skabelon, der bruges til at gengive indhold på mailpåmindelse."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1863,7 +1855,7 @@ msgstr "Antallet af gentagelser kan ikke være negativ."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Der er ingen deltagere til disse arrangementer"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -2015,7 +2007,7 @@ msgstr "Ja, er på vej."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "Du kan ikke opdatere en gentagelse uden basisbegivenhed."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0

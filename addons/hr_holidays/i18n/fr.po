@@ -12,6 +12,7 @@
 # Florent de Labarre <florent@iguanayachts.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Geoffrey_GMF <gmf@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Geoffrey_GMF <gmf@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2798,6 +2799,8 @@ msgid ""
 "Only accrue for the time worked by the employee. This is the time when the "
 "employee did not take time off."
 msgstr ""
+"Uniquement accumuler pour le temps travaillé par l'employé.. Il s'agit du "
+"temps pendant lequel l'employé n'a pas pris de congé. "
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -3278,13 +3281,13 @@ msgstr "Congé pris"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
-"The accrual starts after a defined period from the employee start date. This"
-" field defines the number of days, months or years after which accrual is "
-"used."
+"The accrual starts after a defined period from the allocation start date. "
+"This field defines the number of days, months or years after which accrual "
+"is used."
 msgstr ""
-"L'accréditation débute après une période définie qui fait suite à la date "
-"d'embauche de l'employé. Ce champ définit le nombre de jours, mois ou années"
-" qui composent cette période. "
+"Le cumul commence après une période définie à partir de la date de début de "
+"l'allocation. Ce champ définit le nombre de jours, mois ou années après "
+"lesquels le cumul est utilisé."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3356,6 +3359,9 @@ msgid ""
 "The employees that lack allocation days are:\n"
 "%s"
 msgstr ""
+"\n"
+"Les employés qui manquent des jours d'allocations sont :\n"
+"%s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -4115,12 +4121,14 @@ msgid ""
 "You have several allocations for those type and period.\n"
 "Please split your request to fit in their number of days."
 msgstr ""
+"Vous avez plusieurs allocations pour ce type et cette période. \n"
+"Veuillez diviser votre demande pour qu'elle corresponde à leur nombre de jours."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You must be %s\\'s Manager to approve this leave"
-msgstr ""
+msgstr "Vous devez être le manager de %s pour approuver ce congé"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4193,7 +4201,7 @@ msgstr "Par employé"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report_employee_time_off
 msgid "by Employee and Time Off Type"
-msgstr ""
+msgstr "par employé et type de congé"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all

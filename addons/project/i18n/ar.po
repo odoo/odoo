@@ -1985,7 +1985,7 @@ msgstr "خطأ! يجب أن يسبق تاريخ بدء المشروع تاريخ
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متكرر للمهام. "
+msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متداخل للمهام. "
 
 #. module: project
 #. openerp-web
@@ -5357,12 +5357,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "لا يمكنك %s %s حقول في المهمة. "
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr "لا يمكنك أرشفة المهام المتكررة. يرجى تعطيل التكرار أولاً. "
@@ -5413,6 +5407,20 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr "لا يمكنك حذف مراحل تحتوي على مهام. عليك أولاً حذف كافة مهامها. "
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -26,7 +26,11 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _default_payment_methods(self):
-        return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
+        domain = [('split_transactions', '=', False), ('company_id', '=', self.env.company.id)]
+        non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
+        available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
+                                                                            ('config_ids', '=', False)], limit=1)
+        return non_cash_pm | available_cash_pm
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
@@ -183,6 +187,13 @@ class PosConfig(models.Model):
     def _compute_cash_control(self):
         for config in self:
             config.cash_control = bool(config.payment_method_ids.filtered('is_cash_count'))
+
+    @api.onchange('payment_method_ids')
+    def _check_cash_payment_method(self):
+        for config in self:
+            if len(config.payment_method_ids.filtered('is_cash_count')) > 1:
+                config.payment_method_ids = config.payment_method_ids._origin
+                raise ValidationError(_('You can only have one cash payment method.'))
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):

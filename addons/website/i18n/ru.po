@@ -26,6 +26,7 @@
 # Martin Trigaux, 2022
 # ILMIR <karamov@it-projects.info>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Alena Vlasova, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
+"Last-Translator: Alena Vlasova, 2023\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +141,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: website
 #. openerp-web
@@ -639,14 +640,8 @@ msgstr "<b>Двигайте</b> эту иконку, чтобы изменить
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
-"<br/><br/>\n"
-"                    Пример настроек:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1357,6 +1352,15 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart
 msgid "A Chart Title"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
 msgstr ""
 
 #. module: website
@@ -4114,6 +4118,13 @@ msgstr "Включить функцию редактора форм для эт�
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
@@ -6381,6 +6392,29 @@ msgid "Main actions"
 msgstr "Основные действия"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "Управление страницами"
@@ -6399,6 +6433,20 @@ msgstr "Управляйте страницами вашего сайта"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "Управлять этой страницей"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7029,7 +7077,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Not published"
-msgstr ""
+msgstr "Не опубликовано"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -7567,6 +7615,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Placeholder"
 msgstr "Заполнитель"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -8471,7 +8526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page__seo_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo имя"
 
 #. module: website
 #. openerp-web
@@ -8659,7 +8714,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
-msgstr ""
+msgstr "Боковая панель"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -11009,6 +11064,13 @@ msgid "You can't remove the submit button of the form"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11555,6 +11617,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
 msgstr "menu, pricing"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view

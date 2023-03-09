@@ -11,6 +11,7 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Adi Sharashov <Adi@laylinetech.com>, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,17 +30,17 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
 msgid "# Invoiced"
-msgstr ""
+msgstr "מספר חשבוניות"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
 msgid "# Paid"
-msgstr ""
+msgstr "מספר שולם"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr ""
+msgstr "מספר ממתין"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -47,16 +48,18 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/><strong> From: </strong>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong>מאת:</strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<strong> To:</strong>"
-msgstr ""
+msgstr "<strong>עבור:</strong>"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
@@ -71,7 +74,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr ""
+msgstr "שורת חשבון חשבונית"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -81,7 +84,7 @@ msgstr "הוסף תיאור..."
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid "Add a new member"
-msgstr ""
+msgstr "הוספת משתמש חדש"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__member_price
@@ -94,12 +97,12 @@ msgstr "מספר מנויים"
 #: model:ir.model.fields,field_description:membership.field_res_users__associate_member
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr ""
+msgstr "חבר/ה מקושר/ת"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr ""
+msgstr "שותף מקושר"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -120,14 +123,14 @@ msgstr "תאריך ביטול המנוי"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
 msgid "Cancel date"
-msgstr ""
+msgstr "תאריך ביטול"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
 msgid "Cancelled Member"
-msgstr ""
+msgstr "חבר מבוטל"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -228,7 +231,7 @@ msgstr "שם לתצוגה"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
 msgid "Earned Amount"
-msgstr ""
+msgstr "סכום שהתקבל"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
@@ -254,7 +257,7 @@ msgstr "תאריך סיום המנוי"
 #. module: membership
 #: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "שגיאה! תאריך סיום לא יכול להיות לפני תאריך התחלה."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -268,7 +271,7 @@ msgstr "תחזית"
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__free
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__free
 msgid "Free Member"
-msgstr ""
+msgstr "חברות חינם"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
@@ -313,12 +316,12 @@ msgstr "חשבונית מנוי"
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__invoiced
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__invoiced
 msgid "Invoiced Member"
-msgstr ""
+msgstr "חברות בתשלום"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "בחשבונית/שולם/חינם"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_state
@@ -348,7 +351,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
 msgid "Join Date"
-msgstr ""
+msgstr "תאריך הצטרפות"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
@@ -392,7 +395,7 @@ msgstr "חבר"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
 msgid "Member Price"
-msgstr ""
+msgstr "מחיר חברות"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -406,7 +409,7 @@ msgstr "מנויים"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 msgid "Members Analysis"
-msgstr ""
+msgstr "ניתוח חברים"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__product_id
@@ -437,7 +440,7 @@ msgstr "ניתוח מנויים"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "תקופת חברות"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product__membership_date_to
@@ -535,7 +538,7 @@ msgstr "אין דירוג עדיין"
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__none
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__none
 msgid "Non Member"
-msgstr ""
+msgstr "לא מנוי"
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
@@ -549,14 +552,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__old
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__old
 msgid "Old Member"
-msgstr ""
+msgstr "מנוי ישן"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__paid
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__paid
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__paid
 msgid "Paid Member"
-msgstr ""
+msgstr "מנוי בתשלום"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__partner
@@ -573,12 +576,12 @@ msgstr ""
 #: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "השותף הנו מנוי חינם"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
 msgid "Pending Amount"
-msgstr ""
+msgstr "סכום שממתין"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -633,22 +636,22 @@ msgstr "תאריך תחילת המנוי"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
 msgid "Sum of # Invoiced"
-msgstr ""
+msgstr "סך הכל נדרש"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
 msgid "Sum of # Paid"
-msgstr ""
+msgstr "סך הכל שולם"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
 msgid "Sum of Earned Amount"
-msgstr ""
+msgstr "סך סכום שהתקבל"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
 msgid "Sum of Quantity"
-msgstr ""
+msgstr "סך כמות"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -664,22 +667,22 @@ msgstr "התנועה של שורת פקודת יומן זו."
 #: model:ir.model.fields,help:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,help:membership.field_res_users__membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "המחיר שהשותף ביקש"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "הערה זו תופיע על הצעות מחיר..."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "זה יציג עמודות שולם, ישן, וסך הכל"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "זה יציג עמודות ממתינים, נשלחו, וסך הכל ממתינים"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
@@ -696,7 +699,7 @@ msgstr "ספקים"
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__waiting
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__waiting
 msgid "Waiting Member"
-msgstr ""
+msgstr "חברות בהמתנה"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:0

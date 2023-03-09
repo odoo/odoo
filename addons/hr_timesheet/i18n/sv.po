@@ -16,6 +16,7 @@
 # Robin Calvin, 2022
 # Simon S, 2022
 # Daniel Löfgren, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Daniel Löfgren, 2022\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +147,7 @@ msgstr "<span>timmar</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>Datum</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -256,7 +257,7 @@ msgstr "Apple App Store"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "Application Settings"
-msgstr ""
+msgstr "Programinställningar"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
@@ -1162,6 +1163,12 @@ msgid "Timesheets can be logged on this task."
 msgstr ""
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
 msgstr ""
@@ -1308,6 +1315,12 @@ msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
 msgstr ""
 
 #. module: hr_timesheet

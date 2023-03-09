@@ -339,7 +339,7 @@ Object.assign(PaletteSelectionScreen, {
     template: 'website.Configurator.PaletteSelectionScreen',
 });
 
-class FeaturesSelectionScreen extends Component {
+export class FeaturesSelectionScreen extends Component {
     constructor() {
         super(...arguments);
         this.state = useStore((state) => state);

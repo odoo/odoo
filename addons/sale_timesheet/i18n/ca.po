@@ -13,8 +13,10 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # Jonatan Gk, 2022
 # marcescu, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Farouk Jabiri, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +47,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oviewnocontentsmilingface\">\n"
+"                    Enregistra els fulls de temps\n"
+"                </p><p>\n"
+"                    Podeu registrar i fer un seguiment de les vostres hores de treball per projecte cada\n"
+"                    dia. Cada temps dedicat a un projecte es convertirà en un cost i es podrà tornar a facturar a\n"
+"                    clients si cal.\n"
+"                </p>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
@@ -57,12 +66,14 @@ msgid ""
 "% of timesheets that are billable compared to the total number of timesheets"
 " linked to the AA of the project, rounded to the unit."
 msgstr ""
+"% dels fulls de temps que són facturables en comparació amb el nombre total "
+"de fulls de temps enllaçats a l'AA del projecte, arrodonits a la unitat."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr ""
+msgstr "S'afegiran %(amount)s %(label)s a la nova comanda de vendes."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -131,7 +142,7 @@ msgstr "<span class=\"o_stat_text\">Registrat</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr ""
+msgstr "<strong>Facturat:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -176,7 +187,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
-msgstr ""
+msgstr "Serveis de postvenda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
@@ -217,6 +228,8 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
+"No es pot seleccionar un empleat més d'una vegada en el mapatge. Suprimiu "
+"els duplicats i torneu-ho a provar."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
@@ -253,7 +266,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "Facturable"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
@@ -270,7 +283,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable Type"
-msgstr ""
+msgstr "Tipus de facturació"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -309,7 +322,7 @@ msgstr "Avisar o marcar com a fet"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr ""
+msgstr "Per tipus de facturació"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -320,7 +333,7 @@ msgstr "Cancel·lar"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr ""
+msgstr "Trieu l'ordre de venda a facturar"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
@@ -379,17 +392,17 @@ msgstr "Crea factura"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr ""
+msgstr "Crea una factura a partir del projecte"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr ""
+msgstr "Crea la línia SO a partir del projecte"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr ""
+msgstr "Crea SO a partir del projecte"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -399,18 +412,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Crea una comanda de venda"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr ""
+msgstr "Crea una comanda de vendes a partir del projecte"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Create a Sales Order"
-msgstr ""
+msgstr "Crea una comanda de venda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -448,7 +461,7 @@ msgstr "Client"
 #: model:product.product,name:sale_timesheet.product_service_order_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
-msgstr ""
+msgstr "Atenció al client (hores pagades)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
@@ -458,7 +471,7 @@ msgstr "Valoracions del client"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
-msgstr ""
+msgstr "Client de la comanda de vendes"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__line_date
@@ -517,12 +530,12 @@ msgstr "Empleat"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Taxa de treballador"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
 msgid "Employee that has timesheets on the project."
-msgstr ""
+msgstr "Treballador que té fulls de temps en el projecte."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -539,7 +552,7 @@ msgstr "Data de finalització"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Fixed price services"
-msgstr ""
+msgstr "Serveis de preus fixos"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -549,12 +562,12 @@ msgstr "Agrupar per"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
-msgstr ""
+msgstr "S'ha mostrat la venda d'avisos"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "Té multisol"
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
@@ -589,7 +602,7 @@ msgstr "En curs"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 msgid "Info Invoice"
-msgstr ""
+msgstr "Factura d'informació"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
@@ -611,6 +624,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
 " create later on."
 msgstr ""
+"Factura basada en fulls de temps ( quantitat lliurada) en projectes o "
+"tasques que creareu més endavant."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -619,6 +634,9 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a project for "
 "the order with a task for each sales order line to track the time spent."
 msgstr ""
+"Factura basada en fulls de temps (menor quantitat), i crea un projecte per a"
+" la comanda amb una tasca per a cada línia de comandes de vendes per fer un "
+"seguiment del temps dedicat."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -627,6 +645,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a task in an "
 "existing project to track the time spent."
 msgstr ""
+"Factura basada en fulls de temps (menor quantitat) i crea una tasca en un "
+"projecte existent per fer un seguiment del temps dedicat."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -635,11 +655,13 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Factura basada en fulls de temps (menor quantitat), i crea un projecte buit "
+"per a la comanda per a fer un seguiment del temps dedicat."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr ""
+msgstr "Factura creada a partir del full de temps"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
@@ -650,7 +672,7 @@ msgstr "Facturar temps i material des de tasques."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Factura el teu temps i material als clients"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -671,12 +693,12 @@ msgstr "Política de facturació"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
 msgid "Invoicing Timesheet Enabled"
-msgstr ""
+msgstr "S'ha activat el full de temps de facturació"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__is_cost_changed
 msgid "Is Cost Manually Changed"
-msgstr ""
+msgstr "El cost ha canviat manualment"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -702,13 +724,13 @@ msgstr "Anotació comptable"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Arquitecte júnior (Factura en fulls de temps)"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Kitchen Assembly (Milestones)"
-msgstr ""
+msgstr "Reunió de la cuina (pedres miliars)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
@@ -767,7 +789,7 @@ msgstr "Mètode d'actualització de la quantitat entregada"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
-msgstr ""
+msgstr "Serveis de fita"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -816,6 +838,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
+"Només es facturaran els fulls de temps que encara no estiguin facturats (i "
+"validats, si escau) d'aquest període. Si el període no està indicat, tots "
+"els fulls de temps que encara no estiguin facturats (i validats, si escau) "
+"es facturaran sense distinció."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -852,6 +878,8 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
+"Percentatge del temps lliurat en comparació amb l'import prepagat que s'ha "
+"d'aconseguir per a activar l'activitat d'oportunitat de venda."
 
 #. module: sale_timesheet
 #. openerp-web
@@ -888,6 +916,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
+"Producte de la comanda de venda. Ha de ser un servei facturat basat en fulls"
+" de temps en les tasques."
 
 #. module: sale_timesheet
 #. openerp-web
@@ -941,7 +971,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr ""
+msgstr "Línia de vendes del projecte, mapatge dels empleats"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -957,7 +987,7 @@ msgstr "Actualització del projecte"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
 msgid "Project for which we are creating a sales order"
-msgstr ""
+msgstr "Projecte per al qual estem creant una comanda de vendes"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
@@ -967,7 +997,7 @@ msgstr "Taxa del projecte"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
 msgid "Project to make billable"
-msgstr ""
+msgstr "Projecte per a facturar"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1048,7 +1078,7 @@ msgstr "Comanda de venda"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr ""
+msgstr "Compte analític de l'ordre de venda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -1063,7 +1093,7 @@ msgstr "Línia comanda de venda"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid "Sale line/Employee map"
-msgstr ""
+msgstr "Mapa de venda de línia/empleat"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
@@ -1201,7 +1231,7 @@ msgstr "Veneu serveis i factureu el temps invertit"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Arquitecte sènior (Factura en fulls de temps)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -1224,13 +1254,13 @@ msgstr "Vendes del servei"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold_ratio
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold_ratio
 msgid "Service Upsell Threshold Ratio"
-msgstr ""
+msgstr "Relació del llindar de venda avançada"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Servei en el full de temps"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1285,7 +1315,7 @@ msgstr "Recurrència de la tasca"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
-msgstr ""
+msgstr "Tipus de tasca"
 
 #. module: sale_timesheet
 #: model:project.project,label_tasks:sale_timesheet.project_support
@@ -1302,6 +1332,8 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
+"El producte %s és obligatori per l'aplicació de fulls de temps i no es pot "
+"arxivar ni suprimir."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1310,6 +1342,8 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
+"No es pot crear la comanda de vendes perquè no heu introduït alguns empleats que han introduït fulls de temps en aquest projecte. Llista tots els empleats rellevants abans de crear la comanda de vendes.\n"
+"Empleat/s que manca/s: %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__so_analytic_account_id
@@ -1319,19 +1353,19 @@ msgstr "El compte analític relacionat amb una comanda de venda."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "The cost of the project is now at"
-msgstr ""
+msgstr "El cost del projecte ara és a"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr ""
+msgstr "El projecte ja té una comanda de venda."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr ""
+msgstr "El projecte ja està vinculat a un article de comanda de vendes."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1340,12 +1374,15 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
+"La comanda de vendes no es pot crear perquè alguns fulls de temps d'aquest "
+"projecte ja estan enllaçats a una altra comanda de vendes."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
 msgstr ""
+"L'ordre de venda seleccionada hauria de contenir alguna cosa a facturar."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1359,6 +1396,13 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
+"La tarifa de treball és perfecta si voleu facturar diferents serveis a "
+"diferents clients a diferents tarifes. La tarifa fixa és perfecta si factura"
+" un servei a una tarifa fixa per hora o dia treballat independentment de "
+"l'empleat que el va realitzar. La taxa d'empleat és preferible si els "
+"vostres empleats lliuren el mateix servei a un ritme diferent. Per exemple, "
+"els consultors sèniors i júnior oferirien el mateix servei (= consultoria), "
+"però a un ritme diferent a causa del seu nivell d'antiguitat."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1424,7 +1468,7 @@ msgstr "Unitat de codificació dels fulls d'hores"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
 msgid "Timesheet Product"
-msgstr ""
+msgstr "Producte del full de temps"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__timesheet_revenues
@@ -1437,7 +1481,7 @@ msgstr "Ingressos del full d'hores"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "Durada total del full de temps"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
@@ -1465,18 +1509,18 @@ msgstr "Fulls d'hores"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr ""
+msgstr "Període dels fulls de temps"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets by Billing Type"
-msgstr ""
+msgstr "Fulls de temps per tipus de facturació"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr ""
+msgstr "Fulls de temps de %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
@@ -1491,7 +1535,7 @@ msgstr "Els fulls d'hores es tenen en compte en facturar el vostre temps"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
-msgstr ""
+msgstr "Fulls de temps emprats en la facturació del temps dedicat"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1511,6 +1555,8 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
+"Import total a facturar en la comanda de venda, incloent tots els articles "
+"(serveis, serveis, despeses, ...)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
@@ -1521,6 +1567,8 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
+"Durada total registrada, expressada en la codificació UoM, i arrodonida a la"
+" unitat"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1551,7 +1599,7 @@ msgstr "Preu un."
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr ""
+msgstr "Preu unitari de la comanda de venda."
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
@@ -1563,23 +1611,24 @@ msgstr "Unitats"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
-msgstr ""
+msgstr "El valor no existeix en el tipus de preus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
 msgid "View Timesheets"
-msgstr ""
+msgstr "Mostra els fulls de temps"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
 msgstr ""
+"Avisa el venedor d'un augment de venda quan el treball realitzat excedeixi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
 msgid "Warning Employee Rate"
-msgstr ""
+msgstr "Freqüència d'empleats d'avís"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
@@ -1591,7 +1640,7 @@ msgstr "Assistent"
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "You can only apply this action from a project."
-msgstr ""
+msgstr "Només podeu aplicar aquesta acció des d'un projecte."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1600,6 +1649,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
+"No podeu enllaçar un projecte facturable a un article de comanda de vendes "
+"que prové d'una factura de despesa o d'una factura de proveïdor."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1608,12 +1659,14 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
+"No podeu vincular un projecte facturable a un article de comanda de venda "
+"que no sigui un servei."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
-msgstr ""
+msgstr "No podeu modificar fulls de temps que ja estan facturats."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
@@ -1643,7 +1696,7 @@ msgstr "hores"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "margin ("
-msgstr ""
+msgstr "marge ("
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form

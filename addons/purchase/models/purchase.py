@@ -950,7 +950,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             taxes = line.taxes_id.compute_all(**line._prepare_compute_all_values())
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -1057,11 +1057,16 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for line in self:
-                if line.order_id.state == 'purchase':
+                if (
+                    line.order_id.state == "purchase"
+                    and float_compare(line.product_qty, values["product_qty"], precision_digits=precision) != 0
+                ):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
@@ -1104,7 +1109,8 @@ class PurchaseOrderLine(models.Model):
                     date=rec.date_order,
                     company_id=rec.company_id.id,
                 )
-                rec.account_analytic_id = default_analytic_account.analytic_id
+                if default_analytic_account:
+                    rec.account_analytic_id = default_analytic_account.analytic_id
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_tag_ids(self):
@@ -1117,7 +1123,8 @@ class PurchaseOrderLine(models.Model):
                     date=rec.date_order,
                     company_id=rec.company_id.id,
                 )
-                rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+                if default_analytic_account:
+                    rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
     @api.onchange('product_id')
     def onchange_product_id(self):

@@ -9,6 +9,8 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Martin Trigaux, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
+# Anna, 2023
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2022\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,14 +41,14 @@ msgstr "Ettevõtted"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "Lisaaega kokku"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "Arvesta lisaaeg maha"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -58,13 +60,13 @@ msgstr "Loobu"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
 msgid "Extra Hours"
-msgstr ""
+msgstr "Ületunnid"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "Lisaaeg saadaval"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -83,7 +85,7 @@ msgstr "Tunnid"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "HR kohaloleku ületunnid"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
@@ -97,17 +99,18 @@ msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
 msgstr ""
+"Kui seda tüüpi vaba aeg on heaks kiidetud, arvestatakse kohaloleku  maha."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "Ületunnitöö omavastutus"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "Taotle ületunde"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -119,34 +122,34 @@ msgstr "Salvesta"
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
-msgstr ""
+msgstr "Töötajal ei ole selle puhkuse pikendamiseks piisavalt lisatunde."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
-msgstr ""
+msgstr "Töötajal ei ole selle puhkuse pikendamiseks piisavalt lisatunde."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to request this allocation."
-msgstr ""
+msgstr "Töötajal ei ole selle puhkuse taotlemiseks piisavalt lisatunde."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
-msgstr ""
+msgstr "Töötajal ei ole selle puhkuse taotlemiseks piisavalt lisatunde."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
-msgstr ""
+msgstr "Töötajal ei ole selle puhkuse taotlemiseks piisavalt ületunde."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -167,7 +170,7 @@ msgstr "Puudumise tüüp"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "Ületunnid kokku"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_users
@@ -179,7 +182,7 @@ msgstr "Kasutajad"
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
-msgstr ""
+msgstr "Teil ei ole selle puhkuse taotlemiseks piisavalt lisatunde"
 
 #. module: hr_holidays_attendance
 #. openerp-web

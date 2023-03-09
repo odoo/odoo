@@ -160,7 +160,7 @@
                             <field name="amount_residual" widget='monetary' options="{'currency_field': 'currency_id'}" invisible="1"/>
                             <div class="o_td_label">
                                 <field name="label_total_amount_company" nolabel="1" class="o_form_label" invisible="1"/>
-                                <label for="total_amount_company" string="" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
+                                <label for="total_amount_company" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
                             </div>
                             <!-- YTI TO REMOVE IN MASTER END -->
                             <div class="o_row d-flex" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
@@ -741,11 +741,12 @@
                      <notebook>
                         <page name="expenses" string="Expense">
                         <field name="is_editable" invisible="1"/>
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" attrs="{'readonly': [('is_editable', '=', False)]}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" attrs="{'readonly': [('is_editable', '=', False)]}" force_save="1">
                             <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="product_id"/>
                                 <field name="name"/>
+                                <field name="employee_id" invisible="1"/>
                                 <field name="state" invisible="1"/>
                                 <field name="reference" optional="hide"/>
                                 <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>

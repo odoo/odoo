@@ -16,6 +16,7 @@
 # CristianCruzParra, 2022
 # Harcogourmet, 2022
 # jabelchi, 2022
+# Ivan Espinola, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: Ivan Espinola, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,22 +148,24 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
+"<strong>Avís</strong> Assegureu-vos que heu iniciat la sessió com a soci "
+"correcte abans de fer aquest pagament."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>Avís</strong> Falta la moneda o és incorrecta."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
+msgstr "<strong>Avís</strong> Cal que inicieu una sessió per pagar."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Ja existeix una transacció de pagament amb referència %s."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -249,7 +252,7 @@ msgstr "Activar"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Activa Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -280,7 +283,7 @@ msgstr "Alipay"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr ""
+msgstr "Permet desar els mètodes de pagament"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -292,7 +295,7 @@ msgstr "Import"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Import disponible per al reemborsament"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -396,12 +399,12 @@ msgstr "Model de document de devolució de trucada"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
 msgid "Callback Done"
-msgstr ""
+msgstr "S'ha fet la crida de retorn"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Resum de la crida de retorn"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -456,6 +459,9 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
+"Captura l'import des d'Odoo, quan s'hagi completat el lliurament.\n"
+"Useu això si voleu carregar les vostres targetes de clients només quan\n"
+"Està segur que pot enviar-los els productes."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -574,7 +580,7 @@ msgstr "Crear un nou mètode de pagament"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "Create a new payment token"
-msgstr ""
+msgstr "Crea un nou testimoni de pagament"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -611,7 +617,7 @@ msgstr "Credencials"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "Targeta de dèbit de crèdit"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
@@ -678,7 +684,7 @@ msgstr "Client"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "Defineix l'ordre de visualització"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
@@ -744,6 +750,7 @@ msgstr "Correu electrònic"
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Enable credit &amp; debit card payments supported by Stripe"
 msgstr ""
+"Activa els pagaments de targetes de crèdit i dèbit compatibles amb Stripe"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -918,7 +925,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
 msgid "Inline Form Template"
-msgstr ""
+msgstr "Plantilla de formulari inclosa"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1011,7 +1018,7 @@ msgstr "Última modificació el "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Data del darrer canvi d'estat"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1053,7 +1060,7 @@ msgstr "Manual"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Devolució màxima permesa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1181,12 +1188,12 @@ msgstr "Ok"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online Payments"
-msgstr ""
+msgstr "Pagaments en línia"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "Pagament directe en línia"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
@@ -1201,7 +1208,7 @@ msgstr "Pagament en línia amb redirecció"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online payments enabled"
-msgstr ""
+msgstr "Pagaments en línia habilitats"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1320,7 +1327,7 @@ msgstr "Quantitat a pagar"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Seguiment del pagament"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1384,7 +1391,7 @@ msgstr "Token de pagament"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "Comptador del testimoni de pagament"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1417,7 +1424,7 @@ msgstr "Transaccions de pagament"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "Transaccions de pagament enllaçades al testimoni"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
@@ -1487,7 +1494,7 @@ msgstr "Seleccioneu només una opció de pagament."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
-msgstr ""
+msgstr "Establiu una quantitat més petita que %s."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1503,7 +1510,7 @@ msgstr "Utilitzeu els detalls de transferència següents"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Utilitzeu el nom de la comanda com a referència de comunicació."
 
 #. module: payment
 #. openerp-web
@@ -1515,7 +1522,7 @@ msgstr "Si us plau, espereu..."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Processat per"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1536,7 +1543,7 @@ msgstr "Raó:"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "Motiu: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
@@ -1610,7 +1617,7 @@ msgstr "Càrrec directe SEPA"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "CONFIGURACIÓ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1688,7 +1695,7 @@ msgstr "Mostra la pàgina de credencials"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_done_msg
 msgid "Show Done Msg"
-msgstr ""
+msgstr "Mostra el missatge final"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_payment_icon_ids
@@ -1817,7 +1824,7 @@ msgstr "La referència de l'adquirent de la transacció"
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "L'import a reemborsar ha de ser positiu i no pot ser superior a %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
@@ -1856,7 +1863,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "S'han d'omplir els camps següents: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -1885,6 +1892,7 @@ msgstr "El missatge que es mostra si el pagament està autoritzat"
 msgid ""
 "The message displayed if the order is canceled during the payment process"
 msgstr ""
+"El missatge mostrat si la comanda es cancel·la durant el procés de pagament"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1899,11 +1907,13 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid "The message displayed if the order pending after the payment process"
 msgstr ""
+"El missatge que es mostra si la comanda està pendent després del procés de "
+"pagament"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "The message displayed to explain and help the payment process"
-msgstr ""
+msgstr "El missatge mostrat per explicar i ajudar el procés de pagament"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1911,6 +1921,7 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
+"El pagament hauria de ser directe, amb redirecció, o fet per un token."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1926,7 +1937,7 @@ msgstr "La ruta a la qual es redirigeix ​​l'usuari després de la transacci�
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "El pagament d'origen dels pagaments de reemborsament relacionats"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2082,7 +2093,7 @@ msgstr "Transaccions"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Tipus de reemborsament acceptat"
 
 #. module: payment
 #. openerp-web
@@ -2146,7 +2157,7 @@ msgstr "Transacció buida"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "S'està esperant el pagament"
 
 #. module: payment
 #. openerp-web
@@ -2242,7 +2253,7 @@ msgstr "No podeu suprimir una vista que utilitza un adquirent de pagament."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "No teniu accés a aquest testimoni de pagament."
 
 #. module: payment
 #. openerp-web
@@ -2250,6 +2261,8 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Hauríeu de rebre un correu electrònic que confirmi el pagament d'aquí a uns "
+"minuts."
 
 #. module: payment
 #. openerp-web
@@ -2390,7 +2403,7 @@ msgstr "Codi Postal"
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr ""
+msgstr "pagament: transaccions postprocessament"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list

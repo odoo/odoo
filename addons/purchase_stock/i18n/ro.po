@@ -6,7 +6,8 @@
 # Martin Trigaux, 2021
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Claudia Baisan, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
+"Last-Translator: Claudia Baisan, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr "% Livrare la timp"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+ %d zi(le)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -77,7 +78,7 @@ msgstr "<span class=\"o_stat_text\">Achiziții</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_value\">%</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -342,7 +343,7 @@ msgstr "Ultima modificare la"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
 msgid "Last Purchase"
-msgstr ""
+msgstr "Ultima achiziție"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -366,10 +367,10 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Marja de eroare pentru termenele de plată ale vânzătorilor. Când sistemul "
-"generează comenzi de achiziție pentru comandare de produse, acestea vor fi "
-"programate cu multe zile mai devreme, să facă față întârzierilor neașteptate"
-" ale vânzătorilor."
+"Marja de eroare pentru timpul de livrare a furnizorului. Când sistemul "
+"generează comenzi de achiziție pentru completare stoc, acestea vor fi "
+"programate cu mai multe zile mai devreme, ca să facă față întârzierilor "
+"neașteptate ale furnizorului."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -589,7 +590,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
 msgid "Set as Supplier"
-msgstr ""
+msgstr "Setează ca furnizor"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
@@ -630,7 +631,7 @@ msgstr "Raport Regulă Stoc"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr ""
+msgstr "Informații de reaprovizionare furnizor stoc"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -787,10 +788,9 @@ msgstr ""
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"Când produsele sunt necesare <b>%s</b>, <br/>o cerere de ofertă este creată "
-"pentru a satisface nevoile."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

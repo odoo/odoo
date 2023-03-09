@@ -399,8 +399,6 @@ class IrMailServer(models.Model):
         body = body or u''
 
         msg = EmailMessage(policy=email.policy.SMTP)
-        msg.set_charset('utf-8')
-
         if not message_id:
             if object_id:
                 message_id = tools.generate_tracking_message_id(object_id)
@@ -424,9 +422,11 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         else:

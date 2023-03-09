@@ -4,7 +4,7 @@
 from datetime import timedelta
 from itertools import groupby
 import operator as py_operator
-from odoo import api, fields, models
+from odoo import fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
@@ -48,7 +48,7 @@ class ProductTemplate(models.Model):
         super()._compute_show_qty_status_button()
         for template in self:
             if template.is_kits:
-                template.show_on_hand_qty_status_button = True
+                template.show_on_hand_qty_status_button = template.product_variant_count <= 1
                 template.show_forecasted_qty_status_button = False
 
     def _compute_used_in_bom_count(self):
@@ -78,9 +78,26 @@ class ProductTemplate(models.Model):
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'product_uom_qty',
-            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'}
+            'search_default_filter_plan_date': 1,
         }
         return action
+
+    def action_archive(self):
+        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.product_variant_ids.ids)]).product_id.mapped('display_name')
+        res = super().action_archive()
+        if filtered_products:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                'title': _("Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+                            "which means that the product can still be used on it/them.", filtered_products),
+                'type': 'warning',
+                'sticky': True,  #True/False will display for few seconds if false
+                'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        return res
 
 
 class ProductProduct(models.Model):
@@ -315,3 +332,20 @@ class ProductProduct(models.Model):
             if OPERATORS[operator](product.qty_available, value):
                 product_ids.append(product.id)
         return list(set(product_ids))
+
+    def action_archive(self):
+        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids)]).product_id.mapped('display_name')
+        res = super().action_archive()
+        if filtered_products:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                'title': _("Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+                            "which means that the product can still be used on it/them.", filtered_products),
+                'type': 'warning',
+                'sticky': True,  #True/False will display for few seconds if false
+                'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        return res

@@ -6,6 +6,8 @@
 # Thomas Deleval <thd@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Moka Tourisme <hello@mokatourisme.fr>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,13 +15,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:0
@@ -291,12 +293,12 @@ msgstr "Enregistrement de débogage"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "Méthode de livraison par défaut utilisée dans les bons de commande."
+msgstr "Mode de livraison par défaut utilisé dans les bons de commande."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr "Définir une nouvelle méthode de livraison"
+msgstr "Définir un nouveau mode de livraison"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -325,7 +327,7 @@ msgstr "Message de livraison"
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
-msgstr "Méthode de livraison"
+msgstr "Mode de livraison"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
@@ -393,7 +395,7 @@ msgstr "Détermine l'ordre d'affichage"
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -415,9 +417,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Chaque société de transport (par exemple UPS ) peut avoir plusieurs méthodes"
-" de livraison (par exemple UPS Express , UPS Standard ) avec un ensemble de "
-"règles de tarification pour chaque méthode."
+"Chaque société de transport (par exemple UPS) peut avoir plusieurs modes de "
+"livraison (par exemple UPS Express , UPS Standard) avec un ensemble de "
+"règles de tarification pour chaque mode."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -429,8 +431,7 @@ msgstr "Environnement"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
-"Erreur: cette méthode de livraison n'est pas disponible pour cette adresse."
+msgstr "Erreur: ce mode de livraison n'est pas disponible pour cette adresse."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -751,7 +752,7 @@ msgstr "Étiquette de retour accessible depuis le portail client"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retour à la cueillette"
+msgstr "Picking de retour"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -1107,12 +1108,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
 msgid "Zip From"
-msgstr "À partir de"
+msgstr "Code postaux à partir de"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
-msgstr "Destinataire"
+msgstr "Code postaux jusqu'à"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

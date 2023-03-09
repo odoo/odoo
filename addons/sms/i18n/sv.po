@@ -17,6 +17,7 @@
 # Victor Ekström, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Robin Calvin, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Robin Calvin, 2022\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -765,6 +766,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Valfritt översättningsspråk (ISO-kod) som ska väljas när du skickar ett "
+"e-postmeddelande. Om inget anges används den engelska versionen. Detta bör "
+"vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t.ex. {{ "
+"object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
@@ -871,7 +876,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Renderingsmodell"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1235,6 +1240,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ av serveråtgärd. Följande värden är tillgängliga:\n"
+"- execute Python Code\": ett block av Python-kod som ska exekveras\n"
+"- \"Create\": skapar en ny post med nya värden\n"
+"- \"Update a Record\": Uppdatera värdena i en post\n"
+"- \"Execute several actions\": definierar en åtgärd som utlöser flera andra serveråtgärder\n"
+"- \"Skicka e-post\": skickar automatiskt ett e-postmeddelande (diskussion)\n"
+"- 'Add Followers': lägg till följare till en post (Diskutera)\n"
+"- \"Skapa nästa aktivitet\": skapa en aktivitet (Diskutera)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf

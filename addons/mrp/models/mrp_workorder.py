@@ -66,7 +66,7 @@ class MrpWorkorder(models.Model):
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
         compute='_compute_state', store=True,
-        default='pending', copy=False, readonly=True)
+        default='pending', copy=False, readonly=True, index=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
         help='Slot into workcenter calendar once planned',
@@ -422,6 +422,12 @@ class MrpWorkorder(models.Model):
     def _onchange_expected_duration(self):
         self.duration_expected = self._get_duration_expected()
 
+    @api.onchange('finished_lot_id')
+    def _onchange_finished_lot_id(self):
+        res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+        if res is not True:
+            return res
+
     def write(self, values):
         if 'production_id' in values:
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
@@ -576,7 +582,7 @@ class MrpWorkorder(models.Model):
 
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
-        else:
+        elif self.qty_producing == 0:
             self.qty_producing = self.qty_remaining
 
         self.env['mrp.workcenter.productivity'].create(
@@ -605,10 +611,9 @@ class MrpWorkorder(models.Model):
             vals['leave_id'] = leave.id
             return self.write(vals)
         else:
-            if self.date_planned_start > start_date:
+            if not self.date_planned_start or self.date_planned_start > start_date:
                 vals['date_planned_start'] = start_date
-                if self.duration_expected:
-                    vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
+                vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
             if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
             return self.with_context(bypass_duration_calculation=True).write(vals)
@@ -630,7 +635,7 @@ class MrpWorkorder(models.Model):
                 vals['date_start'] = end_date
             if not workorder.date_planned_start or end_date < workorder.date_planned_start:
                 vals['date_planned_start'] = end_date
-            workorder.write(vals)
+            workorder.with_context(bypass_duration_calculation=True).write(vals)
 
             workorder._start_nextworkorder()
         return True
@@ -861,16 +866,8 @@ class MrpWorkorder(models.Model):
             )
 
     def _check_sn_uniqueness(self):
-        """ Alert the user if the serial number as already been produced """
-        if self.product_tracking == 'serial' and self.finished_lot_id:
-            sml = self.env['stock.move.line'].search_count([
-                ('lot_id', '=', self.finished_lot_id.id),
-                ('location_id.usage', '=', 'production'),
-                ('qty_done', '=', 1),
-                ('state', '=', 'done')
-            ])
-            if sml:
-                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
+        # todo master: remove
+        pass
 
     def _update_qty_producing(self, quantity):
         self.ensure_one()

@@ -7,10 +7,12 @@
 # fausthuang, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
-# Martin Trigaux, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Emily Jia <eji@odoo.com>, 2023
+# digitalliuzg8888, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3120,6 +3122,13 @@ msgid "Maximum Exceeded"
 msgstr "超过最大值"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "最大值已达到"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "消息传递错误"
@@ -4036,6 +4045,8 @@ msgid "Picking POS"
 msgstr "拣货POS"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -5754,6 +5765,15 @@ msgstr "营业点仅支持“添加舍入明细”舍入策略."
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr "如果未配置现金付款方式，则金额不能高于到期应付金额。"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr "您的付款明细金额必须四舍五入以验证交易."
@@ -6042,6 +6062,16 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr "公司没有配置会计科目表. 请转到会计设置以安装会计科目表."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6430,6 +6460,15 @@ msgid "Type of the exception activity on record."
 msgstr "记录的异常活动类型。"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr "这个订单还没有同步到服务器。请确认它已被同步，然后再试。"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6611,9 +6650,10 @@ msgstr "UUID"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "VAT:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "未同步的订单"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6756,6 +6796,12 @@ msgid ""
 msgstr ""
 "您正在尝试销售带有序列号/批号的产品，但其中一些未设置。\n"
 "是否仍要继续？"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr "您只能使用一种现金付款方式。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -7066,3 +7112,9 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "与当前订单重复"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""

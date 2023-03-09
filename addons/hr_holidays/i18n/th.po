@@ -3237,12 +3237,10 @@ msgstr "ใช้การลาแล้ว"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
-"The accrual starts after a defined period from the employee start date. This"
-" field defines the number of days, months or years after which accrual is "
-"used."
+"The accrual starts after a defined period from the allocation start date. "
+"This field defines the number of days, months or years after which accrual "
+"is used."
 msgstr ""
-"ยอดสะสมเริ่มต้นหลังจากระยะเวลาที่กำหนดจากวันที่เริ่มต้นของพนักงาน "
-"ฟิลด์นี้กำหนดจำนวนวัน เดือน หรือปีหลังจากที่ใช้ยอดสะสม"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3297,6 +3295,15 @@ msgid ""
 msgstr ""
 "จำนวนการลาที่เหลือไม่เพียงพอสำหรับประเภทการลานี้\n"
 "โปรดตรวจสอบการลาที่รอการตรวจสอบ"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -3998,6 +4005,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr "คุณไม่สามารถลบคำขอการจัดสรรซึ่งอยู่ใน %sสถานะ "
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -4013,6 +4027,20 @@ msgstr ""
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr "คุณไม่มีสิทธิ์ขอการอนุมัติครั้งที่สองในการขอหยุดงาน"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

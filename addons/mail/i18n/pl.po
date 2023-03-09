@@ -8,10 +8,9 @@
 # Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2021
 # Jaroslaw Kaczmarski, 2021
 # Monika Motyczyńska <m.monia@op.pl>, 2021
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
 # Maja Stawicka <mjstwck@wp.pl>, 2021
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2021
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2021
 # Tomasz Leppich <t.leppich@gmail.com>, 2021
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2021
 # Natalia Gros <nag@odoo.com>, 2021
@@ -28,11 +27,13 @@
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
 # Martin Trigaux, 2021
 # Dawid Prus, 2021
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
 # Karol Rybak <karolrybak85@gmail.com>, 2022
 # Jacek Michalski <michalski.jck@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2022
+# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
+# Maksym <ms@myodoo.pl>, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2022\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,7 +150,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "%społączony"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -466,7 +467,7 @@ msgstr "<span class=\"o_form_label\">Czynności</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Spersonalizowana lista serwerów ICE</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -863,7 +864,7 @@ msgstr "Dodaj użytkowników"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add your twilio credentials for ICE servers"
-msgstr ""
+msgstr "Dodaj certyfikaty twilio dla serwerów ICE"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1348,7 +1349,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Można edytować treść"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -1564,6 +1565,9 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
+"Czat między dwiema osobami jest prywatny i unikalny. Grupa jest prywatna "
+"wśród osób zaproszonych. Do kanału można dołączać bez ograniczeń (w "
+"zależności od jego ustawień). "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -1700,7 +1704,7 @@ msgstr "Ustawienia konfiguracji"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr ""
+msgstr "Skonfiguruj listę serwerów ICE dla webRTC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3085,7 +3089,7 @@ msgstr "Grupy"
 #: model_terms:ir.ui.view,arch_db:mail.mail_guest_view_tree
 #, python-format
 msgid "Guest"
-msgstr ""
+msgstr "Gość"
 
 #. module: mail
 #: code:addons/mail/models/mail_guest.py:0
@@ -3645,7 +3649,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Jest edytorem"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -4079,7 +4083,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "Szablon wiadomości"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_template_editor
@@ -5871,7 +5875,7 @@ msgstr "Usuń tego obserwatora"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model renderowania"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -6675,7 +6679,7 @@ msgstr "Podsumowanie"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Parametr systemu"
 
 #. module: mail
 #. openerp-web
@@ -6987,7 +6991,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "This is their first connection. Wish them luck."
-msgstr ""
+msgstr "To ich pierwsze połączenie. Życz im powodzenia."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -7410,7 +7414,7 @@ msgstr "Użyj funkcji \"Naciśnij i mów\""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "Use Twilio ICE servers"
-msgstr ""
+msgstr "Użyj serwerów Twilio ICE"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
@@ -7463,7 +7467,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_tree
 msgid "User Settings"
-msgstr ""
+msgstr "Ustawienia użytkownika"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users_settings_volumes

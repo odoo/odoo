@@ -22,22 +22,47 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
             this.lockedValidateOrder = useAsyncLockedMethod(this.validateOrder);
+            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
             NumberBuffer.use(this._getNumberBufferConfig);
             onChangeOrder(this._onPrevOrder, this._onNewOrder);
             useErrorHandlers();
             this.payment_interface = null;
             this.error = false;
-            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
+        }
+
+        mounted() {
+            this.env.pos.on('change:selectedClient', this.render, this);
+        }
+        willUnmount() {
+            this.env.pos.off('change:selectedClient', null, this);
+        }
+
+        showMaxValueError() {
+            this.showPopup('ErrorPopup', {
+                title: this.env._t('Maximum value reached'),
+                body: this.env._t('The amount cannot be higher than the due amount if you don\'t have a cash payment method configured.')
+            });
         }
         get _getNumberBufferConfig() {
-            return {
+            let config = {
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
                 nonKeyboardInputEvent: 'input-from-numpad',
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
+            };
+            // Check if pos has a cash payment method
+            const hasCashPaymentMethod = this.payment_methods_from_config.some(
+                (method) => method.type === 'cash'
+            );
+
+            if (!hasCashPaymentMethod) {
+                config['maxValue'] = this.currentOrder.get_due();
+                config['maxValueReached'] = this.showMaxValueError.bind(this);
             }
+
+            return config;
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -318,6 +343,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     ),
                 });
                 return false;
+            }
+
+            //If this order is a refund, check if there is a cash payment
+            if (this.currentOrder.get_due() < 0) {
+                if (!this.payment_methods_from_config.some(payment_method => payment_method.is_cash_count)) {
+                    this.showPopup('ErrorPopup', {
+                        title: this.env._t('Cannot return change without a cash payment method'),
+                        body: this.env._t('There is no cash payment method available in this point of sale to handle the change.\n\n Please add a cash payment method in the point of sale configuration.')
+                    });
+                    return false;
+                }
             }
 
             // The exact amount must be paid if there is no cash payment method defined.

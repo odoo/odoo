@@ -1,21 +1,12 @@
 /*Modifications for the Standard and Boxed document layouts */
-.header.o_company_1_layout .o_boxed_header {
-	max-height: 40mm;
-}
-
 .article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
     > .pt-5 {
-		> .address.row {
-			width: 105% !important;
-    		height: 58mm;
-			margin-left: -11mm;
-			margin-top: -16mm;
-			> div[name="address"] {
-				padding-top: 10mm;
-				> address {
-					height: 30mm !important;
-				}
-			}
+        padding-top: 0 !important;
+        > .address.row {
+            width: 117% !important;
+            height: 68mm !important;
+            margin-top: -4mm !important;
+            line-height: 1.1em;
         }
     }
 }
@@ -23,32 +14,53 @@
 /*Modifications for Bold and Striped document layouts*/
 .article.o_report_layout_bold.o_company_1_layout, .article.o_report_layout_striped.o_company_1_layout {
     > .address.row {
-		width: 105% !important;
-		height: 58mm;
-		margin-top: -4mm;
-		margin-left: -11mm;
-		> div[name="address"] {
-	    	padding-top: 10mm;
-			> address {
-				height: 29mm !important;
-			}
-		}
+        width: 117% !important;
+        height: 68mm !important;
+        margin-top: -4mm !important;
+        line-height: 1.1em;
     }
 }
 
 /* Modifications for all layouts */
 div .address.row > div[name="address"] {
     position: relative !important;
-    width: 103mm !important;
+    margin-left: 48% !important;
     background-color: #ffffff;
-	line-height: 1.2em;
-    > address {
-		width: 100% !important;
-		position: absolute !important;
-		bottom: 0 !important;
-		padding-left: 3mm;
-		padding-top: 3mm;
-        height: 33mm;
-		max-height: 33mm;
+    > address, div {
+        > address {
+            width: 100% !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            padding-left: 5mm;
+            padding-top: 3mm;
+            height: 33mm;
+            max-height: 33mm;
+        }
+    }
+}
+
+div .header.o_company_1_layout > div[class$="_header"] {
+    overflow: hidden !important;
+    max-height: 150px;
+}
+
+/* Follow-up Letters */
+div .row.fallback_header {
+    margin-top: -4mm !important;
+    height: 68mm !important;
+    width: 117% !important;
+    > div.col-5.offset-7 {
+        background-color: #ffffff;
+        margin-left: 48.5% !important;
+        position: relative !important;
+        > div:first-child {
+            width: 100%;
+            padding-left: 2mm !important;
+            height: 33mm;
+            max-height: 33mm !important;
+            line-height: 1.1em;
+            position: absolute;
+            bottom: 0;
+        }
     }
 }

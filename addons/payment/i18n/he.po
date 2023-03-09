@@ -17,6 +17,7 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,7 +85,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">אמצעי תשלום שמורים</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -97,6 +98,8 @@ msgid ""
 "<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal "
 "account</span>"
 msgstr ""
+"<span><i class=\"fa fa-arrow-right\"/> איך להגדיר את חשבון הפייפאל "
+"שלך</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -118,6 +121,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>לא נמצאה אפשרות תשלום מתאימה.</strong><br/>\n"
+"                                אם לדעתך מדובר בטעות, נא ליצור קשר עם מנהלי האתר."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
@@ -144,18 +149,18 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>אזהרה</strong> המטבע אינו תקין או חסר."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
+msgstr "<strong>אזהרה</strong> עליך להכנס למערכת כדי לשלם."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "תשלום עם מספר אסמכתא %s כבר קיים"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -164,6 +169,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"בקשה לזיכוי של %(amount)s נשלחה. התשלום יווצר בקרוב. אסמכתא לפעולה הזיכוי: "
+"%(ref)s(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -176,7 +183,7 @@ msgstr "נדרש אסימון ליצירת עסקת תשלום חדשה."
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
-msgstr ""
+msgstr "עסקה עם מספר אסמכתא %(ref)s נוצרה (%(acq_name)s)"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -185,6 +192,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"עסקה עם מספר אסמכתא %(ref)s נוצרה באמצעי התשלום %(token_name)s "
+"(%(acq_name)s)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -273,7 +282,7 @@ msgstr "Alipay"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr ""
+msgstr "לאפשר שמירת אמצעי תשלום"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -285,7 +294,7 @@ msgstr "סכום"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "סכום שנותר ליצירת זיכוי"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -298,7 +307,7 @@ msgstr "סכום מקסימלי"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "An error occurred during the processing of this payment."
-msgstr ""
+msgstr "התרחבה שגיאה במהלך עיבוד התשלום הזה."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -316,7 +325,7 @@ msgstr "בארכיון"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Are you sure you want to delete this payment method?"
-msgstr ""
+msgstr "באמת ברצונך למחוק את אמצעי התשלום הזה?"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -602,7 +611,7 @@ msgstr "אישורים"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "כרטיס אשראי"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
@@ -669,7 +678,7 @@ msgstr "לקוח"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "הגדרת סדר התצוגה"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
@@ -885,7 +894,7 @@ msgstr "אם התשלום לא אושר תוכל ליצור איתנו קשר."
 msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
-msgstr ""
+msgstr "אם לדעתך מדובר בטעות, נא ליצור קשר עם מנהל האתר."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -949,7 +958,7 @@ msgstr "חשבוניות"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "כמות חשבוניות"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -961,7 +970,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr ""
+msgstr "האם זה מקושר למסמכים הבאים:"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_journal
@@ -1115,7 +1124,7 @@ msgstr "לא בוצע תשלום."
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "No payment option selected"
-msgstr ""
+msgstr "לא נבחרה אפשרות תשלום"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__not_done
@@ -1125,7 +1134,7 @@ msgstr "לא בוצע"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
-msgstr ""
+msgstr "לא מאומת"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1149,7 +1158,7 @@ msgstr "Odoo מודול ארגוני"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "תשלומים לא-מקוונים עם אסימון/טוקן"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -1167,27 +1176,27 @@ msgstr "אישור"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online Payments"
-msgstr ""
+msgstr "תשלומים מקוונים"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "תשלום מקוון וישיר"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "תשלומים מקוונים לפי טוקן/אסימון"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "תשלומים מקוונים עם הפניה"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online payments enabled"
-msgstr ""
+msgstr "תשלומים מקוונים מופעלים"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1358,7 +1367,7 @@ msgstr "מזהה תשלום"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "אשף החזרי תשלום / זיכויים"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1460,14 +1469,14 @@ msgstr "טלפון"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr ""
+msgstr "נא לבחור אפשרות תשלום."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr ""
+msgstr "נא לבחור רק אפשרות תשלום אחת."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1479,7 +1488,7 @@ msgstr "אנא הגדר סכום הנמוך מ %s."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Please switch to company '%s' to make this payment."
-msgstr ""
+msgstr "נא להחליף לחברה '%s' כדי לבצע תשלום זה."
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1522,12 +1531,12 @@ msgstr "סיבה:"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "סיבה: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "תבנית טופס הפנייה"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1554,12 +1563,12 @@ msgstr "החזר כספי"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "סכום להחזיר / לזכות"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "סכום לזיכוי"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1596,17 +1605,17 @@ msgstr "חיוב ישיר של SEPA"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "הגדרה"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Save Payment Method"
-msgstr ""
+msgstr "שמירת אמצעי תשלום"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
-msgstr ""
+msgstr "שמור את פרטי התשלום שלי"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
@@ -1664,7 +1673,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_cancel_msg
 msgid "Show Cancel Msg"
-msgstr ""
+msgstr "הצגת הודעת ביטול"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_credentials_page
@@ -1704,7 +1713,7 @@ msgstr "תשלום מקור"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "עסקת מקור"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_state
@@ -1777,7 +1786,7 @@ msgstr "מצב בדיקה"
 #: model:ir.model.fields,help:payment.field_payment_token__provider
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "שירות התשלום לשימוש עם רוכש זה"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1800,7 +1809,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "סכום הזיכוי צריך להיות מספר חיובי ולא יכול להיות יותר מ-%s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
@@ -1838,7 +1847,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "יש למלא את השדות הבאים: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -1973,12 +1982,12 @@ msgstr "ערך הסכום לתשלום חייב להיות חיובי."
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr ""
+msgstr "אין עסקאות להציג"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr ""
+msgstr "אין על מה לשלם."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__allow_tokenization
@@ -2006,17 +2015,17 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "This payment has not been processed yet."
-msgstr ""
+msgstr "התשלום עדיין לא טופל."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
-msgstr ""
+msgstr "אמצעי תשלום זה אומת על-ידי המערכת שלנו."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
-msgstr ""
+msgstr "אמצעי תשלום זה לא אומת על-ידי המערכת שלנו."
 
 #. module: payment
 #. openerp-web
@@ -2049,7 +2058,7 @@ msgstr "עסקאות"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "תמיכה בסוג זיכוי"
 
 #. module: payment
 #. openerp-web
@@ -2073,7 +2082,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
-msgstr ""
+msgstr "אימות אמצעי התשלום"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
@@ -2127,7 +2136,7 @@ msgstr "אזהרה!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr ""
+msgstr "איננו יכולים למחוק את אמצעי התשלום."
 
 #. module: payment
 #. openerp-web
@@ -2141,14 +2150,14 @@ msgstr "איננו מצליחים למצוא את התשלום שלך, אך אל
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "לא הצלחנו לקבל את התשלום שלך."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
-msgstr ""
+msgstr "לא הצלחנו לשמור את אמצעי התשלום שלך."
 
 #. module: payment
 #. openerp-web
@@ -2357,12 +2366,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show less"
-msgstr ""
+msgstr "הצג פחות..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
-msgstr ""
+msgstr "הצג עוד..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form

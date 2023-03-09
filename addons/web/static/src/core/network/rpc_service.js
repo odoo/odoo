@@ -22,6 +22,8 @@ export class ConnectionLostError extends Error {}
 
 export class ConnectionAbortedError extends Error {}
 
+export class HTTPError extends Error {}
+
 // -----------------------------------------------------------------------------
 // Main RPC method
 // -----------------------------------------------------------------------------
@@ -64,7 +66,18 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
                 reject(new ConnectionLostError());
                 return;
             }
-            const { error: responseError, result: responseResult } = JSON.parse(request.response);
+            let params;
+            try {
+                params = JSON.parse(request.response);
+            } catch (_) {
+                // the response isn't json parsable, which probably means that the rpc request could
+                // not be handled by the server, e.g. PoolError('The Connection Pool Is Full')
+                if (!settings.silent) {
+                    bus.trigger("RPC:RESPONSE", data.id);
+                }
+                return reject(new ConnectionLostError());
+            }
+            const { error: responseError, result: responseResult } = params;
             if (!settings.silent) {
                 bus.trigger("RPC:RESPONSE", data.id);
             }

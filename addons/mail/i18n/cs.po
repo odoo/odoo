@@ -13,7 +13,8 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -333,6 +334,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Chatujte s kolegy</b> v reálném čase pomocí přímých "
+"zpráv.</p><p><i>Nejprve musíte pozvat uživatele v nastavení "
+"aplikace.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -412,6 +416,12 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
+"                                    Pokud chcete odeslat pro všechny záznamy vyhovující výběrovým kritériím, zaškrtněte zde :\n"
+"                                </span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
+"                                    Pokud chcete odeslat pouze pro vybrané záznamy, zrušte zaškrtnutí :\n"
+"                                </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -470,6 +480,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                    Všem záznamům vyhovující aktuálním výběrovým kritériím bude zaslaný e-mail,\n"
+"                                    nejen tým ze seznamu.\n"
+"                                </strong><br/>\n"
+"                                E-mail bude zaslaný na všechny vybrané záznamy.<br/>\n"
+"                                Potvrzení tohoto pomocníka pravděpodobně na několik minut zablokuje váš prohlížeč."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -486,6 +502,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Budou použity pouze záznamy vybrané v seznamu.</strong><br/>\n"
+"                                Email bude zaslaný na všechny vybrané záznamy seznamu."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -1310,7 +1328,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Může upravovat tělo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -1718,7 +1736,7 @@ msgstr "Připojení se nezdařilo (problém s odesílajícím poštovním server
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Považuje odpovědi za nové vlákno"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -3607,7 +3625,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Je Editor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -3689,7 +3707,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "Join Channel"
-msgstr ""
+msgstr "Připojit se ke kanálu"
 
 #. module: mail
 #. openerp-web
@@ -4114,6 +4132,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Spravovat odpovědi jako nově přicházející e-maily místo toho, aby odpovědi "
+"směřovaly do stejného vlákna."
 
 #. module: mail
 #. openerp-web
@@ -5124,6 +5144,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
+"e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
+"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
+"{{object.partner_id.lang}}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -5140,6 +5164,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"Původní diskuse: Odpovědi najdete v diskuzi původního dokumentu.\n"
+" Jiná e-mailová adresa: Odpovědi budou odeslány na e-mailovou adresu uvedenou v id sledovací zprávy namísto původního diskusního vlákna dokumentu.\n"
+" To má vliv na generované ID zprávy."
 
 #. module: mail
 #. openerp-web
@@ -5370,6 +5397,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Pravidla jak zpracovat chatovací upozornění:\n"
+"- Zpracovat e-mailem: upozornění budou zaslané na vaši e-mailovou adresu\n"
+"- Zpracovat v Odoo: upozornění se zobrazí ve vaší schránce Odoo Příchozí zprávy"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -5832,12 +5862,12 @@ msgstr "Odstranit odběratele"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Vykreslování modelu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Odpovědi"
 
 #. module: mail
 #. openerp-web

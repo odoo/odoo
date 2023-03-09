@@ -15,7 +15,7 @@ class ReportBomStructure(models.AbstractModel):
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
             variant = data.get('variant')
-            candidates = variant and self.env['product.product'].browse(variant) or bom.product_id or bom.product_tmpl_id.product_variant_ids
+            candidates = variant and self.env['product.product'].browse(int(variant)) or bom.product_id or bom.product_tmpl_id.product_variant_ids
             quantity = float(data.get('quantity', bom.product_qty))
             for product_variant_id in candidates.ids:
                 if data and data.get('childs'):
@@ -74,6 +74,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom_id': bom_id,
             'currency': self.env.company.currency_id,
             'byproducts': lines,
+            'extra_column_count': self._get_extra_column_count(),
         }
         return self.env.ref('mrp.report_mrp_byproduct_line')._render({'data': values})
 

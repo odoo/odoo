@@ -6,9 +6,11 @@ import json
 import pytz
 import markupsafe
 
+from collections import defaultdict
+
 from odoo import models, fields, api, _
-from odoo.tools import html_escape, float_is_zero
-from odoo.exceptions import AccessError
+from odoo.tools import html_escape, float_is_zero, float_compare
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.iap import jsonrpc
 import logging
 
@@ -65,6 +67,11 @@ class AccountEdiFormat(models.Model):
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type or line.is_rounding_line)):
+            if line.price_subtotal < 0:
+                # Line having a negative amount is not allowed.
+                if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
+                    raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
+                                  "Please create a credit note instead."))
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:
@@ -271,11 +278,12 @@ class AccountEdiFormat(models.Model):
         if set_vat:
             partner_details.update({
                 "LglNm": partner.commercial_partner_id.name,
-                "GSTIN": partner.vat or "",
+                "GSTIN": partner.vat or "URP",
             })
         else:
             partner_details.update({"Nm": partner.name})
-        if is_overseas:
+        # For no country I would suppose it is India, so not sure this is super right
+        if is_overseas and (not partner.country_id or partner.country_id.code != 'IN'):
             partner_details.update({
                 "GSTIN": "URP",
                 "Pin": 999999,
@@ -304,7 +312,8 @@ class AccountEdiFormat(models.Model):
         }
         """
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
-        full_discount_or_zero_quantity = line.discount == 100.00 or float_is_zero(line.quantity, 3)
+        quantity = line.quantity
+        full_discount_or_zero_quantity = line.discount == 100.00 or float_is_zero(quantity, 3)
         if full_discount_or_zero_quantity:
             unit_price_in_inr = line.currency_id._convert(
                 line.price_unit,
@@ -313,19 +322,26 @@ class AccountEdiFormat(models.Model):
                 line.date or fields.Date.context_today(self)
                 )
         else:
-            unit_price_in_inr = ((line.balance / (1 - (line.discount / 100))) / line.quantity) * sign
+            unit_price_in_inr = ((line.balance / (1 - (line.discount / 100))) / quantity) * sign
+
+        if unit_price_in_inr < 0 and quantity < 0:
+            # If unit price and quantity both is negative then
+            # We set unit price and quantity as positive because
+            # government does not accept negative in qty or unit price
+            unit_price_in_inr = unit_price_in_inr * -1
+            quantity = quantity * -1
         return {
             "SlNo": str(index),
             "PrdDesc": line.name.replace("\n", ""),
             "IsServc": line.product_id.type == "service" and "Y" or "N",
             "HsnCd": self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code),
-            "Qty": self._l10n_in_round_value(line.quantity or 0.0, 3),
+            "Qty": self._l10n_in_round_value(quantity or 0.0, 3),
             "Unit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             # Unit price in company currency and tax excluded so its different then price_unit
             "UnitPrice": self._l10n_in_round_value(unit_price_in_inr, 3),
             # total amount is before discount
-            "TotAmt": self._l10n_in_round_value(unit_price_in_inr * line.quantity),
-            "Discount": self._l10n_in_round_value((unit_price_in_inr * line.quantity) * (line.discount / 100)),
+            "TotAmt": self._l10n_in_round_value(unit_price_in_inr * quantity),
+            "Discount": self._l10n_in_round_value((unit_price_in_inr * quantity) * (line.discount / 100)),
             "AssAmt": self._l10n_in_round_value(line.balance * sign),
             "GstRt": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
                 tax_details_by_code.get("cgst_rate", 0.00) + tax_details_by_code.get("sgst_rate", 0.00)), 3),
@@ -344,6 +360,94 @@ class AccountEdiFormat(models.Model):
             "TotItemVal": self._l10n_in_round_value(
                 (line.balance + line_tax_details.get("tax_amount", 0.00)) * sign),
         }
+
+    def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, invoice, json_payload):
+        """Set negative lines against positive lines as discount with same HSN code and tax rate
+
+            With negative lines
+
+            product name | hsn code | unit price | qty | discount | total
+            =============================================================
+            product A    | 123456   | 1000       | 1   | 100      |  900
+            product B    | 123456   | 1500       | 2   | 0        | 3000
+            Discount     | 123456   | -300       | 1   | 0        | -300
+
+            Converted to without negative lines
+
+            product name | hsn code | unit price | qty | discount | total
+            =============================================================
+            product A    | 123456   | 1000       | 1   | 100      |  900
+            product B    | 123456   | 1500       | 2   | 300      | 2700
+
+            totally discounted lines are kept as 0, though
+        """
+        def discount_group_key(line_vals):
+            return "%s-%s"%(line_vals['HsnCd'], line_vals['GstRt'])
+
+        def put_discount_on(discount_line_vals, other_line_vals):
+            discount = discount_line_vals['AssAmt'] * -1
+            discount_to_allow = other_line_vals['AssAmt']
+            if float_compare(discount_to_allow, discount, precision_rounding=invoice.currency_id.rounding) < 0:
+                # Update discount line, needed when discount is more then max line, in short remaining_discount is not zero
+                discount_line_vals.update({
+                    'AssAmt': self._l10n_in_round_value(discount_line_vals['AssAmt'] + other_line_vals['AssAmt']),
+                    'IgstAmt': self._l10n_in_round_value(discount_line_vals['IgstAmt'] + other_line_vals['IgstAmt']),
+                    'CgstAmt': self._l10n_in_round_value(discount_line_vals['CgstAmt'] + other_line_vals['CgstAmt']),
+                    'SgstAmt': self._l10n_in_round_value(discount_line_vals['SgstAmt'] + other_line_vals['SgstAmt']),
+                    'CesAmt': self._l10n_in_round_value(discount_line_vals['CesAmt'] + other_line_vals['CesAmt']),
+                    'CesNonAdvlAmt': self._l10n_in_round_value(discount_line_vals['CesNonAdvlAmt'] + other_line_vals['CesNonAdvlAmt']),
+                    'StateCesAmt': self._l10n_in_round_value(discount_line_vals['StateCesAmt'] + other_line_vals['StateCesAmt']),
+                    'StateCesNonAdvlAmt': self._l10n_in_round_value(discount_line_vals['StateCesNonAdvlAmt'] + other_line_vals['StateCesNonAdvlAmt']),
+                    'OthChrg': self._l10n_in_round_value(discount_line_vals['OthChrg'] + other_line_vals['OthChrg']),
+                    'TotItemVal': self._l10n_in_round_value(discount_line_vals['TotItemVal'] + other_line_vals['TotItemVal']),
+                })
+                other_line_vals.update({
+                    'Discount': self._l10n_in_round_value(other_line_vals['Discount'] + discount_to_allow),
+                    'AssAmt': 0.00,
+                    'IgstAmt': 0.00,
+                    'CgstAmt': 0.00,
+                    'SgstAmt': 0.00,
+                    'CesAmt': 0.00,
+                    'CesNonAdvlAmt': 0.00,
+                    'StateCesAmt': 0.00,
+                    'StateCesNonAdvlAmt': 0.00,
+                    'OthChrg': 0.00,
+                    'TotItemVal': 0.00,
+                })
+                return False
+            other_line_vals.update({
+                'Discount': self._l10n_in_round_value(other_line_vals['Discount'] + discount),
+                'AssAmt': self._l10n_in_round_value(other_line_vals['AssAmt'] + discount_line_vals['AssAmt']),
+                'IgstAmt': self._l10n_in_round_value(other_line_vals['IgstAmt'] + discount_line_vals['IgstAmt']),
+                'CgstAmt': self._l10n_in_round_value(other_line_vals['CgstAmt'] + discount_line_vals['CgstAmt']),
+                'SgstAmt': self._l10n_in_round_value(other_line_vals['SgstAmt'] + discount_line_vals['SgstAmt']),
+                'CesAmt': self._l10n_in_round_value(other_line_vals['CesAmt'] + discount_line_vals['CesAmt']),
+                'CesNonAdvlAmt': self._l10n_in_round_value(other_line_vals['CesNonAdvlAmt'] + discount_line_vals['CesNonAdvlAmt']),
+                'StateCesAmt': self._l10n_in_round_value(other_line_vals['StateCesAmt'] + discount_line_vals['StateCesAmt']),
+                'StateCesNonAdvlAmt': self._l10n_in_round_value(other_line_vals['StateCesNonAdvlAmt'] + discount_line_vals['StateCesNonAdvlAmt']),
+                'OthChrg': self._l10n_in_round_value(other_line_vals['OthChrg'] + discount_line_vals['OthChrg']),
+                'TotItemVal': self._l10n_in_round_value(other_line_vals['TotItemVal'] + discount_line_vals['TotItemVal']),
+            })
+            return True
+
+        discount_lines = []
+        for discount_line in json_payload['ItemList'].copy(): #to be sure to not skip in the loop:
+            if discount_line['AssAmt'] < 0:
+                discount_lines.append(discount_line)
+                json_payload['ItemList'].remove(discount_line)
+        if not discount_lines:
+            return json_payload
+
+        lines_grouped_and_sorted = defaultdict(list)
+        for line in sorted(json_payload['ItemList'], key=lambda i: i['AssAmt'], reverse=True):
+            lines_grouped_and_sorted[discount_group_key(line)].append(line)
+
+        for discount_line in discount_lines:
+            apply_discount_on_lines = lines_grouped_and_sorted.get(discount_group_key(discount_line), [])
+            for apply_discount_on in apply_discount_on_lines:
+                if put_discount_on(discount_line, apply_discount_on):
+                    break
+        return json_payload
 
     def _l10n_in_edi_generate_invoice_json(self, invoice):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoice)
@@ -425,10 +529,12 @@ class AccountEdiFormat(models.Model):
                 json_payload["ExpDtls"].update({
                     "Port": invoice.l10n_in_shipping_port_code_id.code
                 })
-        return json_payload
+        if not invoice._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
+            return json_payload
+        return self._l10n_in_edi_generate_invoice_json_managing_negative_lines(invoice, json_payload)
 
     @api.model
-    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False):
+    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False, filter_invl_to_apply=None):
         def l10n_in_grouping_key_generator(tax_values):
             base_line = tax_values["base_line_id"]
             tax_line = tax_values["tax_line_id"]
@@ -466,6 +572,7 @@ class AccountEdiFormat(models.Model):
         return move._prepare_edi_tax_details(
             filter_to_apply=l10n_in_filter_to_apply,
             grouping_key_generator=l10n_in_grouping_key_generator,
+            filter_invl_to_apply=filter_invl_to_apply,
         )
 
     @api.model
@@ -496,10 +603,10 @@ class AccountEdiFormat(models.Model):
     @api.model
     def _l10n_in_edi_no_config_response(self):
         return {'error': [{
-            'code': '000',
+            'code': '0',
             'message': _(
-                "A username and password still needs to be set or it's wrong for the E-invoice(IN). "
-                "It needs to be added and verify in the Settings."
+                "Unable to send e-Invoice."
+                "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
             )}
         ]}
 

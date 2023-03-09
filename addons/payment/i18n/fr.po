@@ -140,6 +140,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Avertissement</strong> La création d'un fournisseur de paiement à partir du bouton <em>CREER</em> n'est pas prise en charge.\n"
+"                        Veuillez plutôt utiliser l'action <em>Dupliquer</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -173,6 +175,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"Une demande de remboursement de %(amount)s a été envoyée. Le paiement sera "
+"créé sous peu. Référence du remboursement : %(ref)s (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -186,6 +190,7 @@ msgstr "Un token est requis pour créer une nouvelle transaction de paiement."
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
 msgstr ""
+"Une transaction avec la référence %(ref)s a été initiée (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -194,6 +199,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"Une transaction avec la référence %(ref)s a été initiée en utilisant le mode"
+" de paiement %(token_name)s (%(acq_name)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -641,7 +648,7 @@ msgstr "Carte de crédit (fourni par Buckaroo)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ogone
 msgid "Credit Card (powered by Ogone)"
-msgstr ""
+msgstr "Carte de crédit (fourni par Ogone)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -693,7 +700,7 @@ msgstr "Description"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "Description of the acquirer for customers"
-msgstr ""
+msgstr "Description du fournisseur de vos clients"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
@@ -794,7 +801,7 @@ msgstr "Frais fixes internationales "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__acquirer_id
 msgid "Force Payment Acquirer"
-msgstr ""
+msgstr "Forcez le fournisseur de paiement"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_link_wizard__acquirer_id
@@ -802,6 +809,9 @@ msgid ""
 "Force the customer to pay via the specified payment acquirer. Leave empty to"
 " allow the customer to choose among all acquirers."
 msgstr ""
+"Forcez le client à payer par le biais du fournisseur de paiement précisé. "
+"Laissez la case vide pour permettre au client de choisir parmi tous les "
+"fournisseurs."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -843,7 +853,7 @@ msgstr "Routage HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_acquirers
 msgid "Has Multiple Acquirers"
-msgstr ""
+msgstr "A de multiples fournisseurs"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
@@ -920,6 +930,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the acquirer."
 msgstr ""
+"En mode test, un faux paiement est traité via une interface de paiement test.\n"
+"Ce mode est recommandé lors de la configuration de l'intermédiaire."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
@@ -1044,7 +1056,7 @@ msgstr "Dernière mise à jour le"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Leave empty to allow all acquirers"
-msgstr ""
+msgstr "Laisser la case vise pour autoriser tous les fournisseurs"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -1148,6 +1160,8 @@ msgid ""
 "Note that only tokens from acquirers allowing to capture the amount are "
 "available."
 msgstr ""
+"Notez que seuls les jetons des fournisseurs permettant de saisir le montant "
+"sont disponibles."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
@@ -1313,7 +1327,7 @@ msgstr "Intermédiaires de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_acquirer_ids
 msgid "Payment Acquirers Available"
-msgstr ""
+msgstr "Intermédiaires de paiement disponibles"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
@@ -1430,7 +1444,7 @@ msgstr "Assistant d'acquisition de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
 msgid "Payment acquirer selected"
-msgstr ""
+msgstr "Fournisseur de paiement sélectionné"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1496,7 +1510,7 @@ msgstr "Veuillez définir un montant inférieur à %s."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Please switch to company '%s' to make this payment."
-msgstr ""
+msgstr "Veuillez passer à la société '%s' pour effectuer ce paiement."
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1775,6 +1789,8 @@ msgstr "Icônes des méthodes de paiement prises en charge"
 #: model:ir.model.fields,help:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Technical field used to hide or show the payment_token_id if needed."
 msgstr ""
+"Champ technique utilisé pour masquer ou afficher le payment_token_id si "
+"nécessaire."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_test
@@ -1795,6 +1811,7 @@ msgstr "Mode test"
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
+"Le fournisseur de services de paiement à utiliser avec cet intermédiaire"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1805,12 +1822,12 @@ msgstr "Le jeton d'accès n'est pas valide."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
 msgid "The acquirer reference of the token of the transaction"
-msgstr ""
+msgstr "La référence du fournisseur du jeton de la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
-msgstr ""
+msgstr "La référence fournisseur de la transaction"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_refund_wizard.py:0
@@ -1823,7 +1840,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "The anonymized acquirer reference of the payment method"
-msgstr ""
+msgstr "La référence anonymisée de l'intermédiaire du mode de paiement"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__color
@@ -1841,16 +1858,20 @@ msgid ""
 "The countries for which this payment acquirer is available.\n"
 "If none is set, it is available for all countries."
 msgstr ""
+"Les pays pour lesquels cet intermédiaire de paiement est disponible. \n"
+"Si aucun pays n'est défini, il est disponible dans tous les pays."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__description
 msgid "The description shown in the card in kanban view "
-msgstr ""
+msgstr "La description affichée sur la carte dans la vue kanban"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
 msgstr ""
+"Le montant des frais ; défini par le système comme ils dépendent du "
+"fournisseur"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1866,12 +1887,13 @@ msgstr "La référence interne de la transaction"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "The journal in which the successful transactions are posted"
-msgstr ""
+msgstr "Le journal dans lequel les transactions réussies sont enregistrées"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "The list of acquirers supporting this payment icon"
 msgstr ""
+"La liste d'intermédiaires qui prennent en charge cet icône de paiement"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
@@ -2027,6 +2049,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "acquirer's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Ceci permet de contrôler si les clients peuvent sauvegarder leurs modes de paiement comme des jetons de paiement. \n"
+"Un jeton de paiement est un lien anonyme aux détails du mode de paiement sauvegardé dans\n"
+"la base de données de l'intermédiaire, permettant au client de le réutiliser pour un prochain achat."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -2082,6 +2107,8 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "acquirers: %s"
 msgstr ""
+"L'autorisation de transaction n'est pas prise en charge par les "
+"intermédiaires de paiement suivants : %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2246,12 +2273,16 @@ msgid ""
 "You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
 "Linked acquirer(s): %s"
 msgstr ""
+"Vous ne pouvez pas supprimer un mode de paiement associé à un intermédiaire en mode activé ou test. \n"
+"Intermédiaire(s) associé(s) : %s"
 
 #. module: payment
 #: code:addons/payment/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr ""
+"Vous ne pouvez pas supprimer une vue qui est utilisée par un intermédiaire "
+"de paiement."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0

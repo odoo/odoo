@@ -5,7 +5,6 @@
 # Translators:
 # Chinzorita <chinzorig.o@asterisk-tech.mn>, 2021
 # baaska sh <sh.baaskash@gmail.com>, 2021
-# hish, 2021
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2021
 # BATKHUYAG Ganbold <gbatkhuyag@gmail.com>, 2021
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
@@ -25,7 +24,8 @@
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
 # Bayarkhuu Bataa, 2022
 # Martin Trigaux, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# hish, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,6 +96,8 @@ msgid ""
 "\n"
 "(%s) exists in location %s"
 msgstr ""
+"\n"
+"(%s) %s байрлал дээр байна"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -116,7 +118,7 @@ msgstr ""
 #: code:addons/stock/models/stock_production_lot.py:0
 #, python-format
 msgid " - Product: %s, Serial Number: %s"
-msgstr ""
+msgstr " - Бараа: %s, Серийн дугаар: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__cyclic_inventory_frequency
@@ -124,12 +126,14 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
+"0-ээс ялгаатай үед, уг байрлал дээрх барааг тооллох төлөвлөгөө огноо нь "
+"давтамжын дагуу автоматаар төлөвлөгдөнө."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr ""
+msgstr "%(warehouse)s: Барааг %(supplier)s нийлүүлэгчээс бэлтгэн нийлүүлнэ"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_type.py:0
@@ -145,17 +149,19 @@ msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
 msgstr ""
+"%s эх байрлал эсвэл очих байрлалын анхны утгыг ашиглах эсвэл %s агуулахын "
+"байрлалууд архивлагдана."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr ""
+msgstr "'Тооллогын хүснэгт'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -191,7 +197,7 @@ msgstr ""
 #: code:addons/stock/models/stock_production_lot.py:0
 #, python-format
 msgid "(copy of) %s"
-msgstr ""
+msgstr "%s(хуулбар)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -232,7 +238,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+ %d хоног(ууд)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -242,7 +248,7 @@ msgstr ", хамгийн их:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -375,6 +381,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '=', 'done'), "
 "('from_immediate_transfer', '=', True)]}\"> / </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('state', '=', 'done'), "
+"('from_immediate_transfer', '=', True)]}\"> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -437,7 +445,7 @@ msgstr "<span class=\"o_stat_text\">Үйл ажиллагаа</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Transfers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Шилжүүлэг</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -507,7 +515,7 @@ msgstr "<span>Барааг багцанд оноогоогүй байна</span>
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr ""
+msgstr "<span>Хүргэгдээгүй хүлээгдэж буй тоо хэмжээ:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -517,7 +525,7 @@ msgstr "<span>кг</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "<span>×</span>"
-msgstr ""
+msgstr "<span>×</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -533,7 +541,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Available Quantity</strong>"
-msgstr ""
+msgstr "<strong>Боломжит тоо хэмжээ</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -543,7 +551,7 @@ msgstr "<strong>Тоолсон тоо</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivered</strong>"
-msgstr ""
+msgstr "<strong>Хүргэгдсэн</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -552,6 +560,8 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
+"<strong>Агуулахын хөдөлгөөн хийх үед боловсруулсан тоо нь анх төлөвлөсөн "
+"тооноос зөрүүтэй байна, зөрүүг үл тоомсорлож болохгүй.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -582,7 +592,7 @@ msgstr "<strong>Доод тоо :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Гарт буй тоо</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -593,7 +603,7 @@ msgstr "<strong>Захиалга:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered</strong>"
-msgstr ""
+msgstr "<strong>Захиалсан</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -656,7 +666,7 @@ msgstr "<strong>Очих</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr ""
+msgstr "<strong>Мөшгигдсөн бараа(ууд):</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -672,6 +682,7 @@ msgstr "? Энэ нь таны бараа материалыг зөрчилд х
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type !"
 msgstr ""
+"Уг зураасан код нь аль хэдийнээ өөр савлагааны төрөлд ашиглагдсан байна !"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -768,7 +779,7 @@ msgstr "Шинэ дамжлага нэмэх"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_storage_category
 msgid "Add a new storage category"
-msgstr ""
+msgstr "Байршуулалтын ангилал шинээр үүсгэх"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -803,7 +814,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Add quality checks to your transfer operations"
-msgstr ""
+msgstr "Агуулахын шилжүүлгийн үйл ажиллагаанд чанарын хяналтын шалгуур нэмэх"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -876,12 +887,12 @@ msgstr "Хуваарилалт"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
 msgid "Allow New Product"
-msgstr ""
+msgstr "Шинэ барааг зөвшөөрөх"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr ""
+msgstr "Холимог барааг зөвшөөрөх"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -891,13 +902,13 @@ msgstr "Зөвшөөрөгдсөн байрлал"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Day and Month"
-msgstr ""
+msgstr "Жил бүр тооллого хийх сар ба өдөр"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__annual_inventory_month
 msgid "Annual Inventory Month"
-msgstr ""
+msgstr "Жил бүр тооллого хийх сар"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__annual_inventory_month
@@ -920,7 +931,7 @@ msgstr "Дараахад хэрэглэх боломжтой"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__packaging_selectable
 msgid "Applicable on Packaging"
-msgstr ""
+msgstr "Савлагаанд хэрэгжих"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__product_selectable
@@ -1158,7 +1169,7 @@ msgstr "Зураасан код уншигч"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Transfers"
-msgstr ""
+msgstr "Багц шилжүүлэг"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
@@ -1342,6 +1353,12 @@ msgstr "Барааны тоо хэмжээг өөрчлөх"
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "Илүү сайн нэрээр солино уу"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -2972,7 +2989,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__has_message
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Мессежтэй"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -3438,6 +3455,13 @@ msgstr "Домайны үйлдэл буруу %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Домэйнийн баруун параметр буруу %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4176,7 +4200,7 @@ msgstr "Барааг Түгээх болон Татах урсгалыг зох�
 #. module: stock
 #: model:res.groups,name:stock.group_stock_storage_categories
 msgid "Manage Storage Categories"
-msgstr ""
+msgstr "Нөөцийн ангилал ашиглах"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7313,7 +7337,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Storage Categories"
-msgstr ""
+msgstr "Нөөцийн ангилал"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
@@ -7892,6 +7916,14 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one "
 "instead."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
 msgstr ""
 
 #. module: stock
@@ -8868,6 +8900,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9012,6 +9050,12 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "'Дууссан' төлөвтэй барааны хөдөлгөөний нөөцлөлтыг цуцлах боломжгүй."
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
@@ -9043,6 +9087,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
+"Та <i>хийгдсэн</i> тоо хэмжээг бүртгээгүй байна, <i>Хэрэгжүүлэх</i> товчийг "
+"дарвал Odoo бүх тоо хэмжээгээр боловсруулах болно."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -9326,4 +9372,11 @@ msgstr ""
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""

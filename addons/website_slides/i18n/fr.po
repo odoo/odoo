@@ -9,9 +9,9 @@
 # Cédric Thiry <cth@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Antoine Huvelle <antoine.huvelle@gmail.com>, 2022
-# Moka Tourisme <hello@mokatourisme.fr>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Moka Tourisme <hello@mokatourisme.fr>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -304,7 +304,7 @@ msgid ""
 "block\">Prev</span>"
 msgstr ""
 "<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Prev</span>"
+"block\">Préc.</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -615,6 +615,8 @@ msgid ""
 "px-2 font-weight-normal\"><i class=\"fa fa-check\"/> "
 "Completed</span></small>"
 msgstr ""
+"<small><span class=\"badge badge-pill badge-success pull-right my-1 py-1 "
+"px-2 font-weight-normal\"><i class=\"fa fa-check\"/> Achevé</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -695,6 +697,8 @@ msgid ""
 "<span class=\"badge badge-success font-weight-normal px-2 py-1 "
 "m-1\">Preview</span>"
 msgstr ""
+"<span class=\"badge badge-success font-weight-normal px-2 py-1 "
+"m-1\">Aperçu</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -703,6 +707,9 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
+"<span class=\"badge font-weight-bold px-2 py-1 m-1 badge-warning\">\n"
+"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -710,7 +717,7 @@ msgid ""
 "<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"fa fa-"
 "chevron-right ml-2\"/>"
 msgstr ""
-"<span class=\"d-none d-sm-inline-block\">Suivant</span> <i class=\"fa fa-"
+"<span class=\"d-none d-sm-inline-block\">Suiv.</span> <i class=\"fa fa-"
 "chevron-right ml-2\"/>"
 
 #. module: website_slides
@@ -808,6 +815,10 @@ msgid ""
 "                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
 msgstr ""
+"<span id=\"first\" class=\"mr-1 mr-sm-2\" title=\"Première diapo\" aria-label=\"Première diapo\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 mx-sm-2\" title=\"Diapo précédente\" aria-label=\"Diapo précédente\" role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Diapo suivante\" aria-label=\"Diapo suivante\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Dernière diapo\" aria-label=\"Dernière diapo\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -816,6 +827,9 @@ msgid ""
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"fullscreen\" class=\"ml-1 ml-sm-2\" title=\" Vue plein écran\" aria-label=\"Plein écran\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -827,6 +841,12 @@ msgid ""
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"zoomout\" class=\"d-none d-sm-inline ml-2 mr-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -1226,7 +1246,7 @@ msgstr "Permettre l'évaluation sur le cours"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Allow students to review your course"
-msgstr ""
+msgstr "Permettre aux étudiants de revoir votre cours"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_resource_downloadable
@@ -1701,6 +1721,9 @@ msgid ""
 "answering                               questions. In this course, you'll "
 "study those topics with activities about mathematics, science and logic."
 msgstr ""
+"Les tâches courantes d'un informaticien consistent à poser les bonnes "
+"questions et à y répondre. Dans ce cours, vous étudierez ces sujets avec des"
+" activités sur les mathématiques, les sciences et la logique."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1777,7 +1800,7 @@ msgstr "Achèvement"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
 msgid "Completion Email"
-msgstr ""
+msgstr "Email d'achèvement"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -1794,7 +1817,7 @@ msgstr "Rédiger un email"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Computer Science for kids"
-msgstr ""
+msgstr "L'informatique pour les enfants"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
@@ -2239,6 +2262,12 @@ msgid ""
 " * Specific : You choose the slide to appear.\n"
 " * None : No slides will be shown.\n"
 msgstr ""
+"En fonction de la stratégie de promotion, une diapositive apparaîtra en haut de la page du cours :\n"
+" * Dernière publication : la dernière diapositive créée.\n"
+" * La plus votée : la diapositive avec le plus de votes.\n"
+" * La plus regardée : la diapositive qui a été la plus regardée.\n"
+" * Spécifique : Vous choisissez la diapositive à afficher. \n"
+" * Aucune : Aucune diapositive n'apparaîtra.\n"
 
 #. module: website_slides
 #. openerp-web
@@ -2273,7 +2302,7 @@ msgstr "Avez-vous lu l'intégralité de l'article ?"
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:0
 #, python-format
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -2382,7 +2411,7 @@ msgstr "Documentation"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Documentation Layout"
-msgstr ""
+msgstr "Mise en page de la documentation"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_document
@@ -2482,6 +2511,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
 msgid "Email attendees once they've finished the course"
 msgstr ""
+"Envoyez un email aux participants une fois qu'ils ont terminé le cours."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
@@ -2560,7 +2590,7 @@ msgstr "Saisissez votre <b>question</b>. Soyez clair et concis."
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Enter your answer"
-msgstr ""
+msgstr "Saisissez votre réponse"
 
 #. module: website_slides
 #. openerp-web
@@ -2676,6 +2706,8 @@ msgstr ""
 #, python-format
 msgid "First, let's add a <b>Presentation</b>. It can be a .pdf or an image."
 msgstr ""
+"Commençons tout d'abord par ajouter une <b>présentation</b>. Il doit s'agir "
+"d'un fichier .pdf ou une image."
 
 #. module: website_slides
 #. openerp-web
@@ -2915,7 +2947,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to create a Lesson as a Web Page?"
-msgstr ""
+msgstr "Comment créer une leçon comme une page web ?"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_1
@@ -3919,7 +3951,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Only JPG, PNG, PDF, files types are supported"
-msgstr ""
+msgstr "Seuls les types de dossier JPG, PNG et PDF sont pris en charge"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -4104,7 +4136,7 @@ msgstr "En cours"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Promoted Content"
-msgstr ""
+msgstr "Contenu promu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
@@ -5237,7 +5269,7 @@ msgstr "Formation"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Training Layout"
-msgstr ""
+msgstr "Mise en page de formation"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
@@ -5867,6 +5899,9 @@ msgid ""
 "Click on <b>Add Content</b> to upload a document, create a web page or link "
 "a video."
 msgstr ""
+"Votre première section est créée, il est maintenant temps d'ajouter des "
+"leçons à votre cours. Cliquez sur <b>Ajouter du contenu</b> pour charger un "
+"document, créer une page web ou lier une vidéo."
 
 #. module: website_slides
 #. openerp-web
@@ -5935,7 +5970,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "e.g. Introduction"
-msgstr ""
+msgstr "par ex. Introduction"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -6020,7 +6055,7 @@ msgstr "pour contacter un responsable."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 msgid "to download resources"
-msgstr ""
+msgstr "pour télécharger des ressources"
 
 #. module: website_slides
 #. openerp-web
@@ -6063,7 +6098,7 @@ msgstr "your-friend@domain.com"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_type }} with you!"
-msgstr ""
+msgstr "{{ user.name }} a partagé {{ object.slide_type }} avec vous !"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

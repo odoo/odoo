@@ -386,6 +386,7 @@ class WebsiteSale(http.Controller):
             'pricelist': pricelist,
             'add_qty': add_qty,
             'products': products,
+            'search_product': search_product,
             'search_count': product_count,  # common for all searchbox
             'bins': TableCompute().process(products, ppg, ppr),
             'ppg': ppg,
@@ -771,12 +772,21 @@ class WebsiteSale(http.Controller):
         return partner_id
 
     def values_preprocess(self, order, mode, values):
-        # Convert the values for many2one fields to integer since they are used as IDs
+        new_values = dict()
         partner_fields = request.env['res.partner']._fields
-        return {
-            k: (bool(v) and int(v)) if k in partner_fields and partner_fields[k].type == 'many2one' else v
-            for k, v in values.items()
-        }
+
+        for k, v in values.items():
+            # Convert the values for many2one fields to integer since they are used as IDs
+            if k in partner_fields and partner_fields[k].type == 'many2one':
+                new_values[k] = bool(v) and int(v)
+            # Store empty fields as `False` instead of empty strings `''` for consistency with other applications like
+            # Contacts.
+            elif v == '':
+                new_values[k] = False
+            else:
+                new_values[k] = v
+
+        return new_values
 
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
@@ -874,7 +884,7 @@ class WebsiteSale(http.Controller):
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
                     # We need to update the pricelist(by the one selected by the customer), because onchange_partner reset it
                     # We only need to update the pricelist when it is not redirected to /confirm_order
-                    if kw.get('callback', '') != '/shop/confirm_order':
+                    if kw.get('callback', False) != '/shop/confirm_order':
                         request.website.sale_get_order(update_pricelist=True)
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
@@ -1277,6 +1287,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values

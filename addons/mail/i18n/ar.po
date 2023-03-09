@@ -2128,7 +2128,7 @@ msgstr "فشل التسليم"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr ""
+msgstr "فشل التوصيل "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2144,8 +2144,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
-"الوصف الذي سيتم إضافته في الرسالة التي سيتم نشرها لهذا النوع الفرعي. إذا "
-"تُرك هذا الحقل فارغًا، سيتم إضافة الاسم بدلًا من ذلك."
+"الوصف الذي ستتم إضافته في الرسالة التي سيتم نشرها لهذا النوع الفرعي. إذا "
+"تُرك هذا الحقل فارغاً، ستتم إضافة الاسم عوضاً عن ذلك. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__default_display_mode
@@ -2665,7 +2665,7 @@ msgstr "للموظفين فقط "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr "تمكين تتبع الطلب"
+msgstr "تمكين تتبع الطلبات "
 
 #. module: mail
 #. openerp-web
@@ -3364,6 +3364,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"إذا كان معداً، سيقوم منظم قائمة الانتظار بإرسال الرسالة بعد التاريخ. إذا لم "
+"يكن معداً، سيتم إرسال الرسالة في أقرب فرصة، إلا إذا تم تحديد المنطقة "
+"الزمنية، فسيتم عندها اعتبارها كجزء من المنطقة الزمنية للتوقيت العالمي "
+"المنسق. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -5291,9 +5295,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"نوع فرعي رئيسي ، يُستخدم للاشتراك التلقائي. هذا الحقل غير مسمى بشكل صحيح. "
-"على سبيل المثال في مشروع ، يشير parent_id من الأنواع الفرعية للمشروع إلى "
-"الأنواع الفرعية ذات الصلة بالمهام."
+"نوع فرعي رئيسي، يُستخدم للاشتراك التلقائي. لم تتم تسمية هذا الحقل بشكل صحيح."
+" على سبيل المثال في مشروع ما، يشير parent_id من الأنواع الفرعية للمشروع إلى "
+"الأنواع الفرعية ذات الصلة بالمهام. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__partner_id
@@ -5306,7 +5310,7 @@ msgstr "الشريك"
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "Partner Profile"
-msgstr "الملف الشخصي للشريك"
+msgstr "ملف الشريك التعريفي "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
@@ -5941,7 +5945,7 @@ msgstr "اسم ملف التقرير "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr "الشريك الطالب"
+msgstr "الشريك مقدم الطلب "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
@@ -6040,7 +6044,7 @@ msgstr "تدوير"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Rotate (r)"
-msgstr "تدوير (r)"
+msgstr "تدوير (اليمين) "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__rtc_session_ids
@@ -6255,7 +6259,7 @@ msgstr "إرسال بريد إلكتروني"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Send Mail (%s)"
-msgstr "ارسل بريد (%s)"
+msgstr "إرسال البريد (%s) "
 
 #. module: mail
 #. openerp-web
@@ -7620,7 +7624,7 @@ msgstr "نوع العرض "
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "عرض الصورة "
 
 #. module: mail
 #. openerp-web
@@ -7742,7 +7746,7 @@ msgstr "اسم العملية غير صحيح (%s) "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "YYYY-MM-DD HH:MM:SS"
 
 #. module: mail
 #. openerp-web
@@ -8193,7 +8197,7 @@ msgstr "تم إنشاؤها من:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been modified from:"
-msgstr "تم تعديل من:"
+msgstr "تم تعديله من: "
 
 #. module: mail
 #: code:addons/mail/models/models.py:0

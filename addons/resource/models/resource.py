@@ -12,7 +12,7 @@ from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
@@ -293,6 +293,9 @@ class ResourceCalendar(models.Model):
         self.hours_per_day = self._compute_hours_per_day(attendances)
 
     def switch_calendar_type(self):
+        if self == self.env.company.resource_calendar_id:
+            raise UserError(_('Impossible to switch calendar type for the default company schedule.'))
+
         if not self.two_weeks_calendar:
             self.attendance_ids.unlink()
             self.attendance_ids = [
@@ -1022,7 +1025,7 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
         default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', index=True)
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', 'in', [company_id, False])]", check_company=True, index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(

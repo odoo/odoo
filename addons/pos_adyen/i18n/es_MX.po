@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
@@ -161,6 +161,12 @@ msgstr ""
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
 msgstr "La terminal %s ya se usa en el método de pago %s."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
 
 #. module: pos_adyen
 #. openerp-web

@@ -473,37 +473,42 @@ class EmailConfigCase(TransactionCase):
         self.assertEqual(message["From"], "settings@example.com")
 
 
+class _FakeSMTP:
+    """SMTP stub"""
+    def __init__(self):
+        self.messages = []
+        self.from_filter = 'example.com'
+
+    # Python 3 before 3.7.4
+    def sendmail(self, smtp_from, smtp_to_list, message_str,
+                 mail_options=(), rcpt_options=()):
+        self.messages.append(message_str)
+
+    # Python 3.7.4+
+    def send_message(self, message, smtp_from, smtp_to_list,
+                     mail_options=(), rcpt_options=()):
+        self.messages.append(message.as_string())
+
+
 class TestEmailMessage(TransactionCase):
-    def test_as_string(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._fake_smtp = _FakeSMTP()
+
+    def build_email(self, **kwargs):
+        kwargs.setdefault('email_from', 'from@example.com')
+        kwargs.setdefault('email_to', 'to@example.com')
+        kwargs.setdefault('subject', 'subject')
+        return self.env['ir.mail_server'].build_email(**kwargs)
+
+    def send_email(self, msg):
+        with patch.object(threading.current_thread(), 'testing', False):
+            self.env['ir.mail_server'].send_email(msg, smtp_session=self._fake_smtp)
+        return self._fake_smtp.messages.pop()
+
+    def test_bpo_34424_35805(self):
         """Ensure all email sent are bpo-34424 and bpo-35805 free"""
-
-        message_truth = (
-            r'From: .+? <joe@example\.com>\r\n'
-            r'To: .+? <joe@example\.com>\r\n'
-            r'Message-Id: <[0-9a-z.-]+@[0-9a-z.-]+>\r\n'
-            r'References: (<[0-9a-z.-]+@[0-9a-z.-]+>\s*)+\r\n'
-            r'\r\n'
-        )
-
-        class FakeSMTP:
-            """SMTP stub"""
-            def __init__(this):
-                this.email_sent = False
-                this.from_filter = 'example.com'
-
-            # Python 3 before 3.7.4
-            def sendmail(this, smtp_from, smtp_to_list, message_str,
-                         mail_options=(), rcpt_options=()):
-                this.email_sent = True
-                self.assertRegex(message_str, message_truth)
-
-            # Python 3.7.4+
-            def send_message(this, message, smtp_from, smtp_to_list,
-                             mail_options=(), rcpt_options=()):
-                message_str = message.as_string()
-                this.email_sent = True
-                self.assertRegex(message_str, message_truth)
-
         msg = email.message.EmailMessage(policy=email.policy.SMTP)
         msg['From'] = '"Joé Doe" <joe@example.com>'
         msg['To'] = '"Joé Doe" <joe@example.com>'
@@ -512,7 +517,33 @@ class TestEmailMessage(TransactionCase):
         msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
         msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
-        smtp = FakeSMTP()
-        self.patch(threading.current_thread(), 'testing', False)
-        self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
-        self.assertTrue(smtp.email_sent)
+        msg_on_the_wire = self.send_email(msg)
+        self.assertEqual(msg_on_the_wire,
+            'From: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
+            'To: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
+            'Message-Id: <929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>\r\n'
+            'References: <345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>\r\n'
+            '\r\n'
+        )
+
+    def test_alternative_correct_order(self):
+        """
+        RFC-1521 7.2.3. The Multipart/alternative subtype
+        > the alternatives appear in an order of increasing faithfulness
+        > to the original content. In general, the best choice is the
+        > LAST part of a type supported by the recipient system's local
+        > environment.
+
+        Also, the MIME-Version header should be present in BOTH the
+        enveloppe AND the parts
+        """
+        msg = self.build_email(body='<p>Hello world</p>', subtype='html')
+        msg_on_the_wire = self.send_email(msg)
+
+        self.assertGreater(msg_on_the_wire.index('text/html'), msg_on_the_wire.index('text/plain'),
+            "The html part should be preferred (=appear after) to the text part")
+        self.assertEqual(msg_on_the_wire.count('==============='), 2 + 2, # +2 for the header and the footer
+            "There should be 2 parts: one text and one html")
+        self.assertEqual(msg_on_the_wire.count('MIME-Version: 1.0'), 3,
+            "There should be 3 headers MIME-Version: one on the enveloppe, "
+            "one on the html part, one on the text part")

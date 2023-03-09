@@ -17,6 +17,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Lasse Larsson, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022\n"
+"Last-Translator: Lasse Larsson, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,6 +177,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
+"<span>Alla generella inställningar för denna produkt hanteras av</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1641,6 +1643,14 @@ msgstr "Nästa aktivitetssummering"
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
 msgstr "Nästa aktivitetstyp"
+
+#. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -3164,6 +3174,12 @@ msgstr ""
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
 msgstr ""
 
 #. module: product

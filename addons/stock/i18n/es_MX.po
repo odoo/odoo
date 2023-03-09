@@ -8,7 +8,7 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Jose Carmona <jrcarmona@gmail.com>, 2021
 # Martin Trigaux, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -736,7 +736,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. La aplicación de Inventario debe estar instalada.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. La aplicación Inventario debe estar instalada.\n"
 "Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
@@ -1411,6 +1411,12 @@ msgstr "Cambiar cantidad de producto"
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "Cambiar a un mejor nombre"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr "Cambiar %s está restringido, no puede realizar esta operación."
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -2658,7 +2664,7 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Disfrute de una experiencia de ritmo rápido con la aplicación de Código de "
+"Disfrute de una experiencia de ritmo rápido con la aplicación Código de "
 "barras de Odoo. Es increíblemente rápida y funciona incluso sin una conexión"
 " a internet estable. Es compatible con todos los flujos: ajustes de "
 "inventario, recolección por lotes, movimientos por lotes o paletas, "
@@ -3566,6 +3572,15 @@ msgstr "Dominio inválido para el operador %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Dominio inválido para el operando derecho %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"La configuración de la regla no es válida, la siguiente regla causa un bucle"
+" infinito: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -6571,8 +6586,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Se utilizan las cajas reutilizables para la preparación de lotes y después se vacían para volver a utilizarse. Al escanear una caja reutilizable mediante la aplicación de código de barras, se agregan los productos a la caja.\n"
-"En cambio, las cajas desechables no se vuelven a utilizar y cuando se escanea una caja desechable a través de la aplicación de código de barras, los productos incluidos se agregan al traslado. "
+"Se utilizan las cajas reutilizables para la preparación de lotes y después se vacían para volver a utilizarse. Al escanear una caja reutilizable mediante la aplicación Código de barras, se agregan los productos a la caja.\n"
+"En cambio, las cajas desechables no se vuelven a utilizar y cuando se escanea una caja desechable a través de la aplicación Código de barras, los productos incluidos se agregan al traslado. "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -8148,6 +8163,16 @@ msgstr ""
 "uno nuevo."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La empresa de este producto no se puede cambiar mientras tenga cantidades "
+"que pertenecen a otra empresa."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9169,6 +9194,12 @@ msgstr ""
 "cancelar el movimiento de existencias."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "No puede cambiar el tipo de un producto que ya se utilizó."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9336,6 +9367,14 @@ msgstr ""
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "No puede cancelar un movimiento de existencias que está como 'hecho'."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No puede cambiar un movimiento de existencias cancelado, cree una nueva "
+"línea en su lugar."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9675,3 +9714,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Orden de entrega (Ref {{ object.name or 'n/a' "
 "}})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Días de visibilidad global"

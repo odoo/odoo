@@ -261,7 +261,7 @@ QUnit.test('parse integer', function(assert) {
 });
 
 QUnit.test('parse monetary', function(assert) {
-    assert.expect(15);
+    assert.expect(16);
     var originalCurrencies = session.currencies;
     const originalParameters = _.clone(core._t.database.parameters);
     session.currencies = {
@@ -269,6 +269,10 @@ QUnit.test('parse monetary', function(assert) {
             digits: [69, 2],
             position: "after",
             symbol: "€"
+        },
+        2: {
+            digits: [69, 2],
+            symbol: "¥"
         },
         3: {
             digits: [69, 2],
@@ -285,6 +289,8 @@ QUnit.test('parse monetary', function(assert) {
     assert.strictEqual(fieldUtils.parse.monetary("1,000,000.00"), 1000000);
     assert.strictEqual(fieldUtils.parse.monetary("$&nbsp;125.00", {}, {currency_id: 3}), 125);
     assert.strictEqual(fieldUtils.parse.monetary("1,000.00&nbsp;€", {}, {currency_id: 1}), 1000);
+    const formated_value = fieldUtils.format.monetary(100, {}, {currency_id: 2});
+    assert.strictEqual(fieldUtils.parse.monetary(formated_value, {}, {currency_id: 2}), 100);
     assert.throws(function() {fieldUtils.parse.monetary("$ 12.00", {}, {currency_id: 3})}, /is not a correct/);
     assert.throws(function() {fieldUtils.parse.monetary("$&nbsp;12.00", {}, {currency_id: 1})}, /is not a correct/);
     assert.throws(function() {fieldUtils.parse.monetary("$&nbsp;12.00&nbsp;34", {}, {currency_id: 3})}, /is not a correct/);

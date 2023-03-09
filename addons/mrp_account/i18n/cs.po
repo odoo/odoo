@@ -3,9 +3,9 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # trendspotter <jirka.p@volny.cz>, 2021
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,11 +22,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+#, python-format
 msgid "Analytic Account"
 msgstr "Analytický účet"
 
@@ -55,8 +57,10 @@ msgid "Bill of Material"
 msgstr "Kusovník"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Bills of Materials"
 msgstr "Kusovníky"
 
@@ -120,8 +124,10 @@ msgid "Manufacturing Order"
 msgstr "Výrobní příkaz"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Manufacturing Orders"
 msgstr "Výrobní příkazy"
 
@@ -202,6 +208,12 @@ msgstr "Pracovní příkaz"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
 msgstr ""
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
+#, python-format
+msgid "Work Orders"
+msgstr "Pracovní příkazy"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning
 
 
 class AccountMove(models.Model):
@@ -97,11 +97,16 @@ class AccountMove(models.Model):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if not company_unit_partner.state_id:
-                raise ValidationError(_(
-                    "State is missing from your company/unit %(company_name)s (%(company_id)s).\nFirst set state in your company/unit.",
-                    company_name=company_unit_partner.name,
-                    company_id=company_unit_partner.id
-                ))
+                msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
+                "Set the address of your company (Don't forget the State field)") % (company_unit_partner.name)
+                action = {
+                    "view_mode": "form",
+                    "res_model": "res.company",
+                    "type": "ir.actions.act_window",
+                    "res_id" : move.company_id.id,
+                    "views": [[self.env.ref("base.view_company_form").id, "form"]],
+                }
+                raise RedirectWarning(msg, action, _('Go to Company configuration'))
             elif move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 

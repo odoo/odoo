@@ -18,11 +18,12 @@
 # david danilov, 2021
 # Jonathan Spier, 2021
 # Yihya Hugirat <hugirat@gmail.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Netta Waizer, 2022
 # MichaelHadar, 2022
-# NoaFarkash, 2022
 # Roy Sayag, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Roy Sayag, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -482,6 +483,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        שלום,\n"
+"        <br/><br/>\n"
+"        חשבונית\n"
+"        % if ctx.get('proforma'):\n"
+"            פרו פורמה שלך עבור ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (עם מזהה: ${object.origin} )\n"
+"            % endif\n"
+"            בסכום שלך <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> זמינה.\n"
+"        % else:\n"
+"            ${שם מסמך} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (עם מזהה: ${object.origin} )\n"
+"            % endif\n"
+"            בסכום של <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> מוכן לבדיקה.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        אל תהסס לפנות אלינו אם יש לך שאלות.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1688,7 +1714,7 @@ msgstr "מקדמות"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "מקדמה"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1767,7 +1793,7 @@ msgstr "דוא\"ל שנשלח ללקוח ברגע ששילם על ההזמנה."
 #: model_terms:product.product,website_description:sale.product_product_4e
 #: model_terms:product.product,website_description:sale.product_product_4f
 msgid "Ergonomic"
-msgstr ""
+msgstr "ארגונומי"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2050,7 +2076,7 @@ msgstr "כתובת לחשבונית"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr ""
+msgstr "התראת חשבונית"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -2569,7 +2595,7 @@ msgstr "אין מה לחייב"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "עכשיו, ניצור הצעת מחיר לדוגמא."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2758,7 +2784,7 @@ msgstr "הזמנה לחיוב"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "כמות שהוזמנה: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -3947,7 +3973,7 @@ msgstr "שדה טכני למטרת חווית משתמש."
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr ""
+msgstr "שדה טכני לסינון המסים הקיימים לפי מדינה פיסקלית ומצב פיסקלי."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4620,6 +4646,7 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"לא ניתן לשנות את סוג המוצר מכיוון שהוא כבר בשימוש בהזמנות מכירה קיימות."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4672,6 +4699,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"הצעת המחיר מכילה מוצרים של חברת  %(product_company)s ואילו הצעת המחיר שייכת לחברה %(quote_company)s. \n"
+"אנא שנה את החברה בהצעת המחיר או הסר את המוצרים מחברות אחרות  (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server

@@ -18,7 +18,8 @@
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Martin Trigaux, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Manuela Silva <mmsrs@sky.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2022\n"
+"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -626,9 +627,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 
 #. module: website
@@ -1302,6 +1301,15 @@ msgid "A Chart Title"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "Um Subtítulo de Secção"
@@ -1797,7 +1805,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Amazing pages"
-msgstr ""
+msgstr "Páginas extraordinárias"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map
@@ -4028,6 +4036,13 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
 msgstr "Ativar a funcionalidade 'criador de formulário' para este modelo."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -6268,6 +6283,29 @@ msgid "Main actions"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "Gerir Páginas"
@@ -6286,6 +6324,20 @@ msgstr "Gerir as Páginas do Seu Website"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "Gerir esta página"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -6677,7 +6729,7 @@ msgstr "Nome"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Name (A-Z)"
-msgstr ""
+msgstr "Nome (A-Z)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -7438,6 +7490,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Placeholder"
 msgstr "Símbolo"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -9878,7 +9937,7 @@ msgstr "Carregar"
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Uploaded file is too large."
-msgstr ""
+msgstr "O ficheiro enviado é muito grande."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__url
@@ -10823,6 +10882,13 @@ msgid "You can't remove the submit button of the form"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11362,6 +11428,14 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
 msgstr ""
 
 #. module: website

@@ -318,12 +318,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
 
         // Get list of website_form compatible models.
         this.models = await this._rpc({
-            model: "ir.model",
-            method: "search_read",
-            args: [
-                [['website_form_access', '=', true]],
-                ['id', 'model', 'name', 'website_form_label', 'website_form_key']
-            ],
+            model: 'ir.model',
+            method: 'get_compatible_form_models',
         });
 
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
@@ -1258,7 +1254,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     if (dependencyEl.nodeName === 'SELECT') {
                         for (const option of dependencyEl.querySelectorAll('option')) {
                             const button = document.createElement('we-button');
-                            button.textContent = option.value;
+                            button.textContent = option.value || `<${_t("no value")}>`;
                             button.dataset.selectDataAttribute = option.value;
                             selectOptEl.append(button);
                         }
@@ -1325,8 +1321,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
         const defaults = [...this.$target[0].querySelectorAll('[checked], [selected]')].map(el => {
-            const idInt = parseInt(el.value);
-            return isNaN(idInt) ? el.value : idInt;
+            return /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value;
         });
         list.dataset.defaults = JSON.stringify(defaults);
 
@@ -1417,10 +1412,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             options = [...multipleInputs.querySelectorAll('.checkbox input, .radio input')];
         }
         return options.map(opt => {
-            const id = parseInt(opt.value);
             const name = select ? opt : opt.nextElementSibling;
             return {
-                id: isNaN(id) ? opt.value : id,
+                id: /^-?[0-9]{1,15}$/.test(opt.value) ? parseInt(opt.value) : opt.value,
                 display_name: name.textContent.trim(),
                 selected: select ? opt.selected : opt.checked,
             };
@@ -1493,6 +1487,7 @@ const DisableOverlayButtonOption = options.Class.extend({
         this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
         const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
         $button.attr('title', message).tooltip({delay: 0});
+        // TODO In master: add `o_disabled` but keep actual class.
         $button.removeClass(className); // Disable the functionnality
     },
 

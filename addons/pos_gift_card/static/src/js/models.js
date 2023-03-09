@@ -6,7 +6,6 @@ odoo.define("pos_gift_card.gift_card", function (require) {
   const _t = core._t;
 
   models.load_fields("pos.order.line", "generated_gift_card_ids");
-  models.load_fields("pos.order.line", "redeem_pos_order_line_ids");
 
     // Load the products used for creating program reward lines.
     var existing_models = models.PosModel.prototype.models;

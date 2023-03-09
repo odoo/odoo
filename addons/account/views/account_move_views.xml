@@ -851,20 +851,27 @@
                                 <label for="journal_id"
                                        groups="account.group_account_readonly"
                                        invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
-                                <div name="journal_div" class="d-flex" invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
+                                <div name="journal_div"
+                                     class="d-flex"
+                                     invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"
+                                     groups="account.group_account_readonly">
                                     <field name="journal_id"
-                                        groups="account.group_account_readonly"
-                                        options="{'no_create': True}"
-                                        attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                           options="{'no_create': True}"
+                                           attrs="{'readonly': [('posted_before', '=', True)]}"/>
                                     <span class="oe_inline o_form_label mx-3 oe_read_only"
                                         groups="base.group_multi_currency"> in </span>
                                     <!-- Bigger margin on the left because in edit mode the external link button covers the text -->
                                     <span class="oe_inline o_form_label mr-3 ml-5 oe_edit_only"
-                                        groups="base.group_multi_currency"> in </span>
+                                          groups="base.group_multi_currency"> in </span>
                                     <field name="currency_id"
-                                        groups="base.group_multi_currency"
-                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                           groups="base.group_multi_currency"
+                                           attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
+
+                                <field name="currency_id"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       groups="!account.group_account_readonly,base.group_multi_currency"/>
+
                             </group>
                         </group>
                         <notebook>
@@ -1061,7 +1068,7 @@
                                 </field>
                                 <group col="12" class="oe_invoice_lines_tab">
                                     <group colspan="8">
-                                        <field name="narration" placeholder="Terms and Conditions" class="oe_inline" nolabel="1"/>
+                                        <field name="narration" placeholder="Terms and Conditions" class="oe_inline text-break" nolabel="1"/>
                                     </group>
                                     <!-- Totals (only invoices / receipts) -->
                                     <group colspan="4">
@@ -1268,7 +1275,7 @@
                                     </group>
                                 </group>
                                 <!-- Internal note -->
-                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                                <field name="narration" placeholder="Add an internal note..." nolabel="1" class="text-break" height="50"/>
                             </page>
                         </notebook>
                     </sheet>

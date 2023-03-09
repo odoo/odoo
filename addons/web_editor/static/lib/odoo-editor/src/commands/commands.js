@@ -38,6 +38,7 @@ import {
     isUnbreakable,
     makeContentsInline,
     formatSelection,
+    getDeepestPosition,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -77,26 +78,31 @@ function insert(editor, data, isText = true) {
        fakeEl.replaceChildren(...fakeEl.firstChild.childNodes);
     }
 
+    startNode = startNode || editor.document.getSelection().anchorNode;
+
     // In case the html inserted is all contained in a single root <p> or <li>
     // tag, we take the all content of the <p> or <li> and avoid inserting the
-    // <p> or <li>.
-    if (fakeEl.childElementCount === 1 && (fakeEl.firstChild.nodeName === 'P' || fakeEl.firstChild.nodeName === 'LI')) {
+    // <p> or <li>. The same is true for a <pre> inside a <pre>.
+    if (fakeEl.childElementCount === 1 && (
+        fakeEl.firstChild.nodeName === 'P' ||
+        fakeEl.firstChild.nodeName === 'LI' ||
+        fakeEl.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+    )) {
         const p = fakeEl.firstElementChild;
         fakeEl.replaceChildren(...p.childNodes);
     } else if (fakeEl.childElementCount > 1) {
         // Grab the content of the first child block and isolate it.
-        if (isBlock(fakeEl.firstChild)) {
+        if (isBlock(fakeEl.firstChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.firstChild.nodeName)) {
             fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
             fakeEl.firstElementChild.remove();
         }
         // Grab the content of the last child block and isolate it.
-        if (isBlock(fakeEl.lastChild)) {
+        if (isBlock(fakeEl.lastChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.lastChild.nodeName)) {
             fakeElLastChild.replaceChildren(...fakeEl.lastElementChild.childNodes);
             fakeEl.lastElementChild.remove();
         }
     }
 
-    startNode = startNode || editor.document.getSelection().anchorNode;
     if (startNode.nodeType === Node.ELEMENT_NODE) {
         if (selection.anchorOffset === 0) {
             const textNode = editor.document.createTextNode('');
@@ -186,7 +192,11 @@ function insert(editor, data, isText = true) {
     currentNode = lastChildNode || currentNode;
     selection.removeAllRanges();
     const newRange = new Range();
-    const lastPosition = rightPos(currentNode);
+    let lastPosition = rightPos(currentNode);
+    if (lastPosition[0] === editor.editable) {
+        // Correct the position if it happens to be in the editable root.
+        lastPosition = getDeepestPosition(...lastPosition);
+    }
     newRange.setStart(lastPosition[0], lastPosition[1]);
     newRange.setEnd(lastPosition[0], lastPosition[1]);
     selection.addRange(newRange);
@@ -332,7 +342,10 @@ export const editorCommands = {
         const restoreCursor = preserveCursor(editor.document);
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
-        for (const block of selectedBlocks) {
+        const deepestSelectedBlocks = selectedBlocks.filter(block => (
+            !descendants(block).some(descendant => selectedBlocks.includes(descendant))
+        ));
+        for (const block of deepestSelectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
                     block.nodeName,
@@ -442,6 +455,9 @@ export const editorCommands = {
         // before we apply the unlink, otherwise the command is not performed
         // because the content editable root is the link
         const closestEl = closestElement(sel.focusNode, 'a');
+        if(closestEl) {
+            closestEl.removeAttribute('class'); // To prevent firefox from adding unnecessary <span>.
+        }
         if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
             editor._activateContenteditable();
         }
@@ -535,9 +551,9 @@ export const editorCommands = {
         // Get the <font> nodes to color
         const selectedNodes = getSelectedNodes(editor.editable);
         const fonts = selectedNodes.flatMap(node => {
-            let font = closestElement(node, 'font');
+            let font = closestElement(node, 'font') || closestElement(node, 'span');
             const children = font && descendants(font);
-            if (font && font.nodeName === 'FONT') {
+            if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
                 // Partially selected <font>: split it.
                 const selectedChildren = children.filter(child => selectedNodes.includes(child));
                 if (selectedChildren.length) {
@@ -545,8 +561,14 @@ export const editorCommands = {
                 } else {
                     font = [];
                 }
-            } else if (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) {
-                // Node is a visible text node: wrap it in a <font>.
+            } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || (node.nodeType === Node.ELEMENT_NODE &&
+                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                        isVisibleStr(node.textContent) &&
+                        !node.classList.contains('btn') &&
+                        !node.querySelector('font'))) {
+                // Node is a visible text or inline node without font nor a button:
+                // wrap it in a <font>.
                 const previous = node.previousSibling;
                 const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
                 if (

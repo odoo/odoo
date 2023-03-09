@@ -401,6 +401,7 @@ export async function click(el, options) {
             bubbles: true,
             clientX: pos.left + 1,
             clientY: pos.top + 1,
+            view: el.ownerDocument.defaultView,
         },
         options,
     );

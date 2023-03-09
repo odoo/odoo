@@ -89,8 +89,8 @@ class PickingType(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'sequence_id' not in vals or not vals['sequence_id']:
-            if vals['warehouse_id']:
+        if not vals.get('sequence_id') and vals.get('sequence_code'):
+            if vals.get('warehouse_id'):
                 wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                 vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                     'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
@@ -779,6 +779,14 @@ class Picking(models.Model):
         self.write({'printed': True})
         return self.env.ref('stock.action_report_picking').report_action(self)
 
+    def should_print_delivery_address(self):
+        self.ensure_one()
+        return self.move_lines and self.move_lines[0].partner_id and self._is_to_external_location()
+
+    def _is_to_external_location(self):
+        self.ensure_one()
+        return self.picking_type_code == 'outgoing'
+
     def action_confirm(self):
         self._check_company()
         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
@@ -815,6 +823,7 @@ class Picking(models.Model):
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
         self.write({'is_locked': True})
+        self.filtered(lambda x: not x.move_lines).state = 'cancel'
         return True
 
     def _action_done(self):
@@ -1022,7 +1031,7 @@ class Picking(models.Model):
             lines = self.move_lines.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
-                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
+                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
                 if self.env['stock.move'].search([
                         ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
                         ('product_qty', '>', 0),

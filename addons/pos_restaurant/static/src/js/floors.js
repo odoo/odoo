@@ -69,6 +69,9 @@ models.Order = models.Order.extend({
         this.table = this.pos.tables_by_id[json.table_id];
         this.floor = this.table ? this.pos.floors_by_id[json.floor_id] : undefined;
         this.customer_count = json.customer_count || 1;
+        // Overwrite to show it in local time since is saved in UTC
+        if (this.pos.config.is_table_management)
+            this.validation_date = moment.utc(json.creation_date).local().toDate();
     },
     export_for_printing: function() {
         var json = _super_order.export_for_printing.apply(this,arguments);

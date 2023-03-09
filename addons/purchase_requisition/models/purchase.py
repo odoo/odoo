@@ -110,14 +110,10 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     def _compute_account_analytic_id(self):
-        for rec in self:
-            if not rec.order_id.requisition_id:
-                super(PurchaseOrderLine, self)._compute_account_analytic_id()
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_account_analytic_id()
 
     def _compute_analytic_tag_ids(self):
-        for rec in self:
-            if not rec.order_id.requisition_id:
-                super(PurchaseOrderLine, self)._compute_analytic_tag_ids()
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_analytic_tag_ids()
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):

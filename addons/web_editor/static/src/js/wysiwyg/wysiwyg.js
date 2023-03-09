@@ -110,6 +110,7 @@ const Wysiwyg = Widget.extend({
         if (options.value) {
             this.$editable.html(options.value);
         }
+        const initialHistoryId = options.value && this._getInitialHistoryId(options.value);
         this.$editable.data('wysiwyg', this);
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
@@ -145,11 +146,13 @@ const Wysiwyg = Widget.extend({
             placeholder: this.options.placeholder,
             showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
+            initialHistoryId,
             getContentEditableAreas: this.options.getContentEditableAreas,
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
+            allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {
@@ -180,7 +183,10 @@ const Wysiwyg = Widget.extend({
             },
             filterMutationRecords: (records) => {
                 return records.filter((record) => {
-                    return !(record.target.classList && record.target.classList.contains('o_header_standard'));
+                    return !(
+                        (record.target.classList && record.target.classList.contains('o_header_standard')) ||
+                        (record.type === 'attributes' && record.attributeName === 'data-last-history-steps')
+                    );
                 });
             },
             preHistoryUndo: () => {
@@ -193,7 +199,7 @@ const Wysiwyg = Widget.extend({
             onChange: options.onChange,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
         }, editorCollaborationOptions));
 
         document.addEventListener("mousemove", this._signalOnline, true);
@@ -257,7 +263,7 @@ const Wysiwyg = Widget.extend({
                     }
                     if ($field.data('oe-type') === "image") {
                         $field.attr('contenteditable', false);
-                        $field.find('img').attr('contenteditable', true);
+                        $field.find('img').attr('contenteditable', $field.data('oe-readonly') !== 1);
                     }
                     if ($field.is('[data-oe-many2one-id]')) {
                         $field.attr('contenteditable', false);
@@ -347,7 +353,7 @@ const Wysiwyg = Widget.extend({
                     })();
                 }
                 $target.focus();
-                if ($target.closest('#wrapwrap, .iframe-editor-wrapper').length) {
+                if ($target.closest('#wrapwrap, .iframe-editor-wrapper').length && this.snippetsMenu) {
                     this.toggleLinkTools({
                         forceOpen: true,
                         link: $target[0],
@@ -410,39 +416,21 @@ const Wysiwyg = Widget.extend({
         this.call('bus_service', 'addChannel', this._collaborationChannelName);
         this.call('bus_service', 'startPolling');
 
-        // const syncHistory = async (fromClientId) => {
-        // }
         // Check wether clientA is before clientB.
         const isClientFirst = (clientA, clientB) => {
             if (clientA.startTime === clientB.startTime) {
-                return clientA.id.localCompare(clientB.id) === -1;
+                return clientA.id.localeCompare(clientB.id) < 1;
             } else {
                 return clientA.startTime < clientB.startTime;
             }
         };
         const rpcMutex = new Mutex();
 
-        this._getCurrentRecord = async () => {
-            const records = await this._rpc({
-                model: modelName,
-                method: "read",
-                args: [
-                    [resId],
-                    [fieldName, 'write_date']
-                ],
-            });
-            records[0].body = records[0][fieldName];
-            return records[0];
-        }
-        this._getRecordWriteDate = (record) => {
-            const dateString = record.write_date.replace(/^(\d{4}-\d{2}-\d{2}) ((\d{2}:?){3})$/, '$1T$2Z');
-            return new Date(dateString);
-        }
-
         this._getNewPtp = () => {
             // Wether or not the history has been sent or received at least once.
             let historySyncAtLeastOnce = false;
             let historySyncFinished = false;
+            let historyStepsBuffer = [];
 
             return new PeerToPeer({
                 peerConnectionConfig: { iceServers: this._iceServers },
@@ -496,14 +484,42 @@ const Wysiwyg = Widget.extend({
                             break;
                         case 'rtc_data_channel_open': {
                             fromClientId = notificationPayload.connectionClientId;
-                            this.ptp.clientsInfos[fromClientId].startTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
+                            const remoteStartTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
+                            this.ptp.clientsInfos[fromClientId].startTime = remoteStartTime;
                             this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
                                 this.ptp.clientsInfos[fromClientId].clientName = clientName;
                             });
 
                             if (!historySyncAtLeastOnce) {
-                                historySyncAtLeastOnce = true;
-                                await editorCollaborationOptions.onHistoryNeedSync();
+                                const localClient = { id: this._currentClientId, startTime: this._startCollaborationTime };
+                                const remoteClient = { id: fromClientId, startTime: remoteStartTime };
+                                if (isClientFirst(localClient, remoteClient)) {
+                                    historySyncAtLeastOnce = true;
+                                } else {
+                                    const { steps, historyIds } = await this.ptp.requestClient(fromClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
+                                    // Ensure that the history hasn't been
+                                    // synced by another client before this
+                                    // `get_history_from_snapshot` finished.
+                                    if (historySyncAtLeastOnce) {
+                                        return;
+                                    }
+                                    const firstStepId = this.odooEditor.historyGetBranchIds()[0];
+                                    const staleDocument = !historyIds.includes(firstStepId);
+                                    if (staleDocument) {
+                                        return false;
+                                    }
+                                    historySyncAtLeastOnce = true;
+                                    this.odooEditor.historyResetFromSteps(steps, historyIds);
+                                    const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
+                                    if (remoteSelection) {
+                                        this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
+                                    }
+                                }
+                                // In case there are steps received in the meantime, process them.
+                                if (historyStepsBuffer.length) {
+                                    this.odooEditor.onExternalHistorySteps(historyStepsBuffer);
+                                    historyStepsBuffer = [];
+                                }
                                 historySyncFinished = true;
                             } else {
                                 const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
@@ -518,6 +534,8 @@ const Wysiwyg = Widget.extend({
                             // before the history has synced at least once.
                             if (historySyncFinished) {
                                 this.odooEditor.onExternalHistorySteps([notificationPayload]);
+                            } else {
+                                historyStepsBuffer.push(notificationPayload);
                             }
                             break;
                         case 'oe_history_set_selection': {
@@ -571,7 +589,6 @@ const Wysiwyg = Widget.extend({
         }, CHECK_OFFLINE_TIME);
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
-            this._currentRecord = await this._getCurrentRecord();
             let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
             if (!iceServers.length) {
                 iceServers = [
@@ -610,50 +627,14 @@ const Wysiwyg = Widget.extend({
                     },
                     { transport: 'rtc' }
                 );
+                // If missing steps === -1, it means that either the
+                // step.clientId has a stale document or the step.clientId has a
+                // snapshot and does not includes the step in its history.
                 if (missingSteps === -1 || !missingSteps.length) {
-                    // This case should never happen.
                     console.warn('Editor get_missing_steps result is erroneous.');
                     return;
                 }
                 this.ptp && this.odooEditor.onExternalHistorySteps(missingSteps.concat([step]));
-            },
-            onHistoryNeedSync: async () => {
-                if (!this.ptp) return;
-                let firstClientId = this._currentClientId;
-                let firstClientStartTime = this._startCollaborationTime;
-                const connectedClientIds = this.ptp.getConnectedClientIds();
-                for (const clientId of connectedClientIds) {
-                    const clientInfo = this.ptp.clientsInfos[clientId];
-                    // Ensure we already retreived remote client starting time.
-                    if (!clientInfo.startTime) {
-                        continue;
-                    }
-
-                    const isCurrentClientFirst = isClientFirst(
-                        {
-                            startTime: clientInfo.startTime,
-                            id: clientId,
-                        },
-                        {
-                            startTime: firstClientStartTime,
-                            id: firstClientId,
-                        }
-                    );
-
-                    if (isCurrentClientFirst) {
-                        firstClientStartTime = clientInfo.startTime;
-                        firstClientId = clientId;
-                    }
-                }
-
-                if (firstClientId !== this._currentClientId) {
-                    const historySteps = await this.ptp.requestClient(firstClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
-                    this.odooEditor.historyResetFromSteps(historySteps);
-                    const remoteSelection = await this.ptp.requestClient(firstClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
-                    if (remoteSelection) {
-                        this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
-                    }
-                }
             },
         };
         return editorCollaborationOptions;
@@ -982,7 +963,10 @@ const Wysiwyg = Widget.extend({
     cleanForSave: async function () {
         this.odooEditor.clean();
         this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
-
+        const historyIds = this.odooEditor.historyGetBranchIds().join(',');
+        if (this.options.collaborative) {
+            this.odooEditor.editable.children[0].setAttribute('data-last-history-steps', historyIds);
+        }
         if (this.snippetsMenu) {
             await this.snippetsMenu.cleanForSave();
         }
@@ -1160,6 +1144,8 @@ const Wysiwyg = Widget.extend({
                 this.destroyLinkTools();
             }
         } else {
+            const historyStepIndex = this.odooEditor.historySize() - 1;
+            this.odooEditor.historyPauseSteps();
             let { link } = Link.getOrCreateLink({
                 containerNode: this.odooEditor.editable,
                 startNode: options.link,
@@ -1173,7 +1159,6 @@ const Wysiwyg = Widget.extend({
             }, this.$editable[0], {
                 needLabel: true
             }, undefined, link);
-            const restoreSelection = preserveCursor(this.odooEditor.document);
             linkDialog.open();
             linkDialog.on('save', this, data => {
                 if (!data) {
@@ -1185,6 +1170,7 @@ const Wysiwyg = Widget.extend({
                     data.rel = 'ugc';
                 }
                 linkWidget.applyLinkToDom(data);
+                this.odooEditor.historyUnpauseSteps();
                 this.odooEditor.historyStep();
                 link = linkWidget.$link[0];
                 this.odooEditor.setContenteditableLink(linkWidget.$link[0]);
@@ -1199,10 +1185,11 @@ const Wysiwyg = Widget.extend({
                 Promise.resolve().then(() => link.focus());
             });
             linkDialog.on('closed', this, function () {
+                this.odooEditor.historyUnpauseSteps();
                 // If the linkDialog content has been saved
                 // the previous selection in not relevant anymore.
                 if (linkDialog.destroyAction !== 'save') {
-                    restoreSelection();
+                    this.odooEditor.historyRevertUntil(historyStepIndex)
                 }
             });
         }
@@ -1575,7 +1562,7 @@ const Wysiwyg = Widget.extend({
                         // Unstash the mutations now that the color is picked.
                         this.odooEditor.historyUnstash();
                         this._processAndApplyColor(eventName, ev.data.color);
-                        this._updateEditorUI();
+                        this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
                     });
                     colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
@@ -1620,17 +1607,19 @@ const Wysiwyg = Widget.extend({
         }
         const fonts = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
 
-        // Ensure the selection in the fonts tags, otherwise an undetermined
-        // race condition could generate a wrong selection later.
-        const first = fonts[0];
-        const last = fonts[fonts.length - 1];
+        if (!this.lastMediaClicked) {
+            // Ensure the selection in the fonts tags, otherwise an undetermined
+            // race condition could generate a wrong selection later.
+            const first = fonts[0];
+            const last = fonts[fonts.length - 1];
 
-        const sel = this.odooEditor.document.getSelection();
-        sel.removeAllRanges();
-        const range = new Range();
-        range.setStart(first, 0);
-        range.setEnd(...endPos(last));
-        sel.addRange(range);
+            const sel = this.odooEditor.document.getSelection();
+            sel.removeAllRanges();
+            const range = new Range();
+            range.setStart(first, 0);
+            range.setEnd(...endPos(last));
+            sel.addRange(range);
+        }
 
         const hexColor = this._colorToHex(color);
         this.odooEditor.updateColorpickerLabels({
@@ -1912,6 +1901,7 @@ const Wysiwyg = Widget.extend({
                 title: _t('Quote'),
                 description: _t('Add a blockquote section.'),
                 fontawesome: 'fa-quote-right',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'blockquote');
                 },
@@ -1921,6 +1911,7 @@ const Wysiwyg = Widget.extend({
                 title: _t('Code'),
                 description: _t('Add a code section.'),
                 fontawesome: 'fa-code',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'pre');
                 },
@@ -2176,7 +2167,6 @@ const Wysiwyg = Widget.extend({
         }
         this._isOnline = false;
 
-        this.ptp.stop();
         this.preSavePromise = new Promise((resolve, reject) => {
             this.preSavePromiseResolve = resolve;
             this.preSavePromiseReject = reject;
@@ -2200,14 +2190,8 @@ const Wysiwyg = Widget.extend({
             this.preSavePromiseReject = undefined;
         }
         try {
-            const fieldName = this.options.collaborationChannel.collaborationFieldName;
-            const currentContent = this._currentRecord[fieldName];
-            const currentRecordDate = this._getRecordWriteDate(this._currentRecord);
-            const dbRecord = await this._getCurrentRecord();
-            const dbContent = dbRecord[fieldName];
-            const dbRecordDate = this._getRecordWriteDate(dbRecord);
-
-            if (currentContent !== dbContent && dbRecordDate !== currentRecordDate) {
+            const serverContent = await this._ensureCommonHistory();
+            if (serverContent) {
                 const $dialogContent = $(QWeb.render('web_editor.collaboration-reset-dialog'));
                 $dialogContent.append($(this.odooEditor.editable).clone());
                 const dialog = new Dialog(this, {
@@ -2217,7 +2201,7 @@ const Wysiwyg = Widget.extend({
                 });
                 dialog.open({shouldFocusButtons:true});
 
-                this._resetEditor(dbRecord.body);
+                this._resetEditor(serverContent);
             }
             this.preSavePromiseResolve();
             resetPreSavePromise();
@@ -2225,6 +2209,32 @@ const Wysiwyg = Widget.extend({
             this.preSavePromiseReject(e);
             resetPreSavePromise();
         }
+    },
+    _getInitialHistoryId: function (value) {
+        const matchId = value.match(/data-last-history-steps="([0-9,]*?)"/);
+        return matchId && matchId[1];
+    },
+    /**
+     * When the collaboration is active, ensure that we do not try to save with
+     * a different history branch to the database. If the history is different,
+     * return the database html content.
+     *
+     * See `_historyIds` in `historyReset` in OdooEditor.
+     *
+     * @return {string} The database html content if the history is different.
+     */
+    async _ensureCommonHistory() {
+        if (!this.ptp) return;
+        const historyIds = this.odooEditor.historyGetBranchIds();
+        return this._rpc({
+            route: '/web_editor/ensure_common_history',
+            params: {
+                history_ids: historyIds,
+                model_name: this.options.collaborationChannel.collaborationModelName,
+                field_name: this.options.collaborationChannel.collaborationFieldName,
+                res_id: this.options.collaborationChannel.collaborationResId,
+            },
+        });
     },
     _generateClientId: function () {
         // No need for secure random number.
@@ -2241,6 +2251,10 @@ const Wysiwyg = Widget.extend({
         this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
         this.odooEditor.historyReset();
+        const initialHistoryId = value && this._getInitialHistoryId(value);
+        if (initialHistoryId) {
+            this.odooEditor.historySetInitialId(initialHistoryId);
+        }
         this.ptp.notifyAllClients('ptp_join');
     },
     /**

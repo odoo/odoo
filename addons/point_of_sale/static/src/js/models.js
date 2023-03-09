@@ -2170,7 +2170,7 @@ exports.Orderline = Backbone.Model.extend({
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new exports.Packlotline({}, {'json': _.extend(packlotline, {'order_line':this})});
+            var pack_lot_line = new exports.Packlotline({}, {'json': _.extend({...packlotline}, {'order_line':this})});
             this.pack_lot_lines.add(pack_lot_line);
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
@@ -3287,6 +3287,9 @@ exports.Order = Backbone.Model.extend({
         }
         line.order = this;
         this.orderlines.add(line);
+        this.selectLastOrderline(line);
+    },
+    selectLastOrderline: function(line){
         this.select_orderline(this.get_last_orderline());
     },
     get_orderline: function(id){
@@ -3363,7 +3366,9 @@ exports.Order = Backbone.Model.extend({
     remove_orderline: function( line ){
         this.assert_editable();
         this.orderlines.remove(line);
-        this.select_orderline(this.get_last_orderline());
+        if (this.selected_orderline === line) {
+            this.select_orderline(this.get_last_orderline());
+        }
     },
 
     fix_tax_included_price: function(line){
@@ -3406,7 +3411,7 @@ exports.Order = Backbone.Model.extend({
             to_merge_orderline.merge(line);
             this.select_orderline(to_merge_orderline);
         } else {
-            this.orderlines.add(line);
+            this.add_orderline(line);
             this.select_orderline(this.get_last_orderline());
         }
 

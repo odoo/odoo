@@ -599,6 +599,8 @@ class Product(models.Model):
             'route_ids': route_ids,
             'warehouse_id': location.warehouse_id
         })
+        if rule in seen_rules:
+            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
@@ -854,6 +856,18 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         self._sanitize_vals(vals)
+        if 'company_id' in vals and vals['company_id']:
+            products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
+            if products_changing_company:
+                # Forbid changing a product's company when quant(s) exist in another company.
+                quant = self.env['stock.quant'].sudo().search([
+                    ('product_id', 'in', products_changing_company.product_variant_ids.ids),
+                    ('company_id', 'not in', [vals['company_id'], False]),
+                    ('quantity', '!=', 0),
+                ], order=None, limit=1)
+                if quant:
+                    raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
+
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
@@ -863,7 +877,7 @@ class ProductTemplate(models.Model):
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
-            existing_done_move_lines = self.env['stock.move.line'].search([
+            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', '=', 'done'),
             ], limit=1)

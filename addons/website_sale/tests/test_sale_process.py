@@ -6,11 +6,12 @@ import odoo.tests
 from odoo import api
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from odoo.addons.website.tools import MockRequest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
 
     def setUp(self):
         super(TestUi, self).setUp()

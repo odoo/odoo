@@ -10,12 +10,11 @@ import {
     moveNodes,
     preserveCursor,
     isFontAwesome,
-    isMediaElement,
     getDeepRange,
     isUnbreakable,
     closestElement,
     getUrlsInfosInString,
-    URL_REGEX,
+    isVoidElement,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -187,21 +186,22 @@ class Sanitize {
             // Ensure elements which should not contain any content are tagged
             // contenteditable=false to avoid any hiccup.
             if (
-                (isMediaElement(node) || node.tagName === 'HR') &&
+                isVoidElement(node) &&
                 node.getAttribute('contenteditable') !== 'false'
             ) {
                 node.setAttribute('contenteditable', 'false');
             }
+
             if (node.firstChild) {
                 this._parse(node.firstChild);
             }
+
             // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
-                const linkLabel = node.textContent;
-                const match = linkLabel.match(URL_REGEX);
-                if (match && match[0] === node.textContent) {
-                    const urlInfo = getUrlsInfosInString(linkLabel)[0];
-                    node.setAttribute('href', urlInfo.url);
+                const linkLabel = node.innerText;
+                const urlInfo = getUrlsInfosInString(linkLabel);
+                if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
+                    node.setAttribute('href', urlInfo[0].url);
                 }
             }
             node = node.nextSibling;

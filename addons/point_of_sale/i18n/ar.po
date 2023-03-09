@@ -7,8 +7,8 @@
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
 # Farid Fox, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Abdullah Mohamed, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Abdullah Mohamed, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2155,7 +2155,7 @@ msgstr "خطأ"
 #: code:addons/point_of_sale/models/pos_category.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "خطأ! لا يمكنك إنشاء فئات تكرارية."
+msgstr "خطأ! لا يمكنك إنشاء فئات متداخلة. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3176,6 +3176,13 @@ msgid "Maximum Exceeded"
 msgstr "تم تجاوز الحد الأقصى "
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "تم الوصول إلى القيمة القصوى "
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "خطأ في تسليم الرسائل"
@@ -4101,6 +4108,8 @@ msgid "Picking POS"
 msgstr "الانتقاء في نقطة البيع "
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -5554,7 +5563,7 @@ msgstr ""
 #, python-format
 msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
-"بعض عمليات المعالجة الاولية قد فشلت إن لم يكن كلها وذلك بعد مزامنة الطلب."
+"بعض عمليات المعالجة الأولية قد فشلت إن لم يكن كلها وذلك بعد مزامنة الطلب. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5836,6 +5845,17 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr "تدعم نقطة البيع فقط استراتيجية تقريب \"إضافة بند تقريب\". "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"لا يمكن أن يكون المبلغ أكبر من المبلغ المستحق إذا لم تكن لديك طريقة دفع "
+"نقدية مهيئة. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6159,6 +6179,16 @@ msgid ""
 msgstr ""
 "لا يوجد مخطط حسابات مهيأ في الشركة. يرجى الذهاب غلى إعدادات الفوترة لتثبيت "
 "مخطط الحسابات. "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6570,6 +6600,16 @@ msgid "Type of the exception activity on record."
 msgstr "نوع النشاط الاستثنائي المسجل."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"هذا الطلب غير متزامن في الخادم بعد. تأكد من أنه متزامن ثم حاول مجدداً. "
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6755,9 +6795,10 @@ msgstr "المعرف الفريد عالمياً "
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "ضريبة القيمة المضافة:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "طلب غير متزامن "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6904,6 +6945,12 @@ msgid ""
 msgstr ""
 "أنت تحاول بيع منتجات بأرقام تسلسلية/أرقام دفعات، ولكن لم يتم تعيين أرقام لبعض المنتجات بعد. \n"
 "هل ترغب بالاستمرار على أي حال؟ "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -7225,3 +7272,9 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "كانت نسخًا من طلبات موجودة "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""

@@ -12,7 +12,7 @@
 # Martin Trigaux, 2021
 # Lisa <lisa.oskoma@vertel.se>, 2021
 # Peter Ojaäär <peter.ojaaar@arbetsformedlingen.se>, 2021
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Simon S, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
@@ -229,18 +229,9 @@ msgid ""
 "                        <strong>Details of the event</strong>\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <t t-if=\"not is_online and object.display_description\">\n"
-"                            <li>Description: <t t-out=\"object.description or ''\"/></li>\n"
-"                        </t>\n"
-"                        <t t-elif=\"is_online and object.description\">\n"
-"                            <t t-set=\"splitted_description\" t-value=\"object.description_to_html_lines()\"/>\n"
+"                        <t t-if=\"not is_html_empty(object.description)\">\n"
 "                            <li>Description:\n"
-"                                <ul>\n"
-"                                    <t t-foreach=\"splitted_description\" t-as=\"description_line\">\n"
-"                                        <li t-out=\"description_line or ''\"/>\n"
-"                                    </t>\n"
-"                                </ul>\n"
-"                            </li>\n"
+"                            <t t-out=\"object.description\">Internal meeting for discussion for new pricing for product and services.</t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"object.videocall_location\">\n"
 "                            <li>Meeting URL:\n"

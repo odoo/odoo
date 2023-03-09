@@ -156,11 +156,14 @@ class AuthorizeAPI:
         # but is not allowed for transactions with a payment.token.
         bill_to = {}
         if 'profile' not in tx_data:
-            split_name = payment_utils.split_partner_name(tx.partner_name)
+            if tx.partner_id.is_company:
+                split_name = '', tx.partner_name
+            else:
+                split_name = payment_utils.split_partner_name(tx.partner_name)
             # max lengths are defined by the Authorize API
             bill_to = {
                 'billTo': {
-                    'firstName': '' if tx.partner_id.is_company else split_name[0][:50],
+                    'firstName': split_name[0][:50],
                     'lastName': split_name[1][:50],  # lastName is always required
                     'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
                     'address': tx.partner_address,

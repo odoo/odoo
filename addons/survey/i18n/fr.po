@@ -180,6 +180,8 @@ msgid ""
 "<br/>\n"
 "                        <span>Score:</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Score :</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
@@ -237,6 +239,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- Nous utilisons le logo de l'entreprise qui a créé le sondage (pour gérer les cas multi-entreprises) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certification : <t t-out=\"object.survey_id.display_name or ''\">Formulaire de retour d'expérience</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Cher <span t-out=\"object.partner_id.name or 'participant'\">participant</span></p>\n"
+"                <p>\n"
+"                    Vous trouverez ci-joint votre certification pour\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">le formulaire de retour d'expérience</strong>\n"
+"                </p>\n"
+"                <p>Félicitations pour avoir réussi le test !</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -624,6 +651,9 @@ msgid ""
 "left py-0 pl-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
+"left py-0 pl-2\"><span class=\"text-primary text-center text-center w-100 "
+"position-relative\">Clé</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -640,6 +670,8 @@ msgid ""
 "<span class=\"o_survey_session_error_invalid_code d-none\">Code is incorrect.</span>\n"
 "                                    <span class=\"o_survey_session_error_closed d-none\">Session is finished.</span>"
 msgstr ""
+"<span class=\"o_survey_session_error_invalid_code d-none\">Le code est incorrect.</span>\n"
+"                                    <span class=\"o_survey_session_error_closed d-none\">La session est terminée.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -1202,7 +1234,7 @@ msgstr "Certification échouée"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Certification Template"
-msgstr ""
+msgstr "Modèle de certification"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
@@ -1684,6 +1716,8 @@ msgid ""
 "Display images in addition to answer label. Valid only for simple / multiple"
 " choice questions."
 msgstr ""
+"Affichez des images en plus de l'étiquette de réponse. Valable uniquement "
+"pour les questions à choix simple / multiple."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1849,7 +1883,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Finished surveys"
-msgstr ""
+msgstr "Sondages terminés"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
@@ -2165,6 +2199,8 @@ msgid ""
 "If checked, this question will be displayed only \n"
 "        if the specified conditional answer have been selected in a previous question"
 msgstr ""
+"Si coché, cette question sera affichée uniquement\n"
+"si la réponse conditionnelle spécifiée a été sélectionnée dans une question précédente"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back

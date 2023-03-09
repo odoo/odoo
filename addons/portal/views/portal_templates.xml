@@ -330,6 +330,11 @@
         </div>
     </template>
 
+    <!--
+    TODO adapt in master: remove the use of the "title" variable in this
+    template (or rename the variable). Using it at controller level actually
+    also controls the browser tab title, which makes no sense.
+    -->
     <template id="portal_contact" name="Contact">
         <div class="o_portal_contact_details mb-5">
             <h4><t t-if="title" t-esc="title"/><t t-else="">Your contact</t></h4>

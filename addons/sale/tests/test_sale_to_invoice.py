@@ -134,6 +134,52 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
         self.assertEqual(invoice.amount_total, self.sale_order.amount_total - sum(downpayment_line.mapped('price_unit')), 'Downpayment should be applied')
 
+    def test_downpayment_line_remains_on_SO(self):
+        """ Test downpayment's SO line is created and remains unchanged even if everything is invoiced
+        """
+        # Create the SO with one line
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        sale_order_line = self.env['sale.order.line'].with_context(tracking_disable=True).create({
+            'name': self.company_data['product_order_no'].name,
+            'product_id': self.company_data['product_order_no'].id,
+            'product_uom_qty': 5,
+            'product_uom': self.company_data['product_order_no'].uom_id.id,
+            'price_unit': self.company_data['product_order_no'].list_price,
+            'order_id': sale_order.id,
+            'tax_id': False,
+        })
+        # Confirm the SO
+        sale_order.action_confirm()
+        # Update delivered quantity of SO line
+        sale_order_line.write({'qty_delivered': 5.0})
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        # Let's do an invoice for a down payment of 50
+        downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        downpayment.create_invoices()
+        # Let's do the invoice
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        payment.create_invoices()
+        # Confirm all invoices
+        for invoice in sale_order.invoice_ids:
+            invoice.action_post()
+        downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment)
+        self.assertEqual(downpayment_line[0].price_unit, 50, 'The down payment unit price should not change on SO')
+
     def test_downpayment_percentage_tax_icl(self):
         """ Test invoice with a percentage downpayment and an included tax
             Check the total amount of invoice is correct and equal to a respective sale order's total amount
@@ -279,6 +325,37 @@ class TestSaleToInvoice(TestSaleCommon):
                     self.assertEqual(line.qty_invoiced, 2.0, "The ordered (serv) sale line are totally invoiced (qty invoiced = the invoice lines)")
                 self.assertEqual(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
                 self.assertEqual(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
+
+    def test_multiple_sale_orders_on_same_invoice(self):
+        """ The model allows the association of multiple SO lines linked to the same invoice line.
+            Check that the operations behave well, if a custom module creates such a situation.
+        """
+        self.sale_order.action_confirm()
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'delivered'
+        })
+        payment.create_invoices()
+
+        # create a second SO whose lines are linked to the same invoice lines
+        # this is a way to create a situation where sale_line_ids has multiple items
+        sale_order_data = self.sale_order.copy_data()[0]
+        sale_order_data['order_line'] = [
+            (0, 0, line.copy_data({
+                'invoice_lines': [(6, 0, line.invoice_lines.ids)],
+            })[0])
+            for line in self.sale_order.order_line
+        ]
+        self.sale_order.create(sale_order_data)
+
+        # we should now have at least one move line linked to several order lines
+        invoice = self.sale_order.invoice_ids[0]
+        self.assertTrue(any(len(move_line.sale_line_ids) > 1
+                            for move_line in invoice.line_ids))
+
+        # however these actions should not raise
+        invoice.action_post()
+        invoice.button_draft()
+        invoice.button_cancel()
 
     def test_invoice_with_sections(self):
         """ Test create and invoice with sections from the SO, and check qty invoice/to invoice, and the related amounts """
@@ -459,6 +536,86 @@ class TestSaleToInvoice(TestSaleCommon):
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])
+
+    def test_invoice_analytic_tag_so_not_default(self):
+        """
+        Tests whether, when an analytic tag rule is set and
+        the so has an analytic tag different from default,
+        the default analytic tag doesn't get overriden in invoice.
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_tag_default = self.env['account.analytic.tag'].create({'name': 'default'})
+        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'analytic_tag_ids': [(6, 0, analytic_tag_default.ids)],
+            'product_id': self.product_a.id,
+        })
+
+        so = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': "test",
+            'product_id': self.product_a.id
+        })
+        so.order_line.analytic_tag_ids = [(6, 0, analytic_tag_super.ids)]
+        so.action_confirm()
+        so.order_line.qty_delivered = 1
+        aml = so._create_invoices().invoice_line_ids
+        self.assertRecordValues(aml, [{'analytic_tag_ids': analytic_tag_super.ids}])
+
+    def test_invoice_analytic_tag_set_manually(self):
+        """
+        Tests whether, when there is no analytic tag rule set,
+        the manually set analytic tag is passed from the so to the invoice.
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+
+        so = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': "test",
+            'product_id': self.product_a.id
+        })
+        so.order_line.analytic_tag_ids = [(6, 0, analytic_tag_super.ids)]
+        so.action_confirm()
+        so.order_line.qty_delivered = 1
+        aml = so._create_invoices().invoice_line_ids
+        self.assertRecordValues(aml, [{'analytic_tag_ids': analytic_tag_super.ids}])
+
+    def test_invoice_analytic_tag_default_account_id(self):
+        """
+        Test whether, when an analytic tag rule with the condition `account_id` set,
+        the default tag is correctly set during the conversion from so to invoice
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_tag_default = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'analytic_tag_ids': [(6, 0, analytic_tag_default.ids)],
+            'product_id': self.product_a.id,
+            'account_id': self.company_data['default_account_revenue'].id,
+        })
+
+        so = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': "test",
+            'product_id': self.product_a.id
+        })
+        self.assertFalse(so.order_line.analytic_tag_ids, "There should be no tag set.")
+        so.action_confirm()
+        so.order_line.qty_delivered = 1
+        aml = so._create_invoices().invoice_line_ids
+        self.assertRecordValues(aml, [{'analytic_tag_ids': analytic_tag_default.ids}])
 
     def test_partial_invoicing_interaction_with_invoicing_switch_threshold(self):
         """ Let's say you partially invoice a SO, let's call the resuling invoice 'A'. Now if you change the

@@ -146,12 +146,23 @@ class SaleReport(models.Model):
         """ % (groupby)
         return groupby_
 
+    def _select_additional_fields(self, fields):
+        """Hook to return additional fields SQL specification for select part of the table query.
+
+        :param dict fields: additional fields info provided by _query overrides (old API), prefer overriding
+            _select_additional_fields instead.
+        :returns: mapping field -> SQL computation of the field
+        :rtype: dict
+        """
+        return fields
+
     def _query(self, with_clause='', fields=None, groupby='', from_clause=''):
         if not fields:
             fields = {}
+        sale_report_fields = self._select_additional_fields(fields)
         with_ = ("WITH %s" % with_clause) if with_clause else ""
         return '%s (SELECT %s FROM %s WHERE l.display_type IS NULL GROUP BY %s)' % \
-               (with_, self._select_sale(fields), self._from_sale(from_clause), self._group_by_sale(groupby))
+               (with_, self._select_sale(sale_report_fields), self._from_sale(from_clause), self._group_by_sale(groupby))
 
     def init(self):
         # self._table = sale_report

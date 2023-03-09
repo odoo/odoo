@@ -1181,7 +1181,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<ul><li>abc</li><li>def</li><li>ghi</li></ul>');
                     },
-                    contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul>[]<p>34</p>',
+                    contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul><p>[]34</p>',
                 });
             });
             it('should paste the text of an li into another li', async () => {
@@ -1282,6 +1282,15 @@ describe('Copy and paste', () => {
                         await pasteText(editor, 'oom');
                     },
                     contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
+                });
+            });
+            it('should paste and transform URL over the existing url', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[<a href="http://www.xyz.com">http://www.xyz.com</a>]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.xyz.xdc ');
+                    },
+                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
                 });
             });
         });

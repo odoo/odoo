@@ -3,7 +3,7 @@
 
 {
     "name" : "Norway - Accounting",
-    "version" : "2.0",
+    "version" : "2.1",
     "author" : "Rolv Råen",
     'category': 'Accounting/Localizations/Account Charts',
     "description": """This is the module to manage the accounting chart for Norway in Odoo.

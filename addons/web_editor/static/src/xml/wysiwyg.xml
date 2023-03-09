@@ -317,6 +317,10 @@
         </form>
     </t>
     <t t-name="wysiwyg.widgets.font-icons.icons">
+        <div t-if="!iconsParser.length" class="o_nocontent_help">
+            <p class="o_empty_folder_image">No pictograms found.</p>
+            <p class="o_empty_folder_subtitle">Try searching with other keywords.</p>
+        </div>
         <t t-as="data" t-foreach="iconsParser">
             <span t-foreach="data.cssData" t-as="cssData"
                 t-att-data-id="cssData.names[0]"
@@ -478,14 +482,14 @@
         <span class="mr-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
         <div class="w-100">
             <div class="d-flex">
-                <a href="#" target="_blank" class="o_we_url_link font-weight-bold flex-grow-1" t-esc="widget.href" title="Open in a new tab"/>
-                <a href="#" class="mx-2 o_we_copy_link text-dark" data-toggle="tooltip" data-placement="top" title="Copy Link">
+                <a href="#" target="_blank" class="o_we_url_link font-weight-bold flex-grow-1 text-truncate" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" class="mx-1 o_we_copy_link text-dark" data-toggle="tooltip" data-placement="top" title="Copy Link">
                     <i class="fa fa-clone"/>
                 </a>
-                <a href="#" class="mx-2 o_we_edit_link text-dark" data-toggle="tooltip" data-placement="top" title="Edit Link">
+                <a href="#" class="mx-1 o_we_edit_link text-dark" data-toggle="tooltip" data-placement="top" title="Edit Link">
                     <i class="fa fa-edit"/>
                 </a>
-                <a href="#" class="ml-2 o_we_remove_link text-dark" data-toggle="tooltip" data-placement="top" title="Remove Link">
+                <a href="#" class="ml-1 o_we_remove_link text-dark" data-toggle="tooltip" data-placement="top" title="Remove Link">
                     <i class="fa fa-chain-broken"/>
                 </a>
             </div>

@@ -10,6 +10,7 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2021
 # Netta Waizer, 2022
 # Roy Sayag, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Roy Sayag, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr ""
 #. module: pos_gift_card
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
 msgid "<strong>Gift Card Code</strong>"
-msgstr ""
+msgstr "<strong>קוד כרטיס המתנה</strong>"
 
 #. module: pos_gift_card
 #. openerp-web
@@ -36,7 +37,7 @@ msgstr ""
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Amount of the gift card:"
-msgstr ""
+msgstr "סכום כרטיס המתנה:"
 
 #. module: pos_gift_card
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
@@ -51,12 +52,12 @@ msgstr "כלל ברקוד"
 #. module: pos_gift_card
 #: model:ir.model.fields,field_description:pos_gift_card.field_pos_order_line__generated_gift_card_ids
 msgid "Bought Gift Card"
-msgstr ""
+msgstr "קנית כרטיס מתנה"
 
 #. module: pos_gift_card
 #: model:ir.model.fields,field_description:pos_gift_card.field_gift_card__buy_pos_order_line_id
 msgid "Buy Pos Order Line"
-msgstr ""
+msgstr "שורת קנייה בנקודת מכירה"
 
 #. module: pos_gift_card
 #. openerp-web
@@ -69,14 +70,14 @@ msgstr "בטל"
 #. module: pos_gift_card
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
 msgid "Card expires"
-msgstr ""
+msgstr "מועד פקיעת תוקף הכרטיס"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Check a gift card"
-msgstr ""
+msgstr "בדיקת כרטיס מתנה"
 
 #. module: pos_gift_card
 #. openerp-web
@@ -92,7 +93,7 @@ msgstr "אשר"
 #. module: pos_gift_card
 #: model:ir.model.fields,help:pos_gift_card.field_pos_order_line__gift_card_id
 msgid "Deducted from this Gift Card"
-msgstr ""
+msgstr "ירד מכרטיס מתנה זה"
 
 #. module: pos_gift_card
 #: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_settings
@@ -112,14 +113,14 @@ msgstr "בטל"
 #. module: pos_gift_card
 #: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__create_set
 msgid "Generate a new barcode and set a price"
-msgstr ""
+msgstr "יצירת ברקוד חדש והגדרת מחיר"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Generate barcode"
-msgstr ""
+msgstr "יצירת ברקוד"
 
 #. module: pos_gift_card
 #. openerp-web
@@ -144,12 +145,12 @@ msgstr "כרטיס מתנה"
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Gift Card Barcode:"
-msgstr ""
+msgstr "ברקוד כרטיס מתנה:"
 
 #. module: pos_gift_card
 #: model:ir.model.fields,field_description:pos_gift_card.field_pos_order__gift_card_count
 msgid "Gift Card Count"
-msgstr ""
+msgstr "ספירת כרטיס מתנה"
 
 #. module: pos_gift_card
 #. openerp-web
@@ -157,13 +158,13 @@ msgstr ""
 #: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Gift Card Error"
-msgstr ""
+msgstr "שגיאת כרטיס מתנה"
 
 #. module: pos_gift_card
 #: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__gift_card_product_id
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
 msgid "Gift Card Product"
-msgstr ""
+msgstr "מוצר כרטיס מתנה"
 
 #. module: pos_gift_card
 #: model:ir.ui.menu,name:pos_gift_card.pos_gift_card_menu
@@ -180,24 +181,24 @@ msgstr "הגדרות כרטיס מתנה"
 #: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Gift card balance is too low."
-msgstr ""
+msgstr "מאזן כרטיס המתנה נמוך מדי"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Gift card is not valid."
-msgstr ""
+msgstr "כרטיס המתנה לא תקין."
 
 #. module: pos_gift_card
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
 msgid "Gift card settings"
-msgstr ""
+msgstr "הגדרות כרטיס המתנה"
 
 #. module: pos_gift_card
 #: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
 msgid "Here is your gift card!"
-msgstr ""
+msgstr "הנה כרטיס המתנה שלך!"
 
 #. module: pos_gift_card
 #: model:ir.model,name:pos_gift_card.model_pos_config
@@ -217,57 +218,57 @@ msgstr "הזמנות קופה"
 #. module: pos_gift_card
 #: model:ir.model.fields,help:pos_gift_card.field_gift_card__buy_pos_order_line_id
 msgid "Pos Order line where this gift card has been bought."
-msgstr ""
+msgstr "שורת הזמנה בנקודת המכירה בה מצויינת קיינת כרטיס המתנה."
 
 #. module: pos_gift_card
 #: model:ir.model.fields,field_description:pos_gift_card.field_gift_card__redeem_pos_order_line_ids
 msgid "Pos Redeems"
-msgstr ""
+msgstr "פדיונת נקודת מכירה"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Remaining amount of the gift card:"
-msgstr ""
+msgstr "סכום שנותר על כרטיס המתנה:"
 
 #. module: pos_gift_card
 #: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__scan_set
 msgid "Scan an existing barcode and set a price"
-msgstr ""
+msgstr "סריקת ברקוד קיים והגדרת מחיר"
 
 #. module: pos_gift_card
 #: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__scan_use
 msgid "Scan an existing barcode with an existing price"
-msgstr ""
+msgstr "סריקת סרקוד קיים עם מחיר קיים"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Scan and set price on gift card"
-msgstr ""
+msgstr "סריקה והגדרת מחיר על כרטיס מתנה"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Scan gift card"
-msgstr ""
+msgstr "סריקת כרטיס מתנה"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/js/GiftCardPopup.js:0
 #, python-format
 msgid "This gift card has already been sold"
-msgstr ""
+msgstr "כרטיס המתנה הזה כבר נמכר"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/js/models.js:0
 #, python-format
 msgid "This gift card is already applied"
-msgstr ""
+msgstr "כרטיס המתנה הזה כבר מומש"
 
 #. module: pos_gift_card
 #: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_product_id
@@ -284,11 +285,11 @@ msgstr "סוג"
 #: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
 #, python-format
 msgid "Use a gift card"
-msgstr ""
+msgstr "מימוש כרטיס מתנה"
 
 #. module: pos_gift_card
 #. openerp-web
 #: code:addons/pos_gift_card/static/src/js/GiftCardPopup.js:0
 #, python-format
 msgid "You cannot sell a gift card that has already been sold"
-msgstr ""
+msgstr "אי אפשר למכור כרטיס מתנה שכבר נמכר"

@@ -1001,6 +1001,9 @@ body.editor_enable.editor_has_snippets {
                 background: none;
             }
 
+            we-toggler:empty::before {
+                content: '/';
+            }
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -1010,7 +1013,17 @@ body.editor_enable.editor_has_snippets {
                     max-height: 600px;
                     overflow-y: auto;
                 }
+                &:empty {
+                    line-height: $o-we-sidebar-content-field-dropdown-item-height;
+                    background-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                    color: $o-we-sidebar-content-field-dropdown-item-color;
+                    // Padding from we-icon-button mixin.
+                    padding-left: 2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size;
 
+                    &::before {
+                        content: '/';
+                    }
+                }
                 > we-title {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
@@ -1264,13 +1277,8 @@ body.editor_enable.editor_has_snippets {
                         width: 28px;
                     }
                 }
-                &.o_we_matrix_five_col {
-                    width: auto;
-                    td, th {
-                        input {
-                            width: 43px;
-                        }
-                    }
+                tr:last-child we-button {
+                    overflow: visible;
                 }
             }
         }
@@ -1430,13 +1438,20 @@ body.editor_enable.editor_has_snippets {
                         font-family: $o-we-sidebar-content-field-input-font-family;
                     }
                     tr {
+                        // Since the sortable list's <tr> loses its connection with
+                        // the table when dragged, the <td> with the input no longer
+                        // takes up the full width, causing a visual issue. To solve
+                        // this problem, we added the 'flex' display property.
+                        display: flex;
+                        align-items: center;
                         border: none;
                     }
                     td {
+                        flex-grow: 1;
                         padding-bottom: $o-we-sidebar-content-field-spacing / 2;
 
                         &:not(.o_we_list_record_name) {
-                            width: 1px;
+                            flex-grow: 0;
                         }
 
                         we-button.o_we_checkbox_wrapper {
@@ -1517,6 +1532,7 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                max-width: 100%;
             }
         }
 
@@ -1688,8 +1704,14 @@ body.editor_enable.editor_has_snippets {
 
             &::after {
                 content: "";
-                @include o-position-absolute(0, 0, 0, 0);
+                // We use a "sticky" position because it ensures that the
+                // backdrop covers the entire "customize panel" element, even
+                // when it has a vertical scrollbar and is scrolled to the
+                // bottom.
+                @include o-position-sticky(auto, 0, 0, 0);
                 display: block;
+                height: 100vh;
+                margin-top: -100vh;
                 pointer-events: none;
                 background: $o-we-sidebar-content-backdrop-bg;
             }
@@ -2106,8 +2128,13 @@ body.editor_enable.editor_has_snippets {
                     min-width: 22px;
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
                     color: $o-we-fg-lighter;
-                    &.oe_snippet_remove {
+                    // TODO In master: restore `.oe_snippet_remove`.
+                    &.fa-trash {
                         background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
+                        // TODO In master: use `.o_disabled`.
+                        &:not(.oe_snippet_remove) {
+                            opacity: 0.5;
+                        }
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
@@ -2125,6 +2152,16 @@ body.editor_enable.editor_has_snippets {
                         &:hover {
                             border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
                             background-color: $o-we-sidebar-content-field-pressed-bg;
+
+                            // TODO In master: restore `.oe_snippet_remove`.
+                            &.fa-trash {
+                                border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
+                                background-color: $o-we-color-danger;
+                                // TODO In master: use `.o_disabled`.
+                                &:not(.oe_snippet_remove) {
+                                    opacity: 0.5;
+                                }
+                            }
                         }
                     }
                 }

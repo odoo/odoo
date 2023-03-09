@@ -195,7 +195,9 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
     def test_po_to_customer(self):
         """
         Create and confirm a PO with a subcontracted move. The picking type of
-        the PO is 'Dropship' and the delivery address a customer.
+        the PO is 'Dropship' and the delivery address a customer. Then, process
+        a return with the stock location as destination and another return with
+        the supplier as destination
         """
         subcontractor, client = self.env['res.partner'].create([
             {'name': 'SuperSubcontractor'},
@@ -234,7 +236,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             "order_line": [(0, 0, {
                 'product_id': p_finished.id,
                 'name': p_finished.name,
-                'product_qty': 1.0,
+                'product_qty': 2.0,
             })],
         })
         po.button_confirm()
@@ -243,11 +245,45 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(mo.picking_type_id, self.warehouse.subcontracting_type_id)
 
         delivery = po.picking_ids
-        delivery.move_line_ids.qty_done = 1.0
+        delivery.move_line_ids.qty_done = 2.0
         delivery.button_validate()
 
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(mo.state, 'done')
+        self.assertEqual(po.order_line.qty_received, 2)
+
+        # return 1 x P_finished to the stock location
+        stock_location = self.warehouse.lot_stock_id
+        stock_location.return_location = True
+        return_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
+        with return_form.product_return_moves.edit(0) as line:
+            line.quantity = 1.0
+        return_form.location_id = stock_location
+        return_wizard = return_form.save()
+        return_picking_id, _pick_type_id = return_wizard._create_returns()
+
+        delivery_return01 = self.env['stock.picking'].browse(return_picking_id)
+        delivery_return01.move_line_ids.qty_done = 1.0
+        delivery_return01.button_validate()
+
+        self.assertEqual(delivery_return01.state, 'done')
+        self.assertEqual(p_finished.qty_available, 1, 'One product has been returned to the stock location, so it should be available')
+        self.assertEqual(po.order_line.qty_received, 2, 'One product has been returned to the stock location, so we should still consider it as received')
+
+        # return 1 x P_finished to the supplier location
+        supplier_location = dropship_picking_type.default_location_src_id
+        return_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
+        with return_form.product_return_moves.edit(0) as line:
+            line.quantity = 1.0
+        return_form.location_id = supplier_location
+        return_wizard = return_form.save()
+        return_picking_id, _pick_type_id = return_wizard._create_returns()
+
+        delivery_return02 = self.env['stock.picking'].browse(return_picking_id)
+        delivery_return02.move_line_ids.qty_done = 1.0
+        delivery_return02.button_validate()
+
+        self.assertEqual(delivery_return02.state, 'done')
         self.assertEqual(po.order_line.qty_received, 1)
 
     def test_po_to_subcontractor(self):

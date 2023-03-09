@@ -70,6 +70,10 @@ class AccountAnalyticLine(models.Model):
     def _compute_partner_id(self):
         super(AccountAnalyticLine, self.filtered(lambda t: t._is_not_billed()))._compute_partner_id()
 
+    @api.depends('timesheet_invoice_id.state')
+    def _compute_project_id(self):
+        super(AccountAnalyticLine, self.filtered(lambda t: t._is_not_billed()))._compute_project_id()
+
     def _is_not_billed(self):
         self.ensure_one()
         return not self.timesheet_invoice_id or self.timesheet_invoice_id.state == 'cancel'

@@ -155,9 +155,9 @@ class AccountEdiXmlCII(models.AbstractModel):
                 else invoice.commercial_partner_id,
             # Chorus Pro fields
             'buyer_reference': invoice.buyer_reference if 'buyer_reference' in invoice._fields
-                and invoice.buyer_reference else invoice.ref,
+                and invoice.buyer_reference else invoice.commercial_partner_id.ref,
             'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields
-                and invoice.purchase_order_reference else invoice.payment_reference or invoice.name,
+                and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields
                 and invoice.contract_reference else '',
         }
@@ -198,7 +198,8 @@ class AccountEdiXmlCII(models.AbstractModel):
         vals = self._export_invoice_vals(invoice)
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
-        return etree.tostring(cleanup_xml_node(xml_content)), set(errors)
+        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>\n" + etree.tostring(cleanup_xml_node(xml_content))
+        return xml_content, set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT
@@ -215,14 +216,14 @@ class AccountEdiXmlCII(models.AbstractModel):
             logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
 
         # ==== partner_id ====
-        partner_type = invoice_form.journal_id.type == journal.type and 'SellerTradeParty' or 'BuyerTradeParty'
+        partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
         invoice_form.partner_id = self.env['account.edi.format']._retrieve_partner(
             name=_find_value(f"//ram:{partner_type}/ram:Name"),
             mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
             vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
         )
         if not invoice_form.partner_id:
-            logs.append(_("Could not retrieve the vendor."))
+            logs.append(_("Could not retrieve the %s.", _("customer") if invoice_form.move_type in ('out_invoice', 'out_refund') else _("vendor")))
 
         # ==== currency_id ====
 
@@ -333,32 +334,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_amount': './{*}ActualAmount',  # below allowance_charge node
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
-
-        if not invoice_line_form.product_uom_id:
-            logs.append(
-                _("Could not retrieve the unit of measure for line with label '%s'. Did you install the inventory "
-                  "app and enabled the 'Units of Measure' option ?", invoice_line_form.name))
-
-        # Taxes
-        taxes = []
+        inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
+        # retrieve tax nodes
         tax_nodes = tree.findall('.//{*}ApplicableTradeTax/{*}RateApplicablePercent')
-        for tax_node in tax_nodes:
-            tax = self.env['account.tax'].search([
-                ('company_id', '=', journal.company_id.id),
-                ('amount', '=', float(tax_node.text)),
-                ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', journal.type),
-            ], limit=1)
-            if tax:
-                taxes.append(tax)
-            else:
-                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line_form.name))
-
-        invoice_line_form.tax_ids.clear()
-        for tax in taxes:
-            invoice_line_form.tax_ids.add(tax)
-        return logs
+        return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line_form, inv_line_vals, logs)
 
     # -------------------------------------------------------------------------
     # IMPORT : helpers

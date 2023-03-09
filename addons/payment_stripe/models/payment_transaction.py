@@ -138,7 +138,7 @@ class PaymentTransaction(models.Model):
                 'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
                 'email': self.partner_email or None,
                 'name': self.partner_name,
-                'phone': self.partner_phone or None,
+                'phone': self.partner_phone and self.partner_phone[:20] or None,
             }
         )
         return customer
@@ -200,7 +200,9 @@ class PaymentTransaction(models.Model):
             'payment_intents',
             payload=self._stripe_prepare_payment_intent_payload(),
             offline=self.operation == 'offline',
-            idempotency_key=payment_utils.generate_idempotency_key(self, scope='payment_intents'),
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self, scope='payment_intents_token'
+            ) if self.operation == 'offline' else None,
         )  # Make the request idempotent to prevent multiple payments (e.g., rollback mechanism).
         if 'error' not in response:
             payment_intent = response

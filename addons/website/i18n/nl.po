@@ -8,7 +8,8 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -641,14 +642,10 @@ msgstr "<b>Verschuif</b> deze knop om de kolomgrootte te wijzigen."
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 "<br/><br/>\n"
-"                    Voorbeeld van een regel:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Voorbeeld van regel:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1447,6 +1444,17 @@ msgid "A Chart Title"
 msgstr "Een grafiektitel"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
+"Er is een Google Map-fout opgetreden. Zorg ervoor dat je de pop-up voor de "
+"sleutelconfiguratie zorgvuldig leest."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "Een sectie ondertitel"
@@ -1552,7 +1560,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "API Key"
-msgstr "API-code"
+msgstr "API Key"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_about_us
@@ -4256,10 +4264,17 @@ msgstr "Schakel de formulier bouwer in voor dit model."
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr "Schakel de juiste Google Map API's in je Google-account in"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
-msgstr "Voer een API-sleutel in"
+msgstr "Voer een API Key in"
 
 #. module: website
 #. openerp-web
@@ -5003,7 +5018,7 @@ msgstr "Google Maps"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Google Map API Key"
-msgstr "Google Map API sleutel"
+msgstr "Google Map API Key"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
@@ -5014,7 +5029,7 @@ msgstr "Google Maps"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
 #: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
 msgid "Google Maps API Key"
-msgstr "Google Maps API sleutel"
+msgstr "Google Maps API Key"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
@@ -5861,7 +5876,7 @@ msgstr "Intuïtief systeem"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Invalid API Key. The following error was returned by Google:"
-msgstr "Ongeldige API-sleutel. De volgende fout is geretourneerd door Google:"
+msgstr "Ongeldige API Key. De volgende fout is geretourneerd door Google:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -6572,6 +6587,32 @@ msgid "Main actions"
 msgstr "Belangrijkste acties"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr "Zorg ervoor dat facturering is ingeschakeld"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+"Zorg ervoor dat je wacht als er fouten blijven worden weergegeven: soms kun "
+"je een API inschakelen om deze onmiddellijk te gebruiken, maar Google blijft"
+" een tijdje fouten genereren"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr "Zorg ervoor dat uw instellingen correct zijn geconfigureerd:"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "Beheer pagina's"
@@ -6590,6 +6631,20 @@ msgstr "Beheer je website pagina's"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "Beheer deze pagina"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr "Maps JavaScript API"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr "Maps Static API"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7776,6 +7831,13 @@ msgstr "Pillen"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Placeholder"
 msgstr "Label"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr "Places API"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -11304,6 +11366,15 @@ msgid "You can't remove the submit button of the form"
 msgstr "Je kunt de verzendknop van het formulier niet verwijderen"
 
 #. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+"Je kan de standaard website %s niet verwijderen. Probeer in plaats daarvan "
+"de instellingen te wijzigen."
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11866,6 +11937,14 @@ msgstr "metselwerk, grid"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
 msgstr "menu, prijzen"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
+msgstr "geen waarde"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view

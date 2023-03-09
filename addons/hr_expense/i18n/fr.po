@@ -9,6 +9,7 @@
 # Khadija Mbazaa <khadija.mbazaa@gmail.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Damien Bouvy <dbo@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Damien Bouvy <dbo@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgid ""
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
 "<p>Le comptable reçoit le rapport des notes de frais approuvées.</p><p> Il "
-"peut poster les entrées comptables en un click si les taxes et les comptes "
+"peut poster les pièces comptables en un clic si les taxes et les comptes "
 "sont bien configurés.</p>"
 
 #. module: hr_expense
@@ -757,7 +758,7 @@ msgstr "Note de Frais Dupliquée"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "Les produits de notes de frais peuvent être refacturés à vos clients."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -991,7 +992,7 @@ msgstr "En paiement"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Included in price taxes"
-msgstr ""
+msgstr "Taxes incluses dans le prix"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1007,7 +1008,7 @@ msgstr "Pièces jointes non valides !"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
-msgstr ""
+msgstr "Historique de l'app facturation"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -1056,7 +1057,7 @@ msgstr "Taux de Conversion (texte)"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_total_amount_company
 msgid "Label Total Amount Company"
-msgstr ""
+msgstr "Étiquette montant total entreprise"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense____last_update
@@ -1378,6 +1379,8 @@ msgid ""
 "Please configure Default Expense account for Category expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Veuillez configurer un compte de notes de frais par défaut pour la catégorie"
+" de notes de frais: `property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
@@ -1387,7 +1390,7 @@ msgstr "Comptabiliser les écritures"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
-msgstr "Comptabiliser les écritures"
+msgstr "Comptabiliser les pièces"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
@@ -1395,6 +1398,8 @@ msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
 msgstr ""
+"Enregistrez les pièces comptables des nouvelles notes de frais approuvées "
+"par le responsable des employés."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1830,7 +1835,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid "The taxes should be \"Included In Price\""
-msgstr ""
+msgstr "Les taxes doivent être \"incluses dans le prix\""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2012,6 +2017,12 @@ msgid ""
 "company at fixed cost like allowances for mileage, per diem, accomodation or"
 " meal."
 msgstr ""
+"Lorsque le coût d'un produit de note de frais est différent de 0, alors "
+"l'utilisateur utilisant ce produit ne pourra pas modifier le montant de la "
+"note de frais, seulement la quantité. Utilisez un coût différent de 0 pour "
+"les catégories de notes de frais financées par l'entreprise à coût fixe "
+"comme les indemnités de kilométrage, les indemnités journalières, "
+"l'hébergement ou les repas."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

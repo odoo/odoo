@@ -316,7 +316,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the order id and the access token
         try:
-            self._document_check_access('sale.order', order_id, access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
@@ -324,6 +324,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values

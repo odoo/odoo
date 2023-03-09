@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import Form, tagged
+from odoo import fields
+
+from freezegun import freeze_time
 
 
 @tagged('post_install', '-at_install')
@@ -211,6 +214,123 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
+
+    @freeze_time('2021-01-01')
+    def test_rounding_price_unit_exchange_difference(self):
+        test_product = self.test_product_delivery
+        date_po_and_delivery = '2021-01-01'
+        rate_po = 28.0
+        date_bill = '2020-01-01'
+        rate_bill = 26.0
+        foreign_currency = self.currency_data['currency']
+        company_currency = self.env.company.currency_id
+        self.env['res.currency.rate'].create([
+        {
+            'name': date_po_and_delivery,
+            'rate': rate_po,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': rate_bill,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_po_and_delivery,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }])
+
+        purchase_order = self._create_purchase(test_product, date_po_and_delivery, quantity=100, price_unit=6000)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+        invoice = self._create_invoice_for_po(purchase_order, date_bill)
+        invoice.action_post()
+
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        self.assertFalse(price_diff_line, "No price difference line should be created")
+
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
+        self.check_reconciliation(invoice, picking)
+
+    @freeze_time('2021-01-03')
+    def test_price_difference_exchange_difference_accounting_date(self):
+        test_product = self.test_product_delivery
+        test_product.categ_id.write({"property_cost_method": "standard"})
+        test_product.write({'standard_price': 100.0})
+        date_po_receipt = '2021-01-02'
+        rate_po_receipt = 25.0
+        date_bill = '2021-01-01'
+        rate_bill = 30.0
+        date_accounting = '2021-01-03'
+        rate_accounting = 26.0
+
+        foreign_currency = self.currency_data['currency']
+        company_currency = self.env.company.currency_id
+        self.env['res.currency.rate'].create([
+        {
+            'name': date_po_receipt,
+            'rate': rate_po_receipt,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': rate_bill,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_accounting,
+            'rate': rate_accounting,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_po_receipt,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_accounting,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }])
+
+        #purchase order created in foreign currency
+        purchase_order = self._create_purchase(test_product, date_po_receipt, quantity=10, price_unit=3000)
+        with freeze_time(date_po_receipt):
+            self._process_pickings(purchase_order.picking_ids)
+        invoice = self._create_invoice_for_po(purchase_order, date_bill)
+        with Form(invoice) as move_form:
+            move_form.invoice_date = fields.Date.from_string(date_bill)
+            move_form.date = fields.Date.from_string(date_accounting)
+        invoice.action_post()
+
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
+        self.assertAlmostEqual(price_diff_line.balance, 192.31)
+        self.assertAlmostEqual(price_diff_line.price_total, 5000.0)
+
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
+        self.check_reconciliation(invoice, picking)
+        interim_account_id = self.company_data['default_account_stock_in'].id
+
+        valuation_line = picking.move_lines.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
+        self.assertTrue(valuation_line.full_reconcile_id, "The reconciliation should be total at that point.")
+
+        exchange_move = valuation_line.full_reconcile_id.exchange_move_id
+        self.assertTrue(exchange_move, "An exchange move should exists.")
+        exchange_difference = exchange_move.line_ids.filtered(lambda l: l.account_id.id == interim_account_id).balance
+        self.assertAlmostEqual(exchange_difference, 38.46, "Exchange amount is incorrect")
 
     def test_reconcile_cash_basis_bill(self):
         ''' Test the generation of the CABA move after bill payment

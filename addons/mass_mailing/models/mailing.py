@@ -199,8 +199,8 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if mass_mailing.ab_testing_pc < 100:
-                total = int(total / 100.0 * mass_mailing.ab_testing_pc)
+            if total and mass_mailing.ab_testing_enabled and mass_mailing.ab_testing_pc < 100:
+                total = max(int(total / 100.0 * mass_mailing.ab_testing_pc), 1)
             mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
@@ -479,7 +479,7 @@ class MassMailing(models.Model):
 
     def action_schedule(self):
         self.ensure_one()
-        if self.schedule_date:
+        if self.schedule_date and self.schedule_date > fields.Datetime.now():
             return self.action_put_in_queue()
         else:
             action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
@@ -609,7 +609,7 @@ class MassMailing(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
-            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True)],
+            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True), ('mailing_type', '=', self.mailing_type)],
         }
         if self.mailing_type == 'mail':
             action['views'] = [
@@ -806,7 +806,9 @@ class MassMailing(models.Model):
         # randomly choose a fragment
         if self.ab_testing_enabled and self.ab_testing_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
-            topick = int(contact_nbr / 100.0 * self.ab_testing_pc)
+            topick = 0
+            if contact_nbr:
+                topick = max(int(contact_nbr / 100.0 * self.ab_testing_pc), 1)
             if self.campaign_id and self.ab_testing_enabled:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:

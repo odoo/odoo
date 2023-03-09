@@ -3250,9 +3250,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
-"The accrual starts after a defined period from the employee start date. This"
-" field defines the number of days, months or years after which accrual is "
-"used."
+"The accrual starts after a defined period from the allocation start date. "
+"This field defines the number of days, months or years after which accrual "
+"is used."
 msgstr ""
 
 #. module: hr_holidays
@@ -3308,6 +3308,15 @@ msgid ""
 msgstr ""
 "Thời gian nghỉ còn lại của kiểu nghỉ này không đủ.\n"
 "Hãy chọn kiểu nghỉ khác, hoặc kiểm tra lại các đơn xin nghỉ chưa được duyệt của kiểu nghỉ này."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2

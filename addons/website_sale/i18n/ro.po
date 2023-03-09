@@ -7,10 +7,10 @@
 # Julian Dumitrascu, 2021
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
 # sharkutz <sharkutz4life@yahoo.com>, 2021
-# Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
+# Cozmin Candea <office@terrabit.ro>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2022\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,12 +44,12 @@ msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
-msgstr ""
+msgstr "%s recenzie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
-msgstr ""
+msgstr "%s recenzii"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -60,7 +60,7 @@ msgstr "&amp; Livrare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Afișare rezultate pentru '"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
@@ -133,7 +133,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
 msgid "<i class=\"fa fa-chevron-left\"/> Return to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left\"/> Înapoi la coș"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -184,6 +184,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Schimbarea numelui companiei sau a "
+"numărului de TVA nu este permisă odată ce documentele au fost emise pentru "
+"contul dvs. Vă rugăm să ne contactați direct pentru această "
+"operațiune.</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -305,7 +309,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Încărcați un document</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -319,6 +323,8 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
 "'&lt;=', 1)]}\">Based on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
+"'&lt;=', 1)]}\">Bazat pe variante</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -354,6 +360,15 @@ msgid "<span>Process Checkout</span>"
 msgstr "<span>Procesare</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+"<span>Din păcate, comanda dumneavoastră nu poate fi confirmată deoarece suma plătită nu corespunde cu suma din coșul de cumpărături.\n"
+"                        Vă rugăm să contactați responsabilul magazinului pentru mai multe informații.</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Previzualizare video</span>"
@@ -366,7 +381,7 @@ msgstr "Plata dvs. a fost autorizată"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
 msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr ""
+msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -386,6 +401,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                    If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Nu a fost găsită nicio opțiune de plată potrivită.</strong><br/>\n"
+"                                    Dacă credeți că este o eroare, vă rugăm să contactați administratorul site-ului."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -583,7 +600,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
 msgid "A preview will be available at this URL."
-msgstr ""
+msgstr "O previzualizare va fi disponibilă la acest URL."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -652,7 +669,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
 msgid "About cross selling products"
-msgstr ""
+msgstr "Despre produsele de vânzare încrucișată"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -662,7 +679,7 @@ msgstr "Dimensiunea acceptabilă a fișierului"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
 msgid "Accessories for Product"
-msgstr ""
+msgstr "Accesorii pentru produs"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -689,7 +706,7 @@ msgstr "Numar de Cont"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add a Media"
-msgstr ""
+msgstr "Adaugă un fișier media"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -814,24 +831,24 @@ msgstr "Numele Bancii"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr ""
+msgstr "Număr unitate de bază"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "Nume unitate de bază"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr ""
+msgstr "Preț unitate de bază"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
 #: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
-msgstr ""
+msgstr "Unități de bază"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -870,7 +887,7 @@ msgstr "Adresă factură"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Bin"
-msgstr ""
+msgstr "Coș de gunoi"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
@@ -898,7 +915,7 @@ msgstr "Jos"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Box"
-msgstr ""
+msgstr "Cutie"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -998,7 +1015,7 @@ msgstr ""
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Categories:"
-msgstr ""
+msgstr "Categorii:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1015,13 +1032,13 @@ msgstr "Descriere categorie"
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Category:"
-msgstr ""
+msgstr "Categorie:"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Chair"
-msgstr ""
+msgstr "Scaun"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_chairs
@@ -1251,13 +1268,13 @@ msgstr "Data creării"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Current Category or All"
-msgstr ""
+msgstr "Categoria curentă sau Toate"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_id
 msgid "Custom Unit of Measure"
-msgstr ""
+msgstr "Unitatea de măsură personalizată"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1282,7 +1299,7 @@ msgstr "Clienți"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "Conector DHL Express"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1301,6 +1318,8 @@ msgstr "Listă de prețuri implicită"
 msgid ""
 "Define a custom unit to display in the price per unit of measure field."
 msgstr ""
+"Definiți o unitate personalizată pentru a fi afișată în câmpul preț per "
+"unitate de măsură."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1384,11 +1403,13 @@ msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
 msgstr ""
+"Afișați prețul unității de bază pe paginile dvs. de e-commerce. Setați-l la "
+"0 pentru a-l ascunde pentru acest produs."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Displayed in bottom of product pages"
-msgstr ""
+msgstr "Afișat în partea de jos a paginilor produselor"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
@@ -1397,6 +1418,8 @@ msgid ""
 "Displays the custom unit for the products if defined or the selected unit of"
 " measure otherwise."
 msgstr ""
+"Afișează unitatea personalizată pentru produse, dacă este definită, sau "
+"unitatea de măsură selectată în caz contrar."
 
 #. module: website_sale
 #: code:addons/website_sale/models/digest.py:0
@@ -1476,7 +1499,7 @@ msgstr "Editare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
 msgid "Edit in Website Builder"
-msgstr ""
+msgstr "Editare în Website Builder"
 
 #. module: website_sale
 #. openerp-web
@@ -1544,12 +1567,12 @@ msgstr "Imagini/Video suplimentare"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
 msgid "Extra Variant Images"
-msgstr ""
+msgstr "Imagini suplimentare pentru variante"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 msgid "Extra Variant Media"
-msgstr ""
+msgstr "Imagini/Video suplimentare pentru variante"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -1616,7 +1639,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Go to cart"
-msgstr ""
+msgstr "Mergi la coș"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1761,7 +1784,7 @@ msgstr "Valoarea totală a vânzării site-ului Kpi"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lamp"
-msgstr ""
+msgstr "Lampă"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
@@ -1863,7 +1886,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lightbulb sold separately"
-msgstr ""
+msgstr "Becul este vândut separat"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
@@ -1941,13 +1964,13 @@ msgstr "Produs nou"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
-msgstr ""
+msgstr "Nou!"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
-msgstr ""
+msgstr "Cele mai noi produse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -1997,7 +2020,7 @@ msgstr "Nu sunt rezultate pentru \""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for '"
-msgstr ""
+msgstr "Nu sunt rezultate pentru '"
 
 #. module: website_sale
 #. openerp-web
@@ -2055,7 +2078,7 @@ msgstr "Numărul de produse din grilă din magazin"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "Pe roți"
 
 #. module: website_sale
 #. openerp-web
@@ -2203,7 +2226,7 @@ msgstr "Comenzi/Zi"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "Stoc epuizat"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2291,7 +2314,7 @@ msgstr "Tip Utilizator PayPal"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
-msgstr ""
+msgstr "Sistem de deschidere bazat pe pedală"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2358,7 +2381,7 @@ msgstr "Preț - de la mic la mare"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_price
 msgid "Price Per Unit"
-msgstr ""
+msgstr "Preț pe unitate"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -2410,7 +2433,7 @@ msgstr "Produs"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_accessories_action
 msgid "Product Accessories"
-msgstr ""
+msgstr "Accesorii produs"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
@@ -2475,7 +2498,7 @@ msgstr "Linia de atribute a șablonului de produs"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Șablon produs"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
@@ -2501,7 +2524,7 @@ msgstr "Istoric vizulaizare produs"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Product names"
-msgstr ""
+msgstr "Nume produs"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2530,12 +2553,12 @@ msgstr "Produse"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
-msgstr ""
+msgstr "Produse vândute recent împreună"
 
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
 msgid "Products Recently Sold With Product"
-msgstr ""
+msgstr "Produse vândute recent împreună cu produsul"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -2649,13 +2672,13 @@ msgstr "Motivul evaluării"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
-msgstr ""
+msgstr "Produse vândute recent"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
-msgstr ""
+msgstr "Produse vizualizate recent"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2671,7 +2694,7 @@ msgstr "Email recuperare de trimis"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
-msgstr ""
+msgstr "Ranforsat pentru încărcături grele"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2747,7 +2770,7 @@ msgstr "Vânzare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Analysis"
-msgstr ""
+msgstr "Analiza vânzări"
 
 #. module: website_sale
 #. openerp-web
@@ -2999,7 +3022,7 @@ msgstr "Înregistrare"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sit comfortably"
-msgstr ""
+msgstr "Așezați-vă confortabil"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3034,7 +3057,7 @@ msgstr "Vândut"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
-msgstr ""
+msgstr "Vândut"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -3118,7 +3141,7 @@ msgstr "Accesorii sugerate:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr ""
+msgstr "Accesorii sugerate în coșul de cumpărături"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -3159,7 +3182,13 @@ msgstr "Numărul 1"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Tokenul de acces este nevalid."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
+msgstr "Coșul a fost actualizat. Vă rugăm să reîmprospătați pagina."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
@@ -3194,7 +3223,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The order has been canceled."
-msgstr ""
+msgstr "Comanda a fost anulată."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -3220,6 +3249,8 @@ msgid ""
 "The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
 " per unit on this product."
 msgstr ""
+"Valoarea de bază a numărului de unități trebuie să fie mai mare decât 0. "
+"Utilizați 0 pentru a ascunde prețul pe unitate pentru acest produs."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -3310,11 +3341,13 @@ msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
 msgstr ""
+"Adevărat doar pentru filtrele de produse care necesită un product_id "
+"deoarece se referă la vânzări încrucișate"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_show_uom_price
 msgid "UOM Price Display for eCommerce"
-msgstr ""
+msgstr "Afișare preț unitate de măsură pentru eCommerce"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3340,6 +3373,7 @@ msgstr "USPS"
 #: model:ir.model,name:website_sale.model_website_base_unit
 msgid "Unit of Measure for price per unit on eCommerce products."
 msgstr ""
+"Unitate de măsură pentru prețul pe unitate pentru produsele eCommerce."
 
 #. module: website_sale
 #: model:product.product,uom_name:website_sale.product_product_1
@@ -3402,7 +3436,7 @@ msgstr "Afișare coș ("
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
-msgstr ""
+msgstr "Afișare produs"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
@@ -3510,7 +3544,7 @@ msgstr "Secvență website"
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
-msgstr ""
+msgstr "Magazin online"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
@@ -3607,7 +3641,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "With three feet"
-msgstr ""
+msgstr "Cu trei picioare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3687,7 +3721,7 @@ msgstr "cod..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "e.g. lamp,bin"
-msgstr ""
+msgstr "ex. lampă,coș"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website.py:0
@@ -3706,7 +3740,7 @@ msgstr "eCommerce Categorii"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "eCommerce Filtru vizibilitate"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -3721,7 +3755,7 @@ msgstr "eCommerce Costuri de livrare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "eCommerce Magazin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box
@@ -3755,7 +3789,7 @@ msgstr "in categoria \""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "item(s))"
-msgstr ""
+msgstr "articol(e))"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

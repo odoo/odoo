@@ -120,6 +120,21 @@ class TestSMSComposerComment(TestMailFullCommon, TestMailFullRecipients):
 
         self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
+    def test_composer_default_recipient(self):
+        self.test_record.write({
+            'phone_nbr': '0123456789',
+        })
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                ).create({
+                    'body': self._test_body,
+                    'number_field_name': 'phone_nbr',
+                })
+
+        self.assertFalse(composer.recipient_single_valid)
+        self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
+
     def test_composer_internals(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(

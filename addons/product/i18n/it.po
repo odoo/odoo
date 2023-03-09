@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -1689,6 +1689,14 @@ msgid "Next Activity Type"
 msgstr "Tipologia prossima attività"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "Nessun listino prezzi fornitore trovato"
@@ -3283,6 +3291,12 @@ msgid ""
 msgstr ""
 "Per la contabilità, non è possibile scegliere una precisione decimale "
 "superiore al fattore di arrotondamento della valuta principale dell'azienda"
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

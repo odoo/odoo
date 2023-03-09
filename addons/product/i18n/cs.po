@@ -13,7 +13,7 @@
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# Jiří Podhorecký <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2021\n"
+"Last-Translator: Jiří Podhorecký, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1671,6 +1671,14 @@ msgid "Next Activity Type"
 msgstr "Další typ aktivity"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "Ceník dodavatele nebyl nalezen"
@@ -2652,6 +2660,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Šablona produktu je archivována, takže není možná žádná kombinace."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -3225,6 +3239,12 @@ msgid ""
 msgstr ""
 "Nelze definovat desetinnou přesnost 'účtu' větší než zaokrouhlovací faktor "
 "hlavní měny společnosti"
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

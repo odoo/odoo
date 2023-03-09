@@ -6,15 +6,15 @@
 # Zsolt Godó <zsolttokio@gmail.com>, 2021
 # Istvan <leki69@gmail.com>, 2021
 # Martin Trigaux, 2021
-# gezza <geza.nagy@oregional.hu>, 2021
 # Kovács Tibor <kovika@gmail.com>, 2021
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2021
 # krnkris, 2021
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2021
-# Tamás Németh <ntomasz81@gmail.com>, 2022
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # Tamás Dombos, 2022
+# gezza <geza.nagy@oregional.hu>, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Tamás Dombos, 2022\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +68,7 @@ msgstr "\"Mai\""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# Közreműködők"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -105,13 +105,13 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s feladat)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 feladat)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -379,6 +379,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -445,6 +447,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Közreműködők\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -558,12 +563,12 @@ msgstr "<strong>Projekt:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr ""
+msgstr "<u>Mérföldkövek</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -640,7 +645,7 @@ msgstr "Tevékenységek"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Tevékenység kivétel dekoráció"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
@@ -667,7 +672,7 @@ msgstr "Tevékenység típusai"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "Új mérföldkő"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -926,7 +931,7 @@ msgstr "Hozzárendelve"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr ""
+msgstr "Hozzárendelések"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1056,7 +1061,7 @@ msgstr "Blokkolva"
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr ""
+msgstr "Blokkolta"
 
 #. module: project
 #. openerp-web
@@ -1229,7 +1234,7 @@ msgstr "Konfiguráció"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr ""
+msgstr "Szakaszok beállítása"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1516,7 +1521,7 @@ msgstr "nap"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "Days to Deadline"
-msgstr ""
+msgstr "nap a határidőig"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -1592,7 +1597,7 @@ msgstr "Törlés"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "Mérföldkő törlése"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1605,7 +1610,7 @@ msgstr "Projekt törlése"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "Szakasz törlése"
 
 #. module: project
 #. openerp-web
@@ -1620,7 +1625,7 @@ msgstr "Kiszállítva"
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 #, python-format
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "Alárendelt feladatok"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1945,7 +1950,7 @@ msgstr "Követők (Partnerek)"
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikon pld: fa-tasks"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -2061,7 +2066,7 @@ msgstr "Boldog arc"
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Van üzenet"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -2086,7 +2091,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr ""
+msgstr "Hogy halad ez a projekt?"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2134,7 +2139,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Kivétel tevékenységet jelző ikon"
 
 #. module: project
 #. openerp-web
@@ -2343,7 +2348,7 @@ msgstr "Követő"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
 msgid "Is Private"
-msgstr ""
+msgstr "privát"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_is_company
@@ -2711,7 +2716,7 @@ msgstr "Üzenetek"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Mérföldkő"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
@@ -2724,7 +2729,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_milestone_all
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Mérföldkövek"
 
 #. module: project
 #. openerp-web
@@ -2761,7 +2766,7 @@ msgstr "Tevékenységeim határideje"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Favorite Projects"
-msgstr ""
+msgstr "Kedvenc projektjeim"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2847,7 +2852,7 @@ msgstr "Új"
 #: code:addons/project/static/src/js/right_panel/project_utils.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "Új mérföldkő"
 
 #. module: project
 #. openerp-web
@@ -2888,7 +2893,7 @@ msgstr "Következő tevékenységek"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Következő tevékenység naptár esemény"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -2978,7 +2983,7 @@ msgstr "Nincsenek feladatok. Hozzon létre egyet!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr ""
+msgstr "Nincsenek frissítések. Hozzon létre egyet!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3020,7 +3025,7 @@ msgstr "Ismétlések száma"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
 msgid "Number of Tasks"
-msgstr ""
+msgstr "Feladatok száma"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
@@ -3117,7 +3122,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 msgid "On Hold"
-msgstr ""
+msgstr "Felfüggesztett"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3144,7 +3149,7 @@ msgstr "Feladatok megnyitása"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Open tasks"
-msgstr ""
+msgstr "Feladatok megnyitása"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3366,7 +3371,7 @@ msgstr "Privát"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Profitability"
-msgstr ""
+msgstr "Jövedelmezőség"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
@@ -3427,7 +3432,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
-msgstr ""
+msgstr "Projekt közreműködők"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -3452,7 +3457,7 @@ msgstr "Projektmenedzser"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Projekt mérföldkő"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3795,7 +3800,7 @@ msgstr "Időszakos"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 msgid "Recurring Tasks"
-msgstr ""
+msgstr "Ismétlődő feladatok"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
@@ -3923,7 +3928,7 @@ msgstr "Kutatás"
 #. module: project
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
-msgstr ""
+msgstr "Kutatás, fejlesztés"
 
 #. module: project
 #. openerp-web
@@ -4023,7 +4028,7 @@ msgstr "Keresés üzenetek között"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr ""
+msgstr "Keresés prioritásra"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4047,7 +4052,7 @@ msgstr "Keresés szakaszok között"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr ""
+msgstr "Keresés állapotra"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
@@ -4224,7 +4229,7 @@ msgstr "Szakasz leírása és súgók"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Szakasz tulajdonosa"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4451,7 +4456,7 @@ msgstr "Feladat szakasza megváltoztatva"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "Feladat szakaszok"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4669,7 +4674,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "There are no more occurrences."
-msgstr ""
+msgstr "Nincs több előfordulás."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -4902,7 +4907,7 @@ msgstr "Havonta kétszer"
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Kivétel tevékenység típusa a rekordon."
 
 #. module: project
 #. openerp-web
@@ -4979,7 +4984,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
 msgid "Use Email Alias"
-msgstr ""
+msgstr "E-mail álnév használata"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -4989,7 +4994,7 @@ msgstr "Értékelés használata a projekten"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr ""
+msgstr "Ismétlődő feladatok használata"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
@@ -5047,7 +5052,7 @@ msgstr "Megtekintés"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "View Task"
-msgstr ""
+msgstr "Feladat megtekintése"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5184,12 +5189,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5237,6 +5236,20 @@ msgstr ""
 msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
 msgstr ""
 
 #. module: project
@@ -5331,4 +5344,4 @@ msgstr "igaz"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr ""
+msgstr "{{ object.project_id.company_id.name }}: Elégedettségi kérdőív"

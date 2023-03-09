@@ -357,6 +357,15 @@ msgid "<span>Process Checkout</span>"
 msgstr "<span>معالجة الدفع والخروج</span> "
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+"<span>للأسف، تعذر تأكيد طلبك لأن المبلغ المدفوع يختلف عن المبلغ في عربة تسوقك.\n"
+"                        يرجى التواصل مع المسؤول عن المحل للمزيد من المعلومات.</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>معاينة الفيديو</span> "
@@ -770,7 +779,7 @@ msgstr "المنتجات البديلة:"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
-msgstr "قيمة العربات المتروكة"
+msgstr "مبالغ عربات التسوق المتروكة "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -1524,7 +1533,7 @@ msgstr "أدخل اسمًا لمنتجك الجديد"
 #: code:addons/website_sale/models/product_misc.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "خطأ! لا يمكنك إنشاء فئات تكرارية."
+msgstr "خطأ! لا يمكنك إنشاء فئات متداخلة. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -2047,7 +2056,7 @@ msgstr "عدد المنتجات في الشبكة على المتجر "
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "على عجلات "
 
 #. module: website_sale
 #. openerp-web
@@ -2281,7 +2290,7 @@ msgstr "نوع مستخدم Paypal "
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
-msgstr ""
+msgstr "نظام يفتح عن طريق الدواسات "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2659,7 +2668,7 @@ msgstr "البريد الإلكتروني للاسترجاع بانتظار ال
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
-msgstr ""
+msgstr "مهيئة للدفعات الثقيلة "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -3144,6 +3153,12 @@ msgid "The access token is invalid."
 msgstr "رمز الوصول غير صالح. "
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
+msgstr "لقد تم تحديث عربة التسوق. يرجى إعادة تحميل الصفحة. "
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3175,7 +3190,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The order has been canceled."
-msgstr ""
+msgstr "لقد تم إلغاء الطلب. "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

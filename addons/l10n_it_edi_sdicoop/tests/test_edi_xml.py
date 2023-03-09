@@ -80,7 +80,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.italian_partner_a = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
-            'l10n_it_codice_fiscale': '00465840031',
+            'l10n_it_codice_fiscale': '93026890017',
             'country_id': cls.env.ref('base.it').id,
             'street': 'Via Privata Alessi 6',
             'zip': '28887',

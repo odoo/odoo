@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,7 +360,7 @@ msgstr ""
 "            <t t-else=\"\">\n"
 "                Hallo,<br/><br/>\n"
 "            </t>\n"
-"            Neem even de tijd om onze diensten met betrekking tot de taak te beoordelen \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
+"            Neem even de tijd om onze diensten met betrekking tot de taak te beoordelen \"<strong t-out=\"object.name or ''\">Planning en budget</strong>\"\n"
 "            <t t-if=\"object.rating_get_rated_partner_id().name\">\n"
 "                toegewezen aan <strong t-out=\"object.rating_get_rated_partner_id().name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
@@ -2203,8 +2204,8 @@ msgid ""
 "current status of your Idea. %s"
 msgstr ""
 "Behandel je ideeënverzameling binnen Taken van je nieuwe project en bespreek"
-" ze in de chatter van de taken. Gebruik de %s 'and' %s om aan te geven wat "
-"de huidige status van je idee is. %s"
+" ze in de chatter van de taken. Gebruik de %s en %s om aan te geven wat de "
+"huidige status van je idee is. %s"
 
 #. module: project
 #. openerp-web
@@ -5391,12 +5392,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Je kunt geen %s %s velden in taak opnemen."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5453,6 +5448,20 @@ msgid ""
 msgstr ""
 "Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken "
 "verwijderen."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr "Ja kan geen %s velden in taak lezen."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr "Ja kan niet schrijven op %s velden in taak."
 
 #. module: project
 #: code:addons/project/models/project.py:0

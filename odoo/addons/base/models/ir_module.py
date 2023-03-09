@@ -324,6 +324,10 @@ class Module(models.Model):
         self.clear_caches()
         return super(Module, self).unlink()
 
+    def _get_modules_to_load_domain(self):
+        """ Domain to retrieve the modules that should be loaded by the registry. """
+        return [('state', '=', 'installed')]
+
     @staticmethod
     def _check_python_external_dependency(pydep):
         try:
@@ -342,7 +346,6 @@ class Module(models.Model):
         except Exception as e:
             _logger.warning("get_distribution(%s) failed: %s", pydep, e)
             raise Exception('Error finding python library %s' % (pydep,))
-
 
     @staticmethod
     def _check_external_dependencies(terp):
@@ -626,8 +629,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "

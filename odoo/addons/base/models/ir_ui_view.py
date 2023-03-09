@@ -280,6 +280,13 @@ different model than this one), then this view's inheritance specs
 (<xpath/>) are applied, and the result is used as if it were this view's
 actual arch.
 """)
+
+    # The "active" field is not updated during updates if <template> is used
+    # instead of <record> to define the view in XML, see _tag_template. For
+    # qweb views, you should not rely on the active field being updated anyway
+    # as those views, if used in frontend layouts, can be duplicated (see COW)
+    # and will thus always require upgrade scripts if you really want to change
+    # the default value of their "active" field.
     active = fields.Boolean(default=True,
                             help="""If this view is inherited,
 * if True, the view always extends its parent

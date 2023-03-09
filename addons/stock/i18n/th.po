@@ -6,7 +6,7 @@
 # Somchart Jabsung <jabsung.s@gmail.com>, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
-# Amin Cheloh <nineamin@hotmail.com>, 2021
+# Amin Cheloh <amincheloh@gmail.com>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Seksan Poltree <seksan.poltree@gmail.com>, 2021
 # Krisa C, 2021
@@ -968,7 +968,10 @@ msgid "As soon as possible"
 msgstr "เร็วที่สุดเท่าที่จะทำได้"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr ""
 
@@ -1324,6 +1327,12 @@ msgstr "เปลี่ยนปริมาณสินค้า"
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "Change to a better name"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -3387,6 +3396,13 @@ msgstr "ของผู้ให้บริการโดเมนไม่ถ
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "ตัวถูกดําเนินการที่ถูกต้องของโดเมนไม่ถูกต้อง %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -7475,7 +7491,7 @@ msgstr "ชื่อของคลังสินค้าต้องไม่
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr ""
 
 #. module: stock
@@ -7727,6 +7743,14 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one "
 "instead."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
 msgstr ""
 
 #. module: stock
@@ -8047,7 +8071,10 @@ msgid "USPS Connector"
 msgstr "ตัวเชื่อมต่อ USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8685,6 +8712,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8825,6 +8858,12 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
@@ -8937,15 +8976,6 @@ msgstr ""
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
 msgstr ""
 
 #. module: stock
@@ -9144,4 +9174,11 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""

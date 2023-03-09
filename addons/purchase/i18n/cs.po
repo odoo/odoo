@@ -12,7 +12,10 @@
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
+# Jinjiu Liu, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Petr Hemza, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
+"Last-Translator: Petr Hemza, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,7 +87,7 @@ msgstr "&amp;times;"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr "'Žádost o nabídku - %s' % (název objektu)"
+msgstr "'Žádost o nabídku - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -2074,6 +2077,7 @@ msgid "Purchase Order: Vendor Reminder"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2083,6 +2087,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Objednávky"
 
@@ -2613,7 +2618,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Součet celkem"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
@@ -2639,7 +2644,7 @@ msgstr "Daň"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Daň země"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals_json
@@ -2663,6 +2668,8 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
+"Technická oblast pro filtrování dostupných daní v závislosti na fiskální "
+"zemi a fiskální pozici."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content

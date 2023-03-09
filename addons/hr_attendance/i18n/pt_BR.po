@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -887,6 +887,14 @@ msgid ""
 msgstr ""
 "O usuário precisará digitar seu PIN manualmente para fazer check in e check "
 "out"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web

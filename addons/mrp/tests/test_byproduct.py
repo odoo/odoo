@@ -25,6 +25,14 @@ class TestMrpByProduct(common.TransactionCase):
         self.product_a = create_product('Product A', route_ids=[(6, 0, [route_manufacture, route_mto])])
         self.product_b = create_product('Product B', route_ids=[(6, 0, [route_manufacture, route_mto])])
         self.product_c_id = create_product('Product C', route_ids=[]).id
+        self.bom_byproduct = self.MrpBom.create({
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'product_uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]
+            })
 
     def test_00_mrp_byproduct(self):
         """ Test by product with production order."""
@@ -38,22 +46,12 @@ class TestMrpByProduct(common.TransactionCase):
             'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
             })
 
-        # Create BOM for product A and set byproduct product B
-        bom_product_a = self.MrpBom.create({
-            'product_tmpl_id': self.product_a.product_tmpl_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
-            'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]
-            })
-
         # Create production order for product A
         # -------------------------------------
 
         mnf_product_a_form = Form(self.env['mrp.production'])
         mnf_product_a_form.product_id = self.product_a
-        mnf_product_a_form.bom_id = bom_product_a
+        mnf_product_a_form.bom_id = self.bom_byproduct
         mnf_product_a_form.product_qty = 2.0
         mnf_product_a = mnf_product_a_form.save()
         mnf_product_a.action_confirm()
@@ -146,3 +144,64 @@ class TestMrpByProduct(common.TransactionCase):
         mnf_product_a = mnf_product_a_form.save()
         self.assertEqual(mnf_product_a.move_raw_ids.product_id.id, self.product_c_id)
         self.assertFalse(mnf_product_a.move_byproduct_ids)
+
+    def test_byproduct_putaway(self):
+        """
+        Test the byproducts are dispatched correctly with putaway rules. We have
+        a byproduct P and two sublocations L01, L02 with a capacity constraint:
+        max 2 x P by location. There is already 1 x P at L01. Process a MO with
+        2 x P as byproducts. They should be redirected to L02
+        """
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 1000,
+            'product_capacity_ids': [(0, 0, {
+                'product_id': self.product_b.id,
+                'quantity': 2,
+            })]
+        })
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
+        })
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product_b.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
+        })
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product_a.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf2_location.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_b, shelf1_location, 1)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_a
+        mo_form.bom_id = self.bom_byproduct
+        mo_form.product_qty = 2.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo_form = Form(mo)
+        with mo_form.move_byproduct_ids.edit(0) as move:
+            move.quantity_done = 2
+        mo_form.qty_producing = 2.00
+        mo = mo_form.save()
+
+        mo._post_inventory()
+        byproduct_move_line = mo.move_byproduct_ids.move_line_ids
+        finished_move_line = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_a).move_line_ids
+        self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
+        self.assertEqual(finished_move_line.location_dest_id, shelf2_location)

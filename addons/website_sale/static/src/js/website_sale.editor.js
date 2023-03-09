@@ -73,7 +73,10 @@ WebsiteEditMenu.include({
      * @override
      */
     _getReadOnlyAreas () {
-        return $("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray();
+        const readOnlyEls = this._super(...arguments);
+        return [...readOnlyEls].concat(
+            $("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray()
+        );
     },
 });
 });

@@ -7,6 +7,8 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Luca Carlo, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -534,7 +536,7 @@ msgstr "<span>Eliminare veramente questo progetto ?</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Rendicontazione</span>"
+msgstr "<span>Rendiconto</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3610,7 +3612,7 @@ msgstr "Procedura di eliminazione fase del progetto"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr ""
+msgstr "Fasi progetto"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -4025,7 +4027,7 @@ msgstr "Ripetizioni"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Rendiconto"
 
 #. module: project
 #. openerp-web
@@ -5305,12 +5307,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Non si possono %scampi %s in attività."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5367,6 +5363,20 @@ msgid ""
 msgstr ""
 "Impossibile eliminare fasi che contengono lavori. Eliminare prima tutti i "
 "loro lavori."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

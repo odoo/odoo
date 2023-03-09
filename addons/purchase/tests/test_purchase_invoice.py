@@ -334,7 +334,6 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
         super_product = self.env['product.product'].create({'name': 'Super Product'})
         great_product = self.env['product.product'].create({'name': 'Great Product'})
-        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
         self.env['account.analytic.default'].create([
             {
                 'analytic_id': analytic_account_super.id,
@@ -357,8 +356,17 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_super.id, "The analytic account should be set to 'Super Account'")
         purchase_order_line.write({'product_id': great_product.id})
         self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_great.id, "The analytic account should be set to 'Great Account'")
-        purchase_order_line.write({'product_id': product_no_account.id})
-        self.assertFalse(purchase_order_line.account_analytic_id.id, "The analytic account should not be set")
+
+        other_analytic_account = self.env['account.analytic.account'].create({'name': 'Other Account'})
+        other_product = self.env['product.product'].create({'name': 'Other Product'})
+        other_purchase_order_line = self.env['purchase.order.line'].create({
+            'name': other_product.name,
+            'product_id': other_product.id,
+            'order_id': purchase_order.id,
+        })
+        other_purchase_order_line.write({'account_analytic_id': other_analytic_account})
+        purchase_order.write({'date_order': '2019-01-01'})
+        self.assertEqual(other_purchase_order_line.account_analytic_id.id, other_analytic_account.id, "The analytic account should still be set to 'Other Account'")
 
         po_no_analytic_account = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,

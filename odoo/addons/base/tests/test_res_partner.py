@@ -34,9 +34,9 @@ class TestPartner(TransactionCase):
         test_partner_bhide = self.env['res.partner'].create({'name': 'Atmaram Bhide'})
 
         res_jetha = test_partner_jetha.with_context(show_address=1).name_get()
-        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society\n  \n", "name should contain comma separated name and address")
+        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society", "name should contain comma separated name and address")
         res_bhide = test_partner_bhide.with_context(show_address=1).name_get()
-        self.assertEqual(res_bhide[0][1], "Atmaram Bhide\n  \n", "name should contain only name if address is not available, without extra commas")
+        self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
         res_jetha = test_partner_jetha.with_context(show_address=1, address_inline=1).name_get()
         self.assertEqual(res_jetha[0][1], "Jethala, Powder gali, Gokuldham Society", "name should contain comma separated name and address")
@@ -64,6 +64,29 @@ class TestPartner(TransactionCase):
 
         with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
             test_partner_company.write({'company_id': company_2.id})
+
+    def test_commercial_field_sync(self):
+        """Check if commercial fields are synced properly: testing with VAT field"""
+        Partner = self.env['res.partner']
+        company_1 = Partner.create({'name': 'company 1', 'is_company': True, 'vat': 'BE0123456789'})
+        company_2 = Partner.create({'name': 'company 2', 'is_company': True, 'vat': 'BE9876543210'})
+
+        partner = Partner.create({'name': 'someone', 'is_company': False, 'parent_id': company_1.id})
+        Partner.flush()
+        self.assertEqual(partner.vat, company_1.vat, "VAT should be inherited from the company 1")
+
+        # create a delivery address for the partner
+        delivery = Partner.create({'name': 'somewhere', 'type': 'delivery', 'parent_id': partner.id})
+        self.assertEqual(delivery.commercial_partner_id.id, company_1.id, "Commercial partner should be recomputed")
+        self.assertEqual(delivery.vat, company_1.vat, "VAT should be inherited from the company 1")
+
+        # move the partner to another company
+        partner.write({'parent_id': company_2.id})
+        partner.flush()
+        self.assertEqual(partner.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed")
+        self.assertEqual(partner.vat, company_2.vat, "VAT should be inherited from the company 2")
+        self.assertEqual(delivery.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed on delivery")
+        self.assertEqual(delivery.vat, company_2.vat, "VAT should be inherited from the company 2 to delivery")
 
     def test_lang_computation_code(self):
         """ Check computation of lang: coming from installed languages, forced

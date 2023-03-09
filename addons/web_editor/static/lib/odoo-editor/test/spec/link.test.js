@@ -240,6 +240,14 @@ describe('Link', () => {
                     },
                     contentAfter: '<p>a<a href="https://google.com">google.comu[]</a>b</p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.com[]</a></p>',
+                    stepFunction: async editor => {
+                        await insertLineBreak(editor);
+                        await insertText(editor, 'odoo.com')
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.com<br>odoo.com[]</a></p>',
+                });
             });
         });
         describe('range not collapsed', () => {
@@ -400,7 +408,7 @@ describe('Link', () => {
             }, {
                 isRootEditable: false,
                 getContentEditableAreas: function (editor) {
-                    return editor.editable.querySelectorAll('a span');
+                    return [...editor.editable.querySelectorAll('a span')];
                 }
             });
         });

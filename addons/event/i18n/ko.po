@@ -9,14 +9,15 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Heesoo Choi, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,6 +166,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    안녕하세요 <t t-out=\"object.name or ''\">Oscar Morgan</t>님,<br/>\n"
+"    문의주셔서 감사합니다.<br/>\n"
+"    다음 행사 관련 배지를 확인하시기 바랍니다<t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.<br/>\n"
+"    궁금한 점이 있으실 경우, 언제든 문의주시기 바랍니다.\n"
+"    <br/><br/>\n"
+"    감사합니다.\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -187,6 +200,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -230,6 +245,8 @@ msgid ""
 "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
 "button\" title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
+"button\" title=\"Confirm Attendance\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -237,6 +254,8 @@ msgid ""
 "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Confirm Attendance\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1502,7 +1521,7 @@ msgstr "행사 유형"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
-msgstr ""
+msgstr "행사 등록"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
@@ -1531,7 +1550,7 @@ msgstr "행사 : 등록"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "행사: 등록 배지"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -2268,7 +2287,7 @@ msgstr "신규"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -3065,12 +3084,8 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
-msgid "Ticket Instructions"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid "Ticket Intructions"
+msgid "Ticket Instructions"
 msgstr ""
 
 #. module: event

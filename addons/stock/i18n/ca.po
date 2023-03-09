@@ -17,9 +17,11 @@
 # Martin Trigaux, 2022
 # marcescu, 2022
 # eriiikgt, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Harcogourmet, 2022
 # jabelchi, 2022
+# Farouk Jabiri, 2022
+# Ivan Espinola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1412,6 +1414,12 @@ msgstr "Canvia quantitat de producte"
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "Canviar a un nom millor"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -3559,6 +3567,14 @@ msgstr "Domini invàlid per l'operant %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Domini invàlid per l'operant dret %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Configuració de regla no vàlida, la següent regla causa un bucle infinit: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -7806,7 +7822,7 @@ msgstr "El nom del magatzem ha de ser únic per companyia!"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "El nombre de nombres sèrie a generar ha de ser més gran que zero."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8119,6 +8135,16 @@ msgstr ""
 "Aquest producte s'ha utilitzat com a mínim en un moviment d'inventari. No es"
 " recomana canviar el tipus de producte ja que pot provocar inconsistències. "
 "Una millor solució podria ser arxivar el producte i crear-ne un de nou."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"L'empresa d'aquest producte no es pot canviar mentre hi hagi quantitats que "
+"pertanyin a una altra empresa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9140,6 +9166,12 @@ msgstr ""
 "la reserva de moviment d'estoc. "
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "No podeu canviar el tipus de producte que ja s'utilitzava."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9305,6 +9337,14 @@ msgstr ""
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "No pots cancel·lar la reserva d'un moviment d'estoc establert com  a 'Fet'."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No podeu canviar un moviment d'estoc cancel·lat, creeu una línia nova com "
+"alternativa."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9645,3 +9685,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Ordre de lliurament (Ref {{ object.name or "
 "'n/a' }})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Dies globals de visibilitat"

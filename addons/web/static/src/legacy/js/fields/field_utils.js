@@ -635,14 +635,14 @@ function parseMonetary(value, field, options) {
     if (!value.includes(currency.symbol)) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
     }
-    if (currency.position === 'before') {
-        return parseFloat(value
-            .replace(`${ currency.symbol }${ NBSP }`, '')
-            .replace(`${ currency.symbol }&nbsp;`, ''));
-    } else {
+    if (currency.position === 'after') {
         return parseFloat(value
             .replace(`${ NBSP }${ currency.symbol }`, '')
             .replace(`&nbsp;${ currency.symbol }`, ''));
+    } else {
+        return parseFloat(value
+            .replace(`${ currency.symbol }${ NBSP }`, '')
+            .replace(`${ currency.symbol }&nbsp;`, ''));
     }
 }
 

@@ -22,6 +22,7 @@ class TestUBLBE(TestUBLCommon):
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'ref': 'ref_partner_1',
         })
 
         # buyer
@@ -33,6 +34,7 @@ class TestUBLBE(TestUBLCommon):
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_25 = cls.env['account.tax'].create({
@@ -213,9 +215,15 @@ class TestUBLBE(TestUBLCommon):
         self.assertEqual(xml_filename[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, xml_etree, xml_filename)
 
+    def test_encoding_in_attachment_ubl(self):
+        self._test_encoding_in_attachment('ubl_bis3', 'INV_2017_00002_ubl_bis3.xml')
+
     ####################################################
     # Test import
     ####################################################
+
+    def test_import_partner_ubl(self):
+        self._test_import_partner('ubl_bis3', 'INV_2017_00002_ubl_bis3.xml')
 
     def test_import_export_invoice_xml(self):
         """

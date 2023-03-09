@@ -9,6 +9,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Martin Trigaux, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +43,12 @@ msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
-msgstr ""
+msgstr "%s 리뷰"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
-msgstr ""
+msgstr "%s 리뷰"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -58,7 +59,7 @@ msgstr "&amp; 선적"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. 다음에 대한 결과 표시 중 '"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
@@ -93,6 +94,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<br/>\n"
+"                30일 내 환불 보장<br/>\n"
+"                배송: 영업일 기준 2 - 3일"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -130,7 +134,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
 msgid "<i class=\"fa fa-chevron-left\"/> Return to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left\"/> 장바구니로 돌아가기"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -182,6 +186,8 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">계정 관련된 문서 발급이 완료된 이후에는 회사 이름 또는 VAT "
+"번호를 변경할 수 없습니다. 관련된 내용은 직접 연락주시기 바랍니다. </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -345,6 +351,13 @@ msgid "<span>Process Checkout</span>"
 msgstr "<span>결제 진행</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>동영상 미리보기</span>"
@@ -377,6 +390,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                    If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>해당되는 결제 옵션을 찾을 수 없습니다.</strong><br/>\n"
+"오류가 발생한 경우, 웹사이트 관리자에게 문의하시기 바랍니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -586,7 +601,7 @@ msgstr "계정 과목"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add a Media"
-msgstr ""
+msgstr "이미지나 동영상 추가"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -683,7 +698,7 @@ msgstr "국가별 가격, 할인 등 특정 가격 적용"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment of online orders"
-msgstr ""
+msgstr "온라인 주문 배정"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -1163,7 +1178,7 @@ msgstr "고객"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 익스프레스 배송업체"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1265,7 +1280,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Displayed in bottom of product pages"
-msgstr ""
+msgstr "관련 품목 페이지의 하단에 표시됩니다"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
@@ -1475,7 +1490,7 @@ msgstr "온라인 결제가 확인되면 자동으로 청구서 생성"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_gift_card
 msgid "Gift Card"
-msgstr ""
+msgstr "기프트 카드"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2207,12 +2222,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Price - High to Low"
-msgstr ""
+msgstr "높은 가격 순"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Price - Low to High"
-msgstr ""
+msgstr "낮은 가격 순"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -2965,7 +2980,7 @@ msgstr "추천 액새서리:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr ""
+msgstr "이커머스 장바구니에서 추천되는 액세서리"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -3006,6 +3021,12 @@ msgstr "#1"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
 msgstr ""
 
 #. module: website_sale
@@ -3557,7 +3578,7 @@ msgstr "전자 상거래 선적 비용"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "이커머스 온라인 상점"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box

@@ -1167,6 +1167,19 @@ class TestVariantsArchive(common.TestProductCommon):
 
         Product._revert_method('unlink')
 
+    def test_set_barcode(self):
+        tmpl = self.product_0.product_tmpl_id
+        tmpl.barcode = '123'
+        self.assertEqual(tmpl.barcode, '123')
+        self.assertEqual(self.product_0.barcode, '123')
+
+        tmpl.toggle_active()
+
+        tmpl.barcode = '456'
+        tmpl.invalidate_cache(fnames=['barcode'], ids=tmpl.ids)
+        self.assertEqual(tmpl.barcode, '456')
+        self.assertEqual(self.product_0.barcode, '456')
+
     def _update_color_vars(self, ptal):
         self.ptal_color = ptal
         self.assertEqual(self.ptal_color.attribute_id, self.pa_color)

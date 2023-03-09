@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
+from odoo import http
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError
 
@@ -458,3 +461,15 @@ class TestForum(TestForumCommon):
         self.assertEqual(len(food_tags), 2, "One Food tag should have been created in each forum.")
         self.assertIn(forum_1, food_tags.forum_id, "One Food tag should have been created for forum 1.")
         self.assertIn(forum_2, food_tags.forum_id, "One Food tag should have been created for forum 2.")
+
+class TestWebsiteForum(TestForumCommon, HttpCase):
+
+    def test_forum_post_compose_message_without_branding(self):
+        self.authenticate("admin", "admin")
+        self.url_open(f"/forum/{slug(self.forum)}/new", {
+            "post_name": "test_branding",
+            "content": "<p>test</p>",
+            "csrf_token": http.WebRequest.csrf_token(self),
+        })
+        post = self.env["forum.post"].search([('forum_id', '=', self.forum.id), ('name', '=', 'test_branding')])
+        self.assertNotIn("data-oe-", post.message_ids.body)

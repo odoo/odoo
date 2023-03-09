@@ -18,6 +18,9 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Marek Pontus, 2022
+# Leaanika Randmets, 2023
+# Anna, 2023
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Marek Pontus, 2022\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,12 +54,12 @@ msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
-msgstr ""
+msgstr "%s ülevaade"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
-msgstr ""
+msgstr "%s ülevaade"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -67,7 +70,7 @@ msgstr "&amp; tarne"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Näidatakse tulemusi päringule '"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
@@ -142,7 +145,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
 msgid "<i class=\"fa fa-chevron-left\"/> Return to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left\"/> Tagasi ostukorvi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -194,6 +197,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Ettevõtte nime või "
+"käibemaksukohustuslase numbri muutmine ei ole lubatud, kui teie konto jaoks "
+"on dokument välja antud. Selle toimingu tegemiseks võtke meiega otse "
+"ühendust.</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -312,7 +319,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr ""
+msgstr "Laadi üles dokument"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -325,6 +332,8 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
 "'&lt;=', 1)]}\">Based on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
+"'&lt;=', 1)]}\">Variantide põhjal</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -360,6 +369,15 @@ msgid "<span>Process Checkout</span>"
 msgstr "<span>Vormista tellimus</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
+"<span>Kahjuks ei saa Teie tellimust kinnitada, kuna maksesumma ei ühti ostukorvi summaga.\n"
+"                         Lisateabe saamiseks võtke ühendust poega.</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video eelvaade</span>"
@@ -372,7 +390,7 @@ msgstr "<span>Teie makse on autoriseeritud.</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
 msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr ""
+msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -392,6 +410,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                    If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Sobivat makseviisi ei leitud.</strong><br/>\n"
+"                                    Kui arvate, et tegemist on veaga, võtke ühendust veebilehe administraatoriga."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -501,7 +521,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
 msgid "A preview will be available at this URL."
-msgstr ""
+msgstr "Eelvaade on saadaval sellel URL-il."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -570,7 +590,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
 msgid "About cross selling products"
-msgstr ""
+msgstr "Loe rohkem ristmüügi kohta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -580,7 +600,7 @@ msgstr "Sobiv failisuurus"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
 msgid "Accessories for Product"
-msgstr ""
+msgstr "Toote tarvikud"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -607,7 +627,7 @@ msgstr "Konto number"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add a Media"
-msgstr ""
+msgstr "Lisa meedia"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -733,24 +753,24 @@ msgstr "Panga nimi"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr ""
+msgstr "Põhiühikute arv"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "Põhiühiku nimetus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr ""
+msgstr "Ühiku baashind"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
 #: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
-msgstr ""
+msgstr "Põhiühikud"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -789,7 +809,7 @@ msgstr "Arve aadress"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Bin"
-msgstr ""
+msgstr "Kast"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
@@ -816,7 +836,7 @@ msgstr "Alumine osa"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Box"
-msgstr ""
+msgstr "Karp"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -916,7 +936,7 @@ msgstr ""
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Categories:"
-msgstr ""
+msgstr "Kategooriad:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -933,7 +953,7 @@ msgstr "Kategooria kirjeldus"
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Category:"
-msgstr ""
+msgstr "Kategooria:"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1167,13 +1187,13 @@ msgstr "Loomise kuupäev"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Current Category or All"
-msgstr ""
+msgstr "Praegune kategooria või kõik"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_id
 msgid "Custom Unit of Measure"
-msgstr ""
+msgstr "Kohandatud mõõtühik"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1188,7 +1208,7 @@ msgstr "Kliendi riik"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 msgid "Customer Reviews"
-msgstr ""
+msgstr "Klientide hinnangud"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1198,7 +1218,7 @@ msgstr "Kliendid"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express ühendus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1216,7 +1236,7 @@ msgstr "Vaikimisi hinnakiri"
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
 msgid ""
 "Define a custom unit to display in the price per unit of measure field."
-msgstr ""
+msgstr "Määrake kohandatud ühik, mida kuvada mõõtühiku hinna väljal."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1297,11 +1317,13 @@ msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
 msgstr ""
+"Kuvage oma e-kaubanduse lehtedel ühiku põhihinda. Selle toote peitmiseks "
+"määrake väärtusele 0."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Displayed in bottom of product pages"
-msgstr ""
+msgstr "Kuvage tootelehtede alumises osas"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
@@ -1310,6 +1332,8 @@ msgid ""
 "Displays the custom unit for the products if defined or the selected unit of"
 " measure otherwise."
 msgstr ""
+"Kui see on määratud, kuvab toodete kohandatud ühikut või muul viisil valitud"
+" mõõtühikut."
 
 #. module: website_sale
 #: code:addons/website_sale/models/digest.py:0
@@ -1345,7 +1369,7 @@ msgstr "Lohistage see veebilehe blokk ja kukutage see enda lehele."
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Drawer"
-msgstr ""
+msgstr "Sahtel"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers
@@ -1385,7 +1409,7 @@ msgstr "Muuda"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
 msgid "Edit in Website Builder"
-msgstr ""
+msgstr "Muuda veebilehe redaktoris"
 
 #. module: website_sale
 #. openerp-web
@@ -1463,7 +1487,7 @@ msgstr "Extra Variant Media"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Featured"
-msgstr ""
+msgstr "Esiletõstetud"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1511,7 +1535,7 @@ msgstr "Genereeri arve automaatselt peale online makse kinnitamist"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_gift_card
 msgid "Gift Card"
-msgstr ""
+msgstr "Kinkekaart"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -1523,7 +1547,7 @@ msgstr "Annab tootekategooriate nimekirja kuvamisel järjestuse järjekorra."
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Go to cart"
-msgstr ""
+msgstr "Mine ostukorvi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1666,7 +1690,7 @@ msgstr "Kpl veebilehe müügi koguväärtus"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lamp"
-msgstr ""
+msgstr "Lamp"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
@@ -1845,13 +1869,13 @@ msgstr "Uus toode"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
-msgstr ""
+msgstr "Uus!"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
-msgstr ""
+msgstr "Uued tooted"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -1901,7 +1925,7 @@ msgstr "Tulemused puuduvad"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for '"
-msgstr ""
+msgstr "Päringule ei leitud tulemusi '"
 
 #. module: website_sale
 #. openerp-web
@@ -1959,7 +1983,7 @@ msgstr "Toodete arv ruudustikus poes"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "ratastel"
 
 #. module: website_sale
 #. openerp-web
@@ -2107,7 +2131,7 @@ msgstr "Telllimused/Päev"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "Läbimüüdud"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2251,18 +2275,18 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Price - High to Low"
-msgstr ""
+msgstr "Hind (kallimast odavamaks)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Price - Low to High"
-msgstr ""
+msgstr "Hind - kallimast odavamaks"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_price
 msgid "Price Per Unit"
-msgstr ""
+msgstr "Hind ühiku kohta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -2313,7 +2337,7 @@ msgstr "Toode"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_accessories_action
 msgid "Product Accessories"
-msgstr ""
+msgstr "Toote tarvikud"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
@@ -2404,7 +2428,7 @@ msgstr "Toote vaadete ajalugu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Product names"
-msgstr ""
+msgstr "Toodete nimed"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2550,13 +2574,13 @@ msgstr "Hinnangu põhjus"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
-msgstr ""
+msgstr "Viimati müüdud tooted"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
-msgstr ""
+msgstr "Viimati vaadatud tooted"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2648,7 +2672,7 @@ msgstr "Müük"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Analysis"
-msgstr ""
+msgstr "Müügianalüüs"
 
 #. module: website_sale
 #. openerp-web
@@ -2736,7 +2760,7 @@ msgstr "Müügiesindaja"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_mini_price
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
 msgid "Sample"
-msgstr ""
+msgstr "Näidis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2897,7 +2921,7 @@ msgstr "Registreeru"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sit comfortably"
-msgstr ""
+msgstr "Istu mugavalt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2932,7 +2956,7 @@ msgstr "Müüdud"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
-msgstr ""
+msgstr "Välja müüdud"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -3016,7 +3040,7 @@ msgstr "Soovitatud lisavalikud:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr ""
+msgstr "Soovitatud lisavalikud ostukorvis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -3057,6 +3081,12 @@ msgstr "#1"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The access token is invalid."
+msgstr "Juurdepääsutähis on kehtetu."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
 msgstr ""
 
 #. module: website_sale
@@ -3299,7 +3329,7 @@ msgstr "Vaata korvi ("
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
-msgstr ""
+msgstr "Näita toodet"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
@@ -3581,7 +3611,7 @@ msgstr "sisesta kood"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "e.g. lamp,bin"
-msgstr ""
+msgstr "nt. lamp, prügikast"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website.py:0
@@ -3600,7 +3630,7 @@ msgstr "E-kaubanduse kategooriad"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "E-poe filtri nähtavus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -3615,7 +3645,7 @@ msgstr "E-kaubanduse tarnekulud"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "E-kaubanduse pood"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box

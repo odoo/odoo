@@ -216,7 +216,7 @@ class RecurrenceRule(models.Model):
             specific_values_creation = {}
 
         for recurrence in self.filtered('base_event_id'):
-            self.calendar_event_ids |= recurrence.base_event_id
+            recurrence.calendar_event_ids |= recurrence.base_event_id
             event = recurrence.base_event_id or recurrence._get_first_event(include_outliers=False)
             duration = event.stop - event.start
             if specific_values_creation:

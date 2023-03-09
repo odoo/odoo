@@ -18,12 +18,12 @@
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
 # Marko Carević <marko.carevic@live.com>, 2022
 # Martin Trigaux, 2022
-# Bole <bole@dajmi5.com>, 2022
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
 # Tina Milas, 2022
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2022
-# Vladimir Vrgoč, 2022
 # Matej Mijoč, 2022
+# Bole <bole@dajmi5.com>, 2023
+# Vladimir Vrgoč, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Matej Mijoč, 2022\n"
+"Last-Translator: Vladimir Vrgoč, 2023\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +141,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -645,7 +645,7 @@ msgstr "<strong>Gdje želite poslati proizvode?</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "To može dovesti do nedosljednosti u vašem zalihi."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -3386,6 +3386,13 @@ msgid "Invalid domain right operand %s"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr ""
@@ -4724,7 +4731,7 @@ msgstr "Vrste operacija"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Operacija nije podržana"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
@@ -4761,7 +4768,7 @@ msgstr "Vrste operacija"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr ""
+msgstr "Operacije bez paketa"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -5504,7 +5511,7 @@ msgstr "Predložak proizvoda"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Predložak proizvoda"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
@@ -5913,7 +5920,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Receipt"
-msgstr "Račun"
+msgstr "Primke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
@@ -7737,6 +7744,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8493,7 +8508,7 @@ msgstr "Povijest komunikacije Web stranice"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Natpis za jedinicu mjere težine"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
@@ -8700,6 +8715,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8711,7 +8732,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can not enter negative quantities."
-msgstr ""
+msgstr "Ne možete unositi negativne količine"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8837,6 +8858,12 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
 
 #. module: stock
@@ -9142,10 +9169,17 @@ msgstr ""
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""

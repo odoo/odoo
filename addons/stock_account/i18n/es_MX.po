@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Lucia Pacheco <lpo@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,7 +240,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Los apuntes del diario de contrapartida para todos los movimientos de existencias entrantes se publicarán en esta cuenta, a menos que haya una cuenta de valoración específica\n"
+"Los apuntes contables de contrapartida para todos los movimientos de existencias entrantes se publicarán en esta cuenta, a menos que haya una cuenta de valoración específica\n"
 "                establecida en la ubicación de origen. Este es el valor predeterminado para todos los productos de esta categoría. También se puede configurar directamente en cada producto."
 
 #. module: stock_account
@@ -388,12 +388,12 @@ msgstr "Diario"
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "Asiento de diario"
+msgstr "Asiento contable"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Apunte de diario"
+msgstr "Apunte contable"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -705,8 +705,8 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"La acción conduce a la creación de un asiento de diario para la que no tiene"
-" derechos de acceso."
+"La acción conduce a la creación de un asiento contable para el que no tiene "
+"derechos de acceso."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -872,7 +872,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Al realizar una valoración de inventario automatizada, los apuntes de diario de contrapartida para todos los movimientos de existencias salientes se registrarán en esta cuenta,\n"
+"Al realizar una valoración de inventario automatizada, los apuntes contables de contrapartida para todos los movimientos de existencias salientes se registrarán en esta cuenta,\n"
 "                a menos que haya una cuenta de valoración específica establecida en la ubicación de destino. Este es el valor predeterminado para todos los productos de esta categoría.\n"
 "                También se puede configurar directamente en cada producto."
 
@@ -914,7 +914,7 @@ msgid ""
 "rights."
 msgstr ""
 "No puede actualizar el costo de un producto en la valoración automatizada, "
-"ya que conduce a la creación de un asiento de diario para el cual no tiene "
+"ya que conduce a la creación de un asiento contable para el cual no tiene "
 "los derechos de acceso."
 
 #. module: stock_account

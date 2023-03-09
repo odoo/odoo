@@ -12,7 +12,7 @@
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Alexandra Jubert, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -592,6 +592,9 @@ msgid ""
 "                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
 "                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Créer des tâches en envoyant un email à </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Créer des tâches en envoyant un email à </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Créer des tâches en envoyant un email à </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1002,12 +1005,12 @@ msgstr "Me l'assigner"
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignee"
-msgstr ""
+msgstr "assigné"
 
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr "assignés"
 
 #. module: project
 #. openerp-web
@@ -1834,7 +1837,7 @@ msgstr "Avertissement d'évaluation désactivé"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
@@ -5398,12 +5401,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Vous ne pouvez pas %s %s champs dans les tâches."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5464,6 +5461,20 @@ msgstr ""
 "d'abord supprimer toutes leurs tâches."
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr "Vous ne pouvez pas lire %s champs dans la tâche."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr "Vous ne pouvez pas écrire sur %s champs dans la tâche."
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -5510,7 +5521,7 @@ msgstr "ex: fête-au-bureau"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "for customer:"
-msgstr ""
+msgstr "pour le client :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5520,7 +5531,7 @@ msgstr "pour le projet:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in priority:"
-msgstr ""
+msgstr "en priorité :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5530,7 +5541,7 @@ msgstr "dans l'étape:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in status:"
-msgstr ""
+msgstr "en statut :"
 
 #. module: project
 #: code:addons/project/models/project.py:0

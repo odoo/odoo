@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
+# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +100,7 @@ msgstr "%s (nuovo) %s"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr ""
+msgstr "%s figlio dell'OP"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -221,7 +222,7 @@ msgstr "<span class=\"o_stat_text\">Ordini residui</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">OP figlio</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -309,7 +310,7 @@ msgstr "<span>Prodotti non associati a un kit</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Rendicontazione</span>"
+msgstr "<span>Rendiconto</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1153,7 +1154,7 @@ msgstr "Calcolare in base a tempo monitorato"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
 msgid "Computed on last"
-msgstr ""
+msgstr "Calcolato per ultimo"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
@@ -1604,7 +1605,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
 msgid "Display the serial number shortcut on the moves"
-msgstr ""
+msgstr "Visualizza la scorciatoia per il numero di serie nei movimenti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -2844,7 +2845,7 @@ msgstr "Produzione MRP"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
 msgid "Mrp Production Count"
-msgstr ""
+msgstr "Numero produzioni MRP"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
@@ -2993,6 +2994,19 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"Nota: i centri di lavoro archiviati \"%s\" sono ancora legati a distinte "
+"base attive, significa che è ancora possibile pianificare operazioni su di "
+"essi. Per evitarlo, è consigliato invece eliminare il centro di lavoro."
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+"Nota: i prodotti \"%s\" sono ancora legati a distinte base attive, significa"
+" che il prodotto può ancora essere utilizzato nei prodotti stessi."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3063,7 +3077,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
 msgid "Number of source MO"
-msgstr ""
+msgstr "Numero OdP di origine"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -3434,7 +3448,7 @@ msgstr "Stampa tutte le varianti"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print Unfolded"
-msgstr ""
+msgstr "Stampa espansa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__priority
@@ -3637,7 +3651,7 @@ msgstr "Centro di Lavoro"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Production of Draft MO"
-msgstr ""
+msgstr "Produzione OdP in bozza"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -3737,7 +3751,7 @@ msgstr "Quantità Prodotta"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
 msgid "Quantity Producing"
-msgstr ""
+msgstr "Quantità in produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -3837,7 +3851,7 @@ msgstr "Report:"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Rendiconto"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
@@ -4118,7 +4132,7 @@ msgstr "Mostra tutti i record con data prossima azione precedente a oggi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr ""
+msgstr "Mostra righe ordine residuo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -4493,6 +4507,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
+"Il valore attributo %(attribute)s impostato sul prodotto %(product)s non "
+"corrisponde al prodotto DiBa %(bom_product)s."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -4592,6 +4608,8 @@ msgid ""
 "The selected serial number does not correspond to the one used in the "
 "manufacturing order, please select another one."
 msgstr ""
+"Il numero di serie selezionato non corrisponde a quello utilizzato "
+"nell'ordine di produzione, selezionarne un altro."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4992,12 +5010,12 @@ msgstr "Ordini Smontaggio"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr ""
+msgstr "Disassembla: %s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "Unfold"
-msgstr "Deminimizza"
+msgstr "Espandi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor

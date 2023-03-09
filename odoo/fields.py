@@ -1087,7 +1087,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1493,17 +1493,21 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        currency_field = self.get_currency_field(record)
-        if values and currency_field in values:
-            field = record._fields[currency_field]
-            currency = field.convert_to_cache(values[currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+        currency_field_name = self.get_currency_field(record)
+        currency_field = record._fields[currency_field_name]
+        if values and currency_field_name in values:
+            dummy = record.new({currency_field_name: values[currency_field_name]})
+            currency = dummy[currency_field_name]
+        elif values and currency_field.related and currency_field.related.split('.')[0] in values:
+            related_field_name = currency_field.related.split('.')[0]
+            dummy = record.new({related_field_name: values[related_field_name]})
+            currency = dummy[currency_field_name]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field_name]
 
         value = float(value or 0.0)
         if currency:
@@ -2837,9 +2841,8 @@ class Many2one(_Relational):
         return ustr(value.display_name)
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records

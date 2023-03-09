@@ -8,12 +8,12 @@
 
                 <t t-set="address">
                     <div name="div_outgoing_address">
-                        <div t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id != partner">
+                        <div t-if="o.should_print_delivery_address()">
                             <span><strong>Delivery Address:</strong></span>
-                            <div t-field="o.move_ids_without_package[0].partner_id"
+                            <div t-field="o.move_lines[0].partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
-                        <div t-if="o.picking_type_id.code != 'internal' and (not o.move_ids_without_package or not o.move_ids_without_package[0].partner_id or o.move_ids_without_package[0].partner_id == partner) and o.picking_type_id.warehouse_id.partner_id">
+                        <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
                             <span><strong>Warehouse Address:</strong></span>
                             <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>

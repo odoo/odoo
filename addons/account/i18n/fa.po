@@ -15,18 +15,19 @@
 # hamid hvbnet <hvbnet@yahoo.com>, 2022
 # Maziar Niaki <maziarmn@gmail.com>, 2022
 # arya sadeghi <aryasadeghy@gmail.com>, 2022
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2022
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
+# Farid Hariri <fhari1234@gmail.com>, 2022
 # Hamid Darabi, 2022
 # Martin Trigaux, 2022
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
-# rahim agh <rahim.aghareb@gmail.com>, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
 # Hanna Kheradroosta, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2023
+# rahim agh <rahim.aghareb@gmail.com>, 2023
+# fardin mardani, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2022\n"
+"Last-Translator: fardin mardani, 2023\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,17 +72,17 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr "تاریخ قفل %(lock_type)s روی %(lock_date)s تنظیم شده است."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "تعداد قبض‌های تطبیق‌داده‌شده"
+msgstr "# لوایح تطبیق شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "تعداد فاکتورهای تطبیق‌داده‌شده"
+msgstr "# فاکتورهای تطبیق شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
@@ -91,7 +92,7 @@ msgstr "صورت‌حساب‌های تطبیق‌داده‌شده‌"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "تعداد رقم ها"
+msgstr "# رقم"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
@@ -113,7 +114,7 @@ msgstr "%(action)s برای روزنامه %(journal)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "%<span class=\"px-3\"/>("
-msgstr ""
+msgstr "%<span class=\"px-3\"/>("
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -146,25 +147,25 @@ msgstr "%s (گرد کردن)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr ""
+msgstr "%s - %s؛ %s صورت‌حساب، %s هر کدام در %s دریافت می‌شود"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr ""
+msgstr "%s - %s؛ %s صورتحساب، %s هر کدام در %s تحویل می‌شود"
 
 #. module: account
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr ""
+msgstr "1%s به استثنای مالیات"
 
 #. module: account
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr ""
+msgstr "%sشامل مالیات"
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -226,7 +227,7 @@ msgstr "1 صورتحساب"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "پانزده روز"
+msgstr "روز پانزدهم"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
@@ -293,6 +294,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"عزیز\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"<t t-out=\"object.partner_id.name or ''\">براندون فریمن(<t t-out=\"object.partner_id.parent_id.name or ''\">داخلی لاجوردی</t>),\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"object.partner_id.name or ''\">براندون فریمن</t>,\n"
+"</t>\n"
+"<br/><br/>\n"
+"اینجا متعلق به شماست\n"
+"<t t-if=\"object.name\">\n"
+"یادداشت اعتباری<strong t-out=\"object.name or ''\">RINV/2021/05/0001</strong>\n"
+"<t t-else=\"\">\n"
+"<t t-if=\"object.invoice_origin\">\n"
+"(با ارجاع:<t t-out=\"object.invoice_origin or ''\">SUB003</t>),\n"
+"</t>\n"
+"مقدار در<strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"از<t t-out=\"object.company_id.name or ''\">کمپانی شما</t>\n"
+"<br/><br/>\n"
+"در صورت داشتن هرگونه سوال با ما تماس بگیرید.\n"
+"<t t-if=\"object.invoice_user_id.signature\">\n"
+"<br/>\n"
+"<t t-out=\"object.invoice_user_id.signature or ''\">--<br/>مدیر میچل</t>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -339,6 +367,11 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"عزیز\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"<t t-out=\"object.partner_id.name or ''\">براندون فریمن</t>(<t t-out=\"object.partner_id.parent_id.name or ''\">"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -575,6 +608,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('amount_type','!=','percentage')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('amount_type','!=','percentage')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -583,6 +618,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('amount_type','=','fixed')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('amount_type','=','fixed')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -590,6 +627,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('value','!=','percent')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('value','!=','percent')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -649,7 +688,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Post Exchange difference entries in:</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">ورودی های تفاوت پس از تبادل در:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -666,6 +705,8 @@ msgid ""
 "<span class=\"o_form_label\">The following default accounts are used with "
 "certain features.</span>"
 msgstr ""
+"<span class=\"o_form_label\">حساب‌های پیش‌فرض زیر با ویژگی‌های خاصی استفاده "
+"می‌شوند.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -679,6 +720,9 @@ msgid ""
 "                                        Balance\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"تعادل\n"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -687,6 +731,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"مالیات\n"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -696,7 +743,7 @@ msgstr "<span class=\"o_stat_text\">فاکتور شده</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">مطلب ثبت شده در روزنامه</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -732,6 +779,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">11,750.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$<span "
+"class=\"oe_currency_value\">11,750.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -739,6 +788,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">19,250.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$<span "
+"class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -746,6 +797,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">7,500.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$<span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -755,7 +808,7 @@ msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">۲۳۵۰.۰</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -813,7 +866,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (DR)</span>"
-msgstr ""
+msgstr "<span> (DR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -845,7 +898,7 @@ msgstr "<span>مقدار</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount In Currency</span>"
-msgstr ""
+msgstr "<span>مقدار به ارز</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -862,7 +915,7 @@ msgstr "<span>تخفیف %</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Draft</span>"
-msgstr ""
+msgstr "<span>پیشنویس</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -913,7 +966,7 @@ msgstr "<span>گزارش گیری</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
-msgstr ""
+msgstr "<span>مالیات ۰٪</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -933,7 +986,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
+msgstr "<span>این پیش نمایشی از شرایط و ضوابط شما است.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -983,7 +1036,7 @@ msgstr "<strong>شرکت:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "تاریخ سند بستانکار"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1142,6 +1195,8 @@ msgstr "یک سطر صورت وضعیت بانکی یک تراکنش مالی ر
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
 msgstr ""
+"یک موقعیت مالی با مالیات بر ارزش افزوده خارجی در حال حاضر در این منطقه وجود "
+"دارد."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1162,6 +1217,14 @@ msgstr ""
 "                که مربوط به به کارهای زورمره است."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"یکی از سطرهای این انتقال، یک حساب نامعتبر است، شما نمی‌توانید این ارسال را "
+"انجام دهید."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -1174,13 +1237,14 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
+"تحمل پرداخت که به عنوان درصد تعریف می شود همیشه باید بین 0 تا 100 باشد"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
-msgstr ""
+msgstr "تحمل پرداخت که به عنوان مبلغ تعریف می شود باید همیشه بالاتر از 0 باشد"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1550,7 +1614,7 @@ msgstr "حسابی که مقدار مالیات باید به آن ارسال ش
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr ""
+msgstr "پیشوندهای حساب می توانند گروه های حساب را تعیین کنند."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -1716,13 +1780,13 @@ msgstr "نگاشت حساب‌ها از نظر مالی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr ""
+msgstr "حساب تعهدی"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrual Moves"
-msgstr ""
+msgstr "تحرکات تعهدی"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -1747,13 +1811,13 @@ msgstr "حساب تعهدی"
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "جادوگر(ویزارد) سفارشات انباشته شده"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued total"
-msgstr ""
+msgstr "جمع انباشته شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -1929,7 +1993,7 @@ msgstr "افزودن یک سطر به فاکتورتان"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
 msgid "Add a link to a Web Page"
-msgstr ""
+msgstr "یک پیوند به یک صفحه وب اضافه کنید"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -4678,6 +4742,7 @@ msgid "Customer Invoice"
 msgstr "فاکتور مشتری"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7251,6 +7316,7 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"سند بدهکار و سند بستانکار می‌بایست حداقل یک سطر جایگزینی مالیات داشته باشند "
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -10117,6 +10183,19 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr "لطفا بررسی کنید که فیلد \"حساب انتقال\" در شرکت تنظیم شده باشد."
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"لطفاً این مالیات‌ها را کنترل کنید. ممکن تاریخ آن‌ها گذشته باشد. ما آن‌ها را "
+"آپدیت نکرده‌ایم، این‌ها دقیقا با مالیات‌های تعریف شده در نسخه کاژول محلی "
+"سازی، هماهنگ نیستد.<br/> شما ممکن بخواهید آن‌ها را به‌روزرسانی یا بایگانی "
+"کنید.<br/><ul>"
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -10743,7 +10822,7 @@ msgstr "اجزاء تطبیق"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
-msgstr ""
+msgstr "سابقه نمی‌تواند پاک شود. این شریک در حسابداری استفاده شده است"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -11869,7 +11948,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "نمایش ویژگی‌های حسابداری - فقط خواندنی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -13903,6 +13982,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"لینک به رسید پرداخت بانکی این فاکتور، بایگانی شد.\n"
+"بنابراین نمی‌توانید فاکتور را تایید کنید."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14294,6 +14375,14 @@ msgid "There was an error processing this page."
 msgstr "خطایی هنگام پردازش این صفحه رخ داد."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "این مالیاتها هنگام ایجاد هر محصول تعیین می‌شوند."
@@ -14571,6 +14660,16 @@ msgid ""
 msgstr ""
 "این شرط پرداخت به جای شرط پیش‌فرض برای سفارش‌های فروش و فاکتورها برای مشتری "
 "استفاده خواهد شد"
+
+#. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"این محصول در مدخل‌های روزانه ارسال شده است. اگر می‌خواهید واحد اندازه گیری "
+"آن را تغییر دهید، لطفا این محصول را بایگانی کنید و محصول جدیدی بسازید."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14945,6 +15044,12 @@ msgid "Unposted"
 msgstr "ارسال نشده"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "داده های روزنامه ناتراز"
@@ -15289,6 +15394,7 @@ msgid "Vendor Bill Created"
 msgstr "صورت‌حساب‌ فروشنده ایجاد شد"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15827,6 +15933,12 @@ msgstr ""
 " دارند"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15909,11 +16021,10 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"به دلیل فعال شدن حالت محدود در روزنامه نمی توانید فیلدهای زیر را ویرایش "
-"کنید: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16204,6 +16315,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "مالیات‌های شما به روز رسانی شد!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16505,6 +16622,16 @@ msgid "the parent company"
 msgstr "شرکت مادر"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"واحد اندازه گیری (UoM) %s که برای محصول %s انتخاب کرده‌اید با دسته‌بندی آن "
+"هماهنگ نیست:%s"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -16581,3 +16708,5 @@ msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
 msgstr ""
+"یک پیش‌فرض تحلیلی نیازمند به حداقل یک حساب تحلیلی و یا یک برچسب تحلیلی است "
+"که برای توزیح تحلیل استفاده می‌شود."

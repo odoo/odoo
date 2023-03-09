@@ -2,10 +2,11 @@
 <odoo>
     <template id="stock_account_report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@id='total']" position="after">
+          <t groups="stock_account.group_lot_on_invoice">
             <t t-set="lot_values" t-value="o._get_invoiced_lot_values()"/>
             <t t-if="lot_values">
                 <br/>
-                <table groups="stock_account.group_lot_on_invoice" class="table table-sm" style="width: 50%;" name="invoice_snln_table">
+                <table class="table table-sm" style="width: 50%;" name="invoice_snln_table">
                     <thead>
                         <tr>
                             <th><span>Product</span></th>
@@ -27,6 +28,7 @@
                     </tbody>
                 </table>
             </t>
+          </t>
         </xpath>
     </template>
 </odoo>

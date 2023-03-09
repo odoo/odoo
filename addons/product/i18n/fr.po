@@ -11,9 +11,10 @@
 # Rémi CAZENAVE, 2021
 # Sebastien LANGE, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
-# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2021
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Moka Tourisme <hello@mokatourisme.fr>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,11 +163,11 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
-"                                        Liste de prix\n"
+"<span attrs=\"{'invisible': [('pricelist_item_count', '>', 1)]}\">\n"
+"                                        Règle de prix\n"
 "                                    </span>\n"
-"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
-"                                        Listes de prix\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '<=', 1)]}\">\n"
+"                                        Règles de prix\n"
 "                                    </span>"
 
 #. module: product
@@ -216,7 +217,10 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
-msgstr "<strong/>"
+msgstr ""
+"<strong>Avertissement</strong>: l'ajout ou la suppression des attributs\n"
+"                        supprimeront et recréeront des variantes existantes et entraîneront \n"
+"la perte de leurs éventuelles personnalisations."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
@@ -918,7 +922,7 @@ msgstr "Détermine l'ordre d'affichage"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
@@ -2390,7 +2394,7 @@ msgstr "Rangée"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "Règle astuce"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2709,7 +2713,7 @@ msgstr ""
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "The product variant must be a variant of the product template."
-msgstr ""
+msgstr "La variante du produit doit être une variante du modèle de produit."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty

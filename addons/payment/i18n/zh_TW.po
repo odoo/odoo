@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -1468,6 +1468,12 @@ msgid "Please set an amount smaller than %s."
 msgstr "請設置小於 %s 的金額。"
 
 #. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "Please switch to company '%s' to make this payment."
+msgstr ""
+
+#. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
 msgstr "請使用以下轉帳詳細資訊"
@@ -2204,6 +2210,12 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr "您不能刪除付款服務商使用的視圖。"
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "You do not have access to this payment token."
+msgstr ""
 
 #. module: payment
 #. openerp-web

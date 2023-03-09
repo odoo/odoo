@@ -22,11 +22,37 @@ AA/9oACAECAQE/AX//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAY/An//xAAUEAEAAAAAAAAAAA
 AE/IX//2gAMAwEAAgADAAAAEB//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/EH//xAAUEQEAAAAAAAAAAAAAAAAAAAAA
 /9oACAECAQE/EH//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/EH//2Q=="""
 SVG = b"""PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMjAwMDExMDIvL0VOIlxuICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAwL0NSLVNWRy0yMDAwMTEwMi9EVEQvc3ZnLTIwMDAxMTAyLmR0ZCI+PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1MCw1MCkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiIHN0eWxlPSJmaWxsOnJlZDsiIC8+PC9nPjwvc3ZnPg=="""
+NAMESPACED_SVG = b"""<svg:svg xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <svg:rect x="10" y="10" width="80" height="80" fill="green" />
+</svg:svg>"""
 # minimal zip file with an empty `t.txt` file
 ZIP = b"""UEsDBBQACAAIAGFva1AAAAAAAAAAAAAAAAAFACAAdC50eHRVVA0AB5bgaF6W4GheluBoXnV4CwABBOgDAAAE6AMAAA
 MAUEsHCAAAAAACAAAAAAAAAFBLAQIUAxQACAAIAGFva1AAAAAAAgAAAAAAAAAFACAAAAAAAAAAAACkgQAAAAB0LnR4dFVUDQAHlu
 BoXpbgaF6W4GhedXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEAUwAAAFUAAAAAAA=="""
 
+XML = b"""<?xml version='1.0' encoding='utf-8'?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>123456Odoo S.A.893873733</MsgId>
+      <CreDtTm>2018-11-21T09:47:32</CreDtTm>
+      <NbOfTxs>0</NbOfTxs>
+      <CtrlSum>0.0</CtrlSum>
+      <InitgPty>
+        <Nm>Odoo S.A.</Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>BE0477472701</Id>
+              <Issr>KBO-BCE</Issr>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+    </GrpHdr>
+  </CstmrCdtTrfInitn>
+</Document>
+"""
 
 class test_guess_mimetype(BaseCase):
 
@@ -70,6 +96,9 @@ class test_guess_mimetype(BaseCase):
         content = base64.b64decode(SVG)
         mimetype = guess_mimetype(content, default='test')
         self.assertTrue(mimetype.startswith('image/svg'))
+
+        mimetype = guess_mimetype(NAMESPACED_SVG, default='test')
+        self.assertTrue(mimetype.startswith('image/svg'))
         # Tests that whitespace padded SVG are not detected as SVG in odoo implementation
         if not magic:
             mimetype = guess_mimetype(b"   " + content, default='test')
@@ -81,6 +110,9 @@ class test_guess_mimetype(BaseCase):
         mimetype = guess_mimetype(content, default='test')
         self.assertEqual(mimetype, 'application/zip')
 
+    def test_mimetype_xml(self):
+        mimetype = guess_mimetype(XML, default='test')
+        self.assertEqual(mimetype, 'application/xml')
 
     def test_mimetype_get_extension(self):
         self.assertEqual(get_extension('filename.Abc'), '.abc')

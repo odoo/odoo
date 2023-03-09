@@ -11,6 +11,7 @@
 # JanisJanis <jbojars@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Anzelika Adejanova, 2022
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Anzelika Adejanova, 2022\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -617,9 +618,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 
 #. module: website
@@ -1291,6 +1290,15 @@ msgid "A Chart Title"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "A Section Subtitle"
@@ -1556,7 +1564,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_product_catalog/options.js:0
 #, python-format
 msgid "Add a description here"
-msgstr ""
+msgstr "Pievienojiet šeit aprakstu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -2069,7 +2077,7 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Badge"
-msgstr "Vārda birka"
+msgstr "Nozīmīte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -2782,7 +2790,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Columns"
-msgstr ""
+msgstr "Kolonnas"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__website_config_preselection
@@ -3490,7 +3498,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_options
 msgid "Descriptions"
-msgstr ""
+msgstr "Aprakstu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3776,7 +3784,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Donation"
-msgstr ""
+msgstr "Ziedojums"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -4018,6 +4026,13 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
 msgstr ""
 
 #. module: website
@@ -6260,6 +6275,29 @@ msgid "Main actions"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr ""
@@ -6277,6 +6315,20 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
 msgstr ""
 
 #. module: website
@@ -7440,6 +7492,13 @@ msgid "Placeholder"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Plain"
 msgstr ""
@@ -7462,7 +7521,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid "Points of sale"
-msgstr ""
+msgstr "Pārdošanas punkti"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7571,7 +7630,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Printers"
-msgstr ""
+msgstr "Printeri"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__priority
@@ -7778,7 +7837,7 @@ msgstr ""
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
-msgstr ""
+msgstr "Saņēmēja e-pasts"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_rule
@@ -10816,6 +10875,13 @@ msgid "You can't remove the submit button of the form"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11355,6 +11421,14 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
 msgstr ""
 
 #. module: website

@@ -260,13 +260,25 @@ class Website(models.Model):
                 vals['domain'] = 'https://%s' % vals['domain']
             vals['domain'] = vals['domain'].rstrip('/')
 
+    # TODO: rename in master
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_remaining_website(self):
         website = self.search([('id', 'not in', self.ids)], limit=1)
         if not website:
             raise UserError(_('You must keep at least one website.'))
+        default_website = self.env.ref('website.default_website', raise_if_not_found=False)
+        if default_website and default_website in self:
+            raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
 
     def unlink(self):
+        self._remove_attachments_on_website_unlink()
+
+        companies = self.company_id
+        res = super().unlink()
+        companies._compute_website_id()
+        return res
+
+    def _remove_attachments_on_website_unlink(self):
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
@@ -276,10 +288,6 @@ class Website(models.Model):
             ('url', 'ilike', '.assets\\_'),
         ])
         attachments_to_unlink.unlink()
-        companies = self.company_id
-        res = super(Website, self).unlink()
-        companies._compute_website_id()
-        return res
 
     def create_and_redirect_configurator(self):
         self._force()
@@ -1236,6 +1244,9 @@ class Website(models.Model):
             domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
+        # TODO In 16.0 remove condition on _filter_duplicate_pages.
+        if self.env.context.get('_filter_duplicate_pages'):
+            pages = pages._get_most_specific_pages()
         return pages
 
     def search_pages(self, needle=None, limit=None):
@@ -1437,6 +1448,9 @@ class Website(models.Model):
             match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
             snippet_occurences.append(match.group())
 
+        if self._check_snippet_used(snippet_occurences, asset_type, asset_version):
+            return True
+
         # As well as every snippet dropped in html fields
         self.env.cr.execute(sql.SQL(" UNION ").join(
             sql.SQL("SELECT regexp_matches({}, {}, 'g') FROM {}").format(
@@ -1445,10 +1459,11 @@ class Website(models.Model):
                 sql.Identifier(table)
             ) for table, column in html_fields
         ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
-        results = self.env.cr.fetchall()
-        for r in results:
-            snippet_occurences.append(r[0][0])
 
+        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
+        return self._check_snippet_used(snippet_occurences, asset_type, asset_version)
+
+    def _check_snippet_used(self, snippet_occurences, asset_type, asset_version):
         for snippet in snippet_occurences:
             if asset_version == '000':
                 if f'data-v{asset_type}' not in snippet:
@@ -1657,30 +1672,68 @@ class Website(models.Model):
             fields = set(fields).intersection(model._fields)
 
             unaccent = get_unaccent_sql_wrapper(self.env.cr)
-            similarities = [sql.SQL("word_similarity({search}, {field})").format(
-                search=unaccent(sql.Placeholder('search')),
-                # Specific handling for website.page that inherits its arch_db and name fields
-                # TODO make more generic
-                field=unaccent(sql.SQL("{table}.{field}").format(
-                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
-                    field=sql.Identifier(field)
-                ))
-            ) for field in fields]
+
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            # It gets the list of fields requested to search upon and that are
+            # actually not part of the requested model itself but part of a
+            # `inherits` model:
+            #     {
+            #       'name': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'url': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'another_field': {
+            #           'table': 'another_table',
+            #           'fname': 'record_id',
+            #       },
+            #     }
+            inherits_fields = {
+                inherits_model_fname: {
+                    'table': self.env[inherits_model_name]._table,
+                    'fname': inherits_field_name,
+                }
+                for inherits_model_name, inherits_field_name in model._inherits.items()
+                for inherits_model_fname in self.env[inherits_model_name]._fields.keys()
+                if inherits_model_fname in fields
+            }
+
+            similarities = []
+            for field in fields:
+                # Field might belong to another model (`inherits` mechanism)
+                table = inherits_fields[field]['table'] if field in inherits_fields else model._table
+                similarities.append(
+                    sql.SQL("word_similarity({search}, {field})").format(
+                        search=unaccent(sql.Placeholder('search')),
+                        field=unaccent(sql.SQL("{table}.{field}").format(
+                            table=sql.Identifier(table),
+                            field=sql.Identifier(field)
+                        ))
+                    )
+                )
+
             best_similarity = sql.SQL('GREATEST({similarities})').format(
                 similarities=sql.SQL(', ').join(similarities)
             )
 
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
-            # Specific handling for website.page that inherits its arch_db and name fields
-            # TODO make more generic
-            if 'arch_db' in fields:
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            for table_to_join in {
+                field['table']: field['fname'] for field in inherits_fields.values()
+            }.items():  # Removes duplicate inherits model
                 from_clause = sql.SQL("""
                     {from_clause}
-                    LEFT JOIN {view_table} ON {table}.view_id = {view_table}.id
+                    LEFT JOIN {inherits_table} ON {table}.{inherits_field} = {inherits_table}.id
                 """).format(
                     from_clause=from_clause,
                     table=sql.Identifier(model._table),
-                    view_table=sql.Identifier(self.env['ir.ui.view']._table),
+                    inherits_table=sql.Identifier(table_to_join[0]),
+                    inherits_field=sql.Identifier(table_to_join[1]),
                 )
             query = sql.SQL("""
                 SELECT {table}.id, {best_similarity} AS _best_similarity

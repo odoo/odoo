@@ -10,7 +10,8 @@
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +136,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
 "title=\"Opportunities\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-star\" aria-label=\"Příležitosti\" role=\"img\" "
+"title=\"Příležitosti\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -188,6 +191,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Uložením této změny se aktualizuje i e-mail zákazníka.\" "
+"attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -196,6 +202,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Uložením této změny se aktualizuje i telefonní číslo zákazníka.\" "
+"attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -464,7 +473,7 @@ msgstr "Přidejte kvalifikační krok před vytvořením obchodní příležitos
 #: code:addons/crm/static/src/js/forecast/forecast_kanban_column_quick_create.js:0
 #, python-format
 msgid "Add next %s"
-msgstr ""
+msgstr "Přidat další %s"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
@@ -539,7 +548,7 @@ msgstr "Přiřadit dokumentaci"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr ""
+msgstr "Přiřaďte potenciální zákazníky"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -564,7 +573,7 @@ msgstr "Přidělit tuto příležitost uživateli:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assigned Leads Count"
-msgstr ""
+msgstr "Počet přidělených potenciálních zákazníků"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -688,7 +697,7 @@ msgstr "CRM fáze"
 #: model:ir.cron,cron_name:crm.ir_cron_crm_lead_assign
 #: model:ir.cron,name:crm.ir_cron_crm_lead_assign
 msgid "CRM: Lead Assignment"
-msgstr ""
+msgstr "CRM: přidělení potenciálních zákazníků"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -962,7 +971,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr ""
+msgstr "Vytvořte důvod ztráty"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action

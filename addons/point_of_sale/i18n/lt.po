@@ -11,7 +11,6 @@
 # Eimantas <eimantas@focusate.eu>, 2022
 # Gailius Kazlauskas <gailius@vialaurea.lt>, 2022
 # Anatolij, 2022
-# Arunas V. <arunas@devoro.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
@@ -24,8 +23,9 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Arunas V. <arunas@devoro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
+"Last-Translator: Arunas V. <arunas@devoro.com>, 2023\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2564,7 +2564,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Incorrect address for shipping"
-msgstr ""
+msgstr "Siuntimo adresas yra neteisingas"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3147,6 +3147,13 @@ msgid "Maximum Exceeded"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Žinutės pristatymo klaida"
@@ -3266,7 +3273,7 @@ msgstr "Laikraščių lentyna"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Kitas veiklos kalendoriaus įvykis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4065,6 +4072,8 @@ msgid "Picking POS"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -5781,6 +5790,15 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
@@ -6079,6 +6097,16 @@ msgstr ""
 msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
 msgstr ""
 
 #. module: point_of_sale
@@ -6487,6 +6515,15 @@ msgid "Type of the exception activity on record."
 msgstr "Įrašytos išimties veiklos tipas."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6665,9 +6702,10 @@ msgstr "UUID"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "PVM:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6810,6 +6848,12 @@ msgstr ""
 msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
 msgstr ""
 
 #. module: point_of_sale
@@ -7124,3 +7168,9 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "buvo egzistuojančių užsakymų dublikatai"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""

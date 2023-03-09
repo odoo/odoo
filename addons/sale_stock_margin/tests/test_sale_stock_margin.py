@@ -14,6 +14,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def setUpClass(cls):
         super(TestSaleStockMargin, cls).setUpClass()
         cls.pricelist = cls.env['product.pricelist'].create({'name': 'Simple Pricelist'})
+        cls.env['res.currency.rate'].search([]).unlink()
 
     #########
     # UTILS #
@@ -241,7 +242,6 @@ class TestSaleStockMargin(TestStockValuationCommon):
         new_company_currency = self.env.ref('base.EUR') if main_company_currency == self.env.ref('base.USD') else self.env.ref('base.USD')
 
         date = fields.Date.today()
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create([
             {'currency_id': main_company_currency.id, 'rate': 1, 'name': date, 'company_id': False},
             {'currency_id': new_company_currency.id, 'rate': 3, 'name': date, 'company_id': False},

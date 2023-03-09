@@ -234,3 +234,80 @@ class TestSaleMrpProcurement(TransactionCase):
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)
+
+    def test_so_reordering_rule(self):
+        Orderpoint = self.env['stock.warehouse.orderpoint']
+
+        # mulitple variant product
+        car = self.env['product.template'].create({
+            'name': 'Car',
+        })
+        color_attribute = self.env['product.attribute'].create({'name': 'Color', 'sequence': 1})
+        color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+            'sequence': 1,
+        })
+        color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+            'sequence': 2,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': car.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [color_red.id, color_blue.id])],
+        })
+        mrp_prod = car.product_variant_id
+
+        component_prod = self.env['product.product'].create({
+            'name': 'Component 1',
+            'type': 'product',
+        })
+
+        bom = self.env['mrp.bom'].create([{
+            'product_tmpl_id': mrp_prod.product_tmpl_id.id,
+            'product_id': mrp_prod.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_prod.id, 'product_qty': 2}),
+            ],
+        }])
+
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': mrp_prod.id,
+                    'product_uom_qty': 3,
+                })],
+        }).action_confirm()
+        Orderpoint._get_orderpoint_action()
+
+        # change product type to Kit
+        mrp_prod.orderpoint_ids.unlink()
+        bom.type = 'phantom'
+
+        self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': mrp_prod.id,
+                    'product_uom_qty': 3,
+                })],
+        }).action_confirm()
+
+        Orderpoint._get_orderpoint_action()
+        orderpoint_kit = Orderpoint.search([('product_id', '=', mrp_prod.id)])
+        orderpoint_component = Orderpoint.search([('product_id', '=', component_prod.id)])
+
+        self.assertFalse(orderpoint_kit)
+        self.assertEqual(orderpoint_component.qty_to_order, 3*2)
+        # only exclude the kit variant
+        self.assertIn(car.product_variant_id.id, Orderpoint._product_exclude_list())
+        self.assertNotIn((car.product_variant_ids - car.product_variant_id).id, Orderpoint._product_exclude_list())

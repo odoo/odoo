@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class AccountMove(models.Model):
@@ -53,21 +53,20 @@ class AccountMove(models.Model):
                 debit_pdiff_account = move.fiscal_position_id.map_account(debit_pdiff_account)
                 if not debit_pdiff_account:
                     continue
+                # Retrieve stock valuation moves.
+                valuation_stock_moves = self.env['stock.move'].search([
+                    ('purchase_line_id', '=', line.purchase_line_id.id),
+                    ('state', '=', 'done'),
+                    ('product_qty', '!=', 0.0),
+                ]) if line.purchase_line_id else self.env['stock.move']
+                if move.move_type == 'in_refund':
+                    valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
+                else:
+                    valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
 
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
                     po_currency = line.purchase_line_id.currency_id
                     po_company = line.purchase_line_id.company_id
-
-                    # Retrieve stock valuation moves.
-                    valuation_stock_moves = self.env['stock.move'].search([
-                        ('purchase_line_id', '=', line.purchase_line_id.id),
-                        ('state', '=', 'done'),
-                        ('product_qty', '!=', 0.0),
-                    ])
-                    if move.move_type == 'in_refund':
-                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
-                    else:
-                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
 
                     if valuation_stock_moves:
                         valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
@@ -91,9 +90,10 @@ class AccountMove(models.Model):
                 else:
                     # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
                     price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
+                    valuation_date = valuation_stock_moves and max(valuation_stock_moves.mapped('date')) or move.date
                     valuation_price_unit = line.company_currency_id._convert(
                         price_unit, move.currency_id,
-                        move.company_id, fields.Date.today(), round=False
+                        move.company_id, valuation_date, round=False
                     )
 
 
@@ -113,11 +113,13 @@ class AccountMove(models.Model):
                 price_unit_val_dif = price_unit - valuation_price_unit
                 price_subtotal = line.quantity * price_unit_val_dif
 
-                # We consider there is a price difference if the subtotal is not zero. In case a
-                # discount has been applied, we can't round the price unit anymore, and hence we
-                # can't compare them.
+                # We consider there is a price difference if:
+                # - price unit is not zero with respect to product price decimal precision.
+                # - subtotal is not zero with respect to move currency precision.
+                # - no discount was applied, as we can't round the price unit anymore
                 if (
                     not move.currency_id.is_zero(price_subtotal)
+                    and not float_is_zero(price_unit_val_dif, precision_digits=price_unit_prec)
                     and float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0
                 ):
 

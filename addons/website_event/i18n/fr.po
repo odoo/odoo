@@ -7,15 +7,15 @@
 # Alexandra Jubert, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2023-01-27 13:05+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -464,7 +464,7 @@ msgstr "Description"
 #: code:addons/website_event/static/src/js/website_event.editor.js:0
 #, python-format
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
@@ -547,7 +547,7 @@ msgstr "Inscriptions à l'événement"
 #: code:addons/website_event/static/src/xml/customize_options.xml:0
 #, python-format
 msgid "Event Specific"
-msgstr ""
+msgstr "Événement spécifique"
 
 #. module: website_event
 #. openerp-web
@@ -1069,6 +1069,12 @@ msgstr ""
 "Ce menu technique affiche tous les éléments du sous-menu de l'événement."
 
 #. module: website_event
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "This ticket is not available for sale for this event"
+msgstr "Ce ticket n'est pas disponible à la vente pour cet événement"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr "Billet #"
@@ -1245,7 +1251,7 @@ msgstr "Si l'événement a commencé"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_done
 msgid "Whether event is finished"
-msgstr ""
+msgstr "Si l'événement est terminé"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_today
