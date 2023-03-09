@@ -1030,6 +1030,7 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.warehouse_id.id,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
+            'manual_consumption': self.env['stock.move']._determine_is_manual_consumption(product_id, self, bom_line),
         }
         return data
 
