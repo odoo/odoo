@@ -290,66 +290,80 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_receive_fattura_pa(self):
-        ''' Check the proxy for incoming invoices.
+        ''' Check the proxy for incoming invoices for all companies.
         '''
-        proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
-
-        if proxy_users._get_demo_state() == 'demo':
+        if self.env['account_edi_proxy_client.user']._get_demo_state() == 'demo':
             return
 
-        for proxy_user in proxy_users:
-            company = proxy_user.company_id
+        for proxy_user in self.env['account_edi_proxy_client.user'].search([('edi_format_code', '=', 'fattura_pa')]):
+            self._receive_fattura_pa(proxy_user)
+
+    def _receive_fattura_pa(self, proxy_user):
+        ''' Check the proxy for incoming invoices for a specified proxy user.
+        '''
+        try:
+            res = proxy_user._make_request(
+                proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
+                params={'recipient_codice_fiscale': proxy_user.company_id.l10n_it_codice_fiscale})
+        except AccountEdiProxyError as e:
+            res = {}
+            _logger.error('Error while receiving file from SdiCoop: %s', e)
+
+        proxy_acks = []
+        for id_transaction, fattura in res.items():
+            if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['key']):
+                proxy_acks.append(id_transaction)
+
+        if proxy_acks:
             try:
-                res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
-                                               params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
+                proxy_user._make_request(
+                    proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
+                    params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
-                res = {}
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
-            proxy_acks = []
-            for id_transaction, fattura in res.items():
-                if self.env['ir.attachment'].search([('name', '=', fattura['filename']), ('res_model', '=', 'account.move')], limit=1):
-                    # name should be unique, the invoice already exists
-                    _logger.info('E-invoice already exists: %s', fattura['filename'])
-                    proxy_acks.append(id_transaction)
-                    continue
+    def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, key):
+        ''' Save an incoming file from the SdI as an attachment.
 
-                file = proxy_user._decrypt_data(fattura['file'], fattura['key'])
+            :param proxy_user:     the user that saves the attachment.
+            :param id_transaction: id of the SdI transaction for communication with the IAP proxy.
+            :param filename:       name of the file to be saved.
+            :param key:            key to decrypt the file.
+            :returns:              True if everything went well, or the file already exists.
+                                   False if the file cannot be parsed as an XML.
+        '''
 
-                try:
-                    tree = etree.fromstring(file)
-                except Exception:
-                    # should not happen as the file has been checked by SdiCoop
-                    _logger.info('Received file badly formatted, skipping: \n %s', file)
-                    continue
-                invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
-                attachment = self.env['ir.attachment'].create({
-                    'name': fattura['filename'],
-                    'raw': file,
-                    'type': 'binary',
-                    'res_model': 'account.move',
-                    'res_id': invoice.id
-                })
-                if not self.env.context.get('test_skip_commit'):
-                    self.env.cr.commit() # In case something fails after, we still have the attachment
-                # So that we don't delete the attachment when deleting the invoice
-                attachment.res_id = False
-                attachment.res_model = False
-                invoice.unlink()
-                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
-                attachment.write({'res_model': 'account.move',
-                                  'res_id': invoice.id})
-                proxy_acks.append(id_transaction)
-                if not self.env.context.get('test_skip_commit'):
-                    self.env.cr.commit()
+        company = proxy_user.company_id
+        if self.env['ir.attachment'].search([('name', '=', filename), ('res_model', '=', 'account.move')], limit=1):
+            # name should be unique, the invoice already exists
+            _logger.info('E-invoice already exists: %s', filename)
+            return True
 
+        raw_content = proxy_user._decrypt_data(filename, key)
+        invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'raw': raw_content,
+            'type': 'binary',
+            'res_model': 'account.move',
+            'res_id': invoice.id
+        })
 
-            if proxy_acks:
-                try:
-                    proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
-                                            params={'transaction_ids': proxy_acks})
-                except AccountEdiProxyError as e:
-                    _logger.error('Error while receiving file from SdiCoop: %s', e)
+        # In case something fails after, we still have the attachment
+        # So that we don't delete the attachment when deleting the invoice
+        self.env.cr.commit()
+
+        # Detach the attachment and unlink the stub invoice.
+        attachment.res_id = False
+        attachment.res_model = False
+        invoice.unlink()
+
+        # Import the invoice from the attachment and reattach.
+        invoice = self._create_document_from_attachment(attachment)
+        attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+        self.env.cr.commit()
+
+        return True
 
     def _check_filename_is_fattura_pa(self, filename):
         return re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", filename)
@@ -605,6 +619,13 @@ class AccountEdiFormat(models.Model):
                                 invoice._compose_info_message(elements[0], '.')
                             ))
 
+                # Information related to the purchase order <2.1.2>
+                po_refs = []
+                elements = body_tree.xpath('//DatiGenerali/DatiOrdineAcquisto/IdDocumento')
+                if elements:
+                    po_refs = [element.text.strip() for element in elements]
+                    invoice_form.invoice_origin = ", ".join(po_refs)
+
                 # Total amount. <2.4.2.6>
                 elements = body_tree.xpath('.//ImportoPagamento')
                 amount_total_import = 0
@@ -655,7 +676,10 @@ class AccountEdiFormat(models.Model):
                     elements = body_tree.xpath('.//DatiBeniServizi')
 
                 for element in (elements or []):
-                    invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
+                    invoice_line_form = invoice_form.invoice_line_ids.create({
+                        'move_id': invoice_form.id,
+                        'tax_ids': [fields.Command.clear()],
+                    })
                     if invoice_line_form:
                         message_to_log += self._import_fattura_pa_line(element, invoice_line_form, extra_info)
 
@@ -687,6 +711,11 @@ class AccountEdiFormat(models.Model):
                         invoice_line_global_discount.price_unit = general_discount
 
             new_invoice = invoice_form
+
+            # Links the eventual purchase order to the vendor bill.
+            # This may well overwrite the lines of the move thanks to autocomplete, so be aware when debugging.
+            if po_refs:
+                new_invoice._find_and_set_purchase_orders(po_refs, partner.id, new_invoice.amount_total, timeout=4)
 
             elements = body_tree.xpath('.//Allegati')
             if elements:
