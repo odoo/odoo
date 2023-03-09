@@ -333,7 +333,7 @@ class AccountMove(models.Model):
         self.env['account.edi.format']._import_fattura_pa(tree_list[0], invoice)
 
         # there might be other invoices inside the EDI.
-        for tree in tree_list[:1]:
+        for tree in tree_list[1:]:
             other_invoice = invoice.create({
                 'journal_id': invoice.journal_id.id,
             })

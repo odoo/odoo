@@ -9,14 +9,6 @@ from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyClientUser
 
-def patch_proxy_user(func):
-    @patch.object(AccountEdiProxyClientUser, '_make_request', MagicMock(spec=AccountEdiProxyClientUser._make_request))
-    @patch.object(AccountEdiProxyClientUser, '_decrypt_data', MagicMock(spec=AccountEdiProxyClientUser._decrypt_data))
-    @patch.object(AccountEdiProxyClientUser, '_get_demo_state', MagicMock(spec=AccountEdiProxyClientUser._get_demo_state))
-    def patched(self, *args, **kwargs):
-        return func(self, *args, **kwargs)
-    return patched
-
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdi(AccountEdiTestCommon):
 

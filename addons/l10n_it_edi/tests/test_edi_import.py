@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
+from unittest.mock import MagicMock, patch
+
+from odoo import fields, sql_db
 from odoo.tests import tagged
-from odoo.addons.l10n_it_edi.tests.common import TestItEdi, patch_proxy_user
+from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -68,31 +70,31 @@ class TestItEdiImport(TestItEdi):
             }],
         }])
 
-    @patch_proxy_user
     def test_receive_same_vendor_bill_twice(self):
         """ Test that the second time we are receiving an SdiCoop invoice, the second is discarded """
 
-        # The make_request function is called twice when running the _cron_receive_fattura_pa
-        # first to the /in/RicezioneInvoice endpoint (to find new incoming invoices)
-        # second to the /api/l10n_it_edi/1/ack to acknowledge the invoices have been recieved
+        fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         content = self.fake_test_content.encode()
-        fake_responses = [
-            # Response of the format id_transaction: fattura dict
-            {'9999999999': {'filename': 'IT01234567890_FPR02.xml', 'key': '123', 'file': content}},
-            # The response from the _make_request for the ack can be None
-            None,
-        ] * 2 # Since the cron is run twice, and we want the fake results both times
-        self.proxy_user._make_request.side_effect = fake_responses
-        # When calling the decrypt function, the file we're accessing is already decrypted, just return the file
-        self.proxy_user._decrypt_data.side_effect = lambda file, _key: file
-        # In order for the cron function to progress to the point that it imports, we cannot be in demo mode
-        self.proxy_user._get_demo_state.return_value = 'unit_test'
 
-        # TODO: we need to see it does not apply to non-test companies which it does right now (missing security rule on client user)
+        # Our test content is not encrypted
+        proxy_user = MagicMock()
+        proxy_user.company_id = self.company
+        proxy_user._decrypt_data.return_value = content
 
-        #self.edi_format.with_context({'test_skip_commit': True}).sudo()._cron_receive_fattura_pa()
+        def mock_commit(self):
+            pass
+
+        with patch.object(sql_db.Cursor, "commit", mock_commit):
+            for dummy in range(2):
+                fattura_pa._save_incoming_attachment_fattura_pa(
+                    proxy_user=proxy_user,
+                    id_transaction='9999999999',
+                    filename='IT01234567890_FPR02.xml',
+                    content=content,
+                    key=None)
+
         # There should be one attachement with this filename
-        #attachment = self.env['ir.attachment'].search([('name', '=', self.invoice_filename2)])
-        #self.assertEqual(len(attachment), 1)
-        #invoice = self.env['account.move'].search([('payment_reference', '=', 'TWICE_TEST')])
-        #self.assertEqual(len(invoice), 1)
+        attachments = self.env['ir.attachment'].search([('name', '=', 'IT01234567890_FPR02.xml')])
+        self.assertEqual(len(attachments), 1)
+        invoices = self.env['account.move'].search([('payment_reference', '=', 'TWICE_TEST')])
+        self.assertEqual(len(invoices), 1)
