@@ -201,17 +201,15 @@
                             <field name="company_id" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="product_qty" string="Quantity"/>
-                            <div class="o_row g-0 d-flex">
-                                <div attrs="{'invisible': [('state', '=', 'draft')]}" class="o_row flex-grow-0">
-                                    <field name="qty_producing" class="text-start" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
-                                    /
-                                </div>
+                            <div class="d-flex flex-row">
+                                <field name="qty_producing" class="w-auto" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': [('state', '=', 'draft')]}"/>
+                                <span attrs="{'invisible': [('state', '=', 'draft')]}">/</span>
                                 <field name="product_qty" class="oe_inline text-start" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', 'not in', ('draft', 'done'))]}"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
                                     <field name="product_qty" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </button>
-                                <label for="product_uom_id" string="" class="oe_inline"/>
+                                <label for="product_uom_id" string="" class="oe_inline flex-grow-1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
