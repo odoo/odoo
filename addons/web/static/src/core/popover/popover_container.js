@@ -2,21 +2,22 @@
 
 import { Popover } from "./popover";
 
-import { EventBus, Component, onMounted, onWillUnmount, useExternalListener, useState, xml } from "@odoo/owl";
+import { EventBus, Component, onWillDestroy, useExternalListener, useState, xml } from "@odoo/owl";
 
 class PopoverController extends Component {
     setup() {
         this.state = useState({ displayed: false });
-        this.targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
-        useExternalListener(window, "click", this.onClickAway, { capture: true });
-        onMounted(this.onMounted);
-        onWillUnmount(this.onWillUnmount);
-    }
-    onMounted() {
-        this.targetObserver.observe(this.target.parentElement, { childList: true });
-    }
-    onWillUnmount() {
-        this.targetObserver.disconnect();
+
+        if (this.target.isConnected) {
+            useExternalListener(window, "click", this.onClickAway, { capture: true });
+            const targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
+            targetObserver.observe(this.target.parentElement, { childList: true });
+            onWillDestroy(() => {
+                targetObserver.disconnect();
+            });
+        } else {
+            this.onTargetMutate();
+        }
     }
 
     get popoverProps() {
