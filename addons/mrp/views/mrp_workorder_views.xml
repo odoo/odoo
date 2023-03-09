@@ -62,7 +62,9 @@
         <field name="arch" type="xml">
             <tree editable="bottom" multi_edit="1">
                 <header>
-                    <button name="action_mark_as_done" type="object" string="Mark as done" class="btn-outline-primary"/>
+                    <button name="action_mass_start" type="object" string="Start" class="btn btn-success text-uppercase"/>
+                    <button name="action_mass_pause" type="object" string="Pause" class="btn btn-warning text-uppercase"/>
+                    <button name="action_mark_as_done" type="object" string="Done" class="btn btn-danger text-uppercase"/>
                 </header>
                 <field name="consumption" invisible="1"/>
                 <field name="company_id" invisible="1"/>
