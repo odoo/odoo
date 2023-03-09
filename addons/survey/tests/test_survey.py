@@ -3,12 +3,63 @@
 
 from freezegun import freeze_time
 
-from odoo import _, fields
+from odoo import _, Command, fields
 from odoo.addons.survey.tests import common
 from odoo.tests.common import users
 
 
 class TestSurveyInternals(common.TestSurveyCommon):
+
+    @users('survey_manager')
+    def test_allowed_triggering_question_ids(self):
+        # Create 2 surveys, each with 3 questions, each with 2 suggested answers
+        survey_1, survey_2 = self.env['survey.survey'].create([
+            {'title': 'Test Survey 1'},
+            {'title': 'Test Survey 2'}
+        ])
+        self.env['survey.question'].create([
+            {
+                'survey_id': survey_id,
+                'title': f'Question {question_idx}',
+                'question_type': 'simple_choice',
+                'suggested_answer_ids': [
+                    Command.create({
+                        'value': f'Answer {answer_idx}',
+                    }) for answer_idx in range(2)],
+            }
+            for question_idx in range(3)
+            for survey_id in (survey_1 | survey_2).ids
+        ])
+        survey_1_q_1, survey_1_q_2, _ = survey_1.question_ids
+        survey_2_q_1, survey_2_q_2, _ = survey_2.question_ids
+
+        # Make sure they are already configured as conditionally triggered
+        survey_1_q_2.write({
+            'is_conditional': True,
+            'triggering_question_id': survey_1_q_1,
+            'triggering_answer_id': survey_1_q_1.suggested_answer_ids[0]
+        })
+        survey_2_q_2.write({
+            'is_conditional': True,
+            'triggering_question_id': survey_2_q_1,
+            'triggering_answer_id': survey_2_q_1.suggested_answer_ids[0]
+        })
+
+        with self.subTest('Editing existing questions'):
+            # Only previous questions from the same survey
+            self.assertFalse(survey_1_q_2.allowed_triggering_question_ids & survey_2_q_2.allowed_triggering_question_ids)
+            self.assertEqual(survey_1_q_2.allowed_triggering_question_ids, survey_1_q_1)
+            self.assertEqual(survey_2_q_2.allowed_triggering_question_ids, survey_2_q_1)
+
+        survey_1_new_question = self.env['survey.question'].new({'survey_id': survey_1, 'is_conditional': True})
+        survey_2_new_question = self.env['survey.question'].new({'survey_id': survey_2, 'is_conditional': True})
+
+        with self.subTest('New questions'):
+            # New questions should be allowed to use any question with choices from the same survey
+            self.assertFalse(survey_1_new_question.allowed_triggering_question_ids
+                             & survey_2_new_question.allowed_triggering_question_ids)
+            self.assertEqual(survey_1_new_question.allowed_triggering_question_ids.ids, survey_1.question_ids.ids)
+            self.assertEqual(survey_2_new_question.allowed_triggering_question_ids.ids, survey_2.question_ids.ids)
 
     def test_answer_attempts_count(self):
         """ As 'attempts_number' and 'attempts_count' are computed using raw SQL queries, let us
