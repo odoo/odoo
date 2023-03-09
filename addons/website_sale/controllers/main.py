@@ -567,6 +567,12 @@ class WebsiteSale(http.Controller):
             request.env['product.template'].browse(image_res_id).write({'image_1920': False})
         else:
             request.env['product.image'].browse(image_res_id).unlink()
+        if image_res_model == 'product.product' and request.env['product.product'].browse(image_res_id)['image_variant_1920']:
+            template_id = request.env['product.product'].browse(image_res_id).product_tmpl_id
+            template_id.write({'image_1920': False})
+            request.env['product.product'].browse(image_res_id).write({'image_variant_1920': False})
+            print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        print("############################################")
 
     @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):

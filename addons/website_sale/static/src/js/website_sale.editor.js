@@ -955,6 +955,8 @@ options.registry.ReplaceMedia.include({
      * Removes the image in the back-end
      */
     async removeMedia() {
+        // Remove the image from the DOM.
+        this.$target[0].remove();
         this._rpc({
             route: '/shop/product/remove-image',
             params: {
