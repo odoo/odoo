@@ -206,7 +206,7 @@ export class FormCompiler extends ViewCompiler {
             dynamicLabel(label);
         }
         this.encounteredFields[fieldName] = dynamicLabel;
-        field.setAttribute("setDirty", `props.setFieldAsDirty`);
+        field.setAttribute("setDirty.alike", `props.setFieldAsDirty`);
         return field;
     }
 
