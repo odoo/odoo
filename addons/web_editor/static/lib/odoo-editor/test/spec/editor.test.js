@@ -1361,6 +1361,13 @@ X[]
                         contentAfter:
                             '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
                     });
+                    await testEditor(BasicEditor, {
+                        contentBefore:
+                            '<table><tbody><tr><td>abc</td><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                        stepFunction: deleteBackward,
+                        contentAfter:
+                            '<table><tbody><tr><td>abc</td><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                    });
                 });
                 it('should not break a table', async () => {
                     await testEditor(BasicEditor, {
