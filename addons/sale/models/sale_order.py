@@ -1249,11 +1249,13 @@ class SaleOrder(models.Model):
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
         return super(SaleOrder, self.with_context(**so_ctx)).message_post(**kwargs)
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
-        groups = super()._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 

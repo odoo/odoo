@@ -81,9 +81,13 @@ class MailComposer(models.TransientModel):
         ])
 
     # content
-    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
+    subject = fields.Char(
+        'Subject',
+        compute='_compute_subject', readonly=False, store=True)
     body = fields.Html(
-        'Contents', render_engine='qweb', render_options={'post_process': True}, sanitize_style=True,
+        'Contents',
+        render_engine='qweb', render_options={'post_process': True},
+        sanitize_style=True,
         compute='_compute_body', readonly=False, store=True)
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', ondelete='set null')
@@ -545,6 +549,19 @@ class MailComposer(models.TransientModel):
             if not composer.template_id:
                 composer.scheduled_date = False
 
+    # Overrides of mail.compose.mixin
+    @api.depends('template_id')
+    def _compute_lang(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it (in batch mode) or render
+        it (in monorecord comment mode) on the composer. When removing the
+        template, reset it. """
+        for composer in self:
+            if composer.template_id:
+                composer._set_value_from_template('lang')
+            if not composer.template_id:
+                composer.lang = False
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
@@ -739,6 +756,7 @@ class MailComposer(models.TransientModel):
             DYN - 'body',
             STA - 'email_add_signature',
             STA - 'email_layout_xmlid',
+            DYN - 'force_email_lang',  # notify parameter
 
         BOTH
             DYN - 'attachment_ids',
@@ -857,9 +875,12 @@ class MailComposer(models.TransientModel):
         RecordsModel = self.env[self.model].with_prefetch(res_ids)
         email_mode = self.composition_mode == 'mass_mail'
 
-        subjects = self._render_field('subject', res_ids)
+        # langs, used currently only to propagate in comment mode for notification
+        # layout translation
+        langs = self._render_field('lang', res_ids)
+        subjects = self._render_field('subject', res_ids, compute_lang=True)
         bodies = self._render_field(
-            'body', res_ids,
+            'body', res_ids, compute_lang=True,
             # We want to preserve comments in emails so as to keep mso conditionals
             options={'preserve_comments': email_mode},
         )
@@ -876,7 +897,14 @@ class MailComposer(models.TransientModel):
                     {
                         'body_html': bodies[res_id],
                         'res_id': res_id,
-                    } if email_mode else {}),
+                    } if email_mode else {}
+                ),
+                **(
+                    {
+                        # notify parameter to force layout lang
+                        'force_email_lang': langs[res_id],
+                    } if not email_mode else {}
+                ),
             }
             for res_id in res_ids
         }
@@ -951,7 +979,7 @@ class MailComposer(models.TransientModel):
             # recipients: transform partner_ids (field used in mail_message) into
             # recipient_ids, used by mail_mail
             if email_mode:
-                recipient_ids_all = mail_values.pop('partner_ids', []) + self.partner_ids.ids
+                recipient_ids_all = set(mail_values.pop('partner_ids', [])) | set(self.partner_ids.ids)
                 mail_values['recipient_ids'] = [(4, pid) for pid in recipient_ids_all]
 
             # when having no specific reply_to -> fetch rendered email_from
@@ -960,6 +988,42 @@ class MailComposer(models.TransientModel):
                 if not reply_to:
                     reply_to = mail_values.get('email_from', False)
                 mail_values['reply_to'] = reply_to
+
+            # body: render layout in email mode (comment mode is managed by the
+            # notification process, see @_notify_thread_by_email)
+            if email_mode and self.email_layout_xmlid and mail_values['recipient_ids']:
+                lang = langs[res_id]
+                recipient_ids = [command[1] for command in mail_values['recipient_ids']]
+                msg_vals = {
+                    'email_layout_xmlid': self.email_layout_xmlid,
+                    'model': self.model,
+                    'res_id': res_id,
+                }
+                message_inmem = self.env['mail.message'].new({
+                    'body': mail_values['body'],
+                })
+                for _lang, render_values, recipients_group_data in record._notify_get_classified_recipients_iterator(
+                    message_inmem,
+                    [{
+                        'active': True,
+                        'id': pid,
+                        'lang': lang,
+                        'notif': 'email',
+                        'share': True,
+                        'type': 'customer',
+                        'ushare': False,
+                    } for pid in recipient_ids],
+                    msg_vals=msg_vals,
+                    model_description=False,  # force dynamic computation
+                    force_email_lang=lang,
+                ):
+                    mail_body = record._notify_by_email_render_layout(
+                        message_inmem,
+                        recipients_group_data,
+                        msg_vals=msg_vals,
+                        render_values=render_values,
+                    )
+                    mail_values['body_html'] = mail_body
 
         return mail_values_all
 
@@ -974,6 +1038,7 @@ class MailComposer(models.TransientModel):
           populate in '_prepare_mail_values';
         """
         self.ensure_one()
+        email_mode = self.composition_mode == 'mass_mail'
 
         # Duplicate attachments linked to the email.template. Indeed, composer
         # duplicates attachments in mass mode. But in 'rendered' mode attachments
@@ -1000,6 +1065,12 @@ class MailComposer(models.TransientModel):
                 'partner_ids': self.partner_ids.ids,
                 'scheduled_date': self.scheduled_date,
                 'subject': self.subject or '',
+                **(
+                    {
+                        # notify parameter to force layout lang
+                        'force_email_lang': self.lang,
+                    } if not email_mode else {}
+                ),
             }
             for res_id in res_ids
         }

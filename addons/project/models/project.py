@@ -2440,12 +2440,14 @@ class Task(models.Model):
                 res -= waiting_subtype
         return res
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
-        groups = super(Task, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 
@@ -2464,7 +2466,10 @@ class Task(models.Model):
             groups.insert(0, (
                 'allowed_portal_users',
                 lambda pdata: pdata['type'] == 'portal',
-                {}
+                {
+                    'active': True,
+                    'has_button_access': True,
+                }
             ))
         portal_privacy = self.project_id.privacy_visibility == 'portal'
         for group_name, _group_method, group_data in groups:
