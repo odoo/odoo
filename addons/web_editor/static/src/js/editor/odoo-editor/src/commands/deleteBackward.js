@@ -236,3 +236,9 @@ HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
     }
 };
+
+HTMLTableCellElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+    if (offset) {
+        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+    }
+};

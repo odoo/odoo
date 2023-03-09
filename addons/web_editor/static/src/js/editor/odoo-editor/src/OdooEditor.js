@@ -1944,8 +1944,9 @@ export class OdooEditor extends EventTarget {
         let end = range.endContainer;
         // Let the DOM split and delete the range.
         const doJoin =
-            closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
-            closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
+            (closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
+            closestBlock(end) !== closestBlock(range.commonAncestorContainer))
+            && (closestBlock(start).tagName !== 'TD' && closestBlock(end).tagName !== 'TD');
         let next = nextLeaf(end, this.editable);
         const contents = range.extractContents();
         setSelection(start, nodeSize(start));
