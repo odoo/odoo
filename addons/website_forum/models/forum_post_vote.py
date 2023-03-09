@@ -76,7 +76,9 @@ class Vote(models.Model):
         res = super(Vote, self).write(values)
         return res
 
-    def _check_general_rights(self, vals={}):
+    def _check_general_rights(self, vals=None):
+        if vals is None:
+            vals = {}
         post = self.post_id
         if vals.get('post_id'):
             post = self.env['forum.post'].browse(vals.get('post_id'))
