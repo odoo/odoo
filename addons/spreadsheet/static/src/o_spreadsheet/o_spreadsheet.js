@@ -22284,6 +22284,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             owl.onMounted(() => {
                 resizeObserver.observe(this.gridOverlayEl);
             });
+            owl.onWillUnmount(() => {
+                resizeObserver.disconnect();
+            });
             useTouchMove(this.gridOverlay, this.props.onGridMoved, () => {
                 const { scrollY } = this.env.model.getters.getActiveSheetDOMScrollInfo();
                 return scrollY > 0;
