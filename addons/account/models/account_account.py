@@ -382,10 +382,6 @@ class AccountAccount(models.Model):
         elif self.internal_group == 'off_balance':
             self.reconcile = False
             self.tax_ids = False
-        elif self.internal_group == 'income' and not self.tax_ids:
-            self.tax_ids = self.company_id.account_sale_tax_id
-        elif self.internal_group == 'expense' and not self.tax_ids:
-            self.tax_ids = self.company_id.account_purchase_tax_id
 
     def name_get(self):
         result = []
