@@ -776,7 +776,7 @@ export class Record extends DataPoint {
      * @param {string} fieldName
      * @returns {boolean}
      */
-    isInvisible(fieldName) {
+    _isInvisible(fieldName) {
         const activeField = this.activeFields[fieldName];
         const { invisible } = activeField.modifiers || {};
         return invisible ? evalDomain(invisible, this.evalContext) : false;
@@ -859,7 +859,7 @@ export class Record extends DataPoint {
             const activeField = this.activeFields[fieldName];
             // @FIXME type should not be get like this
             const type = activeField.widget || this.fields[fieldName].type;
-            if (!this.isInvisible(fieldName) && preloadedDataRegistry.contains(type)) {
+            if (!this._isInvisible(fieldName) && preloadedDataRegistry.contains(type)) {
                 proms.push(fetchPreloadedData(preloadedDataRegistry.get(type), fieldName));
             }
         }
@@ -1326,7 +1326,7 @@ export class Record extends DataPoint {
         const activeField = this.activeFields[fieldName];
         if (
             activeField &&
-            !this.isInvisible(fieldName) &&
+            !this._isInvisible(fieldName) &&
             value &&
             (!value[1] || activeField.options.always_reload)
         ) {
@@ -1360,7 +1360,7 @@ export class Record extends DataPoint {
     }
 
     async _loadX2ManyData(fieldName) {
-        if (!this.isInvisible(fieldName)) {
+        if (!this._isInvisible(fieldName)) {
             await this.data[fieldName].load();
         }
     }
