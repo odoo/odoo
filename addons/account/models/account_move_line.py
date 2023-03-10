@@ -915,6 +915,7 @@ class AccountMoveLine(models.Model):
                     'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
                     'partner_id': line.partner_id.id,
                     'move_id': line.move_id.id,
+                    'display_type': line.display_type,
                 })
             else:
                 line.tax_key = frozendict({'id': line.id})
