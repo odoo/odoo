@@ -204,6 +204,15 @@ class StockQuant(models.Model):
             return super(StockQuant, self).write(vals)
         return super(StockQuant, self).write(vals)
 
+    def unlink(self):
+        if not self.env.is_superuser():
+            # normally we would allow any user with permission to unlink, but inventory_quantity can only be set by stock_manager
+            if not self.user_has_groups('stock.group_stock_manager'):
+                raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
+            self = self.with_context(inventory_mode=True)
+            self.inventory_quantity = 0
+        return super().unlink()
+
     def action_view_stock_moves(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
