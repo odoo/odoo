@@ -583,6 +583,12 @@ class IrModelFields(models.Model):
                 msg = _("Field names can only contain characters, digits and underscores (up to 63).")
                 raise ValidationError(msg)
 
+    @api.constrains('size', 'translate')
+    def _check_size(self):
+        for rec in self:
+            if rec.ttype == 'char' and rec.translate and rec.size > 0:
+                raise ValidationError(_("Translatable field cannot have a size"))
+
     _sql_constraints = [
         ('name_unique', 'UNIQUE(model, name)', "Field names must be unique per model."),
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
