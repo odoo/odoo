@@ -38,15 +38,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
         </record>
-        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_manufacture"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Manual Assembly</field>
-            <field name="time_cycle">60</field>
-            <field name="sequence">5</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
 
         <record id="mrp_bom_manufacture_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_12"/>
@@ -233,15 +224,6 @@
             <field name="sequence">3</field>
             <field name="consumption">flexible</field>
         </record>
-        <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="time_cycle">120</field>
-            <field name="sequence">10</field>
-            <field name="name">Assembly</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
 
         <record id="mrp_bom_desk_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product_product_computer_desk_head"/>
@@ -249,7 +231,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
         </record>
 
         <record id="mrp_bom_desk_line_2" model="mrp.bom.line">
@@ -258,7 +239,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
         </record>
 
         <record id="mrp_bom_desk_line_3" model="mrp.bom.line">
@@ -291,15 +271,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
         </record>
-        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_table_top"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Manual Assembly</field>
-            <field name="time_cycle">60</field>
-            <field name="sequence">5</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
 
         <record id="mrp_bom_line_wood_panel" model="mrp.bom.line">
             <field name="product_id" ref="product_product_wood_panel"/>
@@ -321,35 +292,7 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
         </record>
-        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Long time assembly</field>
-            <field name="time_cycle">180</field>
-            <field name="sequence">15</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
 
-        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Testing</field>
-            <field name="time_cycle">60</field>
-            <field name="sequence">10</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
-            <field name="workcenter_id" ref="mrp_workcenter_1"/>
-            <field name="name">Packing</field>
-            <field name="time_cycle">30</field>
-            <field name="sequence">5</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
         <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
             <field name="product_id" ref="product_product_ply_veneer"/>
             <field name="product_qty">1</field>
@@ -571,35 +514,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="code">SEC-ASSEM</field>
-        </record>
-        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Long time assembly</field>
-            <field name="time_cycle">180</field>
-            <field name="sequence">15</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Testing</field>
-            <field name="time_cycle">60</field>
-            <field name="sequence">10</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
-            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
-            <field name="workcenter_id" ref="mrp_workcenter_1"/>
-            <field name="name">Packing</field>
-            <field name="time_cycle">30</field>
-            <field name="sequence">5</field>
-            <field name="worksheet_type">pdf</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
         <record id="mrp_bom_drawer_rout_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_drawer"/>
