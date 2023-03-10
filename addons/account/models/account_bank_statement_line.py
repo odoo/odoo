@@ -201,7 +201,7 @@ class AccountBankStatementLine(models.Model):
                         COALESCE(st.balance_start, 0.0),
                         move.state
                     FROM account_bank_statement_line st_line
-                    JOIN account_move move ON move.statement_line_id = st_line.id
+                    JOIN account_move move ON move.id = st_line.move_id
                     LEFT JOIN account_bank_statement st ON st.id = st_line.statement_id
                     WHERE
                         st_line.internal_index <= %s
