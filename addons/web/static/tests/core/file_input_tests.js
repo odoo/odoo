@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { getFixture, mount, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
+import { editInput, getFixture, mount, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 
@@ -115,5 +115,27 @@ QUnit.module("Components", ({ beforeEach }) => {
         });
 
         assert.isNotVisible(target.querySelector(".o_file_input"));
+    });
+
+    QUnit.test("uploading the same file twice triggers the onChange twice", async (assert) => {
+        await createFileInput({
+            props: {
+                onUpload(files) {
+                    assert.step(
+                        files[0].name
+                    );
+                },
+            },
+            mockPost: (route, params) => {
+                return JSON.stringify([{name: params.ufile[0].name}]);
+            },
+        });
+
+        const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+        await editInput(target, ".o_file_input input", file);
+        assert.verifySteps(["fake_file.txt"], "file has been initially uploaded");
+
+        await editInput(target, ".o_file_input input", file);
+        assert.verifySteps(["fake_file.txt"], "file has been uploaded a second time");
     });
 });
