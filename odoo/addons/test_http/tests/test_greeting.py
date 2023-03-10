@@ -37,7 +37,7 @@ class TestHttpGreeting(TestHttpBase):
                     if login == 'public':
                         self.authenticate(None, None)
                     elif login:
-                        self.authenticate(login, login)
+                        self.authenticate(login)
                     res = self.db_url_open(path, allow_redirects=False)
                 else:
                     res = self.nodb_url_open(path, allow_redirects=False)
@@ -56,7 +56,7 @@ class TestHttpGreeting(TestHttpBase):
 
     def test_greeting2_headers_db(self):
         new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
-        self.authenticate('jackoneill', 'jackoneill')
+        self.authenticate('jackoneill')
         res = self.db_url_open('/test_http/greeting')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')

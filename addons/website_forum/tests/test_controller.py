@@ -27,7 +27,7 @@ class TestController(HttpCase):
         }
 
     def test_01_portal_attachment(self):
-        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.authenticate(self.portal_user.login)
         payload = self._build_payload({'name': 'pixel', 'data': self.pixel, 'is_image': True, 'res_model': 'forum.post', 'res_id': 1})
         self.portal_user.karma = 30
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers, timeout=60000)
@@ -36,7 +36,7 @@ class TestController(HttpCase):
         self.assertTrue(attachment)
 
     def test_02_admin_attachment(self):
-        self.authenticate(self.admin_user.login, self.admin_user.login)
+        self.authenticate(self.admin_user.login)
         payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True, "res_model": "forum.post"})
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
         self.assertEqual(200, response.status_code)

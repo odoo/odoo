@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -18,18 +18,16 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         cls.company_b = cls.env.company.create({'name': "Payment Test Company"}) # cls.company_data_2['company']
 
         cls.user_company_a = cls.internal_user
-        cls.user_company_b = cls.env['res.users'].create({
+        cls.user_company_b = new_test_user(cls.env, **{
             'name': f"{cls.company_b.name} User (TEST)",
             'login': 'user_company_b',
-            'password': 'user_company_b',
             'company_id': cls.company_b.id,
             'company_ids': [Command.set(cls.company_b.ids)],
             'groups_id': [Command.link(cls.group_user.id)],
         })
-        cls.user_multi_company = cls.env['res.users'].create({
+        cls.user_multi_company = new_test_user(cls.env, **{
             'name': "Multi Company User (TEST)",
             'login': 'user_multi_company',
-            'password': 'user_multi_company',
             'company_id': cls.company_a.id,
             'company_ids': [Command.set([cls.company_a.id, cls.company_b.id])],
             'groups_id': [Command.link(cls.group_user.id)],
@@ -43,7 +41,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         route_values = self._prepare_pay_values(partner=self.user_company_b.partner_id)
 
         # Log in as user from Company A
-        self.authenticate(self.user_company_a.login, self.user_company_a.login)
+        self.authenticate(self.user_company_a.login)
 
         # Pay in company B
         route_values['company_id'] = self.company_b.id
@@ -101,7 +99,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         self.partner = self.portal_partner
 
         # Log in as user from Company A
-        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.authenticate(self.portal_user.login)
 
         token = self._create_token()
         token_company_b = self._create_token(provider_id=self.provider_company_b.id)
@@ -124,7 +122,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         self.portal_user.write({'company_ids': [company_b.id], 'company_id': company_b.id})
 
         # Log in as portal user
-        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.authenticate(self.portal_user.login)
 
         # Archive token in company A
         url = self._build_url('/payment/archive_token')

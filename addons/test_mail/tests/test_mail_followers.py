@@ -3,7 +3,7 @@
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, users
+from odoo.tests import new_test_user, tagged, users
 from odoo.tools import mute_logger
 
 
@@ -453,7 +453,7 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
     def test_auto_subscribe_notify_email(self):
         """ Responsible is notified when assigned """
         partner = self.env['res.partner'].create({"name": "demo1", "email": "demo1@test.com"})
-        notified_user = self.env['res.users'].create({
+        notified_user = new_test_user(self.env, **{
             'login': 'demo1',
             'partner_id': partner.id,
             'notification_type': 'email',

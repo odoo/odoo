@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import new_test_user, Form
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
@@ -12,7 +12,7 @@ class TestPartner(TransactionCase):
         """ Check name_search on partner, especially with domain based on auto_join
         user_ids field. Check specific SQL of name_search correctly handle joined tables. """
         test_partner = self.env['res.partner'].create({'name': 'Vlad the Impaler'})
-        test_user = self.env['res.users'].create({'name': 'Vlad the Impaler', 'login': 'vlad', 'email': 'vlad.the.impaler@example.com'})
+        test_user = new_test_user(self.env, **{'name': 'Vlad the Impaler', 'login': 'vlad', 'email': 'vlad.the.impaler@example.com'})
 
         ns_res = self.env['res.partner'].name_search('Vlad', operator='ilike')
         self.assertEqual(set(i[0] for i in ns_res), set((test_partner | test_user.partner_id).ids))
@@ -172,7 +172,7 @@ class TestPartner(TransactionCase):
 
     def test_onchange_parent_sync_user(self):
         company_1 = self.env['res.company'].create({'name': 'company_1'})
-        test_user = self.env['res.users'].create({
+        test_user = new_test_user(self.env, **{
             'name': 'This user',
             'login': 'thisu',
             'email': 'this.user@example.com',

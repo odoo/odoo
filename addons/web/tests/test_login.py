@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener
+from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_pass, new_test_user, Opener
 
 
 class TestWebLoginCommon(HttpCase):
@@ -32,7 +32,7 @@ class TestWebLoginCommon(HttpCase):
 
 class TestWebLogin(TestWebLoginCommon):
     def test_web_login(self):
-        res_post = self.login('internal_user', 'internal_user')
+        res_post = self.login('internal_user', new_test_pass(self.env, 'internal_user'))
         # ensure we are logged-in
         self.url_open(
             '/web/session/check',
@@ -43,7 +43,7 @@ class TestWebLogin(TestWebLoginCommon):
         self.assertEqual(res_post.request.path_url, '/web')
 
     def test_web_login_external(self):
-        res_post = self.login('portal_user', 'portal_user')
+        res_post = self.login('portal_user', new_test_pass(self.env, 'portal_user'))
         # ensure we end up on the right page for external users. Valid without portal installed.
         self.assertEqual(res_post.request.path_url, '/web/login_successful')
 
@@ -57,4 +57,4 @@ class TestWebLogin(TestWebLoginCommon):
         self.assertNotEqual(bad_xhr.status_code, 200)
 
         # log in using the above form, it should still be valid
-        self.login('internal_user', 'internal_user', csrf_token)
+        self.login('internal_user', new_test_pass(self.env, 'internal_user'), csrf_token=csrf_token)

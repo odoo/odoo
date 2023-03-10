@@ -5,7 +5,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from unittest.mock import MagicMock, patch
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.models.res_users import User
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
@@ -65,7 +65,7 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         microsoft_id = 'aaaaaaaaa'
         year = date.today().year
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'Test user Calendar',
             'login': 'jean-luc@opoo.com',
             'partner_id': partner.id,

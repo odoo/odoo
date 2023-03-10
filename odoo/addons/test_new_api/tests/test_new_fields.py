@@ -14,7 +14,7 @@ import psycopg2
 from odoo import models, fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
-from odoo.tests import common
+from odoo.tests import common, new_test_user
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
 from odoo.tools.image import image_data_uri
@@ -652,7 +652,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_13_inverse_access(self):
         """ test access rights on inverse fields """
         foo = self.env['test_new_api.category'].create({'name': 'Foo'})
-        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        user = new_test_user(self.env, **{'name': 'Foo', 'login': 'foo'})
         self.assertFalse(user.has_group('base.group_system'))
         # add group on non-stored inverse field
         self.patch(type(foo).display_name, 'groups', 'base.group_system')
@@ -1379,13 +1379,13 @@ class TestFields(TransactionCaseWithUserDemo):
         company2 = self.env['res.company'].create({'name': 'B'})
 
         # create one user per company
-        user0 = self.env['res.users'].create({
+        user0 = new_test_user(self.env, **{
             'name': 'Foo', 'login': 'foo', 'company_id': company0.id,
             'company_ids': [Command.set([company0.id, company1.id, company2.id])]})
-        user1 = self.env['res.users'].create({
+        user1 = new_test_user(self.env, **{
             'name': 'Bar', 'login': 'bar', 'company_id': company1.id,
             'company_ids': [Command.set([company0.id, company1.id, company2.id])]})
-        user2 = self.env['res.users'].create({
+        user2 = new_test_user(self.env, **{
             'name': 'Baz', 'login': 'baz', 'company_id': company2.id,
             'company_ids': [Command.set([company0.id, company1.id, company2.id])]})
 
@@ -2614,7 +2614,7 @@ class TestFields(TransactionCaseWithUserDemo):
             record.invalidate_recordset(['tags'])
             record.read(['tags'])
 
-        user = self.env['res.users'].create({'name': "user", 'login': "user"})
+        user = new_test_user(self.env, **{'name': "user", 'login': "user"})
         record_user = record.with_user(user)
 
         # prep the following query count by caching access check related data
@@ -3079,12 +3079,12 @@ class TestHtmlField(common.TransactionCase):
         self.assertEqual(self.model._fields['comment5'].sanitize, True)
         self.assertEqual(self.model._fields['comment5'].sanitize_overridable, True)
 
-        internal_user = self.env['res.users'].create({
+        internal_user = new_test_user(self.env, **{
             'name': 'test internal user',
             'login': 'test_sanitize',
             'groups_id': [(6, 0, [self.ref('base.group_user')])],
         })
-        bypass_user = self.env['res.users'].create({
+        bypass_user = new_test_user(self.env, **{
             'name': 'test bypass user',
             'login': 'test_sanitize2',
             'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_sanitize_override')])],

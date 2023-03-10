@@ -4,7 +4,7 @@
 from unittest.mock import patch
 
 import odoo
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tests.common import HttpCase
 
 
@@ -28,7 +28,7 @@ class TestWebsiteResetPassword(HttpCase):
             return original_send_mail(*args, **kwargs)
 
         with patch.object(MailMail, 'unlink', lambda self: None), patch.object(MailTemplate, 'send_mail', my_send_mail):
-            user = self.env['res.users'].create({
+            user = new_test_user(self.env, **{
                 'login': 'test',
                 'name': 'The King',
                 'email': 'noop@example.com',
@@ -65,13 +65,13 @@ class TestWebsiteResetPassword(HttpCase):
         website.ensure_one()
 
         # Use AAA and ZZZ as names since res.users are ordered by 'login, name'
-        self.env["res.users"].create(
-            {"website_id": False, "login": "bobo@mail.com", "name": "AAA", "password": "bobo@mail.com"}
+        new_test_user(self.env, **
+            {"website_id": False, "login": "bobo@mail.com", "name": "AAA"}
         )
-        user2 = self.env["res.users"].create(
-            {"website_id": website.id, "login": "bobo@mail.com", "name": "ZZZ", "password": "bobo@mail.com"}
+        user2 = new_test_user(self.env, **
+            {"website_id": website.id, "login": "bobo@mail.com", "name": "ZZZ"}
         )
 
         # The most specific user should be selected
-        self.authenticate("bobo@mail.com", "bobo@mail.com")
+        self.authenticate("bobo@mail.com")
         self.assertEqual(self.session["uid"], user2.id)

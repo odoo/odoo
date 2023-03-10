@@ -254,7 +254,7 @@ class TestPortalFlow(MailCommon, HttpCase):
     @users('portal_test')
     def test_customer_access_logged_without_access(self):
         """Check that the link redirects the customer (without backend access) to the portal for viewing the record."""
-        self.authenticate(self.env.user.login, self.env.user.login)
+        self.authenticate(self.env.user.login)
         res = self.url_open(self.record_access_url)
         self.assertEqual(res.status_code, 200)
         self.assert_URL(res.url, f'/my/test_portal/{self.record_portal.id}')
@@ -262,7 +262,7 @@ class TestPortalFlow(MailCommon, HttpCase):
     @users('portal_test')
     def test_customer_access_logged_without_access_wrong_token(self):
         """Check that it redirects to discuss when logged customer has no access to the record and token is invalid."""
-        self.authenticate(self.env.user.login, self.env.user.login)
+        self.authenticate(self.env.user.login)
         res = self.url_open(self.record_access_url_wrong_token)
         self.assertEqual(res.status_code, 200)
         self.assert_URL(res.url, '/my', {'action': 'mail.action_discuss'})
@@ -284,7 +284,7 @@ class TestPortalFlow(MailCommon, HttpCase):
     @users('employee')
     def test_employee_access(self):
         """Check that the access link redirects an employee to the backend for viewing the record."""
-        self.authenticate(self.env.user.login, self.env.user.login)
+        self.authenticate(self.env.user.login)
         res = self.url_open(self.record_access_url)
         self.assertEqual(res.status_code, 200)
         self.assert_URL(res.url, '/web', {'model': 'mail.test.portal', 'id': str(self.record_portal.id)})
@@ -292,7 +292,7 @@ class TestPortalFlow(MailCommon, HttpCase):
     @users('employee')
     def test_employee_access_wrong_token(self):
         """Check that the access link redirects an employee to the record even if the token invalid."""
-        self.authenticate(self.env.user.login, self.env.user.login)
+        self.authenticate(self.env.user.login)
         res = self.url_open(self.record_access_url_wrong_token)
         self.assertEqual(res.status_code, 200)
         self.assert_URL(res.url, '/web', {'model': 'mail.test.portal', 'id': str(self.record_portal.id)})

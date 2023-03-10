@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.models.chart_template import AccountChartTemplate
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -100,10 +100,9 @@ class TestChartTemplate(TransactionCase):
         super().setUpClass()
 
         # Create user.
-        user = cls.env['res.users'].create({
+        user = new_test_user(cls.env, **{
             'name': 'Because I am accountman!',
             'login': 'accountman',
-            'password': 'accountman',
             'groups_id': [Command.set(cls.env.user.groups_id.ids), Command.link(cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'accountman@test.com'

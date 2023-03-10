@@ -7,7 +7,7 @@ from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
 
 import odoo.tools
-from odoo.tests import common
+from odoo.tests import common, new_test_pass, new_test_user
 from odoo.service import common as auth, model
 from odoo.tools import DotDict
 
@@ -54,7 +54,7 @@ class TestXMLRPC(common.HttpCase):
 
     def test_xmlrpc_html_field(self):
         sig = '<p>bork bork bork <span style="font-weight: bork">bork</span><br></p>'
-        r = self.env['res.users'].create({
+        r = new_test_user(self.env, **{
             'name': 'bob',
             'login': 'bob',
             'signature': sig
@@ -111,10 +111,9 @@ class TestAPIKeys(common.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._user = cls.env['res.users'].create({
+        cls._user = new_test_user(cls.env, **{
             'name': "Bylan",
             'login': 'byl',
-            'password': 'ananananan',
             'tz': 'Australia/Eucla',
         })
 
@@ -135,11 +134,11 @@ class TestAPIKeys(common.HttpCase):
         self.addCleanup(_request_stack.pop)
 
     def test_trivial(self):
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', new_test_pass(self.env, 'byl'), {}])
         self.assertEqual(uid, self._user.id)
 
         ctx = model.dispatch('execute_kw', [
-            self.env.cr.dbname, uid, 'ananananan',
+            self.env.cr.dbname, uid, new_test_pass(self.env, 'byl'),
             'res.users', 'context_get', []
         ])
         self.assertEqual(ctx['tz'], 'Australia/Eucla')
@@ -161,7 +160,7 @@ class TestAPIKeys(common.HttpCase):
         }).make_key()
         k = r['context']['default_key']
 
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', new_test_pass(self.env, 'byl'), {}])
         self.assertEqual(uid, self._user.id)
 
         uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', k, {}])
@@ -189,7 +188,7 @@ class TestAPIKeys(common.HttpCase):
         self.assertFalse(k1.exists())
 
         # other user can't remove user keys
-        u = self.env['res.users'].create({
+        u = new_test_user(self.env, **{
             'name': 'a',
             'login': 'a',
             'groups_id': self.env.ref('base.group_user').ids,
@@ -205,7 +204,7 @@ class TestAPIKeys(common.HttpCase):
 
         with self.assertRaises(AccessDenied):
             model.dispatch('execute_kw', [
-                self.env.cr.dbname, self._user.id, 'ananananan',
+                self.env.cr.dbname, self._user.id, new_test_pass(self.env, 'byl'),
                 'res.users', 'context_get', []
             ])
 

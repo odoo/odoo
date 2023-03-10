@@ -319,9 +319,8 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
             }
         )
         cls.company_of_superuser, cls.company2 = companies
-        cls.password = 'Pl1bhD@2!kXZ'
         cls.user_of_company_of_superuser, cls.user_company2 = [
-            new_test_user(cls.env, f'user_{company.id}', company_id=company.id, password=cls.password)
+            new_test_user(cls.env, f'user_{company.id}', company_id=company.id)
             for company in companies]
 
     def assertDownloadLogo(self, assert_headers, assert_content, user=None, company=None):
@@ -334,7 +333,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         """
         url_suffix = f'?company={company.id}' if company else ''
         if user:
-            self.authenticate(user.login, self.password)
+            self.authenticate(user.login)
         else:
             self.authenticate(None, None)
         self.assertDownload(f'/logo.png{url_suffix}', {},

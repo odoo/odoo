@@ -81,7 +81,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
 
         # Step: employee takes the certification
         # --------------------------------------------------
-        self.authenticate('user_emp', 'user_emp')
+        self.authenticate('user_emp')
 
         # Employee opens start page
         response = self._access_start(certification)
@@ -170,7 +170,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
 
         # Step: employee takes the randomized certification
         # --------------------------------------------------
-        self.authenticate('user_emp', 'user_emp')
+        self.authenticate('user_emp')
 
         # Employee opens start page
         response = self._access_start(certification)

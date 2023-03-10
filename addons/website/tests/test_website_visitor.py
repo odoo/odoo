@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
-from odoo.tests import common, tagged
+from odoo.tests import common, new_test_user, tagged
 
 
 class MockVisitor(common.BaseCase):
@@ -95,7 +95,7 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
             })
-            self.user_portal = self.env['res.users'].create({
+            self.user_portal = new_test_user(self.env, **{
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': self.partner_portal.id,

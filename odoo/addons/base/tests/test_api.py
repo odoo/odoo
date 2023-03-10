@@ -3,6 +3,7 @@
 
 from odoo import api, models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.tests import new_test_user
 from odoo.tools import mute_logger, unique, lazy
 from odoo.exceptions import AccessError
 
@@ -177,7 +178,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         partners[0].company_id.write({'name': 'Fools'})
 
         # create an environment with a demo user
-        demo = self.env['res.users'].create({
+        demo = new_test_user(self.env, **{
             'name': 'test_environment_demo',
             'login': 'test_environment_demo',
             'password': 'test_environment_demo',

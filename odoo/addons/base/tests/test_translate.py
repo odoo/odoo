@@ -11,7 +11,7 @@ import io
 from odoo.exceptions import UserError
 from odoo.tools import sql
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter
-from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
+from odoo.tests.common import TransactionCase, BaseCase, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
 

@@ -10,7 +10,7 @@ from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 @tagged('odoo2google')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
@@ -358,7 +358,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         # Test new event created after stopping synchronization are correctly patched when restarting sync.
         google_id = 'aaaaaaaaa'
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'Test user Calendar',
             'login': 'jean-luc@opoo.com',
             'partner_id': partner.id,

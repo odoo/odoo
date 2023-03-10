@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
@@ -58,7 +58,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 'product_id': self.product_a.id
             })]
         })
-        pub_user = self.env['res.users'].create({
+        pub_user = new_test_user(self.env, **{
             'login': 'test_public_user',
             'name': 'test_public_user',
             'email': False,

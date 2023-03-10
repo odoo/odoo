@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 import odoo
 from odoo.http import root
 from odoo.tests import tagged
-from odoo.tests.common import HOST, new_test_user, get_db_name
+from odoo.tests.common import HOST, new_test_pass, new_test_user, get_db_name
 from odoo.tools import config, file_path
 from odoo.addons.test_http.controllers import CT_JSON
 
@@ -81,7 +81,7 @@ class TestHttpMisc(TestHttpBase):
 
         payload = json.dumps({'jsonrpc': '2.0', 'method': 'call', 'id': None, 'params': {
             'service': 'object', 'method': 'execute', 'args': [
-                get_db_name(), jack.id, 'jackoneill', 'test_http.galaxy', 'render', milky_way.id
+                get_db_name(), jack.id, new_test_pass(self.env, 'jackoneill'), 'test_http.galaxy', 'render', milky_way.id
             ]
         }})
 

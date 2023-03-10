@@ -30,7 +30,7 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
             so_url = '/my/orders/%s' % so.id
             picking_url = '/my/picking/pdf/%s' % picking.id
 
-            self.authenticate(login, login)
+            self.authenticate(login)
 
             if not login:
                 so._portal_ensure_token()

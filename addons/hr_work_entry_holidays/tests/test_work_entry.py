@@ -5,7 +5,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import pytz
 
-from odoo.tests.common import tagged
+from odoo.tests.common import new_test_user, tagged
 from odoo.fields import Date, Datetime
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
@@ -142,7 +142,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
 
         # The work entries generation shouldn't raise an error
 
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'Classic User',
             'login': 'Classic User',
             'company_id': self.env.ref('base.main_company').id,

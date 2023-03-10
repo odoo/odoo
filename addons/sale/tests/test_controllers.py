@@ -48,7 +48,7 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
         )
         self.assertEqual(req.status_code, 200)
 
-        self.authenticate(self.user_portal.login, self.user_portal.login)
+        self.authenticate(self.user_portal.login)
 
         # do not need the token when logged in
         req = self.url_open(

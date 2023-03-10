@@ -139,7 +139,7 @@ class TestController(HttpCase):
         self.assertEqual(mimetype, response['result']['original']['mimetype'], "Wrong mimetype")
 
     def test_04_admin_attachment(self):
-        self.authenticate(self.admin, self.admin)
+        self.authenticate(self.admin)
         payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True})
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
         self.assertEqual(200, response.status_code)

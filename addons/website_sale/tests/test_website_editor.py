@@ -5,7 +5,7 @@ from odoo import Command
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, new_test_user, tagged
 
 ATTACHMENT_DATA = [
     b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAEElEQVR4nGKqf3geEAAA//8EGgIyYKYzzgAAAABJRU5ErkJggg==",
@@ -193,10 +193,9 @@ class TestWebsiteSaleEditor(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env['res.users'].create({
+        new_test_user(cls.env, **{
             'name': 'Restricted Editor',
             'login': 'restricted',
-            'password': 'restricted',
             'groups_id': [Command.set([
                 cls.env.ref('base.group_user').id,
                 cls.env.ref('sales_team.group_sale_manager').id,

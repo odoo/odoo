@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from markupsafe import Markup
 from unittest.mock import patch, MagicMock
 
-from odoo.tests.common import HttpCase
+from odoo.tests.common import new_test_user, HttpCase
 
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
@@ -40,7 +40,7 @@ class TestCommon(HttpCase):
         self.organizer_user = self.env["res.users"].search([("name", "=", "Mike Organizer")])
         if not self.organizer_user:
             partner = self.env['res.partner'].create({'name': 'Mike Organizer', 'email': 'mike@organizer.com'})
-            self.organizer_user = self.env['res.users'].create({
+            self.organizer_user = new_test_user(self.env, **{
                 'name': 'Mike Organizer',
                 'login': 'mike@organizer.com',
                 'partner_id': partner.id,
@@ -49,7 +49,7 @@ class TestCommon(HttpCase):
         self.attendee_user = self.env["res.users"].search([("name", "=", "John Attendee")])
         if not self.attendee_user:
             partner = self.env['res.partner'].create({'name': 'John Attendee', 'email': 'john@attendee.com'})
-            self.attendee_user = self.env['res.users'].create({
+            self.attendee_user = new_test_user(self.env, **{
                 'name': 'John Attendee',
                 'login': 'john@attendee.com',
                 'partner_id': partner.id,

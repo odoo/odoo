@@ -273,7 +273,7 @@ class TestSurveyCommon(SurveyCase):
 
         self.user_emp = mail_new_test_user(
             self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
-            groups='base.group_user', password='user_emp'
+            groups='base.group_user'
         )
 
         self.user_portal = mail_new_test_user(

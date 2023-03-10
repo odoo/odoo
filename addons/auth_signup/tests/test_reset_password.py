@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests.common import HttpCase
+from odoo.tests.common import new_test_user, HttpCase
 from werkzeug.urls import url_parse
 
 
@@ -12,7 +12,7 @@ class TestResetPassword(HttpCase):
             on first signup if a password is already set user is redirected to login page when accessing that link again
             'signup_email' is used in the web controller (web_auth_reset_password) to detect this behaviour
         """
-        test_user = self.env['res.users'].create({
+        test_user = new_test_user(self.env, **{
             'login': 'test',
             'name': 'The King',
             'email': 'noop@example.com',

@@ -206,7 +206,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             shipping address, the existing partner (the one of the so) is reused.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
+        session = self.authenticate(self.user_demo.login)
         session['sale_order_id'] = self.sale_order.id
         root.session_store.save(session)
         with patch(
@@ -262,7 +262,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             the public partner (only creates one new partner that is updated).
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
+        session = self.authenticate(self.user_demo.login)
         session['sale_order_id'] = self.sale_order.id
         root.session_store.save(session)
         with patch(
@@ -346,7 +346,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             address sent by the express checkout form doesn't exist in odoo, we create a new partner.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
+        session = self.authenticate(self.user_demo.login)
         session['sale_order_id'] = self.sale_order.id
         root.session_store.save(session)
         with patch(

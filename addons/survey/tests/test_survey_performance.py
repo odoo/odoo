@@ -15,7 +15,7 @@ class SurveyPerformance(common.TestSurveyResultsCommon, HttpCase):
         having filters from different models needs only a few more queries.
         """
         url = f'/survey/results/{self.survey.id}?filters=A,0,{self.gras_id}|L,0,{self.answer_pauline.id}'
-        self.authenticate('survey_manager', 'survey_manager')
+        self.authenticate('survey_manager')
         with self.assertQueryCount(default=34): # com 34
             self.url_open(url)
 
@@ -26,13 +26,13 @@ class SurveyPerformance(common.TestSurveyResultsCommon, HttpCase):
         the query count stay the same as having a single filter.
         """
         url = f'/survey/results/{self.survey.id}?filters=A,0,{self.gras_id}|A,0,{self.cat_id}'
-        self.authenticate('survey_manager', 'survey_manager')
+        self.authenticate('survey_manager')
         with self.assertQueryCount(default=32): # com 32
             self.url_open(url)
 
     @warmup
     def test_survey_results_with_one_filter(self):
         url = f'/survey/results/{self.survey.id}?filters=A,0,{self.cat_id}'
-        self.authenticate('survey_manager', 'survey_manager')
+        self.authenticate('survey_manager')
         with self.assertQueryCount(default=32): # com 32
             self.url_open(url)

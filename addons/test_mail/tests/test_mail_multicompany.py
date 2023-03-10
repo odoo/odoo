@@ -396,15 +396,15 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
             }
         ])
 
-        for (login, password), mc_record in product(
-            ((None, None),  # not logged: redirect to web/login
-             ('employee', 'employee'),  # access only main company
-             ('admin', 'admin'),  # access both companies
+        for login, mc_record in product(
+            (None,  # not logged: redirect to web/login
+             'employee',  # access only main company
+             'admin',  # access both companies
             ),
             (mc_record_c1, mc_record_c2),
         ):
             with self.subTest(login=login, mc_record=mc_record):
-                self.authenticate(login, password)
+                self.authenticate(login)
                 response = self.url_open(
                     f'/mail/view?model={mc_record._name}&res_id={mc_record.id}',
                     timeout=15

@@ -2,14 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_slides.tests import common
-from odoo.tests.common import users
+from odoo.tests.common import new_test_user, users
 
 
 class TestCoursePurchaseFlow(common.SlidesCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_salesman = cls.env['res.users'].create({
+        cls.user_salesman = new_test_user(cls.env, **{
             'name': 'salesman',
             'login': 'salesman',
             'email': 'salesman007@example.com',

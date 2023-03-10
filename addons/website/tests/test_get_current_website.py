@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -75,5 +75,5 @@ class TestGetCurrentWebsite(TransactionCase):
         website = self.website
         website.specific_user_account = True
 
-        user = self.env['res.users'].create({'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
+        user = new_test_user(self.env, **{'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
         self.assertTrue(user.website_id == user.partner_id.website_id == website)

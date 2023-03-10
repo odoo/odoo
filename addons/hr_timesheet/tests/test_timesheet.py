@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo.fields import Command
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests.common import new_test_user, TransactionCase, Form
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
@@ -60,19 +60,19 @@ class TestCommonTimesheet(TransactionCase):
             'project_id': cls.project_customer.id,
         })
         # users
-        cls.user_employee = cls.env['res.users'].create({
+        cls.user_employee = new_test_user(cls.env, **{
             'name': 'User Employee',
             'login': 'user_employee',
             'email': 'useremployee@test.com',
             'groups_id': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
         })
-        cls.user_employee2 = cls.env['res.users'].create({
+        cls.user_employee2 = new_test_user(cls.env, **{
             'name': 'User Employee 2',
             'login': 'user_employee2',
             'email': 'useremployee2@test.com',
             'groups_id': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
         })
-        cls.user_manager = cls.env['res.users'].create({
+        cls.user_manager = new_test_user(cls.env, **{
             'name': 'User Officer',
             'login': 'user_manager',
             'email': 'usermanager@test.com',
@@ -365,7 +365,7 @@ class TestTimesheet(TestCommonTimesheet):
            This move implying writing on the account.analytic.line.
         '''
 
-        project_manager = self.env['res.users'].create({
+        project_manager = new_test_user(self.env, **{
             'name': 'user_project_manager',
             'login': 'user_project_manager',
             'groups_id': [(6, 0, [self.ref('project.group_project_manager')])],

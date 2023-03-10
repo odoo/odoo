@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 from odoo.exceptions import ValidationError
 from odoo import Command
 
@@ -17,7 +17,7 @@ class TestHasGroup(TransactionCase):
             dict(xml_id=self.group1, values={'name': 'group1'}),
         ])
 
-        self.test_user = self.env['res.users'].create({
+        self.test_user = new_test_user(self.env, **{
             'login': 'testuser',
             'partner_id': self.env['res.partner'].create({
                 'name': "Strawman Test User"
@@ -119,7 +119,7 @@ class TestHasGroup(TransactionCase):
         grp_test_portal = self.env["res.groups"].create({"name": "implied by portal"})
         self.grp_portal.implied_ids = grp_test_portal
 
-        portal_user = self.env['res.users'].create({
+        portal_user = new_test_user(self.env, **{
             'login': 'portalTest2',
             'name': 'Portal test 2',
             'groups_id': [Command.set([self.grp_portal.id])],
@@ -145,14 +145,14 @@ class TestHasGroup(TransactionCase):
         grp_test.implied_ids += self.grp_portal
 
         with self.assertRaises(ValidationError):
-            self.env['res.users'].create({
+            new_test_user(self.env, **{
                 'login': 'test_two_user_types',
                 'name': "Test User with two user types",
                 'groups_id': [Command.set([grp_test.id])]
             })
 
         #Add a user with portal to the group Internal
-        test_user = self.env['res.users'].create({
+        test_user = new_test_user(self.env, **{
                 'login': 'test_user_portal',
                 'name': "Test User with two user types",
                 'groups_id': [Command.set([self.grp_portal.id])]
@@ -169,7 +169,7 @@ class TestHasGroup(TransactionCase):
         grp_test = self.env["res.groups"].create(
             {"name": "test", "implied_ids": [Command.set([self.grp_internal.id])]})
 
-        test_user = self.env['res.users'].create({
+        new_test_user(self.env, **{
             'login': 'test_user_portal',
             'name': "Test User with one user types",
             'groups_id': [Command.set([grp_test.id])]

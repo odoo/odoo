@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import tagged, HttpCase
+from odoo.tests import new_test_users, tagged, HttpCase
 
 from .test_project_base import TestProjectCommon
 
@@ -91,7 +91,7 @@ class TestPersonalStages(TestProjectCommon):
         self.assertEqual(1, total_stage_1)
 
     def test_default_personal_stage(self):
-        user_without_stage, user_with_stages = self.env['res.users'].create([{
+        user_without_stage, user_with_stages = new_test_users(self.env, [{
             'login': 'test_no_stage',
             'name': "Test User without stage",
         }, {

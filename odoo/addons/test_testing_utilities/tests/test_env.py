@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 
 class TestEnv(TransactionCase):
@@ -9,7 +9,7 @@ class TestEnv(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestEnv, cls).setUpClass()
-        user = cls.env['res.users'].create({
+        user = new_test_user(cls.env, **{
             'name': 'superuser',
             'login': 'superuser',
             'password': 'superuser',

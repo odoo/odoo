@@ -6,7 +6,7 @@ from collections import defaultdict
 import psycopg2
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 from odoo.tools import mute_logger
 from odoo import Command
 
@@ -26,7 +26,7 @@ class TestORM(TransactionCase):
         # client-side... a concurrent deletion could therefore cause spurious
         # exceptions even when simply opening a list view!
         # /!\ Using unprileged user to detect former side effects of ir.rules!
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'test user',
             'login': 'test2',
             'groups_id': [Command.set([self.ref('base.group_user')])],
@@ -61,7 +61,7 @@ class TestORM(TransactionCase):
         """ Verify that accessing filtered records works as expected for non-admin user """
         p1 = self.env['res.partner'].create({'name': 'W'})
         p2 = self.env['res.partner'].create({'name': 'Y'})
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'test user',
             'login': 'test2',
             'groups_id': [Command.set([self.ref('base.group_user')])],
@@ -221,7 +221,7 @@ class TestORM(TransactionCase):
     def test_m2m_store_trigger(self):
         group_user = self.env.ref('base.group_user')
 
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'test',
             'login': 'test_m2m_store_trigger',
             'groups_id': [Command.set([])],
@@ -237,7 +237,7 @@ class TestORM(TransactionCase):
     @mute_logger('odoo.models')
     def test_unlink_with_property(self):
         """ Verify that unlink removes the related ir.property as unprivileged user """
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'Justine Bridou',
             'login': 'saucisson',
             'groups_id': [Command.set([self.ref('base.group_partner_manager')])],
@@ -315,7 +315,7 @@ class TestInherits(TransactionCase):
     def test_create(self):
         """ creating a user should automatically create a new partner """
         partners_before = self.env['res.partner'].search([])
-        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        user_foo = new_test_user(self.env, **{'name': 'Foo', 'login': 'foo'})
 
         self.assertNotIn(user_foo.partner_id, partners_before)
 
@@ -333,7 +333,7 @@ class TestInherits(TransactionCase):
     @mute_logger('odoo.models')
     def test_read(self):
         """ inherited fields should be read without any indirection """
-        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        user_foo = new_test_user(self.env, **{'name': 'Foo', 'login': 'foo'})
         user_values, = user_foo.read()
         partner_values, = user_foo.partner_id.read()
 
@@ -343,7 +343,7 @@ class TestInherits(TransactionCase):
     @mute_logger('odoo.models')
     def test_copy(self):
         """ copying a user should automatically copy its partner, too """
-        user_foo = self.env['res.users'].create({
+        user_foo = new_test_user(self.env, **{
             'name': 'Foo',
             'login': 'foo',
             'employee': True,
@@ -366,7 +366,7 @@ class TestInherits(TransactionCase):
     @mute_logger('odoo.models')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
-        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
+        user_foo = new_test_user(self.env, **{'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
         partner_bar = self.env['res.partner'].create({'name': 'Bar'})
 
         foo_before, = user_foo.read()

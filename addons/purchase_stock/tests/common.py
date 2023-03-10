@@ -5,6 +5,7 @@ from odoo import fields
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo import tools
 from odoo.modules.module import get_module_resource
+from odoo.tests import new_test_user
 
 
 class PurchaseTestCommon(TestStockCommon):
@@ -49,7 +50,7 @@ class PurchaseTestCommon(TestStockCommon):
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 2})]})
 
-        cls.res_users_purchase_user = cls.env['res.users'].create({
+        cls.res_users_purchase_user = new_test_user(cls.env, **{
             'company_id': cls.env.ref('base.main_company').id,
             'name': "Purchase User",
             'login': "pu",

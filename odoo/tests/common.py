@@ -129,7 +129,22 @@ def standalone(*tags):
 DB = get_db_name()
 
 
-def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
+def new_test_pass(env, login=''):
+    """ Helper function to create a test password for a given login.
+    Must return the same password each time it is called for the same login;
+    not cryptographically secure; for testing only."""
+
+    # Handle users hardcoded into demo data
+    if login in ('admin', 'demo', 'portal'):
+        return login
+
+    Params = env['ir.config_parameter'].sudo()
+    minlength = int(Params.get_param('auth_password_policy.minlength', default=8))
+    password = login + 'x' * (minlength - len(login))
+    return password
+
+
+def new_test_user(env, login='', groups='base.group_user', context=None, groups_id=None, **kwargs):
     """ Helper function to create a new test user. It allows to quickly create
     users given its login and groups (being a comma separated list of xml ids).
     Kwargs are directly propagated to the create to further customize the
@@ -155,14 +170,15 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
+    if not groups_id:
+        groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
-    # automatically give a password equal to login
+    # automatically give a password derived from login
     if not create_values.get('password'):
-        create_values['password'] = login + 'x' * (8 - len(login))
+        create_values['password'] = new_test_pass(env, login)
     # generate email if not given as most test require an email
     if 'email' not in create_values:
         if single_email_re.match(login):
@@ -174,6 +190,13 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
         create_values['company_ids'] = [(4, create_values['company_id'])]
 
     return env['res.users'].with_context(**context).create(create_values)
+
+
+def new_test_users(env, vals_list):
+    users = env['res.users'].browse()
+    for values in vals_list:
+        users |= new_test_user(env, **values)
+    return users
 
 
 class RecordCapturer:
@@ -1628,7 +1651,7 @@ class HttpCase(TransactionCase):
         self.session.logout(keep_db=keep_db)
         odoo.http.root.session_store.save(self.session)
 
-    def authenticate(self, user, password):
+    def authenticate(self, user, password=None):
         if getattr(self, 'session', None):
             odoo.http.root.session_store.delete(self.session)
 
@@ -1642,6 +1665,8 @@ class HttpCase(TransactionCase):
             # than this transaction.
             self.cr.flush()
             self.cr.clear()
+            if password is None:
+                password = new_test_pass(self.env, user)
             uid = self.registry['res.users'].authenticate(session.db, user, password, {'interactive': False})
             env = api.Environment(self.cr, uid, {})
             session.uid = uid
@@ -1699,7 +1724,7 @@ class HttpCase(TransactionCase):
             self.browser._chrome_without_limit([self.browser.executable, debug_front_end])
             time.sleep(3)
         try:
-            self.authenticate(login, login)
+            self.authenticate(login)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.

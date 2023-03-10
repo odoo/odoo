@@ -10,7 +10,7 @@ class TestCalendarController(HttpCase):
     def setUp(self):
         super().setUp()
         self.user = new_test_user(self.env, "test_user_1", email="test_user_1@nowhere.com", tz="UTC")
-        self.other_user = new_test_user(self.env, "test_user_2", email="test_user_2@nowhere.com", password="P@ssw0rd!", tz="UTC")
+        self.other_user = new_test_user(self.env, "test_user_2", email="test_user_2@nowhere.com", tz="UTC")
         self.partner = self.user.partner_id
         self.event = (
             self.env["calendar.event"]
@@ -41,7 +41,7 @@ class TestCalendarController(HttpCase):
         attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
         token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
-        self.authenticate("test_user_2", "P@ssw0rd!")
+        self.authenticate("test_user_2")
         res = self.url_open(url)
 
         self.assertEqual(res.status_code, 200, "Response should = OK")

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, new_test_user, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -10,10 +10,9 @@ class TestProjectSharingUi(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        user = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nolog': True}).create({
+        user = new_test_user(cls.env, context={'no_reset_password': True, 'mail_create_nolog': True}, **{
             'name': 'Georges',
             'login': 'georges1',
-            'password': 'georges1',
             'email': 'georges@project.portal',
             'signature': 'SignGeorges',
             'notification_type': 'email',

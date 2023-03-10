@@ -9,7 +9,7 @@ class TestAccess(odoo.tests.HttpCase):
     def setUp(self):
         super(TestAccess, self).setUp()
 
-        self.portal_user = self.env['res.users'].create({
+        self.portal_user = odoo.tests.new_test_user(self.env, **{
             'login': 'P',
             'name': 'P',
             'groups_id': [Command.set([self.env.ref('base.group_portal').id])],
@@ -44,7 +44,7 @@ class TestAccess(odoo.tests.HttpCase):
     def test_name_search_with_sudo(self):
         """Check that _name_search return correct values with sudo
         """
-        no_access_user = self.env['res.users'].create({
+        no_access_user = odoo.tests.new_test_user(self.env, **{
             'login': 'no_access',
             'name': 'no_access',
             'groups_id': [Command.clear()],

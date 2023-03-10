@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields
-from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
+from odoo.tests.common import TransactionCase, HttpCase, new_test_user, Form
 
 import json
 import time
@@ -39,10 +39,9 @@ class AccountTestInvoicingCommon(TransactionCase):
                 raise SkipTest(f"Module required for the test is not installed ({template_module.name})")
 
         # Create user.
-        user = cls.env['res.users'].create({
+        user = new_test_user(cls.env, **{
             'name': 'Because I am accountman!',
             'login': 'accountman',
-            'password': 'accountman',
             'groups_id': [
                 (6, 0, cls.env.user.groups_id.ids),
                 (4, cls.env.ref('account.group_account_manager').id),

@@ -7,7 +7,7 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from dateutil.relativedelta import relativedelta
 
 
@@ -1092,11 +1092,10 @@ class TestSubcontractingPortal(TransactionCase):
             'company_id': cls.env.ref('base.main_company').id,
         })
         # Make the subcontracting partner a portal user
-        cls.portal_user = cls.env['res.users'].create({
+        cls.portal_user = new_test_user(cls.env, **{
             'name': 'portal user (subcontractor)',
             'partner_id': cls.subcontractor_partner1.id,
             'login': 'subcontractor',
-            'password': 'subcontractor',
             'email': 'subcontractor@subcontracting.portal',
             'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]
         })

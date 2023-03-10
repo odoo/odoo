@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseUsersCommon
@@ -16,7 +16,7 @@ class TestAccessRights(BaseUsersCommon, SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.sale_user2 = cls.env['res.users'].create({
+        cls.sale_user2 = new_test_user(cls.env, **{
             'name': 'salesman_2',
             'login': 'salesman_2',
             'email': 'default_user_salesman_2@example.com',

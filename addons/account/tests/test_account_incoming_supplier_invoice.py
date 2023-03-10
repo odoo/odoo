@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 import json
 
@@ -14,7 +14,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
 
         cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test-company.odoo.com')
 
-        cls.internal_user = cls.env['res.users'].create({
+        cls.internal_user = new_test_user(cls.env, **{
             'name': 'Internal User',
             'login': 'internal.user@test.odoo.com',
             'email': 'internal.user@test.odoo.com',

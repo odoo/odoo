@@ -13,11 +13,10 @@ class TestLivechatCommon(tests.TransactionCase):
 
         self.group_user = self.env.ref('base.group_user')
         self.group_livechat_user = self.env.ref('im_livechat.im_livechat_group_user')
-        self.operator = self.env['res.users'].create({
+        self.operator = tests.new_test_user(self.env, **{
             'name': 'Operator Michel',
             'login': 'operator',
             'email': 'operator@example.com',
-            'password': "ideboulonate",
             'livechat_username': 'El Deboulonnator',
             'groups_id': [(6, 0, [
                 self.group_user.id,

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 
 
 class TestCompany(TransactionCase):
@@ -12,7 +12,7 @@ class TestCompany(TransactionCase):
         Tests an archived user in an archived company cannot be unarchived
         without changing its company to an active company."""
         company = self.env['res.company'].create({'name': 'foo'})
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'foo',
             'login': 'foo',
             'company_id': company.id,

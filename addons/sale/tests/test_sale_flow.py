@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.tests import new_test_user
 
 
 class TestSaleFlow(TestSaleCommonBase):
@@ -9,7 +10,7 @@ class TestSaleFlow(TestSaleCommonBase):
     def setUpClass(cls):
         super().setUpClass()
 
-        user = cls.env['res.users'].create({
+        user = new_test_user(cls.env, **{
             'name': 'Because I am saleman!',
             'login': 'saleman',
             'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],

@@ -4,7 +4,7 @@
 from unittest.mock import patch
 
 import odoo
-from odoo.tests import HttpCase
+from odoo.tests import HttpCase, new_test_pass
 from odoo import http
 
 class TestAuthSignupFlow(HttpCase):
@@ -33,12 +33,14 @@ class TestAuthSignupFlow(HttpCase):
         csrf_token = http.Request.csrf_token(self)
 
         # Values from login form
+        login = 'toto@example.com'
+        password = new_test_pass(self.env, login)
         name = 'toto'
         payload = {
-            'login': 'toto@example.com',
+            'login': login,
             'name': name,
-            'password': 'mypassword',
-            'confirm_password': 'mypassword',
+            'password': password,
+            'confirm_password': password,
             'csrf_token': csrf_token,
         }
 

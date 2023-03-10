@@ -7,7 +7,7 @@ from unittest.mock import DEFAULT
 from odoo import exceptions
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.tests.common import tagged, Form, users
+from odoo.tests.common import new_test_user, tagged, Form, users
 from odoo.tools import mute_logger
 
 
@@ -296,9 +296,9 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         self.assertTrue(msg_emp.starred)
 
     def test_inbox_message_fetch_needaction(self):
-        user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
+        user1 = new_test_user(self.env, **{'login': 'user1', 'name': 'User 1'})
         user1.notification_type = 'inbox'
-        user2 = self.env['res.users'].create({'login': 'user2', 'name': 'User 2'})
+        user2 = new_test_user(self.env, **{'login': 'user2', 'name': 'User 2'})
         user2.notification_type = 'inbox'
         message1 = self.test_record.with_user(self.user_admin).message_post(body='Message 1', partner_ids=[user1.partner_id.id, user2.partner_id.id])
         message2 = self.test_record.with_user(self.user_admin).message_post(body='Message 2', partner_ids=[user1.partner_id.id, user2.partner_id.id])

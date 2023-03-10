@@ -6,7 +6,7 @@ from unittest.mock import patch
 from lxml import objectify
 
 from odoo.fields import Command
-from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.base.tests.common import BaseCommon, new_test_user
 from odoo.tools.misc import hmac as hmac_tool
 
 _logger = logging.getLogger(__name__)
@@ -30,16 +30,14 @@ class PaymentCommon(BaseCommon):
         cls.group_public = cls.env.ref('base.group_public')
 
         cls.admin_user = cls.env.ref('base.user_admin')
-        cls.internal_user = cls.env['res.users'].create({
+        cls.internal_user = new_test_user(cls.env, **{
             'name': 'Internal User (Test)',
             'login': 'internal',
-            'password': 'internal',
             'groups_id': [Command.link(cls.group_user.id)]
         })
-        cls.portal_user = cls.env['res.users'].create({
+        cls.portal_user = new_test_user(cls.env, **{
             'name': 'Portal User (Test)',
             'login': 'payment_portal',
-            'password': 'payment_portal',
             'groups_id': [Command.link(cls.group_portal.id)]
         })
         cls.public_user = cls.env.ref('base.public_user')

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests.common import new_test_user, TransactionCase, Form
 
 
 class TestMultiCompany(TransactionCase):
@@ -19,7 +19,7 @@ class TestMultiCompany(TransactionCase):
         cls.stock_location_a = cls.warehouse_a.lot_stock_id
         cls.stock_location_b = cls.warehouse_b.lot_stock_id
 
-        cls.user_a = cls.env['res.users'].create({
+        cls.user_a = new_test_user(cls.env, **{
             'name': 'user company a with access to company b',
             'login': 'user a',
             'groups_id': [(6, 0, [
@@ -29,7 +29,7 @@ class TestMultiCompany(TransactionCase):
             'company_id': cls.company_a.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
-        cls.user_b = cls.env['res.users'].create({
+        cls.user_b = new_test_user(cls.env, **{
             'name': 'user company b with access to company a',
             'login': 'user b',
             'groups_id': [(6, 0, [

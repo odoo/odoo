@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import new_test_user, tagged, HttpCase
 from odoo import Command
 
 
@@ -16,11 +16,10 @@ class TestMailFullComposer(HttpCase):
             'auto_delete': True,
             'model_id': self.ref('base.model_res_partner'),
         })
-        testuser = self.env['res.users'].create({
+        testuser = new_test_user(self.env, **{
             'email': 'testuser@testuser.com',
             'groups_id': [Command.set([self.ref('base.group_user'), self.ref('base.group_partner_manager')])],
             'name': 'Test User',
             'login': 'testuser',
-            'password': 'testuser',
         })
         self.start_tour("/web#id=%d&model=res.partner" % testuser.partner_id, 'mail/static/tests/tours/mail_full_composer_test_tour.js', login='testuser')

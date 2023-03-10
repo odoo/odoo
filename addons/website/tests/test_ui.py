@@ -199,10 +199,9 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour("/web", 'homepage', login='admin')
 
     def test_02_restricted_editor(self):
-        self.restricted_editor = self.env['res.users'].create({
+        self.restricted_editor = odoo.tests.new_test_user(self.env, **{
             'name': 'Restricted Editor',
             'login': 'restricted',
-            'password': 'restricted',
             'groups_id': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('website.group_website_restricted_editor')

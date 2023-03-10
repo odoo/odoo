@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import new_test_user, new_test_users, Form
 from odoo.addons.hr.tests.common import TestHrCommon
 
 
@@ -9,12 +9,11 @@ class TestHrEmployee(TestHrCommon):
 
     def setUp(self):
         super().setUp()
-        self.user_without_image = self.env['res.users'].create({
+        self.user_without_image = new_test_user(self.env, **{
             'name': 'Marc Demo',
             'email': 'mark.brown23@example.com',
             'image_1920': False,
             'login': 'demo_1',
-            'password': 'demo_123'
         })
         self.employee_without_image = self.env['hr.employee'].create({
             'user_id': self.user_without_image.id,
@@ -142,7 +141,7 @@ class TestHrEmployee(TestHrCommon):
         employee = self.env['hr.employee'].create({
             'name': 'Test User 3 - employee'
         })
-        user_1, user_2, user_3 = self.env['res.users'].create([
+        user_1, user_2, user_3 = new_test_users(self.env, [
             {
                 'name': 'Test User',
                 'login': 'test_user',
@@ -177,7 +176,6 @@ class TestHrEmployee(TestHrCommon):
             'name': 'Test User',
             'login': 'test_user',
             'email': 'test_user@odoo.com',
-            'password': 'test_user_password',
             'partner_id': partner.id,
         })
         self.assertFalse(self.env['res.users'].search([('login', '=', 'test_user')]).employee_id)

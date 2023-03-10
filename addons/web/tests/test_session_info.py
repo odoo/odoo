@@ -4,7 +4,7 @@ import json
 from uuid import uuid4
 
 from odoo import Command
-from odoo.tests import common
+from odoo.tests import common, new_test_user
 
 
 class TestSessionInfo(common.HttpCase):
@@ -17,7 +17,7 @@ class TestSessionInfo(common.HttpCase):
         cls.companies = [cls.company_a, cls.company_b, cls.company_c]
 
         cls.user_password = "info"
-        cls.user = common.new_test_user(
+        cls.user = new_test_user(
             cls.env,
             "session",
             email="session@in.fo",

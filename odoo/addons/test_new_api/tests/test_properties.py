@@ -9,7 +9,7 @@ from unittest.mock import patch
 from odoo import Command
 
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import Form, TransactionCase, users
+from odoo.tests.common import Form, TransactionCase, users, new_test_user
 from odoo.tools import mute_logger
 
 
@@ -23,7 +23,7 @@ class PropertiesCase(TransactionCase):
         cls.partner = cls.env['test_new_api.partner'].create({'name': 'Test Partner Properties'})
         cls.partner_2 = cls.env['test_new_api.partner'].create({'name': 'Test Partner Properties 2'})
 
-        cls.test_user = cls.env['res.users'].create({
+        cls.test_user = new_test_user(cls.env, **{
             'name': 'Test',
             'login': 'test',
             'company_id': cls.env.company.id,

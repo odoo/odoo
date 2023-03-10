@@ -5,7 +5,7 @@ import base64
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tools import mute_logger
 
 
@@ -292,7 +292,7 @@ class TestAccessFeatures(common.SlidesCase):
         channel.invalidate_model(['partner_ids'])
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
 
-        new_user = self.env['res.users'].create({
+        new_user = new_test_user(self.env, **{
             'name': 'NewUser',
             'login': 'NewUser',
             'groups_id': [(6, 0, [self.ref('base.group_user')])]
@@ -300,7 +300,7 @@ class TestAccessFeatures(common.SlidesCase):
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
 
-        new_user_2 = self.env['res.users'].create({
+        new_user_2 = new_test_user(self.env, **{
             'name': 'NewUser2',
             'login': 'NewUser2',
             'groups_id': [(5, 0)]
@@ -311,7 +311,7 @@ class TestAccessFeatures(common.SlidesCase):
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
 
-        new_user_3 = self.env['res.users'].create({
+        new_user_3 = new_test_user(self.env, **{
             'name': 'NewUser3',
             'login': 'NewUser3',
             'groups_id': [(5, 0)]

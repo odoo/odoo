@@ -17,19 +17,17 @@ class SalesTeamCommon(TransactionCase):
         cls.group_sale_salesman = cls.env.ref('sales_team.group_sale_salesman')
         cls.group_sale_manager = cls.env.ref('sales_team.group_sale_manager')
 
-        cls.sale_user = cls.env['res.users'].create({
+        cls.sale_user = mail_new_test_user(cls.env, **{
             'name': 'Test Salesman',
             'login': 'salesman',
-            'password': 'salesman',
             'email': 'default_user_salesman@example.com',
             'signature': '--\nMark',
             'notification_type': 'email',
             'groups_id': [(6, 0, cls.group_sale_salesman.ids)],
         })
-        cls.sale_manager = cls.env['res.users'].create({
+        cls.sale_manager = mail_new_test_user(cls.env, **{
             'name': 'Test Sales Manager',
             'login': 'salesmanager',
-            'password': 'salesmanager',
             'email': 'default_user_salesmanager@example.com',
             'signature': '--\nDamien',
             'notification_type': 'email',

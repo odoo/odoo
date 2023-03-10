@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.tests.common import tagged
+from odoo.tests.common import new_test_user
 
 
 class TestUTMCommon(common.TransactionCase):
@@ -15,7 +15,7 @@ class TestUTMCommon(common.TransactionCase):
         cls.utm_medium = cls.env['utm.medium'].create({'name': 'Test Medium'})
         cls.utm_source = cls.env['utm.source'].create({'name': 'Test Source'})
 
-        cls.user_employee = cls.env['res.users'].create({
+        cls.user_employee = new_test_user(cls.env, **{
             'name': 'User Employee',
             'login': 'user_employee_utm',
             'email': 'user_employee_utm@test.com',

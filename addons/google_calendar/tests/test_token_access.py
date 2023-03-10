@@ -1,6 +1,6 @@
 from odoo import fields, Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 
 class TestTokenAccess(TransactionCase):
 
@@ -16,7 +16,7 @@ class TestTokenAccess(TransactionCase):
                 'calendar_token_validity': fields.Datetime.today(),
                 'calendar_sync_token': f'{u}_sync_token',
             })
-            user = cls.env['res.users'].create({
+            user = new_test_user(cls.env, **{
                 'name': f'{u}',
                 'login': f'{u}',
                 'email': f'{u}@odoo.com',
@@ -24,7 +24,7 @@ class TestTokenAccess(TransactionCase):
             })
             cls.users += [user]
 
-        cls.system_user = cls.env['res.users'].create({
+        cls.system_user = new_test_user(cls.env, **{
             'name': 'system_user',
             'login': 'system_user',
             'email': 'system_user@odoo.com',

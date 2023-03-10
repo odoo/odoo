@@ -110,8 +110,8 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_user_login(self):
         websocket = self.websocket_connect()
-        new_test_user(self.env, login='test_user', password='Password!1')
-        self.authenticate('test_user', 'Password!1')
+        new_test_user(self.env, login='test_user')
+        self.authenticate('test_user')
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
@@ -119,8 +119,8 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_incoming_message(self):
-        new_test_user(self.env, login='test_user', password='Password!1')
-        user_session = self.authenticate('test_user', 'Password!1')
+        new_test_user(self.env, login='test_user')
+        user_session = self.authenticate('test_user')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
         self.url_open('/web/session/logout')
         # The session with whom the websocket connected has been
@@ -140,8 +140,8 @@ class TestWebsocketCaryall(WebsocketCase):
             original_subscribe(self, *args)
             subscribe_done_event.set()
 
-        new_test_user(self.env, login='test_user', password='Password!1')
-        user_session = self.authenticate('test_user', 'Password!1')
+        new_test_user(self.env, login='test_user')
+        user_session = self.authenticate('test_user')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
         with patch.object(Websocket, 'subscribe', patched_subscribe):
             websocket.send(json.dumps({

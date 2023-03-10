@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.fields import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged, Form
+from odoo.tests import new_test_user, tagged, Form
 from odoo.tools import float_compare
 
 from odoo.addons.sale.tests.common import SaleCommon
@@ -423,13 +423,13 @@ class TestSalesTeam(SaleCommon):
         cls.sale_team_2 = cls.env['crm.team'].create({
             'name': 'Test Sales Team (2)',
         })
-        cls.user_in_team = cls.env['res.users'].create({
+        cls.user_in_team = new_test_user(cls.env, **{
             'email': 'team0user@example.com',
             'login': 'team0user',
             'name': 'User in Team 0',
         })
         cls.sale_team.write({'member_ids': [4, cls.user_in_team.id]})
-        cls.user_not_in_team = cls.env['res.users'].create({
+        cls.user_not_in_team = new_test_user(cls.env, **{
             'email': 'noteamuser@example.com',
             'login': 'noteamuser',
             'name': 'User Not In Team',

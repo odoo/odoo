@@ -83,7 +83,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
     def setUp(self):
         super().setUp()
         self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
-        self.authenticate('jackoneill', 'jackoneill')
+        self.authenticate('jackoneill')
 
     def test_echohttp0_get_qs_db(self):
         res = self.db_url_open('/test_http/echo-http-get?race=Asgard')
@@ -134,7 +134,7 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
     def setUp(self):
         super().setUp()
         self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
-        self.authenticate('jackoneill', 'jackoneill')
+        self.authenticate('jackoneill')
 
     def test_echojson0_qs_json_db(self):
         payload = json.dumps({

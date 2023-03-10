@@ -4,7 +4,7 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo.tests.common import TransactionCase, HttpCase
+from odoo.tests.common import TransactionCase, HttpCase, new_test_user
 from odoo import Command
 
 DISABLED_MAIL_CONTEXT = {
@@ -50,18 +50,16 @@ class BaseUsersCommon(BaseCommon):
         cls.group_portal = cls.env.ref('base.group_portal')
         cls.group_user = cls.env.ref('base.group_user')
 
-        cls.user_portal = cls.env['res.users'].create({
+        cls.user_portal = new_test_user(cls.env, **{
             'name': 'Test Portal User',
             'login': 'portal_user',
-            'password': 'portal_user',
             'email': 'portal_user@gladys.portal',
             'groups_id': [Command.set([cls.group_portal.id])],
         })
 
-        cls.user_internal = cls.env['res.users'].create({
+        cls.user_internal = new_test_user(cls.env, **{
             'name': 'Test Internal User',
             'login': 'internal_user',
-            'password': 'internal_user',
             'email': 'mark.brown23@example.com',
             'groups_id': [Command.set([cls.group_user.id])],
         })
@@ -78,15 +76,13 @@ class TransactionCaseWithUserDemo(TransactionCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
             # YTI TODO: This could be factorized between the different classes
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            cls.user_demo = cls.env['res.users'].create({
+            cls.user_demo = new_test_user(cls.env, **{
                 'login': 'demo',
-                'password': 'demo',
                 'partner_id': cls.partner_demo.id,
                 'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
@@ -103,14 +99,12 @@ class HttpCaseWithUserDemo(HttpCase):
         self.partner_demo = self.user_demo.partner_id
 
         if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
             self.partner_demo = self.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            self.user_demo = self.env['res.users'].create({
+            self.user_demo = new_test_user(self.env, **{
                 'login': 'demo',
-                'password': 'demo',
                 'partner_id': self.partner_demo.id,
                 'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
             })
@@ -126,14 +120,12 @@ class SavepointCaseWithUserDemo(TransactionCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            cls.user_demo = cls.env['res.users'].create({
+            cls.user_demo = new_test_user(cls.env, **{
                 'login': 'demo',
-                'password': 'demo',
                 'partner_id': cls.partner_demo.id,
                 'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
@@ -249,14 +241,12 @@ class HttpCaseWithUserPortal(HttpCase):
         self.partner_portal = self.user_portal.partner_id
 
         if not self.user_portal:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
             self.partner_portal = self.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
             })
-            self.user_portal = self.env['res.users'].with_context(no_reset_password=True).create({
+            self.user_portal = new_test_user(self.env, context={'no_reset_password': True}, **{
                 'login': 'portal',
-                'password': 'portal',
                 'partner_id': self.partner_portal.id,
                 'groups_id': [Command.set([self.env.ref('base.group_portal').id])],
             })

@@ -93,7 +93,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
 
     def test_visitor_info_access_rights(self):
         channel = self._common_basic_flow()
-        self.authenticate(self.operator.login, 'ideboulonate')
+        self.authenticate(self.operator.login)
 
         # Retrieve channels information, visitor info should be there
         res = self.opener.post(self.message_info_url, json={})

@@ -2,7 +2,7 @@
 
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import HttpCase
-from odoo.tests.common import tagged, users
+from odoo.tests.common import new_test_user, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -14,7 +14,7 @@ class TestUi(HttpCase):
     def test_02_crm_tour_rainbowman(self):
         # we create a new user to make sure they get the 'Congrats on your first deal!'
         # rainbowman message.
-        self.env['res.users'].create({
+        new_test_user(self.env, **{
             'name': 'Temporary CRM User',
             'login': 'temp_crm_user',
             'password': 'temp_crm_user',

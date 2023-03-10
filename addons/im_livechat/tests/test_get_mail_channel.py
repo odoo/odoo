@@ -4,13 +4,13 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, new_test_users, TransactionCase
 
 
 class TestGetMailChannel(TransactionCase):
     def setUp(self):
         super(TestGetMailChannel, self).setUp()
-        self.operators = self.env['res.users'].create([{
+        self.operators = new_test_users(self.env, [{
             'name': 'Michel',
             'login': 'michel',
             'livechat_username': "Michel Operator",
@@ -28,7 +28,7 @@ class TestGetMailChannel(TransactionCase):
             'login': 'georges'
         }])
 
-        self.visitor_user = self.env['res.users'].create({
+        self.visitor_user = new_test_user(self.env, **{
             'name': 'Rajesh',
             'login': 'rajesh',
             'country_id': self.ref('base.in'),
@@ -59,7 +59,7 @@ class TestGetMailChannel(TransactionCase):
     def test_channel_get_livechat_visitor_info(self):
         belgium = self.env.ref('base.be')
         public_user = self.env.ref('base.public_user')
-        test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'country_id': belgium.id})
+        test_user = new_test_user(self.env, **{'name': 'Roger', 'login': 'roger', 'country_id': belgium.id})
 
         # ensure visitor info are correct with anonymous
         operator = self.operators[0]

@@ -123,7 +123,7 @@ class TestUsers(TransactionCase):
     @mute_logger('odoo.sql_db')
     def test_deactivate_portal_users_access(self):
         """Test that only a portal users can deactivate his account."""
-        user_internal = self.env['res.users'].create({
+        user_internal = new_test_user(self.env, **{
             'name': 'Internal',
             'login': 'user_internal',
             'password': 'password',
@@ -262,7 +262,7 @@ class TestUsers2(TransactionCase):
         self.assertCountEqual(get_selection_groups(fname), groups.ids)
 
         # create a user
-        user = self.env['res.users'].create({'name': 'foo', 'login': 'foo'})
+        user = new_test_user(self.env, **{'name': 'foo', 'login': 'foo'})
 
         # put user in group0, and check field value
         user.write({fname: group0.id})
@@ -420,7 +420,7 @@ class TestUsersGroupWarning(TransactionCase):
                                                              cls.group_field_service_user).ids
 
         # User
-        cls.test_group_user = cls.env['res.users'].create({
+        cls.test_group_user = new_test_user(cls.env, **{
             'name': 'Test Group User',
             'login': 'TestGroupUser',
             'groups_id': (

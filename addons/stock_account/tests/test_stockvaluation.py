@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests.common import new_test_user, Form, TransactionCase
 
 
 def _create_accounting_data(env):
@@ -68,7 +68,7 @@ class TestStockValuation(TransactionCase):
             'type': 'product',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        cls.inventory_user = cls.env['res.users'].create({
+        cls.inventory_user = new_test_user(cls.env, **{
             'name': 'Pauline Poivraisselle',
             'login': 'pauline',
             'email': 'p.p@example.com',

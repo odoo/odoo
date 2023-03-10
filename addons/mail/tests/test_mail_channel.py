@@ -407,7 +407,7 @@ class TestChannelInternals(MailCommon):
     def test_channel_unsubscribe_auto(self):
         """ Archiving / deleting a user should automatically unsubscribe related
         partner from private channels """
-        test_user = self.env['res.users'].create({
+        test_user = mail_new_test_user(self.env, **{
             "login": "adam",
             "name": "Jonas",
         })

@@ -2,7 +2,7 @@
 
 from lxml import etree
 
-from odoo.tests import users
+from odoo.tests import new_test_user, users
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
@@ -43,10 +43,9 @@ class TestProjectCommon(TransactionCase):
             'signature': 'SignChell',
             'notification_type': 'email',
             'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
-        cls.user_projectuser = Users.create({
+        cls.user_projectuser = new_test_user(cls.env, **{
             'name': 'Armande ProjectUser',
             'login': 'armandel',
-            'password': 'armandel',
             'email': 'armande.projectuser@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
         })

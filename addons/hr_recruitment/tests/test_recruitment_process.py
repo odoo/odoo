@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.modules.module import get_module_resource
 
@@ -26,7 +26,7 @@ class TestRecruitmentProcess(TestHrCommon):
         self.employee_niv = self.employee_niv.with_user(self.res_users_hr_officer.id)
 
         # Create a new HR Recruitment Officer
-        self.res_users_hr_recruitment_officer = self.env['res.users'].create({
+        self.res_users_hr_recruitment_officer = new_test_user(self.env, **{
             'company_id': self.env.ref('base.main_company').id,
             'name': 'HR Recruitment Officer',
             'login': "hrro",

@@ -2,14 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import users, tagged, TransactionCase
+from odoo.tests.common import new_test_users, users, tagged, TransactionCase
 
 
 @tagged('post_install', '-at_install')
 class TestImLivechatMessage(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.users = self.env['res.users'].create([
+        self.users = new_test_users(self.env, [
             {
                 'email': 'e.e@example.com',
                 'groups_id': [Command.link(self.env.ref('base.group_user').id)],

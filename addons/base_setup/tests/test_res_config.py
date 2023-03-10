@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 
 
 def just_raise(*args):
@@ -30,7 +30,7 @@ class TestResConfig(TransactionCase):
         partner = self.env['res.partner'].create({
             'name': 'My User'
         })
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'login': 'My User',
             'company_id': company.id,
             'company_ids': [(4, company.id)],
@@ -46,7 +46,7 @@ class TestResConfig(TransactionCase):
         self.assertTrue(user in self.env.ref('base.group_multi_currency').sudo().users)
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
-        new_user = self.env['res.users'].create({
+        new_user = new_test_user(self.env, **{
             'login': 'My First New User',
             'company_id': company.id,
             'company_ids': [(4, company.id)],
@@ -60,7 +60,7 @@ class TestResConfig(TransactionCase):
         self.assertTrue(user not in self.env.ref('base.group_multi_currency').sudo().users)
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
-        new_user = self.env['res.users'].create({
+        new_user = new_test_user(self.env, **{
             'login': 'My Second New User',
             'company_id': company.id,
             'company_ids': [(4, company.id)],

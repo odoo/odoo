@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import common
+from odoo.tests import common, new_test_user
 from odoo.tools import frozendict
 from odoo import Command
 
@@ -28,7 +28,7 @@ class TestCompanyCheck(common.TransactionCase):
             'name': 'Company C'
         })
 
-        self.test_user = self.env['res.users'].create({
+        self.test_user = new_test_user(self.env, **{
             'name': 'Test',
             'login': 'test',
             'company_id': self.company_a.id,
@@ -182,7 +182,7 @@ class TestCompanyCheck(common.TransactionCase):
         records, example, a private address set by an onchange
         """
 
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'My Classic User',
             'login': 'My Classic User',
             'groups_id': [Command.set(self.env.ref('base.group_user').ids)],

@@ -6,7 +6,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import new_test_user, tagged, TransactionCase
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
 @tagged('post_install', '-at_install')
@@ -17,7 +17,7 @@ class TestPartner(TransactionCase):
         super().setUpClass()
         # use a single value for today throughout the tests to avoid weird scenarios around midnight
         cls.today = date.today()
-        baseUser = cls.env['res.users'].create({
+        baseUser = new_test_user(cls.env, **{
             'email': 'e.e@example.com',
             'groups_id': [Command.link(cls.env.ref('base.group_user').id)],
             'login': 'emp',
@@ -26,7 +26,7 @@ class TestPartner(TransactionCase):
             'signature': '--\nErnest',
         })
         cls.partner = baseUser.partner_id
-        cls.users = baseUser + cls.env['res.users'].create({
+        cls.users = baseUser + new_test_user(cls.env, **{
             'name': 'test1',
             'login': 'test1',
             'email': 'test1@example.com',

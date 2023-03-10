@@ -230,7 +230,7 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
     @users('demo')
     def test_unsubscribe_classic(self):
         self.assertIn(self.user_demo, self.test_digest.user_ids)
-        self.authenticate(self.env.user.login, self.env.user.login)
+        self.authenticate(self.env.user.login)
 
         response = self._url_unsubscribe()
         self.assertEqual(response.status_code, 200)
@@ -243,7 +243,7 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         self.assertNotIn(self.user_demo, self.test_digest.user_ids)
 
         # unsubscribe
-        self.authenticate(self.env.user.login, self.env.user.login)
+        self.authenticate(self.env.user.login)
         response = self._url_unsubscribe()
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(self.user_demo, self.test_digest.user_ids)

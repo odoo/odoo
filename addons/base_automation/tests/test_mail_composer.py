@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import new_test_user, tagged, HttpCase
 
 
 @tagged('-at_install', 'post_install', 'mail_composer')
@@ -15,14 +15,13 @@ class TestMailFullComposer(HttpCase):
             'auto_delete': True,
             'model_id': self.ref('base.model_res_partner'),
         })
-        test_user = self.env['res.users'].create({
+        test_user = new_test_user(self.env, **{
             'email': 'testuser@testuser.com',
             'groups_id': [
                 (6, 0, [self.ref('base.group_user'), self.ref('base.group_partner_manager')]),
             ],
             'name': 'Test User',
             'login': 'testuser',
-            'password': 'testuser',
         })
 
         automated_action = self.env['base.automation'].create({

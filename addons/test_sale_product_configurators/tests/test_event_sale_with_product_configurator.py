@@ -20,7 +20,6 @@ class TestEventProductConfiguratorUi(HttpCase):
             cls.env,
             name='Salesman',
             login='salesman',
-            password='salesman',
             groups='sales_team.group_sale_salesman',
         )
 

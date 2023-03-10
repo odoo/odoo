@@ -59,13 +59,13 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
         }])
 
         self.portal_user = mail_new_test_user(
-            self.env, name='Smeagol', login='user_portal', password='user_portal', email='portal@example.com',
+            self.env, name='Smeagol', login='user_portal', email='portal@example.com',
             groups='base.group_portal'
         )
 
     def test_website_access_event_manager(self):
         """ Event managers are allowed to access both published and unpublished events """
-        self.authenticate('user_eventmanager', 'user_eventmanager')
+        self.authenticate('user_eventmanager')
         published_events = self.events.filtered(lambda event: event.website_published)
         resp = self.url_open('/event/%i' % published_events[0].id)
         self.assertEqual(resp.status_code, 200, 'Managers must have access to published event.')
@@ -80,7 +80,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
 
     def test_website_access_event_uer(self):
         """ Event users are allowed to access both published and unpublished events """
-        self.authenticate('user_eventuser', 'user_eventuser')
+        self.authenticate('user_eventuser')
         published_events = self.events.filtered(lambda event: event.website_published)
         resp = self.url_open('/event/%i' % published_events[0].id)
         self.assertEqual(resp.status_code, 200, 'Event user must have access to published event.')
@@ -96,7 +96,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
     @mute_logger('odoo.http')
     def test_website_access_portal(self):
         """ Portal users access only published events """
-        self.authenticate('user_portal', 'user_portal')
+        self.authenticate('user_portal')
         published_events = self.events.filtered(lambda event: event.website_published)
         resp = self.url_open('/event/%i' % published_events[0].id)
         self.assertEqual(resp.status_code, 200, 'Portal user must have access to published event.')

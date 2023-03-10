@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import AccessError
-from odoo.tests import common, TransactionCase
+from odoo.tests import new_test_user, TransactionCase
 
 
 class Feedback(TransactionCase):
@@ -11,7 +11,7 @@ class Feedback(TransactionCase):
         self.group0 = self.env['res.groups'].create({'name': "Group 0"})
         self.group1 = self.env['res.groups'].create({'name': "Group 1"})
         self.group2 = self.env['res.groups'].create({'name': "Group 2"})
-        self.user = self.env['res.users'].create({
+        self.user = new_test_user(self.env, **{
             'login': 'bob',
             'name': "Bob Bobman",
             'groups_id': [Command.set(self.group2.ids)],
@@ -26,7 +26,7 @@ class TestSudo(Feedback):
         partner_demo = self.env['res.partner'].create({
             'name': 'Marc Demo',
         })
-        user2 = self.env['res.users'].create({
+        user2 = new_test_user(self.env, **{
             'login': 'demo2',
             'password': 'demo2',
             'partner_id': partner_demo.id,

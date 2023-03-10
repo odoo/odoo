@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, new_test_user, tagged
 from odoo.tests.common import HOST
 from odoo.tools import mute_logger
 from odoo.addons.http_routing.models.ir_http import slug
@@ -16,10 +16,9 @@ class TestRedirect(HttpCase):
     def setUp(self):
         super(TestRedirect, self).setUp()
 
-        self.user_portal = self.env['res.users'].with_context({'no_reset_password': True}).create({
+        self.user_portal = new_test_user(self.env, context={'no_reset_password': True}, **{
             'name': 'Test Website Portal User',
             'login': 'portal_user',
-            'password': 'portal_user',
             'email': 'portal_user@mail.com',
             'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])]
         })
@@ -50,7 +49,7 @@ class TestRedirect(HttpCase):
         self.assertTrue(redirect_url in r.text, "Ensure the url_for has replaced the href URL in the DOM")
 
         # [Logged In User] Open the original url and check redirect OK
-        self.authenticate("portal_user", "portal_user")
+        self.authenticate("portal_user")
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
         self.assertTrue(r.url.endswith(redirect_url), "Ensure URL got redirected (2)")

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import users
+from odoo.tests import new_test_pass, users
 
 
 class TestNotifySecurityUpdate(MailCommon):
@@ -29,7 +29,7 @@ class TestNotifySecurityUpdate(MailCommon):
     @users('employee')
     def test_security_update_password(self):
         with self.mock_mail_gateway():
-            self.env.user.write({'password': 'newpassword'})
+            self.env.user.write({'password': new_test_pass(self.env, 'newpassword')})
 
         self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
             'subject': 'Security Update: Password Changed',

@@ -23,12 +23,12 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
     def test_cancel_chat_request_on_visitor_demand(self):
         self._clean_livechat_sessions()
 
-        self.operator_b = self.env['res.users'].create({
+        self.operator_b = tests.new_test_user(self.env, **{
             'name': 'Operator Marc',
             'login': 'operator_b',
             'email': 'operatormarc@example.com',
-            'password': "operatormarc",
             'livechat_username': "Marco'r El",
+            'groups': 'base.group_user,im_livechat.im_livechat_group_user',
         })
 
         # Open Chat Request

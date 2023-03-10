@@ -8,7 +8,7 @@ from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 @tagged('test_leave')
 class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
@@ -142,10 +142,9 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertFalse(work_entry.active)
 
     def test_work_entry_cancel_leave(self):
-        user = self.env['res.users'].create({
+        user = new_test_user(self.env, **{
             'name': 'User Employee',
             'login': 'jul',
-            'password': 'julpassword',
         })
         self.richard_emp.user_id = user
         self.richard_emp.contract_ids.state = 'open'

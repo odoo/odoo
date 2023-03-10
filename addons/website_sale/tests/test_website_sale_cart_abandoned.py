@@ -4,7 +4,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.mail.models.mail_template import MailTemplate
 
@@ -23,7 +23,7 @@ class TestWebsiteSaleCartAbandonedCommon(HttpCaseWithUserPortal):
             'name': 'public',
             'email': 'public@example.com',
         })
-        cls.public_user = cls.env['res.users'].create({
+        cls.public_user = new_test_user(cls.env, **{
             'name': 'Foo', 'login': 'foo',
             'partner_id': cls.public_partner.id,
         })

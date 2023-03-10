@@ -5,7 +5,7 @@ import ast
 
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tests.common import TransactionCase, BaseCase
+from odoo.tests.common import new_test_user, TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 
@@ -616,7 +616,7 @@ class TestBase(TransactionCase):
 
     def test_70_archive_internal_partners(self):
         test_partner = self.env['res.partner'].create({'name':'test partner'})
-        test_user = self.env['res.users'].create({
+        test_user = new_test_user(self.env, **{
                                 'login': 'test@odoo.com',
                                 'partner_id': test_partner.id,
                                 })
@@ -789,11 +789,11 @@ class TestGroups(TransactionCase):
         self.assertIn(a, c.implied_ids)
 
     def test_remove_groups(self):
-        u1 = self.env['res.users'].create({'login': 'u1', 'name': 'U1'})
-        u2 = self.env['res.users'].create({'login': 'u2', 'name': 'U2'})
+        u1 = new_test_user(self.env, **{'login': 'u1', 'name': 'U1'})
+        u2 = new_test_user(self.env, **{'login': 'u2', 'name': 'U2'})
         default = self.env.ref('base.default_user')
         portal = self.env.ref('base.group_portal')
-        p = self.env['res.users'].create({'login': 'p', 'name': 'P', 'groups_id': [Command.set([portal.id])]})
+        p = new_test_user(self.env, **{'login': 'p', 'name': 'P', 'groups_id': [Command.set([portal.id])]})
 
         a = self.env['res.groups'].create({'name': 'A', 'users': [Command.set(u1.ids)]})
         b = self.env['res.groups'].create({'name': 'B', 'users': [Command.set(u1.ids)]})

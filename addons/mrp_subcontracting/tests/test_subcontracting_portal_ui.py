@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import Command
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, HttpCase, new_test_user, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -11,10 +11,9 @@ class TestSubcontractingPortalUi(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         # 1. Create portal user
-        user = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nolog': True}).create({
+        user = new_test_user(cls.env, context={'no_reset_password': True, 'mail_create_nolog': True}, **{
             'name': 'Georges',
             'login': 'georges1',
-            'password': 'georges1',
             'email': 'georges@project.portal',
             'signature': 'SignGeorges',
             'notification_type': 'email',

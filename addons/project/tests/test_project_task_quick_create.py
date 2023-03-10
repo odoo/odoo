@@ -12,12 +12,10 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
         cls.user1, cls.user2 = cls.env['res.users'].with_context({'no_reset_password': True}).create([{
             'name': 'Raouf 1',
             'login': 'raouf1',
-            'password': 'raouf1aa',
             'email': 'raouf1@example.com',
         }, {
             'name': 'Raouf 2',
             'login': 'raouf2',
-            'password': 'raouf2aa',
             'email': 'raouf2@example.com',
         }])
 

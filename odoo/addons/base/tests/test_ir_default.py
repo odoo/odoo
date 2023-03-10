@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 
 
 class TestIrDefault(TransactionCase):
@@ -113,7 +113,7 @@ class TestIrDefault(TransactionCase):
         company_b = self.env["res.company"].create({"name": "C_B"})
         company_a_b = (company_a + company_b)
         company_b_a = (company_b + company_a)
-        multi_company_user = self.env['res.users'].create({
+        multi_company_user = new_test_user(self.env, **{
             'name': 'u2', 'login': 'u2',
             'company_id': company_a.id,
             'company_ids': company_a_b.ids,

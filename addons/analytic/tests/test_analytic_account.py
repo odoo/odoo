@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tests.common import TransactionCase
 from odoo import Command
 
@@ -28,10 +28,9 @@ class TestAnalyticAccount(TransactionCase):
         })
 
         # Create new user to avoid demo data.
-        user = cls.env['res.users'].create({
+        user = new_test_user(cls.env, **{
             'name': 'The anal(ytic) expert!',
             'login': 'analytic',
-            'password': 'analytic',
             'groups_id': [
                 (6, 0, cls.env.user.groups_id.ids),
                 (4, cls.env.ref('analytic.group_analytic_accounting').id),

@@ -436,7 +436,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
     def test_event_page_event_manager(self):
         # website customer data
         with freeze_time(self.reference_now):
-            self.authenticate('user_eventmanager', 'user_eventmanager')
+            self.authenticate('user_eventmanager')
             with self.assertQueryCount(default=35):  # tef 34
                 self._test_url_open('/event/%i' % self.test_event.id)
 
@@ -452,7 +452,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
     def test_events_browse_event_manager(self):
         # website customer data
         with freeze_time(self.reference_now):
-            self.authenticate('user_eventmanager', 'user_eventmanager')
+            self.authenticate('user_eventmanager')
             with self.assertQueryCount(default=43):  # tef 42
                 self._test_url_open('/event')
 

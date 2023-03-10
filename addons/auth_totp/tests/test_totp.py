@@ -7,7 +7,7 @@ from passlib.totp import TOTP
 from odoo import http
 from odoo.exceptions import AccessDenied
 from odoo.service import common as auth, model
-from odoo.tests import tagged, HttpCase, get_db_name
+from odoo.tests import new_test_pass, tagged, HttpCase, get_db_name
 from odoo.tools import mute_logger
 
 from ..controllers.home import Home
@@ -49,11 +49,11 @@ class TestTOTP(HttpCase):
 
         # 2. Verify that RPC is blocked because 2FA is on.
         self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {}),
+            self.xmlrpc_common.authenticate(get_db_name(), 'demo', new_test_pass(self.env, 'demo'), {}),
             "Should not have returned a uid"
         )
         self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {'interactive': True}),
+            self.xmlrpc_common.authenticate(get_db_name(), 'demo', new_test_pass(self.env, 'demo'), {'interactive': True}),
             'Trying to fake the auth type should not work'
         )
         uid = self.env.ref('base.user_demo').id
@@ -73,7 +73,7 @@ class TestTOTP(HttpCase):
         self.start_tour('/', 'totp_login_disabled', login=None)
 
         # 6. Check that rpc is now re-allowed
-        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})
+        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', new_test_pass(self.env, 'demo'), {})
         self.assertEqual(uid, self.env.ref('base.user_demo').id)
         [r] = self.xmlrpc_object.execute_kw(
             get_db_name(), uid, 'demo',
@@ -108,7 +108,7 @@ class TestTOTP(HttpCase):
             "params": {
                 "db": get_db_name(),
                 "login": "demo",
-                "password": "demo",
+                "password": new_test_pass(self.env, "demo"),
                 "context": {},
             },
         }
