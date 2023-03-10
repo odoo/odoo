@@ -104,12 +104,11 @@ class MrpTimerField extends Component {
                 !this.props.record.model.useSampleModel &&
                 this.props.record.data.state == "progress"
             ) {
-                const additionalDuration = await this.orm.call(
+                this.duration = await this.orm.call(
                     "mrp.workorder",
-                    "get_working_duration",
+                    "get_duration",
                     [this.props.record.resId]
                 );
-                this.duration += additionalDuration;
             }
         });
         onWillUpdateProps((nextProps) => {
