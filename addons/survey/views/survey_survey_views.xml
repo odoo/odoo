@@ -14,7 +14,7 @@
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       attrs="{'invisible': [('answer_done_count', '&lt;=', 0)]}"/>
                     <button name="action_start_session" string="Create Live Session" type="object" class="d-none d-sm-block"
-                        attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('active', '=', False), ('certification', '=', True)]}" />
+                        attrs="{'invisible': ['|', '|', '|', ('session_state', '!=', False), ('active', '=', False), ('certification', '=', True), ('survey_type', 'in', ('survey', 'assessment'))]}" />
                     <button name="action_open_session_manager" string="Open Session Manager" type="object" class="d-none d-sm-block"
                         attrs="{'invisible': [('session_state', '=', False)]}" />
                     <button name="action_end_session" string="Close Live Session" type="object" class="d-none d-sm-block"
@@ -49,9 +49,8 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="background_image" widget="image" class="oe_avatar"/>
+                    <field name="survey_type" widget="radio" options="{'horizontal': True}"/>
                     <div class="oe_title" style="width: 100%;">
-                        <label for="title" class="oe_edit_only" string="Survey Title" attrs="{'invisible': [('certification', '=', True)]}"/>
-                        <label for="title" class="oe_edit_only" string="Certification Title" attrs="{'invisible': [('certification', '=', False)]}"/>
                         <h1>
                             <field name="title" options="{'line_breaks': False}" widget="text" placeholder="e.g. Satisfaction Survey"/>
                         </h1>
@@ -96,17 +95,21 @@
                         <page string="Options" name="options">
                             <group name="options">
                                 <group string="Questions" name="questions">
-                                    <field name="questions_layout" widget="radio"
-                                        attrs="{'readonly': [('session_state', 'in', ['ready', 'in_progress'])]}"/>
-                                    <field name="progression_mode" widget="radio" attrs="{'invisible': [('questions_layout', '=', 'one_page')]}"/>
-                                    <field name="questions_selection" widget="radio" />
-                                    <field name="users_can_go_back" string="Back Button" attrs="{'invisible': [('questions_layout', '=', 'one_page')]}"/>
+                                    <field name="questions_layout" widget="radio" force_save="1"
+                                           attrs="{'readonly': ['|', ('session_state', 'in', ['ready', 'in_progress']), ('survey_type', '=', 'live_session')]}"/>
+                                    <field name="progression_mode" widget="radio"
+                                           attrs="{'invisible': ['|', ('questions_layout', '=', 'one_page'), ('survey_type', '=', 'live_session')]}"/>
+                                    <field name="questions_selection" widget="radio"
+                                           attrs="{'invisible': [('survey_type', '=', 'live_session')]}"/>
+                                    <field name="users_can_go_back" string="Back Button"
+                                           attrs="{'invisible': ['|', ('questions_layout', '=', 'one_page'), ('survey_type', '=', 'live_session')]}"/>
                                 </group>
                                 <group string="Participants" name="participants">
-                                    <field name="access_mode"/>
+                                    <field name="access_mode" force_save="1"
+                                           attrs="{'readonly': [('survey_type', '=', 'live_session')]}"/>
                                     <field name="users_login_required"/>
                                     <label for="is_attempts_limited" string="Limit Attempts"
-                                           attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                           attrs="{'invisible': ['|', '|', ('survey_type', '=', 'live_session'), ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
                                     <div class="o_checkbox_optional_field"
                                         attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
                                         <field name="is_attempts_limited" nolabel="1"/>
@@ -116,17 +119,24 @@
                                     </div>
                                 </group>
                                 <group string="Time &amp; Scoring" name="scoring">
-                                    <label for="is_time_limited" string="Survey Time Limit"/>
-                                    <div class="o_checkbox_optional_field">
+                                    <!-- Time -->
+                                    <label for="is_time_limited" string="Survey Time Limit"
+                                           attrs="{'invisible': [('survey_type', 'in', ('survey', 'live_session'))]}"/>
+                                    <div class="o_checkbox_optional_field"
+                                         attrs="{'invisible': [('survey_type', 'in', ('survey', 'live_session'))]}">
                                         <field name="is_time_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_time_limited', '=', False)]}">
                                             <field name="time_limit" widget="float_time" nolabel="1" class="oe_inline"/> minutes
                                         </div>
-                                    </div>  
-                                    <field name="scoring_type" widget="radio" />
+                                    </div>
+                                    <!-- Scoring -->
+                                    <field name="scoring_type" widget="radio" force_save="1"
+                                           attrs="{'readonly': [('survey_type', '=', 'survey')]}"/>
                                     <field name="scoring_success_min" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
-                                    <label for="certification"/>
-                                    <div class="o_checkbox_optional_field">
+                                    <label for="certification"
+                                           attrs="{'invisible': [('survey_type', 'in', ('survey', 'live_session'))]}"/>
+                                    <div class="o_checkbox_optional_field"
+                                         attrs="{'invisible': [('survey_type', 'in', ('survey', 'live_session'))]}">
                                         <field name="certification" nolabel="1"/>
                                         <div attrs="{'invisible': [('certification', '=', False)]}" class="w-100">
                                             <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
@@ -134,7 +144,7 @@
                                                 string="Preview" type="object"
                                                 icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
                                         </div>
-                                    </div> 
+                                    </div>
                                     <field name="certification_mail_template_id"
                                         placeholder="Pick a Template..."
                                         attrs="{'invisible': [('certification', '=', False)]}"/>
@@ -160,7 +170,8 @@
                                         </div>
                                     </div>
                                 </group>
-                                <group string="Live Session">
+                                <group string="Live Session"
+                                       attrs="{'invisible': [('survey_type', 'in', ('survey', 'assessment'))]}">
                                     <field name="session_code" />
                                     <field name="session_link" widget="CopyClipboardChar" />
                                     <field name="session_speed_rating" />
@@ -399,42 +410,54 @@
             <p>
                 No Survey Found
             </p><p>
-                Ready to test? Pick a sample...
+                Ready to test? Pick a sample or create one from scratch...
             </p>
             <div class="row mb-4">
-                <div class="col-sm-4 o_survey_sample_container" action="action_load_sample_feedback_form">
+                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_survey">
                     <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
-                        <img src="/survey/static/src/img/survey_sample_feedback_form.png" class="img-fluid"/>
+                        <img src="/survey/static/src/img/survey_sample_survey.png" class="img-fluid"/>
                         <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
                             Gather feedbacks from your employees and customers
                         </div>
                     </div>
                     <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Feedback Form</a>
+                        <a class="o_survey_load_sample h3 text-center text-primary">Survey</a>
                     </div>
                     <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
-                <div class="col-sm-4 o_survey_sample_container" action="action_load_sample_certification">
+                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_assessment">
                     <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
-                        <img src="/survey/static/src/img/survey_sample_certification.png" class="img-fluid"/>
+                        <img src="/survey/static/src/img/survey_sample_assessment.png" class="img-fluid"/>
                         <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
                             Handle quiz &amp; certifications
                         </div>
                     </div>
                     <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Certification</a>
+                        <a class="o_survey_load_sample h3 text-center text-primary">Assessment</a>
                     </div>
                     <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
-                <div class="col-sm-4 o_survey_sample_container" action="action_load_sample_live_presentation">
+                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_live_session">
                     <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
-                        <img src="/survey/static/src/img/survey_sample_live_presentation.png" class="img-fluid"/>
+                        <img src="/survey/static/src/img/survey_sample_live_session.png" class="img-fluid"/>
                         <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
                             Add some fun to your presentations by sharing questions live
                         </div>
                     </div>
                     <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Live Presentation</a>
+                        <a class="o_survey_load_sample h3 text-center text-primary">Live Session</a>
+                    </div>
+                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
+                </div>
+                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_custom">
+                    <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
+                        <img src="/survey/static/src/img/survey_sample_custom.png" class="img-fluid"/>
+                        <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
+                            Create a custom survey from scratch
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <a class="o_survey_load_sample h3 text-center text-primary">Custom</a>
                     </div>
                     <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
