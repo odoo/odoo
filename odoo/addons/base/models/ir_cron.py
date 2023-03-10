@@ -514,3 +514,7 @@ class ir_cron_trigger(models.Model):
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()
+
+    @api.autovacuum
+    def _gc_cron_triggers(self):
+        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
