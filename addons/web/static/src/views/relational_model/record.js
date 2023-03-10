@@ -56,14 +56,14 @@ export class Record extends DataPoint {
         return this._invalidFields.has(fieldName);
     }
 
-    // TODO: remove?
+    // TODO: remove
     isReadonly(fieldName) {
-        return false;
+        return this._isReadonly(fieldName);
     }
 
-    // TODO: remove?
+    // TODO: remove
     isRequired(fieldName) {
-        return false;
+        return this._isRequired(fieldName);
     }
 
     // TODO: remove (there's a subtask)
@@ -327,6 +327,8 @@ export class Record extends DataPoint {
             if ([null].includes(value)) {
                 // simplify that?
                 evalContext[fieldName] = false;
+            } else if (["char", "text"].includes(field.type)) {
+                evalContext[fieldName] = value !== "" ? value : false;
             } else if (["one2many", "many2many"].includes(field.type)) {
                 evalContext[fieldName] = value.resIds;
             } else if (value && field.type === "date") {
@@ -346,6 +348,11 @@ export class Record extends DataPoint {
         //     evalContext.parent = this.getParentRecordContext();
         // }
         return evalContext;
+    }
+
+    _isReadonly(fieldName) {
+        const readonly = this.activeFields[fieldName].readonly;
+        return readonly ? evalDomain(readonly, this.evalContext) : false;
     }
 
     _isRequired(fieldName) {
