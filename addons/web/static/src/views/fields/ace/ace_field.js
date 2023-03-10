@@ -48,8 +48,8 @@ export class AceField extends Component {
         );
 
         const { model } = this.props.record;
-        useBus(model, "WILL_SAVE_URGENTLY", () => this.commitChanges());
-        useBus(model, "NEED_LOCAL_CHANGES", ({ detail }) =>
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges());
+        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
     }

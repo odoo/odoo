@@ -55,13 +55,13 @@ export class DateField extends Component {
         }
     }
     onDatePickerInput(ev) {
-        this.props.record.model.trigger(
+        this.props.record.model.bus.trigger(
             "FIELD_IS_DIRTY",
             ev.target.value !== this.lastSetValue
         );
     }
     onUpdateInput(date) {
-        this.props.record.model.trigger("FIELD_IS_DIRTY", false);
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
         this.lastSetValue = date;
     }
 }
