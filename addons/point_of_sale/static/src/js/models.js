@@ -2810,7 +2810,6 @@ export class Order extends PosModel {
         this.pos_session_id = this.pos.pos_session.id;
         this.cashier = this.pos.get_cashier();
         this.finalized = false; // if true, cannot be modified.
-        this.set_pricelist(this.pos.default_pricelist);
         this.shippingDate = null;
 
         this.partner = null;
@@ -2832,6 +2831,7 @@ export class Order extends PosModel {
         if (options.json) {
             this.init_from_JSON(options.json);
         } else {
+            this.set_pricelist(this.pos.default_pricelist);
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.access_token = uuidv4(); // unique uuid used to identify the authenticity of the request from the QR code.
             this.ticketCode = this._generateTicketCode(); // 5-digits alphanum code shown on the receipt
@@ -2906,7 +2906,7 @@ export class Order extends PosModel {
         } else {
             partner = null;
         }
-        this.set_partner(partner);
+        this.partner = partner;
 
         this.temporary = false; // FIXME
         this.to_invoice = false; // FIXME
