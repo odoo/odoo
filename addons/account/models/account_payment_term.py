@@ -36,7 +36,6 @@ class AccountPaymentTerm(models.Model):
 
     discount_percentage = fields.Float(string='Discount %', help='Early Payment Discount granted for this payment term', default=2.0)
     discount_days = fields.Integer(string='Discount Days', help='Number of days before the early payment proposition expires', default=10)
-    last_day_for_discount = fields.Date(string='Last date to benefit from the discount', compute='_compute_last_discount_date')
     early_pay_discount_computation = fields.Selection([
         ('included', 'On early payment'),
         ('excluded', 'Never'),
