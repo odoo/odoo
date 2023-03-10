@@ -33,7 +33,7 @@ class Bank(models.Model):
     def name_get(self):
         result = []
         for bank in self:
-            name = bank.name + (bank.bic and (' - ' + bank.bic) or '')
+            name = (bank.name or '') + (bank.bic and (' - ' + bank.bic) or '')
             result.append((bank.id, name))
         return result
 

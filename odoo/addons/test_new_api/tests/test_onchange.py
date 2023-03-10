@@ -25,6 +25,15 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = self.Discussion.default_get(fields)
         self.assertEqual(values, {})
 
+        user = self.env.user
+        field_onchange = self.env['test_new_api.message']._onchange_spec()
+        values = self.env['test_new_api.message'].onchange2({}, [], field_onchange)['value']
+        self.assertEqual(values['discussion'], False)
+        self.assertEqual(values['body'], False)
+        self.assertEqual(values['author'], (user.id, user.display_name))
+        self.assertEqual(values['name'], f'[] {user.name}')
+        self.assertEqual(values['size'], 0)
+
     def test_get_field(self):
         """ checking that accessing an unknown attribute does nothing special """
         with self.assertRaises(AttributeError):
@@ -50,7 +59,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'size': 0,
         }
         self.env.invalidate_all()
-        result = self.Message.onchange(values, 'discussion', field_onchange)
+        result = self.Message.onchange2(values, 'discussion', field_onchange)
         self.assertIn('name', result['value'])
         self.assertEqual(result['value']['name'], "[%s] %s" % (discussion.name, USER.name))
 
@@ -63,7 +72,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'size': 0,
         }
         self.env.invalidate_all()
-        result = self.Message.onchange(values, 'body', field_onchange)
+        result = self.Message.onchange2(values, 'body', field_onchange)
         self.assertIn('size', result['value'])
         self.assertEqual(result['value']['size'], len(BODY))
 
@@ -77,7 +86,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'size': 0,
         }
         self.env.invalidate_all()
-        result = self.Message.onchange(values, 'body', field_onchange)
+        result = self.Message.onchange2(values, 'body', field_onchange)
         self.assertNotIn('name', result['value'])
 
     def test_onchange_many2one(self):
@@ -95,7 +104,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         }
 
         self.env.invalidate_all()
-        result = Category.onchange(values, 'parent', field_onchange).get('value', {})
+        result = Category.onchange2(values, 'parent', field_onchange).get('value', {})
         self.assertIn('root_categ', result)
         self.assertEqual(result['root_categ'], root.name_get()[0])
 
@@ -103,7 +112,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values['parent'] = False
 
         self.env.invalidate_all()
-        result = Category.onchange(values, 'parent', field_onchange).get('value', {})
+        result = Category.onchange2(values, 'parent', field_onchange).get('value', {})
         self.assertIn('root_categ', result)
         self.assertIs(result['root_categ'], False)
 
@@ -134,7 +143,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
                 Command.link(message1.id),
                 Command.link(message2.id),
                 Command.update(message2.id, {'body': "XYZ"}),
-                Command.create({
+                (Command.CREATE, "virtual3", {
                     'name': "[%s] %s" % ('', USER.name),
                     'body': "ABC",
                     'author': USER.id,
@@ -144,42 +153,25 @@ class TestOnChange(SavepointCaseWithUserDemo):
             ],
         }
         self.env.invalidate_all()
-        result = self.Discussion.onchange(values, 'name', field_onchange)
+        result = self.Discussion.onchange2(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertEqual(result['value']['messages'], [
-            Command.clear(),
             Command.update(message1.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': "ABC",
-                'author': USER.name_get()[0],
-                'size': 3,
-                'important': False,
             }),
             Command.update(message2.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': "XYZ",          # this must be sent back
-                'author': USER.name_get()[0],
-                'size': 3,
-                'important': False,
             }),
-            Command.create({
+            Command.update("virtual3", {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': "ABC",
-                'author': USER.name_get()[0],
-                'size': 3,
-                'important': False,
             }),
         ])
 
         # ensure onchange changing one2many without subfield works
         one_level_fields = {k: v for k, v in field_onchange.items() if k.count('.') < 1}
         values = dict(values, name='{generate_dummy_message}')
-        result = self.Discussion.with_context(generate_dummy_message=True).onchange(values, 'name', one_level_fields)
+        result = self.Discussion.with_context(generate_dummy_message=True).onchange2(values, 'name', one_level_fields)
         self.assertEqual(result['value']['messages'], [
-            Command.clear(),
-            Command.link(message1.id),
-            Command.link(message2.id),
-            Command.create({}),
             Command.create({}),
         ])
 
@@ -187,7 +179,6 @@ class TestOnChange(SavepointCaseWithUserDemo):
         """ test the effect of onchange() on one2many fields with line references """
         BODY = "What a beautiful day!"
         USER = self.env.user
-        REFERENCE = "virtualid42"
 
         field_onchange = self.Discussion._onchange_spec()
         self.assertEqual(field_onchange.get('name'), '1')
@@ -205,7 +196,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'moderator': False,
             'participants': [],
             'messages': [
-                (0, REFERENCE, {
+                (Command.CREATE, 'virtual1', {
                     'name': "[%s] %s" % ('', USER.name),
                     'body': BODY,
                     'author': USER.id,
@@ -215,16 +206,11 @@ class TestOnChange(SavepointCaseWithUserDemo):
             ],
         }
         self.env.invalidate_all()
-        result = self.Discussion.onchange(values, 'name', field_onchange)
+        result = self.Discussion.onchange2(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
-            (5, 0, 0),
-            (0, REFERENCE, {
+            (Command.UPDATE, 'virtual1', {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': BODY,
-                'author': USER.name_get()[0],
-                'size': len(BODY),
-                'important': False,
             }),
         ])
 
@@ -233,6 +219,12 @@ class TestOnChange(SavepointCaseWithUserDemo):
         partner1 = self.env['res.partner'].create({'name': 'A partner'})
         multi = self.env['test_new_api.multi'].create({'partner': partner1.id})
         line1 = multi.lines.create({'multi': multi.id})
+
+        self.assertEqual(multi.partner, partner1)
+        self.assertEqual(multi.name, partner1.name)
+        self.assertEqual(multi.lines, line1)
+        self.assertEqual(line1.partner, partner1)
+        self.assertEqual(line1.name, False)
 
         field_onchange = multi._onchange_spec()
         self.assertEqual(field_onchange, {
@@ -245,13 +237,6 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'lines.tags.name': None,
         })
 
-        values = multi._convert_to_write({key: multi[key] for key in ('name', 'partner', 'lines')})
-        self.assertEqual(values, {
-            'name': partner1.name,
-            'partner': partner1.id,
-            'lines': [Command.set([line1.id])],
-        })
-
         # modify 'partner'
         #   -> set 'partner' on all lines
         #   -> recompute 'name'
@@ -260,25 +245,23 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
-            'lines': [Command.set([line1.id]),
-                      Command.create({'name': False, 'partner': False, 'tags': [Command.clear()]})],
+            'lines': [
+                (Command.CREATE, 'virtual2', {'name': False, 'partner': False, 'tags': [Command.clear()]}),
+            ],
         }
         self.env.invalidate_all()
 
-        result = multi.onchange(values, 'partner', field_onchange)
+        result = multi.onchange2(values, 'partner', field_onchange)
         self.assertEqual(result['value'], {
             'name': partner2.name,
             'lines': [
-                Command.clear(),
                 Command.update(line1.id, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [Command.clear()],
                 }),
-                Command.create({
+                Command.update('virtual2', {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [Command.clear()],
                 }),
             ],
         })
@@ -287,26 +270,26 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
-            'lines': [Command.set([line1.id]),
-                      Command.create({'name': False,
-                              'partner': False,
-                              'tags': [Command.clear(), Command.create({'name': 'Tag'})]})],
+            'lines': [
+                (Command.CREATE, 'virtual2', {
+                    'name': False,
+                    'partner': False,
+                    'tags': [Command.create({'name': 'Tag'})],
+                }),
+            ],
         }
         self.env.invalidate_all()
-        result = multi.onchange(values, 'partner', field_onchange)
+        result = multi.onchange2(values, 'partner', field_onchange)
         expected_value = {
             'name': partner2.name,
             'lines': [
-                Command.clear(),
                 Command.update(line1.id, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [Command.clear()],
                 }),
-                Command.create({
+                Command.update('virtual2', {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [Command.clear(), Command.create({'name': 'Tag'})],
                 }),
             ],
         }
@@ -315,13 +298,13 @@ class TestOnChange(SavepointCaseWithUserDemo):
         # ensure ID is not returned when asked and a many2many record is set to be created
         self.env.invalidate_all()
 
-        result = multi.onchange(values, 'partner', dict(field_onchange, **{'lines.tags.id': None}))
+        result = multi.onchange2(values, 'partner', dict(field_onchange, **{'lines.tags.id': None}))
         self.assertEqual(result['value'], expected_value)
 
         # ensure inverse of one2many field is not returned
         self.env.invalidate_all()
 
-        result = multi.onchange(values, 'partner', dict(field_onchange, **{'lines.multi': None}))
+        result = multi.onchange2(values, 'partner', dict(field_onchange, **{'lines.multi': None}))
         self.assertEqual(result['value'], expected_value)
 
     def test_onchange_specific(self):
@@ -342,19 +325,15 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         # check that demo_user is added to participants when set as moderator
         values = {
-            'name': discussion.name,
             'moderator': demo.id,
-            'categories': [Command.link(cat.id) for cat in discussion.categories],
-            'messages': [Command.link(msg.id) for msg in discussion.messages],
-            'participants': [Command.link(usr.id) for usr in discussion.participants],
         }
         self.env.invalidate_all()
-        result = discussion.onchange(values, 'moderator', field_onchange)
+        result = discussion.onchange2(values, 'moderator', field_onchange)
 
         self.assertIn('participants', result['value'])
         self.assertItemsEqual(
             result['value']['participants'],
-            [Command.clear()] + [Command.link(user.id) for user in discussion.participants + demo],
+            [(Command.LINK, demo.id, {'display_name': demo.display_name})],
         )
 
     def test_onchange_default(self):
@@ -370,13 +349,13 @@ class TestOnChange(SavepointCaseWithUserDemo):
         # setting 'value1' to 42 should trigger the change of 'value2'
         self.env.invalidate_all()
         values = {'name': 'X', 'value1': 42, 'value2': False}
-        result = Foo.onchange(values, 'value1', field_onchange)
+        result = Foo.onchange2(values, 'value1', field_onchange)
         self.assertEqual(result['value'], {'value2': 666})
 
         # setting 'value1' to 24 should not trigger the change of 'value2'
         self.env.invalidate_all()
         values = {'name': 'X', 'value1': 24, 'value2': False}
-        result = Foo.onchange(values, 'value1', field_onchange)
+        result = Foo.onchange2(values, 'value1', field_onchange)
         self.assertEqual(result['value'], {})
 
     def test_onchange_one2many_first(self):
@@ -413,7 +392,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'participants': [Command.link(usr.id) for usr in discussion.participants],
             'message_concat': False,
         }
-        result = discussion.onchange(values, 'messages', field_onchange)
+        result = discussion.onchange2(values, 'messages', field_onchange)
         self.assertIn('message_concat', result['value'])
         self.assertEqual(result['value']['message_concat'], "\n".join(lines))
 
@@ -456,24 +435,16 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': "Foo Bar",
             'moderator': demo.id,
-            'categories': [Command.link(cat.id) for cat in discussion.categories],
-            'messages': [Command.link(msg.id) for msg in discussion.messages],
-            'participants': [Command.link(usr.id) for usr in discussion.participants],
-            'important_messages': [Command.link(msg.id) for msg in discussion.important_messages],
-            'important_emails': [Command.link(eml.id) for eml in discussion.important_emails],
+            'important_messages': [Command.set(discussion.important_messages.ids)],
+            'important_emails': [Command.set(discussion.important_emails.ids)],
         }
         self.env.invalidate_all()
-        result = discussion.onchange(values, 'name', field_onchange)
+        result = discussion.onchange2(values, 'name', field_onchange)
 
         self.assertEqual(
             result['value']['important_emails'],
-            [Command.clear(), Command.update(email.id, {
+            [Command.update(email.id, {
                 'name': u'[Foo Bar] %s' % USER.name,
-                'body': BODY,
-                'author': USER.name_get()[0],
-                'size': len(BODY),
-                'important': True,
-                'email_to': demo.email,
             })],
         )
 
@@ -496,13 +467,13 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         self.env.invalidate_all()
         Message = self.env['test_new_api.related']
-        result = Message.onchange(value, 'message', field_onchange)
+        result = Message.onchange2(value, 'message', field_onchange)
 
         self.assertEqual(result['value'], onchange_result)
 
         self.env.invalidate_all()
         Message = self.env(user=self.user_demo.id)['test_new_api.related']
-        result = Message.onchange(value, 'message', field_onchange)
+        result = Message.onchange2(value, 'message', field_onchange)
 
         self.assertEqual(result['value'], onchange_result)
 
@@ -531,7 +502,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         # changing 'discussion' on message should not read 'messages' on discussion
         with patch.object(type(discussion), 'read', mock_read, create=True):
             self.env.invalidate_all()
-            self.Message.onchange(values, 'discussion', field_onchange)
+            self.Message.onchange2(values, 'discussion', field_onchange)
 
         self.assertFalse(called[0], "discussion.messages has been read")
 
@@ -545,7 +516,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         # the inverse many2one field
         values = {'order_id': {'id': order.id, 'currency_id': order.currency_id.id}}
         field_onchange = dict.fromkeys(['order_id', 'subtotal'], '')
-        result = self.env['test_new_api.monetary_order_line'].onchange(values, [], field_onchange)
+        result = self.env['test_new_api.monetary_order_line'].onchange2(values, [], field_onchange)
 
         self.assertEqual(result['value']['order_id'], (order.id, order.display_name))
 
@@ -872,7 +843,9 @@ class TestComputeOnchange(common.TransactionCase):
 
     def test_onchange_editable_compute_one2many(self):
         # create a record with a computed editable field ('edit') on lines
-        record = self.env['test_new_api.compute_editable'].create({'line_ids': [(0, 0, {'value': 7})]})
+        record = self.env['test_new_api.compute_editable'].create({
+            'line_ids': [Command.create({'value': 7})],
+        })
         self.env.flush_all()
         line = record.line_ids
         self.assertRecordValues(line, [{'value': 7, 'edit': 7, 'count': 0}])
@@ -886,14 +859,13 @@ class TestComputeOnchange(common.TransactionCase):
         # user on a computed editable field on a line is not lost.
         line_ids = [
             Command.update(line.id, {'value': 8, 'edit': 9, 'count': 0}),
-            Command.create({'value': 8, 'edit': 9, 'count': 0}),
+            (Command.CREATE, 'virtual2', {'value': 8, 'edit': 9, 'count': 0}),
         ]
-        result = record.onchange({'line_ids': line_ids}, 'line_ids', spec)
+        result = record.onchange2({'line_ids': line_ids}, 'line_ids', spec)
         expected = {'value': {
             'line_ids': [
-                Command.clear(),
-                Command.update(line.id, {'value': 8, 'edit': 9, 'count': 8}),
-                Command.create({'value': 8, 'edit': 9, 'count': 8}),
+                Command.update(line.id, {'count': 8}),
+                Command.update('virtual2', {'count': 8}),
             ],
         }}
         self.assertEqual(result, expected)
@@ -903,7 +875,7 @@ class TestComputeOnchange(common.TransactionCase):
             (op, id_, dict(reversed(list(vals.items()))))
             for op, id_, vals in line_ids
         ]
-        result = record.onchange({'line_ids': line_ids}, 'line_ids', spec)
+        result = record.onchange2({'line_ids': line_ids}, 'line_ids', spec)
         self.assertEqual(result, expected)
 
     def test_computed_editable_one2many_domain(self):

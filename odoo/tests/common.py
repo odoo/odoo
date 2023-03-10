@@ -1835,28 +1835,29 @@ def can_import(module):
         return True
 
 
-class Form(object):
+class Form:
     """ Server-side form view implementation (partial)
 
-    Implements much of the "form view" manipulation flow, such that
-    server-side tests can more properly reflect the behaviour which would be
-    observed when manipulating the interface:
+    Implements much of the "form view" manipulation flow, such that server-side
+    tests can more properly reflect the behaviour which would be observed when
+    manipulating the interface:
 
-    * call default_get and the relevant onchanges on "creation"
-    * call the relevant onchanges on setting fields
-    * properly handle defaults & onchanges around x2many fields
+    * call the relevant onchanges on "creation";
+    * call the relevant onchanges on setting fields;
+    * properly handle defaults & onchanges around x2many fields.
 
-    Saving the form returns the created record if in creation mode.
+    Saving the form returns the current record (which means the created record
+    if in creation mode).
 
-    Regular fields can just be assigned directly to the form, for
-    :class:`~odoo.fields.Many2one` fields assign a singleton recordset::
+    Regular fields can just be assigned directly to the form. In the case
+    of :class:`~odoo.fields.Many2one` fields, one can assign a recordset::
 
         # empty recordset => creation mode
         f = Form(self.env['sale.order'])
         f.partner_id = a_partner
         so = f.save()
 
-    When editing a record, using the form as a context manager to
+    When editing a record, one can use the form as a context manager to
     automatically save it at the end of the scope::
 
         with Form(so) as f2:
@@ -1881,7 +1882,8 @@ class Form(object):
     normally be used as context managers since they get saved in the
     parent record::
 
-        with Form(so) as f3:
+        with Form(self.env['sale.order']) as f3:
+            f.partner_id = a_partner
             # add support
             with f3.order_line.new() as line:
                 line.product_id = env.ref('product.product_product_2')
@@ -1895,26 +1897,29 @@ class Form(object):
             f3.order_line.remove(index=0)
             # SO is saved here
 
-    :param recordp: empty or singleton recordset. An empty recordset will
-                    put the view in "creation" mode and trigger calls to
-                    default_get and on-load onchanges, a singleton will
-                    put it in "edit" mode and only load the view's data.
-    :type recordp: odoo.models.Model
-    :param view: the id, xmlid or actual view object to use for
-                    onchanges and view constraints. If none is provided,
-                    simply loads the default view for the model.
+        # retrieve the record from the form
+        so = f3.save()
+
+    :param record: empty or singleton recordset. An empty recordset will put
+                   the view in "creation" mode from default values, while a
+                   singleton will put it in "edit" mode and only load the
+                   view's data.
+    :type record: odoo.models.Model
+    :param view: the id, xmlid or actual view object to use for onchanges and
+                 view constraints. If none is provided, simply loads the
+                 default view for the model.
     :type view: int | str | odoo.model.Model
 
     .. versionadded:: 12.0
     """
-    def __init__(self, recordp, view=None):
+    def __init__(self, record, view=None):
         # necessary as we're overriding setattr
-        assert isinstance(recordp, BaseModel)
-        env = recordp.env
+        assert isinstance(record, BaseModel)
+        env = record.env
         object.__setattr__(self, '_env', env)
 
         # store model bit only
-        object.__setattr__(self, '_model', recordp.browse(()))
+        object.__setattr__(self, '_model', record.browse(()))
         if isinstance(view, BaseModel):
             assert view._name == 'ir.ui.view', "the view parameter must be a view id, xid or record, got %s" % view
             view_id = view.id
@@ -1922,24 +1927,24 @@ class Form(object):
             view_id = env.ref(view).id
         else:
             view_id = view or False
-        fvg = recordp.get_view(view_id, 'form')
+        fvg = record.get_view(view_id, 'form')
         fvg['tree'] = etree.fromstring(fvg['arch'])
-        fvg['fields'] = self._get_view_fields(fvg['tree'], recordp)
+        fvg['fields'] = self._get_view_fields(fvg['tree'], record)
 
         object.__setattr__(self, '_view', fvg)
 
-        self._process_fvg(recordp, fvg)
+        self._process_fvg(record, fvg)
 
         # ordered?
         vals = dict.fromkeys(fvg['fields'], False)
         object.__setattr__(self, '_values', vals)
         object.__setattr__(self, '_changed', set())
-        if recordp:
-            assert recordp['id'], "editing unstored records is not supported"
+        if record:
+            assert record['id'], "editing unstored records is not supported"
             # always load the id
-            vals['id'] = recordp['id']
+            vals['id'] = record['id']
 
-            self._init_from_values(recordp)
+            self._init_from_values(record)
         else:
             self._init_from_defaults(self._model)
 
@@ -2153,6 +2158,7 @@ class Form(object):
                 raise ValueError("Unknown domain element %s" % [it])
         [result] = stack
         return result
+
     _OPS = {
         '=': operator.eq,
         '==': operator.eq,
@@ -2168,6 +2174,7 @@ class Form(object):
         'not like': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a not in b,
         'not ilike': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a.lower() not in b.lower(),
     }
+
     def _get_context(self, field):
         c = self._view['contexts'].get(field)
         if not c:
@@ -2216,12 +2223,13 @@ class Form(object):
     # q: how to get recordset?
     def __enter__(self):
         return self
-    def __exit__(self, etype, _evalue, _etb):
-        if not etype:
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if not exc_type:
             self.save()
 
     def save(self):
-        """ Saves the form, returns the created record if applicable
+        """ Saves the form (if necessary) and returns the current record.
 
         * does not save ``readonly`` fields
         * does not save unmodified fields (during edition) — any assignment
@@ -2494,6 +2502,7 @@ class Form(object):
 
         return value
 
+
 class O2MForm(Form):
     # noinspection PyMissingConstructor
     def __init__(self, proxy, index=None):
@@ -2572,6 +2581,7 @@ class O2MForm(Form):
 
         return values
 
+
 class UpdateDict(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2590,14 +2600,17 @@ class UpdateDict(dict):
         if args and isinstance(args[0], UpdateDict):
             self._changed.update(args[0]._changed)
 
-class X2MProxy(object):
+
+class X2MProxy:
     _parent = None
     _field = None
+
     def _assert_editable(self):
         assert not self._parent._get_modifier(self._field, 'readonly'),\
             'field %s is not editable' % self._field
         assert not self._parent._get_modifier(self._field, 'invisible'),\
             'field %s is not visible' % self._field
+
 
 class O2MProxy(X2MProxy):
     """ O2MProxy()
@@ -2701,6 +2714,7 @@ class O2MProxy(X2MProxy):
         del self._records[index]
         self._parent._perform_onchange([self._field])
 
+
 class M2MProxy(X2MProxy, collections.abc.Sequence):
     """ M2MProxy()
 
@@ -2724,11 +2738,8 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
 
     def __contains__(self, record):
         relation_ = self._parent._view['fields'][self._field]['relation']
-        assert isinstance(record, BaseModel)\
-           and record._name == relation_
-
+        assert isinstance(record, BaseModel) and record._name == relation_
         return record.id in self._get_ids()
-
 
     def add(self, record):
         """ Adds ``record`` to the field, the record must already exist.
@@ -2774,6 +2785,7 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
         self._get_ids()[:] = []
         self._parent._perform_onchange([self._field])
 
+
 def record_to_values(fields, record):
     r = {}
     # don't read the id explicitly, not sure why but if any of the "magic" hr
@@ -2800,6 +2812,7 @@ def record_to_values(fields, record):
         r[f] = v
     return r
 
+
 def _cleanup_from_default(type_, value):
     if not value:
         if type_ == 'many2many':
@@ -2818,6 +2831,7 @@ def _cleanup_from_default(type_, value):
         return odoo.fields.Date.to_string(value)
     return value
 
+
 def _get_node(view, f, *arg):
     """ Find etree node for the field ``f`` in the view's arch
     """
@@ -2825,6 +2839,7 @@ def _get_node(view, f, *arg):
         n for n in view['tree'].iter('field')
         if n.get('name') == f
     ), *arg)
+
 
 def tagged(*tags):
     """A decorator to tag BaseCase objects.
