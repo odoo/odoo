@@ -99,7 +99,7 @@
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
-            ('include', 'web._assets_bootstrap'),
+            ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
 
