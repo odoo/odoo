@@ -73,6 +73,9 @@ export class FileInput extends Component {
         const parsedFileData = await this.uploadFiles(this.httpParams);
         // When calling onUpload, also pass the files to allow to get data like their names
         this.props.onUpload(parsedFileData, this.fileInputRef.el ? this.fileInputRef.el.files : []);
+        // Because the input would not trigger this method if the same file name is uploaded,
+        // we must clear the value after handling the upload
+        this.fileInputRef.el.value = null;
     }
 
     /**
