@@ -1446,19 +1446,22 @@ var VideoWidget = MediaWidget.extend({
             this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
         }
 
+        this.error = false;
         var $content = query.$video;
         if (!$content) {
             switch (query.errorCode) {
                 case 0:
+                    this.error = _t("The provided url is not valid");
                     $content = $('<div/>', {
                         class: 'alert alert-danger o_video_dialog_iframe mb-2 mt-2',
-                        text: _t("The provided url is not valid"),
+                        text: this.error,
                     });
                     break;
                 case 1:
+                    this.error = _t("The provided url does not reference any supported video");
                     $content = $('<div/>', {
                         class: 'alert alert-warning o_video_dialog_iframe mb-2 mt-2',
-                        text: _t("The provided url does not reference any supported video"),
+                        text: this.error,
                     });
                     break;
             }
