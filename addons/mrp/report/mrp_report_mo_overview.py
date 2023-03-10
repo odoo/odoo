@@ -258,7 +258,7 @@ class ReportMoOverview(models.AbstractModel):
             doc_in = self.env[forecast_line['document_in']['_name']].browse(forecast_line['document_in']['id'])
             replenishment_index = f"{current_index}{count}"
             replenishment = {}
-            uom_id = self.env['uom.uom'].browse(forecast_line['uom_id']['id'])
+            forecast_uom_id = forecast_line['uom_id']
             replenishment['summary'] = {
                 'level': level + 1,
                 'index': replenishment_index,
@@ -269,11 +269,11 @@ class ReportMoOverview(models.AbstractModel):
                 'product_id': product.id,
                 'state': doc_in.state,
                 'formatted_state': self._format_state(doc_in),
-                'quantity': forecast_line['quantity'],
-                'uom_name': forecast_line['uom_id']['display_name'],
+                'quantity': min(move_raw.product_uom_qty, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom)),  # Avoid over-rounding
+                'uom_name': move_raw.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(forecast_line['uom_id']['rounding']),
-                'mo_cost': self._get_replenishment_cost(product, forecast_line['quantity'], uom_id, currency, forecast_line['move_in']),
-                'product_cost': currency.round(uom_id._compute_quantity(forecast_line['quantity'], product.uom_id) * product.standard_price),
+                'mo_cost': self._get_replenishment_cost(product, forecast_line['quantity'], forecast_uom_id, currency, forecast_line['move_in']),
+                'product_cost': currency.round(forecast_uom_id._compute_quantity(forecast_line['quantity'], product.uom_id) * product.standard_price),
                 'currency_id': currency.id,
                 'currency': currency,
             }
@@ -395,7 +395,7 @@ class ReportMoOverview(models.AbstractModel):
                     continue
                 if production_id and extra.get('production_id', False) and extra['production_id'] != production_id:
                     continue
-                taken_from_extra = min(line_qty, extra['quantity'])
+                taken_from_extra = min(line_qty, extra['uom']._compute_quantity(extra['quantity'], forecast_line['uom_id']))
                 line_qty -= taken_from_extra
                 # Create copy of the current forecast line to add a possible replenishment.
                 # Needs to be a copy since it might take multiple replenishment to fulfill a single "out" line.
@@ -452,12 +452,12 @@ class ReportMoOverview(models.AbstractModel):
             for move in linked_moves:
                 if move.state not in ('partially_available', 'assigned'):
                     continue
-                # count reserved stock.
-                reserved = move.product_uom._compute_quantity(move.reserved_availability, move.product_id.uom_id)
+                # count reserved stock in move_raw's uom
+                reserved = move.product_uom._compute_quantity(move.reserved_availability, move_raw.product_uom)
                 # check if the move reserved qty was counted before (happens if multiple outs share pick/pack)
-                reserved = min(reserved - replenish_data['qty_already_reserved'][move], move_raw.product_qty)
+                reserved = min(reserved - move.product_uom._compute_quantity(replenish_data['qty_already_reserved'][move], move_raw.product_uom), move_raw.product_uom_qty)
                 total_reserved += reserved
-                replenish_data['qty_already_reserved'][move] += reserved
+                replenish_data['qty_already_reserved'][move] += move_raw.product_uom._compute_quantity(reserved, move.product_uom)
                 if float_compare(total_reserved, move_raw.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
                     break
             replenish_data['qty_reserved'][move_raw] = total_reserved
