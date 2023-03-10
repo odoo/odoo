@@ -15,17 +15,7 @@ $rounded-sizes: map-merge(
 );
 
 $utilities-opacity: () !default;
-$utilities-opacity: map-merge(
-    $utilities-opacity,
-    (
-        0: 0,
-        25: .25,
-        50: .5,
-        75: .75,
-        100: 1,
-        disabled: $o-opacity-disabled,
-    )
-);
+$utilities-opacity: map-merge($utilities-opacity, $o-opacities);
 
 $utilities-sizes: () !default;
 $utilities-sizes: map-merge(
@@ -73,17 +63,6 @@ $utilities: map-merge(
             (
                 values: $utilities-opacity,
             ),
-        ),
-        "background-color": map-merge(
-            map-get($utilities, "background-color"),
-            (
-                values: map-merge(
-                    map-get(map-get($utilities, "background-color"), "values"),
-                    (
-                        "view": $o-view-background-color,
-                    )
-                )
-            )
         ),
         "border-color":  map-merge(
             map-get($utilities, "border-color"),
@@ -203,16 +182,9 @@ $utilities: map-merge(
             property: min-width,
             values: 0,
         ),
-    )
-);
 
-// Restore text-X from BS4 that use text-emphasis-variant
-// we don't merge $utilities-text-colors into $utilities
-// to avoid same utilises classes generated twice.
-// See bootstrap_review.scss
-$utilities: map-merge(
-    $utilities,
-    (
+        // For the other 'text-X' classes.
+        // See bootstrap_review_backend.scss
         "color": (
             property: color,
             class: text,
@@ -221,16 +193,14 @@ $utilities: map-merge(
             ),
             values: (
                 "body": $body-color,
-                "black": $black,
-                "white": $white,
                 "muted": $text-muted,
-                "black-50": rgba($black, .5), // deprecated
-                "white-50": rgba($white, .5), // deprecated
                 "reset": inherit,
             ),
         ),
+        "background-color": null
     )
 );
+
 
 // Define opacity:hover classes while defining the triggerer behavior.
 // Use'.opacity-trigger-hover' class to allow hovered parents to
