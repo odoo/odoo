@@ -40,7 +40,7 @@ class DriverController(http.Controller):
         This route is called when we want to check if certificate is up-to-date
         Used in cron.daily
         """
-        helpers.check_certificate()
+        helpers.get_certificate_status()
 
     @http.route('/hw_drivers/event', type='json', auth='none', cors='*', csrf=False, save_session=False)
     def event(self, listener):
