@@ -115,15 +115,15 @@ export class AnalyticDistribution extends Component {
         }
         let widgetData = Object.assign({}, ...this.allPlans.map((plan) => ({[plan.id]: {...plan, distribution: []}})));
         records.map((record) => {
-            if (!widgetData[record.root_plan_id[0]]) {
+            if (!widgetData[record.root_plan_id]) {
                 // plans might not have been retrieved
-                widgetData[record.root_plan_id[0]] = { distribution: [] }
+                widgetData[record.root_plan_id] = { distribution: [] }
             }
-            widgetData[record.root_plan_id[0]].distribution.push({
+            widgetData[record.root_plan_id].distribution.push({
                 analytic_account_id: record.id,
                 percentage: data[record.id],
                 id: this.nextId++,
-                group_id: record.root_plan_id[0],
+                group_id: record.root_plan_id,
                 analytic_account_name: record.name,
                 color: record.color,
             });

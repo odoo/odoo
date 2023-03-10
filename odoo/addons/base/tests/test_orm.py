@@ -32,7 +32,8 @@ class TestORM(TransactionCase):
             'groups_id': [Command.set([self.ref('base.group_user')])],
         })
         cs = (c1 + c2).with_user(user)
-        self.assertEqual([{'id': c2.id, 'name': 'Y'}], cs.read(['name']), "read() should skip deleted records")
+        read = cs.read(['name'])
+        self.assertEqual([{'id': c2.id, 'name': 'Y'}], read, "read() should skip deleted records")
         self.assertEqual([], cs[0].read(['name']), "read() should skip deleted records")
 
         # Deleting an already deleted record should be simply ignored
