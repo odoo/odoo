@@ -31,7 +31,7 @@ class Action(Controller):
                 request.update_context(bin_size=True)
             if additional_context:
                 request.update_context(**additional_context)
-            action = request.env[action_type].sudo().browse([action_id]).ead()
+            action = request.env[action_type].sudo().browse([action_id]).read()
             if action:
                 value = clean_action(action[0], env=request.env)
         return value
