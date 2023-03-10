@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
 import { isBinarySize } from "@web/core/utils/binary";
 import { session } from "@web/session";
+import { human_size } from "web.utils";
 
 import { markup } from "@odoo/owl";
 
@@ -280,6 +281,9 @@ export function formatInteger(value, options = {}) {
     if (options.humanReadable) {
         return humanNumber(value, options);
     }
+    if (options.humanReadableSize) {
+        return human_size(value)
+    }
     const grouping = options.grouping || l10n.grouping;
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     return insertThousandsSep(value.toFixed(0), thousandsSep, grouping);
@@ -468,6 +472,7 @@ registry
     .add("float_time", formatFloatTime)
     .add("html", (value) => value)
     .add("integer", formatInteger)
+    .add('integer_size', (value) => formatInteger(value, {humanReadableSize: true}))
     .add("json", formatJson)
     .add("many2one", formatMany2one)
     .add("many2one_reference", formatInteger)
