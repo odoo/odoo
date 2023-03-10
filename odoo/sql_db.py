@@ -32,6 +32,13 @@ from .tools.func import frame_codeinfo, locked
 
 try:
     import sqlparse
+    if callable(sqlparse.keywords.SQL_REGEX[-1][0]):  # sqlparse up to 0.4.3
+        sqlparse.keywords.SQL_REGEX[-1] = (
+            re.compile(r'->>|->|([+/@#%^&|^-]+)', re.IGNORECASE | re.UNICODE).match,
+            sqlparse.tokens.Operator
+        )
+    else:  # current sqlparse master (7fdb2da82d51a9a02baaefb5c7fe5cbbaac4329e)
+        sqlparse.keywords.SQL_REGEX[-1] = (r'->>|->|([+/@#%^&|^-]+)', sqlparse.tokens.Operator)
 except ImportError:
     sqlparse = None
 
