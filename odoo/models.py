@@ -3115,37 +3115,41 @@ class BaseModel(metaclass=MetaModel):
 
         for record in self[offset:limit]:
             vals = {'id': record['id']}
-            for field_name, field_spec in specification.items():
-                field = record._fields[field_name]
+            try:
+                for field_name, field_spec in specification.items():
+                    field = record._fields[field_name]
 
-                if field_spec == {}:
-                    vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
-                else:
-                    if "context" in field_spec:
-                        relational_record = record[field_name].with_context(**field_spec["context"])
+                    if field_spec == {}:
+                        vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
                     else:
-                        relational_record = record[field_name]
-
-                    if field.type == "many2one":
-                        # TODO VSC: move all this to the convert_to_read of the many2one
-                        if 'fields' in field_spec and len(field_spec['fields']):
-                            if len(field_spec["fields"]) == 1 and 'display_name' in field_spec["fields"]:
-                                # specificaton like 'many2one_id': {'fields': {'display_name':{}}
-                                vals[field_name] = field.convert_to_read(relational_record, self, use_name_get=True)
-                            else:
-                                # specification for more fields other than display_name on the many2one like
-                                # 'many2one_id' : {'fields':{'id':{}, 'write_date':{}}}
-                                vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
+                        if "context" in field_spec:
+                            relational_record = record[field_name].with_context(**field_spec["context"])
                         else:
-                            # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
-                            vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
-                    else:
-                        assert field.type in ["many2many", "one2many"]
+                            relational_record = record[field_name]
 
-                        vals[field_name] = relational_record._read_main(field_spec["fields"],
-                                                                        limit=field_spec.get('limit'),
-                                                                        offset=field_spec.get('offset'))
-            records.append(vals)
+                        if field.type == "many2one":
+                            # TODO VSC: move all this to the convert_to_read of the many2one
+                            if 'fields' in field_spec and len(field_spec['fields']):
+                                if len(field_spec["fields"]) == 1 and 'display_name' in field_spec["fields"]:
+                                    # specificaton like 'many2one_id': {'fields': {'display_name':{}}
+                                    vals[field_name] = field.convert_to_read(relational_record, self, use_name_get=True)
+                                else:
+                                    # specification for more fields other than display_name on the many2one like
+                                    # 'many2one_id' : {'fields':{'id':{}, 'write_date':{}}}
+                                    vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
+                            else:
+                                # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
+                                vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
+                        else:
+                            assert field.type in ["many2many", "one2many"]
+
+                            vals[field_name] = relational_record._read_main(field_spec["fields"],
+                                                                            limit=field_spec.get('limit'),
+                                                                            offset=field_spec.get('offset'))
+                records.append(vals)
+            except MissingError:
+                # if we can't access the fields of a record, that means that either the record has been deleted or it is not accessible
+                continue
 
         for record in self[limit:]:
             records.append( {'id': record['id']})
