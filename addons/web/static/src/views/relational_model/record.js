@@ -18,6 +18,7 @@ export class Record extends DataPoint {
             this._values = this._parseServerValues(params.data);
             this._changes = {};
         } else {
+            // FIXME: I'm wondering whereas these initial values shouldn't be in _values instead of _changes
             this._values = {};
             this._changes = this._parseServerValues(
                 Object.assign(this._getDefaultValues(), params.data)
@@ -44,7 +45,7 @@ export class Record extends DataPoint {
     }
 
     get isValid() {
-        return true;
+        return !this._invalidFields.size;
     }
 
     // -------------------------------------------------------------------------
@@ -57,7 +58,7 @@ export class Record extends DataPoint {
 
     // TODO: remove?
     isReadonly(fieldName) {
-        return true;
+        return false;
     }
 
     // TODO: remove?
@@ -74,7 +75,7 @@ export class Record extends DataPoint {
         return new Domain();
     }
 
-    askChanges() {}
+    async askChanges() {}
 
     async update(changes) {
         this.isDirty = true;
@@ -180,7 +181,8 @@ export class Record extends DataPoint {
         }
         const kwargs = { context: this.context };
         let resId = this.resId;
-        if (!resId) {
+        let creation = !resId;
+        if (creation) {
             [resId] = await this.model.orm.create(
                 this.resModel,
                 [changes],
@@ -191,6 +193,9 @@ export class Record extends DataPoint {
         }
         if (!noReload) {
             await this.load(resId);
+            if (creation) {
+                this.resIds.push(resId);
+            }
         } else {
             this._values = { ...this._values, ...this._changes };
             this._changes = {};
