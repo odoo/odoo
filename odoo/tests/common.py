@@ -768,7 +768,7 @@ class ChromeBrowser():
         raise unittest.SkipTest("Error during Chrome headless connection")
 
     def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url)
+        self.ws = websocket.create_connection(self.ws_url, suppress_origin=True)
         if self.ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
         self.ws.settimeout(0.01)
