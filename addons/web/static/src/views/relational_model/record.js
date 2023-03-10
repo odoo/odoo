@@ -83,31 +83,15 @@ export class Record extends DataPoint {
             (fieldName) => this.activeFields[fieldName].onChange
         );
         if (onChangeFields.length) {
-            const response = await this.model.orm.call(
-                this.resModel,
-                "onchange2",
-                [
-                    this.resId ? [this.resId] : [],
-                    this._getChanges({ ...this._changes, ...changes }),
-                    onChangeFields,
-                    getOnChangeSpec(this.activeFields),
-                ],
-                { context: this.context }
-            );
-            if (response.warning) {
-                const { type, title, message } = warning;
-                if (type === "dialog") {
-                    this.model.dialog.add(WarningDialog, { title, message });
-                } else {
-                    this.model.notification.add(message, {
-                        className: warning.className,
-                        sticky: warning.sticky,
-                        title,
-                        type: "warning",
-                    });
-                }
-            }
-            Object.assign(changes, response.value);
+            const otherChanges = await this.model._onchange({
+                resModel: this.resModel,
+                resIds: this.resId ? [this.resId] : [],
+                changes: this._getChanges({ ...this._changes, ...changes }),
+                fieldNames: onChangeFields,
+                spec: getOnChangeSpec(this.activeFields),
+                context: this.context,
+            });
+            Object.assign(changes, this._parseServerValues(otherChanges));
         }
         Object.assign(this._changes, changes);
         Object.assign(this.data, changes);
@@ -121,13 +105,9 @@ export class Record extends DataPoint {
     }
 
     async delete() {
-        const unlinked = await this.model.orm.unlink(
-            this.resModel,
-            [this.resId],
-            {
-                context: this.context,
-            }
-        );
+        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
+            context: this.context,
+        });
         if (!unlinked) {
             return false;
         }
@@ -161,17 +141,12 @@ export class Record extends DataPoint {
         // TODO: handle errors
         if (!this._checkValidity()) {
             const items = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(
-                    this.fields[fieldName].string || fieldName
-                )}</li>`;
+                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
             }, this);
-            this.model.notification.add(
-                markup(`<ul>${items.join("")}</ul>`),
-                {
-                    title: _t("Invalid fields: "),
-                    type: "danger",
-                }
-            );
+            this.model.notification.add(markup(`<ul>${items.join("")}</ul>`), {
+                title: _t("Invalid fields: "),
+                type: "danger",
+            });
             return false;
         }
         const changes = this._getChanges();
@@ -183,11 +158,7 @@ export class Record extends DataPoint {
         let resId = this.resId;
         let creation = !resId;
         if (creation) {
-            [resId] = await this.model.orm.create(
-                this.resModel,
-                [changes],
-                kwargs
-            );
+            [resId] = await this.model.orm.create(this.resModel, [changes], kwargs);
         } else {
             await this.model.orm.write(this.resModel, [resId], changes, kwargs);
         }

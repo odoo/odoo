@@ -5615,7 +5615,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".inner_div"), "col-lg-6");
     });
 
-    QUnit.tttt("deleting a record", async function (assert) {
+    QUnit.test("deleting a record", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -5645,7 +5645,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt("deleting the last record", async function (assert) {
+    QUnit.test("deleting the last record", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -5671,10 +5671,10 @@ QUnit.module("Views", (hooks) => {
         await click(document.body.querySelector(".modal-footer button.btn-primary"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
 
-        assert.verifySteps(["get_views", "read", "unlink", "history-back"]);
+        assert.verifySteps(["get_views", "unity_read", "unlink", "history-back"]);
     });
 
-    QUnit.tttt("empty required fields cannot be saved", async function (assert) {
+    QUnit.test("empty required fields cannot be saved", async function (assert) {
         serverData.models.partner.fields.foo.required = true;
         delete serverData.models.partner.fields.foo.default;
 
@@ -5703,7 +5703,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_field_invalid");
     });
 
-    QUnit.tttt("display a dialog if onchange result is a warning", async function (assert) {
+    QUnit.test("display a dialog if onchange result is a warning", async function (assert) {
         serverData.models.partner.onchanges = { foo: true };
 
         await makeView({
@@ -5713,7 +5713,7 @@ QUnit.module("Views", (hooks) => {
             arch: `<form><field name="foo"/><field name="int_field"/></form>`,
             resId: 2,
             mockRPC(route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     return Promise.resolve({
                         value: { int_field: 10 },
                         warning: {
@@ -5745,7 +5745,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "display a notificaton if onchange result is a warning with type notification",
         async function (assert) {
             serverData.models.partner.onchanges = { foo: true };
@@ -5757,7 +5757,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `<form><field name="foo"/><field name="int_field"/></form>`,
                 resId: 2,
                 mockRPC(route, args) {
-                    if (args.method === "onchange") {
+                    if (args.method === "onchange2") {
                         return Promise.resolve({
                             value: { int_field: 10 },
                             warning: {
@@ -5797,7 +5797,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("can create record even if onchange returns a warning", async function (assert) {
+    QUnit.test("can create record even if onchange returns a warning", async function (assert) {
         serverData.models.partner.onchanges = { foo: true };
 
         await makeView({
@@ -5806,7 +5806,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `<form><field name="foo"/><field name="int_field"/></form>`,
             mockRPC(route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     return Promise.resolve({
                         value: { int_field: 10 },
                         warning: {
@@ -5844,7 +5844,7 @@ QUnit.module("Views", (hooks) => {
                     </form>`,
                 resId: 2,
                 mockRPC(route, args) {
-                    if (args.method === "onchange") {
+                    if (args.method === "onchange2") {
                         return Promise.resolve({
                             value: {},
                             warning: {
@@ -6281,7 +6281,7 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".modal .o_field_widget[name=name] input", "new name");
     });
 
-    QUnit.tttt("onchanges on date(time) fields", async function (assert) {
+    QUnit.test("onchanges on date(time) fields", async function (assert) {
         patchTimeZone(120);
 
         serverData.models.partner.onchanges = {

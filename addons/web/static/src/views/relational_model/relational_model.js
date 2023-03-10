@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { EventBus, markRaw } from "@odoo/owl";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { unique } from "@web/core/utils/arrays";
 import { Model } from "@web/views/model";
@@ -183,17 +184,13 @@ export class RelationalModel extends Model {
     }
 
     async _loadNewRecord(params) {
-        const onChangeSpec = getOnChangeSpec(params.activeFields);
-        console.log("Onchange spec", onChangeSpec);
-        const response = await this.orm.call(
-            params.resModel,
-            "onchange2",
-            [[], {}, [], onChangeSpec],
-            { context: params.context }
-        );
-        console.log("Onchange response", response);
+        const values = await this._onchange({
+            resModel: params.resModel,
+            spec: getOnChangeSpec(params.activeFields),
+            context: params.context,
+        });
         const record = {};
-        for (const [fieldName, value] of Object.entries(response.value)) {
+        for (const [fieldName, value] of Object.entries(values)) {
             switch (params.fields[fieldName].type) {
                 case "one2many":
                 case "many2many": {
@@ -206,6 +203,27 @@ export class RelationalModel extends Model {
             }
         }
         return [record];
+    }
+
+    async _onchange({ resModel, spec, resIds, changes, fieldNames, context }) {
+        console.log("Onchange spec", spec);
+        const args = [resIds || [], changes || {}, fieldNames || [], spec];
+        const response = await this.orm.call(resModel, "onchange2", args, { context });
+        console.log("Onchange response", response);
+        if (response.warning) {
+            const { type, title, message, className, sticky } = response.warning;
+            if (type === "dialog") {
+                this.dialog.add(WarningDialog, { title, message });
+            } else {
+                this.notification.add(message, {
+                    className,
+                    sticky,
+                    title,
+                    type: "warning",
+                });
+            }
+        }
+        return response.value;
     }
 
     async loadRecord({ resModel, resId, activeFields, fields, context }) {
