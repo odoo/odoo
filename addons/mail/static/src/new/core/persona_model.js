@@ -37,9 +37,9 @@ export class Persona {
     get avatarUrl() {
         switch (this.type) {
             case "partner":
-                return `/mail/channel/1/partner/${this.id}/avatar_128`;
+                return `/web/image/res.partner/${this.id}/avatar_128`;
             case "guest":
-                return `/mail/channel/${this.channelId}/guest/${this.id}/avatar_128?unique=${this.name}`;
+                return `/web/image/mail.guest/${this.id}/avatar_128?unique=${this.name}`;
             default:
                 return "";
         }
