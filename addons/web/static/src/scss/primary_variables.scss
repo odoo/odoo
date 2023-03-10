@@ -36,6 +36,18 @@ $o-gray-700: #495057 !default;
 $o-gray-800: #343a40 !default;
 $o-gray-900: #212529 !default;
 
+$o-grays: (
+    100: $o-gray-100,
+    200: $o-gray-200,
+    300: $o-gray-300,
+    400: $o-gray-400,
+    500: $o-gray-500,
+    600: $o-gray-600,
+    700: $o-gray-700,
+    800: $o-gray-800,
+    900: $o-gray-900,
+) !default;
+
 $o-community-color: #71639e !default;
 $o-enterprise-color: #714B67 !default;
 $o-enterprise-primary-color: #017e84 !default;
@@ -52,6 +64,8 @@ $o-warning: #ffac00 !default;
 $o-danger: #dc3545 !default;
 
 // Fine-tune contextual text colors.
+// Overrides $theme-colors generated 'text-x' classes only.
+// Custom colors are set by $o-text-colors-custom
 $o-theme-text-colors: (
     "success": #008818,
     "info": #0180a5,
@@ -60,14 +74,27 @@ $o-theme-text-colors: (
     "odoo": $o-brand-odoo,
 )!default;
 
+// Opacities
 $o-opacity-disabled: .5 !default;
 $o-opacity-muted: .76 !default;
 
+$o-opacities: (
+    0: 0,
+    25: .25,
+    50: .5,
+    75: .75,
+    100: 1,
+    disabled: $o-opacity-disabled,
+    muted: $o-opacity-muted,
+) !default;
+
+// Font families
 $o-font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
 $o-font-family-monospace: o-add-unicode-support-font((SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace)) !default;
 
 $o-headings-font-family: o-add-unicode-support-font(("SF Pro Display", $o-system-fonts)) !default;
 
+// Font colors
 $o-main-text-color: $o-gray-700 !default;
 $o-main-bg-color: #f0eeee !default;
 $o-main-color-muted: rgba($o-main-text-color, $o-opacity-muted) !default;
@@ -76,6 +103,8 @@ $o-main-link-color: darken($o-brand-primary, 5%) !default;
 $o-main-favorite-color: #f3cc00 !default;
 $o-main-code-color: #d2317b !default;
 
+// Components colors
+// TODO: move variables in components
 $o-view-background-color: white !default;
 $o-shadow-color: #303030 !default;
 
@@ -90,6 +119,15 @@ $o-tooltip-arrow-color: white !default;
 $o-tooltip-text-color: $o-main-text-color !default;
 $o-tooltip-title-text-color: $o-main-headings-color !default;
 $o-tooltip-title-background-color: $o-view-background-color !default;
+
+// Custom colors generation maps
+$o-text-colors-custom: (
+    "favourite": $o-main-favorite-color,
+) !default;
+$o-bg-colors-custom: (
+    "view": $o-view-background-color,
+    "favourite": $o-main-favorite-color,
+) !default;
 
 // Components (BS)
 

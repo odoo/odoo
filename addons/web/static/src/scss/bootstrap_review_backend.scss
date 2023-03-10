@@ -1,0 +1,176 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in the backend
+/// ==============================================================================
+
+
+// Bootstrap '$theme-colors' text-x and bg-x classes generation
+// ============================================================================
+// Bootstrap's default behavior is to generate classes directly from its
+// '$theme-colors' map. However, we have disabled this to allow our own
+// approach.
+
+// 'text-x' classes
+// ----------------------------------------------------------------------------
+// 1. To comply with WCAG standards, we need to use text-colors that are
+//    different from the ones in the '$theme-colors' map. We achieve this by
+//    creating a temporary map that overrides uncompliant colors with
+//    '$o-theme-text-colors' ones.
+$-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
+
+// 2. Use different colors for links and buttons when in conjunction with
+//    'text-x' classes to keep consistency with previous versions of Bootstrap.
+//    To do so we pass the values through the 'text-emphasis-variant' mixin.
+@each $-name, $-value in $-o-theme-text-colors {
+    @include text-emphasis-variant(".text-#{$-name}", $-value);
+}
+
+// 3. Adapt the behaviour of .btn-link buttons when in conjuction with contextual
+//    classes (eg. text-warning). 'muted' is set as default text color, while
+//    the contextual-class color will be used on ':hover'.
+//    Note: For the custom classes, this is duplicated below where the classes are
+//    generated with the o-gray
+.btn-link {
+    font-weight: $btn-font-weight;
+
+    @each $-name, $-color in $-o-theme-text-colors{
+        &.btn-#{$-name}, &.text-#{$-name} {
+            @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+        }
+    }
+}
+
+// 3. Cleanup temporary map
+$-o-theme-text-colors: null;
+
+// 'bg-x' classes
+// ----------------------------------------------------------------------------
+// 1. Generate $theme-colors classes using 'o-print-color()' mixin in order to
+//    assign the color and print relative CSS variables as well. Note that
+//    'black' and 'white' are not included in the map, we'll generate these
+//    classes later in conjunction with legacy 'bg-white-x' and 'bg-black-x'
+//    ones.
+@each $-name, $-color in $theme-colors {
+    .bg-#{$-name} {
+        @include o-print-color($-color, background-color, bg-opacity);
+    }
+}
+
+
+// Bootstrap black/white text-x and bg-x classes + legacy opacity ones
+// ============================================================================
+
+// 1. Define placeholder-selectors (aka pseudo-classes) for both white and
+//    black. We'll then extend placeholder rather than classes to avoid
+//    performance issues during SCSS compilation.
+%-text-white {
+    @include o-print-color($o-white, color, text-opacity);
+}
+
+%-text-black {
+    @include o-print-color($o-black, color, text-opacity);
+}
+
+%-bg-white {
+    @include o-print-color($o-white, background-color, bg-opacity);
+}
+
+%-bg-black {
+    @include o-print-color($o-black, background-color, bg-opacity);
+}
+
+.text-white {
+    @extend %-text-white;
+}
+
+.text-black {
+    @extend %-text-black;
+}
+
+.bg-white {
+    @extend %-bg-white;
+}
+
+.bg-black {
+    @extend %-bg-black;
+}
+
+// 2. Generate legacy opacity-variations classes for both white and black. We
+//    don't specifically assign colors here, we just extend placeholder
+//    selectors. To control opacity we act on the '--X-opacity' Bootstrap
+//    default CSS variables.
+$-o-grayscale-opacities: map-remove($o-opacities, 0, 100);
+@each $-name, $-value in $-o-grayscale-opacities {
+    .bg-white-#{$-name} {
+        --bg-opacity: #{$-value};
+        @extend %-bg-white;
+    }
+
+    .bg-black-#{$-name} {
+        --bg-opacity: #{$-value};
+        @extend %-bg-black;
+    }
+}
+
+@each $-name, $-value in $-o-grayscale-opacities {
+    .text-white-#{$-name} {
+        --text-opacity: #{$-value};
+        @extend %-text-white;
+    }
+
+    .text-black-#{$-name} {
+        --text-opacity: #{$-value};
+        @extend %-text-black;
+    }
+}
+
+// 3. Cleanup temporary map
+$-o-grayscale-opacities: null;
+
+
+// Odoo custom text/bg colors classes generation
+// ============================================================================
+
+// 1. Extend odoo's custom colors maps adding Bootstrap's grays.
+//    Note: the card-body rule below needs those grays utilities to be defined
+//    before, so that the related o-bg-color text-muted rules work.
+$-o-text-colors-custom: map-merge($o-text-colors-custom, $o-grays);
+$-o-bg-colors-custom: map-merge($o-bg-colors-custom, $o-grays);
+
+// 2. Generate custom 'text-x' contextual classes
+@each $-name, $-color in $-o-text-colors-custom {
+    @include text-emphasis-variant(".text-#{$-name}", $-color);
+}
+
+// 3. Generate custom 'bg-x' and 'text-bg-x' contextual classes
+@each $-name, $-color in map-merge($-o-bg-colors-custom, $o-grays) {
+    .bg-#{$-name}, .text-bg-#{$-name}  {
+        @include o-print-color($-color, background-color, bg-opacity);
+    }
+
+    .text-bg-#{$-name} {
+        @include o-print-color(color-contrast($-color), color, text-opacity);
+    }
+}
+
+// 4. Cleanup temporary maps
+$-o-text-colors-custom: null;
+$-o-bg-colors-custom: null;
+
+// 5. Adapt the behaviour of .btn-link buttons when in conjuction with the custom
+//    contextual classes (eg. text-action). 'muted' is set as default text color,
+//    while the contextual-class color will be used on ':hover'.
+//    Note: the same is done above for the '$theme-colors'. Here on the
+//    '$o-text-colors-custom' because we don't want it to apply on the '$o-grays'.
+.btn-link {
+    @each $-name, $-color in $o-text-colors-custom{
+        &.btn-#{$-name}, &.text-#{$-name} {
+            @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+        }
+    }
+}
+
+// Cards
+// ============================================================================
+.card-body {
+    @extend %-card-body-reviewed; // See bootstrap_review.scss
+}

@@ -57,28 +57,6 @@ kbd {
   min-width: $o-badge-min-width;
 }
 
-//== Btn-link
-.btn-link {
-  font-weight: $btn-font-weight;
-
-  // -- Btn-link variations
-  // Adapt the behavieur of .btn-link buttons when in conjuction with contextual
-  // classes (eg. text-warning). 'muted' is set as default text color, while
-  // the contextual-class color will be used on ':hover'.
-
-  // Apply all theme-colors variations except "secondary"
-  @each $-name, $-color in map-remove($theme-colors, "secondary") {
-    &.btn-#{$-name}, &.text-#{$-name} {
-      @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
-    }
-  }
-
-  // Specific behavieur for "secondary"
-  &.btn-secondary {
-    @include o-btn-link-variant($body-color, $headings-color);
-  }
-}
-
 // Set position of our custom o-dropdown-menu (not bootstrap)
 .o-dropdown-menu {
   top: 100%;
