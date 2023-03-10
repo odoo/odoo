@@ -11,7 +11,7 @@ class ProjectTaskStagePersonal(models.Model):
 
     task_id = fields.Many2one('project.task', required=True, ondelete='cascade', index=True)
     user_id = fields.Many2one('res.users', required=True, ondelete='cascade', index=True)
-    stage_id = fields.Many2one('project.task.type', domain="[('user_id', '=', user_id)]", ondelete='restrict')
+    stage_id = fields.Many2one('project.task.type', domain="[('user_id', '=', user_id)]", ondelete='set null')
 
     _sql_constraints = [
         ('project_personal_stage_unique', 'UNIQUE (task_id, user_id)', 'A task can only have a single personal stage per user.'),
