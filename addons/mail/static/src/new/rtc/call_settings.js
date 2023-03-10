@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 
 export class CallSettings extends Component {
-    static template = "mail.call_settings";
+    static template = "mail.CallSettings";
     static props = ["thread", "className?"];
 
     setup() {

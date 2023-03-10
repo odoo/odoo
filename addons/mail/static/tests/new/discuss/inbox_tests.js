@@ -31,12 +31,12 @@ QUnit.test("reply: discard on reply button toggle", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-Message");
 
     await click("i[aria-label='Reply']");
-    assert.containsOnce($, ".o-mail-composer");
+    assert.containsOnce($, ".o-Composer");
     await click("i[aria-label='Reply']");
-    assert.containsNone($, ".o-mail-composer");
+    assert.containsNone($, ".o-Composer");
 });
 
 QUnit.test("reply: discard on click away", async (assert) => {
@@ -57,24 +57,24 @@ QUnit.test("reply: discard on click away", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-Message");
 
     await click("i[aria-label='Reply']");
-    assert.containsOnce($, ".o-mail-composer");
+    assert.containsOnce($, ".o-Composer");
 
-    $(".o-mail-composer-textarea")[0].click();
+    $(".o-Composer-input")[0].click();
     await nextAnimationFrame(); // wait just in case, but nothing is supposed to happen
-    assert.containsOnce($, ".o-mail-composer");
+    assert.containsOnce($, ".o-Composer");
 
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-emoji-picker");
+    assert.containsOnce($, ".o-EmojiPicker");
 
-    await click(".o-mail-emoji-picker-content .o-emoji");
-    assert.containsNone($, ".o-mail-emoji-picker");
-    assert.containsOnce($, ".o-mail-composer");
+    await click(".o-EmojiPicker-content .o-Emoji");
+    assert.containsNone($, ".o-EmojiPicker");
+    assert.containsOnce($, ".o-Composer");
 
-    await click(".o-mail-message");
-    assert.containsNone($, ".o-mail-composer");
+    await click(".o-Message");
+    assert.containsNone($, ".o-Composer");
 });
 
 QUnit.test("reply: discard on pressing escape", async (assert) => {
@@ -98,28 +98,28 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-Message");
 
-    await click(".o-mail-message-actions i[aria-label='Reply']");
-    assert.containsOnce($, ".o-mail-composer");
+    await click(".o-Message-actions i[aria-label='Reply']");
+    assert.containsOnce($, ".o-Composer");
 
     // Escape on emoji picker does not stop replying
-    await click(".o-mail-composer button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-emoji-picker");
+    await click(".o-Composer button[aria-label='Emojis']");
+    assert.containsOnce($, ".o-EmojiPicker");
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-emoji-picker");
-    assert.containsOnce($, ".o-mail-composer");
+    assert.containsNone($, ".o-EmojiPicker");
+    assert.containsOnce($, ".o-Composer");
 
     // Escape on suggestion prompt does not stop replying
-    await insertText(".o-mail-composer-textarea", "@");
+    await insertText(".o-Composer-input", "@");
     assert.containsOnce($, ".o-composer-suggestion-list .o-open");
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    assert.containsOnce($, ".o-mail-composer");
+    assert.containsOnce($, ".o-Composer");
 
-    click(".o-mail-composer-textarea").catch(() => {});
+    click(".o-Composer-input").catch(() => {});
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-composer");
+    assert.containsNone($, ".o-Composer");
 });
 
 QUnit.test(
@@ -151,11 +151,11 @@ QUnit.test(
             },
         });
         await openDiscuss();
-        assert.containsOnce($, ".o-mail-message");
+        assert.containsOnce($, ".o-Message");
 
         await click("i[aria-label='Reply']");
-        await insertText(".o-mail-composer-textarea", "Test");
-        await click(".o-mail-composer-send-button");
+        await insertText(".o-Composer-input", "Test");
+        await click(".o-Composer-send");
         assert.verifySteps(["/mail/message/post"]);
     }
 );
@@ -189,13 +189,13 @@ QUnit.test(
             },
         });
         await openDiscuss();
-        assert.containsOnce($, ".o-mail-message");
+        assert.containsOnce($, ".o-Message");
 
         await click("i[aria-label='Reply']");
-        assert.strictEqual($(".o-mail-composer-send-button").text().trim(), "Send");
+        assert.strictEqual($(".o-Composer-send").text().trim(), "Send");
 
-        await insertText(".o-mail-composer-textarea", "Test");
-        await click(".o-mail-composer-send-button");
+        await insertText(".o-Composer-input", "Test");
+        await click(".o-Composer-send");
         assert.verifySteps(["/mail/message/post"]);
     }
 );
@@ -217,8 +217,8 @@ QUnit.test("show subject of message in Inbox", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message:contains(Subject: Salutations, voyageur)");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message:contains(Subject: Salutations, voyageur)");
 });
 
 QUnit.test("show subject of message in history", async (assert) => {
@@ -238,8 +238,8 @@ QUnit.test("show subject of message in history", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message:contains(Subject: Salutations, voyageur)");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message:contains(Subject: Salutations, voyageur)");
 });
 
 QUnit.test(
@@ -262,7 +262,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-content:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-content:contains(Salutations, voyageur)");
     }
 );
 
@@ -286,7 +286,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-content:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-content:contains(Salutations, voyageur)");
     }
 );
 
@@ -310,7 +310,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-content:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-content:contains(Salutations, voyageur)");
     }
 );
 
@@ -334,7 +334,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-contente:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-contente:contains(Salutations, voyageur)");
     }
 );
 
@@ -358,7 +358,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-content:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-content:contains(Salutations, voyageur)");
     }
 );
 
@@ -382,7 +382,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-content:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-content:contains(Salutations, voyageur)");
     }
 );
 
@@ -406,7 +406,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-message-content:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message-content:contains(Salutations, voyageur)");
     }
 );
 
@@ -442,14 +442,14 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, "button:contains(Inbox) .badge:contains(2)");
-    assert.containsOnce($, ".o-mail-category-item:contains(General) .badge:contains(2)");
-    assert.containsN($, ".o-mail-discuss-content .o-mail-message", 2);
+    assert.containsOnce($, ".o-DiscussCategoryItem:contains(General) .badge:contains(2)");
+    assert.containsN($, ".o-Discuss-content .o-Message", 2);
     assert.notOk($("button:contains(Mark all read)")[0].disabled);
 
-    await click(".o-mail-discuss-header button:contains(Mark all read)");
+    await click(".o-Discuss-header button:contains(Mark all read)");
     assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, ".o-mail-category-item:contains(General) .badge");
-    assert.containsNone($, ".o-mail-message");
+    assert.containsNone($, ".o-DiscussCategoryItem:contains(General) .badge");
+    assert.containsNone($, ".o-Message");
     assert.ok($("button:contains(Mark all read)")[0].disabled);
 });
 
@@ -486,10 +486,10 @@ QUnit.test(
                 return Promise.resolve();
             },
         });
-        assert.containsOnce($, ".o-mail-message");
-        assert.containsOnce($, ".o-mail-msg-header a:contains(Some record)");
+        assert.containsOnce($, ".o-Message");
+        assert.containsOnce($, ".o-Message-header a:contains(Some record)");
 
-        click(".o-mail-msg-header a:contains(Some record)").catch(() => {});
+        click(".o-Message-header a:contains(Some record)").catch(() => {});
         assert.verifySteps(["do-action"]);
     }
 );
@@ -536,11 +536,11 @@ QUnit.test("inbox messages are never squashed", async (assert) => {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsN($, ".o-mail-message", 2);
-    assert.doesNotHaveClass($(".o-mail-message:contains(body1)"), "o-squashed");
-    assert.doesNotHaveClass($(".o-mail-message:contains(body2)"), "o-squashed");
-    await click(".o-mail-category-item:contains(test)");
-    assert.hasClass($(".o-mail-message:contains(body2)"), "o-squashed");
+    assert.containsN($, ".o-Message", 2);
+    assert.doesNotHaveClass($(".o-Message:contains(body1)"), "o-squashed");
+    assert.doesNotHaveClass($(".o-Message:contains(body2)"), "o-squashed");
+    await click(".o-DiscussCategoryItem:contains(test)");
+    assert.hasClass($(".o-Message:contains(body2)"), "o-squashed");
 });
 
 QUnit.test("reply: stop replying button click", async (assert) => {
@@ -561,14 +561,14 @@ QUnit.test("reply: stop replying button click", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-Message");
 
     await click("i[aria-label='Reply']");
-    assert.containsOnce($, ".o-mail-composer");
+    assert.containsOnce($, ".o-Composer");
     assert.containsOnce($, "i[title='Stop replying']");
 
     await click("i[title='Stop replying']");
-    assert.containsNone($, ".o-mail-composer");
+    assert.containsNone($, ".o-Composer");
 });
 
 QUnit.test("error notifications should not be shown in Inbox", async (assert) => {
@@ -589,9 +589,9 @@ QUnit.test("error notifications should not be shown in Inbox", async (assert) =>
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-msg-header:contains(on Demo User)");
-    assert.containsNone($, ".o-mail-message-notification");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-header:contains(on Demo User)");
+    assert.containsNone($, ".o-Message-notification");
 });
 
 QUnit.test("emptying inbox displays rainbow man in inbox", async (assert) => {

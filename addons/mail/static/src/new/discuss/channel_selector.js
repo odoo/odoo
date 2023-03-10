@@ -14,7 +14,7 @@ export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
     static props = ["category", "onValidate?", "autofocus?", "multiple?"];
     static defaultProps = { multiple: true };
-    static template = "mail.channel_selector";
+    static template = "mail.ChannelSelector";
 
     setup() {
         this.store = useStore();
@@ -47,13 +47,13 @@ export class ChannelSelector extends Component {
                 const choices = results.map((channel) => {
                     return {
                         channelId: channel.id,
-                        classList: "o-mail-channel-selector-suggestion",
+                        classList: "o-ChannelSelector-suggestion",
                         label: channel.name,
                     };
                 });
                 choices.push({
                     channelId: "__create__",
-                    classList: "o-mail-channel-selector-suggestion",
+                    classList: "o-ChannelSelector-suggestion",
                     label: cleanedTerm,
                 });
                 return choices;
@@ -67,14 +67,14 @@ export class ChannelSelector extends Component {
                 const suggestions = results.map((data) => {
                     this.personaService.insert({ ...data, type: "partner" });
                     return {
-                        classList: "o-mail-channel-selector-suggestion",
+                        classList: "o-ChannelSelector-suggestion",
                         label: data.name,
                         partner: data,
                     };
                 });
                 if (this.store.self.name.includes(cleanedTerm)) {
                     suggestions.push({
-                        classList: "o-mail-channel-selector-suggestion",
+                        classList: "o-ChannelSelector-suggestion",
                         label: this.store.self.name,
                         partner: this.store.self,
                     });
@@ -184,8 +184,8 @@ export class ChannelSelector extends Component {
                     placeholder: "Loading",
                     optionTemplate:
                         this.props.category.id === "channels"
-                            ? "mail.channel_selector.channel"
-                            : "mail.channel_selector.chat",
+                            ? "mail.ChannelSelector.channel"
+                            : "mail.ChannelSelector.chat",
                     options: this.fetchSuggestions(this.state.value),
                 },
             ],

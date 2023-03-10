@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.call_participant_card" owl="1">
-        <div class="o-mail-call-participant-card position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
+    <t t-name="mail.CallParticipantCard" owl="1">
+        <div class="o-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
             t-att-class="{
                 'o-isTalking': !props.minimized and isTalking,
                 'o-isInvitation opacity-50': !rtcSession,
@@ -16,26 +16,26 @@
         >
             <!-- card -->
             <CallParticipantVideo t-if="hasVideo" session="rtcSession"/>
-            <div t-else="" class="o-mail-call-participant-card-avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized }" draggable="false">
+            <div t-else="" class="o-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized }" draggable="false">
                 <img alt="Avatar"
                         t-att-class="{
                         'o-isTalking': isTalking,
                         'o-isInvitation': !rtcSession,
                         }"
-                        class="o-mail-call-participant-card-avatarImage h-100 rounded-circle border-5 o_object_fit_cover"
+                        class="h-100 rounded-circle border-5 o_object_fit_cover"
                         t-att-src="channelMember?.avatarUrl"
                         draggable="false"
                 />
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-mail-call-participant-card-overlay o-mail-call-participant-card-overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
-                    <span t-if="!props.minimized" class="o-mail-call-participant-card-name p-1 rounded-1 bg-black-75 text-truncate" t-esc="name"/>
+                <span class="o-CallParticipantCard-overlay o-CallParticipantCard-overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
+                    <span t-if="!props.minimized" class="p-1 rounded-1 bg-black-75 text-truncate" t-esc="name"/>
                     <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
-                <div class="o-mail-call-participant-card-overlay o-mail-call-participant-card-overlayTop position-absolute top-0 end-0 d-flex flex-row-reverse">
+                <div class="o-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex flex-row-reverse">
                     <span t-if="rtcSession.isSelfMuted and !rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="muted" aria-label="muted">
                         <i class="fa fa-microphone-slash"/>
                     </span>

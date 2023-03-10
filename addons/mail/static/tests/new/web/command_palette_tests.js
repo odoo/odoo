@@ -24,7 +24,7 @@ QUnit.test("open the chatWindow of a user from the command palette", async (asse
     await editSearchBar("@");
     await afterNextRender(() => advanceTime(commandSetupRegistry.get("@").debounceDelay));
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-ChatWindow");
 });
 
 QUnit.test("open the chatWindow of a channel from the command palette", async (assert) => {
@@ -41,6 +41,6 @@ QUnit.test("open the chatWindow of a channel from the command palette", async (a
     assert.containsOnce($, ".o_command:contains(project)");
 
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-chat-window");
-    assert.containsOnce($, ".o-mail-chat-window-header-name:contains(general)");
+    assert.containsOnce($, ".o-ChatWindow");
+    assert.containsOnce($, ".o-ChatWindow-name:contains(general)");
 });

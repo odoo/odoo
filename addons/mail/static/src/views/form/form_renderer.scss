@@ -2,7 +2,7 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_FormRenderer_chatterContainer {
+.o-Form-chatter {
     --ChatterTopbar-padding-v: #{map-get($spacers, 2)};
 
     @include media-breakpoint-down(md) {
@@ -20,9 +20,9 @@
         border-left: $border-width solid;
         padding: map-get($spacers, 0);
         max-width: var(--Chatter-max-width);
-        width: $o-chatter-min-width;
+        width: $o-Chatter-minWidth;
 
-        .o-mail-message.o-not-discussion {
+        .o-Message.o-not-discussion {
             border-width: $border-width 0;
         }
 
@@ -49,12 +49,12 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_FormRenderer_chatterContainer.o-aside {
+.o-Form-chatter.o-aside {
     border-left-color: $border-color;
 }
 
 
-.o_FormRenderer_chatterContainer {
+.o-Form-chatter {
     display: flex;
     margin: 0 auto;
     padding-bottom: map-get($spacers, 5);
@@ -62,6 +62,6 @@
 }
 
 // FIX to hide chatter in dialogs when they are opened from an action returned by python code
-.modal .modal-dialog .o_form_view .o_FormRenderer_chatterContainer {
+.modal .modal-dialog .o_form_view .o-Form-chatter {
     display: none;
 }

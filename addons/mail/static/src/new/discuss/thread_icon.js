@@ -13,7 +13,7 @@ import { createLocalId } from "@mail/new/utils/misc";
  * @extends {Component<Props, Env>}
  */
 export class ThreadIcon extends Component {
-    static template = "mail.thread_icon";
+    static template = "mail.ThreadIcon";
     static components = { Typing };
     static props = ["thread", "size?", "className?"];
     static defaultProps = {

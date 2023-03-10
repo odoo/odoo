@@ -24,7 +24,7 @@ QUnit.test("auto layout with link preview list", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message .o-mail-link-preview-list");
+    assert.containsOnce($, ".o-Message .o-LinkPreviewList");
 });
 
 QUnit.test("auto layout with link preview as gif", async function (assert) {
@@ -47,7 +47,7 @@ QUnit.test("auto layout with link preview as gif", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-link-preview-image");
+    assert.containsOnce($, ".o-LinkPreviewImage");
 });
 
 QUnit.test("simplest card layout", async function (assert) {
@@ -68,9 +68,9 @@ QUnit.test("simplest card layout", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-link-preview-card");
-    assert.containsOnce($, ".o-mail-link-preview-card:contains(Article title)");
-    assert.containsOnce($, ".o-mail-link-preview-card:contains(Description)");
+    assert.containsOnce($, ".o-LinkPreviewCard");
+    assert.containsOnce($, ".o-LinkPreviewCard:contains(Article title)");
+    assert.containsOnce($, ".o-LinkPreviewCard:contains(Description)");
 });
 
 QUnit.test("simplest card layout with image", async function (assert) {
@@ -92,10 +92,10 @@ QUnit.test("simplest card layout with image", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-link-preview-card");
-    assert.containsOnce($, ".o-mail-link-preview-card:contains(Article title)");
-    assert.containsOnce($, ".o-mail-link-preview-card:contains(Description)");
-    assert.containsOnce($, ".o-mail-link-preview-card-image");
+    assert.containsOnce($, ".o-LinkPreviewCard");
+    assert.containsOnce($, ".o-LinkPreviewCard:contains(Article title)");
+    assert.containsOnce($, ".o-LinkPreviewCard:contains(Description)");
+    assert.containsOnce($, ".o-LinkPreviewCard img");
 });
 
 QUnit.test("Link preview video layout", async function (assert) {
@@ -117,10 +117,10 @@ QUnit.test("Link preview video layout", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-link-preview-video");
-    assert.containsOnce($, ".o-mail-link-preview-video:contains(video title)");
-    assert.containsOnce($, ".o-mail-link-preview-video:contains(Description)");
-    assert.containsOnce($, ".o-mail-link-preview-video-overlay");
+    assert.containsOnce($, ".o-LinkPreviewVideo");
+    assert.containsOnce($, ".o-LinkPreviewVideo:contains(video title)");
+    assert.containsOnce($, ".o-LinkPreviewVideo:contains(Description)");
+    assert.containsOnce($, ".o-LinkPreviewVideo-overlay");
 });
 
 QUnit.test("Link preview image layout", async function (assert) {
@@ -140,7 +140,7 @@ QUnit.test("Link preview image layout", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-link-preview-image");
+    assert.containsOnce($, ".o-LinkPreviewImage");
 });
 
 QUnit.test("Remove link preview Gif", async function (assert) {
@@ -163,7 +163,7 @@ QUnit.test("Remove link preview Gif", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-link-preview-image button[aria-label='Remove']");
+    await click(".o-LinkPreviewImage button[aria-label='Remove']");
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });
 
@@ -185,7 +185,7 @@ QUnit.test("Remove link preview card", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-link-preview-card button[aria-label='Remove']");
+    await click(".o-LinkPreviewCard button[aria-label='Remove']");
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });
 
@@ -208,7 +208,7 @@ QUnit.test("Remove link preview video", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-link-preview-video button[aria-label='Remove']");
+    await click(".o-LinkPreviewVideo button[aria-label='Remove']");
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });
 
@@ -229,6 +229,6 @@ QUnit.test("Remove link preview image", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-link-preview-image button[aria-label='Remove']");
+    await click(".o-LinkPreviewImage button[aria-label='Remove']");
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });

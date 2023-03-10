@@ -128,7 +128,7 @@ QUnit.test(
                 resIds: [partnerId_1, partnerId_2],
             }
         );
-        assert.containsOnce($, ".o-mail-chatter button:contains(2)");
+        assert.containsOnce($, ".o-Chatter button:contains(2)");
 
         // The attachment links are updated on (re)load,
         // so using pager is a way to reload the record "Partner1".
@@ -136,7 +136,7 @@ QUnit.test(
         // Simulate unlinking attachment 1 from Partner 1.
         pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
         await click(".o_pager_previous");
-        assert.containsOnce($, ".o-mail-chatter button:contains(1)");
+        assert.containsOnce($, ".o-Chatter button:contains(1)");
     }
 );
 
@@ -180,8 +180,8 @@ QUnit.test(
             views: [[false, "form"]],
         };
         await openView(openViewAction);
-        assert.containsOnce($, ".o-mail-chatter");
-        assert.containsOnce($, ".o-mail-message");
+        assert.containsOnce($, ".o-Chatter");
+        assert.containsOnce($, ".o-Message");
         assert.containsOnce($, ".o-mail-read-more-less");
     }
 );
@@ -226,8 +226,8 @@ QUnit.test("read more links becomes read less after being clicked", async (asser
         views: [[false, "form"]],
     };
     await openView(openViewAction);
-    assert.containsOnce($, ".o-mail-chatter");
-    assert.containsOnce($, ".o-mail-message");
+    assert.containsOnce($, ".o-Chatter");
+    assert.containsOnce($, ".o-Message");
     assert.containsOnce($, ".o-mail-read-more-less:contains(Read More)");
 
     await click(".o-mail-read-more-less");
@@ -287,7 +287,7 @@ QUnit.test(
         await click(".o-mail-read-more-less");
         assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
 
-        await click(".o-mail-message");
+        await click(".o-Message");
         assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
     }
 );

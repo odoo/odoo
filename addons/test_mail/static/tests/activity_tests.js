@@ -179,7 +179,7 @@ QUnit.module("test_mail", {}, function () {
 
         assert.ok(
             $activity.find(
-                "table tbody tr:first td:nth-child(2).today .o-activity-cell-closest-deadline:contains(" +
+                "table tbody tr:first td:nth-child(2).today .o-ActivityCell-deadline:contains(" +
                     today +
                     ")"
             ).length,
@@ -380,52 +380,52 @@ QUnit.module("test_mail", {}, function () {
             },
         });
 
-        await click(document.querySelector(".today .o-activity-cell-closest-deadline"));
+        await click(document.querySelector(".today .o-ActivityCell-deadline"));
         assert.containsOnce(
             document.body,
-            ".o-activity-list-popover",
+            ".o-ActivityListPopover",
             "dropdown should be displayed"
         );
         assert.ok(
             document
-                .querySelector(".o-activity-list-popover-today-title")
+                .querySelector(".o-ActivityListPopover-todayTitle")
                 .textContent.includes("Today"),
             "Title should be today"
         );
         assert.ok(
-            [...document.querySelectorAll(".o-mail-activity-mail-template-name")].filter((el) =>
+            [...document.querySelectorAll(".o-ActivityMailTemplate-name")].filter((el) =>
                 el.textContent.includes("Template1")
             ).length,
             "Template1 should be available"
         );
         assert.ok(
-            [...document.querySelectorAll(".o-mail-activity-mail-template-name")].filter((el) =>
+            [...document.querySelectorAll(".o-ActivityMailTemplate-name")].filter((el) =>
                 el.textContent.includes("Template2")
             ).length,
             "Template2 should be available"
         );
 
-        await click(document.querySelector(".o-mail-activity-mail-template-preview"));
-        await click(document.querySelector(".today .o-activity-cell-closest-deadline"));
-        await click(document.querySelector(".o-mail-activity-mail-template-send"));
-        await click(document.querySelector(".overdue .o-activity-cell-closest-deadline"));
+        await click(document.querySelector(".o-ActivityMailTemplate-preview"));
+        await click(document.querySelector(".today .o-ActivityCell-deadline"));
+        await click(document.querySelector(".o-ActivityMailTemplate-send"));
+        await click(document.querySelector(".overdue .o-ActivityCell-deadline"));
         assert.containsNone(
             document.body,
-            ".o-mail-activity-mail-template-name",
+            ".o-ActivityMailTemplate-name",
             "No template should be available"
         );
 
-        await click($(".o-activity-list-popover button:contains(Schedule an activity)")[0]);
-        await click(document.querySelector(".overdue .o-activity-cell-closest-deadline"));
-        await click(document.querySelector(".o-activity-list-popover-item-mark-as-done"));
+        await click($(".o-ActivityListPopover button:contains(Schedule an activity)")[0]);
+        await click(document.querySelector(".overdue .o-ActivityCell-deadline"));
+        await click(document.querySelector(".o-ActivityListPopoverItem-markAsDone"));
         await editInput(
             document.body,
-            ".o-mail-activity-mark-as-done textarea[placeholder='Write Feedback']",
+            ".o-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
             "feedback2"
         );
         await click(
             document.querySelector(
-                ".o-mail-activity-mark-as-done button[aria-label='Done and Schedule Next']"
+                ".o-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
             )
         );
         assert.verifySteps([

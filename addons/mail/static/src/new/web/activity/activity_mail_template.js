@@ -17,7 +17,7 @@ export class ActivityMailTemplate extends Component {
         onUpdate: () => {},
     };
     static props = ["activity", "onClickButtons?", "onUpdate?"];
-    static template = "mail.activity_mail_template";
+    static template = "mail.ActivityMailTemplate";
 
     /**
      * @param {MouseEvent} ev

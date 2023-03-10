@@ -17,7 +17,7 @@ import { markEventHandled } from "../utils/misc";
 
 export class NavigableList extends Component {
     static components = { ImStatus };
-    static template = "mail.navigable_list";
+    static template = "mail.NavigableList";
     static props = {
         anchorRef: {},
         position: { type: String, optional: true },

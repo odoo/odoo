@@ -127,7 +127,7 @@ export async function loadEmoji() {
 export class EmojiPicker extends Component {
     static props = ["onSelect", "close", "onClose?", "storeScroll?"];
     static defaultProps = { onClose: () => {} };
-    static template = "mail.emoji_picker";
+    static template = "mail.EmojiPicker";
 
     setup() {
         this.categories = null;
@@ -157,7 +157,7 @@ export class EmojiPicker extends Component {
                 this.shouldScrollElem = false;
                 const getElement = () =>
                     this.gridRef.el.querySelector(
-                        `.o-emoji-category[data-category="${this.state.categoryId}"`
+                        `.o-EmojiPicker-category[data-category="${this.state.categoryId}"`
                     );
                 const elem = getElement();
                 if (elem) {

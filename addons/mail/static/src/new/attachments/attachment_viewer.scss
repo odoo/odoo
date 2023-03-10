@@ -1,32 +1,32 @@
-.o-mail-attachment-viewer {
+.o-AttachmentViewer {
     z-index: -1;
     outline: none;
 }
 
-.o-mail-attachment-viewer-buttonNavigation {
+.o-AttachmentViewer-navigation {
     width: 40px;
     height: 40px;
 }
 
-.o-mail-attachment-viewer-header {
+.o-AttachmentViewer-header {
     height: $o-navbar-height;
 }
 
-.o-mail-attachment-viewer-main {
+.o-AttachmentViewer-main {
     z-index: -1;
     padding: ($o-navbar-height * 1.125) 0;
 }
 
-.o-mail-attachment-viewer-zoomer {
+.o-AttachmentViewer-zoomer {
     padding: ($o-navbar-height * 1.125) 0;
 }
 
-.o-mail-attachment-viewer-headerItemButton:hover {
+.o-AttachmentViewer-headerButton:hover {
     background-color: rgba($white, 0.1);
     color: lighten($gray-400, 15%);
 }
 
-.o-mail-attachment-viewer-toolbarButton {
+.o-AttachmentViewer-toolbarButton {
     background-color: var(--mail-attachment-viewer-toolbarButton-background-color, #{$o-gray-800});
     color: #fff;
 
@@ -35,7 +35,7 @@
     }
 }
 
-.o-mail-attachment-viewer-view {
+.o-AttachmentViewer-view {
     background-color: #000000;
     box-shadow: 0 0 40px #000000;
     outline: none;

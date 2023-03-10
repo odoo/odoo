@@ -26,8 +26,8 @@ QUnit.test("dragover files on thread with composer", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await afterNextRender(() => dragenterFiles($(".o-mail-thread")[0]));
-    assert.containsOnce($, ".o-dropzone");
+    await afterNextRender(() => dragenterFiles($(".o-Thread")[0]));
+    assert.containsOnce($, ".o-Dropzone");
 });
 
 QUnit.test("load more messages from channel (auto-load on scroll)", async (assert) => {
@@ -46,10 +46,10 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async (asser
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsN($, "button:contains(Load More) ~ .o-mail-message", 30);
+    assert.containsN($, "button:contains(Load More) ~ .o-Message", 30);
 
-    await afterNextRender(() => ($(".o-mail-thread")[0].scrollTop = 0));
-    assert.containsN($, ".o-mail-message", 60);
+    await afterNextRender(() => ($(".o-Thread")[0].scrollTop = 0));
+    assert.containsN($, ".o-Message", 60);
 });
 
 QUnit.test(
@@ -69,8 +69,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-message");
-        assert.containsOnce($, ".o-mail-message:contains(Subject: Salutations, voyageur)");
+        assert.containsOnce($, ".o-Message");
+        assert.containsOnce($, ".o-Message:contains(Subject: Salutations, voyageur)");
     }
 );
 
@@ -91,7 +91,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone($, ".o-mail-message:contains(Salutations, voyageur)");
+        assert.containsNone($, ".o-Message:contains(Salutations, voyageur)");
     }
 );
 
@@ -107,8 +107,8 @@ QUnit.test("auto-scroll to bottom of thread on load", async (assert) => {
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsN($, ".o-mail-message", 25);
-    assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+    assert.containsN($, ".o-Message", 25);
+    assert.ok(isScrolledToBottom($(".o-Thread")[0]));
 });
 
 QUnit.test("display day separator before first message of the day", async (assert) => {
@@ -128,7 +128,7 @@ QUnit.test("display day separator before first message of the day", async (asser
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-thread-date");
+    assert.containsOnce($, ".o-Thread-date");
 });
 
 QUnit.test("do not display day separator if all messages of the day are empty", async (assert) => {
@@ -141,7 +141,7 @@ QUnit.test("do not display day separator if all messages of the day are empty", 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-thread-date");
+    assert.containsNone($, ".o-Thread-date");
 });
 
 QUnit.test(
@@ -164,15 +164,15 @@ QUnit.test(
         );
         const { openDiscuss } = await start();
         await openDiscuss(channelId_1);
-        const scrolltop_1 = $(".o-mail-thread")[0].scrollHeight / 2;
-        $(".o-mail-thread")[0].scrollTo({ top: scrolltop_1 });
-        await click(".o-mail-category-item:contains(channel-2)");
-        const scrolltop_2 = $(".o-mail-thread")[0].scrollHeight / 3;
-        $(".o-mail-thread")[0].scrollTo({ top: scrolltop_2 });
-        await click(".o-mail-category-item:contains(channel-1)");
-        assert.ok(isScrolledTo($(".o-mail-thread")[0], scrolltop_1));
-        await click(".o-mail-category-item:contains(channel-2)");
-        assert.ok(isScrolledTo($(".o-mail-thread")[0], scrolltop_2));
+        const scrolltop_1 = $(".o-Thread")[0].scrollHeight / 2;
+        $(".o-Thread")[0].scrollTo({ top: scrolltop_1 });
+        await click(".o-DiscussCategoryItem:contains(channel-2)");
+        const scrolltop_2 = $(".o-Thread")[0].scrollHeight / 3;
+        $(".o-Thread")[0].scrollTo({ top: scrolltop_2 });
+        await click(".o-DiscussCategoryItem:contains(channel-1)");
+        assert.ok(isScrolledTo($(".o-Thread")[0], scrolltop_1));
+        await click(".o-DiscussCategoryItem:contains(channel-2)");
+        assert.ok(isScrolledTo($(".o-Thread")[0], scrolltop_2));
     }
 );
 
@@ -191,11 +191,11 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
     );
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    $(".o-mail-thread")[0].scrollTo({ top: $(".o-mail-thread")[0].scrollHeight / 2 });
-    $(".o-mail-thread")[0].scrollTo({ top: $(".o-mail-thread")[0].scrollHeight });
-    await insertText(".o-mail-composer-textarea", "123");
-    await click(".o-mail-composer-send-button");
-    assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+    $(".o-Thread")[0].scrollTo({ top: $(".o-Thread")[0].scrollHeight / 2 });
+    $(".o-Thread")[0].scrollTo({ top: $(".o-Thread")[0].scrollHeight });
+    await insertText(".o-Composer-input", "123");
+    await click(".o-Composer-send");
+    assert.ok(isScrolledToBottom($(".o-Thread")[0]));
 });
 
 QUnit.test("mention a channel with space in the name", async (assert) => {
@@ -203,10 +203,10 @@ QUnit.test("mention a channel with space in the name", async (assert) => {
     const channelId = pyEnv["mail.channel"].create({ name: "General good boy" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-composer-textarea", "#");
+    await insertText(".o-Composer-input", "#");
     await click(".o-composer-suggestion");
-    await click(".o-mail-composer-send-button");
-    assert.containsOnce($(".o-mail-message-body"), ".o_channel_redirect");
+    await click(".o-Composer-send");
+    assert.containsOnce($(".o-Message-body"), ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General good boy");
 });
 
@@ -215,10 +215,10 @@ QUnit.test('mention a channel with "&" in the name', async (assert) => {
     const channelId = pyEnv["mail.channel"].create({ name: "General & good" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-composer-textarea", "#");
+    await insertText(".o-Composer-input", "#");
     await click(".o-composer-suggestion");
-    await click(".o-mail-composer-send-button");
-    assert.containsOnce($(".o-mail-message-body"), ".o_channel_redirect");
+    await click(".o-Composer-send");
+    assert.containsOnce($(".o-Message-body"), ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General & good");
 });
 
@@ -262,7 +262,7 @@ QUnit.test(
         );
         assert.verifySteps(["rpc:channel_fetch"]);
 
-        $(".o-mail-composer-textarea")[0].focus();
+        $(".o-Composer-input")[0].focus();
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
@@ -292,7 +292,7 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        $(".o-mail-composer-textarea")[0].focus();
+        $(".o-Composer-input")[0].focus();
         // simulate receiving a message
         await env.services.rpc("/mail/chat_post", {
             context: { mockedUserId: userId },
@@ -320,8 +320,8 @@ QUnit.test(
         }
         const { env } = await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item");
-        assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+        await click(".o-NotificationItem");
+        assert.ok(isScrolledToBottom($(".o-Thread")[0]));
 
         // simulate receiving a message
         await afterNextRender(() =>
@@ -331,7 +331,7 @@ QUnit.test(
                 uuid: "channel-uuid",
             })
         );
-        assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+        assert.ok(isScrolledToBottom($(".o-Thread")[0]));
     }
 );
 
@@ -351,12 +351,12 @@ QUnit.test(
         }
         const { env } = await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item");
-        assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+        await click(".o-NotificationItem");
+        assert.ok(isScrolledToBottom($(".o-Thread")[0]));
 
-        $(".o-mail-thread").scrollTop(0);
+        $(".o-Thread").scrollTop(0);
         await nextAnimationFrame();
-        assert.strictEqual($(".o-mail-thread")[0].scrollTop, 0);
+        assert.strictEqual($(".o-Thread")[0].scrollTop, 0);
 
         // simulate receiving a message
         await afterNextRender(() =>
@@ -366,7 +366,7 @@ QUnit.test(
                 uuid: "channel-uuid",
             })
         );
-        assert.strictEqual($(".o-mail-thread")[0].scrollTop, 0);
+        assert.strictEqual($(".o-Thread")[0].scrollTop, 0);
     }
 );
 
@@ -375,8 +375,8 @@ QUnit.test("show empty placeholder when thread contains no message", async (asse
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-thread:contains(There are no messages in this conversation.)");
-    assert.containsNone($, ".o-mail-message");
+    assert.containsOnce($, ".o-Thread:contains(There are no messages in this conversation.)");
+    assert.containsNone($, ".o-Message");
 });
 
 QUnit.test("show empty placeholder when thread contains only empty messages", async (assert) => {
@@ -385,8 +385,8 @@ QUnit.test("show empty placeholder when thread contains only empty messages", as
     pyEnv["mail.message"].create({ model: "mail.channel", res_id: channelId });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-thread:contains(There are no messages in this conversation.)");
-    assert.containsNone($, ".o-mail-message");
+    assert.containsOnce($, ".o-Thread:contains(There are no messages in this conversation.)");
+    assert.containsNone($, ".o-Message");
 });
 
 QUnit.test(
@@ -411,7 +411,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
-        assert.containsN($, ".o-mail-message", 10);
+        assert.containsN($, ".o-Message", 10);
         assert.containsOnce($, "button:contains(Load More)"); // still 40 non-empty
     }
 );
@@ -439,16 +439,16 @@ QUnit.test(
         pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-message");
+        assert.containsOnce($, ".o-Message");
         assert.containsNone($, "hr + span:contains(New messages)");
 
-        await insertText(".o-mail-composer-textarea", "hey!");
+        await insertText(".o-Composer-input", "hey!");
         await afterNextRender(() => {
             // need to remove focus from text area to avoid set_last_seen_message
-            $(".o-mail-composer-send-button")[0].focus();
-            $(".o-mail-composer-send-button")[0].click();
+            $(".o-Composer-send")[0].focus();
+            $(".o-Composer-send")[0].click();
         });
-        assert.containsN($, ".o-mail-message", 2);
+        assert.containsN($, ".o-Message", 2);
         assert.containsNone($, "hr + span:contains(New messages)");
     }
 );
@@ -481,10 +481,10 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message", "should have an initial message");
+    assert.containsOnce($, ".o-Message", "should have an initial message");
     assert.containsNone($, "hr + span:contains(New messages)");
 
-    $(".o-mail-composer-textarea")[0].blur();
+    $(".o-Composer-input")[0].blur();
     // simulate receiving a message
     await afterNextRender(() =>
         env.services.rpc("/mail/chat_post", {
@@ -493,11 +493,11 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
             uuid: "randomuuid",
         })
     );
-    assert.containsN($, ".o-mail-message", 2);
+    assert.containsN($, ".o-Message", 2);
     assert.containsOnce($, "hr + span:contains(New messages)");
-    assert.containsOnce($, ".o-mail-thread-new-message ~ .o-mail-message:contains(hu)");
+    assert.containsOnce($, ".o-Thread-newMessage ~ .o-Message:contains(hu)");
 
-    $(".o-mail-composer-textarea")[0].focus();
+    $(".o-Composer-input")[0].focus();
     await nextTick();
     assert.containsNone($, "hr + span:contains(New messages)");
 });
@@ -513,12 +513,12 @@ QUnit.test("no new messages separator on posting message (no message history)", 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-message");
+    assert.containsNone($, ".o-Message");
     assert.containsNone($, "hr + span:contains(New messages)");
 
-    await insertText(".o-mail-composer-textarea", "hey!");
-    await click(".o-mail-composer-send-button");
-    assert.containsOnce($, ".o-mail-message");
+    await insertText(".o-Composer-input", "hey!");
+    await click(".o-Composer-send");
+    assert.containsOnce($, ".o-Message");
     assert.containsNone($, "hr + span:contains(New messages)");
 });
 
@@ -537,12 +537,12 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-composer-textarea", "@");
-    await insertText(".o-mail-composer-textarea", "Pyn");
+    await insertText(".o-Composer-input", "@");
+    await insertText(".o-Composer-input", "Pyn");
     await click(".o-composer-suggestion");
-    await click(".o-mail-composer-send-button");
+    await click(".o-Composer-send");
     assert.containsOnce(
-        $(".o-mail-message-body"),
+        $(".o-Message-body"),
         `.o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`
     );
 });
@@ -569,20 +569,20 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-composer-textarea", "@");
-    await insertText(".o-mail-composer-textarea", "Te");
+    await insertText(".o-Composer-input", "@");
+    await insertText(".o-Composer-input", "Te");
     await click(".o-composer-suggestion:eq(0)");
-    await insertText(".o-mail-composer-textarea", "@");
-    await insertText(".o-mail-composer-textarea", "Te");
+    await insertText(".o-Composer-input", "@");
+    await insertText(".o-Composer-input", "Te");
     await click(".o-composer-suggestion:eq(1)");
-    await click(".o-mail-composer-send-button");
-    assert.containsOnce($, ".o-mail-message-body");
+    await click(".o-Composer-send");
+    assert.containsOnce($, ".o-Message-body");
     assert.containsOnce(
-        $(".o-mail-message-body"),
+        $(".o-Message-body"),
         `.o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
     );
     assert.containsOnce(
-        $(".o-mail-message-body"),
+        $(".o-Message-body"),
         `.o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]:contains("@TestPartner")`
     );
 });
@@ -592,11 +592,11 @@ QUnit.test("mention a channel on a second line when the first line contains #", 
     const channelId = pyEnv["mail.channel"].create({ name: "General good" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-composer-textarea", "#blabla\n");
-    await insertText(".o-mail-composer-textarea", "#");
+    await insertText(".o-Composer-input", "#blabla\n");
+    await insertText(".o-Composer-input", "#");
     await click(".o-composer-suggestion");
-    await click(".o-mail-composer-send-button");
-    assert.containsOnce($(".o-mail-message-body"), ".o_channel_redirect");
+    await click(".o-Composer-send");
+    assert.containsOnce($(".o-Message-body"), ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General good");
 });
 
@@ -607,13 +607,13 @@ QUnit.test(
         const channelId = pyEnv["mail.channel"].create({ name: "General good" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await insertText(".o-mail-composer-textarea", "#");
+        await insertText(".o-Composer-input", "#");
         await click(".o-composer-suggestion");
-        const text = $(".o-mail-composer-textarea").val();
-        $(".o-mail-composer-textarea").val(text.slice(0, -1));
-        await insertText(".o-mail-composer-textarea", ", test");
-        await click(".o-mail-composer-send-button");
-        assert.containsOnce($(".o-mail-message-body"), ".o_channel_redirect");
+        const text = $(".o-Composer-input").val();
+        $(".o-Composer-input").val(text.slice(0, -1));
+        await insertText(".o-Composer-input", ", test");
+        await click(".o-Composer-send");
+        assert.containsOnce($(".o-Message-body"), ".o_channel_redirect");
         assert.strictEqual($(".o_channel_redirect").text(), "#General good");
     }
 );
@@ -633,20 +633,20 @@ QUnit.test("mention 2 different channels that have the same name", async (assert
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId_1);
-    await insertText(".o-mail-composer-textarea", "#");
-    await insertText(".o-mail-composer-textarea", "m");
+    await insertText(".o-Composer-input", "#");
+    await insertText(".o-Composer-input", "m");
     await click(".o-composer-suggestion:eq(0)");
-    await insertText(".o-mail-composer-textarea", "#");
-    await insertText(".o-mail-composer-textarea", "m");
+    await insertText(".o-Composer-input", "#");
+    await insertText(".o-Composer-input", "m");
     await click(".o-composer-suggestion:eq(1)");
-    await click(".o-mail-composer-send-button");
-    assert.containsOnce($, ".o-mail-message-body");
+    await click(".o-Composer-send");
+    assert.containsOnce($, ".o-Message-body");
     assert.containsOnce(
-        $(".o-mail-message-body"),
+        $(".o-Message-body"),
         `.o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="mail.channel"]:contains("#my channel")`
     );
     assert.containsOnce(
-        $(".o-mail-message-body"),
+        $(".o-Message-body"),
         `.o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="mail.channel"]:contains("#my channel")`
     );
 });
@@ -668,13 +668,13 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await insertText(".o-mail-composer-textarea", "email@odoo.com\n");
-        await insertText(".o-mail-composer-textarea", "@");
-        await insertText(".o-mail-composer-textarea", "Te");
+        await insertText(".o-Composer-input", "email@odoo.com\n");
+        await insertText(".o-Composer-input", "@");
+        await insertText(".o-Composer-input", "Te");
         await click(".o-composer-suggestion");
-        await click(".o-mail-composer-send-button");
+        await click(".o-Composer-send");
         assert.containsOnce(
-            $(".o-mail-message-body"),
+            $(".o-Message-body"),
             `.o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@TestPartner")`
         );
     }
@@ -699,12 +699,12 @@ QUnit.test("basic rendering of canceled notification", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message-notification .fa-envelope-o");
+    assert.containsOnce($, ".o-Message-notification .fa-envelope-o");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification-popover");
-    assert.containsOnce($, ".o-mail-message-notification-popover .fa-trash-o");
-    assert.containsOnce($, ".o-mail-message-notification-popover:contains(Someone)");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-MessageNotificationPopover");
+    assert.containsOnce($, ".o-MessageNotificationPopover .fa-trash-o");
+    assert.containsOnce($, ".o-MessageNotificationPopover:contains(Someone)");
 });
 
 QUnit.test(
@@ -736,10 +736,10 @@ QUnit.test(
         const { openDiscuss, env } = await start();
         await openDiscuss(channelId);
         // send a command that leads to receiving a transient message
-        await insertText(".o-mail-composer-textarea", "/who");
-        await click(".o-mail-composer-send-button");
+        await insertText(".o-Composer-input", "/who");
+        await click(".o-Composer-send");
         // composer is focused by default, we remove that focus
-        $(".o-mail-composer-textarea")[0].blur();
+        $(".o-Composer-input")[0].blur();
         // simulate receiving a message
         await afterNextRender(() =>
             env.services.rpc("/mail/chat_post", {
@@ -748,9 +748,9 @@ QUnit.test(
                 uuid: "channel20uuid",
             })
         );
-        assert.containsN($, ".o-mail-message", 3);
+        assert.containsN($, ".o-Message", 3);
         assert.containsOnce($, "hr + span:contains(New messages)");
-        assert.containsOnce($, ".o-mail-message[aria-label='Note'] + .o-mail-thread-new-message");
+        assert.containsOnce($, ".o-Message[aria-label='Note'] + .o-Thread-newMessage");
     }
 );
 
@@ -761,9 +761,9 @@ QUnit.test(
         const channelId = pyEnv["mail.channel"].create({ name: "test" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await insertText(".o-mail-composer-textarea", "Dummy Message");
-        await click(".o-mail-composer-send-button");
-        assert.strictEqual(document.activeElement, $(".o-mail-composer-textarea")[0]);
+        await insertText(".o-Composer-input", "Dummy Message");
+        await click(".o-Composer-send");
+        assert.strictEqual(document.activeElement, $(".o-Composer-input")[0]);
     }
 );
 
@@ -788,9 +788,9 @@ QUnit.test(
         });
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item-name");
-        assert.containsOnce($, ".o-mail-chat-window");
-        assert.containsNone($, ".o-mail-chat-window-header:contains('(1)')");
+        await click(".o-NotificationItem-name");
+        assert.containsOnce($, ".o-ChatWindow");
+        assert.containsNone($, ".o-ChatWindow-header:contains('(1)')");
     }
 );
 
@@ -827,10 +827,10 @@ QUnit.test(
             },
         });
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsOnce($, ".o-mail-notification-item");
-        assert.containsNone($, ".o-mail-chat-window");
+        assert.containsOnce($, ".o-NotificationItem");
+        assert.containsNone($, ".o-ChatWindow");
 
-        await click(".o-mail-notification-item");
-        assert.containsOnce($, ".o-mail-chat-window");
+        await click(".o-NotificationItem");
+        assert.containsOnce($, ".o-ChatWindow");
     }
 );

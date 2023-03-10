@@ -5,7 +5,7 @@ import { useRtc } from "@mail/new/rtc/rtc_hook";
 
 export class CallParticipantVideo extends Component {
     static props = ["session"];
-    static template = "mail.call_participant_video";
+    static template = "mail.CallParticipantVideo";
 
     setup() {
         this.rtc = useRtc();

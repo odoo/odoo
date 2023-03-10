@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="mail.composer" owl="1">
+<t t-name="mail.Composer" owl="1">
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <div t-ref="composer">
-        <div class="o-mail-composer d-grid flex-shrink-0 bg-view"
+        <div class="o-Composer d-grid flex-shrink-0 bg-view"
                 t-att-class="{
-                    'px-3 py-4 o-mail-extended-composer': extended,
+                    'px-3 py-4 o-extended': extended,
                     'p-3': normal,
-                    'o-has-current-partner-avatar px-3': !this.env.inChatWindow and thread,
+                    'o-hasSelfAvatar px-3': !this.env.inChatWindow and thread,
                 }">
-            <div class="o-mail-composer-sidebar-main flex-shrink-0" t-if="!compact">
-                <img class="o-mail-composer-avatar mt-1 rounded-circle" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+            <div class="o-Composer-sidebarMain flex-shrink-0" t-if="!compact">
+                <img class="o-Composer-avatar mt-1 rounded-circle" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
             </div>
-            <div class="o-mail-composer-core-header text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
+            <div class="o-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
                 <span class="cursor-pointer" t-on-click="() => props.highlightReplyTo and props.highlightReplyTo(props.messageToReplyTo.message.id)">
                     Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
                 </span>
@@ -24,7 +24,7 @@
                 </span>
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
             </div>
-            <div class="o-mail-composer-core-main d-flex flex-nowrap align-items-start flex-grow-1"
+            <div class="o-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1"
                 t-att-class="{ 'flex-column' : extended }"
             >
                 <div class="d-flex border bg-view flex-grow-1"
@@ -34,7 +34,7 @@
                     }"
                 >
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-composer-textarea form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
+                        <textarea class="o-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -52,7 +52,7 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-composer-fake position-absolute"
+                            class="o-Composer-fake position-absolute"
                             t-model="props.composer.textInputContent"
                             t-ref="fakeTextarea"
                             disabled="1"
@@ -75,7 +75,7 @@
                         <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
                 </div>
-                <button t-if="!compact or store.isSmall" class="o-mail-composer-send-button btn btn-primary o-last border-start-0"
+                <button t-if="!compact or store.isSmall" class="o-Composer-send btn btn-primary o-last border-start-0"
                     t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended}"
                     t-on-click="sendMessage"
                     type="button"
@@ -86,7 +86,7 @@
                     <t t-else="">Send</t>
                 </button>
             </div>
-            <div class="o-mail-composer-footer overflow-auto">
+            <div class="o-Composer-footer overflow-auto">
                 <AttachmentList
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"

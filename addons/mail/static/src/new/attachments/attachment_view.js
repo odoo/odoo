@@ -12,7 +12,7 @@ import { hidePDFJSButtons } from "@web/legacy/js/libs/pdfjs";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentView extends Component {
-    static template = "mail.attachment_view";
+    static template = "mail.AttachmentView";
     static components = {};
     static props = ["threadId", "threadModel"];
 

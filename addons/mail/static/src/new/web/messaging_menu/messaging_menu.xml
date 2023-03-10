@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="mail.messaging_menu" owl="1">
+<t t-name="mail.MessagingMenu" owl="1">
     <Dropdown t-if="!env.inDiscussApp" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = store.isSmall and store.discuss.activeTab === 'mailbox' ? 'all' : store.discuss.activeTab"></i>
-            <span class="o-mail-messaging-menu-counter badge"><t t-esc="counter"/></span>
+            <span class="o-MessagingMenu-counter badge"><t t-esc="counter"/></span>
         </t>
         <t t-set-slot="default">
-            <t t-call="mail.messaging_menu.content"/>
+            <t t-call="mail.MessagingMenu.content"/>
         </t>
     </Dropdown>
-    <t t-else="" t-call="mail.messaging_menu.content"/>
+    <t t-else="" t-call="mail.MessagingMenu.content"/>
 </t>
 
-<t t-name="mail.messaging_menu.content" owl="1">
+<t t-name="mail.MessagingMenu.content" owl="1">
     <t t-set="failures" t-value="store.notificationGroups"/>
-    <div class="o-mail-messaging-menu flex-grow-1" t-att-class="{ 'overflow-auto w-100 mh-100': store.isSmall }">
+    <div class="o-MessagingMenu flex-grow-1" t-att-class="{ 'overflow-auto w-100 mh-100': store.isSmall }">
         <div t-att-class="{'flex-row-reverse text-uppercase': store.isSmall,
-        'o-mail-messaging-menu-topbar border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp,
+        'o-MessagingMenu-header border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp,
         }">
             <t t-if="!store.isSmall">
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'all'">All</button>
@@ -34,7 +34,7 @@
                         <ChannelSelector category="category" autofocus="true"/>
                     </div>
                 </t>
-                <button t-if="!env.inDiscussApp or (env.inDiscussApp and store.discuss.activeTab === 'chat' and !state.addingChat)" t-att-class="env.inDiscussApp ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link o-mail-messaging-menu-new-message'" t-on-click.stop="onClickNewMessage">
+                <button t-if="!env.inDiscussApp or (env.inDiscussApp and store.discuss.activeTab === 'chat' and !state.addingChat)" t-att-class="env.inDiscussApp ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link o-MessagingMenu-new'" t-on-click.stop="onClickNewMessage">
                     <t t-if="env.inDiscussApp">Start a conversation</t>
                     <t t-else="">New Message</t>
                 </button>
@@ -102,8 +102,8 @@
             </t>
         </div>
     </div>
-    <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg w-100">
-        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-messaging-menu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
+    <div t-if="store.isSmall" class="o-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100">
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
             'text-primary fw-bolder': store.discuss.activeTab === tab.id,
             'border-end': !tab_last,
         }" t-on-click="() => this.onClickNavTab(tab.id)">

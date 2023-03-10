@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class CallInvitation extends Component {
     static props = ["thread"];
-    static template = "mail.call_invitation";
+    static template = "mail.CallInvitation";
 
     setup() {
         this.threadService = useService("mail.thread");

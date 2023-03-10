@@ -32,7 +32,7 @@ import { SuggestedRecipientsList } from "./suggested_recipient_list";
  * @extends {Component<Props, Env>}
  */
 export class Chatter extends Component {
-    static template = "mail.chatter";
+    static template = "mail.Chatter";
     static components = {
         AttachmentList,
         Dropdown,
@@ -117,7 +117,7 @@ export class Chatter extends Component {
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
-            "o-mail-chatter-dropzone"
+            "o-Chatter-dropzone"
         );
 
         onMounted(this.scrollPosition.restore);

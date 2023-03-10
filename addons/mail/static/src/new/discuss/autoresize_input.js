@@ -4,7 +4,7 @@ import { onExternalClick } from "@mail/new/utils/hooks";
 import { Component, useRef, useState, onWillUpdateProps, useEffect } from "@odoo/owl";
 
 export class AutoresizeInput extends Component {
-    static template = "mail.autoresize_input";
+    static template = "mail.AutoresizeInput";
     static props = {
         className: { type: String, optional: true },
         disabled: { type: Boolean, optional: true },

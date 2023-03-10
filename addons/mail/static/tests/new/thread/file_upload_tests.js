@@ -31,21 +31,19 @@ QUnit.test("no conflicts between file uploads", async (assert) => {
         contentType: "text/plain",
     });
     await afterNextRender(() =>
-        editInput(document.body, ".o-mail-chatter .o-mail-composer input[type=file]", file1)
+        editInput(document.body, ".o-Chatter .o-Composer input[type=file]", file1)
     );
     // Uploading file in the second thread: mail.channel in chatWindow.
     await click("i[aria-label='Messages']");
-    await click(".o-mail-notification-item");
+    await click(".o-NotificationItem");
     const file2 = await createFile({
         name: "text2.txt",
         content: "hello, world",
         contentType: "text/plain",
     });
-    await afterNextRender(() =>
-        editInput(document.body, ".o-mail-chat-window input[type=file]", file2)
-    );
-    assert.containsOnce($, ".o-mail-chatter .o-mail-attachment-card");
-    assert.containsOnce($, ".o-mail-chat-window .o-mail-attachment-card");
+    await afterNextRender(() => editInput(document.body, ".o-ChatWindow input[type=file]", file2));
+    assert.containsOnce($, ".o-Chatter .o-AttachmentCard");
+    assert.containsOnce($, ".o-ChatWindow .o-AttachmentCard");
 });
 
 QUnit.test("Attachment shows spinner during upload", async (assert) => {
@@ -65,8 +63,6 @@ QUnit.test("Attachment shows spinner during upload", async (assert) => {
         content: "hello, world",
         contentType: "text/plain",
     });
-    await afterNextRender(() =>
-        editInput(document.body, ".o-mail-composer input[type=file]", file)
-    );
-    assert.containsOnce($, ".o-mail-attachment-card .fa-spinner");
+    await afterNextRender(() => editInput(document.body, ".o-Composer input[type=file]", file));
+    assert.containsOnce($, ".o-AttachmentCard .fa-spinner");
 });

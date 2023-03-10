@@ -7,7 +7,7 @@ import { browser } from "@web/core/browser/browser";
 
 export class WelcomePage extends Component {
     static props = ["data?", "proceed?"];
-    static template = "mail.welcome_page";
+    static template = "mail.WelcomePage";
 
     setup() {
         this.messaging = useMessaging();

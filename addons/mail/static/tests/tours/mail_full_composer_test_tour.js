@@ -10,30 +10,28 @@ import { registry } from "@web/core/registry";
  * an action (action manager) which is not possible to test with QUnit.
  * @see mail/tests/test_mail_full_composer.py
  */
-registry.category("web_tour.tours").add(
-    "mail/static/tests/tours/mail_full_composer_test_tour.js",
-    {
-        test: true,
-        steps: [
+registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_composer_test_tour.js", {
+    test: true,
+    steps: [
         {
             content: "Click on Send Message",
             trigger: "button:contains(Send message)",
         },
         {
             content: "Write something in composer",
-            trigger: ".o-mail-composer-textarea",
+            trigger: ".o-Composer-input",
             run: "text blahblah",
         },
         {
             content: "Add one file in composer",
-            trigger: ".o-mail-composer button[aria-label='Attach files']",
+            trigger: ".o-Composer button[aria-label='Attach files']",
             async run() {
                 const file = await createFile({
                     content: "hello, world",
                     contentType: "text/plain",
                     name: "text.txt",
                 });
-                inputFiles(document.querySelector(".o-mail-composer-core-main .o_input_file"), [
+                inputFiles(document.querySelector(".o-Composer-coreMain .o_input_file"), [
                     file,
                 ]);
             },
@@ -41,11 +39,11 @@ registry.category("web_tour.tours").add(
         {
             content: "Open full composer",
             trigger: "button[aria-label='Full composer']",
-            extra_trigger: ".o-mail-attachment-card:not(.o-mail-is-uploading)", // waiting the attachment to be uploaded
+            extra_trigger: ".o-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the earlier provided attachment is listed",
-            trigger: '.o-mail-attachment-card[title="text.txt"]',
+            trigger: '.o-AttachmentCard[title="text.txt"]',
             run() {},
         },
         {
@@ -90,11 +88,11 @@ registry.category("web_tour.tours").add(
         },
         {
             content: "Check message is shown",
-            trigger: '.o-mail-message-body:contains("blahblah")',
+            trigger: '.o-Message-body:contains("blahblah")',
         },
         {
             content: "Check message contains the attachment",
-            trigger: '.o-mail-message .o-mail-attachment-card:contains("text.txt")',
+            trigger: '.o-Message .o-AttachmentCard:contains("text.txt")',
         },
-    ]
+    ],
 });

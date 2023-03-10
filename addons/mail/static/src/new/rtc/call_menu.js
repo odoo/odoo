@@ -9,11 +9,11 @@ import { useService } from "@web/core/utils/hooks";
 
 export class CallMenu extends Component {
     static props = [];
-    static template = "mail.call_menu";
+    static template = "mail.CallMenu";
     setup() {
         this.threadService = useService("mail.thread");
         this.rtc = useRtc();
     }
 }
 
-registry.category("systray").add("mail.call_menu", { Component: CallMenu }, { sequence: 100 });
+registry.category("systray").add("mail.CallMenu", { Component: CallMenu }, { sequence: 100 });

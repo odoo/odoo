@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mail.message_seen_indicator" owl="1">
-        <span class="o-mail-message-seen-indicator position-relative d-flex opacity-75-hover opacity-50" t-att-class="{ 'o-all-seen text-odoo': hasEveryoneSeen }" t-attf-class="{{ props.className }}" t-att-title="text">
+    <t t-name="mail.MessageSeenIndicator" owl="1">
+        <span class="o-MessageSeenIndicator position-relative d-flex opacity-75-hover opacity-50" t-att-class="{ 'o-all-seen text-odoo': hasEveryoneSeen }" t-attf-class="{{ props.className }}" t-att-title="text">
             <t t-if="!isMessagePreviousToLastSelfMessageSeenByEveryone">
                 <i t-if="hasSomeoneFetched or hasSomeoneSeen" class="fa fa-check ps-1"/>
                 <i t-if="hasSomeoneSeen" class="o-second fa fa-check position-absolute"/>

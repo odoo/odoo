@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mail.call_context_menu" owl="1">
+    <t t-name="mail.CallContextMenu" owl="1">
         <div class="d-flex flex-column p-3">
             <input type="range" min="0.0" max="1" step="0.01" t-att-value="volume" t-on-change="onChangeVolume" class="form-range"/>
             <t t-if="env.debug">

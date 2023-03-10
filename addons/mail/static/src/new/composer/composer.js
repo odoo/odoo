@@ -54,7 +54,7 @@ export class Composer extends Component {
         "messageEdition?",
         "messageComponent?",
     ];
-    static template = "mail.composer";
+    static template = "mail.Composer";
 
     setup() {
         this.messaging = useMessaging();
@@ -108,7 +108,7 @@ export class Composer extends Component {
                         }
                     }
                 },
-                "o-mail-composer-dropzone"
+                "o-Composer-dropzone"
             );
         }
         if (this.props.messageEdition) {

@@ -5,7 +5,7 @@ import { Component, onMounted, useExternalListener, useRef, useState } from "@od
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
-    static template = "mail.activity_mark_as_done";
+    static template = "mail.ActivityMarkAsDone";
     static props = ["activity", "close?", "hasHeader?", "onClickDoneAndScheduleNext?", "reload?"];
     static defaultProps = {
         hasHeader: false,

@@ -18,7 +18,7 @@ import { useRtc } from "@mail/new/rtc/rtc_hook";
  * @extends {Component<Props, Env>}
  */
 export class Sidebar extends Component {
-    static template = "mail.discuss_sidebar";
+    static template = "mail.DiscussSidebar";
     static components = { ChannelSelector, ThreadIcon, ImStatus };
     static props = [];
 

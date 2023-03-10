@@ -13,7 +13,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
  * @extends {Component<Props, Env>}
  */
 export class SuggestedRecipient extends Component {
-    static template = "mail.suggested_recipient";
+    static template = "mail.SuggestedRecipients";
     static props = ["thread", "recipient"];
 
     setup() {

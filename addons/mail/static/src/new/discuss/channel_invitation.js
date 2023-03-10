@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ChannelInvitation extends Component {
     static components = { ImStatus };
     static props = ["thread", "close?", "chatState?"];
-    static template = "mail.channel_invitation";
+    static template = "mail.ChannelInvitation";
 
     setup() {
         this.messaging = useMessaging();

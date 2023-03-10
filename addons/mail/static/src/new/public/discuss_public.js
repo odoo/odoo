@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 export class DiscussPublic extends Component {
     static components = { Discuss, WelcomePage };
     static props = ["data"];
-    static template = "mail.discuss_public";
+    static template = "mail.DiscussPublic";
 
     setup() {
         this.messaging = useMessaging();

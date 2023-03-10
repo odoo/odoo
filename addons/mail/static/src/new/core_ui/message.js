@@ -2,7 +2,7 @@
 
 import { ImStatus } from "@mail/new/discuss/im_status";
 import { AttachmentList } from "@mail/new/attachments/attachment_list";
-import { MessageInReplyTo } from "./message_in_reply_to";
+import { MessageInReply } from "./message_in_reply";
 import { isEventHandled, markEventHandled } from "@mail/new/utils/misc";
 import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/new/utils/format";
 import { onExternalClick } from "@mail/new/utils/hooks";
@@ -48,7 +48,7 @@ export class Message extends Component {
         AttachmentList,
         Composer,
         LinkPreviewList,
-        MessageInReplyTo,
+        MessageInReply,
         MessageReactions,
         MessageSeenIndicator,
         ImStatus,
@@ -70,7 +70,7 @@ export class Message extends Component {
         "squashed?",
         "thread?",
     ];
-    static template = "mail.message";
+    static template = "mail.Message";
 
     setup() {
         this.popover = usePopover();

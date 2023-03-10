@@ -33,9 +33,9 @@ QUnit.test("rendering when just one has received the message", async (assert) =>
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message-seen-indicator");
-    assert.doesNotHaveClass($(".o-mail-message-seen-indicator"), "o-all-seen");
-    assert.containsOnce($, ".o-mail-message-seen-indicator i");
+    assert.containsOnce($, ".o-MessageSeenIndicator");
+    assert.doesNotHaveClass($(".o-MessageSeenIndicator"), "o-all-seen");
+    assert.containsOnce($, ".o-MessageSeenIndicator i");
 });
 
 QUnit.test("rendering when everyone have received the message", async (assert) => {
@@ -64,9 +64,9 @@ QUnit.test("rendering when everyone have received the message", async (assert) =
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message-seen-indicator");
-    assert.doesNotHaveClass($(".o-mail-message-seen-indicator"), "o-all-seen");
-    assert.containsOnce($, ".o-mail-message-seen-indicator i");
+    assert.containsOnce($, ".o-MessageSeenIndicator");
+    assert.doesNotHaveClass($(".o-MessageSeenIndicator"), "o-all-seen");
+    assert.containsOnce($, ".o-MessageSeenIndicator i");
 });
 
 QUnit.test("rendering when just one has seen the message", async (assert) => {
@@ -102,9 +102,9 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message-seen-indicator");
-    assert.doesNotHaveClass($(".o-mail-message-seen-indicator"), "o-all-seen");
-    assert.containsN($, ".o-mail-message-seen-indicator i", 2);
+    assert.containsOnce($, ".o-MessageSeenIndicator");
+    assert.doesNotHaveClass($(".o-MessageSeenIndicator"), "o-all-seen");
+    assert.containsN($, ".o-MessageSeenIndicator i", 2);
 });
 
 QUnit.test("rendering when just one has seen & received the message", async (assert) => {
@@ -136,9 +136,9 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message-seen-indicator");
-    assert.doesNotHaveClass($(".o-mail-message-seen-indicator"), "o-all-seen");
-    assert.containsN($, ".o-mail-message-seen-indicator i", 2);
+    assert.containsOnce($, ".o-MessageSeenIndicator");
+    assert.doesNotHaveClass($(".o-MessageSeenIndicator"), "o-all-seen");
+    assert.containsN($, ".o-MessageSeenIndicator i", 2);
 });
 
 QUnit.test("rendering when just everyone has seen the message", async (assert) => {
@@ -167,9 +167,9 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message-seen-indicator");
-    assert.hasClass($(".o-mail-message-seen-indicator"), "o-all-seen");
-    assert.containsN($, ".o-mail-message-seen-indicator i", 2);
+    assert.containsOnce($, ".o-MessageSeenIndicator");
+    assert.hasClass($(".o-MessageSeenIndicator"), "o-all-seen");
+    assert.containsN($, ".o-MessageSeenIndicator i", 2);
 });
 
 QUnit.test("'channel_fetch' notification received is correctly handled", async (assert) => {
@@ -191,8 +191,8 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsNone($, ".o-mail-message-seen-indicator i");
+    assert.containsOnce($, ".o-Message");
+    assert.containsNone($, ".o-MessageSeenIndicator i");
 
     const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
@@ -203,7 +203,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
             partner_id: partnerId,
         });
     });
-    assert.containsOnce($, ".o-mail-message-seen-indicator i");
+    assert.containsOnce($, ".o-MessageSeenIndicator i");
 });
 
 QUnit.test("'channel_seen' notification received is correctly handled", async (assert) => {
@@ -225,8 +225,8 @@ QUnit.test("'channel_seen' notification received is correctly handled", async (a
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsNone($, ".o-mail-message-seen-indicator i");
+    assert.containsOnce($, ".o-Message");
+    assert.containsNone($, ".o-MessageSeenIndicator i");
 
     const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
@@ -237,7 +237,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async (a
             partner_id: partnerId,
         });
     });
-    assert.containsN($, ".o-mail-message-seen-indicator i", 2);
+    assert.containsN($, ".o-MessageSeenIndicator i", 2);
 });
 
 QUnit.test(
@@ -261,8 +261,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-message");
-        assert.containsNone($, ".o-mail-message-seen-indicator i");
+        assert.containsOnce($, ".o-Message");
+        assert.containsNone($, ".o-MessageSeenIndicator i");
 
         const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
         // Simulate received channel fetched notification
@@ -273,7 +273,7 @@ QUnit.test(
                 partner_id: partnerId,
             });
         });
-        assert.containsOnce($, ".o-mail-message-seen-indicator i");
+        assert.containsOnce($, ".o-MessageSeenIndicator i");
 
         // Simulate received channel seen notification
         await afterNextRender(() => {
@@ -283,7 +283,7 @@ QUnit.test(
                 partner_id: partnerId,
             });
         });
-        assert.containsN($, ".o-mail-message-seen-indicator i", 2);
+        assert.containsN($, ".o-MessageSeenIndicator i", 2);
     }
 );
 
@@ -310,8 +310,8 @@ QUnit.test(
         pyEnv["mail.channel.member"].write(memberIds, { seen_message_id: messageId });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-message");
-        assert.containsNone($, ".o-mail-message-seen-indicator");
+        assert.containsOnce($, ".o-Message");
+        assert.containsNone($, ".o-MessageSeenIndicator");
     }
 );
 
@@ -346,14 +346,14 @@ QUnit.test(
         pyEnv["mail.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-message:contains(Message before last seen)");
+        assert.containsOnce($, ".o-Message:contains(Message before last seen)");
         assert.containsOnce(
             $,
-            ".o-mail-message:contains(Message before last seen) .o-mail-message-seen-indicator"
+            ".o-Message:contains(Message before last seen) .o-MessageSeenIndicator"
         );
         assert.containsNone(
             $,
-            ".o-mail-message:contains(Message before last seen) .o-mail-message-seen-indicator i"
+            ".o-Message:contains(Message before last seen) .o-MessageSeenIndicator i"
         );
     }
 );
@@ -384,8 +384,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-message");
-        assert.containsOnce($, ".o-mail-message-seen-indicator");
-        assert.containsN($, ".o-mail-message-seen-indicator i", 1);
+        assert.containsOnce($, ".o-Message");
+        assert.containsOnce($, ".o-MessageSeenIndicator");
+        assert.containsN($, ".o-MessageSeenIndicator i", 1);
     }
 );

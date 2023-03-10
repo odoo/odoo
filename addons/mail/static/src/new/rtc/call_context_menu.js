@@ -10,7 +10,7 @@ const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TUR
 
 export class CallContextMenu extends Component {
     static props = ["rtcSession", "close?"];
-    static template = "mail.call_context_menu";
+    static template = "mail.CallContextMenu";
 
     updateStatsTimeout;
 

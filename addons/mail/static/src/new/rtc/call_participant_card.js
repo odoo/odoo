@@ -14,7 +14,7 @@ const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 export class CallParticipantCard extends Component {
     static props = ["className", "cardData", "thread", "minimized?"];
     static components = { CallParticipantVideo };
-    static template = "mail.call_participant_card";
+    static template = "mail.CallParticipantCard";
 
     closePopover;
 

@@ -37,8 +37,8 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($, ".o-activity-button i.text-muted");
-    assert.strictEqual($(".o-list-activity-summary")[0].innerText, "");
+    assert.containsOnce($, ".o-ActivityButton i.text-muted");
+    assert.strictEqual($(".o-ListActivity-summary")[0].innerText, "");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -89,13 +89,10 @@ QUnit.test("list activity widget with activities", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($(".o_data_row:eq(0)"), ".o-activity-button i.text-warning.fa-phone");
-    assert.strictEqual(
-        $(".o_data_row:eq(0) .o-list-activity-summary")[0].innerText,
-        "Call with Al"
-    );
-    assert.containsOnce($(".o_data_row:eq(1)"), ".o-activity-button i.text-success.fa-clock-o");
-    assert.strictEqual($(".o_data_row:eq(1) .o-list-activity-summary")[0].innerText, "Type 2");
+    assert.containsOnce($(".o_data_row:eq(0)"), ".o-ActivityButton i.text-warning.fa-phone");
+    assert.strictEqual($(".o_data_row:eq(0) .o-ListActivity-summary")[0].innerText, "Call with Al");
+    assert.containsOnce($(".o_data_row:eq(1)"), ".o-ActivityButton i.text-success.fa-clock-o");
+    assert.strictEqual($(".o_data_row:eq(1) .o-ListActivity-summary")[0].innerText, "Type 2");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -137,8 +134,8 @@ QUnit.test("list activity widget with exception", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($, ".o-activity-button i.text-warning.fa-warning");
-    assert.strictEqual($(".o-list-activity-summary")[0].innerText, "Warning");
+    assert.containsOnce($, ".o-ActivityButton i.text-warning.fa-warning");
+    assert.strictEqual($(".o-ListActivity-summary")[0].innerText, "Warning");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -217,12 +214,12 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.strictEqual($(".o-list-activity-summary")[0].innerText, "Call with Al");
+    assert.strictEqual($(".o-ListActivity-summary")[0].innerText, "Call with Al");
 
-    await click(".o-activity-button"); // open the popover
-    await click(".o-activity-list-popover-item-mark-as-done"); // mark the first activity as done
-    await click(".o-mail-activity-mark-as-done button[aria-label='Done']"); // confirm
-    assert.strictEqual($(".o-list-activity-summary")[0].innerText, "Meet FP");
+    await click(".o-ActivityButton"); // open the popover
+    await click(".o-ActivityListPopoverItem-markAsDone"); // mark the first activity as done
+    await click(".o-ActivityMarkAsDone button[aria-label='Done']"); // confirm
+    assert.strictEqual($(".o-ListActivity-summary")[0].innerText, "Meet FP");
     assert.verifySteps([
         "web_search_read",
         "activity_format",
@@ -278,6 +275,6 @@ QUnit.test("list activity exception widget with activity", async (assert) => {
         views: [[false, "list"]],
     });
     assert.containsN($, ".o_data_row", 2);
-    assert.containsNone($(".o_data_row .o_activity_exception_cell")[0], ".o_ActivityException");
-    assert.containsOnce($(".o_data_row .o_activity_exception_cell")[1], ".o_ActivityException");
+    assert.containsNone($(".o_data_row .o_activity_exception_cell")[0], ".o-ActivityException");
+    assert.containsOnce($(".o_data_row .o_activity_exception_cell")[1], ".o-ActivityException");
 });

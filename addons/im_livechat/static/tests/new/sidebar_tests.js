@@ -20,8 +20,8 @@ QUnit.test("Unknown visitor", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-discuss-sidebar .o-mail-category-livechat");
-    assert.containsOnce($, ".o-mail-category-item:contains(Visitor 11)");
+    assert.containsOnce($, ".o-DiscussSidebar .o-DiscussCategory-livechat");
+    assert.containsOnce($, ".o-DiscussCategoryItem:contains(Visitor 11)");
 });
 
 QUnit.test("Known user with country", async (assert) => {
@@ -44,7 +44,7 @@ QUnit.test("Known user with country", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-category-item:contains(Jean (Belgium))");
+    assert.containsOnce($, ".o-DiscussCategoryItem:contains(Jean (Belgium))");
 });
 
 QUnit.test("Do not show channel when visitor is typing", async (assert) => {
@@ -71,7 +71,7 @@ QUnit.test("Do not show channel when visitor is typing", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-category-livechat");
+    assert.containsNone($, ".o-DiscussCategory-livechat");
     // simulate livechat visitor typing
     const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     await env.services.rpc("/im_livechat/notify_typing", {
@@ -82,7 +82,7 @@ QUnit.test("Do not show channel when visitor is typing", async (assert) => {
         uuid: channel.uuid,
     });
     await nextTick();
-    assert.containsNone($, ".o-mail-category-livechat");
+    assert.containsNone($, ".o-DiscussCategory-livechat");
 });
 
 QUnit.test("Close should update the value on the server", async (assert) => {
@@ -109,7 +109,7 @@ QUnit.test("Close should update the value on the server", async (assert) => {
         [[currentUserId]]
     );
     assert.ok(initalSettings.is_discuss_sidebar_category_livechat_open);
-    await click(".o-mail-category-livechat .btn");
+    await click(".o-DiscussCategory-livechat .btn");
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -142,7 +142,7 @@ QUnit.test("Open should update the value on the server", async (assert) => {
         [[currentUserId]]
     );
     assert.notOk(initalSettings.is_discuss_sidebar_category_livechat_open);
-    await click(".o-mail-category-livechat .btn");
+    await click(".o-DiscussCategory-livechat .btn");
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -168,7 +168,7 @@ QUnit.test("Open from the bus", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-category-livechat + .o-mail-category-item");
+    assert.containsNone($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
             "res.users.settings": {
@@ -177,7 +177,7 @@ QUnit.test("Open from the bus", async (assert) => {
             },
         });
     });
-    assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
+    assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
 });
 
 QUnit.test("Close from the bus", async (assert) => {
@@ -197,7 +197,7 @@ QUnit.test("Close from the bus", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
+    assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
             "res.users.settings": {
@@ -206,7 +206,7 @@ QUnit.test("Close from the bus", async (assert) => {
             },
         });
     });
-    assert.containsNone($, ".o-mail-category-livechat + .o-mail-category-item");
+    assert.containsNone($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
 });
 
 QUnit.test("Smiley face avatar for an anonymous livechat item", async (assert) => {
@@ -223,7 +223,7 @@ QUnit.test("Smiley face avatar for an anonymous livechat item", async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        $(".o-mail-category-livechat + .o-mail-category-item img")[0].dataset.src,
+        $(".o-DiscussCategory-livechat + .o-DiscussCategoryItem img")[0].dataset.src,
         "/mail/static/src/img/smiley/avatar.jpg"
     );
 });
@@ -242,7 +242,7 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.strictEqual(
-        $(".o-mail-category-livechat + .o-mail-category-item img")[0].dataset.src,
+        $(".o-DiscussCategory-livechat + .o-DiscussCategoryItem img")[0].dataset.src,
         `/web/image/res.partner/${partnerId}/avatar_128`
     );
 });
@@ -269,7 +269,7 @@ QUnit.test("No counter if the category is unfolded and with unread messages", as
     await openDiscuss();
     assert.containsNone(
         $,
-        ".o-mail-category-livechat .o-mail-discuss-category-counter",
+        ".o-DiscussCategory-livechat .o-Discuss-category-counter",
         "should not have a counter if the category is unfolded and with unread messages"
     );
 });
@@ -293,7 +293,7 @@ QUnit.test("No counter if category is folded and without unread messages", async
     await openDiscuss();
     assert.containsNone(
         $,
-        ".o-mail-category-livechat .o-mail-category-counter",
+        ".o-DiscussCategory-livechat .o-DiscussCategory-counter",
         "should not have a counter if the category is unfolded and with unread messages"
     );
 });
@@ -324,7 +324,10 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.strictEqual($(".o-mail-category-livechat .o-mail-category-counter").text(), "1");
+        assert.strictEqual(
+            $(".o-DiscussCategory-livechat .o-DiscussCategory-counter").text(),
+            "1"
+        );
     }
 );
 
@@ -347,12 +350,12 @@ QUnit.test("Close manually by clicking the title", async (assert) => {
     await openDiscuss();
     assert.containsOnce(
         $,
-        ".o-mail-category-livechat + .o-mail-category-item",
+        ".o-DiscussCategory-livechat + .o-DiscussCategoryItem",
         "Category is unfolded initially"
     );
     // fold the livechat category
-    await click(".o-mail-category-livechat .btn");
-    assert.containsNone($, ".o-mail-category-item");
+    await click(".o-DiscussCategory-livechat .btn");
+    assert.containsNone($, ".o-DiscussCategoryItem");
 });
 
 QUnit.test("Open manually by clicking the title", async (assert) => {
@@ -374,12 +377,12 @@ QUnit.test("Open manually by clicking the title", async (assert) => {
     await openDiscuss();
     assert.containsNone(
         $,
-        ".o-mail-category-livechat + .o-mail-category-item",
+        ".o-DiscussCategory-livechat + .o-DiscussCategoryItem",
         "Category is folded initially"
     );
     // open the livechat category
-    await click(".o-mail-category-livechat .btn");
-    assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
+    await click(".o-DiscussCategory-livechat .btn");
+    assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
 });
 
 QUnit.test("Category item should be invisible if the category is closed", async (assert) => {
@@ -395,9 +398,9 @@ QUnit.test("Category item should be invisible if the category is closed", async 
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
-    await click(".o-mail-category-livechat .btn");
-    assert.containsNone($, ".o-mail-category-livechat + .o-mail-category-item");
+    assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
+    await click(".o-DiscussCategory-livechat .btn");
+    assert.containsNone($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
 });
 
 QUnit.test(
@@ -415,11 +418,14 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
-        await click(".o-mail-category-livechat + .o-mail-category-item");
-        assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item.o-active");
-        await click(".o-mail-category-livechat .btn");
-        assert.containsOnce($, ".o-mail-category-livechat + .o-mail-category-item");
+        assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
+        await click(".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
+        assert.containsOnce(
+            $,
+            ".o-DiscussCategory-livechat + .o-DiscussCategoryItem.o-active"
+        );
+        await click(".o-DiscussCategory-livechat .btn");
+        assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
     }
 );
 
@@ -440,6 +446,6 @@ QUnit.test("Clicking on unpin button unpins the channel", async (assert) => {
         },
     });
     await openDiscuss();
-    await click(".o-mail-category-item [title='Unpin Conversation']");
+    await click(".o-DiscussCategoryItem [title='Unpin Conversation']");
     assert.verifySteps(["You unpinned your conversation with Visitor 11"]);
 });

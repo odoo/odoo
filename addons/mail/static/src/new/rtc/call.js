@@ -21,7 +21,7 @@ import { isEventHandled, markEventHandled } from "@mail/new/utils/misc";
 export class Call extends Component {
     static components = { CallActionList, CallParticipantCard };
     static props = ["thread", "compact?"];
-    static template = "mail.call";
+    static template = "mail.Call";
 
     overlayTimeout;
 
@@ -110,7 +110,7 @@ export class Call extends Component {
     }
 
     onMouseleaveMain(ev) {
-        if (ev.relatedTarget && ev.relatedTarget.closest(".o-mail-call-main-controls")) {
+        if (ev.relatedTarget && ev.relatedTarget.closest(".o-Call-overlay")) {
             // the overlay should not be hidden when the cursor leaves to enter the controller popover
             return;
         }

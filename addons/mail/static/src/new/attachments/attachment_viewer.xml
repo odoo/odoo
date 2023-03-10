@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.attachment_viewer" owl="1">
+    <t t-name="mail.AttachmentViewer" owl="1">
         <div class="d-flex justify-content-center" t-att-class="{ 'modal fixed-top bottom-0': props.modal }">
-            <div class="o-mail-attachment-viewer flex-column align-items-center d-flex w-100 h-100" tabindex="0">
-                <div class="o-mail-attachment-viewer-header position-absolute top-0 d-flex w-100 bg-black-75 text-400">
+            <div class="o-AttachmentViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0">
+                <div class="o-AttachmentViewer-header position-absolute top-0 d-flex w-100 bg-black-75 text-400">
                     <div t-if="isViewable" class="d-flex align-items-center ms-4 me-2">
                         <i t-if="state.attachment.isImage" class="fa fa-picture-o" role="img" title="Image"/>
                         <i t-if="state.attachment.isPdf" class="fa fa-file-text" role="img" title="PDF file"/>
@@ -15,58 +15,58 @@
                         <span class="text-truncate" t-out="state.attachment.displayName"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <div class="o-mail-attachment-viewer-buttonDownload o-mail-attachment-viewer-headerItemButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download">
+                    <div class="o-AttachmentViewer-download o-AttachmentViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download">
                         <a t-att-href="state.attachment.downloadUrl" class="text-reset" download="">
                             <i class="fa fa-download fa-fw" role="img"/>
                             <span>Download</span>
                         </a>
                     </div>
 
-                    <div t-on-click.stop="close" class="o-mail-attachment-viewer-headerItemButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
+                    <div t-on-click.stop="close" class="o-AttachmentViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
                         <i class="fa fa-fw fa-times" role="img"/>
                     </div>
                 </div>
-                <div t-on-click.stop="close" t-on-mousemove="onMousemoveView" class="o-mail-attachment-viewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.attachment.isImage }">
-                    <div t-if="state.attachment.isImage" class="o-mail-attachment-viewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
-                        <div t-if="!state.imageLoaded" class="o-mail-attachment-viewer-loading position-absolute">
+                <div t-on-click.stop="close" t-on-mousemove="onMousemoveView" class="o-AttachmentViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.attachment.isImage }">
+                    <div t-if="state.attachment.isImage" class="o-AttachmentViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
+                        <div t-if="!state.imageLoaded" class="position-absolute">
                             <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
                         </div>
-                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-mail-attachment-viewer-view o-mail-attachment-viewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.attachment.imageUrl" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-AttachmentViewer-view o-AttachmentViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.attachment.imageUrl" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                     </div>
-                    <iframe t-if="state.attachment.isPdf" class="o-mail-attachment-viewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': env.isSmall }" t-att-src="state.attachment.defaultSource"/>
-                    <iframe t-if="state.attachment.isText" class="o-mail-attachment-viewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.attachment.defaultSource"/>
-                    <iframe t-if="state.attachment.isUrlYoutube" allow="autoplay; encrypted-media" class="o-mail-attachment-viewer-view w-75 h-100 border-0" t-att-src="state.attachment.defaultSource" height="315" width="560"/>
-                    <video t-if="state.attachment.isVideo" class="o-mail-attachment-viewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': env.isSmall }" t-on-click="onClickVideo" controls="controls">
+                    <iframe t-if="state.attachment.isPdf" class="o-AttachmentViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': env.isSmall }" t-att-src="state.attachment.defaultSource"/>
+                    <iframe t-if="state.attachment.isText" class="o-AttachmentViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.attachment.defaultSource"/>
+                    <iframe t-if="state.attachment.isUrlYoutube" allow="autoplay; encrypted-media" class="o-AttachmentViewer-view w-75 h-100 border-0" t-att-src="state.attachment.defaultSource" height="315" width="560"/>
+                    <video t-if="state.attachment.isVideo" class="o-AttachmentViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': env.isSmall }" t-on-click="onClickVideo" controls="controls">
                         <source t-att-data-type="state.attachment.mimetype" t-att-src="state.attachment.defaultSource"/>
                     </video>
                 </div>
-                <div t-if="state.attachment.isImage" class="o-mail-attachment-viewer-toolbar position-absolute bottom-0 d-flex" role="toolbar">
-                    <div class="o-mail-attachment-viewer-toolbarButton p-3 rounded-0" t-on-click="zoomIn" title="Zoom In (+)" role="button">
+                <div t-if="state.attachment.isImage" class="position-absolute bottom-0 d-flex" role="toolbar">
+                    <div class="o-AttachmentViewer-toolbarButton p-3 rounded-0" t-on-click="zoomIn" title="Zoom In (+)" role="button">
                         <i class="fa fa-fw fa-plus" role="img"/>
                     </div>
-                    <div class="o-mail-attachment-viewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === 1 }" t-on-click="resetZoom" role="button" title="Reset Zoom (0)">
+                    <div class="o-AttachmentViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === 1 }" t-on-click="resetZoom" role="button" title="Reset Zoom (0)">
                         <i class="fa fa-fw fa-search" role="img"/>
                     </div>
-                    <div class="o-mail-attachment-viewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === minScale }" t-on-click="zoomOut" title="Zoom Out (-)" role="button">
+                    <div class="o-AttachmentViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === minScale }" t-on-click="zoomOut" title="Zoom Out (-)" role="button">
                         <i class="fa fa-fw fa-minus" role="img"/>
                     </div>
-                    <div class="o-mail-attachment-viewer-toolbarButton p-3 rounded-0" t-on-click="rotate" title="Rotate (r)" role="button">
+                    <div class="o-AttachmentViewer-toolbarButton p-3 rounded-0" t-on-click="rotate" title="Rotate (r)" role="button">
                         <i class="fa fa-fw fa-repeat" role="img"/>
                     </div>
-                    <div class="o-mail-attachment-viewer-toolbarButton p-3 rounded-0" t-on-click="onClickPrint" title="Print" role="button">
+                    <div class="o-AttachmentViewer-toolbarButton p-3 rounded-0" t-on-click="onClickPrint" title="Print" role="button">
                         <i class="fa fa-fw fa-print" role="img"/>
                     </div>
-                    <div class="o-mail-attachment-viewer-buttonDownload o-mail-attachment-viewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button">
+                    <div class="o-AttachmentViewer-download o-AttachmentViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button">
                         <a t-att-href="state.attachment.downloadUrl" class="text-reset" download="">
                             <i class="fa fa-download fa-fw" role="img"/>
                         </a>
                     </div>
                 </div>
                 <t t-if="props.attachments.length > 1">
-                    <div class="o-mail-attachment-viewer-buttonNavigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
+                    <div class="o-AttachmentViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
                         <span class="fa fa-chevron-left" role="img"/>
                     </div>
-                    <div class="o-mail-attachment-viewer-buttonNavigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle" t-on-click="next" title="Next (Right-Arrow)" aria-label="Next" role="button">
+                    <div class="o-AttachmentViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle" t-on-click="next" title="Next (Right-Arrow)" aria-label="Next" role="button">
                         <span class="fa fa-chevron-right" role="img"/>
                     </div>
                 </t>

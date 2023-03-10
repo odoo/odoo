@@ -3,6 +3,6 @@
 import { Component } from "@odoo/owl";
 
 export class SnailmailNotificationPopover extends Component {
-    static template = "snailmail.snailmail_notification_popover";
+    static template = "snailmail.SnailmailNotificationPopover";
     static props = ["message", "close?"];
 }

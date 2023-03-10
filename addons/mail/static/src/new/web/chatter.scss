@@ -1,35 +1,35 @@
-.o-mail-chatter {
+.o-Chatter {
     @include make-container-max-widths();
 
     margin-left: auto;
     margin-right: auto;
 }
 
-.o-mail-chatter .o-mail-message-body [summary~="o_mail_notification"] {
+.o-Chatter .o-Message-body [summary~="o_mail_notification"] {
     display: none;
 }
 
-.o-mail-chatter-topbar {
+.o-Chatter-topbar {
     padding-inline-start: 0;
 }
 
-.o_FormRenderer_chatterContainer.o-aside .o-mail-chatter-topbar  {
+.o-Form-chatter.o-aside .o-Chatter-topbar  {
     padding-inline-start: $o-horizontal-padding;
 }
 
-.o-chatter-disabled .o-mail-message-actions {
+.o-chatter-disabled .o-Message-actions {
     display: none;
 }
 
-.o-mail-chatter-topbar-close-button {
+.o-Chatter-close {
     width: $o-statusbar-height;
 }
 
-.o-mail-chatter-topbar-follower-list-button:focus {
+.o-Followers-button:focus {
     background-color: $gray-200;
 }
 
-.o-mail-chatter-topbar-follower-list-dropdown {
+.o-Followers-dropdown {
     /**
      * Note: Min() refers to CSS min() and not SCSS min().
      *
@@ -38,12 +38,12 @@
     max-width: Min(400px, 95vw);
 }
 
-.o-mail-chatter-topbar-follower-list-follower-avatar {
-    width: $o-mail-partner-avatar-size;
-    height: $o-mail-partner-avatar-size;
+.o-Follower-avatar {
+    width: $o-Avatar-sizeSmall;
+    height: $o-Avatar-sizeSmall;
 }
 
-.o-mail-chatter-topbar-follower-list-follower-details {
+.o-Follower-details {
     min-width: 0;
 
     &:hover {
@@ -52,11 +52,11 @@
     }
 }
 
-.o-mail-chatter-topbar-follower-list-follower-button:hover {
+.o-Follower-action:hover {
     background: $gray-400;
     color: $black;
 }
 
-.btn.o-mail-chatter-topbar-follow:hover {
+.btn.o-Chatter-follow:hover {
     color: $black !important;
 }

@@ -39,9 +39,9 @@ export async function testEmojiButtonVisible(assert, selector) {
 export async function testEmojiButton(assert, input, button) {
     // emoji picker opens
     await click(button);
-    assert.containsOnce($, ".o-mail-emoji-picker");
+    assert.containsOnce($, ".o-EmojiPicker");
     // clicking an emoji adds it to the input field
-    const emoji_1 = $(".o-mail-emoji-picker-content .o-emoji")[0];
+    const emoji_1 = $(".o-EmojiPicker-content .o-Emoji")[0];
     const emojiChar_1 = emoji_1.textContent;
     await click(emoji_1);
     assert.ok(input.value.endsWith(emojiChar_1));
@@ -50,7 +50,7 @@ export async function testEmojiButton(assert, input, button) {
     input.setSelectionRange(2, input.value.length - emojiChar_1.length);
     // pick an emoji while the text is selected
     await click(button);
-    const emoji_2 = $(".o-mail-emoji-picker-content .o-emoji")[0];
+    const emoji_2 = $(".o-EmojiPicker-content .o-Emoji")[0];
     const emojiChar_2 = emoji_2.textContent;
     await click(emoji_2);
     // the selected region is replaced and the rest stays in place

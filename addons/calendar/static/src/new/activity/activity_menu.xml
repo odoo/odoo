@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.activity_menu" t-inherit-mode="extension">
+    <t t-inherit="mail.ActivityMenu" t-inherit-mode="extension">
         <xpath expr="//*[@name='activityTitle']" position="after">
             <div t-if="group.type === 'meeting'">
                 <t t-set="is_next_meeting" t-value="true"/>

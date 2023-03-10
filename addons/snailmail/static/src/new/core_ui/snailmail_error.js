@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 export class SnailmailError extends Component {
     static components = { Dialog };
     static props = ["close", "failureType", "messageId"];
-    static template = "snailmail.snailmail_error";
+    static template = "snailmail.SnailmailError";
 
     setup() {
         this.orm = useService("orm");

@@ -12,8 +12,8 @@ QUnit.module("mobile messaging menu", {
 QUnit.test("Livechat button is not present when there is no livechat thread", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-messaging-menu");
-    assert.containsNone($, ".o-mail-messaging-menu-navbar:contains(Livechat)");
+    assert.containsOnce($, ".o-MessagingMenu");
+    assert.containsNone($, ".o-MessagingMenu-navbar:contains(Livechat)");
 });
 
 QUnit.test(
@@ -31,7 +31,7 @@ QUnit.test(
         });
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsOnce($, ".o-mail-messaging-menu");
-        assert.containsOnce($, ".o-mail-messaging-menu-navbar:contains(Livechat)");
+        assert.containsOnce($, ".o-MessagingMenu");
+        assert.containsOnce($, ".o-MessagingMenu-navbar:contains(Livechat)");
     }
 );

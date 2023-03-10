@@ -41,7 +41,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[title='Show Member List']");
-        assert.containsOnce($, ".o-mail-channel-member-list");
+        assert.containsOnce($, ".o-ChannelMemberList");
     }
 );
 
@@ -59,9 +59,9 @@ QUnit.test("should have correct members in member list", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsN($, ".o-mail-channel-member", 2);
-    assert.containsOnce($, `.o-mail-channel-member:contains("${pyEnv.currentPartner.name}")`);
-    assert.containsOnce($, ".o-mail-channel-member:contains('Demo')");
+    assert.containsN($, ".o-ChannelMember", 2);
+    assert.containsOnce($, `.o-ChannelMember:contains("${pyEnv.currentPartner.name}")`);
+    assert.containsOnce($, ".o-ChannelMember:contains('Demo')");
 });
 
 QUnit.test(
@@ -99,8 +99,8 @@ QUnit.test("chat with member should be opened after clicking on channel member",
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    await click(".o-mail-channel-member.cursor-pointer");
-    assert.containsOnce($, ".o-mail-autoresize-input[title='Demo']");
+    await click(".o-ChannelMember.cursor-pointer");
+    assert.containsOnce($, ".o-AutoresizeInput[title='Demo']");
 });
 
 QUnit.test(
@@ -142,7 +142,7 @@ QUnit.test("Load more button should load more members", async (assert) => {
     pyEnv["mail.channel"].write([channelId], { channel_member_ids });
     await click("button[title='Show Member List']");
     await click("button[title='Load more']");
-    assert.containsN($, ".o-mail-channel-member", 102);
+    assert.containsN($, ".o-ChannelMember", 102);
 });
 
 QUnit.test("Channel member count update after user joined", async (assert) => {
@@ -156,7 +156,7 @@ QUnit.test("Channel member count update after user joined", async (assert) => {
     assert.strictEqual(thread.memberCount, 1);
     await click("button[title='Show Member List']");
     await click("button[title='Add Users']");
-    await click(".o-mail-channel-invitation-selectablePartner:contains(Harry)");
+    await click(".o-ChannelInvitation-selectable:contains(Harry)");
     await click("button[title='Invite to Channel']");
     assert.strictEqual(thread.memberCount, 2);
 });

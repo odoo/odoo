@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="website_livechat.thread" t-inherit="mail.thread" t-inherit-mode="extension" owl="1">
-        <xpath expr="//*[hasclass('o-mail-thread')]" position="before">
+    <t t-name="website_livechat.Thread" t-inherit="mail.Thread" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[hasclass('o-Thread')]" position="before">
             <t t-set="visitor" t-value="props.thread.visitor"/>
-            <div t-if="visitor and !env.inChatWindow" class="o-mail-visitor-banner py-4 px-2 d-flex border-bottom">
-                <div class="o-mail-visitor-banner-sidebar me-2 d-flex justify-content-center">
-                    <div class="o-mail-visitor-banner-avatar-container mx-1 position-relative">
-                        <img class="o-mail-visitor-banner-avatar w-100 h-100 rounded-circle" t-att-src="visitor.avatarUrl" alt="Avatar"/>
+            <div t-if="visitor and !env.inChatWindow" class="o-VisitorBanner py-4 px-2 d-flex border-bottom">
+                <div class="o-VisitorBanner-sidebar me-2 d-flex justify-content-center">
+                    <div class="o-VisitorBanner-avatar mx-1 position-relative">
+                        <img class="w-100 h-100 rounded-circle" t-att-src="visitor.avatarUrl" alt="Avatar"/>
                         <ImStatus t-if="visitor.isConnected" persona="visitor" className="'bottom-0 end-0 position-absolute'"/>
                     </div>
                 </div>

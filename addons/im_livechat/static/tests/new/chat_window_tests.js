@@ -17,10 +17,10 @@ QUnit.test("No call buttons", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-notification-item");
-    assert.containsOnce($, ".o-mail-chat-window");
-    assert.containsNone($, ".o-mail-chat-window-header .o-mail-command i.fa-phone");
-    assert.containsNone($, ".o-mail-chat-window-header .o-mail-command i.fa-gear");
+    await click(".o-NotificationItem");
+    assert.containsOnce($, ".o-ChatWindow");
+    assert.containsNone($, ".o-ChatWindow-header .o-ChatWindow-command i.fa-phone");
+    assert.containsNone($, ".o-ChatWindow-header .o-ChatWindow-command i.fa-gear");
 });
 
 QUnit.test("closing a chat window with no message from admin side unpins it", async (assert) => {
@@ -44,8 +44,8 @@ QUnit.test("closing a chat window with no message from admin side unpins it", as
     });
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-notification-item");
-    await click(".o-mail-chat-window-header .o-mail-command[title='Close chat window']");
+    await click(".o-NotificationItem");
+    await click(".o-ChatWindow-header .o-ChatWindow-command[title='Close chat window']");
     const channels = await env.services.orm.silent.call("mail.channel", "channel_info", [
         channelId,
     ]);

@@ -6,7 +6,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class CallActionList extends Component {
     static props = ["thread", "fullscreen", "compact?"];
-    static template = "mail.call_action_list";
+    static template = "mail.CallActionList";
 
     setup() {
         this.rtc = useRtc();

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.call_menu" owl="1">
-        <div class="o-mail-call-menu dropdown" t-attf-class="{{ className }}" t-ref="root">
+    <t t-name="mail.CallMenu" owl="1">
+        <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
             <button t-if="rtc.state.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="() => this.threadService.open(this.rtc.state.channel)">
-                <div class="o-mail-call-menu-button-content d-flex align-items-center">
+                <div class="o-CallMenu-buttonContent d-flex align-items-center">
                     <span class="position-relative me-2">
                         <i class="fa me-2" t-att-class="{
                             'fa-microphone': !rtc.state.sendCamera and !rtc.state.sendScreen,
@@ -12,7 +12,7 @@
                             'fa-desktop': rtc.state.sendScreen,
                         }"/>
                         <small class="position-absolute top-0 end-0 bottom-0 mt-n3 pt-1">
-                            <i class="o-mail-call-menu-dot fa fa-circle text-warning small"/>
+                            <i class="o-CallMenu-dot fa fa-circle text-warning small"/>
                         </small>
                     </span>
                     <em class="text-truncate" t-esc="rtc.state.channel.displayName"/>

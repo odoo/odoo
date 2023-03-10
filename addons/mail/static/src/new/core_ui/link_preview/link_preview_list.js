@@ -10,7 +10,7 @@ import { LinkPreview } from "./link_preview";
  * @extends {Component<Props, Env>}
  */
 export class LinkPreviewList extends Component {
-    static template = "mail.link_preview_list";
+    static template = "mail.LinkPreviewList";
     static props = ["linkPreviews", "deletable?"];
     static defaultProps = {
         deletable: false,

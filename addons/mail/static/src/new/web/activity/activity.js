@@ -25,7 +25,7 @@ export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
     static props = ["data", "onUpdate?", "reloadParentView"];
     static defaultProps = { onUpdate: () => {} };
-    static template = "mail.activity";
+    static template = "mail.Activity";
 
     /** @type {function} */
     closePopover;

@@ -11,7 +11,7 @@ import { SuggestedRecipient } from "@mail/new/web/suggested_recipient";
  * @extends {Component<Props, Env>}
  */
 export class SuggestedRecipientsList extends Component {
-    static template = "mail.suggested_recipients_list";
+    static template = "mail.SuggestedRecipientsList";
     static components = { SuggestedRecipient };
     static props = ["thread", "className", "styleString"];
 

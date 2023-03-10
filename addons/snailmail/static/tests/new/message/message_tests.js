@@ -25,16 +25,16 @@ QUnit.test("Sent", async (assert) => {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-snailmail-notification-popover");
-    assert.containsOnce($, ".o-snailmail-notification-popover i");
-    assert.hasClass($(".o-snailmail-notification-popover i"), "fa-check");
-    assert.strictEqual($(".o-snailmail-notification-popover").text(), "Sent");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-SnailmailNotificationPopover");
+    assert.containsOnce($, ".o-SnailmailNotificationPopover i");
+    assert.hasClass($(".o-SnailmailNotificationPopover i"), "fa-check");
+    assert.strictEqual($(".o-SnailmailNotificationPopover").text(), "Sent");
 });
 
 QUnit.test("Canceled", async (assert) => {
@@ -57,16 +57,16 @@ QUnit.test("Canceled", async (assert) => {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-snailmail-notification-popover");
-    assert.containsOnce($, ".o-snailmail-notification-popover i");
-    assert.hasClass($(".o-snailmail-notification-popover i"), "fa-trash-o");
-    assert.strictEqual($(".o-snailmail-notification-popover").text(), "Canceled");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-SnailmailNotificationPopover");
+    assert.containsOnce($, ".o-SnailmailNotificationPopover i");
+    assert.hasClass($(".o-SnailmailNotificationPopover i"), "fa-trash-o");
+    assert.strictEqual($(".o-SnailmailNotificationPopover").text(), "Canceled");
 });
 
 QUnit.test("Pending", async (assert) => {
@@ -89,16 +89,16 @@ QUnit.test("Pending", async (assert) => {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-snailmail-notification-popover");
-    assert.containsOnce($, ".o-snailmail-notification-popover i");
-    assert.hasClass($(".o-snailmail-notification-popover i"), "fa-clock-o");
-    assert.strictEqual($(".o-snailmail-notification-popover").text(), "Awaiting Dispatch");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-SnailmailNotificationPopover");
+    assert.containsOnce($, ".o-SnailmailNotificationPopover i");
+    assert.hasClass($(".o-SnailmailNotificationPopover i"), "fa-clock-o");
+    assert.strictEqual($(".o-SnailmailNotificationPopover").text(), "Awaiting Dispatch");
 });
 
 QUnit.test("No Price Available", async (assert) => {
@@ -132,20 +132,20 @@ QUnit.test("No Price Available", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-snailmail-error");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-SnailmailError");
     assert.strictEqual(
-        $(".o-snailmail-error .modal-body").text().trim(),
+        $(".o-SnailmailError .modal-body").text().trim(),
         "The country to which you want to send the letter is not supported by our service."
     );
     assert.containsOnce($, "button:contains(Cancel letter)");
     await click("button:contains(Cancel letter)");
-    assert.containsNone($, ".o-snailmail-error");
+    assert.containsNone($, ".o-SnailmailError");
     assert.verifySteps(["cancel_letter"]);
 });
 
@@ -180,21 +180,21 @@ QUnit.test("Credit Error", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-snailmail-error");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-SnailmailError");
     assert.strictEqual(
-        $(".o-snailmail-error p").text().trim(),
+        $(".o-SnailmailError p").text().trim(),
         "The letter could not be sent due to insufficient credits on your IAP account."
     );
     assert.containsOnce($, "button:contains(Re-send letter)");
     assert.containsOnce($, "button:contains(Cancel letter)");
     await click("button:contains(Re-send letter)");
-    assert.containsNone($, ".o-snailmail-error");
+    assert.containsNone($, ".o-SnailmailError");
     assert.verifySteps(["send_letter"]);
 });
 
@@ -229,21 +229,21 @@ QUnit.test("Trial Error", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-snailmail-error");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-SnailmailError");
     assert.strictEqual(
-        $(".o-snailmail-error p").text().trim(),
+        $(".o-SnailmailError p").text().trim(),
         "You need credits on your IAP account to send a letter."
     );
     assert.containsOnce($, "button:contains(Re-send letter)");
     assert.containsOnce($, "button:contains(Cancel letter)");
     await click("button:contains(Re-send letter)");
-    assert.containsNone($, ".o-snailmail-error");
+    assert.containsNone($, ".o-SnailmailError");
     assert.verifySteps(["send_letter"]);
 });
 
@@ -277,12 +277,12 @@ QUnit.test("Format Error", async (assert) => {
             openFormatErrorActionDef.resolve();
         },
     });
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    click(".o-mail-message-notification").then(() => {});
+    click(".o-Message-notification").then(() => {});
     await openFormatErrorActionDef;
     assert.verifySteps(["do_action"]);
 });
@@ -316,12 +316,12 @@ QUnit.test("Missing Required Fields", async (assert) => {
             openRequiredFieldsActionDef.resolve();
         },
     });
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-paper-plane");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-paper-plane");
 
-    click(".o-mail-message-notification").then(() => {});
+    click(".o-Message-notification").then(() => {});
     await openRequiredFieldsActionDef;
     assert.verifySteps(["do_action"]);
 });

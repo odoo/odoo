@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ChannelMemberList extends Component {
     static components = { ImStatus };
     static props = ["thread", "className"];
-    static template = "mail.channel_member_list";
+    static template = "mail.ChannelMemberList";
 
     setup() {
         this.messaging = useMessaging();

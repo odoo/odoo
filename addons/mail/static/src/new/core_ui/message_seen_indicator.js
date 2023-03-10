@@ -10,7 +10,7 @@ import { useStore } from "../core/messaging_hook";
  * @extends {Component<Props, Env>}
  */
 export class MessageSeenIndicator extends Component {
-    static template = "mail.message_seen_indicator";
+    static template = "mail.MessageSeenIndicator";
     static props = ["message", "thread", "className?"];
 
     setup() {

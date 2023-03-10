@@ -23,8 +23,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-header button[title='Add Users']");
-        assert.containsOnce($, ".o-mail-channel-invitation");
+        await click(".o-Discuss-header button[title='Add Users']");
+        assert.containsOnce($, ".o-ChannelInvitation");
     }
 );
 
@@ -52,12 +52,9 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-header button[title='Add Users']");
-        await insertText(".o-mail-channel-invitation-searchInput", "TestPartner2");
-        assert.strictEqual(
-            $(".o-mail-channel-invitation-selectablePartner").text(),
-            "TestPartner2"
-        );
+        await click(".o-Discuss-header button[title='Add Users']");
+        await insertText(".o-ChannelInvitation-search", "TestPartner2");
+        assert.strictEqual($(".o-ChannelInvitation-selectable").text(), "TestPartner2");
     }
 );
 
@@ -79,11 +76,8 @@ QUnit.test("Invitation form should display channel group restriction", async (as
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-discuss-header button[title='Add Users']");
-    assert.containsOnce(
-        $,
-        '.o-mail-channel-invitation:contains(Access restricted to group "testGroup")'
-    );
+    await click(".o-Discuss-header button[title='Add Users']");
+    assert.containsOnce($, '.o-ChannelInvitation:contains(Access restricted to group "testGroup")');
 });
 
 QUnit.test("should be able to create a new group chat from an existing chat", async (assert) => {
@@ -108,12 +102,12 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-discuss-header button[title='Add Users']");
-    await insertText(".o-mail-channel-invitation-searchInput", "TestPartner2");
+    await click(".o-Discuss-header button[title='Add Users']");
+    await insertText(".o-ChannelInvitation-search", "TestPartner2");
     await click(".form-check-input");
     await click("button[title='Create Group Chat']");
     assert.strictEqual(
-        $(".o-mail-discuss-thread-name").val(),
+        $(".o-Discuss-threadName").val(),
         "Mitchell Admin, TestPartner, TestPartner2"
     );
 });

@@ -27,7 +27,7 @@ import { localization } from "@web/core/l10n/localization";
 export class ChatWindowContainer extends Component {
     static components = { ChatWindow, Dropdown };
     static props = [];
-    static template = "mail.chat_window_container";
+    static template = "mail.ChatWindowContainer";
 
     get CHAT_WINDOW_END_GAP_WIDTH() {
         return CHAT_WINDOW_END_GAP_WIDTH;

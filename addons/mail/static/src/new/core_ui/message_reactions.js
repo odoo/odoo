@@ -9,7 +9,7 @@ import { useStore } from "../core/messaging_hook";
 
 export class MessageReactions extends Component {
     static props = ["message"];
-    static template = "mail.message_reactions";
+    static template = "mail.MessageReactions";
 
     setup() {
         this.user = useService("user");

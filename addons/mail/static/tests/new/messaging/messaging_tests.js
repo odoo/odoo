@@ -25,7 +25,7 @@ QUnit.test(
                 uuid: channel.uuid,
             })
         );
-        assert.containsOnce($, ".o-mail-chat-window-header:contains(Dumbledore)");
+        assert.containsOnce($, ".o-ChatWindow-header:contains(Dumbledore)");
     }
 );
 
@@ -51,6 +51,6 @@ QUnit.test(
         });
         // leaving discuss.
         await openFormView("res.partner", partnerId);
-        assert.containsOnce($, ".o-mail-chat-window-header:contains(Dumbledore)");
+        assert.containsOnce($, ".o-ChatWindow-header:contains(Dumbledore)");
     }
 );

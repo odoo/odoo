@@ -62,17 +62,17 @@ QUnit.test("basic rendering of tracking value (float type)", async function (ass
     await this.start({ res_id: mailTestTrackAllId1 });
     await editInput(target, "div[name=float_field] input", 45.67);
     await click(".o_form_button_save");
-    assert.containsOnce(target, ".o-mail-message-tracking");
-    assert.containsOnce(target, ".o-mail-message-tracking-field");
+    assert.containsOnce(target, ".o-Message-tracking");
+    assert.containsOnce(target, ".o-Message-trackingField");
     assert.strictEqual(
-        target.querySelector(".o-mail-message-tracking-field").textContent,
+        target.querySelector(".o-Message-trackingField").textContent,
         "(Float)"
     );
-    assert.containsOnce(target, ".o-mail-message-tracking-old");
-    assert.strictEqual(target.querySelector(".o-mail-message-tracking-old").textContent, "12.30");
-    assert.containsOnce(target, ".o-mail-message-tracking-separator");
-    assert.containsOnce(target, ".o-mail-message-tracking-new");
-    assert.strictEqual(target.querySelector(".o-mail-message-tracking-new").textContent, "45.67");
+    assert.containsOnce(target, ".o-Message-trackingOld");
+    assert.strictEqual(target.querySelector(".o-Message-trackingOld").textContent, "12.30");
+    assert.containsOnce(target, ".o-Message-trackingSeparator");
+    assert.containsOnce(target, ".o-Message-trackingNew");
+    assert.strictEqual(target.querySelector(".o-Message-trackingNew").textContent, "45.67");
 });
 
 QUnit.test("rendering of tracked field of type float: from non-0 to 0", async function (assert) {
@@ -84,7 +84,7 @@ QUnit.test("rendering of tracked field of type float: from non-0 to 0", async fu
     await editInput(target, "div[name=float_field] input", 0);
     await click(".o_form_button_save");
     assert.strictEqual(
-        target.querySelector(".o-mail-message-tracking").textContent,
+        target.querySelector(".o-Message-tracking").textContent,
         "1.000.00(Float)"
     );
 });
@@ -98,7 +98,7 @@ QUnit.test("rendering of tracked field of type float: from 0 to non-0", async fu
     await editInput(target, "div[name=float_field] input", 1);
     await click(".o_form_button_save");
     assert.strictEqual(
-        target.querySelector(".o-mail-message-tracking").textContent,
+        target.querySelector(".o-Message-tracking").textContent,
         "0.001.00(Float)"
     );
 });
@@ -111,7 +111,7 @@ QUnit.test("rendering of tracked field of type integer: from non-0 to 0", async 
     await this.start({ res_id: mailTestTrackAllId1 });
     await editInput(target, "div[name=integer_field] input", 0);
     await click(".o_form_button_save");
-    assert.strictEqual(target.querySelector(".o-mail-message-tracking").textContent, "10(Integer)");
+    assert.strictEqual(target.querySelector(".o-Message-tracking").textContent, "10(Integer)");
 });
 
 QUnit.test("rendering of tracked field of type integer: from 0 to non-0", async function (assert) {
@@ -122,7 +122,7 @@ QUnit.test("rendering of tracked field of type integer: from 0 to non-0", async 
     await this.start({ res_id: mailTestTrackAllId1 });
     await editInput(target, "div[name=integer_field] input", 1);
     await click(".o_form_button_save");
-    assert.strictEqual(target.querySelector(".o-mail-message-tracking").textContent, "01(Integer)");
+    assert.strictEqual(target.querySelector(".o-Message-tracking").textContent, "01(Integer)");
 });
 
 QUnit.test("rendering of tracked field of type monetary: from non-0 to 0", async function (assert) {
@@ -134,7 +134,7 @@ QUnit.test("rendering of tracked field of type monetary: from non-0 to 0", async
     await editInput(target, "div[name=monetary_field] input", 0);
     await click(".o_form_button_save");
     assert.strictEqual(
-        target.querySelector(".o-mail-message-tracking").textContent,
+        target.querySelector(".o-Message-tracking").textContent,
         "1.000.00(Monetary)"
     );
 });
@@ -148,7 +148,7 @@ QUnit.test("rendering of tracked field of type monetary: from 0 to non-0", async
     await editInput(target, "div[name=monetary_field] input", 1);
     await click(".o_form_button_save");
     assert.strictEqual(
-        target.querySelector(".o-mail-message-tracking").textContent,
+        target.querySelector(".o-Message-tracking").textContent,
         "0.001.00(Monetary)"
     );
 });
@@ -164,7 +164,7 @@ QUnit.test(
         click(".o_field_boolean input").catch(() => {});
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "YesNo(Boolean)"
         );
     }
@@ -179,7 +179,7 @@ QUnit.test(
         click(".o_field_boolean input").catch(() => {});
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "NoYes(Boolean)"
         );
     }
@@ -196,7 +196,7 @@ QUnit.test(
         await editInput(target, "div[name=char_field] input", "");
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "MarcNone(Char)"
         );
     }
@@ -213,7 +213,7 @@ QUnit.test(
         await editInput(target, "div[name=char_field] input", "Marc");
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "NoneMarc(Char)"
         );
     }
@@ -234,7 +234,7 @@ QUnit.test(
         );
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "None12/14/2018(Date)"
         );
     }
@@ -255,7 +255,7 @@ QUnit.test(
         );
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "12/14/2018None(Date)"
         );
     }
@@ -281,7 +281,7 @@ QUnit.test(
             ["mail.test.track.all"].records.find(({ id }) => id === mailTestTrackAllId1);
         assert.strictEqual(savedRecord.datetime_field, "2018-12-14 10:42:28");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "None12/14/2018 13:42:28(Datetime)"
         );
     }
@@ -303,7 +303,7 @@ QUnit.test(
         );
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "12/14/2018 16:42:28None(Datetime)"
         );
     }
@@ -320,7 +320,7 @@ QUnit.test(
         await editInput(target, "div[name=text_field] textarea", "");
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "MarcNone(Text)"
         );
     }
@@ -337,7 +337,7 @@ QUnit.test(
         await editInput(target, "div[name=text_field] textarea", "Marc");
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "NoneMarc(Text)"
         );
     }
@@ -354,7 +354,7 @@ QUnit.test(
         await editSelect(target, "div[name=selection_field] select", false);
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "firstNone(Selection)"
         );
     }
@@ -369,7 +369,7 @@ QUnit.test(
         await editSelect(target, "div[name=selection_field] select", '"first"');
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "Nonefirst(Selection)"
         );
     }
@@ -387,7 +387,7 @@ QUnit.test(
         await editInput(target, ".o_field_many2one_selection input", "");
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "MarcNone(Many2one)"
         );
     }
@@ -403,7 +403,7 @@ QUnit.test(
         await selectDropdownItem(target, "many2one_field_id", "Marc");
         await click(".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o-mail-message-tracking").textContent,
+            target.querySelector(".o-Message-tracking").textContent,
             "NoneMarc(Many2one)"
         );
     }

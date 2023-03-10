@@ -38,7 +38,7 @@ export class Discuss extends Component {
     static props = {
         public: { type: Boolean, optional: true },
     };
-    static template = "mail.discuss";
+    static template = "mail.Discuss";
 
     MODES = Object.freeze({
         MEMBER_LIST: "member-list",

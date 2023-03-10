@@ -8,7 +8,7 @@ export class Dropzone extends Component {
         onDrop: { type: Function, optional: true },
         ref: Object,
     };
-    static template = "mail.dropzone";
+    static template = "mail.Dropzone";
 
     setup() {
         this.root = useRef("root");

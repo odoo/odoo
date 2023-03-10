@@ -21,7 +21,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & online", asyn
     await openDiscuss();
     assert.containsOnce(
         $,
-        ".o-mail-category-item:contains(Demo) .o-mail-thread-icon .fa-plane[title='Online']"
+        ".o-DiscussCategoryItem:contains(Demo) .o-ThreadIcon .fa-plane[title='Online']"
     );
 });
 
@@ -42,7 +42,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & away", async 
     await openDiscuss();
     assert.containsOnce(
         $,
-        ".o-mail-category-item:contains(Demo) .o-mail-thread-icon .fa-plane[title='Away']"
+        ".o-DiscussCategoryItem:contains(Demo) .o-ThreadIcon .fa-plane[title='Away']"
     );
 });
 
@@ -63,6 +63,6 @@ QUnit.test("thread icon of a chat when correspondent is on leave & offline", asy
     await openDiscuss();
     assert.containsOnce(
         $,
-        ".o-mail-category-item:contains(Demo) .o-mail-thread-icon .fa-plane[title='Out of office']"
+        ".o-DiscussCategoryItem:contains(Demo) .o-ThreadIcon .fa-plane[title='Out of office']"
     );
 });

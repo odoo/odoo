@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.call_action_list" owl="1">
-        <div class="o-mail-call-action-list d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
+    <t t-name="mail.CallActionList" owl="1">
+        <div class="o-CallActionList d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
             <div class="d-flex align-items-center flex-wrap">
                 <t t-if="isOfActiveCall and rtc.state.selfSession">
                     <t t-if="rtc.state?.selfSession.isMute" t-set="micText">Unmute</t>

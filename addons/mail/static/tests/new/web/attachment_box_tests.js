@@ -24,9 +24,9 @@ QUnit.test("base empty rendering", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-AttachmentBox");
     assert.containsOnce($, "button:contains('Attach files')");
-    assert.containsNone($, ".o-mail-chatter .o-mail-attachment-image");
+    assert.containsNone($, ".o-Chatter .o-AttachmentImage");
 });
 
 QUnit.test("base non-empty rendering", async (assert) => {
@@ -62,10 +62,10 @@ QUnit.test("base non-empty rendering", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-attachment-box");
+    assert.containsOnce($, ".o-AttachmentBox");
     assert.containsOnce($, "button:contains('Attach files')");
-    assert.containsOnce($, ".o-mail-chatter input[type='file']");
-    assert.containsOnce($, ".o-mail-attachment-list");
+    assert.containsOnce($, ".o-Chatter input[type='file']");
+    assert.containsOnce($, ".o-AttachmentList");
 });
 
 QUnit.test("remove attachment should ask for confirmation", async (assert) => {
@@ -93,7 +93,7 @@ QUnit.test("remove attachment should ask for confirmation", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-attachment-card");
+    assert.containsOnce($, ".o-AttachmentCard");
     assert.containsOnce($, "button[title='Remove']");
 
     await click("button[title='Remove']");
@@ -101,7 +101,7 @@ QUnit.test("remove attachment should ask for confirmation", async (assert) => {
 
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
-    assert.containsNone($, ".o-mail-attachment-images");
+    assert.containsNone($, ".o-AttachmentImage");
 });
 
 QUnit.test("view attachments", async (assert) => {
@@ -135,17 +135,17 @@ QUnit.test("view attachments", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click('.o-mail-attachment-card[aria-label="Blah.txt"] .o-mail-attachment-card-image');
-    assert.containsOnce($, ".o-mail-attachment-viewer");
-    assert.containsOnce($, ".o-mail-attachment-viewer-header:contains(Blah.txt)");
-    assert.containsOnce($, ".o-mail-attachment-viewer div[aria-label='Next']");
+    await click('.o-AttachmentCard[aria-label="Blah.txt"] .o-AttachmentCard-image');
+    assert.containsOnce($, ".o-AttachmentViewer");
+    assert.containsOnce($, ".o-AttachmentViewer-header:contains(Blah.txt)");
+    assert.containsOnce($, ".o-AttachmentViewer div[aria-label='Next']");
 
-    await click(".o-mail-attachment-viewer div[aria-label='Next']");
-    assert.containsOnce($, ".o-mail-attachment-viewer-header:contains(Blu.txt)");
-    assert.containsOnce($, ".o-mail-attachment-viewer div[aria-label='Next']");
+    await click(".o-AttachmentViewer div[aria-label='Next']");
+    assert.containsOnce($, ".o-AttachmentViewer-header:contains(Blu.txt)");
+    assert.containsOnce($, ".o-AttachmentViewer div[aria-label='Next']");
 
-    await click(".o-mail-attachment-viewer div[aria-label='Next']");
-    assert.containsOnce($, ".o-mail-attachment-viewer-header:contains(Blah.txt)");
+    await click(".o-AttachmentViewer div[aria-label='Next']");
+    assert.containsOnce($, ".o-AttachmentViewer-header:contains(Blah.txt)");
 });
 
 QUnit.test("scroll to attachment box when toggling on", async (assert) => {
@@ -171,10 +171,10 @@ QUnit.test("scroll to attachment box when toggling on", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    $(".o-mail-chatter-scrollable").scrollTop(10 * 1000); // to bottom
-    assert.notEqual($(".o-mail-chatter-scrollable").scrollTop(), 0);
+    $(".o-Chatter-scrollable").scrollTop(10 * 1000); // to bottom
+    assert.notEqual($(".o-Chatter-scrollable").scrollTop(), 0);
     await click("i.fa-paperclip");
-    assert.strictEqual($(".o-mail-chatter-scrollable").scrollTop(), 0);
+    assert.strictEqual($(".o-Chatter-scrollable").scrollTop(), 0);
 });
 
 QUnit.test("scroll to attachment box when toggling on", async (assert) => {
@@ -201,8 +201,8 @@ QUnit.test("scroll to attachment box when toggling on", async (assert) => {
         views: [[false, "form"]],
     });
     await afterNextRender(() => {
-        $(".o-mail-chatter-scrollable").scrollTop(10 * 1000); // to bottom
+        $(".o-Chatter-scrollable").scrollTop(10 * 1000); // to bottom
     });
     await click("button[aria-label='Attach files']");
-    assert.strictEqual($(".o-mail-chatter-scrollable").scrollTop(), 0);
+    assert.strictEqual($(".o-Chatter-scrollable").scrollTop(), 0);
 });

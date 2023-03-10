@@ -19,7 +19,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 export class MessagingMenu extends Component {
     static components = { Dropdown, NotificationItem, ImStatus, ChannelSelector };
     static props = [];
-    static template = "mail.messaging_menu";
+    static template = "mail.MessagingMenu";
 
     setup() {
         this.messaging = useMessaging();

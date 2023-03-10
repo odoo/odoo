@@ -4,8 +4,8 @@
     <t t-name="mail.ActivityCell" owl="1">
         <div class="h-100 cursor-pointer p-3" t-on-click="onClick">
             <div class="h-100 d-flex align-items-center justify-content-center position-relative" t-ref="content">
-                <div class="o-activity-cell-closest-deadline text-white" t-out="closestDeadlineFormatted"/>
-                <span t-if="props.activityIds.length > 1" class="o-activity-cell-count badge bg-light rounded-pill border-0" t-out="props.activityIds.length"/>
+                <div class="o-ActivityCell-deadline text-white" t-out="closestDeadlineFormatted"/>
+                <span t-if="props.activityIds.length > 1" class="o-ActivityCell-counter badge bg-light rounded-pill border-0" t-out="props.activityIds.length"/>
             </div>
         </div>
     </t>

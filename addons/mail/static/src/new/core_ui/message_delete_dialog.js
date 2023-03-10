@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 export class MessageDeleteDialog extends Component {
     static components = { Dialog };
     static props = ["close", "message", "messageComponent"];
-    static template = "mail.message.delete";
+    static template = "mail.MessageDeleteDialog";
 
     setup() {
         /** @type {import("@mail/new/core/message_service").MessageService} */

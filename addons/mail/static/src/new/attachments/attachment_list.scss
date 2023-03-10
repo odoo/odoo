@@ -1,8 +1,8 @@
-.o-mail-attachment-card-aside-unlink.o-inComposer {
+.o-AttachmentCard-unlink.o-inComposer {
     transform: translateX(100%);
 }
 
-.o-mail-attachment-card-aside {
+.o-AttachmentCard-aside {
     &:not(.o-hasMultipleActions) {
         min-width: 50px;
     }
@@ -12,19 +12,19 @@
     }
 }
 
-.o-mail-attachment-card-aside:hover .o-mail-attachment-card-aside-unlink.o-inComposer {
+.o-AttachmentCard-aside:hover .o-AttachmentCard-unlink.o-inComposer {
     transform: translateX(0);
 }
 
-.o-mail-attachment-list-in-composer {
+.o-AttachmentList-in-composer {
     max-height: 300px;
 
-    &.o-mail-attachment-list-in-chat-window {
+    &.o-inChatWindow {
         max-height: 100px;
     }
 }
 
-.o-mail-attachment-image {
+.o-AttachmentImage {
     min-width: 20px;
     min-height: 20px;
 
@@ -33,6 +33,6 @@
     }
 }
 
-.o-mail-viewable {
+.o-viewable {
     cursor: zoom-in;
 }

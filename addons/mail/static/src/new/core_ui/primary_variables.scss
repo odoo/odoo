@@ -1,22 +1,24 @@
-$o-mail-thread-avatar-size: 36px !default;
-$o-mail-thread-window-bg: #FAFAFA !default;
-$o-mail-thread-window-width: 340px !default;
+$o-Avatar-size: 36px !default;
+$o-Avatar-sizeSmall: 24px !default;
+$o-ChatWindow-bg: #FAFAFA !default;
+$o-ChatWindow-width: 340px !default;
 // Needed because $border-radius variations are all set to 0 in enterprise.
-$o-mail-rounded-rectangle-border-radius-sm: .2rem !default;
-$o-mail-rounded-rectangle-border-radius-lg: 3 * $o-mail-rounded-rectangle-border-radius-sm !default;
+$o-RoundedRectangle-small: .2rem !default;
+$o-RoundedRectangle-large: 3 * $o-RoundedRectangle-small !default;
 
-$o-mail-link-preview-width: 320px !default;
-$o-mail-link-preview-height: 240px !default;
-$o-mail-link-preview-card-height: 80px !default;
+$o-LinkPreview-width: 320px !default;
+$o-LinkPreview-height: 240px !default;
+$o-LinkPreviewCard-height: 80px !default;
 
-$o-mail-thread-typing-icon-size-medium: 5px !default;
-$o-mail-thread-typing-icon-size-small: 3px !default;
+$o-Typing-medium: 5px !default;
+$o-Typing-small: 3px !default;
 
-$o-mail-message-sidebar-width: 48px !default;
-$navigable-list-z-index: 11;
-$o-chatter-min-width: 530px !default;
+$o-Message-sidebarWidth: 48px !default;
+$o-NavigableList-zIndex: 11;
+$o-Chatter-minWidth: 530px !default;
+$o-Discuss-inspector: 250px !default;
 
-@mixin o-viewer-black-btn {
+@mixin o-AttachmentViewer-arrow {
     background-color: rgba(black, 0.4);
     color: rgba(map-get($theme-colors, 'light'), 0.7);
 

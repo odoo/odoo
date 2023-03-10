@@ -34,7 +34,7 @@ export class ChatWindow extends Component {
         ChannelInvitation,
     };
     static props = ["chatWindow", "right?"];
-    static template = "mail.chat_window";
+    static template = "mail.ChatWindow";
 
     setup() {
         this.store = useStore();

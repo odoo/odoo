@@ -44,8 +44,8 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
             }
         },
     });
-    assert.containsN($, ".o-mail-chat-window", 2);
-    assert.containsOnce($, ".o-mail-chat-window-hidden-button");
+    assert.containsN($, ".o-ChatWindow", 2);
+    assert.containsOnce($, ".o-ChatWindowHiddenToggler");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
 });
 
@@ -83,11 +83,11 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
             }
         },
     });
-    assert.containsN($, ".o-mail-chat-window", 2);
-    assert.containsOnce($, ".o-mail-chat-window-hidden-button");
+    assert.containsN($, ".o-ChatWindow", 2);
+    assert.containsOnce($, ".o-ChatWindowHiddenToggler");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
-    await click(".o-mail-chat-window-hidden-button");
-    await click(".o-mail-chat-window-hidden-menu-item .o-mail-chat-window-header");
+    await click(".o-ChatWindowHiddenToggler");
+    await click(".o-ChatWindowHiddenMenu-item .o-ChatWindow-header");
     assert.verifySteps(["fetch_messages"]);
 });
 
@@ -114,24 +114,24 @@ QUnit.test(
         );
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item:contains(channel-A)");
+        await click(".o-NotificationItem:contains(channel-A)");
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item:contains(channel-B)");
+        await click(".o-NotificationItem:contains(channel-B)");
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item:contains(channel-C)");
+        await click(".o-NotificationItem:contains(channel-C)");
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-notification-item:contains(channel-D)");
+        await click(".o-NotificationItem:contains(channel-D)");
         await waitUntil(
-            ".o-mail-chat-window-header:contains(channel-D) .o-mail-command[title='Close chat window']"
+            ".o-ChatWindow-header:contains(channel-D) .o-ChatWindow-command[title='Close chat window']"
         );
-        assert.containsN($, ".o-mail-chat-window", 2);
-        assert.containsOnce($, ".o-mail-chat-window:eq(0):contains(channel-A)");
-        assert.containsOnce($, ".o-mail-chat-window:eq(1):contains(channel-D)");
-        assert.containsOnce($, ".o-mail-chat-window-hidden-button:contains(2)");
+        assert.containsN($, ".o-ChatWindow", 2);
+        assert.containsOnce($, ".o-ChatWindow:eq(0):contains(channel-A)");
+        assert.containsOnce($, ".o-ChatWindow:eq(1):contains(channel-D)");
+        assert.containsOnce($, ".o-ChatWindowHiddenToggler:contains(2)");
         await click(
-            ".o-mail-chat-window-header:contains(channel-D) .o-mail-command[title='Close chat window']"
+            ".o-ChatWindow-header:contains(channel-D) .o-ChatWindow-command[title='Close chat window']"
         );
-        assert.containsOnce($, ".o-mail-chat-window:eq(0):contains(channel-A)");
-        assert.containsOnce($, ".o-mail-chat-window:eq(1):contains(channel-C)");
+        assert.containsOnce($, ".o-ChatWindow:eq(0):contains(channel-A)");
+        assert.containsOnce($, ".o-ChatWindow:eq(1):contains(channel-C)");
     }
 );

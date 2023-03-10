@@ -24,7 +24,7 @@ patch(ActivityMenu.prototype, "note", {
         );
         onExternalClick("noteInput", (ev) => {
             if (
-                ev.target.closest(".o-note-activity-menu-show") ||
+                ev.target.closest(".o-ActivityMenu-show") ||
                 ev.target.closest(".bootstrap-datetimepicker-widget")
             ) {
                 return;

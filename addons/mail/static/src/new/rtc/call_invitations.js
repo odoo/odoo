@@ -9,7 +9,7 @@ import { CallInvitation } from "@mail/new/rtc/call_invitation";
 export class CallInvitations extends Component {
     static props = [];
     static components = { CallInvitation };
-    static template = "mail.call_invitations";
+    static template = "mail.CallInvitations";
 
     setup() {
         this.rtc = useRtc();

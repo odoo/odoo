@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.attachment_view" owl="1">
-        <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-attachment">
+    <t t-name="mail.AttachmentView" owl="1">
+        <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-Attachment">
             <t t-if="state.thread.mainAttachment">
                 <h3 t-if="!state.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="state.thread.mainAttachment.filename"/></h3>
-                <div t-if="state.thread.mainAttachment.isImage" class="o-mail-attachment-imgContainer">
+                <div t-if="state.thread.mainAttachment.isImage" class="o-Attachment-imgContainer">
                     <img id="attachment_img" class="img img-fluid d-block" t-attf-src="/web/image/#{state.thread.mainAttachment.id}?unique=1"/>
                 </div>
                 <iframe t-if="state.thread.mainAttachment.isPdf" class="mb48" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{state.thread.mainAttachment.id}?filename%3D#{window.encodeURIComponent(state.thread.mainAttachment.name)}" t-ref="iframeViewerPdf"/>

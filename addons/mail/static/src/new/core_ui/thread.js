@@ -37,7 +37,7 @@ export class Thread extends Component {
         isInChatWindow: false,
         order: "asc", // 'asc' or 'desc'
     };
-    static template = "mail.thread";
+    static template = "mail.Thread";
 
     setup() {
         this.messaging = useMessaging();

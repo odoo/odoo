@@ -11,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ActivityMenu extends Component {
     static components = { Dropdown };
     static props = [];
-    static template = "mail.activity_menu";
+    static template = "mail.ActivityMenu";
 
     setup() {
         this.messaging = useMessaging();

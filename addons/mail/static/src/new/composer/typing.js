@@ -19,7 +19,7 @@ export class Typing extends Component {
         displayText: true,
     };
     static props = ["channel", "size?", "displayText?"];
-    static template = "mail.typing";
+    static template = "mail.Typing";
 
     setup() {
         this.messaging = useMessaging();

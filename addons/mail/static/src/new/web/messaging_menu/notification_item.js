@@ -20,7 +20,7 @@ export class NotificationItem extends Component {
         "onSwipeRight?",
         "slots?",
     ];
-    static template = "mail.notification_item";
+    static template = "mail.NotificationItem";
 
     setup() {
         this.markAsReadRef = useRef("markAsRead");

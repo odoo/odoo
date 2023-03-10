@@ -1,57 +1,50 @@
-.o-mail-link-preview-card {
-    max-width: $o-mail-link-preview-width;
+.o-LinkPreviewCard {
+    max-width: $o-LinkPreview-width;
 
     .row {
-        min-height: $o-mail-link-preview-card-height;
+        min-height: $o-LinkPreviewCard-height;
     }
 }
 
-.o-mail-link-preview-card-hasMultineLines {
+.o-LinkPreviewCard-hasMultineLines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.o-LinkPreviewCard-imageLinkWrap {
+    border-right: 1px solid $card-border-color;
+}
+
+.o-LinkPreviewImage img {
+    max-height: $o-LinkPreview-height;
+    max-width: $o-LinkPreview-width;
+}
+
+.o-LinkPreviewVideo {
+    max-width: $o-LinkPreview-width;
+
+    .row {
+        min-height: $o-LinkPreviewCard-height;
+    }
+}
+
+.o-LinkPreviewVideo-hasDescription {
     display: -webkit-box;
     -webkit-box-orient: vertical;
 
-    &.o-link-preview-card-description {
+    &.o-LinkPreviewVideo-description {
         -webkit-line-clamp: 2;
     }
-    &.o-link-preview-card-title {
+    &.o-LinkPreviewVideo-title {
         -webkit-line-clamp: 3;
     }
 }
 
-.o-mail-link-preview-card-imageLinkWrap {
+.o-LinkPreviewVideo-videoWrap {
     border-right: 1px solid $card-border-color;
 }
 
-.o-mail-link-preview-image img {
-    max-height: $o-mail-link-preview-height;
-    max-width: $o-mail-link-preview-width;
-}
-
-.o-mail-link-preview-video {
-    max-width: $o-mail-link-preview-width;
-
-    .row {
-        min-height: $o-mail-link-preview-card-height;
-    }
-}
-
-.o-mail-link-preview-video-hasMultineLines {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-
-    &.o-mail-link-preview-video-description {
-        -webkit-line-clamp: 2;
-    }
-    &.o-mail-link-preview-video-title {
-        -webkit-line-clamp: 3;
-    }
-}
-
-.o-mail-link-preview-video-imageLinkWrap {
-    border-right: 1px solid $card-border-color;
-}
-
-.o-mail-link-preview-video-playBtn {
+.o-LinkPreviewVideo-play {
     background: #000000;
 
     i {
@@ -59,11 +52,11 @@
     }
 }
 
-.o-mail-link-preview-aside {
+.o-LinkPreview-aside {
     display: none;
 }
-.o-mail-link-preview-card:hover, .o-mail-link-preview-image:hover, .o-mail-link-preview-video:hover {
-    .o-mail-link-preview-aside {
+.o-LinkPreviewCard:hover, .o-LinkPreviewImage:hover, .o-LinkPreviewVideo:hover {
+    .o-LinkPreview-aside {
         display: block;
     }
 }

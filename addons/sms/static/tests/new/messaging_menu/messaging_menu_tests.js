@@ -20,14 +20,14 @@ QUnit.test("mark as read", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-notification-item");
-    assert.containsOnce($, ".o-mail-notification-item i[title='Mark As Read']");
+    assert.containsOnce($, ".o-NotificationItem");
+    assert.containsOnce($, ".o-NotificationItem i[title='Mark As Read']");
     assert.containsOnce(
         $,
-        ".o-mail-notification-item:contains(An error occurred when sending an SMS)"
+        ".o-NotificationItem:contains(An error occurred when sending an SMS)"
     );
-    await click(".o-mail-notification-item i[title='Mark As Read']");
-    assert.containsNone($, ".o-mail-notification-item");
+    await click(".o-NotificationItem i[title='Mark As Read']");
+    assert.containsNone($, ".o-NotificationItem");
 });
 
 QUnit.test("notifications grouped by notification_type", async (assert) => {
@@ -71,8 +71,8 @@ QUnit.test("notifications grouped by notification_type", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-notification-item", 2);
-    const items = $(".o-mail-notification-item");
+    assert.containsN($, ".o-NotificationItem", 2);
+    const items = $(".o-NotificationItem");
     assert.ok(items[0].textContent.includes("Partner (2)"));
     assert.ok(items[0].textContent.includes("An error occurred when sending an email"));
     assert.ok(items[1].textContent.includes("Partner (2)"));
@@ -132,8 +132,8 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
 
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-notification-item");
-    assert.containsOnce($, ".o-mail-notification-item:contains(Partner (2))");
-    await click(".o-mail-notification-item");
+    assert.containsOnce($, ".o-NotificationItem");
+    assert.containsOnce($, ".o-NotificationItem:contains(Partner (2))");
+    await click(".o-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

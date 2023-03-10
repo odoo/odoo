@@ -11,17 +11,17 @@
         display: block;
         flex: 1 0 auto;
         overflow: hidden;
-        width: $o-chatter-min-width;
+        width: $o-Chatter-minWidth;
         border-left: 1px solid map-get($grays, '400');
 
-        > .o-mail-attachment {
+        > .o-Attachment {
             position: relative;
             width: 100%;
             height: 100%;
             .arrow {
                 width: 5%;
                 @include o-position-absolute(50%, 0);
-                @include o-viewer-black-btn;
+                @include o-AttachmentViewer-arrow;
                 transition: width 0.3s;
                 padding-top: 30px;
                 height: 75px;
@@ -37,7 +37,7 @@
                 width: 100%;
                 height: 100%;
             }
-            > .o-mail-attachment-imgContainer {
+            > .o-Attachment-imgContainer {
                 position: absolute;
                 overflow: auto;
                 width: 100%;

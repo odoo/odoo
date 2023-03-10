@@ -11,7 +11,7 @@ import { LinkPreviewConfirmDelete } from "./link_preview_confirm_delete";
  * @extends {Component<Props, Env>}
  */
 export class LinkPreview extends Component {
-    static template = "mail.link_preview";
+    static template = "mail.LinkPreview";
     static props = ["linkPreview", "deletable"];
     static components = {};
 

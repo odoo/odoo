@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="im_livechat.discuss_sidebar" t-inherit="mail.discuss_sidebar" t-inherit-mode="extension" owl="1">
+    <t t-name="im_livechat.DiscussSidebar" t-inherit="mail.DiscussSidebar" t-inherit-mode="extension" owl="1">
         <xpath expr="//*[@name='chatCategory']" position="before">
-            <t t-if="store.discuss.livechat.threads.length > 0" t-call="mail.discuss_category">
+            <t t-if="store.discuss.livechat.threads.length > 0" t-call="mail.DiscussCategory">
                 <t t-set="category" t-value="store.discuss.livechat"/>
             </t>
         </xpath>

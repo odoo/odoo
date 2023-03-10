@@ -2,11 +2,11 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o-mail-call-participant-card {
+.o-CallParticipantCard {
     aspect-ratio: 16/9;
 }
 
-.o-mail-call-participant-card-avatarImage {
+.o-CallParticipantCard-avatar img {
     max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
     max-width: #{"min(100%, 100px)"};
     aspect-ratio: 1;
@@ -17,7 +17,7 @@
     }
 
     &.o-isInvitation:not(:hover) {
-        animation: o-mail-call-participant-card-avatarImag_borderPulse 3s linear infinite;
+        animation: o-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
     }
 
     &.o-isInvitation:hover {
@@ -25,7 +25,7 @@
     }
 }
 
-@keyframes o-mail-call-participant-card-avatarImag_borderPulse {
+@keyframes o-CallParticipantCard-avatarImag_borderPulse {
     0% { border: solid white }
     20% { border: solid $gray-600 }
     35% { border: solid $gray-100 }
@@ -34,12 +34,12 @@
     85% { border: solid $gray-700 }
 }
 
-.o-mail-call-participant-card-overlay {
+.o-CallParticipantCard-overlay {
     pointer-events: none;
     margin: Min(5%, map-get($spacers, 2));
 }
 
-.o-mail-call-participant-card-overlayBottom {
+.o-CallParticipantCard-overlayBottom {
     max-width: 50%;
 }
 
@@ -47,12 +47,12 @@
 // Style
 // ------------------------------------------------------------------
 
-.o-mail-call-participant-card {
+.o-CallParticipantCard {
     &.o-isTalking {
         box-shadow: inset 0 0 0 map-get($spacers, 1) darken($o-enterprise-primary-color, 5%);
     }
 }
 
-.o-mail-call-participant-card-avatarFrame:not(.o-minimized) {
-    background-color: var(--o-mail-call-participant-card-avatarFrame-background-color, #{$o-gray-700});
+.o-CallParticipantCard-avatar:not(.o-minimized) {
+    background-color: var(--o-CallParticipantCard-avatarBgColor, #{$o-gray-700});
 }

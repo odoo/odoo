@@ -44,11 +44,11 @@ QUnit.test("openChat: open new chat for user", async function (assert) {
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { env } = await start();
-    assert.containsNone($, ".o-mail-chat-window");
+    assert.containsNone($, ".o-ChatWindow");
     await afterNextRender(() => {
         env.services["mail.thread"].openChat({ partnerId });
     });
-    assert.containsOnce($, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-ChatWindow");
 });
 
 QUnit.test("openChat: open existing chat for user", async function (assert) {
@@ -63,9 +63,9 @@ QUnit.test("openChat: open existing chat for user", async function (assert) {
         channel_type: "chat",
     });
     const { env } = await start();
-    assert.containsOnce($, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-ChatWindow");
     await afterNextRender(() => {
         env.services["mail.thread"].openChat({ partnerId });
     });
-    assert.containsOnce($, ".o-mail-chat-window");
+    assert.containsOnce($, ".o-ChatWindow");
 });

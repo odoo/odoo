@@ -18,7 +18,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 export class AttachmentList extends Component {
     static props = ["attachments", "unlinkAttachment", "imagesHeight"];
-    static template = "mail.attachment_list";
+    static template = "mail.AttachmentList";
 
     setup() {
         // Arbitrary high value, this is effectively a max-width.

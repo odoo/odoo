@@ -22,16 +22,16 @@ QUnit.test("Notification Sent", async function (assert) {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-mobile");
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-mobile");
 
-    await click(".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification-popover");
-    assert.containsOnce($, ".o-mail-message-notification-popover i");
-    assert.hasClass($(".o-mail-message-notification-popover i"), "fa-check");
-    assert.containsOnce($, ".o-mail-message-notification-popover:contains(Someone)");
+    await click(".o-Message-notification");
+    assert.containsOnce($, ".o-MessageNotificationPopover");
+    assert.containsOnce($, ".o-MessageNotificationPopover i");
+    assert.hasClass($(".o-MessageNotificationPopover i"), "fa-check");
+    assert.containsOnce($, ".o-MessageNotificationPopover:contains(Someone)");
 });
 
 QUnit.test("Notification Error", async function (assert) {
@@ -61,11 +61,11 @@ QUnit.test("Notification Error", async function (assert) {
         },
     });
 
-    assert.containsOnce($, ".o-mail-message");
-    assert.containsOnce($, ".o-mail-message-notification");
-    assert.containsOnce($, ".o-mail-message-notification i");
-    assert.hasClass($(".o-mail-message-notification i"), "fa-mobile");
-    click(".o-mail-message-notification").catch(() => {});
+    assert.containsOnce($, ".o-Message");
+    assert.containsOnce($, ".o-Message-notification");
+    assert.containsOnce($, ".o-Message-notification i");
+    assert.hasClass($(".o-Message-notification i"), "fa-mobile");
+    click(".o-Message-notification").catch(() => {});
     await openResendActionDef;
     assert.verifySteps(["do_action"]);
 });

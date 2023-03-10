@@ -8,7 +8,7 @@ import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentViewer extends Component {
-    static template = "mail.attachment_viewer";
+    static template = "mail.AttachmentViewer";
     static components = {};
     static props = ["attachments", "startIndex", "close", "modal?"];
     static defaultProps = {

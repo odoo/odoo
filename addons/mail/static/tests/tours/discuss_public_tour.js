@@ -7,12 +7,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
     test: true,
     steps: [
         {
-            trigger: ".o-mail-discuss-public",
-            extraTrigger: ".o-mail-thread",
+            trigger: ".o-DiscussPublic",
+            extraTrigger: ".o-Thread",
         },
         {
             content: "Check that we are on channel page",
-            trigger: ".o-mail-thread",
+            trigger: ".o-Thread",
             run() {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
                     console.error("Channel secret token is still present in URL.");
@@ -37,40 +37,40 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
         },
         {
             content: "Write something in composer",
-            trigger: ".o-mail-composer-textarea",
+            trigger: ".o-Composer-input",
             run: "text cheese",
         },
         {
             content: "Add one file in composer",
-            trigger: ".o-mail-composer button[aria-label='Attach files']",
+            trigger: ".o-Composer button[aria-label='Attach files']",
             async run() {
                 const file = await createFile({
                     content: "hello, world",
                     contentType: "text/plain",
                     name: "text.txt",
                 });
-                inputFiles(document.querySelector(".o-mail-composer-core-main .o_input_file"), [
+                inputFiles(document.querySelector(".o-Composer-coreMain .o_input_file"), [
                     file,
                 ]);
             },
         },
         {
             content: "Check the earlier provided attachment is listed",
-            trigger: '.o-mail-attachment-card[title="text.txt"]',
-            extra_trigger: ".o-mail-attachment-card:not(.o-mail-is-uploading)", // waiting the attachment to be uploaded
+            trigger: '.o-AttachmentCard[title="text.txt"]',
+            extra_trigger: ".o-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
             run() {},
         },
         {
             content: "Send message",
-            trigger: ".o-mail-composer-send-button",
+            trigger: ".o-Composer-send",
         },
         {
             content: "Check message is shown",
-            trigger: '.o-mail-message-body:contains("cheese")',
+            trigger: '.o-Message-body:contains("cheese")',
         },
         {
             content: "Check message contains the attachment",
-            trigger: '.o-mail-message .o-mail-attachment-card:contains("text.txt")',
+            trigger: '.o-Message .o-AttachmentCard:contains("text.txt")',
         },
     ],
 });
