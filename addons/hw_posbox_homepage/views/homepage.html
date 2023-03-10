@@ -70,6 +70,11 @@
         position: absolute;
         right: 0;
     }
+    .warn-tr {
+        color: #856404;
+        background-color: #fff3cd;
+        border: 2px solid #f3e4ce;
+    }
 </style>
 <script>
     $(document).ready(function () {
@@ -109,6 +114,24 @@
         <tr>
             <td class="heading">Server</td>
             <td><a href='{{ server_status }}' target=_blank>{{ server_status }}<a class="btn btn-sm float-right" href='/server'>configure</a></td>
+        </tr>
+        <tr class="{{ 'warn-tr' if not is_certificate_ok }}">
+            <td class="heading">HTTPS certificate</td>
+            <td>
+                {% if is_certificate_ok %}
+                    <details>
+                        <summary>OK</summary>
+                        <code>{{ certificate_details }}</code>
+                    </details>
+                {% else %}
+                    Error code:
+                    {% set error_code = certificate_details.split(' ') | first | replace("_", "-") | lower %}
+                    {% set doc_url = 'https://www.odoo.com/documentation/master/applications/productivity/iot/config/https_certificate_iot.html#' ~ error_code %}
+                    <a target="_blank" class="btn btn-sm float-right" href="{{ doc_url }}">help</a>
+                    <br/>
+                    <code style="white-space: pre-wrap;">{{ certificate_details }}</code>
+                {% endif %}
+            </td>
         </tr>
         {% if server_status != "Not Configured" %}
         <tr>
