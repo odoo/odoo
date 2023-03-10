@@ -4,6 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 import { datetime_to_str } from "web.time";
+import { assignDefined } from "@mail/new/utils/misc";
 
 patch(MockServer.prototype, "mail/models/mail_channel", {
     async _performRPC(route, args) {
@@ -521,7 +522,17 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                     ["channel_id", "=", channel.id],
                 ]),
             };
-            const res = Object.assign({}, channel, {
+            const res = assignDefined({}, channel, [
+                "id",
+                "name",
+                "defaultDisplayMode",
+                "description",
+                "uuid",
+                "create_uid",
+                "group_based_subscription",
+                "avatarCacheKey",
+            ]);
+            Object.assign(res, {
                 last_message_id: lastMessageId,
                 message_needaction_counter: messageNeedactionCounter,
                 authorizedGroupFullName: group_public_id ? group_public_id.name : false,

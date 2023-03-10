@@ -24,6 +24,7 @@ export function assignDefined(obj, data, keys = Object.keys(data)) {
             obj[key] = data[key];
         }
     }
+    return obj;
 }
 
 // todo: move this some other place in the future

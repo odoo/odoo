@@ -30,6 +30,8 @@ export class Thread {
     attachments = [];
     /** @type {integer} */
     activeRtcSessionId;
+    /** @type {object|undefined} */
+    channel;
     /** @type {import("@mail/new/core/channel_member_model").ChannelMember[]} */
     channelMembers = [];
     /** @type {RtcSession{}} */
@@ -201,7 +203,7 @@ export class Thread {
     }
 
     get imgUrl() {
-        const avatarCacheKey = this.serverData?.channel?.avatarCacheKey;
+        const avatarCacheKey = this.channel.avatarCacheKey;
         if (this.type === "channel" || this.type === "group") {
             return `/web/image/mail.channel/${this.id}/avatar_128?unique=${avatarCacheKey}`;
         }

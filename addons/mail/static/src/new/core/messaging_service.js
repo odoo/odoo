@@ -439,7 +439,7 @@ export class Messaging {
             channel = this.threadService.insert({
                 id: channelData.id,
                 model: "mail.channel",
-                type: channelData.channel_type,
+                type: channelData.channel.channel_type,
                 serverData: channelData,
             });
         }

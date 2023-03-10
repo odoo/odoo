@@ -454,7 +454,7 @@ export class ThreadService {
      * @param {Object} data
      */
     update(thread, data) {
-        const { attachments, ...remainingData } = data;
+        const { attachments, serverData, ...remainingData } = data;
         assignDefined(thread, remainingData);
         if (attachments) {
             // smart process to avoid triggering reactives when there is no change between the 2 arrays
@@ -464,8 +464,7 @@ export class ThreadService {
                 (a1, a2) => a1.id === a2.id
             );
         }
-        if (data.serverData) {
-            const { serverData } = data;
+        if (serverData) {
             assignDefined(thread, serverData, [
                 "uuid",
                 "authorizedGroupFullName",
@@ -475,7 +474,11 @@ export class ThreadService {
                 "message_needaction_counter",
                 "name",
                 "state",
+                "group_based_subscription",
             ]);
+            if (thread.model === "mail.channel" && serverData.channel) {
+                thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
+            }
 
             thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
             if (serverData.last_interest_dt) {
@@ -736,7 +739,7 @@ export class ThreadService {
         return (
             ["channel", "group"].includes(thread.type) &&
             !thread.message_needaction_counter &&
-            !thread.serverData.group_based_subscription
+            !thread.group_based_subscription
         );
     }
     /**

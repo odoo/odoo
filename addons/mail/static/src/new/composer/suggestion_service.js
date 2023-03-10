@@ -40,7 +40,7 @@ class SuggestionService {
             thread &&
             (thread.type === "group" ||
                 thread.type === "chat" ||
-                (thread.type === "channel" && thread.serverData.group_based_subscription));
+                (thread.type === "channel" && thread.group_based_subscription));
         if (isNonPublicChannel) {
             kwargs.channel_id = thread.id;
         }
@@ -173,7 +173,7 @@ class SuggestionService {
             thread &&
             (thread.type === "group" ||
                 thread.type === "chat" ||
-                (thread.type === "channel" && thread.serverData.group_based_subscription));
+                (thread.type === "channel" && thread.group_based_subscription));
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
             // group restricted channel. Indeed, the message with the mention
@@ -218,9 +218,9 @@ class SuggestionService {
             if (!isAInternalUser && isBInternalUser) {
                 return 1;
             }
-            if (thread?.serverData?.channel) {
-                const isMember1 = thread.serverData.channel.channelMembers[0][1].includes(p1);
-                const isMember2 = thread.serverData.channel.channelMembers[0][1].includes(p2);
+            if (thread?.channel) {
+                const isMember1 = thread.channel.channelMembers[0][1].includes(p1);
+                const isMember2 = thread.channel.channelMembers[0][1].includes(p2);
                 if (isMember1 && !isMember2) {
                     return -1;
                 }
