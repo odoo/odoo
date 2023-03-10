@@ -70,3 +70,7 @@ class BusPresence(models.Model):
             if presence.last_presence < last_presence:
                 values['last_presence'] = last_presence
             presence.write(values)
+
+    @api.autovacuum
+    def _gc_bus_presence(self):
+        self.search([('user_id.active', '=', False)]).unlink()
