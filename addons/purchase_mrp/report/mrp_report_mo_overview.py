@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools import float_compare
 
 class ReportMoOverview(models.AbstractModel):
     _inherit = 'report.mrp.report_mo_overview'
@@ -16,17 +15,17 @@ class ReportMoOverview(models.AbstractModel):
         po_lines = self.env['purchase.order.line'].search(domain, order='date_planned, id')
 
         for po_line in po_lines:
-            line_qty = po_line.product_uom_qty
-            if po_line.move_dest_ids.raw_material_production_id:
-                for move in po_line.move_dest_ids:
-                    if float_compare(line_qty, move.product_uom_qty, precision_rounding=po_line.product_uom.rounding) >= 0:
-                        prod_qty = move.product_uom_qty
-                    else:
-                        prod_qty = line_qty
-                    res.append(self._format_extra_replenishment(po_line, prod_qty, move.raw_material_production_id.id))
-                    line_qty -= prod_qty
-            else:
-                res.append(self._format_extra_replenishment(po_line, po_line.product_uom_qty))
+            line_qty = po_line.product_qty
+            for move in po_line.move_dest_ids:
+                linked_production = self.env['stock.move'].browse(move._rollup_move_dests()).raw_material_production_id
+                # Only create specific lines for moves directly linked to a manufacturing order
+                if not linked_production:
+                    continue
+                prod_qty = min(line_qty, move.product_uom._compute_quantity(move.product_uom_qty, po_line.product_uom))
+                res.append(self._format_extra_replenishment(po_line, prod_qty, linked_production.id))
+                line_qty -= prod_qty
+            if line_qty:
+                res.append(self._format_extra_replenishment(po_line, line_qty))
 
         return res
 
@@ -36,6 +35,7 @@ class ReportMoOverview(models.AbstractModel):
             'id': po_line.order_id.id,
             'cost': po_line.price_total,
             'quantity': quantity,
+            'uom': po_line.product_uom,
             'production_id': production_id
         }
 
