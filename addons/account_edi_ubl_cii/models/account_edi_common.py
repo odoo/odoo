@@ -309,10 +309,10 @@ class AccountEdiCommon(models.AbstractModel):
         return invoice
 
     def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat):
-        """ Retrieve the partner, if no matching partner is found, create it
+        """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)
         """
         invoice.partner_id = self.env['account.edi.format']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
-        if not invoice.partner_id and name:
+        if not invoice.partner_id and name and vat:
             invoice.partner_id = self.env['res.partner'].create({'name': name, 'email': mail, 'phone': phone})
             # an invalid VAT will throw a ValidationError (see 'check_vat' in base_vat)
             try:
