@@ -328,10 +328,10 @@ class AccountEdiCommon(models.AbstractModel):
         return True
 
     def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat):
-        """ Retrieve the partner, if no matching partner is found, create it
+        """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)
         """
         invoice.partner_id = self.env['res.partner']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
-        if not invoice.partner_id and name:
+        if not invoice.partner_id and name and vat:
             invoice.partner_id = self.env['res.partner'].create({'name': name, 'email': mail, 'phone': phone})
             country_code = invoice.partner_id.commercial_partner_id.country_code
             if vat and self.env['res.partner']._run_vat_test(vat, country_code, invoice.partner_id.is_company):
