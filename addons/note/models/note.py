@@ -18,6 +18,10 @@ class Stage(models.Model):
     user_id = fields.Many2one('res.users', string='Owner', required=True, ondelete='cascade', default=lambda self: self.env.uid)
     fold = fields.Boolean('Folded by Default')
 
+    @api.autovacuum
+    def _gc_personal_stages(self):
+        self.env['note.stage'].search([('user_id.active', '=', False)], limit=1000).unlink()
+
 
 class Tag(models.Model):
 
