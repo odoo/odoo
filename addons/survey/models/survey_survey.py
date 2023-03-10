@@ -55,6 +55,13 @@ class Survey(models.Model):
         return result
 
     # description
+    survey_type = fields.Selection([
+        ('survey', 'Survey'),
+        ('live_session', 'Live session'),
+        ('assessment', 'Assessment'),
+        ('custom', 'Custom'),
+    ],
+        string='Survey Type', required=True, default='custom')
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
     description = fields.Html(
@@ -239,7 +246,6 @@ class Survey(models.Model):
             # as avg returns None if nothing found, set 0 if it's the case.
             survey.answer_duration_avg = (result_per_survey_id.get(survey.id) or 0) / 3600
 
-
     @api.depends('question_and_page_ids')
     def _compute_page_and_question_ids(self):
         for survey in self:
@@ -330,6 +336,31 @@ class Survey(models.Model):
                 survey.scoring_type = 'scoring_without_answers'
             elif not survey.scoring_type:
                 survey.scoring_type = 'no_scoring'
+
+    @api.onchange('survey_type')
+    def _onchange_survey_type(self):
+        if self.survey_type == 'survey':
+            self.write({
+                'certification': False,
+                'is_time_limited': False,
+                'scoring_type': 'no_scoring',
+            })
+        elif self.survey_type == 'live_session':
+            self.write({
+                'access_mode': 'public',
+                'is_attempts_limited': False,
+                'is_time_limited': False,
+                'progression_mode': 'percent',
+                'questions_layout': 'page_per_question',
+                'questions_selection': 'all',
+                'scoring_type': 'scoring_with_answers',
+                'users_can_go_back': False,
+            })
+        elif self.survey_type == 'assessment':
+            self.write({
+                'access_mode': 'token',
+                'scoring_type': 'scoring_with_answers',
+            })
 
     # ------------------------------------------------------------
     # CRUD
