@@ -48,10 +48,6 @@ export class DataPoint {
             field = { type: "integer" };
         }
         switch (field.type) {
-            case "char":
-            case "text": {
-                return value || "";
-            }
             case "date": {
                 return value ? deserializeDate(value) : false;
             }

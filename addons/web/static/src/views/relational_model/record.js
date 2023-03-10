@@ -6,10 +6,10 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { evalDomain, isNumeric, isX2Many } from "@web/views/utils";
 import { DataPoint } from "./datapoint";
+import { getOnChangeSpec } from "./utils";
 
 export class Record extends DataPoint {
     setup(params) {
-        console.log(params.data);
         this.resId = params.data.id || false;
         this.resIds = params.resIds || (this.resId ? [this.resId] : []);
         // multiple fields: we could loop here on activeFields and generate a
@@ -76,8 +76,38 @@ export class Record extends DataPoint {
 
     askChanges() {}
 
-    update(changes) {
+    async update(changes) {
         this.isDirty = true;
+        const onChangeFields = Object.keys(changes).filter(
+            (fieldName) => this.activeFields[fieldName].onChange
+        );
+        if (onChangeFields.length) {
+            const response = await this.model.orm.call(
+                this.resModel,
+                "onchange2",
+                [
+                    this.resId ? [this.resId] : [],
+                    this._getChanges({ ...this._changes, ...changes }),
+                    onChangeFields,
+                    getOnChangeSpec(this.activeFields),
+                ],
+                { context: this.context }
+            );
+            if (response.warning) {
+                const { type, title, message } = warning;
+                if (type === "dialog") {
+                    this.model.dialog.add(WarningDialog, { title, message });
+                } else {
+                    this.model.notification.add(message, {
+                        className: warning.className,
+                        sticky: warning.sticky,
+                        title,
+                        type: "warning",
+                    });
+                }
+            }
+            Object.assign(changes, response.value);
+        }
         Object.assign(this._changes, changes);
         Object.assign(this.data, changes);
         this._setEvalContext();
@@ -90,9 +120,13 @@ export class Record extends DataPoint {
     }
 
     async delete() {
-        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
-            context: this.context,
-        });
+        const unlinked = await this.model.orm.unlink(
+            this.resModel,
+            [this.resId],
+            {
+                context: this.context,
+            }
+        );
         if (!unlinked) {
             return false;
         }
@@ -126,12 +160,17 @@ export class Record extends DataPoint {
         // TODO: handle errors
         if (!this._checkValidity()) {
             const items = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+                return `<li>${escape(
+                    this.fields[fieldName].string || fieldName
+                )}</li>`;
             }, this);
-            this.model.notificationService.add(markup(`<ul>${items.join("")}</ul>`), {
-                title: _t("Invalid fields: "),
-                type: "danger",
-            });
+            this.model.notification.add(
+                markup(`<ul>${items.join("")}</ul>`),
+                {
+                    title: _t("Invalid fields: "),
+                    type: "danger",
+                }
+            );
             return false;
         }
         const changes = this._getChanges();
@@ -141,7 +180,11 @@ export class Record extends DataPoint {
         const kwargs = { context: this.context };
         let resId = this.resId;
         if (!resId) {
-            [resId] = await this.model.orm.create(this.resModel, [changes], kwargs);
+            [resId] = await this.model.orm.create(
+                this.resModel,
+                [changes],
+                kwargs
+            );
         } else {
             await this.model.orm.write(this.resModel, [resId], changes, kwargs);
         }
@@ -230,21 +273,21 @@ export class Record extends DataPoint {
         return !this._invalidFields.size;
     }
 
-    _getChanges() {
-        const changes = {};
-        for (const [fieldName, value] of Object.entries(this._changes)) {
+    _getChanges(changes = this._changes) {
+        const result = {};
+        for (const [fieldName, value] of Object.entries(changes)) {
             const type = this.fields[fieldName].type;
             if (type === "date") {
-                changes[fieldName] = value ? serializeDate(value) : false;
+                result[fieldName] = value ? serializeDate(value) : false;
             } else if (type === "datetime") {
-                changes[fieldName] = value ? serializeDateTime(value) : false;
+                result[fieldName] = value ? serializeDateTime(value) : false;
             } else if (type === "many2one") {
-                changes[fieldName] = value ? value[0] : false;
+                result[fieldName] = value ? value[0] : false;
             } else {
-                changes[fieldName] = value;
+                result[fieldName] = value;
             }
         }
-        return changes;
+        return result;
     }
 
     _getDefaultValues() {
@@ -275,10 +318,11 @@ export class Record extends DataPoint {
         for (const fieldName in this.data) {
             const value = this.data[fieldName];
             const field = this.fields[fieldName];
-            if ([null].includes(value)) {
-                // simplify that?
-                evalContext[fieldName] = false;
-            } else if (["one2many", "many2many"].includes(field.type)) {
+            // if ([null, ""].includes(value)) {
+            //     // simplify that?
+            //     evalContext[fieldName] = false;
+            // } else
+            if (["one2many", "many2many"].includes(field.type)) {
                 evalContext[fieldName] = value.resIds;
             } else if (value && field.type === "date") {
                 evalContext[fieldName] = serializeDate(value);

@@ -72,3 +72,19 @@ export const getFieldsSpec = (activeFields, fields) => {
     }
     return fieldsSpec;
 };
+
+function _populateOnChangeSpec(activeFields, spec, path = false) {
+    const prefix = path ? `${path}.` : "";
+    for (const [fieldName, field] of Object.entries(activeFields)) {
+        const key = `${prefix}${fieldName}`;
+        spec[key] = field.onChange ? "1" : "";
+        if (field.related) {
+            _populateOnChangeSpec(field.related.activeFields, spec, key);
+        }
+    }
+}
+export const getOnChangeSpec = (activeFields) => {
+    const spec = {};
+    _populateOnChangeSpec(activeFields, spec);
+    return spec;
+};

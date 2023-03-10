@@ -2279,7 +2279,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_field_integer.o_field_invalid");
     });
 
-    QUnit.tttt("required field computed by another field in a form view", async function (assert) {
+    QUnit.test("required field computed by another field in a form view", async function (assert) {
         serverData.models.partner.fields.foo.default = false;
         serverData.models.partner.onchanges = {
             foo(record) {
@@ -2350,7 +2350,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_field_invalid");
     });
 
-    QUnit.tttt("tooltips on multiple occurrences of fields and labels", async function (assert) {
+    QUnit.test("tooltips on multiple occurrences of fields and labels", async function (assert) {
         serverData.models.partner.fields.foo.help = "foo tooltip";
         serverData.models.partner.fields.bar.help = "bar tooltip";
 
@@ -2407,7 +2407,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "readonly attrs on fields are re-evaluated on field change",
         async function (assert) {
             await makeView({
@@ -2452,7 +2452,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("field with readonly modifier depending on id", async function (assert) {
+    QUnit.test("field with readonly modifier depending on id", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -2485,7 +2485,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt(
+    QUnit.skip(
         "readonly attrs on lines are re-evaluated on field change 2",
         async function (assert) {
             serverData.models.partner.records[0].product_ids = [37];
@@ -2544,7 +2544,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("empty fields have o_form_empty class in readonly mode", async function (assert) {
+    QUnit.test("empty fields have o_form_empty class in readonly mode", async function (assert) {
         serverData.models.partner.fields.foo.default = false; // no default value for this test
         serverData.models.partner.records[1].foo = false; // 1 is record with id=2
         serverData.models.partner.records[1].trululu = false; // 1 is record with id=2

@@ -10,7 +10,7 @@ import { DynamicRecordList } from "./dynamic_record_list";
 import { DynamicGroupList } from "./dynamic_group_list";
 import { Group } from "./group";
 import { StaticList } from "./static_list";
-import { getFieldsSpec } from "./utils";
+import { getFieldsSpec, getOnChangeSpec } from "./utils";
 
 export class RelationalModel extends Model {
     // FIXME: ask sad :D without this, can't make instance of model reactive.
@@ -19,17 +19,17 @@ export class RelationalModel extends Model {
         return "Object";
     }
 
-    setup(params, { user, company, notification }) {
-        this.user = user;
+    setup(params, { company, dialog, notification, user }) {
         this.company = company;
-        this.notificationService = notification;
+        this.dialog = dialog;
+        this.notification = notification;
+        this.user = user;
 
         this.bus = new EventBus();
 
         this.keepLast = markRaw(new KeepLast());
         this.mutex = markRaw(new Mutex());
 
-        console.log("coucou");
         this.rootParams = markRaw(params);
     }
 
@@ -118,37 +118,35 @@ export class RelationalModel extends Model {
     }
 
     async _loadData(params) {
-        console.log("coucou load");
+        if (params.viewMode === "form" && !params.resId) {
+            // FIXME: this will be handled by unity at some point
+            return this._loadNewRecord(params);
+        }
+        if (params.viewMode !== "form" && params.groupBy.length) {
+            // FIXME: this *might* be handled by unity at some point
+            return this._loadGroupedList(params);
+        }
         const fieldSpec = getFieldsSpec(params.activeFields, params.fields);
-        console.log(fieldSpec);
+        console.log("Unity field spec", fieldSpec);
         const unityReadSpec = {
             context: { ...params.context, bin_size: true },
             fields: fieldSpec,
         };
         if (params.viewMode === "form") {
-            if (!params.resId) {
-                // FIXME: this will be handled by unity at some point
-                return this._loadNewRecord(params);
-            }
             unityReadSpec.method = "read";
             unityReadSpec.ids = [params.resId];
         } else {
-            if (params.groupBy.length) {
-                // FIXME: this *might* be handled by unity at some point
-                return this._loadGroupedList(params);
-            }
             unityReadSpec.method = "search";
             unityReadSpec.domain = params.domain;
             unityReadSpec.offset = params.offset;
             unityReadSpec.limit = params.limit;
         }
         const response = await this.orm.call(params.resModel, "unity_read", [], unityReadSpec);
-        console.log(response);
+        console.log("Unity response", response);
         return response[0];
     }
 
     async _loadGroupedList(params) {
-        console.log("load group", params);
         const firstGroupByName = params.groupBy[0].split(":")[0];
         const _orderBy = params.orderBy.filter(
             (o) => o.name === firstGroupByName || params.fields[o.name].group_operator !== undefined
@@ -181,33 +179,19 @@ export class RelationalModel extends Model {
                 group.records = response.records;
             }
         }
-        console.log(groups);
-        window.groups = groups;
         return { groups, length };
     }
 
     async _loadNewRecord(params) {
-        const onChangeSpec = {};
-        const _populateOnChangeSpec = (activeFields, path = false) => {
-            const prefix = path ? `${path}.` : "";
-            for (const [fieldName, field] of Object.entries(activeFields)) {
-                const key = `${prefix}${fieldName}`;
-                onChangeSpec[key] = field.onChange ? "1" : "";
-                if (field.related) {
-                    _populateOnChangeSpec(field.related.activeFields, key);
-                }
-            }
-            return onChangeSpec;
-        };
-        _populateOnChangeSpec(params.activeFields);
-        window.onChangeSpec = onChangeSpec;
+        const onChangeSpec = getOnChangeSpec(params.activeFields);
+        console.log("Onchange spec", onChangeSpec);
         const response = await this.orm.call(
             params.resModel,
-            "onchange",
+            "onchange2",
             [[], {}, [], onChangeSpec],
             { context: params.context }
         );
-        window.response = response;
+        console.log("Onchange response", response);
         const record = {};
         for (const [fieldName, value] of Object.entries(response.value)) {
             switch (params.fields[fieldName].type) {
@@ -242,7 +226,7 @@ export class RelationalModel extends Model {
     }
 }
 
-RelationalModel.services = ["user", "company", "notification"];
+RelationalModel.services = ["company", "dialog", "notification", "user"];
 RelationalModel.Record = Record;
 RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;
