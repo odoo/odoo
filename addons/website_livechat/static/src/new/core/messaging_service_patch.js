@@ -13,7 +13,7 @@ patch(Messaging.prototype, "website_livechat", {
                     id: notification.payload.id,
                     model: "mail.channel",
                     serverData: notification.payload,
-                    type: notification.payload.channel_type,
+                    type: notification.payload.channel.channel_type,
                 });
                 const chatWindow = this.chatWindowService.insert({ thread: channel });
                 this.chatWindowService.makeVisible(chatWindow);
