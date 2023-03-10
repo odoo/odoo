@@ -8,17 +8,20 @@ from odoo import api, models, _
 
 class SurveyTemplate(models.Model):
     """This model defines additional actions on the 'survey.survey' model that
-       can be used to load a survey sample. The model defines a sample for:
-       (1) A feedback form
-       (2) A certification
-       (3) A live presentation
+       can be used to load a survey sample. The model defines a sample for each
+       survey type:
+       (1) survey: A feedback form
+       (2) assessment: A certification
+       (3) live_session: A live presentation
+       (4) custom: An empty survey
     """
 
     _inherit = 'survey.survey'
 
     @api.model
-    def action_load_sample_feedback_form(self):
+    def action_load_sample_survey(self):
         return self.env['survey.survey'].create({
+            'survey_type': 'survey',
             'title': _('Feedback Form'),
             'description': '<br>'.join([
                 _('Please complete this very short survey to let us know how satisfied your are with our products.'),
@@ -79,8 +82,9 @@ class SurveyTemplate(models.Model):
         }).action_show_sample()
 
     @api.model
-    def action_load_sample_certification(self):
+    def action_load_sample_assessment(self):
         survey_values = {
+            'survey_type': 'assessment',
             'title': _('Certification'),
             'certification': True,
             'access_mode': 'token',
@@ -172,9 +176,10 @@ class SurveyTemplate(models.Model):
         return self.env['survey.survey'].create(survey_values).action_show_sample()
 
     @api.model
-    def action_load_sample_live_presentation(self):
+    def action_load_sample_live_session(self):
         return self.env['survey.survey'].create({
-            'title': _('Live Presentation'),
+            'survey_type': 'live_session',
+            'title': _('Live Session'),
             'description': '<br>'.join([
                 _('How good of a presenter are you? Let\'s find out!'),
                 _('But first, keep listening to the host.')
@@ -242,6 +247,13 @@ class SurveyTemplate(models.Model):
                 }),
 
             ]
+        }).action_show_sample()
+
+    @api.model
+    def action_load_sample_custom(self):
+        return self.env['survey.survey'].create({
+            'survey_type': 'custom',
+            'title': '',
         }).action_show_sample()
 
     def action_show_sample(self):
