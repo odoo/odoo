@@ -313,7 +313,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "onchange",
+            "onchange2",
         ]);
     });
 
@@ -883,7 +883,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "form",
             id: "",
         });
-        assert.verifySteps(["/web/dataset/call_kw/partner/onchange"]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/onchange2"]);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(

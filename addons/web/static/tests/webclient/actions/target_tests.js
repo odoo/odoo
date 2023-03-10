@@ -50,7 +50,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "onchange",
+            "onchange2",
         ]);
     });
 
@@ -145,7 +145,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/onchange",
+            "/web/dataset/call_kw/partner/onchange2",
         ]);
         await testUtils.dom.click(`button[name="5"]`);
         assert.verifySteps([
@@ -153,7 +153,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/unity_read",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/onchange",
+            "/web/dataset/call_kw/partner/onchange2",
         ]);
         assert.containsOnce(document.body, ".modal");
         await testUtils.dom.click(`button[name="some_method"]`);

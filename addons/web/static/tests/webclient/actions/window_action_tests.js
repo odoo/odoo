@@ -189,7 +189,7 @@ QUnit.module("ActionManager", (hooks) => {
             "web_read_group",
             "unity_read search",
             "unity_read search",
-            "onchange",
+            "onchange2",
             "name_create",
             "unity_read read",
             "unity_read read",
@@ -813,7 +813,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "unity_read search",
-            "onchange",
+            "onchange2",
             "unity_read search",
         ]);
     });
@@ -900,7 +900,7 @@ QUnit.module("ActionManager", (hooks) => {
             };
             const def = testUtils.makeTestPromise();
             const mockRPC = async (route, args) => {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     // delay the opening of the dialog
                     await def;
                 }
@@ -1919,7 +1919,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "unity_read search",
-            "onchange",
+            "onchange2",
             "get_formview_action",
             "create", // FIXME: to check with mcm
             "get_views",
@@ -2225,7 +2225,7 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             serverData.views["partner,false,form"] = `<form><field name="foo"/></form>`;
             const mockRPC = (route, args) => {
-                if (args.method === "onchange") {
+                if (args.method === "onchange2") {
                     return Promise.resolve({
                         value: {},
                         warning: {
@@ -2443,7 +2443,7 @@ QUnit.module("ActionManager", (hooks) => {
             .add("odoo.exceptions.ValidationError", WarningDialogWait);
 
         const mockRPC = (route, args) => {
-            if (args.method === "onchange" && args.model === "partner") {
+            if (args.method === "onchange2" && args.model === "partner") {
                 const error = new RPCError();
                 error.exceptionName = "odoo.exceptions.ValidationError";
                 error.code = 200;
