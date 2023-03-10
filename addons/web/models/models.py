@@ -146,7 +146,7 @@ class Base(models.AbstractModel):
                         kanban columns
         :param progress_bar - the <progressbar/> declaration attributes
                             (field, colors, sum)
-        :return a dictionnary mapping group_by values to dictionnaries mapping
+        :return a dictionary mapping group_by values to dictionaries mapping
                 progress bar field values to the related number of records
         """
         group_by_fname = group_by.partition(':')[0]
