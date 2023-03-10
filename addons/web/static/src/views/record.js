@@ -26,7 +26,7 @@ class _Record extends Component {
         }
 
         this.model = new RelationalModel(this.env, modelParams, modelServices);
-        useBus(this.model, "update", () => this.render(true));
+        useBus(this.model.bus, "update", () => this.render(true));
 
         let loadKey;
         const load = (props) => {

@@ -250,7 +250,7 @@ export class X2ManyField extends Component {
         if (editable) {
             if (this.list.editedRecord) {
                 const proms = [];
-                this.list.model.trigger("NEED_LOCAL_CHANGES", { proms });
+                this.list.model.bus.trigger("NEED_LOCAL_CHANGES", { proms });
                 await Promise.all([...proms, this.list.editedRecord._updatePromise]);
                 await this.list.editedRecord.switchMode("readonly", { checkValidity: true });
             }

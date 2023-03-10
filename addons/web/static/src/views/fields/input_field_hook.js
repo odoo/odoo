@@ -45,7 +45,7 @@ export function useInputField(params) {
      */
     function onInput(ev) {
         isDirty = ev.target.value !== lastSetValue;
-        component.props.record.model.trigger("FIELD_IS_DIRTY", isDirty);
+        component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
     }
 
     /**
@@ -76,7 +76,7 @@ export function useInputField(params) {
                 lastSetValue = ev.target.value;
             }
 
-            component.props.record.model.trigger("FIELD_IS_DIRTY", isDirty);
+            component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
         }
     }
     function onKeydown(ev) {
@@ -116,10 +116,8 @@ export function useInputField(params) {
     });
 
     const { model } = component.props.record;
-    useBus(model, "WILL_SAVE_URGENTLY", () => commitChanges(true));
-    useBus(model, "NEED_LOCAL_CHANGES", (ev) =>
-        ev.detail.proms.push(commitChanges())
-    );
+    useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));
+    useBus(model.bus, "NEED_LOCAL_CHANGES", (ev) => ev.detail.proms.push(commitChanges()));
 
     /**
      * Roughly the same as onChange, but called at more specific / critical times. (See bus events)
@@ -154,7 +152,7 @@ export function useInputField(params) {
             if ((val || false) !== (component.props.record.data[component.props.name] || false)) {
                 await component.props.record.update({ [component.props.name]: val });
                 lastSetValue = inputRef.el.value;
-                component.props.record.model.trigger("FIELD_IS_DIRTY", isDirty);
+                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
             }
         }
     }
