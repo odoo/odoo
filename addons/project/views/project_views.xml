@@ -884,7 +884,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
                                         <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
-                                        <field name="user_id" widget="many2one_avatar_user" t-if="record.user_id.raw_value"/>
+                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                     </div>
                                 </div>
                             </div>
@@ -1427,7 +1427,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
-                                        <t t-if="record.user_ids.raw_value"><field name="user_ids" widget="many2many_avatar_user"/></t>
+                                        <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]"/>
                                     </div>
                                 </div>
                                 <div class="kanban_bottom_subtasks_section"/>
