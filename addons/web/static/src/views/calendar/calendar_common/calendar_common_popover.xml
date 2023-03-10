@@ -46,7 +46,7 @@
         <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
             <Record resModel="props.model.resModel" resId="props.record.id" fields="props.model.fields" activeFields="props.model.popoverFields" mode="'readonly'" values="props.record.rawRecord" t-slot-scope="slot">
                 <t t-foreach="slot.record.fieldNames" t-as="fieldName" t-key="fieldName">
-                    <t t-if="!slot.record.isInvisible(fieldName)">
+                    <t t-if="!isInvisible(fieldName, slot.record)">
                         <t t-set="fieldInfo" t-value="props.model.popoverFields[fieldName]" />
                         <li class="list-group-item flex-shrink-0 d-flex flex-wrap align-items-center" t-att-class="fieldInfo.attrs.class">
                             <strong class="me-2">
