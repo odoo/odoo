@@ -996,7 +996,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             expense_lines = sheet.mapped('expense_line_ids')
             if expense_lines and any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
-                raise ValidationError(_("Expenses must have the same To Reimburse status."))
+                raise ValidationError(_("All expenses in an expense report must have the same \"paid by\" criteria."))
 
     @api.depends('expense_line_ids')
     def _compute_product_ids(self):
