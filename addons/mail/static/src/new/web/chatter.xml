@@ -123,7 +123,7 @@
                     </FileUploader>
                 </div>
             </div>
-            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.localId" order="'desc'"/>
+            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.localId" order="'desc'" hasMessageScrollAdjustInChatter="props.hasMessageScrollAdjustInChatter"/>
         </div>
     </div>
 </t>

@@ -47,10 +47,9 @@ export class Chatter extends Component {
         "compactHeight?",
         "displayName?",
         "hasActivities?",
-        "hasExternalBorder?",
         "hasFollowers?",
         "hasMessageList?",
-        "hasMessageListScrollAdjust?",
+        "hasMessageScrollAdjustInChatter?",
         "hasParentReloadOnAttachmentsChanged?",
         "hasParentReloadOnFollowersUpdate?",
         "hasParentReloadOnMessagePosted?",
@@ -64,10 +63,9 @@ export class Chatter extends Component {
     static defaultProps = {
         compactHeight: false,
         hasActivities: true,
-        hasExternalBorder: true,
         hasFollowers: true,
         hasMessageList: true,
-        hasMessageListScrollAdjust: false,
+        hasMessageScrollAdjustInChatter: false,
         hasParentReloadOnAttachmentsChanged: false,
         hasParentReloadOnFollowersUpdate: false,
         hasParentReloadOnMessagePosted: false,
@@ -214,7 +212,12 @@ export class Chatter extends Component {
             },
         };
         this.env.services.action.doAction(action, {
-            onClose: () => this.onFollowerChanged(),
+            onClose: () => {
+                this.load(this.props.threadId, ["followers", "suggestedRecipients"]);
+                if (this.props.hasParentReloadOnFollowersUpdate) {
+                    this.reloadParentView();
+                }
+            },
         });
     }
 
@@ -335,10 +338,16 @@ export class Chatter extends Component {
 
     async unlinkAttachment(attachment) {
         await this.attachmentUploader.unlink(attachment);
+        if (this.props.hasParentReloadOnAttachmentsChanged) {
+            this.reloadParentView();
+        }
     }
 
     onUploaded(data) {
         this.attachmentUploader.uploadData(data);
+        if (this.props.hasParentReloadOnAttachmentsChanged) {
+            this.reloadParentView();
+        }
         this.state.isAttachmentBoxOpened = true;
         this.scrollPosition.ref.el.scrollTop = 0;
     }

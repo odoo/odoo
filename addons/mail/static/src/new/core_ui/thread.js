@@ -27,6 +27,7 @@ export class Thread extends Component {
     static components = { Message, Transition };
     static props = [
         "isInChatWindow?",
+        "hasMessageScrollAdjustInChatter?",
         "thread",
         "messageEdition?",
         "messageHighlight?",
@@ -35,6 +36,7 @@ export class Thread extends Component {
     ];
     static defaultProps = {
         isInChatWindow: false,
+        hasMessageScrollAdjustInChatter: false,
         order: "asc", // 'asc' or 'desc'
     };
     static template = "mail.Thread";
@@ -45,7 +47,7 @@ export class Thread extends Component {
         this.state = useState({ isReplyingTo: false });
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
-        if (!this.env.inChatter) {
+        if (!this.env.inChatter || this.props.hasMessageScrollAdjustInChatter) {
             useAutoScroll("messages", () => {
                 if (
                     this.props.messageHighlight &&
@@ -71,25 +73,30 @@ export class Thread extends Component {
             this.props.thread.scrollPosition,
             "bottom"
         );
-        useScrollSnapshot("messages", {
-            onWillPatch: () => {
-                return {
-                    hasMoreMsgsAbove:
-                        this.props.thread.oldestNonTransientMessage?.id !==
-                            this.oldestNonTransientMessage && this.props.order === "asc",
-                };
-            },
-            onPatched: ({ hasMoreMsgsAbove, scrollTop, scrollHeight }) => {
-                const el = this.messagesRef.el;
-                if (hasMoreMsgsAbove) {
-                    el.scrollTop = scrollTop + el.scrollHeight - scrollHeight;
-                }
-                this.oldestNonTransientMessage = this.props.thread.oldestNonTransientMessage?.id;
-            },
-        });
+        if (!this.env.inChatter || this.props.hasMessageScrollAdjustInChatter) {
+            useScrollSnapshot("messages", {
+                onWillPatch: () => {
+                    return {
+                        hasMoreMsgsAbove:
+                            this.props.thread.oldestNonTransientMessage?.id !==
+                                this.oldestNonTransientMessage && this.props.order === "asc",
+                    };
+                },
+                onPatched: ({ hasMoreMsgsAbove, scrollTop, scrollHeight }) => {
+                    const el = this.messagesRef.el;
+                    if (hasMoreMsgsAbove) {
+                        el.scrollTop = scrollTop + el.scrollHeight - scrollHeight;
+                    }
+                    this.oldestNonTransientMessage =
+                        this.props.thread.oldestNonTransientMessage?.id;
+                },
+            });
+        }
         onMounted(() => {
             this.oldestNonTransientMessage = this.props.thread.oldestNonTransientMessage?.id;
-            this.scrollPosition.restore();
+            if (!this.env.inChatter || this.props.hasMessageScrollAdjustInChatter) {
+                this.scrollPosition.restore();
+            }
         });
         onWillStart(() => {
             this.threadService.fetchNewMessages(this.props.thread);
