@@ -174,6 +174,7 @@ export class Record extends DataPoint {
             return false;
         }
         const changes = this._getChanges();
+        delete changes.id; // id never changes, and should not be written
         if (!Object.keys(changes).length) {
             return true;
         }
@@ -318,11 +319,10 @@ export class Record extends DataPoint {
         for (const fieldName in this.data) {
             const value = this.data[fieldName];
             const field = this.fields[fieldName];
-            // if ([null, ""].includes(value)) {
-            //     // simplify that?
-            //     evalContext[fieldName] = false;
-            // } else
-            if (["one2many", "many2many"].includes(field.type)) {
+            if ([null].includes(value)) {
+                // simplify that?
+                evalContext[fieldName] = false;
+            } else if (["one2many", "many2many"].includes(field.type)) {
                 evalContext[fieldName] = value.resIds;
             } else if (value && field.type === "date") {
                 evalContext[fieldName] = serializeDate(value);

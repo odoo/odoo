@@ -2485,7 +2485,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.tttt(
         "readonly attrs on lines are re-evaluated on field change 2",
         async function (assert) {
             serverData.models.partner.records[0].product_ids = [37];
@@ -2610,7 +2610,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "empty fields' labels still get the empty class after widget rerender",
         async function (assert) {
             serverData.models.partner.fields.foo.default = false; // no default value for this test
@@ -2660,7 +2660,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt(
+    QUnit.test(
         'empty inner readonly fields don\'t have o_form_empty class in "create" mode',
         async function (assert) {
             serverData.models.partner.fields.product_id.readonly = true;
@@ -2684,7 +2684,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt(
+    QUnit.test(
         "label tag added for fields have o_form_empty class in readonly mode if field is empty",
         async function (assert) {
             serverData.models.partner.fields.foo.default = false; // no default value for this test
@@ -2730,7 +2730,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt(
+    QUnit.test(
         "required attrs on fields are re-evaluated on field change",
         async function (assert) {
             await makeView({
@@ -2769,7 +2769,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("required fields should have o_required_modifier", async function (assert) {
+    QUnit.test("required fields should have o_required_modifier", async function (assert) {
         serverData.models.partner.fields.foo.required = true;
         await makeView({
             type: "form",
@@ -2788,7 +2788,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_field_widget.o_required_modifier");
     });
 
-    QUnit.tttt("required float fields works as expected", async function (assert) {
+    QUnit.test("required float fields works as expected", async function (assert) {
         serverData.models.partner.fields.qux.required = true;
         await makeView({
             type: "form",
@@ -2825,10 +2825,10 @@ QUnit.module("Views", (hooks) => {
             "qux input is properly formatted"
         );
 
-        assert.verifySteps(["get_views", "onchange", "create", "read", "write", "read"]);
+        assert.verifySteps(["get_views", "onchange2", "create", "unity_read", "write", "unity_read"]);
     });
 
-    QUnit.tttt("separators", async function (assert) {
+    QUnit.test("separators", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -2848,7 +2848,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div.o_horizontal_separator");
     });
 
-    QUnit.tttt("invisible attrs on separators", async function (assert) {
+    QUnit.test("invisible attrs on separators", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -2868,7 +2868,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "div.o_horizontal_separator");
     });
 
-    QUnit.tttt("form views in dialogs do not have a control panel", async function (assert) {
+    QUnit.test("form views in dialogs do not have a control panel", async function (assert) {
         serverData.views = {
             "partner,false,form": `<form><field name="foo"/></form>`,
         };
@@ -2888,7 +2888,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
     });
 
-    QUnit.tttt("form views in dialogs closes on save", async function (assert) {
+    QUnit.test("form views in dialogs closes on save", async function (assert) {
         serverData.models.partner.records[0].foo = undefined;
         delete serverData.models.partner.fields.foo.default;
         serverData.views = {
@@ -2923,7 +2923,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_dialog .o_form_view", "the dialog has been closed");
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "form views in dialogs closes on discard on existing record",
         async function (assert) {
             serverData.models.partner.records[0].foo = undefined;
@@ -2954,7 +2954,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
+    QUnit.test("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
         const bus = new EventBus();
         registry.category("services").add("ui", {
             start(env) {
@@ -2989,7 +2989,7 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target.querySelector(".o_dialog .o_form_view"), "o_xxl_form_view");
     });
 
-    QUnit.tttt("buttons in form view", async function (assert) {
+    QUnit.test("buttons in form view", async function (assert) {
         assert.expect(11);
 
         const mockedActionService = {
@@ -3044,15 +3044,15 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "get_views",
-            "read", // initial read
+            "unity_read", // initial read
             "post",
-            "read", // reload (successfully clicked on p)
+            "unity_read", // reload (successfully clicked on p)
             "some_method",
-            "read", // reload (unsuccessfully clicked on s)
+            "unity_read", // reload (unsuccessfully clicked on s)
         ]);
     });
 
-    QUnit.tttt("buttons classes in form view", async function (assert) {
+    QUnit.test("buttons classes in form view", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -3110,7 +3110,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt("nested buttons in form view header", async function (assert) {
+    QUnit.test("nested buttons in form view header", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -3203,7 +3203,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.tttt("buttons in form view, new record", async function (assert) {
+    QUnit.test("buttons in form view, new record", async function (assert) {
         // this test simulates a situation similar to the settings forms.
         assert.expect(9);
 
@@ -3246,14 +3246,14 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "onchange"]);
+        assert.verifySteps(["get_views", "onchange2"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
 
-        assert.verifySteps(["create", "read", "execute_action", "read"]);
+        assert.verifySteps(["create", "unity_read", "execute_action", "unity_read"]);
     });
 
-    QUnit.tttt("buttons in form view, new record, with field id in view", async function (assert) {
+    QUnit.test("buttons in form view, new record, with field id in view", async function (assert) {
         assert.expect(8);
         // buttons in form view are one of the rare example of situation when we
         // save a record without reloading it immediately, because we only care
@@ -3301,10 +3301,10 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_form_statusbar button.p"));
 
-        assert.verifySteps(["get_views", "onchange", "create", "read", "execute_action", "read"]);
+        assert.verifySteps(["get_views", "onchange2", "create", "unity_read", "execute_action", "unity_read"]);
     });
 
-    QUnit.tttt("buttons with data-hotkey attribute", async function (assert) {
+    QUnit.test("buttons with data-hotkey attribute", async function (assert) {
         const mockedActionService = {
             start() {
                 return {
@@ -3333,7 +3333,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["validate"]);
     });
 
-    QUnit.tttt("change and save char", async function (assert) {
+    QUnit.test("change and save char", async function (assert) {
         assert.expect(3);
 
         await makeView({
@@ -3355,7 +3355,7 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.tttt("properly reload data from server", async function (assert) {
+    QUnit.test("properly reload data from server", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
