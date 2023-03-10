@@ -159,6 +159,8 @@ class Base(models.AbstractModel):
                 value = selection_labels.get(value, False)
             if isinstance(value, tuple):
                 value = value[1]  # FIXME should use technical value (0)
+            if isinstance(value, dict):
+                value = value['display_name']  # FIXME should use technical value (0)
             return value
 
         result = {}
@@ -187,9 +189,13 @@ class Base(models.AbstractModel):
         # TO DO in master: harmonize this function and readgroup to allow factorization
         group_by_name = group_by.partition(':')[0]
         group_by_modifier = group_by.partition(':')[2] or 'month'
-
-        records_values = self.search_read(domain or [], [progress_bar['field'], group_by_name])
         field_type = self._fields[group_by_name].type
+        if field_type in ['many2one','one2many', 'many2many']:
+            group_by_field_spec = {'fields': {'display_name': {}}}
+        else:
+            group_by_field_spec = {}
+
+        records_values = self.search_read(domain or [], {progress_bar['field']: {}, group_by_name: group_by_field_spec})
 
         for record_values in records_values:
             group_by_value = record_values.pop(group_by_name)
