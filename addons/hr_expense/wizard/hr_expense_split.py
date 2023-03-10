@@ -57,7 +57,7 @@ class HrExpenseSplit(models.TransientModel):
         In case we switch to the product without taxes defined on it, taxes should be removed.
         Computed method won't be good for this purpose, as we don't want to recompute and reset taxes in case they are removed on purpose during splitting.
         """
-        self.tax_ids = self.tax_ids if self.product_has_tax and self.tax_ids else self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
+        self.tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
 
     @api.depends('product_id')
     def _compute_product_has_tax(self):
