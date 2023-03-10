@@ -8,7 +8,7 @@ export class InventoryReportListController extends ListController {
     setup() {
         super.setup();
         if (this.props.context.inventory_mode || this.props.context.inventory_report_mode) {
-            useBus(this.model, "record-updated", this.recordUpdated);
+            useBus(this.model.bus, "record-updated", this.recordUpdated);
         }
     }
 
