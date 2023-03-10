@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date, float_is_zero, Query
+from odoo.tools import frozendict, formatLang, format_date, float_compare, Query
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -996,13 +996,14 @@ class AccountMoveLine(models.Model):
             if line.display_type != 'product' or not line.tax_ids.ids or line.company_id.early_pay_discount_computation != 'mixed':
                 continue
 
+            amount_total = abs(sum(x['amount_currency'] for x in needed_terms.values()))
             percentages_to_apply = []
             names = []
             for term in needed_terms.values():
                 if term.get('discount_percentage'):
                     percentages_to_apply.append({
                         'discount_percentage': term['discount_percentage'],
-                        'term_percentage': abs(term['amount_currency'] / line.move_id.amount_total) if line.move_id.amount_total else 0
+                        'term_percentage': abs(term['amount_currency'] / amount_total) if amount_total else 0
                     })
                     names.append(f"{term['discount_percentage']}%")
 
@@ -2491,7 +2492,7 @@ class AccountMoveLine(models.Model):
 
             for account_id, distribution in self.analytic_distribution.items():
                 line_values = self._prepare_analytic_distribution_line(float(distribution), account_id, distribution_on_each_plan)
-                if not float_is_zero(line_values.get("amount"), precision_digits=self.env.company.currency_id.decimal_places):
+                if not self.currency_id.is_zero(line_values.get('amount')):
                     analytic_line_vals.append(line_values)
         return analytic_line_vals
 
@@ -2503,7 +2504,8 @@ class AccountMoveLine(models.Model):
         account_id = int(account_id)
         account = self.env['account.analytic.account'].browse(account_id)
         distribution_plan = distribution_on_each_plan.get(account.root_plan_id, 0) + distribution
-        if self.env.company.currency_id.compare_amounts(distribution_plan, 100) == 0:
+        decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
+        if float_compare(distribution_plan, 100, precision_digits=decimal_precision) == 0:
             amount = -self.balance * (100 - distribution_on_each_plan.get(account.root_plan_id, 0)) / 100.0
         else:
             amount = -self.balance * distribution / 100.0

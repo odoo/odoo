@@ -712,11 +712,6 @@ class AccountEdiFormat(models.Model):
 
             new_invoice = invoice_form
 
-            # Links the eventual purchase order to the vendor bill.
-            # This may well overwrite the lines of the move thanks to autocomplete, so be aware when debugging.
-            if po_refs:
-                new_invoice._find_and_set_purchase_orders(po_refs, partner.id, new_invoice.amount_total, timeout=4)
-
             elements = body_tree.xpath('.//Allegati')
             if elements:
                 for element in elements:
