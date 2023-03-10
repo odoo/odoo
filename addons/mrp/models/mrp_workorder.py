@@ -872,6 +872,10 @@ class MrpWorkorder(models.Model):
             duration += (datetime.now() - time.date_start).total_seconds() / 60
         return duration
 
+    def get_duration(self):
+        self.ensure_one()
+        return sum(self.time_ids.mapped('duration')) + self.get_working_duration()
+
     def action_mark_as_done(self):
         for wo in self:
             if wo.working_state == 'blocked':
@@ -885,7 +889,6 @@ class MrpWorkorder(models.Model):
         for wo in self:
             if wo.working_state == 'blocked':
                 raise UserError(_('Some workorders require another workorder to be completed first'))
-        for wo in self:
             wo.button_start()
 
     def action_mass_pause(self):
