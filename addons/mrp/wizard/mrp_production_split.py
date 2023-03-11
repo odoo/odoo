@@ -59,14 +59,14 @@ class MrpProductionSplit(models.TransientModel):
                     'quantity': quantity,
                     'user_id': wizard.production_id.user_id,
                     'date': wizard.production_id.date_start,
-                    'serial_numbers': lot_names[i] if should_generate_lot else False,
+                    'lot_names': lot_names[i] if should_generate_lot else False,
                 }))
                 remaining_quantity = float_round(remaining_quantity - quantity, precision_rounding=wizard.product_uom_id.rounding)
             commands.append(Command.create({
                 'quantity': remaining_quantity,
                 'user_id': wizard.production_id.user_id,
                 'date': wizard.production_id.date_start,
-                'serial_numbers': lot_names[-1] if should_generate_lot else False,
+                'lot_names': lot_names[-1] if should_generate_lot else False,
             }))
             wizard.production_detailed_vals_ids = commands
 
@@ -80,7 +80,7 @@ class MrpProductionSplit(models.TransientModel):
     def action_split(self):
         productions = self.production_id._split_productions(
             amounts={self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]},
-            lot_names={self.production_id: [detail.serial_numbers for detail in self.production_detailed_vals_ids]},
+            lot_names={self.production_id: [detail.lot_names for detail in self.production_detailed_vals_ids]},
         )
         for production, detail in zip(productions, self.production_detailed_vals_ids):
             production.user_id = detail.user_id
@@ -108,9 +108,13 @@ class MrpProductionSplit(models.TransientModel):
         return action
 
     def action_generate_first_lot_name(self):
-        if not self.first_lot_name:
-            self.first_lot_name = self.env['stock.lot']._get_next_serial(self.production_id.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
-        return self.action_prepare_split()
+        first_lot_name = self.env['stock.lot']._get_next_serial(self.production_id.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        # return a new action since current wizard will be closed
+        action = self.action_prepare_split()
+        action['context'] = {
+            'default_first_lot_name': first_lot_name,
+        }
+        return action
 
 
 class MrpProductionSplitLine(models.TransientModel):
@@ -124,4 +128,4 @@ class MrpProductionSplitLine(models.TransientModel):
         'res.users', 'Responsible',
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
     date = fields.Datetime('Schedule Date')
-    serial_numbers = fields.Text('Lot/Serial Numbers')
+    lot_names = fields.Text('Lot/Serial Numbers')
