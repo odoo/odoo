@@ -1535,7 +1535,7 @@ class MrpProduction(models.Model):
             'orderpoint_id': self.orderpoint_id.id,
         }
 
-    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False, lot_names=False):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -1547,6 +1547,10 @@ class MrpProduction(models.Model):
         an additional backorder, e.g. having product_qty=5 if mrp.production(1,) product_qty was 10.
         :param bool set_consumed_qty: whether to set qty_done on move lines to the reserved quantity
         or the initial demand if no reservation, except for the remaining backorder.
+        :param dict lot_names: a dict with a production as key and a list value containing
+        the lot_name each production split is going to produce including the original production,
+        e.g. {mrp.production(1,): [0001, 0002]} will result in mrp.production(1,) having the lot/sn
+        going to be produced to be "0001" and a new backorder with lot/sn to be "0002".
         :return: mrp.production records in order of [orig_prod_1, backorder_prod_1,
         backorder_prod_2, orig_prod_2, backorder_prod_2, etc.]
         """
@@ -1572,6 +1576,26 @@ class MrpProduction(models.Model):
         backorder_vals_list = []
         initial_qty_by_production = {}
 
+        # Create lots
+        if not lot_names:
+            lot_names = {}
+        lots_mapping = {}
+        lots_vals = []
+        for production in lot_names.keys():
+            for lot_name in lot_names[production]:
+                if lot_name == production.lot_producing_id.name:
+                    lot = production.lot_producing_id
+                    lots_mapping[(lot.product_id, lot.name)] = lot.id
+                elif lot_name:
+                    lots_vals.append({
+                        'name': lot_name,
+                        'product_id': production.product_id.id,
+                        'company_id': production.company_id.id,
+                    })
+        lots = self.env['stock.lot'].create(lots_vals)
+        for lot in lots:
+            lots_mapping[(lot.product_id, lot.name)] = lot.id
+
         # Create the backorders.
         for production in self:
             initial_qty_by_production[production] = production.product_qty
@@ -1584,15 +1608,20 @@ class MrpProduction(models.Model):
             backorder_qtys = amounts[production][1:]
             production.product_qty = amounts[production][0]
 
+            lot_name_list = lot_names.get(production)
+            if lot_name_list:
+                production.lot_producing_id = lots_mapping.get((production.product_id, lot_name_list[0]))
+
             next_seq = max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
 
-            for qty_to_backorder in backorder_qtys:
+            for i, qty_to_backorder in enumerate(backorder_qtys):
                 next_seq += 1
                 backorder_vals_list.append(dict(
                     backorder_vals,
                     product_qty=qty_to_backorder,
                     name=production._get_name_backorder(production.name, next_seq),
-                    backorder_sequence=next_seq
+                    backorder_sequence=next_seq,
+                    lot_producing_id=lots_mapping.get((production.product_id, lot_name_list[i+1]), self.env['stock.lot']) if lot_name_list else False,
                 ))
 
         backorders = self.env['mrp.production'].with_context(skip_confirm=True).create(backorder_vals_list)

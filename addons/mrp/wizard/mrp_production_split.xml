@@ -31,7 +31,16 @@
                 <form string="Split Production">
                     <group>
                         <group>
+                            <field name="tracking" invisible="1"/>
                             <field name="production_id" readonly="1"/>
+                            <label for="first_lot_name" attrs="{'invisible': [('tracking', '=', 'none')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('tracking', '=', 'none')]}">
+                                <field name="first_lot_name"/>
+                                <button name="action_generate_first_lot_name" type="object" class="btn btn-primary fa fa-plus-square-o" 
+                                    aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" 
+                                    attrs="{'invisible': [('first_lot_name', '!=', False), ('first_lot_name', '!=', '')]}"/>
+                            </div>
+                            <field name="counter"/>
                         </group>
                         <group>
                             <field name="product_id"/>
@@ -41,22 +50,13 @@
                                 <span><field name="product_uom_id" groups="uom.group_uom"/></span>
                             </div>
                         </group>
-                        <group>
-                            <field name="counter"/>
-                        </group>
-                        <group>
-                            <label for="production_capacity"/>
-                            <div class="o_row">
-                                <span><field name="production_capacity"/></span>
-                                <span><field name="product_uom_id" groups="uom.group_uom"/></span>
-                            </div>
-                        </group>
                     </group>
                     <field name="production_detailed_vals_ids" attrs="{'invisible': [('counter', '=', 0)]}">
                         <tree editable="top">
                             <field name="date"/>
                             <field name="user_id"/>
                             <field name="quantity"/>
+                            <field name="serial_numbers" optional="hidden" attrs="{'column_invisible': [('parent.tracking', '=', 'none')]}"/>
                         </tree>
                     </field>
                     <field name="production_split_multi_id" invisible="1"/>

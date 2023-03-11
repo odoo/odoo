@@ -386,6 +386,36 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.origin, expected_origin)
         self.assertEqual(mo.product_qty, 10)
 
+    def test_split_mo_with_tracked_product(self):
+        """Test split of a MO with tracked product. When MO already have a lot,
+        it should be set as first_lot_name in the wizard.
+        """
+        # Change 'Units' rounding to 1 (integer only quantities)
+        self.uom_unit.rounding = 1
+        # Create a mo for 10 products
+        mo, _, _, _, _ = self.generate_mo(tracking_final='lot', qty_final=10, qty_base_1=1, qty_base_2=1)
+        # create a lot for the finished product
+        mo.action_generate_serial()
+        lot_1 = mo.lot_producing_id
+        # Split in 3 parts
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 3
+        # Check the lot_1 set as first_lot_name in the wizard
+        self.assertEqual(wizard.first_lot_name, lot_1.name)
+        action = wizard.save().action_split()
+        # Should have 3 mos
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 3)
+        mo1 = mo.procurement_group_id.mrp_production_ids[0]
+        mo2 = mo.procurement_group_id.mrp_production_ids[1]
+        mo3 = mo.procurement_group_id.mrp_production_ids[2]
+        # Check quantities and lot
+        self.assertEqual(mo1.product_qty, 3)
+        self.assertEqual(mo2.product_qty, 3)
+        self.assertEqual(mo3.product_qty, 4)
+        self.assertTrue(mo1.lot_producing_id.name, lot_1.name)
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids.lot_producing_id), 3)
+
     def test_reservation_method_w_mo(self):
         """ Create a MO for 2 units, Produce 1 and create a backorder.
         The MO and the backorder should be assigned according to the reservation method
