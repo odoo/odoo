@@ -47,13 +47,13 @@ export class ChannelSelector extends Component {
                 const choices = results.map((channel) => {
                     return {
                         channelId: channel.id,
-                        classList: "o-ChannelSelector-suggestion",
+                        classList: "o-mail-ChannelSelector-suggestion",
                         label: channel.name,
                     };
                 });
                 choices.push({
                     channelId: "__create__",
-                    classList: "o-ChannelSelector-suggestion",
+                    classList: "o-mail-ChannelSelector-suggestion",
                     label: cleanedTerm,
                 });
                 return choices;
@@ -67,14 +67,14 @@ export class ChannelSelector extends Component {
                 const suggestions = results.map((data) => {
                     this.personaService.insert({ ...data, type: "partner" });
                     return {
-                        classList: "o-ChannelSelector-suggestion",
+                        classList: "o-mail-ChannelSelector-suggestion",
                         label: data.name,
                         partner: data,
                     };
                 });
                 if (this.store.self.name.includes(cleanedTerm)) {
                     suggestions.push({
-                        classList: "o-ChannelSelector-suggestion",
+                        classList: "o-mail-ChannelSelector-suggestion",
                         label: this.store.self.name,
                         partner: this.store.self,
                     });

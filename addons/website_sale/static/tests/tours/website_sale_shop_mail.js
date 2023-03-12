@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         content: "wait mail to be sent, and go see it",
-        trigger: '.o-Message-body:contains("Your"):contains("order")',
+        trigger: '.o-mail-Message-body:contains("Your"):contains("order")',
         run: function () {
             window.location.href = "/web#action=mail.action_view_mail_mail&view_type=list";
         },

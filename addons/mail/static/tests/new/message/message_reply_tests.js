@@ -24,8 +24,8 @@ QUnit.test("click on message in reply to highlight the parent message", async (a
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Message:contains(Reply to Hey) .o-MessageInReply-message");
-    assert.containsOnce($, ".o-Message:contains(Hey lol).o-highlighted");
+    await click(".o-mail-Message:contains(Reply to Hey) .o-mail-MessageInReply-message");
+    assert.containsOnce($, ".o-mail-Message:contains(Hey lol).o-highlighted");
 });
 
 QUnit.test("click on message in reply to scroll to the parent message", async (assert) => {
@@ -56,10 +56,12 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Message:contains(Response to first message) .o-MessageInReply-message");
+    await click(
+        ".o-mail-Message:contains(Response to first message) .o-mail-MessageInReply-message"
+    );
     await nextTick();
-    const thread = $(".o-Thread")[0];
-    const oldestMsg = $(".o-Message:eq(0)")[0];
+    const thread = $(".o-mail-Thread")[0];
+    const oldestMsg = $(".o-mail-Message:eq(0)")[0];
     const oldestMsgTop = oldestMsg.offsetTop;
     const oldestMsgBottom = oldestMsgTop + oldestMsg.offsetHeight;
     const threadTop = thread.offsetTop;

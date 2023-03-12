@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
-        <xpath expr="//*[hasclass('o-Thread')]" position="before">
+        <xpath expr="//*[hasclass('o-mail-Thread')]" position="before">
             <div t-if="props.thread.model === 'mail.channel' and props.thread.correspondent and personaService.outOfOfficeText(props.thread.correspondent)" class="alert alert-primary" t-esc="personaService.outOfOfficeText(props.thread.correspondent)" role="alert"/>
         </xpath>
     </t>

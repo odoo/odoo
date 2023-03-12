@@ -32,7 +32,7 @@ QUnit.test("grant course access", async (assert) => {
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-Activity");
+    assert.containsOnce($, ".o-mail-Activity");
     assert.containsOnce($, "button:contains(Grant Access)");
 
     await click("button:contains(Grant Access)");
@@ -67,7 +67,7 @@ QUnit.test("refuse course access", async (assert) => {
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-Activity");
+    assert.containsOnce($, ".o-mail-Activity");
     assert.containsOnce($, "button:contains(Refuse Access)");
 
     await click("button:contains(Refuse Access)");

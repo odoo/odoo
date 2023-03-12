@@ -108,7 +108,7 @@ export class Composer extends Component {
                         }
                     }
                 },
-                "o-Composer-dropzone"
+                "o-mail-Composer-dropzone"
             );
         }
         if (this.props.messageEdition) {

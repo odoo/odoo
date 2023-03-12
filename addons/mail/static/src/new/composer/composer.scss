@@ -1,4 +1,4 @@
-.o-Composer {
+.o-mail-Composer {
     grid-template-areas:
         "sidebar-header core-header"
         "sidebar-main core-main"
@@ -7,32 +7,32 @@
     grid-template-rows: auto 1fr auto;
 
     &.o-hasSelfAvatar {
-        grid-template-columns: $o-Message-sidebarWidth 1fr;
+        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
     }
 
-    .o-Composer-sidebarMain {
+    .o-mail-Composer-sidebarMain {
         width: 48px;
         justify-self: center;
     }
 
-    .o-Composer-coreHeader {
+    .o-mail-Composer-coreHeader {
         grid-area: core-header;
     }
 
-    .o-Composer-coreMain {
+    .o-mail-Composer-coreMain {
         grid-area: core-main;
     }
 
-    .o-Composer-sidebarMain {
+    .o-mail-Composer-sidebarMain {
         grid-area: sidebar-main;
     }
 
-    .o-Composer-footer {
+    .o-mail-Composer-footer {
         grid-area: core-footer;
     }
 }
 
-.o-Composer-input {
+.o-mail-Composer-input {
     padding-top: 10px; // carefully crafted to have the text in the middle in chat window
     padding-bottom: 10px;
     max-height: 100px;
@@ -47,9 +47,9 @@
     }
 }
 
-.o-Composer-avatar {
-    width: $o-Avatar-size;
-    height: $o-Avatar-size;
+.o-mail-Composer-avatar {
+    width: $o-mail-Avatar-size;
+    height: $o-mail-Avatar-size;
 }
 
 .o-fast-popover {
@@ -59,7 +59,7 @@
     animation: 0.02s slide-bottom !important;
 }
 
-.o-Composer-fake {
+.o-mail-Composer-fake {
     height: 0;
     top: -10000px;
     padding-top: 10px;

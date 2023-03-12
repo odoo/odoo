@@ -351,8 +351,8 @@ QUnit.test("many2one_avatar_user widget in list view", async (assert) => {
         views: [[false, "list"]],
     });
     await click(document.body, ".o_data_cell .o_m2o_avatar > img");
-    assert.containsOnce($, ".o-ChatWindow");
-    assert.strictEqual($(".o-ChatWindow-name").text(), "Partner 1");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Partner 1");
 });
 
 QUnit.test("many2many_avatar_user widget in form view", async (assert) => {
@@ -373,6 +373,6 @@ QUnit.test("many2many_avatar_user widget in form view", async (assert) => {
         views: [[false, "form"]],
     });
     await click(document.body, ".o_field_many2many_avatar_user .badge .o_m2m_avatar");
-    assert.containsOnce($, ".o-ChatWindow");
-    assert.strictEqual($(".o-ChatWindow-name").text(), "Partner 1");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Partner 1");
 });

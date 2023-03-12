@@ -23,8 +23,8 @@ QUnit.test("No call buttons", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-Discuss-header button[title='Start a Call']");
-    assert.containsNone($, ".o-Discuss-header button[title='Show Call Settings']");
+    assert.containsNone($, ".o-mail-Discuss-header button[title='Start a Call']");
+    assert.containsNone($, ".o-mail-Discuss-header button[title='Show Call Settings']");
 });
 
 QUnit.test("No reaction button", async (assert) => {
@@ -42,7 +42,7 @@ QUnit.test("No reaction button", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Message");
+    await click(".o-mail-Message");
     assert.containsNone($, "i[aria-label='Add a Reaction']");
 });
 
@@ -61,7 +61,7 @@ QUnit.test("No reply button", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Message");
+    await click(".o-mail-Message");
     assert.containsNone($, "i[aria-label='Reply']");
 });
 
@@ -85,7 +85,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-DiscussCategory-livechat");
+    assert.containsNone($, ".o-mail-DiscussCategory-livechat");
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
     await afterNextRender(async () =>
@@ -95,11 +95,11 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
             message_content: "new message",
         })
     );
-    assert.containsOnce($, ".o-DiscussCategory-livechat");
-    assert.containsOnce($, ".o-DiscussCategory-livechat + .o-DiscussCategoryItem");
+    assert.containsOnce($, ".o-mail-DiscussCategory-livechat");
+    assert.containsOnce($, ".o-mail-DiscussCategory-livechat + .o-mail-DiscussCategoryItem");
     assert.containsOnce(
         $,
-        ".o-DiscussCategory-livechat + .o-DiscussCategoryItem:contains(Visitor (Belgium))"
+        ".o-mail-DiscussCategory-livechat + .o-mail-DiscussCategoryItem:contains(Visitor (Belgium))"
     );
 });
 
@@ -113,9 +113,9 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
     });
     const { insertText, openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-Composer-input", "Test");
-    await click(".o-Composer-send");
-    await click(".o-Message");
+    await insertText(".o-mail-Composer-input", "Test");
+    await click(".o-mail-Composer-send");
+    await click(".o-mail-Message");
     assert.containsNone($, ".i[title='Add a Reaction']");
 });
 
@@ -132,7 +132,7 @@ QUnit.test("invite button should be present on livechat", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-Discuss button[title='Add Users']");
+    assert.containsOnce($, ".o-mail-Discuss button[title='Add Users']");
 });
 
 QUnit.test(
@@ -175,14 +175,14 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.strictEqual($(".o-DiscussCategoryItem:eq(0)").text(), "Visitor 12");
-        assert.strictEqual($(".o-DiscussCategoryItem:eq(1)").text(), "Visitor 11");
+        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(0)").text(), "Visitor 12");
+        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(1)").text(), "Visitor 11");
         // post a new message on the last channel
-        await click(".o-DiscussCategoryItem:eq(1)");
-        await insertText(".o-Composer-input", "Blabla");
-        await click(".o-Composer-send");
-        assert.containsN($, ".o-DiscussCategoryItem", 2);
-        assert.strictEqual($(".o-DiscussCategoryItem:eq(0)").text(), "Visitor 11");
-        assert.strictEqual($(".o-DiscussCategoryItem:eq(1)").text(), "Visitor 12");
+        await click(".o-mail-DiscussCategoryItem:eq(1)");
+        await insertText(".o-mail-Composer-input", "Blabla");
+        await click(".o-mail-Composer-send");
+        assert.containsN($, ".o-mail-DiscussCategoryItem", 2);
+        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(0)").text(), "Visitor 11");
+        assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(1)").text(), "Visitor 12");
     }
 );

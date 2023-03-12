@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss" owl="1">
-    <div class="o-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': store.isSmall }" t-ref="root">
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': store.isSmall }" t-ref="root">
         <div t-if="store.isSmall and store.discuss.activeTab === 'mailbox'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
-        <div t-if="thread and !(store.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab))" class="o-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
-            <div class="o-Discuss-header px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
+        <div t-if="thread and !(store.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab))" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
+            <div class="o-mail-Discuss-header px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
                 <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
-                        className="'o-Discuss-threadName lead fw-bold flex-shrink-1 text-dark'"
+                        className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark'"
                         disabled="!thread.isRenameable"
                         onValidate.bind="renameThread"
                         value="thread.displayName"
@@ -18,7 +18,7 @@
                         <div class="flex-shrink-0 mx-2 py-2 border-start"/>
                         <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                         <AutoresizeInput
-                            className="'o-Discuss-threadDescription flex-shrink-1'"
+                            className="'o-mail-Discuss-threadDescription flex-shrink-1'"
                             onValidate.bind="updateThreadDescription"
                             placeholder="autogrowDescriptionPlaceholder"
                             value="thread.description or ''"
@@ -41,7 +41,7 @@
                         <i class="fa fa-lg fa-gear text-700"/>
                     </button>
                     <div t-if="props.public and !store.isSmall" class="d-flex align-items-center">
-                        <img class="o-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="publicAvatarUrl"/>
+                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="publicAvatarUrl"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
                             <t t-if="store.user" t-esc="store.user.name"/>
                             <t t-else="">
@@ -60,8 +60,8 @@
                     <Thread thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageHighlight="messageHighlight" messageToReplyTo="messageToReplyTo"/>
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" highlightReplyTo="messageHighlight.highlightMessage" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
                 </div>
-                <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="'o-Discuss-channelMemberList flex-shrink-0 border-start'"/>
-                <CallSettings t-if="state.activeMode === MODES.SETTINGS and thread" thread="thread" className="'o-Discuss-callSettings border-start'"/>
+                <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start'"/>
+                <CallSettings t-if="state.activeMode === MODES.SETTINGS and thread" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
             </div>
         </div>
         <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">

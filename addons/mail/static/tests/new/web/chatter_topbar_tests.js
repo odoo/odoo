@@ -21,12 +21,12 @@ QUnit.test("base rendering", async (assert) => {
         views: [[false, "form"]],
     });
 
-    assert.containsOnce($, ".o-Chatter-topbar");
+    assert.containsOnce($, ".o-mail-Chatter-topbar");
     assert.containsOnce($, "button:contains(Send message)");
     assert.containsOnce($, "button:contains(Log note)");
     assert.containsOnce($, "button:contains(Activities)");
     assert.containsOnce($, "button[aria-label='Attach files']");
-    assert.containsOnce($, ".o-Followers");
+    assert.containsOnce($, ".o-mail-Followers");
 });
 
 QUnit.test("rendering with multiple partner followers", async (assert) => {
@@ -55,14 +55,14 @@ QUnit.test("rendering with multiple partner followers", async (assert) => {
         views: [[false, "form"]],
     });
 
-    assert.containsOnce($, ".o-Followers");
-    assert.containsOnce($, ".o-Followers-button");
+    assert.containsOnce($, ".o-mail-Followers");
+    assert.containsOnce($, ".o-mail-Followers-button");
 
-    await click(".o-Followers-button");
-    assert.containsOnce($, ".o-Followers-dropdown");
-    assert.containsN($, ".o-Follower", 2);
-    assert.strictEqual($(".o-Follower:eq(0)").text().trim(), "Jean Michang");
-    assert.strictEqual($(".o-Follower:eq(1)").text().trim(), "Eden Hazard");
+    await click(".o-mail-Followers-button");
+    assert.containsOnce($, ".o-mail-Followers-dropdown");
+    assert.containsN($, ".o-mail-Follower", 2);
+    assert.strictEqual($(".o-mail-Follower:eq(0)").text().trim(), "Jean Michang");
+    assert.strictEqual($(".o-mail-Follower:eq(1)").text().trim(), "Eden Hazard");
 });
 
 QUnit.test("log note toggling", async (assert) => {
@@ -76,15 +76,18 @@ QUnit.test("log note toggling", async (assert) => {
     });
     assert.containsOnce($, "button:contains(Log note)");
     assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
-    assert.containsNone($, ".o-Composer");
+    assert.containsNone($, ".o-mail-Composer");
 
     await click("button:contains(Log note)");
     assert.hasClass($("button:contains(Log note)"), "o-active");
-    assert.containsOnce($, ".o-Composer .o-Composer-input[placeholder='Log an internal note...']");
+    assert.containsOnce(
+        $,
+        ".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note...']"
+    );
 
     await click("button:contains(Log note)");
     assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
-    assert.containsNone($, ".o-Composer");
+    assert.containsNone($, ".o-mail-Composer");
 });
 
 QUnit.test("send message toggling", async (assert) => {
@@ -98,15 +101,15 @@ QUnit.test("send message toggling", async (assert) => {
     });
     assert.containsOnce($, "button:contains(Send message)");
     assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
-    assert.containsNone($, ".o-Composer");
+    assert.containsNone($, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
     assert.hasClass($("button:contains(Send message)"), "o-active");
-    assert.containsOnce($, ".o-Composer-input[placeholder='Send a message to followers...']");
+    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Send a message to followers...']");
 
     await click("button:contains(Send message)");
     assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
-    assert.containsNone($, ".o-Composer");
+    assert.containsNone($, ".o-mail-Composer");
 });
 
 QUnit.test("log note/send message switching", async (assert) => {
@@ -122,17 +125,17 @@ QUnit.test("log note/send message switching", async (assert) => {
     assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
     assert.containsOnce($, "button:contains(Log note)");
     assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
-    assert.containsNone($, ".o-Composer");
+    assert.containsNone($, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
     assert.hasClass($("button:contains(Send message)"), "o-active");
     assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
-    assert.containsOnce($, ".o-Composer-input[placeholder='Send a message to followers...']");
+    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Send a message to followers...']");
 
     await click("button:contains(Log note)");
     assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
     assert.hasClass($("button:contains(Log note)"), "o-active");
-    assert.containsOnce($, ".o-Composer-input[placeholder='Log an internal note...']");
+    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Log an internal note...']");
 });
 
 QUnit.test("attachment counter without attachments", async (assert) => {
@@ -226,8 +229,8 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsOnce($, ".o-Chatter-fileUploader");
-        assert.containsNone($, ".o-AttachmentBox");
+        assert.containsOnce($, ".o-mail-Chatter-fileUploader");
+        assert.containsNone($, ".o-mail-AttachmentBox");
     }
 );
 
@@ -250,9 +253,9 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsNone($, ".o-Chatter-fileUploader");
+        assert.containsNone($, ".o-mail-Chatter-fileUploader");
         await click("button[aria-label='Attach files']");
-        assert.containsOnce($, ".o-AttachmentBox");
+        assert.containsOnce($, ".o-mail-AttachmentBox");
     }
 );
 
@@ -261,7 +264,7 @@ QUnit.test("composer state conserved when clicking on another topbar button", as
     const partnerId = pyEnv["res.partner"].create({});
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-Chatter-topbar");
+    assert.containsOnce($, ".o-mail-Chatter-topbar");
     assert.containsOnce($, "button:contains(Send message)");
     assert.containsOnce($, "button:contains(Log note)");
     assert.containsOnce($, "button[aria-label='Attach files']");

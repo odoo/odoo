@@ -51,15 +51,15 @@ QUnit.test("activity menu widget: menu with no records", async function (assert)
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
     assert.containsOnce(
         target,
-        ".o-ActivityMenu:contains(Congratulations, you're done with your activities.)"
+        ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)"
     );
 });
 
 QUnit.test("activity menu widget: activity menu with 2 models", async function (assert) {
     const { env } = await start();
     assert.containsOnce(target, ".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce(target, ".o-ActivityMenu-counter");
-    assert.containsOnce(target, ".o-ActivityMenu-counter:contains(5)");
+    assert.containsOnce(target, ".o-mail-ActivityMenu-counter");
+    assert.containsOnce(target, ".o-mail-ActivityMenu-counter:contains(5)");
     let context = {};
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -71,29 +71,29 @@ QUnit.test("activity menu widget: activity menu with 2 models", async function (
         search_default_activities_overdue: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce(target, ".o-ActivityMenu");
-    assert.containsN(target, ".o-ActivityMenu .o-ActivityGroup", 2);
-    await click(".o-ActivityMenu .o-ActivityGroup button:contains('Late')");
-    assert.containsNone(target, ".o-ActivityMenu");
+    assert.containsOnce(target, ".o-mail-ActivityMenu");
+    assert.containsN(target, ".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Late')");
+    assert.containsNone(target, ".o-mail-ActivityMenu");
     context = {
         force_search_count: 1,
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    await click(".o-ActivityMenu .o-ActivityGroup button:contains('Today')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Today')");
     context = {
         force_search_count: 1,
         search_default_activities_upcoming_all: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-ActivityMenu .o-ActivityGroup button:contains('Future')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Future')");
     context = {
         force_search_count: 1,
         search_default_activities_overdue: 1,
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-ActivityMenu .o-ActivityGroup:contains('mail.test.activity')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup:contains('mail.test.activity')");
 });
 
 QUnit.test("activity menu widget: activity view icon", async function (assert) {
@@ -101,10 +101,10 @@ QUnit.test("activity menu widget: activity view icon", async function (assert) {
     await click(".o_menu_systray i[aria-label='Activities']");
     assert.containsN(target, "button[title='Summary']", 2);
     const first = $(target).find(
-        ".o-ActivityGroup:contains('res.partner') button[title='Summary']"
+        ".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']"
     );
     const second = $(target).find(
-        ".o-ActivityGroup:contains('mail.test.activity') button[title='Summary']"
+        ".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']"
     );
     assert.ok(first);
     assert.hasClass(first, "fa-clock-o");
@@ -122,17 +122,17 @@ QUnit.test("activity menu widget: activity view icon", async function (assert) {
             }
         },
     });
-    await click(".o-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
+    await click(".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
     assert.containsNone(target, ".o-dropdown-menu");
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-ActivityGroup:contains('res.partner') button[title='Summary']");
+    await click(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
 });
 
 QUnit.test("activity menu widget: close on messaging menu click", async function (assert) {
     await start();
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce(target, ".o-ActivityMenu");
+    assert.containsOnce(target, ".o-mail-ActivityMenu");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-ActivityMenu");
+    assert.containsNone(target, ".o-mail-ActivityMenu");
 });

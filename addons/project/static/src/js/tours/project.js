@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add('project_tour', {
     content: _t("Let's start working on your task."),
     position: "bottom",
 }, {
-    trigger: ".o-Chatter-topbar button:contains(Send message)",
+    trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \
     Add new people to the followers' list to make them aware of the main changes about this task.")),
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('project_tour', {
     width: 350,
     position: "bottom"
 }, {
-    trigger: ".o-Chatter-topbar button:contains(Activities)",
+    trigger: ".o-mail-Chatter-topbar button:contains(Activities)",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
 }, {

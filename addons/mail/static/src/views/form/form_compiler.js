@@ -52,7 +52,7 @@ function compileChatter(node, params) {
         saveRecord: "() => __comp__.saveButtonClicked and __comp__.saveButtonClicked()",
     });
     const chatterContainerHookXml = createElement("div");
-    chatterContainerHookXml.classList.add("o-Form-chatter");
+    chatterContainerHookXml.classList.add("o-mail-Form-chatter");
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
@@ -81,7 +81,7 @@ export class MailFormCompiler extends ViewCompiler {
 
     compile(node, params) {
         const res = super.compile(node, params).children[0];
-        const chatterContainerHookXml = res.querySelector(".o-Form-chatter");
+        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
                 "t-if": `!__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
@@ -156,7 +156,7 @@ patch(FormCompiler.prototype, "mail", {
     compile(node, params) {
         // TODO no chatter if in dialog?
         const res = this._super(node, params);
-        const chatterContainerHookXml = res.querySelector(".o-Form-chatter");
+        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }

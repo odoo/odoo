@@ -27,12 +27,12 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-VisitorBanner-avatar img");
+    assert.containsOnce($, ".o-website_livechat-VisitorBanner-avatar img");
     assert.containsOnce(
         $,
-        ".o-VisitorBanner-avatar img[data-src='/mail/static/src/img/smiley/avatar.jpg']"
+        ".o-website_livechat-VisitorBanner-avatar img[data-src='/mail/static/src/img/smiley/avatar.jpg']"
     );
-    assert.containsOnce($, ".o-VisitorBanner-avatar .o-ImStatus");
+    assert.containsOnce($, ".o-website_livechat-VisitorBanner-avatar .o-mail-ImStatus");
     assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
     assert.containsOnce($, "span:contains(Visitor #11)");
     assert.containsOnce($, "span:contains(English)");
@@ -63,7 +63,7 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-VisitorBanner");
+    assert.containsOnce($, ".o-website_livechat-VisitorBanner");
 });
 
 QUnit.test("Livechat with logged visitor should show visitor banner", async (assert) => {
@@ -90,8 +90,8 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async (ass
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-VisitorBanner");
-    assert.containsOnce($, ".o-VisitorBanner:contains(Partner Visitor)");
+    assert.containsOnce($, ".o-website_livechat-VisitorBanner");
+    assert.containsOnce($, ".o-website_livechat-VisitorBanner:contains(Partner Visitor)");
 });
 
 QUnit.test("Livechat without visitor should not show visitor banner", async (assert) => {
@@ -108,8 +108,8 @@ QUnit.test("Livechat without visitor should not show visitor banner", async (ass
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-Thread");
-    assert.containsNone($, ".o-VisitorBanner");
+    assert.containsOnce($, ".o-mail-Thread");
+    assert.containsNone($, ".o-website_livechat-VisitorBanner");
 });
 
 QUnit.test("Non-livechat channel should not show visitor banner", async (assert) => {
@@ -117,6 +117,6 @@ QUnit.test("Non-livechat channel should not show visitor banner", async (assert)
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-Thread");
-    assert.containsNone($, ".o-VisitorBanner");
+    assert.containsOnce($, ".o-mail-Thread");
+    assert.containsNone($, ".o-website_livechat-VisitorBanner");
 });

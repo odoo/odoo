@@ -1,21 +1,21 @@
-.o-Typing-dot {
+.o-mail-Typing-dot {
     animation: o_mail_Typing_animation 1.5s linear infinite;
 
     &.o-sizeMedium {
-        width: $o-Typing-medium;
-        height: $o-Typing-medium;
+        width: $o-mail-Typing-medium;
+        height: $o-mail-Typing-medium;
     }
 
     &.o-sizeSmall {
-        width: $o-Typing-small;
-        height: $o-Typing-small;
+        width: $o-mail-Typing-small;
+        height: $o-mail-Typing-small;
     }
 
-    &.o-Typing-dot2 {
+    &.o-mail-Typing-dot2 {
         animation-delay: -1.35s;
     }
 
-    &.o-Typing-dot3 {
+    &.o-mail-Typing-dot3 {
         animation-delay: -1.2s;
     }
 }
@@ -29,7 +29,7 @@
     }
 }
 
-.o-Typing:before {
+.o-mail-Typing:before {
     // invisible character so that typing status bar has constant height, regardless of text content.
     content: "\200b"; /* unicode zero width space character */
 }

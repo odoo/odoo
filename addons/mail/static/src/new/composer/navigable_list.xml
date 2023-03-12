@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NavigableList" owl="1">
-        <div class="o-NavigableList bg-white m-0 p-0" t-ref="root" t-att-class="props.class">
+        <div class="o-mail-NavigableList bg-white m-0 p-0" t-ref="root" t-att-class="props.class">
             <div t-if="isOpened and hasOptions" class="o-open border" t-on-mousedown.prevent="">
                 <t t-foreach="sources" t-as="source" t-key="source.id">
-                    <div t-if="source.isLoading" class="o-NavigableList-item">
+                    <div t-if="source.isLoading" class="o-mail-NavigableList-item">
                         <a href="#" class="">
                             <i class="fa fa-spin fa-circle-o-notch"/>
                             <t t-esc="source.placeholder"/>
@@ -14,13 +14,13 @@
                     <t t-else="">
                         <div
                             t-foreach="source.options" t-as="option" t-key="option.id"
-                            class="o-NavigableList-item"
+                            class="o-mail-NavigableList-item"
                             t-att-class="option.classList"
                             t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
                             t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
                             t-on-click="(ev) => this.onOptionClick(ev, [source_index, option_index])"
                         >
-                            <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-NavigableList-active bg-300': isActiveSourceOption([source_index, option_index]) }">
+                            <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-mail-NavigableList-active bg-300': isActiveSourceOption([source_index, option_index]) }">
                                 <t t-if="source.optionTemplate" t-call="{{ source.optionTemplate }}"/>
                                 <t t-else="" t-esc="option.label"/>
                             </a>

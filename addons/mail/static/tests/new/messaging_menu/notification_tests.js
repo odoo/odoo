@@ -29,15 +29,15 @@ QUnit.test("basic layout", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-NotificationItem-name:contains(Channel)");
-    assert.containsOnce($, ".o-NotificationItem-counter:contains(2)");
+    assert.containsOnce($, ".o-mail-NotificationItem-name:contains(Channel)");
+    assert.containsOnce($, ".o-mail-NotificationItem-counter:contains(2)");
     assert.containsOnce(
-        $(".o-NotificationItem-name:contains(Channel)").closest(".o-NotificationItem"),
-        ".o-NotificationItem-date:contains(now)"
+        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
+        ".o-mail-NotificationItem-date:contains(now)"
     );
     assert.containsOnce(
         $,
-        ".o-NotificationItem-text:contains(An error occurred when sending an email)"
+        ".o-mail-NotificationItem-text:contains(An error occurred when sending an email)"
     );
 });
 
@@ -58,17 +58,17 @@ QUnit.test("mark as read", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsOnce(
-        $(".o-NotificationItem-name:contains(Channel)").closest(".o-NotificationItem"),
-        ".o-NotificationItem-markAsRead"
+        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
+        ".o-mail-NotificationItem-markAsRead"
     );
 
     await click(
-        $(".o-NotificationItem-name:contains(Channel)")
-            .closest(".o-NotificationItem")
-            .find(".o-NotificationItem-markAsRead")
+        $(".o-mail-NotificationItem-name:contains(Channel)")
+            .closest(".o-mail-NotificationItem")
+            .find(".o-mail-NotificationItem-markAsRead")
     );
     assert.containsNone(
-        $(".o-NotificationItem-name:contains(Channel)").closest(".o-NotificationItem")
+        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem")
     );
 });
 
@@ -125,7 +125,7 @@ QUnit.test("open non-channel failure", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-NotificationItem");
+    await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });
 
@@ -173,7 +173,11 @@ QUnit.test("different mail.channel are not grouped", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-NotificationItem:contains(An error occurred when sending an email)", 2);
+    assert.containsN(
+        $,
+        ".o-mail-NotificationItem:contains(An error occurred when sending an email)",
+        2
+    );
 });
 
 QUnit.test("multiple grouped notifications by model", async (assert) => {
@@ -216,8 +220,8 @@ QUnit.test("multiple grouped notifications by model", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-NotificationItem", 2);
-    assert.containsN($, ".o-NotificationItem-counter:contains(2)", 2);
+    assert.containsN($, ".o-mail-NotificationItem", 2);
+    assert.containsN($, ".o-mail-NotificationItem-counter:contains(2)", 2);
 });
 
 QUnit.test("non-failure notifications are ignored", async (assert) => {
@@ -235,7 +239,7 @@ QUnit.test("non-failure notifications are ignored", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone($, ".o-NotificationItem");
+    assert.containsNone($, ".o-mail-NotificationItem");
 });
 
 QUnit.test(
@@ -260,9 +264,9 @@ QUnit.test(
         ]);
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsN($, ".o-NotificationItem-name", 2);
-        assert.strictEqual($(".o-NotificationItem-name:eq(0)").text(), "Channel 2020");
-        assert.strictEqual($(".o-NotificationItem-name:eq(1)").text(), "Channel 2019");
+        assert.containsN($, ".o-mail-NotificationItem-name", 2);
+        assert.strictEqual($(".o-mail-NotificationItem-name:eq(0)").text(), "Channel 2020");
+        assert.strictEqual($(".o-mail-NotificationItem-name:eq(1)").text(), "Channel 2019");
     }
 );
 
@@ -286,7 +290,7 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-NotificationItem", 2);
+    assert.containsN($, ".o-mail-NotificationItem", 2);
 
     const channel_1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId_1]])[0];
     await afterNextRender(() => {
@@ -304,14 +308,14 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
             },
         });
     });
-    assert.containsN($, ".o-NotificationItem", 2);
+    assert.containsN($, ".o-mail-NotificationItem", 2);
     assert.containsOnce(
-        $(".o-NotificationItem:eq(0)"),
-        ".o-NotificationItem-name:contains(Channel 2019)"
+        $(".o-mail-NotificationItem:eq(0)"),
+        ".o-mail-NotificationItem-name:contains(Channel 2019)"
     );
     assert.containsOnce(
-        $(".o-NotificationItem:eq(1)"),
-        ".o-NotificationItem-name:contains(Channel 2020)"
+        $(".o-mail-NotificationItem:eq(1)"),
+        ".o-mail-NotificationItem-name:contains(Channel 2020)"
     );
 });
 
@@ -325,6 +329,6 @@ QUnit.test(
             },
         });
         await start();
-        assert.containsOnce($, ".o-MessagingMenu-counter:contains(0)");
+        assert.containsOnce($, ".o-mail-MessagingMenu-counter:contains(0)");
     }
 );

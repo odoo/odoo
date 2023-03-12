@@ -110,7 +110,7 @@ export class Call extends Component {
     }
 
     onMouseleaveMain(ev) {
-        if (ev.relatedTarget && ev.relatedTarget.closest(".o-Call-overlay")) {
+        if (ev.relatedTarget && ev.relatedTarget.closest(".o-mail-Call-overlay")) {
             // the overlay should not be hidden when the cursor leaves to enter the controller popover
             return;
         }

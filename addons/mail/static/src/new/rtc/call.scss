@@ -2,10 +2,10 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o-Call {
+.o-mail-Call {
     height: 50%; // ensures that the view returns to the right height when resized
     min-height: 50%;
-    background: var(--o-Call-bgColor, #{$dark});
+    background: var(--o-mail-Call-bgColor, #{$dark});
 
     &.o-minimized {
         height: 20%; // ensures that the view returns to the right height when resized
@@ -13,7 +13,7 @@
     }
 }
 
-.o-Call-sidebar {
+.o-mail-Call-sidebar {
     width: 120px;
     min-width: 120px;
     overflow-y: auto;
@@ -24,11 +24,11 @@
     }
 }
 
-.o-Call-sidebarCard {
+.o-mail-Call-sidebarCard {
     aspect-ratio: 16/9;
 }
 
-.o-Call-mainCard {
+.o-mail-Call-mainCard {
     width: var(--width);
     height: var(--height);
     min-width: var(--width);
@@ -36,7 +36,7 @@
     aspect-ratio: 16/9;
 }
 
-.o-Call-sidebarToggler {
+.o-mail-Call-sidebarToggler {
     top: 50%;
     transform: translateY(-50%);
     right: 0;
@@ -46,7 +46,7 @@
 // Style
 // ------------------------------------------------------------------
 
-.o-Call-sidebar {
+.o-mail-Call-sidebar {
 
     &::-webkit-scrollbar {
         background: map-get($grays, '900');
@@ -56,7 +56,7 @@
     }
 }
 
-.o-Call-sidebarToggler {
+.o-mail-Call-sidebarToggler {
     color: white;
     border-radius: 10px 0px 0px 10px;
     border-right: 0px;

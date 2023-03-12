@@ -43,7 +43,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion");
 
-    await insertText(".o-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "@");
     assert.containsN($, ".o-composer-suggestion", 3);
 });
 
@@ -71,11 +71,11 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsNone($, ".o-composer-suggestion");
-        await insertText(".o-Composer-input", "first message");
+        await insertText(".o-mail-Composer-input", "first message");
         triggerHotkey("Enter");
         await nextTick();
 
-        await insertText(".o-Composer-input", "@");
+        await insertText(".o-mail-Composer-input", "@");
         assert.containsN($, ".o-composer-suggestion", 3);
     }
 );
@@ -86,7 +86,7 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     assert.containsNone($, ".o-composer-suggestion");
-    await insertText(".o-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "@");
     assert.containsOnce($, ".o-composer-suggestion:contains(Mitchell Admin)");
 });
 
@@ -105,7 +105,7 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "@");
     assert.containsOnce($, ".o-composer-suggestion:contains(TestPartner)");
 });
 
@@ -124,9 +124,9 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "@");
     await click(".o-composer-suggestion:contains(TestPartner)");
-    assert.strictEqual($(".o-Composer-input").val().trim(), "@TestPartner");
+    assert.strictEqual($(".o-mail-Composer-input").val().trim(), "@TestPartner");
 });
 
 QUnit.test('display command suggestions on typing "/"', async (assert) => {
@@ -138,7 +138,7 @@ QUnit.test('display command suggestions on typing "/"', async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    await insertText(".o-Composer-input", "/");
+    await insertText(".o-mail-Composer-input", "/");
     assert.containsOnce($, ".o-composer-suggestion-list .o-open");
 });
 
@@ -148,11 +148,11 @@ QUnit.test("use a command for a specific channel type", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    assert.strictEqual($(".o-Composer-input").val(), "");
-    await insertText(".o-Composer-input", "/");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", "/");
     await click(".o-composer-suggestion");
     assert.strictEqual(
-        $(".o-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "/who ",
         "command + additional whitespace afterwards"
     );
@@ -169,10 +169,10 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsNone($, ".o-composer-suggestion-list .o-open");
-        assert.strictEqual($(".o-Composer-input").val(), "");
-        await insertText(".o-Composer-input", "bluhbluh ");
-        assert.strictEqual($(".o-Composer-input").val(), "bluhbluh ");
-        await insertText(".o-Composer-input", "/");
+        assert.strictEqual($(".o-mail-Composer-input").val(), "");
+        await insertText(".o-mail-Composer-input", "bluhbluh ");
+        assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
+        await insertText(".o-mail-Composer-input", "/");
         assert.containsNone($, ".o-composer-suggestion-list .o-open");
     }
 );
@@ -187,7 +187,7 @@ QUnit.test('display canned response suggestions on typing ":"', async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    await insertText(".o-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", ":");
     assert.containsOnce($, ".o-composer-suggestion-list .o-open");
 });
 
@@ -201,12 +201,12 @@ QUnit.test("use a canned response", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    assert.strictEqual($(".o-Composer-input").val(), "");
-    await insertText(".o-Composer-input", ":");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", ":");
     assert.containsOnce($, ".o-composer-suggestion");
     await click(".o-composer-suggestion");
     assert.strictEqual(
-        $(".o-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "Hello! How are you? ",
         "canned response + additional whitespace afterwards"
     );
@@ -222,14 +222,14 @@ QUnit.test("use a canned response some text", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion");
-    assert.strictEqual($(".o-Composer-input").val(), "");
-    await insertText(".o-Composer-input", "bluhbluh ");
-    assert.strictEqual($(".o-Composer-input").val(), "bluhbluh ");
-    await insertText(".o-Composer-input", ":");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", "bluhbluh ");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
+    await insertText(".o-mail-Composer-input", ":");
     assert.containsOnce($, ".o-composer-suggestion");
     await click(".o-composer-suggestion");
     assert.strictEqual(
-        $(".o-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "bluhbluh Hello! How are you? ",
         "previous content + canned response substitution + additional whitespace afterwards"
     );
@@ -244,7 +244,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    await insertText(".o-Composer-input", "#");
+    await insertText(".o-mail-Composer-input", "#");
     assert.containsOnce($, ".o-composer-suggestion-list .o-open");
 });
 
@@ -257,12 +257,12 @@ QUnit.test("mention a channel", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-composer-suggestion-list .o-open");
-    assert.strictEqual($(".o-Composer-input").val(), "");
-    await insertText(".o-Composer-input", "#");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", "#");
     assert.containsOnce($, ".o-composer-suggestion");
     await click(".o-composer-suggestion");
     assert.strictEqual(
-        $(".o-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "#General ",
         "mentioned channel + additional whitespace afterwards"
     );
@@ -286,9 +286,9 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) 
     });
     await openDiscuss(channelId);
     pyEnv["mail.channel"].create({ name: "foo" });
-    insertText(".o-Composer-input", "#");
+    insertText(".o-mail-Composer-input", "#");
     await nextTick();
-    insertText(".o-Composer-input", "f");
+    insertText(".o-mail-Composer-input", "f");
     await deferred;
     assert.verifySteps(["get_mention_suggestions"]);
 });

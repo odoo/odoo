@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityListPopoverItem" owl="1">
-        <div class="o-ActivityListPopoverItem d-flex flex-column border-bottom py-2">
+        <div class="o-mail-ActivityListPopoverItem d-flex flex-column border-bottom py-2">
             <div class="overflow-auto d-flex align-items-baseline ms-3 me-1">
                 <i t-if="props.activity.icon" class="fa small me-2" t-attf-class="{{ props.activity.icon }}" role="img"/>
                 <t t-if="props.activity.summary">
@@ -10,16 +10,16 @@
                 <t t-if="!props.activity.summary and props.activity.activity_type_id">
                     <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="props.activity.activity_type_id[1]"/>
                 </t>
-                <button t-if="hasEditButton" class="o-ActivityListPopoverItem-editbtn btn-sm btn-link" t-on-click="onClickEditActivityButton">
+                <button t-if="hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn-sm btn-link" t-on-click="onClickEditActivityButton">
                     <i class="fa fa-pencil"/>
                 </button>
                 <t t-if="props.activity.can_write">
                     <FileUploader t-if="hasFileUploader" onUploaded.bind="onFileUploaded">
                         <t t-set-slot="toggler">
-                            <button class="o-ActivityListPopoverItem-link btn btn-link shadow-none fs-4 fa fa-upload" title="Upload file" aria-label="Upload File"/>
+                            <button class="o-mail-ActivityListPopoverItem-link btn btn-link shadow-none fs-4 fa fa-upload" title="Upload file" aria-label="Upload File"/>
                         </t>
                     </FileUploader>
-                    <button t-if="hasMarkDoneButton" class="o-ActivityListPopoverItem-link o-ActivityListPopoverItem-markAsDone btn btn-link shadow-none fs-4 fa fa-check-circle" title="Mark as done" aria-label="Mark as done" t-on-click="onClickMarkAsDone" t-ref="markDoneButton"/>
+                    <button t-if="hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-link o-mail-ActivityListPopoverItem-markAsDone btn btn-link shadow-none fs-4 fa fa-check-circle" title="Mark as done" aria-label="Mark as done" t-on-click="onClickMarkAsDone" t-ref="markDoneButton"/>
                 </t>
             </div>
             <div t-if="props.activity.state !== 'today'" class="d-flex align-items-baseline flex-wrap mx-3">

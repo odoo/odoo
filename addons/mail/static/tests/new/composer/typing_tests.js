@@ -25,7 +25,7 @@ QUnit.test('receive other member typing status "is typing"', async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-Typing").text(), "");
+    assert.strictEqual($(".o-mail-Typing").text(), "");
 
     // simulate receive typing notification from demo
     await afterNextRender(() =>
@@ -35,7 +35,7 @@ QUnit.test('receive other member typing status "is typing"', async (assert) => {
             is_typing: true,
         })
     );
-    assert.strictEqual($(".o-Typing").text(), "Demo is typing...");
+    assert.strictEqual($(".o-mail-Typing").text(), "Demo is typing...");
 });
 
 QUnit.test(
@@ -52,7 +52,7 @@ QUnit.test(
         });
         const { env, openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -62,7 +62,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual($(".o-Typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-Typing").text(), "Demo is typing...");
 
         // simulate receive typing notification from demo "is no longer typing"
         await afterNextRender(() =>
@@ -72,7 +72,7 @@ QUnit.test(
                 is_typing: false,
             })
         );
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
     }
 );
 
@@ -91,7 +91,7 @@ QUnit.test(
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
 
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -101,10 +101,10 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual($(".o-Typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-Typing").text(), "Demo is typing...");
 
         await afterNextRender(() => advanceTime(OTHER_LONG_TYPING));
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
     }
 );
 
@@ -122,7 +122,7 @@ QUnit.test(
         });
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -134,7 +134,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual($(".o-Typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-Typing").text(), "Demo is typing...");
 
         // simulate receive typing notification from demo "is typing" again after long time.
         await advanceTime(LONG_TYPING);
@@ -146,9 +146,9 @@ QUnit.test(
         await nextTick();
         await advanceTime(LONG_TYPING);
         await nextAnimationFrame();
-        assert.strictEqual($(".o-Typing").text(), "Demo is typing...");
+        assert.strictEqual($(".o-mail-Typing").text(), "Demo is typing...");
         await afterNextRender(() => advanceTime(OTHER_LONG_TYPING - LONG_TYPING));
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
     }
 );
 
@@ -170,7 +170,7 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-Typing").text(), "");
+    assert.strictEqual($(".o-mail-Typing").text(), "");
 
     // simulate receive typing notification from other 10 (is typing)
     await afterNextRender(() =>
@@ -180,7 +180,7 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
             is_typing: true,
         })
     );
-    assert.strictEqual($(".o-Typing").text(), "Other 10 is typing...");
+    assert.strictEqual($(".o-mail-Typing").text(), "Other 10 is typing...");
 
     // simulate receive typing notification from other 11 (is typing)
     await afterNextRender(() =>
@@ -191,7 +191,7 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
         })
     );
     assert.strictEqual(
-        $(".o-Typing").text(),
+        $(".o-mail-Typing").text(),
         "Other 10 and Other 11 are typing...",
         "Should display longer typer named first"
     );
@@ -204,7 +204,7 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
             is_typing: true,
         })
     );
-    assert.strictEqual($(".o-Typing").text(), "Other 10, Other 11 and more are typing...");
+    assert.strictEqual($(".o-mail-Typing").text(), "Other 10, Other 11 and more are typing...");
 
     // simulate receive typing notification from other 10 (no longer is typing)
     await afterNextRender(() =>
@@ -214,7 +214,7 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
             is_typing: false,
         })
     );
-    assert.strictEqual($(".o-Typing").text(), "Other 11 and Other 12 are typing...");
+    assert.strictEqual($(".o-mail-Typing").text(), "Other 11 and Other 12 are typing...");
 
     // simulate receive typing notification from other 10 (is typing again)
     await afterNextRender(() =>
@@ -225,7 +225,7 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
         })
     );
     assert.strictEqual(
-        $(".o-Typing").text(),
+        $(".o-mail-Typing").text(),
         "Other 11, Other 12 and more are typing...",
         "Should order by longer typer ('Other 10' just recently restarted typing)"
     );
@@ -242,7 +242,7 @@ QUnit.test("current partner notify is typing to other thread members", async (as
         },
     });
     await openDiscuss(channelId);
-    await insertText(".o-Composer-input", "a");
+    await insertText(".o-mail-Composer-input", "a");
     assert.verifySteps(["notify_typing:true"]);
 });
 
@@ -260,14 +260,14 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-Composer-input", "a");
+        await insertText(".o-mail-Composer-input", "a");
         assert.verifySteps(["notify_typing:true"]);
 
         // simulate current partner typing a character for a long time.
         let totalTimeElapsed = 0;
         const elapseTickTime = SHORT_TYPING / 2;
         while (totalTimeElapsed < LONG_TYPING + SHORT_TYPING) {
-            await insertText(".o-Composer-input", "a");
+            await insertText(".o-mail-Composer-input", "a");
             totalTimeElapsed += elapseTickTime;
             await advanceTime(elapseTickTime);
         }
@@ -289,7 +289,7 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-Composer-input", "a");
+        await insertText(".o-mail-Composer-input", "a");
         assert.verifySteps(["notify_typing:true"]);
 
         await advanceTime(SHORT_TYPING);
@@ -311,11 +311,11 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-Composer-input", "a");
+        await insertText(".o-mail-Composer-input", "a");
         assert.verifySteps(["notify_typing:true"]);
 
         await nextAnimationFrame();
-        assert.strictEqual($(".o-Typing").text(), "");
+        assert.strictEqual($(".o-mail-Typing").text(), "");
     }
 );
 
@@ -334,8 +334,8 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($(".o-DiscussCategoryItem"), ".o-DiscussCategoryItem-threadIcon");
-    assert.containsOnce($, ".o-ThreadIcon-online");
+    assert.containsOnce($(".o-mail-DiscussCategoryItem"), ".o-mail-DiscussCategoryItem-threadIcon");
+    assert.containsOnce($, ".o-mail-ThreadIcon-online");
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() =>
@@ -345,8 +345,8 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
             is_typing: true,
         })
     );
-    assert.containsOnce($, ".o-Typing-icon");
-    assert.strictEqual($(".o-Typing-icon")[0].title, "Demo is typing...");
+    assert.containsOnce($, ".o-mail-Typing-icon");
+    assert.strictEqual($(".o-mail-Typing-icon")[0].title, "Demo is typing...");
 
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() =>
@@ -356,5 +356,5 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
             is_typing: false,
         })
     );
-    assert.containsOnce($, ".o-ThreadIcon-online");
+    assert.containsOnce($, ".o-mail-ThreadIcon-online");
 });
