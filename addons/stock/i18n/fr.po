@@ -172,7 +172,7 @@ msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
 msgstr ""
-"%s utiliser des emplacements de source et de destination par défaut depuis "
+"%s utiliser des emplacements d'origine et de destination par défaut depuis "
 "l'entrepôt %s qui sera archivé."
 
 #. module: stock
@@ -259,13 +259,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* Emplacement fournisseur : emplacement virtuel représentant l'emplacement source des produits provenant des fournisseurs\n"
+"* Emplacement fournisseur : emplacement virtuel représentant l'emplacement d'origine des produits provenant des fournisseurs\n"
 "* Vue : emplacement virtuel utilisé pour avoir une structure hiérarchique de votre entrepôt, agrégeant ses emplacements enfants ; ne peut directement contenir des produits\n"
 "* Emplacement interne : emplacements physiques au sein de vos entrepôts,\n"
 "* Emplacement client : emplacement virtuel représentant l'emplacement de destination des produits envoyés à vos clients\n"
 "* Perte d'inventaire : emplacement virtuel servant de contre-partie pour les opérations d'inventaire utilisées pour corriger les niveaux de stock (Inventaires physiques)\n"
 "* Production : emplacement virtuel servant de contre-partie pour les opérations de production : cet emplacement consomme les composants et produit les produits finis\n"
-"* Emplacement de transit : emplacement de contre-partie qui est utilisé lors des opérations inter-sociétés ou inter-entrepôts"
+"* Emplacement de transit : emplacement de contre-partie qui est utilisé lors des opérations entre sociétés ou entre entrepôts"
 
 #. module: stock
 #. odoo-python
@@ -1328,7 +1328,7 @@ msgid ""
 msgstr ""
 "Par défaut, le système prendra dans le stock de l'emplacement d'origine et "
 "attendra passivement la disponibilité. L'autre possibilité vous permet de "
-"créer d'office un approvisionnement à l'emplacement source (sans tenir "
+"créer d'office un approvisionnement à l'emplacement d'origine (sans tenir "
 "compte son niveau de stock actuel) pour acheminer les produits. Pour faire "
 "des mouvements chaînés et faire en sorte que celui-ci attende le précédent, "
 "la seconde option devra être choisie."
@@ -1429,7 +1429,7 @@ msgstr "Capacité par produit"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Categorize your locations for smarter putaway rules"
 msgstr ""
-"Catégorisez vos emplacements pour des règles de rangements plus "
+"Catégorisez vos emplacements pour des stratégies de rangements plus "
 "intelligentes"
 
 #. module: stock
@@ -1931,7 +1931,7 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
-"Créez des nouvelles règles de rangement pour dispatcher automatiquement "
+"Créez de nouvelles stratégies de rangement pour dispatcher automatiquement "
 "certains produits vers leur emplacement approprié au moment de la réception."
 
 #. module: stock
@@ -2260,7 +2260,7 @@ msgstr "Emplacement de destination par défaut"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
-msgstr "Emplacement source par défaut"
+msgstr "Emplacement d'origine par défaut"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -2337,7 +2337,7 @@ msgstr ""
 "\n"
 "FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
 "LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
-"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"Emplacement le plus proche : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
 "FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
@@ -4626,7 +4626,7 @@ msgstr "Mars"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Marquer \"À faire\""
+msgstr "Marquer comme à faire"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -5030,7 +5030,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid "No putaway rule found. Let's create one!"
-msgstr "Aucune règle de rangement trouvée. Créons-en une !"
+msgstr "Aucune stratégie de rangement trouvée. Créons-en une !"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -5053,7 +5053,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "No source location defined on stock rule: %s!"
-msgstr "Pas d'emplacement de stock défini sur la règle de stock : %s !"
+msgstr "Pas d'emplacement d'origine défini sur la règle de stock : %s !"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -7443,7 +7443,7 @@ msgid ""
 msgstr ""
 "Le numéro de série (%s) ne se trouve pas dans %s, mais bien dans le(s) emplacement(s): %s.\n"
 "\n"
-"L'emplacement source pour ce mouvement de stock va être changé en %s."
+"L'emplacement d'origine pour ce mouvement de stock va être changé en %s."
 
 #. module: stock
 #. odoo-javascript
@@ -7478,7 +7478,7 @@ msgstr ""
 "\n"
 "FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
 "LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
-"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"Emplacement le plus proche : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
 "FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
@@ -7537,7 +7537,7 @@ msgstr "Expédition"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr "Connecteurs avec les transporteurs"
+msgstr "Connecteurs d'expédition"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
@@ -8077,7 +8077,7 @@ msgstr "Entrepôt approvisionné"
 #: model:ir.model.fields,field_description:stock.field_stock_move__procure_method
 #: model:ir.model.fields,field_description:stock.field_stock_rule__procure_method
 msgid "Supply Method"
-msgstr "Méthode de fourniture"
+msgstr "Méthode d'approvisionnement"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__warehouse_id
@@ -8088,7 +8088,7 @@ msgstr "Entrepôt d'approvisionement "
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_stock
 msgid "Take From Stock"
-msgstr "Prendre du stock"
+msgstr "Prendre dans le stock"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
@@ -8102,9 +8102,9 @@ msgid ""
 "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
 "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
 msgstr ""
-"Prendre dans le stock : les produits seront pris du stock disponible de l'emplacement source.\n"
-"Déclencher une autre règle : le système va essayer de trouver une règle de stock pour amener les produits dans l'emplacement source. Le stock disponible sera ignoré.\n"
-"Prendre dans le stock, si pas disponible, déclencher une autre règle : les produits seront pris du stock disponible de l'emplacement source. S'il n'y a pas de stock disponible, le système va essayer de trouver une règle de stock pour amener les produits dans l'emplacement source."
+"Prendre dans le stock : les produits seront pris du stock disponible de l'emplacement d'origine.\n"
+"Déclencher une autre règle : le système va essayer de trouver une règle de stock pour amener les produits dans l'emplacement d'origine. Le stock disponible sera ignoré.\n"
+"Prendre dans le stock, si pas disponible, déclencher une autre règle : les produits seront pris du stock disponible de l'emplacement d'origine. S'il n'y a pas de stock disponible, le système va essayer de trouver une règle de stock pour amener les produits dans l'emplacement d'origine."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
@@ -8250,7 +8250,7 @@ msgstr "Le stock prévu pour le"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
-msgstr "Les transferts inter-entrepôts ont été générés"
+msgstr "Les transferts entre entrepôts ont été générés"
 
 #. module: stock
 #. odoo-python
@@ -8492,8 +8492,8 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Il s'agit de la zone d'emplacement source par défaut quand vous créez une "
-"opération de stock manuellement avec ce type d'opération. Il est néanmoins "
+"Il s'agit de la zone d'emplacement d'origine par défaut quand vous créez une"
+" opération de stock manuellement avec ce type d'opération. Il est néanmoins "
 "possible de changer cela ou que les routes définissent une autre zone "
 "d'emplacement. Si ce champ est laissé vide, l'emplacement fournisseur défini"
 " sur le contact sera utilisé."
@@ -8663,7 +8663,7 @@ msgid ""
 "location for stock moves generated by manufacturing orders."
 msgstr ""
 "Cet emplacement de stock sera utilisé, à la place de l'emplacement par "
-"défaut, comme emplacement source des mouvements de stock générés par les "
+"défaut, comme emplacement d'origine des mouvements de stock générés par les "
 "ordres de fabrication."
 
 #. module: stock

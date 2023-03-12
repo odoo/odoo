@@ -519,14 +519,14 @@ msgstr ""
 "---------\n"
 "\n"
 "* 일본 기업을 위한 계정과목 일람표 및 세금 서식\n"
-"* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n"
+"* 회사에서 필요로 하는 모든 계정 전체를 다루지는 않습니다. 이 서식을 기반으로 계정을 추가/삭제/수정해야 합니다.\n"
 "\n"
-"Note:\n"
+"메모:\n"
 "-----\n"
 "\n"
-"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  Under normal circumstances, you might not need to use those at all.\n"
+"* POS 구현에서 발생할 수 있는 특수한 요구 사항을 처리하기 위해 재정 상황 '内税' 및 '外税'가 추가되었습니다. [1] 정상적인 상황에서는 보통은 전혀 사용할 필요가 없습니다.\n"
 "\n"
-"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"[1] 자세한 내용은 https://github.com/odoo/odoo/pull/6470 를 확인하십시오.\n"
 "\n"
 "    "
 
@@ -552,7 +552,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"이 모듈은 사용자 정의가 가능한 판매 팀 기능을 POS에 추가합니다. 이 기능은 POS 판매를 보다 쉽게 보고 관리할 수 있도록 합니다.\n"
+"이 모듈은 POS에 사용할 맞춤형 영업팀 기능을 추가합니다. 이 기능으로 POS을 통한 판매를 보다 쉽게 확인하고 관리할 수 있습니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale_margin
@@ -561,6 +561,9 @@ msgid ""
 "\n"
 "This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
 msgstr ""
+"\n"
+"\n"
+"이 모듈을 추가하시면 판매 마진 보고서에서 POS 주문 마진을 확인할 수 있습니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -592,8 +595,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"이 모듈을 사용하면 계산원이 고객에게 할인율을\n"
-"신속하게 제공할 수 있습니다.\n"
+"이 모듈을 사용하면 간단하게 캐셔 쪽에서 고객에게 할인율을\n"
+"안내해줄 수 있습니다.\n"
 "\n"
 
 #. module: base
@@ -731,6 +734,10 @@ msgid ""
 "        Contains Balance sheet, Profit and Loss reports\n"
 "    "
 msgstr ""
+"\n"
+"        카자흐스탄 회계 보고서\n"
+"        대차대조표 및 손익계산서 포함\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -1113,7 +1120,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        불가리아 회계 계정과목 및 세금 업무\n"
+"        불가리아 회계 계정과목 및 세무 업무\n"
 "    "
 
 #. module: base
@@ -1132,7 +1139,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        리투아니아의 회계를 위한 계정과목표(COA) 서식.\n"
+"        리투아니아의 회계를 위한 계정과목표 (COA) 서식.\n"
 "\n"
 "        This module also includes:\n"
 "\n"
@@ -1151,7 +1158,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        슬로베니아 회계 계정과목 및 세금 업무\n"
+"        슬로베니아 회계 계정과목 및 세무 업무\n"
 "    "
 
 #. module: base
@@ -1430,16 +1437,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        FEC 표준 파일 가져오기용 모듈로, 회계 기록을 가져올 경우 유용하게 사용할 수 있습니다.\n"
+"        FEC 표준 파일 가져오기용 모듈로, 회계 기록을 가져와야 하는 경우에 유용하게 사용할 수 있습니다.\n"
 "\n"
-"        FEC 파일(fichier des écritures comptables)은 프랑스 기업이 세무 당국에 제출해야 하는 표준 회계 보고서입니다.\n"
-"        이 모듈을 사용하면 계정, 저널, 파트너 정보를 가져와서 파일을 이동시킬 수 있습니다.\n"
+"        FEC 파일 (fichier des écritures comptables)은 프랑스 기업이 세무 당국에 제출해야 하는 표준 회계 보고서입니다.\n"
+"        이 모듈을 사용하면 계정, 저널, 협력사 정보를 가져와서 파일을 이동시킬 수 있습니다.\n"
 "\n"
-"        FEC의 CSV 형식만 가능함을 참고바랍니다.\n"
+"        FEC의 CSV 형식만 가능함을 참고하시기 바랍니다.\n"
 "        인코딩 방식으로는 'utf-8', 'utf-8-sig' 및 'iso8859_15' 방식만 허용됩니다.\n"
 "        다음과 같은 구분 기호를 사용할 수 있습니다 : ';' or '|' or ',' or '\t'.\n"
 "\n"
-"        공식 기술 사양(fr)\n"
+"        공식 기술 사양 (fr)\n"
 "        https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
 "\n"
 "        세무 당국에서 사용하는 FEC 테스트용 툴\n"
@@ -5130,6 +5137,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU 원스탑샵 (OSS) VAT\n"
+"==========================\n"
+"\n"
+"2021년 7월 1일부터 EU에서 다른 EU 회원국에 위치한 구매자에게 10,000유로 이상의 매출을 발생시킨 EU 사업장은, 구매자의 회원국에서 VAT를 등록 및 납부하여야 합니다.\n"
+"본 신규 EU 내 적용 지침 미만의 금액에 대해서는 국경 간 판매에 VAT에 대한 국내 규칙을 계속 적용할 수 있습니다. 이 EU 지침을 간편하게 적용시키기 위해서 OSS (One Stop Shop) 등록 체계를 통해 기업들은 자체적으로 세금 신고를 할 수 있습니다.\n"
+"\n"
+"이 모듈은 해당되는 세금을 자동으로 적용하고 기록하기 위해 필요한 EU 재정 상태 및 세금을 생성할 수 있도록 지원하고 있습니다.\n"
+"\n"
+"제안되는 매핑에 대해서 판매 상품이나 서비스에 적합한지 확인하기만 하면 됩니다.\n"
+"\n"
+"참조 \n"
+"++++++++++\n"
+"Council Directive (EU) 2017/2455 Council Directive (EU) 2019/1995\n"
+"Council Implementing Regulation (EU) 2019/2026\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_oss_reports
@@ -6685,9 +6709,9 @@ msgstr ""
 "\n"
 "창고 관리를 설치 한 경우 다음 기본 설정을 처리 할 수 ​​있습니다 :\n"
 "\n"
-"* 배송 : 일괄 배송 또는 부분 배송\n"
-"* 청구서 발행 : 청구서의 결제 방법 선택\n"
-"* 인코텀 : 국제상업용어\n"
+"* 배송: 일괄 배송 또는 부분 배송\n"
+"* 청구서 발행: 청구서의 결제 방법 선택\n"
+"* 인코텀즈: 국제상업용어\n"
 "\n"
 "\n"
 "이 모듈을 사용하면 범주, 부분합 또는 페이지 나누기로 \n"
@@ -6723,9 +6747,9 @@ msgstr ""
 "\n"
 "환경 설정\n"
 "-----------\n"
-"* 배송 : 일괄 배송 또는 부분 배송\n"
-"* 청구서 발행 : 청구서의 결제 방법 선택\n"
-"* 인코텀 : 국제상업용어\n"
+"* 배송: 일괄 배송 또는 부분 배송\n"
+"* 청구서 발행: 청구서의 결제 방법 선택\n"
+"* 인코텀즈: 국제상업용어\n"
 "\n"
 
 #. module: base
@@ -8059,7 +8083,7 @@ msgid ""
 msgstr ""
 "\n"
 "슬로바키아 회계 차트 및 현지화: 계정과목표 2020, 기본 VAT 율 및 \n"
-"재정 상황.\n"
+"재정 상태.\n"
 "\n"
 "Tento modul definuje:\n"
 "• Slovenskú účtovú osnovu za rok 2020\n"
@@ -8195,6 +8219,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail : the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"스위스 현지화\n"
+"==================\n"
+"이 모듈은 스위스 계정과목표 (Swiss PME/KMU 2015) 및 세금을 정의하고 청구서를 인쇄하거나 우편으로 보낼 때 ISR 및 QR 청구서를 생성할 수 있도록 합니다.\n"
+"\n"
+"필요한 정보를 지정하면 ISR이 생성됩니다 :\n"
+"    - 대금을 수령할 수 있는 은행 계좌가 설정되어 있어야 하며, 유효한 우편번호가 있어야 합니다.\n"
+"    - 청구서는 결제를 받을 은행 계좌가 지정되어 있어야 합니다\n"
+"      (수기로 수행 가능한 작업이나, 은행 계좌가 설정되어 있는 경우에는 자동으로 기본값으로 설정됩니다).\n"
+"    - 은행의 우편 주소를 설정해야 합니다.\n"
+"    - 청구서 대금은 EUR 또는 CHF 로만 가능합니다 (ISR에서 이외의 통화는 허용되지 않습니다).\n"
+"\n"
+"다음과 같은 경우에는 QR 청구서를 생성합니다:\n"
+"    - 청구서에 설정되어 있는 협력서가 스위스에 전체 주소가 있습니다 (거리, 도시, 우편번호 및 국가)\n"
+"    - 청구서에서 스위스 QR 코드를 생성하는 옵션이 선택되어 있습니다 (기본 설정)\n"
+"    - 은행 분개장에 올바른 계좌 번호/QR IBAN가 설정되어 있습니다.\n"
+"    - (QR-IBAN 사용 시): 청구서의 결제 참조가 QR 참조로 되어 있습니다\n"
+"\n"
+"위의 기준을 충족하는 경우 ISR 및 QR 청구서가 자동으로 생성됩니다.\n"
+"\n"
+"진행 방식은 다음과 같습니다:\n"
+"    - 청구서를 인쇄하면 청구서, ISR 및 QR 청구서의 세 가지 파일이 다운로드됩니다.\n"
+"    - '우편 발송' 버튼을 클릭하면 초안 메일에 청구서, ISR 및 QR 청구서 세 가지 파일이 첨부됩니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro
@@ -11190,7 +11238,7 @@ msgstr "1. %b, %B         ==&gt; 12월, 12월"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_1099
 msgid "1099 Reporting"
-msgstr "1099 리포트"
+msgstr "1099 신고서"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -14594,7 +14642,7 @@ msgstr "벨리즈"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
+msgstr "아래의 내용은 참고용으로만 제시되는 내용이며 Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -33661,7 +33709,7 @@ msgstr "터키 - 회계"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Turkey - Accounting Reports"
-msgstr ""
+msgstr "터키 - 회계 보고서"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -34890,12 +34938,12 @@ msgstr "웹 간트"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_gantt
 msgid "Web Gantt Tests"
-msgstr ""
+msgstr "웹 간트 테스트"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_gantt
 msgid "Web Gantt Tests: Tests specific to the gantt view"
-msgstr ""
+msgstr "웹 간트 테스트: 간트 뷰 전용 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
@@ -34962,7 +35010,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_appointment
 msgid "Website Appointments"
-msgstr ""
+msgstr "웹사이트 약속"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
@@ -35247,7 +35295,7 @@ msgstr "근로 항목"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_attendance
 msgid "Work Entries - Attendance"
-msgstr ""
+msgstr "작업 항목 - 근태"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
@@ -35262,7 +35310,7 @@ msgstr "근로 항목 - 계약 유료버전"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning
 msgid "Work Entries - Planning"
-msgstr ""
+msgstr "작업 항목 - 계획"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -35605,7 +35653,7 @@ msgstr "다른 검색 기준을 시도해 볼 수 있습니다."
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "귀사의 이용약관을 반영하여 이 문서를 업데이트해야 합니다."
 
 #. module: base
 #. odoo-python
@@ -35729,7 +35777,7 @@ msgstr "및"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_assets
 msgid "assets"
-msgstr ""
+msgstr "자산"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
