@@ -14865,6 +14865,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"Під час спроби додати банер до оригінального PDF-файлу сталася помилка.\n"
+"Переконайтеся, що джерело файлу дійсне."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15597,7 +15599,7 @@ msgstr "Залишок"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "Неопубліковані записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -16223,6 +16225,9 @@ msgid ""
 "already posted. If you are absolutely sure you want to modify the opening "
 "balance of your accounts, reset the move to draft."
 msgstr ""
+"Ви не можете імпортувати \"openning_balance\", якщо початкова проводка (%s) "
+"вже опублікована. Якщо ви абсолютно впевнені, що хочете змінити початковий "
+"баланс своїх рахунків, скиньте проводку до чернетки."
 
 #. module: account
 #. odoo-python
@@ -16547,6 +16552,8 @@ msgstr ""
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
 msgstr ""
+"Будь ласка, зверніться до свого бухгалтера, щоб надрукувати результат "
+"цілісності хешу."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16668,11 +16675,13 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Ви не можете видалити наступні поля через обмежений режим, що активується в "
-"журналі: %s."
+"Ви не можете редагувати наступні поля: %s.\n"
+"Наступні записи вже хешовані:\n"
+"%s"
 
 #. module: account
 #. odoo-python

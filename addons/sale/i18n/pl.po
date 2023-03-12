@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
@@ -59,7 +59,7 @@ msgstr " Pobrane Dane"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# Zamówienia sprzedaży"
+msgstr "# Zamówienia Sprzedaży"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -3462,7 +3462,7 @@ msgstr "Odnośnik"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "Odnośnik do dokumentu, który wygenerował to zapytanie ofertowe."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3583,7 +3583,7 @@ msgstr "Ostrzeżenia sprzedaży"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Metoda płatności onboardingu Sprzedaży."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3868,7 +3868,7 @@ msgstr "Wyślij fakturę pro-forma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr ""
+msgstr "Wyślij email dotyczący produktu gdy faktura jest zatwierdzona"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3910,12 +3910,12 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
-msgstr ""
+msgstr "Wysyłaj automatycznie do klientów gdy anulujesz zamówienie"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "Wysłane do klientów podczas potwierdzenia zamówienia"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4261,7 +4261,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Ilość do zafakturowania z góry, wyłączając podatki"
 
 #. module: sale
 #. odoo-python
@@ -4272,6 +4272,8 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Następujące produkty nie mogą być zastrzeżone dla firmy %sz powodu wcześniejszego użycia w ofertach lub zamówieniach sprzedaży dla innej firmy.\n"
+"%s Możesz zarchiwizować te produkty i odtworzyć je z ograniczeniem firmowym lub pozostawić je jako produkt współdzielony."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4295,7 +4297,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Zamówienie nie jest w stanie wymagającym podpisu klienta."
 
 #. module: sale
 #. odoo-python
@@ -4307,7 +4309,7 @@ msgstr "Zamówiona ilość została zaktualizowana,"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Komunikacja w sprawie płatności tego zamówienia sprzedaży."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -4372,7 +4374,7 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
 
@@ -4543,7 +4545,7 @@ msgstr "Całkowity Podatek"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Całkowity podatek wyłączony"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4570,14 +4572,14 @@ msgstr "Transakcje"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Wpisz nazwę"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
-msgstr ""
+msgstr "Napisz wiadomość..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -4650,23 +4652,23 @@ msgstr "Kwota bez podatku"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Zafakturowana kwota bez podatku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Kwota bez podatku do zafakturowania"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "Zafakturowana kwota bez podatku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Untaxed Total"
+msgstr "Ilość nieopodatkowana"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4676,12 +4678,12 @@ msgstr "JM"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "Aktualizuj Ceny"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Aktualizuj Podatki"
 
 #. module: sale
 #. odoo-python
@@ -4735,7 +4737,7 @@ msgstr "Zobacz ofertę"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Pusta transakcja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -4794,7 +4796,7 @@ msgstr "Napisz nazwę firmy, aby ją stworzyć, lub zobaczyć sugestie."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Możesz zafakturować je zanim zostaną dostarczone"
 
 #. module: sale
 #. odoo-python
@@ -4840,6 +4842,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Nie możesz zmienić typu produktu ponieważ jest już użyty w zamówieniu "
+"sprzedaży."
 
 #. module: sale
 #. odoo-python
@@ -4849,6 +4853,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Nie możesz zmienić typu pozycji zamówienia sprzedaży. Zamiast tego usuń "
+"obecną pozycję i utwórz nową, właściwego typu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4860,7 +4866,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "Twój feedback..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4871,16 +4877,18 @@ msgstr "Twoje zamówienie zostało potwierdzone."
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"Twoje zamówienie zostało podpisane lecz nadal należy je opłacić aby je "
+"potwierdzić"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Twoje zamówienie zostało podpisane."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Twoje zamówienie nie jest w trybie do odrzucenia."
 
 #. module: sale
 #. odoo-python
@@ -4895,7 +4903,7 @@ msgstr ""
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "automatyczne fakturowanie: wyślij gotową fakturę"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
