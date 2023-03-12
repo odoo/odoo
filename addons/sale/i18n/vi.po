@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2022-06-17 09:54+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -304,6 +304,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Xin chào,\n"
+"        <br/><br/>\n"
+"        Hiện\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            hóa đơn chiếu lệ cho <t t-out=\"doc_name or ''\">báo giá</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (với mã tham chiếu: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            có giá trị là <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> đã có.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">báo giá</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (với mã tham chiếu: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            có giá trị là <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> đã sẵn sàng để xem lại.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có câu hỏi cần được giải đáp.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -433,6 +463,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Xem trước</span>\n"
+"                            <span class=\"o_stat_text\">khách hàng</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -508,6 +540,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            Địa chỉ giao hàng:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -628,13 +663,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Chấp nhận & thanh toán báo giá"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Chấp nhận & ký báo giá"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -769,6 +804,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Đơn hàng sẽ được bán thêm khi số lượng được giao lớn hơn số lượng \n"
+"                đặt hàng ban đầu và chính sách xuất hóa đơn dựa vào số lượng được đặt hàng. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -820,6 +857,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Ví dụ, nếu bạn bán số giờ dịch vụ trả trước, Odoo sẽ đề xuất bạn\n"
+"                bán thêm số giờ khi tất cả số giờ đặt hàng đã được sử dụng hết. "
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1161,7 +1200,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "Thẻ Tín dụng và Ghi nợ (qua Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1468,7 +1507,7 @@ msgstr "Đặt cọc"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "Khoản trả trước"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1727,7 +1766,7 @@ msgstr "Nhóm theo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Vị trí tài chính được thay đổi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2511,7 +2550,7 @@ msgstr "Ngày đặt hàng"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Ngày đặt hàng:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2725,7 +2764,7 @@ msgstr "Bảng giá"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Chi tiết bảng giá"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2752,7 +2791,7 @@ msgstr "Hóa đơn chiếu lệ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Hóa đơn chiếu lệ #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2932,7 +2971,7 @@ msgstr "Ngày Báo giá"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Ngày báo giá"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3020,7 +3059,7 @@ msgstr "Recompute all prices based on this pricelist"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Tính lại toàn bộ thuế dựa vào vị trí tài chính này"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3499,7 +3538,7 @@ msgstr "Hiện thị biên lợi nhuận trên Đơn bán hàng"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Ký &amp; thanh toán báo giá"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3944,14 +3983,9 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
-"Không có gì để xuất hóa đơn!\n"
-"\n"
-"(Các) lý do của hành vi này có thể là:\n"
-"- Bạn nên giao sản phẩm trước khi xuất hóa đơn:            Nhấp vào biểu tượng \"xe tải\" (trên cùng bên phải màn hình) và làm theo hướng dẫn.\n"
-"- Bạn nên sửa đổi chính sách xuất hóa đơn cho sản phẩm: Mở sản phẩm, đi tới tab \"Bán hàng\" và sửa đổi chính sách lập hóa đơn từ \"số lượng đã giao\" thành \"số lượng đặt hàng\". Đối với dịch vụ, bạn nên sửa đổi chính sách xuất hóa đơn dịch vụ thành 'Trả trước'."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4066,6 +4100,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Việc này sẽ cập nhật mọi loại thuế dựa theo vị trí tài chính đang được lựa "
+"chọn. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4272,7 +4308,7 @@ msgstr "Update Prices"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Cập nhật thuế"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4305,7 +4341,7 @@ msgstr "Sổ lưới biến thể"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "Xem đơn hàng"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4399,6 +4435,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Bạn có thể chọn tất cả đơn đặt hàng và gửi hóa đơn hàng loạt, <br>\n"
+"                 hoặc kiểm tra từng đơn hàng và gửi hóa đơn cho từng đơn một."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4481,7 +4519,7 @@ msgstr ""
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 #: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "xuất hóa đơn tự động: gửi hóa đơn đã sẵn sàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4518,6 +4556,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Đơn hàng đang chờ' or 'Đơn hàng' }} (Mã {{ object.name or"
+" 'không có' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4526,3 +4567,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Hóa đơn chiếu lệ' or 'Báo giá') or 'Đơn hàng' }} "
+"(Mã {{ object.name or 'không có' }})"
