@@ -11,7 +11,7 @@ QUnit.test("base rendering not editable", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-Chatter-follow");
+    assert.containsOnce($, ".o-mail-Chatter-follow");
 });
 
 QUnit.test("hover following button", async (assert) => {

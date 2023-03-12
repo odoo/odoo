@@ -56,13 +56,13 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
         if (enabled) {
             assert.containsNone(
                 document.body,
-                ".o-Chatter-topbar button:contains(Send message):disabled",
+                ".o-mail-Chatter-topbar button:contains(Send message):disabled",
                 `${msg}: send message button must not be disabled (${details}`
             );
         } else {
             assert.containsOnce(
                 document.body,
-                ".o-Chatter-topbar button:contains(Send message):disabled",
+                ".o-mail-Chatter-topbar button:contains(Send message):disabled",
                 `${msg}: send message button must be disabled (${details})`
             );
         }

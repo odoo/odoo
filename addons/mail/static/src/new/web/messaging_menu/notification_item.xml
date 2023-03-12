@@ -3,28 +3,28 @@
 
 <t t-name="mail.NotificationItem" owl="1">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <div class="o-NotificationItem d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'border-bottom': !props.isLast, 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
+        <div class="o-mail-NotificationItem d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'border-bottom': !props.isLast, 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
             <div class="position-relative o-bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="w-100 h-100 rounded-circle" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start m-2 overflow-auto">
                 <div class="d-flex">
-                    <span class="o-NotificationItem-name fw-bold text-truncate" t-esc="props.displayName"/>
-                    <span class="o-NotificationItem-counter mx-1 fw-bold" t-if="props.count > 1"> (<t t-esc="props.count"/>)</span>
+                    <span class="o-mail-NotificationItem-name fw-bold text-truncate" t-esc="props.displayName"/>
+                    <span class="o-mail-NotificationItem-counter mx-1 fw-bold" t-if="props.count > 1"> (<t t-esc="props.count"/>)</span>
                     <span class="flex-grow-1"/>
-                    <small t-if="props.datetime" class="o-NotificationItem-date text-muted opacity-50 ms-2">
+                    <small t-if="props.datetime" class="o-mail-NotificationItem-date text-muted opacity-50 ms-2">
                         <RelativeTime datetime="props.datetime"/>
                     </small>
 
                 </div>
                 <div class="d-flex">
-                    <div class="o-NotificationItem-text text-truncate">
+                    <div class="o-mail-NotificationItem-text text-truncate">
                         <t t-slot="body-icon"/>
                         <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <i t-if="props.hasMarkAsReadButton" class="o-NotificationItem-markAsRead fa fa-check d-flex ms-2 text-600 opacity-50 opacity-100-hover" title="Mark As Read" t-ref="markAsRead"/>
+                    <i t-if="props.hasMarkAsReadButton" class="o-mail-NotificationItem-markAsRead fa fa-check d-flex ms-2 text-600 opacity-50 opacity-100-hover" title="Mark As Read" t-ref="markAsRead"/>
                 </div>
             </div>
         </div>

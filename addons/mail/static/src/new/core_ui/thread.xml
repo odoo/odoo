@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread" owl="1">
-    <div class="o-Thread overflow-auto pb-4 flex-grow-1 bg-view" t-ref="messages">
+    <div class="o-mail-Thread overflow-auto pb-4 flex-grow-1 bg-view" t-ref="messages">
         <t t-if="!props.thread.isEmpty or props.thread.loadMore or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column" t-att-class="{'justify-content-end': !env.inChatter and props.thread.type !== 'mailbox'}" style="min-height:100%">
                 <t t-set="currentDay" t-value="0"/>
@@ -13,7 +13,7 @@
                 </t>
                 <t t-foreach="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()" t-as="msg" t-key="msg.id">
                     <t t-if="msg.dateDay !== currentDay">
-                        <div class="o-Thread-date d-flex align-items-center fw-bolder pt-4">
+                        <div class="o-mail-Thread-date d-flex align-items-center fw-bolder pt-4">
                             <hr class="flex-grow-1 border-top"/>
                             <span class="px-3"><t t-esc="msg.dateDay"/></span>
                             <hr class="flex-grow-1 border-top"/>
@@ -34,7 +34,7 @@
                         messageEdition="props.messageEdition"
                     />
                     <Transition visible="threadService.lastSeenBySelfMessageId(props.thread) === msg.id and !msg_last" name="'o-fade'" t-slot-scope="transition">
-                        <div class="o-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
+                        <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
                             <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
                         </div>
                     </Transition>
@@ -47,7 +47,7 @@
             </div>
         </t>
         <t t-else="">
-            <div class="d-flex flex-column align-items-center justify-content-center p-4 text-muted fst-italic h-100">
+            <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center p-4 text-muted fst-italic h-100">
                 <t t-if="props.thread.status !== 'loading'">
                     <t t-if="props.thread.isEmpty and props.thread.type === 'mailbox'">
                     <t t-if="props.thread.id === 'inbox'">
@@ -85,7 +85,7 @@
 
 <t t-name="mail.Thread.loadingError" owl="1">
     <div class="d-flex flex-grow-1 align-items-center justify-content-center flex-column">
-        <div class="o-Thread-error">
+        <div class="o-mail-Thread-error">
             An error occurred while fetching messages.
         </div>
         <button class="btn btn-link" t-on-click="onClickLoadMore">

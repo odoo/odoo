@@ -21,13 +21,13 @@
 }
 
 .o_modal_fullscreen {
-    z-index: $o-ChatWindow-zindex + 1;
+    z-index: $o-mail-ChatWindow-zindex + 1;
 
     .arrow {
         @include o-position-absolute(50%, $grid-gutter-width*0.5);
         border-radius: 100%;
         padding: 12px 16px 11px 18px;
-        @include o-AttachmentViewer-arrow;
+        @include o-mail-AttachmentViewer-arrow;
     }
 
     .arrow-left {

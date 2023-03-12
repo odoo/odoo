@@ -14,7 +14,7 @@ QUnit.test("No add attachments button", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-Composer");
+    assert.containsOnce($, ".o-mail-Composer");
     assert.containsNone($, "button[title='Attach files']");
 });
 
@@ -28,10 +28,10 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-Composer");
-    dragenterFiles($(".o-Composer-input")[0]);
+    assert.containsOnce($, ".o-mail-Composer");
+    dragenterFiles($(".o-mail-Composer-input")[0]);
     await nextTick();
-    assert.containsNone($, ".o-Dropzone");
+    assert.containsNone($, ".o-mail-Dropzone");
 });
 
 QUnit.test("Can execute help command on livechat channels", async (assert) => {
@@ -55,8 +55,8 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-NotificationItem");
-    await editInput(document.body, ".o-Composer-input", "/help");
+    await click(".o-mail-NotificationItem");
+    await editInput(document.body, ".o-mail-Composer-input", "/help");
     triggerHotkey("Enter");
     await nextTick();
     assert.verifySteps(["execute_command_help"]);
@@ -75,7 +75,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-Typing").text(), "");
+    assert.strictEqual($(".o-mail-Typing").text(), "");
     const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
@@ -85,5 +85,5 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
             uuid: channel.uuid,
         })
     );
-    assert.containsOnce($, ".o-Typing:contains(Visitor 20 is typing...)");
+    assert.containsOnce($, ".o-mail-Typing:contains(Visitor 20 is typing...)");
 });

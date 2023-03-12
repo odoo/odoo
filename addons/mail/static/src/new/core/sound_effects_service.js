@@ -37,7 +37,6 @@ export class SoundEffects {
         if (!soundEffect) {
             return;
         }
-        console.log("play sound effect", soundEffect);
         if (!soundEffect.audio) {
             const audio = new window.Audio();
             const ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";

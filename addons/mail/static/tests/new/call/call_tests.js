@@ -1,12 +1,7 @@
 /** @odoo-module **/
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import {
-    editInput,
-    nextTick,
-    patchWithCleanup,
-    triggerEvent,
-} from "@web/../tests/helpers/utils";
+import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 
 QUnit.module("call");
@@ -18,17 +13,17 @@ QUnit.test("basic rendering", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-Call");
-    assert.containsOnce($, ".o-CallParticipantCard[aria-label='Mitchell Admin']");
-    assert.containsOnce($, ".o-CallActionList");
-    assert.containsN($, ".o-CallActionList button", 6);
+    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    assert.containsOnce($, ".o-mail-Call");
+    assert.containsOnce($, ".o-mail-CallParticipantCard[aria-label='Mitchell Admin']");
+    assert.containsOnce($, ".o-mail-CallActionList");
+    assert.containsN($, ".o-mail-CallActionList button", 6);
     assert.containsOnce($, "button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
-    assert.containsOnce($, ".o-CallActionList button[aria-label='Deafen']");
-    assert.containsOnce($, ".o-CallActionList button[aria-label='Turn camera on']");
-    assert.containsOnce($, ".o-CallActionList button[aria-label='Share screen']");
-    assert.containsOnce($, ".o-CallActionList button[aria-label='Enter Full Screen']");
-    assert.containsOnce($, ".o-CallActionList button[aria-label='Disconnect']");
+    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Deafen']");
+    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Turn camera on']");
+    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Share screen']");
+    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Enter Full Screen']");
+    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Disconnect']");
 });
 
 QUnit.test("should not display call UI when no more members (self disconnect)", async (assert) => {
@@ -36,11 +31,11 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-Call");
+    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    assert.containsOnce($, ".o-mail-Call");
 
-    await click(".o-CallActionList button[aria-label='Disconnect']");
-    assert.containsNone($, ".o-Call");
+    await click(".o-mail-CallActionList button[aria-label='Disconnect']");
+    assert.containsNone($, ".o-mail-Call");
 });
 
 QUnit.test("show call UI in chat window when in call", async (assert) => {
@@ -48,14 +43,20 @@ QUnit.test("show call UI in chat window when in call", async (assert) => {
     pyEnv["mail.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-NotificationItem:contains(General)");
-    assert.containsOnce($, ".o-ChatWindow");
-    assert.containsNone($, ".o-Call");
-    assert.containsOnce($, ".o-ChatWindow-header .o-ChatWindow-command[title='Start a Call']");
+    await click(".o-mail-NotificationItem:contains(General)");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsNone($, ".o-mail-Call");
+    assert.containsOnce(
+        $,
+        ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
+    );
 
-    await click(".o-ChatWindow-header .o-ChatWindow-command[title='Start a Call']");
-    assert.containsOnce($, ".o-Call");
-    assert.containsNone($, ".o-ChatWindow-header .o-ChatWindow-command[title='Start a Call']");
+    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']");
+    assert.containsOnce($, ".o-mail-Call");
+    assert.containsNone(
+        $,
+        ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
+    );
 });
 
 QUnit.test("should disconnect when closing page while in call", async (assert) => {
@@ -77,8 +78,8 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
         },
     });
 
-    await click(".o-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-Call");
+    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    assert.containsOnce($, ".o-mail-Call");
     // simulate page close
     await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
     await nextTick();
@@ -96,17 +97,17 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-DiscussCategoryItem");
 
-    await click(".o-DiscussSidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(document.body, ".o-ChannelSelector input", "mario"));
-    await click(".o-ChannelSelector-suggestion");
-    await triggerEvent(document.body, ".o-ChannelSelector input", "keydown", {
+    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "mario"));
+    await click(".o-mail-ChannelSelector-suggestion");
+    await triggerEvent(document.body, ".o-mail-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.containsOnce($, ".o-DiscussCategoryItem");
-    assert.containsNone($, ".o-Discuss-content .o-Message");
-    assert.containsNone($, ".o-Call");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
+    assert.containsNone($, ".o-mail-Call");
 });
 
 QUnit.test("no default rtc after joining a group conversation", async (assert) => {
@@ -118,16 +119,16 @@ QUnit.test("no default rtc after joining a group conversation", async (assert) =
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-DiscussCategoryItem");
-    await click(".o-DiscussSidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(document.body, ".o-ChannelSelector input", "mario"));
-    await click(".o-ChannelSelector-suggestion");
-    await afterNextRender(() => editInput(document.body, ".o-ChannelSelector input", "luigi"));
-    await click(".o-ChannelSelector-suggestion");
-    await triggerEvent(document.body, ".o-ChannelSelector input", "keydown", {
+    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "mario"));
+    await click(".o-mail-ChannelSelector-suggestion");
+    await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "luigi"));
+    await click(".o-mail-ChannelSelector-suggestion");
+    await triggerEvent(document.body, ".o-mail-ChannelSelector input", "keydown", {
         key: "Enter",
     });
-    assert.containsOnce($, ".o-DiscussCategoryItem");
-    assert.containsNone($, ".o-Discuss-content .o-Message");
-    assert.containsNone($, ".o-Call");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
+    assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
+    assert.containsNone($, ".o-mail-Call");
 });

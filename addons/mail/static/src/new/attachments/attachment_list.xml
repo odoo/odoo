@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList" owl="1">
-        <div class="o-AttachmentList overflow-y-auto d-flex flex-column mt-1"
+        <div class="o-mail-AttachmentList overflow-y-auto d-flex flex-column mt-1"
             t-att-class="{
                 'o-inComposer': env.inComposer,
                 'o-inChatWindow': env.inChatWindow,
@@ -12,7 +12,7 @@
         >
             <div class="d-flex flex-grow-1 flex-wrap" role="menu">
                 <div t-foreach="imagesAttachments" t-as="attachment" t-key="attachment.id" t-att-aria-label="attachment.filename"
-                    class="o-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1"
+                    class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1"
                     t-att-title="attachment.name"
                     t-att-class="{ 'o-isUploading': attachment.uploading }"
                     tabindex="0"
@@ -45,7 +45,7 @@
             </div>
             <div class="d-flex flex-grow-1 flex-wrap mt-1">
                 <div t-foreach="nonImagesAttachments" t-as="attachment" t-key="attachment.id"
-                    class="o-AttachmentCard d-flex rounded bg-300 mb-1 me-1 mw-100"
+                    class="o-mail-AttachmentCard d-flex rounded bg-300 mb-1 me-1 mw-100"
                     t-att-class="{
                         'ms-1': isInChatWindowAndIsAlignedRight,
                         'me-1': !isInChatWindowAndIsAlignedRight,
@@ -55,12 +55,12 @@
                      t-on-click="() => this.attachmentViewer.open(attachment, props.attachments)"
                 >
                     <!-- o_image from mimetype.scss -->
-                    <div class="o-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                    <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
                     <div class="overflow-auto d-flex justify-content-center flex-column px-1">
                         <div t-if="attachment.name" class="text-truncate" t-esc="attachment.name"/>
                         <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
                     </div>
-                    <div class="o-AttachmentCard-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachment.isDeletable and !env.inComposer }">
+                    <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachment.isDeletable and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
                         </div>
@@ -68,7 +68,7 @@
                             <i class="fa fa-check"/>
                         </div>
                         <button t-if="attachment.isDeletable"
-                            class="o-AttachmentCard-unlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0"
+                            class="o-mail-AttachmentCard-unlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0"
                             t-attf-class="{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base' : 'bg-300' }}"
                             t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove"
                         >

@@ -22,11 +22,14 @@ QUnit.test("activity mark done popover simplest layout", async (assert) => {
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce($, ".o-ActivityMarkAsDone");
-    assert.containsOnce($, ".o-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
-    assert.containsOnce($, ".o-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    assert.containsOnce($, ".o-ActivityMarkAsDone button[aria-label='Done']");
-    assert.containsOnce($, ".o-ActivityMarkAsDone button:contains(Discard)");
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone");
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
+    assert.containsOnce(
+        $,
+        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
+    );
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
 });
 
 QUnit.test("activity with force next mark done popover simplest layout", async (assert) => {
@@ -46,11 +49,14 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce($, ".o-ActivityMarkAsDone");
-    assert.containsOnce($, ".o-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
-    assert.containsOnce($, ".o-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    assert.containsNone($, ".o-ActivityMarkAsDone button[aria-label='Done']");
-    assert.containsOnce($, ".o-ActivityMarkAsDone button:contains(Discard)");
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone");
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
+    assert.containsOnce(
+        $,
+        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
+    );
+    assert.containsNone($, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
 });
 
 QUnit.test("activity mark done popover mark done without feedback", async (assert) => {
@@ -88,7 +94,7 @@ QUnit.test("activity mark done popover mark done without feedback", async (asser
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    await click(".o-ActivityMarkAsDone button[aria-label='Done']");
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     assert.verifySteps(["action_feedback"]);
 });
 
@@ -128,11 +134,11 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
     });
     await click(".btn:contains('Mark Done')");
     insertText(
-        ".o-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
+        ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
     ).catch(() => {}); // no render
     await nextTick();
-    await click(".o-ActivityMarkAsDone button[aria-label='Done']");
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     assert.verifySteps(["action_feedback"]);
 });
 
@@ -178,11 +184,11 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
     });
     await click(".btn:contains('Mark Done')");
     insertText(
-        ".o-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
+        ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
     ).catch(() => {}); // no render
     await nextTick();
-    await click(".o-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     assert.verifySteps(["action_feedback_schedule_next"]);
 });
 
@@ -218,6 +224,6 @@ QUnit.test("[technical] activity mark done & schedule next with new action", asy
         },
     });
     await click(".btn:contains('Mark Done')");
-    await click(".o-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     assert.verifySteps(["activity_action"]);
 });

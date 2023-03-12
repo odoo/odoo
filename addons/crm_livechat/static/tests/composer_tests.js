@@ -18,7 +18,7 @@ QUnit.test("Can execute lead command", async function (assert) {
         },
     });
     await openDiscuss(channelId);
-    await insertText(".o-Composer-input", "/lead great lead");
+    await insertText(".o-mail-Composer-input", "/lead great lead");
     await afterNextRender(() => {
         triggerHotkey("Enter");
     });

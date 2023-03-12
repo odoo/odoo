@@ -163,7 +163,6 @@ export class Messaging {
     // -------------------------------------------------------------------------
 
     handleNotification(notifications) {
-        console.log("notifications received", notifications);
         const channelsLeft = new Set(
             notifications.reduce((channelIds, notification) => {
                 if (notification.type === "mail.channel/leave") {

@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: Markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     position: "bottom"
 }, {
-    trigger: ".o-Chatter .o-Composer button[aria-label='Send']",
+    trigger: ".o-mail-Chatter .o-mail-Composer button[aria-label='Send']",
     extra_trigger: '.o_applicant_form',
     content: _t("Send your email. Followers will get a copy of the communication."),
     position: "bottom"

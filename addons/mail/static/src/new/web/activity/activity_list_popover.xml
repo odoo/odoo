@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityListPopover" owl="1">
-        <div class="o-ActivityListPopover d-flex flex-column" t-ref="root">
+        <div class="o-mail-ActivityListPopover d-flex flex-column" t-ref="root">
             <div class="overflow-y-auto d-flex flex-column flex-grow-1">
                 <span t-if="activities.length === 0" class="p-3 text-center fst-italic text-500 border-bottom">Schedule activities to help you get things done.</span>
                 <t t-if="overdueActivities.length > 0">
@@ -14,7 +14,7 @@
                 </t>
                 <t t-if="todayActivities.length > 0">
                     <div class="d-flex bg-100 py-2 border-bottom">
-                        <span class="o-ActivityListPopover-todayTitle text-warning fw-bold mx-3">Today</span>
+                        <span class="o-mail-ActivityListPopover-todayTitle text-warning fw-bold mx-3">Today</span>
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-warning mx-3 align-self-center" t-esc="todayActivities.length"/>
                     </div>

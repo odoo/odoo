@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.DiscussSidebar" owl="1">
-    <div class="o-DiscussSidebar d-flex flex-column overflow-auto flex-shrink-0 h-100 pt-3 border-end bg-light">
+    <div class="o-mail-DiscussSidebar d-flex flex-column overflow-auto flex-shrink-0 h-100 pt-3 border-end bg-light">
         <div class="d-flex justify-content-center">
             <button t-on-click="onClickStartMeeting" class="btn btn-primary rounded" title="Start a meeting">
                 Start a meeting
@@ -52,17 +52,17 @@
 
 <t t-name="mail.DiscussCategory" owl="1">
     <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
-    <div class="o-DiscussCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
+    <div class="o-mail-DiscussCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
         <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
-            <i class="o-DiscussCategory-icon small" t-att-class="category.isOpen ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"/>
+            <i class="o-mail-DiscussCategory-icon small" t-att-class="category.isOpen ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"/>
             <span class="btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
         </div>
         <div class="flex-grow-1"/>
         <div class="d-flex me-3">
             <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
-            <i t-if="category.canAdd and category.isOpen" class="o-DiscussCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"/>
+            <i t-if="category.canAdd and category.isOpen" class="o-mail-DiscussCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"/>
         </div>
-        <div t-if="!category.isOpen and threadService.getDiscussCategoryCounter(category.id) > 0" class="o-DiscussCategory-counter badge rounded-pill text-bg-primary me-3">
+        <div t-if="!category.isOpen and threadService.getDiscussCategoryCounter(category.id) > 0" class="o-mail-DiscussCategory-counter badge rounded-pill text-bg-primary me-3">
             <t t-esc="threadService.getDiscussCategoryCounter(category.id)"/>
         </div>
     </div>
@@ -82,7 +82,7 @@
 
 <t t-name="mail.DiscussCategoryItem" owl="1">
     <t t-set="counter" t-value="threadService.getCounter(thread)"/>
-    <button class="o-DiscussCategoryItem btn d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
+    <button class="o-mail-DiscussCategoryItem btn d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
         t-att-class="{
             'bg-100': threadLocalId !== store.discuss.threadLocalId,
             'o-active bg-200': threadLocalId === store.discuss.threadLocalId,
@@ -92,19 +92,19 @@
     >
         <div class="o-bg-inherit position-relative d-flex ms-4 flex-shrink-0" style="width:30px;height:30px">
             <img class="w-100 h-100 rounded-circle" t-att-src="thread.imgUrl" alt="Thread Image"/>
-            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
+            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
         </div>
         <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': threadService.isUnread(thread) }">
             <t t-esc="thread.displayName"/>
         </span>
         <div class="flex-grow-1"/>
-        <div class="o-DiscussCategoryItem-commands d-none ms-1 me-3">
+        <div class="o-mail-DiscussCategoryItem-commands d-none ms-1 me-3">
             <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
             <div t-if="threadService.canLeave(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
                 t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
             <div t-if="threadService.canUnpin(thread)" t-attf-class="fa fa-times ms-1" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
         </div>
-        <div t-if="counter > 0" t-attf-class="o-DiscussCategoryItem-counter badge rounded-pill text-bg-primary ms-1 me-3">
+        <div t-if="counter > 0" t-attf-class="o-mail-DiscussCategoryItem-counter badge rounded-pill text-bg-primary ms-1 me-3">
             <t t-esc="counter"/>
         </div>
     </button>

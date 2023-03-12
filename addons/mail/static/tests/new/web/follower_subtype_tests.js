@@ -35,20 +35,20 @@ QUnit.test("simplest layout of a followed subtype", async (assert) => {
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
     });
-    await click(".o-Followers-button");
+    await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
-    assert.containsOnce($, ".o-FollowerSubtypeDialog-subtype:contains(TestSubtype)");
-    assert.containsOnce($(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype)"), "label");
+    assert.containsOnce($, ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)");
+    assert.containsOnce($(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"), "label");
     assert.containsOnce(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype)"),
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"),
         "input[type='checkbox']"
     );
     assert.strictEqual(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) label").text(),
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) label").text(),
         "TestSubtype"
     );
     assert.ok(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
             .checked
     );
 });
@@ -82,10 +82,10 @@ QUnit.test("simplest layout of a not followed subtype", async (assert) => {
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
     });
-    await click(".o-Followers-button");
+    await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     assert.notOk(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
             .checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
@@ -120,23 +120,27 @@ QUnit.test("toggle follower subtype checkbox", async (assert) => {
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
     });
-    await click(".o-Followers-button");
+    await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     assert.notOk(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
             .checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
 
-    await click(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']");
+    await click(
+        ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']"
+    );
     assert.ok(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
             .checked
     );
 
-    await click(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']");
+    await click(
+        ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']"
+    );
     assert.notOk(
-        $(".o-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
+        $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
             .checked
     );
 });
@@ -174,13 +178,13 @@ QUnit.test("follower subtype apply", async (assert) => {
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
     });
-    await click(".o-Followers-button");
+    await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
 
     const subtype1 =
-        ".o-FollowerSubtypeDialog-subtype:contains(TestSubtype1) input[type='checkbox']";
+        ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype1) input[type='checkbox']";
     const subtype2 =
-        ".o-FollowerSubtypeDialog-subtype:contains(TestSubtype2) input[type='checkbox']";
+        ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype2) input[type='checkbox']";
     assert.ok($(subtype1)[0].checked);
     assert.notOk($(subtype2)[0].checked);
     await click(subtype1);

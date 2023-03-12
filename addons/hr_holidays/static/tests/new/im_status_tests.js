@@ -21,7 +21,7 @@ QUnit.test("on leave & online", async (assert) => {
     });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce($, ".o-ImStatus i.fa-plane[title='Online']");
+    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Online']");
 });
 
 QUnit.test("on leave & away", async (assert) => {
@@ -39,7 +39,7 @@ QUnit.test("on leave & away", async (assert) => {
     });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce($, ".o-ImStatus i.fa-plane[title='Idle']");
+    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Idle']");
 });
 
 QUnit.test("on leave & offline", async (assert) => {
@@ -57,5 +57,5 @@ QUnit.test("on leave & offline", async (assert) => {
     });
     await openDiscuss(channelId);
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
-    assert.containsOnce($, ".o-ImStatus i.fa-plane[title='Out of office']");
+    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Out of office']");
 });

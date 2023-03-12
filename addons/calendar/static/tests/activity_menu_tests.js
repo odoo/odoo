@@ -37,12 +37,12 @@ QUnit.test("activity menu widget:today meetings", async function (assert) {
             assert.step("action");
         },
     });
-    assert.containsOnce(target, ".o-ActivityGroup:contains(Today's Meetings)");
-    assert.containsN(target, ".o-ActivityGroup .o-calendar-metting", 2);
+    assert.containsOnce(target, ".o-mail-ActivityGroup:contains(Today's Meetings)");
+    assert.containsN(target, ".o-mail-ActivityGroup .o-calendar-metting", 2);
     assert.containsOnce(target, ".o-calendar-metting:contains(meeting1)");
     assert.containsOnce(target, ".o-calendar-metting:contains(meeting2)");
     assert.hasClass($(target).find("span:contains(meeting1)"), "fw-bold");
     assert.doesNotHaveClass($(target).find("span:contains(meeting2)"), "fw-bold");
-    await click(".o-ActivityMenu .o-ActivityGroup");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup");
     assert.verifySteps(["action"]);
 });

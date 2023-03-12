@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("mail_tour", {
     sequence: 80,
     steps: [
         {
-            trigger: ".o-DiscussCategory-channel .o-DiscussCategory-add",
+            trigger: ".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add",
             content: Markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("mail_tour", {
             position: "bottom",
         },
         {
-            trigger: ".o-ChannelSelector input",
+            trigger: ".o-mail-ChannelSelector input",
             content: Markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
             auto: true,
@@ -28,16 +28,16 @@ registry.category("web_tour.tours").add("mail_tour", {
             },
         },
         {
-            trigger: ".o-ChannelSelector-list",
-            extra_trigger: ".o-ChannelSelector-suggestion",
+            trigger: ".o-mail-ChannelSelector-list",
+            extra_trigger: ".o-mail-ChannelSelector-suggestion",
             content: Markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
             run() {
-                document.querySelector(".o-ChannelSelector-suggestion").click();
+                document.querySelector(".o-mail-ChannelSelector-suggestion").click();
             },
         },
         {
-            trigger: ".o-Composer-input",
+            trigger: ".o-mail-Composer-input",
             content: Markup(
                 _t(
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
@@ -51,17 +51,17 @@ registry.category("web_tour.tours").add("mail_tour", {
             },
         },
         {
-            trigger: ".o-Composer-send",
+            trigger: ".o-mail-Composer-send",
             content: _t("Post your message on the thread"),
             position: "top",
         },
         {
-            trigger: ".o-Message",
+            trigger: ".o-mail-Message",
             content: _t("Click on your message"),
             position: "top",
         },
         {
-            trigger: ".o-Message i[aria-label='Mark as Todo']",
+            trigger: ".o-mail-Message i[aria-label='Mark as Todo']",
             content: Markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add("mail_tour", {
             position: "bottom",
         },
         {
-            trigger: ".o-DiscussCategory-chat .o-DiscussCategory-add",
+            trigger: ".o-mail-DiscussCategory-chat .o-mail-DiscussCategory-add",
             content: Markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"

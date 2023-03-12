@@ -31,8 +31,8 @@ QUnit.test("Renders the call settings", async (assert) => {
     const channelId = pyEnv["mail.channel"].create({ name: "test" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Discuss-header .fa-gear");
-    assert.containsOnce($, ".o-CallSettings", "Should have a call settings menu");
+    await click(".o-mail-Discuss-header .fa-gear");
+    assert.containsOnce($, ".o-mail-CallSettings", "Should have a call settings menu");
     assert.containsOnce($, "label[aria-label='Input device']");
     assert.containsOnce($, "option[value=mockAudioDeviceId]");
     assert.containsNone($, "option[value=mockVideoDeviceId]");
@@ -55,7 +55,7 @@ QUnit.test("activate push to talk", async (assert) => {
     const channelId = pyEnv["mail.channel"].create({ name: "test" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Discuss-header .fa-gear");
+    await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='toggle push-to-talk']");
     assert.containsOnce($, "i[aria-label='Register new key']");
     assert.containsOnce($, "label[aria-label='Delay after releasing push-to-talk']");
@@ -75,7 +75,7 @@ QUnit.test("activate blur", async (assert) => {
     const channelId = pyEnv["mail.channel"].create({ name: "test" });
     const { click, openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-Discuss-header .fa-gear");
+    await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='Blur video background']");
     assert.containsOnce($, "label[aria-label='Background blur intensity']");
     assert.containsOnce($, "label[aria-label='Edge blur intensity']");

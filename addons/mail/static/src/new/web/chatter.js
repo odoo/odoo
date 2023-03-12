@@ -115,7 +115,7 @@ export class Chatter extends Component {
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
-            "o-Chatter-dropzone"
+            "o-mail-Chatter-dropzone"
         );
 
         onMounted(this.scrollPosition.restore);

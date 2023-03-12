@@ -69,16 +69,19 @@ QUnit.test("many2one_avatar_employee widget in list view", async function (asser
         dom.click(document.querySelector(".o_data_cell .o_m2o_avatar > img"))
     );
     assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    assert.containsOnce(document.body, ".o-ChatWindow-name");
-    assert.strictEqual(document.querySelector(".o-ChatWindow-name").textContent, "Mario");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
+    assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
 
     // click on second employee
     await afterNextRender(() =>
         dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[1])
     );
     assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
-    assert.containsN(document.body, ".o-ChatWindow-name", 2);
-    assert.strictEqual(document.querySelectorAll(".o-ChatWindow-name")[1].textContent, "Luigi");
+    assert.containsN(document.body, ".o-mail-ChatWindow-name", 2);
+    assert.strictEqual(
+        document.querySelectorAll(".o-mail-ChatWindow-name")[1].textContent,
+        "Luigi"
+    );
 
     // click on third employee (same as first)
     await afterNextRender(() =>
@@ -90,7 +93,7 @@ QUnit.test("many2one_avatar_employee widget in list view", async function (asser
     );
     assert.containsN(
         document.body,
-        ".o-ChatWindow-name",
+        ".o-mail-ChatWindow-name",
         2,
         "should still have only 2 chat windows because third is the same partner as first"
     );
@@ -234,7 +237,7 @@ QUnit.test("many2many_avatar_employee widget in form view", async function (asse
         `read hr.employee.public ${employeeId_1}`,
         `read hr.employee.public ${employeeId_2}`,
     ]);
-    assert.containsN(document.body, ".o-ChatWindow-name", 2);
+    assert.containsN(document.body, ".o-mail-ChatWindow-name", 2);
 });
 
 QUnit.test("many2many_avatar_employee widget in list view", async function (assert) {
@@ -283,16 +286,19 @@ QUnit.test("many2many_avatar_employee widget in list view", async function (asse
         `read hr.employee.public ${employeeId_1},${employeeId_2}`,
         `read hr.employee.public ${employeeId_1}`,
     ]);
-    assert.containsOnce(document.body, ".o-ChatWindow-name");
-    assert.strictEqual(document.querySelector(".o-ChatWindow-name").textContent, "Mario");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
+    assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
 
     // click on second employee
     await afterNextRender(() =>
         dom.click(document.querySelectorAll(".o_data_cell .o_m2m_avatar")[1])
     );
     assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
-    assert.containsN(document.body, ".o-ChatWindow-name", 2);
-    assert.strictEqual(document.querySelectorAll(".o-ChatWindow-name")[1].textContent, "Yoshi");
+    assert.containsN(document.body, ".o-mail-ChatWindow-name", 2);
+    assert.strictEqual(
+        document.querySelectorAll(".o-mail-ChatWindow-name")[1].textContent,
+        "Yoshi"
+    );
 });
 
 QUnit.test("many2many_avatar_employee widget in kanban view", async function (assert) {
@@ -429,6 +435,6 @@ QUnit.test(
             `read hr.employee.public ${employeeId_2}`,
         ]);
 
-        assert.containsOnce(document.body, ".o-ChatWindow-name");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
     }
 );

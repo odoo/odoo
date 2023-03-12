@@ -1,50 +1,50 @@
-.o-LinkPreviewCard {
-    max-width: $o-LinkPreview-width;
+.o-mail-LinkPreviewCard {
+    max-width: $o-mail-LinkPreview-width;
 
     .row {
-        min-height: $o-LinkPreviewCard-height;
+        min-height: $o-mail-LinkPreviewCard-height;
     }
 }
 
-.o-LinkPreviewCard-hasMultineLines {
+.o-mail-LinkPreviewCard-hasMultineLines {
     display: -webkit-box;
     -webkit-box-orient: vertical;
 }
 
-.o-LinkPreviewCard-imageLinkWrap {
+.o-mail-LinkPreviewCard-imageLinkWrap {
     border-right: 1px solid $card-border-color;
 }
 
-.o-LinkPreviewImage img {
-    max-height: $o-LinkPreview-height;
-    max-width: $o-LinkPreview-width;
+.o-mail-LinkPreviewImage img {
+    max-height: $o-mail-LinkPreview-height;
+    max-width: $o-mail-LinkPreview-width;
 }
 
-.o-LinkPreviewVideo {
-    max-width: $o-LinkPreview-width;
+.o-mail-LinkPreviewVideo {
+    max-width: $o-mail-LinkPreview-width;
 
     .row {
-        min-height: $o-LinkPreviewCard-height;
+        min-height: $o-mail-LinkPreviewCard-height;
     }
 }
 
-.o-LinkPreviewVideo-hasDescription {
+.o-mail-LinkPreviewVideo-hasDescription {
     display: -webkit-box;
     -webkit-box-orient: vertical;
 
-    &.o-LinkPreviewVideo-description {
+    &.o-mail-LinkPreviewVideo-description {
         -webkit-line-clamp: 2;
     }
-    &.o-LinkPreviewVideo-title {
+    &.o-mail-LinkPreviewVideo-title {
         -webkit-line-clamp: 3;
     }
 }
 
-.o-LinkPreviewVideo-videoWrap {
+.o-mail-LinkPreviewVideo-videoWrap {
     border-right: 1px solid $card-border-color;
 }
 
-.o-LinkPreviewVideo-play {
+.o-mail-LinkPreviewVideo-play {
     background: #000000;
 
     i {
@@ -52,11 +52,11 @@
     }
 }
 
-.o-LinkPreview-aside {
+.o-mail-LinkPreview-aside {
     display: none;
 }
-.o-LinkPreviewCard:hover, .o-LinkPreviewImage:hover, .o-LinkPreviewVideo:hover {
-    .o-LinkPreview-aside {
+.o-mail-LinkPreviewCard:hover, .o-mail-LinkPreviewImage:hover, .o-mail-LinkPreviewVideo:hover {
+    .o-mail-LinkPreview-aside {
         display: block;
     }
 }

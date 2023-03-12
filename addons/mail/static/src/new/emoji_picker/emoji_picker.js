@@ -157,7 +157,7 @@ export class EmojiPicker extends Component {
                 this.shouldScrollElem = false;
                 const getElement = () =>
                     this.gridRef.el.querySelector(
-                        `.o-EmojiPicker-category[data-category="${this.state.categoryId}"`
+                        `.o-mail-EmojiPicker-category[data-category="${this.state.categoryId}"`
                     );
                 const elem = getElement();
                 if (elem) {

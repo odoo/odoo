@@ -15,10 +15,10 @@ QUnit.test("Messages are received cross-tab", async (assert) => {
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss(channelId);
-    await tab1.insertText(".o-Composer-input", "Hello World!");
+    await tab1.insertText(".o-mail-Composer-input", "Hello World!");
     await tab1.click("button:contains(Send)");
-    assert.containsOnce(tab1.target, ".o-Message:contains(Hello World!)");
-    assert.containsOnce(tab2.target, ".o-Message:contains(Hello World!)");
+    assert.containsOnce(tab1.target, ".o-mail-Message:contains(Hello World!)");
+    assert.containsOnce(tab2.target, ".o-mail-Message:contains(Hello World!)");
 });
 
 QUnit.test("Delete starred message updates counter", async (assert) => {
@@ -54,10 +54,10 @@ QUnit.test("Thread rename", async (assert) => {
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss(channelId);
-    await tab1.insertText(".o-Discuss-threadName", "Sales", { replace: true });
+    await tab1.insertText(".o-mail-Discuss-threadName", "Sales", { replace: true });
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(tab2.target, ".o-Discuss-threadName[title='Sales']");
-    assert.containsOnce(tab2.target, ".o-DiscussCategoryItem:contains(Sales)");
+    assert.containsOnce(tab2.target, ".o-mail-Discuss-threadName[title='Sales']");
+    assert.containsOnce(tab2.target, ".o-mail-DiscussCategoryItem:contains(Sales)");
 });
 
 QUnit.test("Thread description update", async (assert) => {
@@ -67,11 +67,14 @@ QUnit.test("Thread description update", async (assert) => {
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss(channelId);
-    await tab1.insertText(".o-Discuss-threadDescription", "The very best channel", {
+    await tab1.insertText(".o-mail-Discuss-threadDescription", "The very best channel", {
         replace: true,
     });
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(tab2.target, ".o-Discuss-threadDescription[title='The very best channel']");
+    assert.containsOnce(
+        tab2.target,
+        ".o-mail-Discuss-threadDescription[title='The very best channel']"
+    );
 });
 
 QUnit.test("Channel subscription is renewed when channel is added", async (assert) => {
@@ -102,7 +105,7 @@ QUnit.test("Channel subscription is renewed when channel is left", async (assert
         },
     });
     await openDiscuss();
-    await click(".o-DiscussCategoryItem .btn[title='Leave this channel']");
+    await click(".o-mail-DiscussCategoryItem .btn[title='Leave this channel']");
     assert.verifySteps(["update-channels"]);
 });
 
@@ -130,7 +133,7 @@ QUnit.test("Adding attachments", async (assert) => {
             message_id: messageId,
         })
     );
-    assert.containsOnce(tab2.target, ".o-AttachmentCard:contains(test.txt)");
+    assert.containsOnce(tab2.target, ".o-mail-AttachmentCard:contains(test.txt)");
 });
 
 QUnit.test("Remove attachment from message", async (assert) => {
@@ -151,10 +154,10 @@ QUnit.test("Remove attachment from message", async (assert) => {
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss(channelId);
-    assert.containsOnce(tab1.target, ".o-AttachmentCard:contains(test.txt)");
-    await tab2.click(".o-AttachmentCard-unlink");
+    assert.containsOnce(tab1.target, ".o-mail-AttachmentCard:contains(test.txt)");
+    await tab2.click(".o-mail-AttachmentCard-unlink");
     await tab2.click(".modal-footer .btn:contains(Ok)");
-    assert.containsNone(tab1.target, ".o-AttachmentCard:contains(test.txt)");
+    assert.containsNone(tab1.target, ".o-mail-AttachmentCard:contains(test.txt)");
 });
 
 QUnit.test("Add member to channel", async (assert) => {
@@ -165,11 +168,11 @@ QUnit.test("Add member to channel", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-ChannelMember:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-mail-ChannelMember:contains(Mitchell Admin)");
     await click("button[title='Add Users']");
-    await click(".o-ChannelInvitation-selectable:contains(Harry)");
+    await click(".o-mail-ChannelInvitation-selectable:contains(Harry)");
     await click("button[title='Invite to Channel']");
-    assert.containsOnce($, ".o-ChannelMember:contains(Harry)");
+    assert.containsOnce($, ".o-mail-ChannelMember:contains(Harry)");
 });
 
 QUnit.test("Remove member from channel", async (assert) => {
@@ -189,7 +192,7 @@ QUnit.test("Remove member from channel", async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-ChannelMember:contains(Harry)");
+    assert.containsOnce($, ".o-mail-ChannelMember:contains(Harry)");
     env.services.orm.call("mail.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });

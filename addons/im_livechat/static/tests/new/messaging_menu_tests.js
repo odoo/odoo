@@ -17,10 +17,10 @@ QUnit.test('livechats should be in "chat" filter', async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-MessagingMenu button:contains(All)");
-    assert.hasClass($(".o-MessagingMenu button:contains(All)"), "fw-bolder");
-    assert.containsOnce($, ".o-NotificationItem:contains(Visitor 11)");
-    await click(".o-MessagingMenu button:contains(Chat)");
-    assert.hasClass($(".o-MessagingMenu button:contains(Chat)"), "fw-bolder");
-    assert.containsOnce($, ".o-NotificationItem:contains(Visitor 11)");
+    assert.containsOnce($, ".o-mail-MessagingMenu button:contains(All)");
+    assert.hasClass($(".o-mail-MessagingMenu button:contains(All)"), "fw-bolder");
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    await click(".o-mail-MessagingMenu button:contains(Chat)");
+    assert.hasClass($(".o-mail-MessagingMenu button:contains(Chat)"), "fw-bolder");
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
 });
