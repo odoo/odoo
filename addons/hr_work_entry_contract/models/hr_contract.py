@@ -303,10 +303,11 @@ class HrContract(models.Model):
         dependendant_fields = self._get_fields_that_recompute_we()
         if any(key in dependendant_fields for key in vals.keys()):
             for contract in self:
-                date_from = max(self.date_start, self.date_generated_from.date())
-                date_to = min(self.date_end or date.max, self.date_generated_to.date())
+                date_from = max(contract.date_start, contract.date_generated_from.date())
+                date_to = min(contract.date_end or date.max, contract.date_generated_to.date())
                 if date_from != date_to:
                     contract._recompute_work_entries(date_from, date_to)
+        return result
 
     def _recompute_work_entries(self, date_from, date_to):
         self.ensure_one()
