@@ -23,7 +23,14 @@
             </div>
             <div class="col end total">
                 <div t-if="env.isMobile">Total</div>
-                <div><t t-esc="total"/></div>
+                <div class="flex-container">
+                    <div class="self-end">
+                        <t t-esc="total"/>
+                    </div>
+                    <div t-if="showAmountUnpaid" class="self-end text-gray">
+                        (left: <t t-esc="amountUnpaidRepr"/>)
+                    </div>
+                </div>
             </div>
             <div class="col state">
                 <div t-if="env.isMobile">State</div>
