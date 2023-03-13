@@ -3,7 +3,11 @@
 
     <!-- User Demo -->
     <record id="base.user_demo" model="res.users">
-        <field name="groups_id" eval="[(4, ref('group_hr_timesheet_user'))]"/>
+        <field name="groups_id" eval="[
+            Command.unlink(ref('project.group_project_manager')),
+            Command.unlink(ref('group_timesheet_manager')),
+            Command.link(ref('group_hr_timesheet_user'))
+        ]"/>
     </record>
 
     <!-- Projects -->
