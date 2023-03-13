@@ -18,7 +18,7 @@ const MAP = {
 const dmyRegex = /^([0|1|2|3][1-9])\/(0[1-9]|1[0-2])\/(\d{4})$/i;
 
 export function migrate(data) {
-    let _data = load(data);
+    let _data = load(data, !!odoo.debug);
     const version = _data.odooVersion || 0;
     if (version < 1) {
         _data = migrate0to1(_data);
@@ -67,7 +67,7 @@ function migrate1to2(data) {
             if (cell.content && cell.content.startsWith("=")) {
                 try {
                     cell.content = migratePivotDaysParameters(cell.content);
-                } catch (_) {
+                } catch {
                     continue;
                 }
             }

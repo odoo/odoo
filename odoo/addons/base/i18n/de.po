@@ -10,6 +10,7 @@
 # Martin Trigaux, 2022
 # Wolfgang Taferner, 2022
 # Larissa Manderfeld, 2023
+# Chris Egal <sodaswed@web.de>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3372,6 +3373,29 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
+"\n"
+"Australisches Buchhaltungsmodul\n"
+"============================\n"
+"\n"
+"Steuerpflichtige Zahlungen - Jahresbericht (TPAR) für Australien\n"
+"\n"
+"Der Jahresbericht für steuerpflichtige Zahlungen (TPAR) ermöglicht:\n"
+"\n"
+"- Zahlungen an Auftragnehmer (oder Unterauftragnehmer) für Dienstleistungen, oder\n"
+"- Zuschüsse, die von staatlichen Stellen an ABN-Inhaber gezahlt werden\n"
+"\n"
+"gemeldet werden, wenn dies im Rahmen des Taxable Payments Reporting System (TPRS) und der Taxable Government Grants and Payments reporting measure erforderlich ist.\n"
+"\n"
+"Der TPAR ist bis zum 28. August eines jeden Jahres fällig.\n"
+"\n"
+"Wenn Sie Ihren TPAR nicht rechtzeitig einreichen, können Strafen verhängt werden.\n"
+"\n"
+"Weitere Informationen darüber, wer verpflichtet ist, einen Jahresbericht über steuerpflichtige Zahlungen einzureichen, finden Sie unter\n"
+"https://softwaredevelopers.ato.gov.au/tprs\n"
+"\n"
+"Der Jahresbericht muss dem Kommissar spätestens am 28. August nach Ende des Haushaltsjahres vorgelegt werden. Auf Wunsch können die Berichte auch in kürzeren Abständen eingereicht werden.\n"
+"\n"
+"Der Bericht verwendet die Steuerkennzeichen ``Dienstleistung`` und ``Steuerabzug``, um geeignete Journalposten zu finden. Diese werden anhand der Steuerpositionen und des richtigen Produkttyps (Dienstleistungen) festgelegt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona
@@ -4433,6 +4457,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI Chilenische Lokalisierung\n"
+"========================\n"
+"Verwenden Sie diesen Code, um das DTE-Dokument für die chilenische Rechnungsstellung zu erzeugen.\n"
+"- DTE (elektronisches steuerpflichtiges Dokument) im XML-Format.\n"
+"- Direkte Kommunikation mit dem SII (Servicio de Impuestos Internos), um Rechnungen und andere Steuerdokumente im Zusammenhang mit Verkäufen zu versenden.\n"
+"- Kommunikation mit den Kunden, um die DTEs zu versenden.\n"
+"- Kommunikation mit den Lieferanten (Verkäufern), um DTEs von ihnen zu akzeptieren.\n"
+"- Direkte Kommunikation mit der SII, um die Annahme oder Ablehnung von Lieferantenrechnungen oder anderen DTEs mitzuteilen.\n"
+"\n"
+" Um den Barcode auf der Rechnung zu sehen, benötigen Sie die pdf417gen-Bibliothek.  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5005,6 +5040,34 @@ msgid ""
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 "    "
 msgstr ""
+"\n"
+"Funktionell\n"
+"----------\n"
+"\n"
+"Dieses Modul fügt Buchhaltungsfunktionen für die ecuadorianische Lokalisierung hinzu, die\n"
+"die die Mindestanforderungen für den Betrieb eines Unternehmens in Ecuador in Übereinstimmung\n"
+"mit lokalen Regulierungsbehörden wie der ecuadorianischen Steuerbehörde -SRI- und der \n"
+"Oberaufsichtsbehörde für Unternehmen -Super Intendencia de Compañías-.\n"
+"\n"
+"Folgen Sie den folgenden Konfigurationsschritten:\n"
+"1. Gehen Sie zu Ihrem Unternehmen und konfigurieren Sie Ihr Land als Ecuador\n"
+"2. Installieren Sie das Fakturierungs- oder Buchhaltungsmodul, alles wird automatisch erledigt.\n"
+"\n"
+"Highlights:\n"
+"* Der ecuadorianische Kontenplan wird automatisch installiert, basierend auf dem von Super Intendencia de Compañías bereitgestellten Beispiel.\n"
+"* Liste der Steuern (einschließlich Einbehaltungen) wird ebenfalls installiert, Sie können die Steuern, die Ihr Unternehmen nicht verwendet, abschalten\n"
+"* Steuerliche Position, Belegarten, Liste der lokalen Banken, Liste der lokalen Staaten usw. werden ebenfalls installiert.\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"Stammdaten:\n"
+"* Kontenplan, basierend auf einer Empfehlung von Super Cías\n"
+"* Ecuadorianische Steuern, Steuerkennzeichen und Steuergruppen\n"
+"* Ecuadorianische steuerliche Positionen\n"
+"* Belegarten (in Ecuador gibt es etwa 41 Arten von Kaufbelegen)\n"
+"* Identifikationstypen\n"
+"* Ecuadorianische Banken\n"
+"* Partner: Consumidor Final, SRI, IESS, und auch grundlegende Mehrwertsteuer-Validierung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -12165,6 +12228,72 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
+"Fügt Unterstützung für die Authentifizierung durch LDAP-Server hinzu.\n"
+"===============================================\n"
+"Dieses Modul ermöglicht es Benutzern, sich mit ihrem LDAP-Benutzernamen und -Passwort anzumelden, und\n"
+"erstellt automatisch Odoo-Benutzer für sie während des Betriebs.\n"
+"\n"
+"**Hinweis:** Dieses Modul funktioniert nur auf Servern, auf denen das Python-Modul ``python-ldap`` installiert ist.\n"
+"\n"
+"Konfiguration:\n"
+"--------------\n"
+"Nachdem Sie dieses Modul installiert haben, müssen Sie die LDAP-Parameter im Menü\n"
+"Menü Allgemeine Einstellungen. Verschiedene Firmen können unterschiedliche\n"
+"LDAP-Server haben, solange sie eindeutige Benutzernamen haben (Benutzernamen müssen in Odoo eindeutig sein\n"
+"in Odoo eindeutig sein, auch über mehrere Unternehmen hinweg).\n"
+"\n"
+"Anonyme LDAP-Verbindungen werden ebenfalls unterstützt (für LDAP-Server, die dies zulassen), indem\n"
+"einfach den LDAP-Benutzer und das Passwort in der LDAP-Konfiguration leer lassen.\n"
+"Dies ermöglicht keine anonyme Authentifizierung für Benutzer, sondern nur für das Master\n"
+"LDAP-Konto, das verwendet wird, um zu überprüfen, ob ein Benutzer existiert, bevor versucht wird, ihn zu\n"
+"authentifizieren.\n"
+"\n"
+"Die Sicherung der Verbindung mit STARTTLS ist für LDAP-Server verfügbar, die\n"
+"unterstützen, indem sie die TLS-Option in der LDAP-Konfiguration aktivieren.\n"
+"\n"
+"Weitere Optionen für die Konfiguration der LDAP-Einstellungen finden Sie in der ldap.conf\n"
+"manpage: manpage:`ldap.conf(5)`.\n"
+"\n"
+"Sicherheitserwägungen:\n"
+"------------------------\n"
+"Die LDAP-Passwörter der Benutzer werden nie in der Odoo-Datenbank gespeichert, der LDAP-Server\n"
+"wird immer dann abgefragt, wenn ein Benutzer authentifiziert werden muss. Es findet keine Duplizierung des\n"
+"Kennworts findet nicht statt, und die Kennwörter werden nur an einer Stelle verwaltet.\n"
+"\n"
+"Odoo verwaltet keine Passwortänderungen im LDAP, so dass jede Passwortänderung\n"
+"sollte auf anderem Wege direkt im LDAP-Verzeichnis vorgenommen werden (für LDAP-Benutzer).\n"
+"\n"
+"Es ist auch möglich, lokale Odoo-Benutzer in der Datenbank zu haben, zusammen mit\n"
+"LDAP-authentifizierten Benutzern (das Administratorkonto ist ein offensichtliches Beispiel).\n"
+"\n"
+"So funktioniert es:\n"
+"---------------------\n"
+"* Das System versucht zunächst, die Benutzer anhand der lokalen Odoo\n"
+"Datenbank zu authentifizieren;\n"
+"* Schlägt diese Authentifizierung fehl (z.B. weil der Benutzer kein lokales\n"
+"Kennwort hat), versucht das System dann, die Authentifizierung anhand von LDAP vorzunehmen;\n"
+"\n"
+"Da LDAP-Benutzer in der lokalen Odoo-Datenbank standardmäßig leere Kennwörter haben\n"
+"(was keinen Zugriff bedeutet), schlägt der erste Schritt immer fehl und der LDAP-Server wird\n"
+"für die Authentifizierung abgefragt.\n"
+"\n"
+"Die Aktivierung von STARTTLS stellt sicher, dass die Authentifizierungsanfrage an den LDAP-Server\n"
+"verschlüsselt wird.\n"
+"\n"
+"Benutzer-Vorlage:\n"
+"--------------\n"
+"In der LDAP-Konfiguration in den Allgemeinen Einstellungen kann eine *Benutzervorlage\n"
+"Vorlage* auszuwählen. Wenn diese eingestellt ist, wird dieser Benutzer als Vorlage für die Erstellung der lokalen Benutzer verwendet\n"
+"wenn sich jemand zum ersten Mal per LDAP-Authentifizierung anmeldet. Diese\n"
+"ermöglicht die Voreinstellung der Standardgruppen und -menüs für die erstmaligen Benutzer.\n"
+"\n"
+"**Warnung:** Wenn Sie ein Passwort für die Benutzervorlage festlegen, wird dieses Passwort\n"
+"dieses Kennwort als lokales Kennwort für jeden neuen LDAP-Benutzer zugewiesen, wodurch\n"
+"ein *Masterkennwort* für diese Benutzer festgelegt (bis es manuell geändert wird). Sie\n"
+"wollen dies normalerweise nicht. Eine einfache Möglichkeit, eine Benutzervorlage einzurichten, besteht darin\n"
+"Sie melden sich einmal mit einem gültigen LDAP-Benutzer an und lassen Odoo einen leeren lokalen\n"
+"Benutzer mit demselben Login (und einem leeren Passwort) erstellen zu lassen, dann diesen neuen\n"
+"Benutzer in einen Benutzernamen umbenennen, der im LDAP nicht existiert, und seine Gruppen einrichten\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_extended_40
@@ -14382,7 +14511,7 @@ msgstr "Mehrstufig"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_basis
 msgid "Cash Basis Accounting Reports"
-msgstr ""
+msgstr "Berichte zur Kassenbuchführung"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -16703,7 +16832,7 @@ msgstr "Strategie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "Richtlinie"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -20705,7 +20834,7 @@ msgstr "Inaktive Benutzer"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__include
 msgid "Include"
-msgstr ""
+msgstr "einbeziehen"
 
 #. module: base
 #. odoo-python
@@ -28195,7 +28324,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
 msgid "Project Accounting Assets"
-msgstr ""
+msgstr "Projektbuchhaltung Vermögenswerte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_budget
@@ -28928,7 +29057,7 @@ msgstr "Raleway"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_string
 msgid "Rate String"
-msgstr ""
+msgstr "Zeichenfolge bewerten"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_ids
@@ -29635,6 +29764,8 @@ msgid ""
 "SQL expression for ordering records in the model; e.g. \"x_sequence asc, id "
 "desc\""
 msgstr ""
+"SQL-Ausdruck für die Reihenfolge der Datensätze im Modell, z. B. "
+"\"x_sequence asc, id desc\"."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_certificate
@@ -33012,6 +33143,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
+"Dieses Modul enthält Tests im Zusammenhang mit der Basisautomatisierung. Diese sind\n"
+"sind in einem separaten Modul enthalten, da es Modelle enthält, die nur zur Durchführung\n"
+"Tests unabhängig von funktionalen Aspekten anderer Modelle durchzuführen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail

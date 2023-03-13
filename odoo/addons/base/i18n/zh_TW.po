@@ -2778,44 +2778,6 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
-"\n"
-"Add a new model named \"Identification Type\" that extend the vat field functionality in the partner and let the user to identify (an eventually invoice) to contacts not only with their fiscal tax ID (VAT) but with other types of identifications like national document, passport, foreign ID, etc. With this module installed you will see now in the partner form view two fields:\n"
-"\n"
-"* Identification Type\n"
-"* Identification Number\n"
-"\n"
-"This behavior is a common requirement for some latam countries like Argentina and Chile. If your localization has this requirements then you need to depend on this module and define in your localization module the identifications types that are used in your country. Generally these types of identifications are defined by the government authorities that regulate the fiscal operations. For example:\n"
-"\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat for natural person), and another 80 valid identification types.\n"
-"\n"
-"Each identification holds this information:\n"
-"\n"
-"* name: short name of the identification\n"
-"* description: could be the same short name or a long name\n"
-"* country_id: the country where this identification belongs\n"
-"* is_vat: identify this record as the corresponding VAT for the specific country.\n"
-"* sequence: let us to sort the identification types depending on the ones that are most used.\n"
-"* active: we can activate/inactivate identifications to make it easier to our customers\n"
-"\n"
-"In order to make this module compatible for multi-company environments where we have companies that does not need/support this requirement, we have added generic identification types and generic rules to manage the contact information and make it transparent for the user when only use the VAT as we formerly know.\n"
-"\n"
-"Generic Identifications:\n"
-"\n"
-"* VAT: The Fiscal Tax Identification or VAT number, by default will be selected as identification type so the user will only need to add the related vat number.\n"
-"* Passport\n"
-"* Foreign ID (Foreign National Document)\n"
-"\n"
-"Rules when creating a new partner: We will only see the identification types that are meaningful, taking into account these rules:\n"
-"\n"
-"* If the partner have not country address set: Will show the generic identification types plus the ones defined in the partner's related company country (If the partner has not specific company then will show the identification types related to the current user company)\n"
-"\n"
-"* If the partner has country address : will show the generic identification types plus the ones defined for the country of the partner.\n"
-"\n"
-"When creating a new company, will set to the related partner always the related country is_vat identification type.\n"
-"\n"
-"All the defined identification types can be reviewed and activate/deactivate in \"Contacts / Configuration / Identification Type\" menu.\n"
-"\n"
-"This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -7033,15 +6995,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"巴拿马会计科目表和税收本地化.\n"
-"\n"
-"计划承诺 panameño e impuestos de acuerdo a disposiciones vigentes\n"
-"\n"
-"Con la Colaboración de \n"
-"- AHMNET CORP http://www.ahmnet.com\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
@@ -10695,7 +10648,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
-msgstr "<code>UserError</code>: 與 <code>raise</code> 一起使用的警告異常"
+msgstr "<code>UserError</code>：警告錯誤，與 <code>raise</code> 關鍵字一起使用"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -14087,7 +14040,7 @@ msgstr "博內爾島，聖尤斯特歇斯島和薩巴"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__boolean
 msgid "Boolean"
-msgstr "布爾"
+msgstr "真假值"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale_exhibitor
@@ -14584,14 +14537,14 @@ msgstr "無法僅從名稱建立新的 '1%s' 紀錄. 請手動建立這些紀錄
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr "無法停用目前被聯繫人所使用的語系."
+msgstr "不可停用目前正有聯絡人使用的語言。"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
-msgstr "不能撤消目前使用者使用的語言."
+msgstr "不可停用目前正有用戶使用的語言。"
 
 #. module: base
 #. odoo-python
@@ -23379,74 +23332,6 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
-"Minimal set of accounts to start to work in Perú.\n"
-"=================================================\n"
-"\n"
-"The usage of this CoA must refer to the official documentation on MEF.\n"
-"\n"
-"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
-"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
-"\n"
-"All the legal references can be found here.\n"
-"\n"
-"http://www.sunat.gob.pe/legislacion/general/index.html\n"
-"\n"
-"Considerations.\n"
-"===============\n"
-"\n"
-"Chart of account:\n"
-"-----------------\n"
-"\n"
-"The tree of the CoA is done using account groups, all the accounts with move\n"
-"are available as groups but only the more common ones are available as actual\n"
-"accounts, if you want to create a new one use the group of accounts as\n"
-"reference.\n"
-"\n"
-"# TODO: Image showing what I am talking about.\n"
-"\n"
-"Taxes:\n"
-"------\n"
-"\n"
-"'IGV': {'name': 'VAT', 'code': 'S'},\n"
-"'IVAP': {'name': 'VAT', 'code': ''},\n"
-"'ISC': {'name': 'EXC', 'code': 'S'},\n"
-"'ICBPER': {'name': 'OTH', 'code': ''},\n"
-"'EXP': {'name': 'FRE', 'code': 'G'},\n"
-"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
-"'EXO': {'name': 'VAT', 'code': 'E'},\n"
-"'INA': {'name': 'FRE', 'code': 'O'},\n"
-"'OTROS': {'name': 'OTH', 'code': 'S'},\n"
-"\n"
-"We added on this module the 3 concepts in taxes (necessary for the EDI\n"
-"signature)\n"
-"\n"
-"# TODO: Describe new fields.\n"
-"\n"
-"Products:\n"
-"---------\n"
-"\n"
-"Code for products to be used in the EDI are availables here, in order to decide\n"
-"which tax use due to which code following this reference and python code:\n"
-"\n"
-"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
-"\n"
-"**Nota:**\n"
-"---------\n"
-"\n"
-"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
-"\n"
-"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
-"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
-"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
-"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
-"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
-"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
-"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
-"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
-"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
-"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
-"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
-"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -27207,7 +27092,7 @@ msgstr "輸出名稱 %r 已二次使用."
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
 #: model:ir.model.fields,field_description:base.field_base_language_install__overwrite
 msgid "Overwrite Existing Terms"
-msgstr "覆蓋現有術語"
+msgstr "取代目前已有字詞"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -28138,7 +28023,7 @@ msgstr "產品比較"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
 msgid "Product Email Template"
-msgstr "產品 Email 模板"
+msgstr "產品電郵範本"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_images
@@ -28670,7 +28555,7 @@ msgstr "專案、任務、工時表"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Properties"
-msgstr "權益"
+msgstr "屬性"
 
 #. module: base
 #. odoo-python
@@ -33878,7 +33763,7 @@ msgstr "Ukraine - Accounting"
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
-msgstr "不能刪除該單據，因為它被用作預設屬性"
+msgstr "無法刪除此文件，因它正被用作預設屬性"
 
 #. module: base
 #. odoo-python
@@ -35775,7 +35660,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
-msgstr "布林"
+msgstr "真假值"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost

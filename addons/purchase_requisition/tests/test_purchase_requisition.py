@@ -284,3 +284,29 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(
             po_1.order_line.price_unit, 16,
             "Line's unit price from the original PO shouldn't be changed")
+
+    def test_10_alternative_po_line_price_unit_different_uom(self):
+        """ Check that the uom is copied in the alternative PO, and the "unit_price"
+        is calculated according to this uom and not that of the product """
+        # Creates a first Purchase Order.
+        po_form = Form(self.env['purchase.order'])
+        self.product_09.standard_price = 10
+        po_form.partner_id = self.res_partner_1
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 1
+            line.product_uom = self.env.ref('uom.product_uom_dozen')
+        po_1 = po_form.save()
+        self.assertEqual(po_1.order_line[0].price_unit, 120)
+
+        # Creates an alternative PO.
+        action = po_1.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+
+        po_2 = po_1.alternative_po_ids - po_1
+        self.assertEqual(po_2.order_line[0].product_uom, po_1.order_line[0].product_uom)
+        self.assertEqual(po_2.order_line[0].price_unit, 120)

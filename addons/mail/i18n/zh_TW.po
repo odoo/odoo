@@ -815,6 +815,8 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">關注文件的人，以及</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -831,7 +833,7 @@ msgstr "<strong>內部溝通</strong>: 回復會發佈內部留言， 關注者�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
-msgstr "<strong>初始備註：</strong>"
+msgstr "<strong>原始備註：</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1231,7 +1233,7 @@ msgstr "加入附件"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr "添加聯絡人以發出通知  ..."
+msgstr "加入要通知的聯絡人⋯"
 
 #. module: mail
 #. odoo-javascript
@@ -2357,7 +2359,7 @@ msgstr "公司"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "撰寫信件"
+msgstr "撰寫電郵"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -2585,7 +2587,7 @@ msgstr "建立或搜索頻道..."
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Created"
-msgstr "已建立"
+msgstr "建立"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2748,7 +2750,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
 msgid "Days"
-msgstr "天數"
+msgstr "天內"
 
 #. module: mail
 #. odoo-javascript
@@ -3177,7 +3179,7 @@ msgstr "到期時間"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "截止日期至"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3185,14 +3187,14 @@ msgstr "截止日期至"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Due in %s days"
-msgstr ""
+msgstr "%s 天內到期"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Due in %s days:"
-msgstr ""
+msgstr "%s 天內到期："
 
 #. module: mail
 #. odoo-javascript
@@ -4550,7 +4552,7 @@ msgstr "表示這個活動是自動生成的，不是任何使用者建立。"
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
-msgstr "資訊"
+msgstr "詳細資訊"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__initial_res_model
@@ -7099,7 +7101,7 @@ msgstr "已安排"
 #: code:addons/mail/static/src/components/activity_box/activity_box.xml:0
 #, python-format
 msgid "Planned activities"
-msgstr "計劃的活動"
+msgstr "已計劃活動"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -7417,7 +7419,7 @@ msgstr "讀取日期"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "顯示較少"
 
 #. module: mail
 #. odoo-javascript
@@ -7634,7 +7636,7 @@ msgstr "從黑名單嚮導中刪除電子郵件"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Remove from Todo"
-msgstr ""
+msgstr "移除待辦"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7737,7 +7739,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Reset Template"
-msgstr ""
+msgstr "重設範本"
 
 #. module: mail
 #. odoo-javascript
@@ -8136,7 +8138,7 @@ msgstr "發送電子信件"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Send Mail (%s)"
-msgstr "發送信件（ %s）"
+msgstr "發送信件（使用範本：%s）"
 
 #. module: mail
 #. odoo-javascript
@@ -8821,7 +8823,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template description"
-msgstr ""
+msgstr "範本描述"
 
 #. module: mail
 #. odoo-python
@@ -8859,7 +8861,7 @@ msgstr "模板渲染僅支持 inline_template、qweb 或 qweb_view（視圖或�
 #: model_terms:ir.ui.view,arch_db:mail.email_template_tree
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
-msgstr "版型"
+msgstr "範本"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -9614,7 +9616,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr "上傳文件"
+msgstr "上載文件"
 
 #. module: mail
 #. odoo-javascript
@@ -13052,7 +13054,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
-msgstr "by"
+msgstr "由"
 
 #. module: mail
 #. odoo-javascript

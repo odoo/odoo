@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2023
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2023
 # Farid Hariri <fhari1234@gmail.com>, 2023
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
 # Zahed Alfak <tamass4116@gmail.com>, 2023
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2023
@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: fardin mardani, 2023\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
@@ -89,8 +89,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state در ('draft', 'sent') و 'پیش‌فاکتور  - %s' % (object.name)) یا "
-"'سفارش - %s' % (object.name)"
+"(object.state در ('draft', 'sent') and 'پیش‌فاکتور  - %s' % (object.name)) "
+"or 'سفارش - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -634,7 +634,7 @@ msgstr "<strong>تاریخ پیشفاکتور:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr "مسئول‌فروش"
+msgstr "<strong>مسئول‌فروش:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -744,7 +744,8 @@ msgid ""
 msgstr ""
 "باتوجه به پیکربندی محصول، مقدار تحویل شده می‌تواند به طور خودکار با مکانیزم محاسبه شود:\n"
 " - دستی: کمیت به صورت دستی روی خط تنظیم می‌شود\n"
-" - تحلیلی از هزینه‌ها: کمیت مجموع مقدار از هزینه‌های ثبت شده است\n"
+" - تحلیلی از هزینه‌ها: کمیت مجموع مقدار از هزینه‌های \n"
+"ثبت شده است\n"
 " - برگه کارکرد: مقدار عبارت است از مجموع ساعات ضبط شده بر روی وظایف مربوط به این سطر فروش است\n"
 " - انتقال موجودی: کمیت از برداشت‌های تاییدشده بدست می‌آید.\n"
 
@@ -865,7 +866,7 @@ msgstr "تحلیلی از هزینه ها"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "سطرتحلیلی"
+msgstr "سطر تحلیلی"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
@@ -1054,7 +1055,7 @@ msgstr "برای افزودن برخی محصولات یا خدمات به پی�
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
-msgstr "برای تعیین هدف صورتحساب کلیک کنید"
+msgstr "برای تعیین هدف صدور فاکتور کلیک کنید"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1269,7 +1270,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "کارت اعتباری و نقدی (از طریق Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1333,7 +1334,7 @@ msgstr "آدرس پرتال مشتری"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
 msgid "Customer Reference"
-msgstr "مرجع (معرف) مشتری"
+msgstr "مرجع مشتری"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1390,23 +1391,23 @@ msgstr "کسر پیش پرداخت"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default Limit:"
-msgstr "حد پیش‌فرض:"
+msgstr "حد پیشفرض:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr "اعتبار پیش‌فرض پیش‌فاکتور"
+msgstr "اعتبار پیشفرض پیش‌فاکتور"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
-msgstr "اعتبار پیش‌فرض پیش‌فاکتور (روز)"
+msgstr "اعتبار پیشفرض پیش‌فاکتور (روز)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for payment advances"
-msgstr "محصول قراردادی مورد استفاده برای پیش پرداخت ها"
+msgstr "محصول قراردادی مورد استفاده برای پرداخت های پیشفرض"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1460,9 +1461,9 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "تاریخ تحویلی که شما می توانید به مشتری وعده دهید، در صورتی که محصولات خدماتی"
-" باشند، از حداقل زمان مورد نیاز سطرهای سفارش محاسبه می‌شود. در صورت حمل، "
-"سیاست حمل و نقل از سفارش در نظر گرفته خواهد شد تا یا حداقل یا حداکثر زمان "
-"تدارک از سطرهای سفارش استفاده شود."
+" باشند، از حداقل زمان مورد نیاز سطرهای سفارش حساب محاسبه می‌شود. در صورت "
+"حمل، سیاست حمل و نقل از سفارش در نظر گرفته خواهد شد تا یا حداقل یا حداکثر "
+"زمان تدارک از سطرهای سفارش استفاده شود."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1620,7 +1621,7 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"پیش پرداخت هنگام ایجاد فاکتور از سفارش فروش ایجاد می شوند. آنها هنگام کپی "
+"پیش پرداخت هنگام ایجاد فاکتورها از سفارش فروش ایجاد می شوند. آنها هنگام کپی "
 "کردن سفارش های فروش کپی نمی شوند."
 
 #. module: sale
@@ -3303,7 +3304,7 @@ msgstr "آماده سازی روش انتخابی پرداخت فروش"
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales"
-msgstr "اصناف مرتبط (سقف‌کاذب، شرکتهای BMS, مجری تاسیسات ...)"
+msgstr "فروش"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -4069,7 +4070,7 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
 
