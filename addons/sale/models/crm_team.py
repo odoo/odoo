@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
-    use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away.")
     invoiced = fields.Float(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,
