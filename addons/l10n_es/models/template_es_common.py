@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('es_common')
     def _get_es_common_template_data(self):
         return {
-            'name': 'PGCE común',
+            'name': _('Common'),
             'visible': 0,
             'property_account_receivable_id': 'account_common_4300',
             'property_account_payable_id': 'account_common_4100',
