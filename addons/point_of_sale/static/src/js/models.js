@@ -1826,7 +1826,8 @@ class Orderline extends PosModel {
             price_extra: this.get_price_extra(),
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
-            price_manually_set: this.price_manually_set
+            price_manually_set: this.price_manually_set,
+            refunded_orderline_id: this.refunded_orderline_id,
         };
     }
     //used to create a json of the ticket, to be sent to the printer
