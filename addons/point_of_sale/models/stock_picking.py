@@ -94,6 +94,21 @@ class StockPicking(models.Model):
         moves = self.env['stock.move'].create(move_vals)
         confirmed_moves = moves._action_confirm()
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
+        self._link_owner_on_return_picking(lines)
+
+    def _link_owner_on_return_picking(self, lines):
+        """This method tries to retrieve the owner of the returned product"""
+        if lines[0].order_id.refunded_order_ids.picking_ids:
+            returned_lines_picking = lines[0].order_id.refunded_order_ids.picking_ids
+            returnable_qty_by_product = {}
+            for move_line in returned_lines_picking.move_line_ids:
+                returnable_qty_by_product[(move_line.product_id.id, move_line.owner_id.id or 0)] = move_line.qty_done
+            for move in self.move_line_ids:
+                for keys in returnable_qty_by_product:
+                    if move.product_id.id == keys[0] and keys[1] and returnable_qty_by_product[keys] > 0:
+                        move.write({'owner_id': keys[1]})
+                        returnable_qty_by_product[keys] -= move.product_uom_qty
+
 
     def _send_confirmation_email(self):
         # Avoid sending Mail/SMS for POS deliveries
