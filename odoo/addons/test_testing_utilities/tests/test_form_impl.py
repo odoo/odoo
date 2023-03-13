@@ -365,6 +365,13 @@ class TestO2M(TransactionCase):
             "should not have set v (and thus not name)"
         )
 
+    def test_o2m_parent_context(self):
+        """ Test the o2m form with a context on the field that uses 'parent'. """
+        view = 'test_testing_utilities.o2m_parent_context'
+        with Form(self.env['test_testing_utilities.parent'], view=view) as f:
+            with f.subs.new() as s:
+                s.value = 42
+
     def test_o2m_default(self):
         """ Tests that default_get can return defaults for the o2m
         """
@@ -621,7 +628,7 @@ class TestNestedO2M(TransactionCase):
         })
         form = Form(obj)
         form.qty_producing = 1
-        form._perform_onchange(['move_raw_ids'])
+        form._perform_onchange('move_raw_ids')
         form.save()
 
     def test_empty_update(self):
