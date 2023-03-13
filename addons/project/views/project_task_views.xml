@@ -763,13 +763,13 @@
                     <field name="project_id"/>
                     <field name="is_private" />
                     <templates>
-                        <div class="justify-content-between" t-name="activity-box">
-                            <div class="text-end col-6">
+                        <div class="w-100" t-name="activity-box" style="display: inline-grid; grid-template-columns: auto max-content;">
+                            <div>
                                 <span t-att-title="record.name.value">
-                                    <field name="name" display="full" class="text-truncate"/>
+                                    <field name="name" display="full" class="w-100 text-truncate"/>
                                 </span>
                                 <span t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
-                                    <field t-if="record.project_id.value" name="project_id" muted="1" display="full"/>
+                                    <field t-if="record.project_id.value" name="project_id" muted="1" class="w-100 text-truncate"/>
                                     <span t-elif="record.is_private.value" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
