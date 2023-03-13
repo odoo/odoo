@@ -259,6 +259,24 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         down_payment = (down_payment * parse.float(payload)) / 100;
                     }
 
+                    if (down_payment > sale_order.amount_unpaid) {
+                        const errorBody = sprintf(
+                            this.env._t(
+                                "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
+                            ),
+                            this.env.pos.format_currency(down_payment),
+                            this.env.pos.format_currency(sale_order.amount_unpaid),
+                            sale_order.amount_unpaid > 0
+                                ? this.env.pos.format_currency(sale_order.amount_unpaid)
+                                : this.env.pos.format_currency(0)
+                        );
+                        await this.popup.add(ErrorPopup, {
+                            title: "Error amount too high",
+                            body: errorBody,
+                        });
+                        down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
+                    }
+
                     const new_line = new Orderline(
                         {},
                         {
@@ -301,6 +319,13 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                 "picking_ids",
             ]
         );
+
+        const saleOrdersAmountUnpaid = await this.orm.call(
+            "sale.order",
+            "get_order_amount_unpaid",
+            [[id]]
+        );
+        sale_order.amount_unpaid = saleOrdersAmountUnpaid[sale_order.id];
 
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
