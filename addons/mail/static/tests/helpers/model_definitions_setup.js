@@ -22,6 +22,7 @@ addModelNamesToFetch([
     "mail.guest",
     "mail.link.preview",
     "mail.message",
+    "mail.message.reaction",
     "mail.message.subtype",
     "mail.notification",
     "mail.shortcode",
@@ -34,6 +35,7 @@ addModelNamesToFetch([
 addFakeModel("res.fake", {
     message_ids: { string: "Messages", type: "one2many", relation: "mail.message" },
     activity_ids: { string: "Activities", type: "one2many", relation: "mail.activity" },
+    message_follower_ids: { string: "Followers", type: "char" },
     email_cc: { type: "char" },
     partner_ids: { relation: "res.partner", string: "Related partners", type: "one2many" },
 });
@@ -85,7 +87,6 @@ insertModelFields("mail.message", {
     },
     is_discussion: { string: "Discussion", type: "boolean" },
     is_note: { string: "Discussion", type: "boolean" },
-    is_notification: { string: "Note", type: "boolean" },
     needaction_partner_ids: {
         relation: "res.partner",
         string: "Partners with Need Action",
