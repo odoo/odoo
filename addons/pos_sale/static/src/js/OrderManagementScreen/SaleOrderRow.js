@@ -1,7 +1,5 @@
 /** @odoo-module */
-
 import { Component } from "@odoo/owl";
-import utils from "web.utils";
 
 /**
  * @props {models.Order} order
@@ -42,14 +40,7 @@ export class SaleOrderRow extends Component {
      * @returns {boolean}
      */
     get showAmountUnpaid() {
-        const isFullAmountUnpaid = utils.float_is_zero(
-            Math.abs(this.order.amount_total - this.order.amount_unpaid),
-            this.env.pos.currency.decimal_places
-        );
-        return (
-            !isFullAmountUnpaid &&
-            !utils.float_is_zero(this.order.amount_unpaid, this.env.pos.currency.decimal_places)
-        );
+        return this.order.amount_total != this.order.amount_unpaid;
     }
     get amountUnpaidRepr() {
         return this.env.pos.format_currency(this.order.amount_unpaid);
