@@ -441,7 +441,7 @@ class TestUsersGroupWarning(TransactionCase):
         with self.assertQueryCount(__system__=436), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = False
-            UserForm._perform_onchange([self.sales_categ_field])
+            UserForm._perform_onchange(self.sales_categ_field)
 
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -449,7 +449,7 @@ class TestUsersGroupWarning(TransactionCase):
             )
 
             UserForm._values[self.sales_categ_field] = self.group_sales_administrator.id
-            UserForm._perform_onchange([self.sales_categ_field])
+            UserForm._perform_onchange(self.sales_categ_field)
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_inheritance_warning(self):
@@ -463,7 +463,7 @@ class TestUsersGroupWarning(TransactionCase):
         with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
-            UserForm._perform_onchange([self.sales_categ_field])
+            UserForm._perform_onchange(self.sales_categ_field)
 
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -471,7 +471,7 @@ class TestUsersGroupWarning(TransactionCase):
             )
 
             UserForm._values[self.sales_categ_field] = self.group_sales_administrator.id
-            UserForm._perform_onchange([self.sales_categ_field])
+            UserForm._perform_onchange(self.sales_categ_field)
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_inheritance_warning_multi(self):
@@ -488,7 +488,7 @@ class TestUsersGroupWarning(TransactionCase):
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
             UserForm._values[self.project_categ_field] = self.group_project_user.id
-            UserForm._perform_onchange([self.sales_categ_field])
+            UserForm._perform_onchange(self.sales_categ_field)
 
             self.assertTrue(
                 UserForm.user_group_warning,
@@ -496,7 +496,7 @@ class TestUsersGroupWarning(TransactionCase):
             )
 
             UserForm._values[self.sales_categ_field] = self.group_sales_administrator.id
-            UserForm._perform_onchange([self.sales_categ_field])
+            UserForm._perform_onchange(self.sales_categ_field)
 
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -515,7 +515,7 @@ class TestUsersGroupWarning(TransactionCase):
         with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
-            UserForm._perform_onchange([self.timesheets_categ_field])
+            UserForm._perform_onchange(self.timesheets_categ_field)
 
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -523,7 +523,7 @@ class TestUsersGroupWarning(TransactionCase):
             )
 
             UserForm._values[self.timesheets_categ_field] = self.group_timesheets_user_all_timesheet.id
-            UserForm._perform_onchange([self.timesheets_categ_field])
+            UserForm._perform_onchange(self.timesheets_categ_field)
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_parent_inheritance_no_warning(self):
@@ -536,6 +536,6 @@ class TestUsersGroupWarning(TransactionCase):
         with self.assertQueryCount(__system__=420), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.field_service_categ_field] = self.group_field_service_user.id
-            UserForm._perform_onchange([self.field_service_categ_field])
+            UserForm._perform_onchange(self.field_service_categ_field)
 
             self.assertFalse(UserForm.user_group_warning)
