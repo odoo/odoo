@@ -64,6 +64,7 @@ class PosOrder(models.Model):
             'full_product_name',
             'customer_note',
             'price_extra',
+            'refunded_orderline_id',
         ])
         return fields
 
