@@ -808,7 +808,7 @@ class AccountEdiFormat(models.Model):
                         percentage = round(tax_amount / price_subtotal * 100)
 
         natura_element = element.xpath('.//Natura')
-        invoice_line_form.tax_ids = []
+        invoice_line_form.tax_ids = ()
         if percentage is not None:
             l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
             conditions = (
