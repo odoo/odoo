@@ -27,6 +27,20 @@ QUnit.test("basic rendering", async (assert) => {
     assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Disconnect']");
 });
 
+QUnit.test("no call with odoobot", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.partnerRootId }],
+        ],
+        channel_type: "chat",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsNone($, ".o-mail-Discuss-header button[title='Start a Call']");
+});
+
 QUnit.test("should not display call UI when no more members (self disconnect)", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });

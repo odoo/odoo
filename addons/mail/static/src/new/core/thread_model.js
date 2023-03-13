@@ -138,7 +138,10 @@ export class Thread {
     }
 
     get allowCalls() {
-        return ["chat", "channel", "group"].includes(this.type);
+        return (
+            ["chat", "channel", "group"].includes(this.type) &&
+            this.correspondent !== this._store.partnerRoot
+        );
     }
 
     get hasMemberList() {
@@ -183,6 +186,7 @@ export class Thread {
         }
         const correspondents = this.channelMembers
             .map((member) => member.persona)
+            .filter((persona) => !!persona)
             .filter(({ id }) => id !== this._store.user.id);
         if (correspondents.length === 1) {
             // 2 members chat.
