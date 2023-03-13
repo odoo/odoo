@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { standardFieldProps } from "../standard_field_props";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
+import { standardFieldProps } from "../standard_field_props";
 
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
@@ -59,6 +60,7 @@ export class Many2OneField extends Component {
         canScanBarcode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         value: { optional: true },
+        decorations: { type: Object, optional: true },
     };
     static defaultProps = {
         canOpen: true,
@@ -70,6 +72,7 @@ export class Many2OneField extends Component {
         searchLimit: 7,
         string: "",
         canScanBarcode: false,
+        decorations: {},
     };
 
     static SEARCH_MORE_LIMIT = 320;
@@ -159,6 +162,15 @@ export class Many2OneField extends Component {
     }
     get hasExternalButton() {
         return this.props.canOpen && !!this.value && !this.state.isFloating;
+    }
+    get classFromDecoration() {
+        const evalContext = this.props.record.evalContext;
+        for (const decorationName in this.props.decorations) {
+            if (evaluateExpr(this.props.decorations[decorationName], evalContext)) {
+                return `text-${decorationName}`;
+            }
+        }
+        return "";
     }
     get displayName() {
         return this.value ? this.value[1].split("\n")[0] : "";
@@ -299,7 +311,7 @@ export const many2OneField = {
     component: Many2OneField,
     displayName: _lt("Many2one"),
     supportedTypes: ["many2one"],
-    extractProps: ({ attrs, options, string }) => {
+    extractProps: ({ attrs, decorations, options, string }) => {
         const canCreate =
             attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !options.no_create;
         return {
@@ -309,6 +321,7 @@ export const many2OneField = {
             canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
             canQuickCreate: canCreate && !options.no_quick_create,
             canCreateEdit: canCreate && !options.no_create_edit,
+            decorations,
             nameCreateField: options.create_name_field,
             canScanBarcode: !!options.can_scan_barcode,
             string,
