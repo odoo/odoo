@@ -39,5 +39,7 @@ class AccountJournal(models.Model):
             return self.env['account.edi.xml.ubl_a_nz'], {}
         if self.country_code == 'NL':
             return self.env['account.edi.xml.ubl_nl'], {}
+        if self.country_code == 'SG':
+            return self.env['account.edi.xml.ubl_sg'], {}
         if self.country_code in COUNTRY_EAS:
             return self.env['account.edi.xml.ubl_bis3'], {}
