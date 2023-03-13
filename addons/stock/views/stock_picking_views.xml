@@ -43,7 +43,7 @@
                                 <field name="sequence_id" groups="base.group_no_one"/>
                                 <field name="sequence_code"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                                <field name="print_label" attrs="{'invisible': [('code', '!=', 'internal')]}"/>
+                                <field name="print_label" attrs="{'invisible': [('code', 'not in', ['internal', 'outgoing'])]}"/>
                                 <field name="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}" widget="radio"/>
                                 <label for="reservation_days_before" string="Reserve before scheduled date" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}"/>
                                 <div class="o_row" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}">
