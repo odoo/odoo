@@ -231,17 +231,13 @@ class MrpStockReport(models.TransientModel):
             specific_paperformat_args={'data-report-margin-top': 17, 'data-report-header-spacing': 12}
         )
 
-    def _get_html(self):
-        result = {}
-        rcontext = {}
+    def _get_main_lines(self):
         context = dict(self.env.context)
-        rcontext['lines'] = self.with_context(context).get_lines()
-        result['html'] = self.env['ir.qweb']._render('stock.report_stock_inventory', rcontext)
-        return result
+        return self.with_context(context).get_lines()
 
     @api.model
-    def get_html(self, given_context=None):
+    def get_main_lines(self, given_context=None):
         res = self.search([('create_uid', '=', self.env.uid)], limit=1)
         if not res:
-            return self.create({}).with_context(given_context)._get_html()
-        return res.with_context(given_context)._get_html()
+            return self.create({}).with_context(given_context)._get_main_lines()
+        return res.with_context(given_context)._get_main_lines()
