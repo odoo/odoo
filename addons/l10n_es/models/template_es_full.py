@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('es_full')
     def _get_es_full_template_data(self):
         return {
-            'name': 'PGCE completo 2008',
+            'name': _('Complete (2008)'),
             'parent': 'es_common',
         }
 
