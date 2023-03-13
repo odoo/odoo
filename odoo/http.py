@@ -1585,8 +1585,6 @@ class Request:
             except Exception as exc:
                 if isinstance(exc, HTTPException) and exc.code is None:
                     raise  # bubble up to odoo.http.Application.__call__
-                if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
-                    raise  # bubble up to werkzeug.debug.DebuggedApplication
                 exc.error_response = self.registry['ir.http']._handle_error(exc)
                 raise
 
@@ -2010,11 +2008,6 @@ class Application:
                 _logger.warning(exc)
             else:
                 _logger.error("Exception during request handling.", exc_info=True)
-
-            # Server is running with --dev=werkzeug, bubble the error up
-            # to werkzeug so he can fire up a debugger.
-            if 'werkzeug' in config['dev_mode'] and request.dispatcher.routing_type != 'json':
-                raise
 
             # Ensure there is always a WSGI handler attached to the exception.
             if not hasattr(exc, 'error_response'):
