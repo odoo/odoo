@@ -28,11 +28,3 @@ formArchsRegistry.add(
         </div>
     </form>`
 );
-formArchsRegistry.add(
-    'res.fake',
-    `<form>
-        <div class="oe_chatter">
-            <field name="message_ids"/>
-        </div>
-    </form>`
-);
