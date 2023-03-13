@@ -432,6 +432,16 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
                     rootID: params[0],
+                    delete: (toDelete) => {
+                        this.widget.odooEditor.observerUnactive();
+                        const menuEl = this.widget.$editable[0].querySelector(`[data-content_menu_id="${params[0]}"]`);
+                        for (const deleteId of toDelete) {
+                            for (const itemEl of menuEl.querySelectorAll(`[data-oe-id="${deleteId}"]`)) {
+                                itemEl.remove();
+                            }
+                        }
+                        this.widget.odooEditor.observerActive();
+                    },
                     save: () => {
                         const snippetsMenu = this.widget.snippetsMenu;
                         snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});

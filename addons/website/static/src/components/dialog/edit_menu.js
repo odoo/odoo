@@ -228,6 +228,9 @@ export class EditMenuDialog extends Component {
             }
         ],
         { context: { lang: this.website.currentWebsite.metadata.lang } });
+        if (this.props.delete && this.toDelete.length) {
+            this.props.delete(this.toDelete);
+        }
         if (this.props.save) {
             this.props.save();
         } else {
