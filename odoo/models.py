@@ -6331,7 +6331,7 @@ class BaseModel(metaclass=MetaModel):
                     if name == 'id':
                         continue
                     field = record._fields[name]
-                    if (field.type == 'properties' and field.definition_record in field_name
+                    if (field.type == 'properties' and field.definition_record in names
                        and other.get(name) == self[name] == []):
                         # TODO: The parent field on "record" can be False, if it was changed,
                         # (even if if was changed to a not Falsy value) because of

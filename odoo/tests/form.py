@@ -283,9 +283,9 @@ class Form:
         vals.clear()
         vals['id'] = False
 
-        # call onchange with an empty list of fields; this retrieves default
-        # values, applies onchanges and return the result
-        self._perform_onchange([])
+        # call onchange with no field; this retrieves default values, applies
+        # onchanges and return the result
+        self._perform_onchange()
         # fill in whatever fields are still missing with falsy values
         vals.update({
             field_name: _cleanup_from_default(field_info['type'], False)
@@ -323,7 +323,7 @@ class Form:
             value = value.id
 
         self._values[field_name] = value
-        self._perform_onchange([field_name])
+        self._perform_onchange(field_name)
 
     def _get_modifier(self, field_name, modifier, *, view=None, vals=None):
         if view is None:
@@ -398,26 +398,27 @@ class Form:
 
     def _get_context(self, field_name):
         """ Return the context of a given field. """
-        context = self._view['contexts'].get(field_name)
-        if not context:
+        context_str = self._view['contexts'].get(field_name)
+        if not context_str:
             return {}
+        eval_context = self._get_eval_context()
+        return safe_eval(context_str, eval_context)
 
-        # see _getEvalContext
-        # the context for a field's evals (of domain/context) is the composition of:
-        # * the parent's values
-        # * ??? element.context ???
-        # * the environment's context (?)
-        # * a few magic values
-        eval_context = dict(self._values_to_save(all_fields=True))
-        eval_context.update(self._env.context)
-        eval_context.update(
-            id=self._record.id,
-            active_id=self._record.id,
-            active_ids=self._record.ids,
-            active_model=self._record._name,
-            current_date=date.today().strftime("%Y-%m-%d"),
-        )
-        return safe_eval(context, eval_context, {'context': eval_context})
+    def _get_eval_context(self):
+        """ Return the context dict to eval something. """
+        context = {
+            'id': self._record.id,
+            'active_id': self._record.id,
+            'active_ids': self._record.ids,
+            'active_model': self._record._name,
+            'current_date': date.today().strftime("%Y-%m-%d"),
+            **self._env.context,
+        }
+        return {
+            **context,
+            'context': context,
+            **self._values_to_save(all_fields=True),
+        }
 
     def __enter__(self):
         """ This makes the Form usable as a context manager. """
@@ -562,22 +563,27 @@ class Form:
             result[field_name] = value
         return result
 
-    def _perform_onchange(self, field_names, context=None):
-        assert isinstance(field_names, list)
+    def _perform_onchange(self, field_name=None):
+        assert field_name is None or isinstance(field_name, str)
 
-        # marks any onchange source as changed
-        self._changed.update(field_names)
+        # marks onchange source as changed
+        if field_name:
+            self._changed.add(field_name)
 
-        # skip calling onchange() if there's no trigger on any of the changed
-        # fields
+        # skip calling onchange() if there's no on_change on the field
         spec = self._view['onchange']
-        if field_names and not any(spec[field_name] for field_name in field_names):
+        if field_name and not spec[field_name]:
             return
 
         record = self._record
-        if context is not None:
-            record = record.with_context(**context)
-        result = record.onchange(self._onchange_values(), field_names, spec)
+
+        # if the onchange is triggered by a field, add the context of that field
+        if field_name:
+            context = self._get_context(field_name)
+            if context:
+                record = record.with_context(**context)
+
+        result = record.onchange(self._onchange_values(), field_name, spec)
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
@@ -740,6 +746,11 @@ class O2MForm(Form):
             vals = {**self._values, '•parent•': self._proxy._form._values}
         return super()._get_modifier(field_name, modifier, view=view, vals=vals)
 
+    def _get_eval_context(self):
+        eval_context = super()._get_eval_context()
+        eval_context['parent'] = Dotter(self._proxy._form._values)
+        return eval_context
+
     def _onchange_values(self):
         values = super()._onchange_values()
         # computed o2m may not have a relation_field(?)
@@ -768,8 +779,7 @@ class O2MForm(Form):
             else:
                 raise AssertionError(f"Expected command 0 or 1, found {cmd!r}")
 
-        # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
-        proxy._form._perform_onchange([proxy._field], self._env.context)
+        proxy._form._perform_onchange(proxy._field)
 
     def _values_to_save(self, all_fields=False):
         """ Validates values and returns only fields modified since
@@ -905,7 +915,7 @@ class O2MProxy(X2MProxy):
             raise AssertionError("Expected command 0 or 1, got %s" % commands[cidx])
         # remove reified record
         del self._records[index]
-        self._form._perform_onchange([self._field])
+        self._form._perform_onchange(self._field)
 
     def _command_index(self, for_record):
         """ Takes a record index and finds the corresponding record index
@@ -962,7 +972,7 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
             f"trying to assign a {record._name!r} object to a {comodel_name!r} field"
         self._get_ids().append(record.id)
 
-        parent._perform_onchange([self._field])
+        parent._perform_onchange(self._field)
 
     # pylint: disable=redefined-builtin
     def remove(self, id=None, index=None):
@@ -976,14 +986,14 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
             del self._get_ids()[index]
         else:
             self._get_ids().remove(id)
-        self._form._perform_onchange([self._field])
+        self._form._perform_onchange(self._field)
 
     def clear(self):
         """ Removes all existing records in the m2m
         """
         self._assert_editable()
         self._get_ids()[:] = []
-        self._form._perform_onchange([self._field])
+        self._form._perform_onchange(self._field)
 
 
 def read_record(record, fields):
@@ -1031,3 +1041,15 @@ def _cleanup_from_default(type_, value):
     elif type_ == 'date' and isinstance(value, date):
         return odoo.fields.Date.to_string(value)
     return value
+
+
+class Dotter:
+    """ Simple wrapper for a dict where keys are accessed as readonly attributes. """
+    __slots__ = ['__values']
+
+    def __init__(self, values):
+        self.__values = values
+
+    def __getattr__(self, key):
+        val = self.__values[key]
+        return Dotter(val) if isinstance(val, dict) else val

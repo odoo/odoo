@@ -113,6 +113,23 @@
         </field>
     </record>
 
+    <record id="o2m_parent_context" model="ir.ui.view">
+        <field name="name">Parent Inline Tree with context on field</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="value"/>
+                <field name="v"/>
+                <field name="subs">
+                    <tree editable="bottom">
+                        <field name="value" context="{'parent_value': parent.value}"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
     <record id="non_normalized_attrs" model="ir.ui.view">
         <field name="name">Non Normalised Domains</field>
         <field name="model">test_testing_utilities.a</field>
