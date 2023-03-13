@@ -1085,12 +1085,13 @@ export class Record extends DataPoint {
             }
 
             const parent = this.data[propertiesField.definition_record];
-
             const relatedPropertyField = {
-                id: parent[0], //record.id,
                 fieldName,
-                displayName: parent[1], //record.display_name,
             };
+            if (parent) {
+                relatedPropertyField.id = parent[0]; //record.id,
+                relatedPropertyField.displayName = parent[1]; //record.display_name,
+            }
 
             this.fields[propertyFieldName] = {
                 ...pick(definition, "selection", "string", "tags", "type"),
