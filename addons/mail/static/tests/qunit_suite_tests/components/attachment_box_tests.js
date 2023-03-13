@@ -14,10 +14,11 @@ QUnit.module("mail", {}, function () {
             const resPartnerId1 = pyEnv["res.partner"].create({});
             const views = {
                 "res.partner,false,form": `<form>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
-            </form>`,
+                    <sheet/>
+                    <div class="oe_chatter">
+                        <field name="message_ids"  options="{'open_attachments': True}"/>
+                    </div>
+                </form>`,
             };
             const { messaging, openView } = await start({ serverData: { views } });
             await openView({
@@ -67,10 +68,11 @@ QUnit.module("mail", {}, function () {
             ]);
             const views = {
                 "res.partner,false,form": `<form>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
-            </form>`,
+                    <sheet/>
+                    <div class="oe_chatter">
+                        <field name="message_ids"  options="{'open_attachments': True}"/>
+                    </div>
+                </form>`,
             };
             const { messaging, openView } = await start({ serverData: { views } });
             await openView({
@@ -120,10 +122,11 @@ QUnit.module("mail", {}, function () {
             ]);
             const views = {
                 "res.partner,false,form": `<form>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
-            </form>`,
+                    <sheet/>
+                    <div class="oe_chatter">
+                        <field name="message_ids"  options="{'open_attachments': True}"/>
+                    </div>
+                </form>`,
             };
             const { click, messaging, openView } = await start({ serverData: { views } });
             await openView({
@@ -136,9 +139,9 @@ QUnit.module("mail", {}, function () {
             });
 
             await click(`
-        .o_AttachmentCard[data-id="${firstAttachment.localId}"]
-        .o_AttachmentCard_image
-    `);
+                .o_AttachmentCard[data-id="${firstAttachment.localId}"]
+                .o_AttachmentCard_image
+            `);
             assert.containsOnce(
                 document.body,
                 ".o_Dialog",
@@ -193,10 +196,11 @@ QUnit.module("mail", {}, function () {
             });
             const views = {
                 "res.partner,false,form": `<form>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
-            </form>`,
+                    <sheet/>
+                    <div class="oe_chatter">
+                        <field name="message_ids"  options="{'open_attachments': True}"/>
+                    </div>
+                </form>`,
             };
             const { click, openView } = await start({ serverData: { views } });
             await openView({
