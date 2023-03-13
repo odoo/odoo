@@ -259,6 +259,17 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         down_payment = (down_payment * parse.float(payload)) / 100;
                     }
 
+                    if (down_payment > sale_order.amount_unpaid) {
+                        const errorBody = sprintf(
+                            this.env._t("You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."),
+                            this.env.pos.format_currency(down_payment),
+                            this.env.pos.format_currency(sale_order.amount_unpaid),
+                            sale_order.amount_unpaid > 0 ? this.env.pos.format_currency(sale_order.amount_unpaid) : this.env.pos.format_currency(0),
+                        );
+                        await this.showPopup('ErrorPopup', { title: 'Error amount too high', body: errorBody });
+                        down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
+                    }
+
                     const new_line = Orderline.create(
                         {},
                         {
@@ -306,9 +317,17 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
             context: this.env.session.user_context,
         });
 
+        const saleOrdersAmountUnpaid = await this.rpc({
+            model: "sale.order",
+            method: "get_order_amount_unpaid",
+            args: [[id]],
+            context: this.env.session.user_context,
+        });
+        sale_order[0].amount_unpaid = saleOrdersAmountUnpaid[sale_order[0].id];
+
         const sale_lines = await this._getSOLines(sale_order[0].order_line);
         sale_order[0].order_line = sale_lines;
-        
+
         const picking_id = await this.rpc({
             model: 'stock.picking',
             method: 'read',

@@ -2,7 +2,6 @@
 
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
-import utils from "web.utils";
 
 /**
  * @props {models.Order} order
@@ -41,14 +40,7 @@ class SaleOrderRow extends PosComponent {
      * @returns {boolean}
      */
     get showAmountUnpaid() {
-        const isFullAmountUnpaid = utils.float_is_zero(
-            Math.abs(this.order.amount_total - this.order.amount_unpaid),
-            this.env.pos.currency.decimal_places
-        );
-        return (
-            !isFullAmountUnpaid &&
-            !utils.float_is_zero(this.order.amount_unpaid, this.env.pos.currency.decimal_places)
-        );
+        return this.order.amount_total != this.order.amount_unpaid;
     }
     get amountUnpaidRepr() {
         return this.env.pos.format_currency(this.order.amount_unpaid);
