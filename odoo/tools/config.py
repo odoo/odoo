@@ -293,7 +293,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Advanced options")
         group.add_option('--dev', dest='dev_mode', type="string",
                          help="Enable developer mode. Param: List of options separated by comma. "
-                              "Options : all, [pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml")
+                              "Options : all, reload, qweb, werkzeug, xml")
         group.add_option('--shell-interface', dest='shell_interface', type="string",
                          help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
                               "[ipython|ptpython|bpython|python]")
@@ -533,7 +533,7 @@ class configmanager(object):
         self.options['translate_modules'].sort()
 
         dev_split = opt.dev_mode and  [s.strip() for s in opt.dev_mode.split(',')] or []
-        self.options['dev_mode'] = 'all' in dev_split and dev_split + ['pdb', 'reload', 'qweb', 'werkzeug', 'xml'] or dev_split
+        self.options['dev_mode'] = 'all' in dev_split and dev_split + ['reload', 'qweb', 'werkzeug', 'xml'] or dev_split
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
