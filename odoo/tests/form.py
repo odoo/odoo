@@ -120,13 +120,14 @@ class Form:
             view_id = record.env.ref(view).id
         else:
             view_id = view or False
-        view = record.get_view(view_id, 'form')
-        view['tree'] = etree.fromstring(view['arch'])
-        view['fields'] = self._get_view_fields(view['tree'], record)
+
+        views = record.get_views([(view_id, 'form')])
+        object.__setattr__(self, '_models_info', views['models'])
+        # self._models_info = {model_name: {field_name: field_info}}
+        tree = etree.fromstring(views['views']['form']['arch'])
+        view = self._process_view(tree, record)
         object.__setattr__(self, '_view', view)
-        self._process_view(view, record)
         # self._view = {
-        #     'arch': view_arch_str,
         #     'tree': view_arch_etree,
         #     'fields': {field_name: field_info},
         #     'modifiers': {field_name: {modifier: domain}},
@@ -144,30 +145,22 @@ class Form:
         else:
             self._init_from_defaults()
 
-    def _get_view_fields(self, node, model):
-        """ Return the field info of the fields in the view ``node``. """
-        level = node.xpath('count(ancestor::field)')
-        # retrieve the names of the <field> elements at the level of 'node';
-        # this trick is necessary for subviews, because 'node' is a part of its
-        # parent view's etree
-        field_names = {
-            elem.get('name')
-            for elem in node.xpath(f'.//field[count(ancestor::field) = {level}]')
-        }
-        return model.fields_get(sorted(field_names))
-
-    def _process_view(self, view, model, level=2):
+    def _process_view(self, tree, model, level=2):
         """ Post-processes to augment the view_get with:
         * an id field (may not be present if not in the view but needed)
         * pre-processed modifiers (map of modifier name to json-loaded domain)
         * pre-processed onchanges list
         """
-        view['fields'].setdefault('id', {'type': 'id'})
-        # pre-resolve modifiers & bind to arch toplevel
-        modifiers = view['modifiers'] = {
-            'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]},
+        fields = {'id': {'type': 'id'}}
+        modifiers = {'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]}}
+        contexts = {}
+        view = {
+            'tree': tree,
+            'fields': fields,
+            'modifiers': modifiers,
+            'contexts': contexts,
         }
-        contexts = view['contexts'] = {}
+        # pre-resolve modifiers & bind to arch toplevel
         eval_context = {
             "uid": self._env.user.id,
             "tz": self._env.user.tz,
@@ -180,9 +173,13 @@ class Form:
             "context": {},
         }
         # retrieve <field> nodes at the current level
-        flevel = view['tree'].xpath('count(ancestor::field)')
-        for node in view['tree'].xpath(f'.//field[count(ancestor::field) = {flevel}]'):
+        flevel = tree.xpath('count(ancestor::field)')
+        for node in tree.xpath(f'.//field[count(ancestor::field) = {flevel}]'):
             field_name = node.get('name')
+
+            # add field_info into fields
+            field_info = self._models_info[model._name].get(field_name) or {'type': None}
+            fields[field_name] = field_info
 
             # determine modifiers
             field_modifiers = {}
@@ -228,7 +225,6 @@ class Form:
             if ctx:
                 contexts[field_name] = ctx
 
-            field_info = view['fields'].get(field_name) or {'type': None}
             # FIXME: better widgets support
             # NOTE: selection breaks because of m2o widget=selection
             if node.get('widget') in ['many2many']:
@@ -236,9 +232,12 @@ class Form:
 
             # determine subview to use for edition
             if level and field_info['type'] == 'one2many':
+                field_info['invisible'] = field_modifiers.get('invisible') == [TRUE_LEAF]
                 field_info['edition_view'] = self._get_one2many_edition_view(field_info, node, level)
 
-        view['onchange'] = model._onchange_spec({'arch': etree.tostring(view['tree'])})
+        view['onchange'] = model._onchange_spec({'arch': etree.tostring(tree)})
+
+        return view
 
     def _get_one2many_edition_view(self, field_info, node, level):
         """ Return a suitable view for editing records into a one2many field. """
@@ -251,28 +250,27 @@ class Form:
         for view_type in ['tree', 'form']:
             if view_type in views:
                 continue
+            if field_info['invisible']:
+                # add an empty view
+                views[view_type] = etree.Element(view_type)
+                continue
             refs = self._env['ir.ui.view']._get_view_refs(node)
-            subview = submodel.with_context(**refs).get_view(view_type=view_type)
-            subnode = etree.fromstring(subview['arch'])
+            subviews = submodel.with_context(**refs).get_views([(None, view_type)])
+            subnode = etree.fromstring(subviews['views'][view_type]['arch'])
             views[view_type] = subnode
             node.append(subnode)
+            for model_name, fields in subviews['models'].items():
+                self._models_info.setdefault(model_name, {}).update(fields)
 
-        # if the default view is a kanban or a non-editable list, the
-        # "edition controller" is the form view
+        # pick the first editable subview
         view_type = next(
             vtype for vtype in node.get('mode', 'tree').split(',') if vtype != 'form'
         )
         if not (view_type == 'tree' and views['tree'].get('editable')):
             view_type = 'form'
 
-        subnode = views[view_type]
-        subview = {
-            'tree': subnode,
-            'fields': self._get_view_fields(subnode, submodel),
-        }
         # don't recursively process o2ms in o2ms
-        self._process_view(subview, submodel, level=level-1)
-        return subview
+        return self._process_view(views[view_type], submodel, level=level-1)
 
     def __str__(self):
         return f"<{type(self).__name__} {self._record}>"
@@ -723,10 +721,10 @@ class O2MForm(Form):
         object.__setattr__(self, '_record', model)
         object.__setattr__(self, '_env', model.env)
 
-        # copy so we don't risk breaking it too much (?)
-        view = dict(proxy._field_info['edition_view'])
+        object.__setattr__(self, '_models_info', proxy._form._models_info)
+        tree = proxy._field_info['edition_view']['tree']
+        view = self._process_view(tree, model)
         object.__setattr__(self, '_view', view)
-        self._process_view(view, model)
 
         vals = dict.fromkeys(view['fields'], False)
         object.__setattr__(self, '_values', vals)
