@@ -1395,8 +1395,6 @@ def start(preload=None, stop=False):
             else:
                 module = 'watchdog'
             _logger.warning("'%s' module not installed. Code autoreload feature is disabled", module)
-    if 'werkzeug' in config['dev_mode']:
-        server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)
 
