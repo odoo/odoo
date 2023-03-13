@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 import time
 
 from odoo import api, fields, models
@@ -47,50 +48,37 @@ class ProductProduct(models.Model):
         help="Expected margin * 100 / Expected Sale")
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         """
-            Inherit read_group to calculate the sum of the non-stored fields, as it is not automatically done anymore through the XML.
+            Inherit _read_group to calculate the sum of the non-stored fields, as it is not automatically done anymore through the XML.
         """
         fields_list = ['turnover', 'sale_avg_price', 'sale_purchase_price', 'sale_num_invoiced', 'purchase_num_invoiced',
                        'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost', 'total_margin',
                        'expected_margin', 'total_margin_rate', 'expected_margin_rate']
+        SPECIAL = {f'{field_name}:sum' for field_name in fields_list} # Only sum is allowed
 
-        # Not any of the fields_list support aggregate function like :sum
-        def truncate_aggr(field):
-            field_no_aggr, _sep, agg = field.partition(':')
-            if field_no_aggr in fields_list:
-                if agg and agg != 'sum':
-                    raise NotImplementedError('Aggregate functions other than \':sum\' are not allowed.')
-                return field_no_aggr
-            return field
-        fields = {truncate_aggr(field) for field in fields}
+        if SPECIAL.isdisjoint(aggregates):
+            return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
 
-        res = super(ProductProduct, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        if any(x in fields for x in fields_list):
-            # Calculate first for every product in which line it needs to be applied
-            re_ind = 0
-            prod_re = {}
-            tot_products = self.browse([])
-            for re in res:
-                if re.get('__domain'):
-                    products = self.search(re['__domain'])
-                    tot_products |= products
-                    for prod in products:
-                        prod_re[prod.id] = re_ind
-                re_ind += 1
-            res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
-            for key in res_val:
-                for l in res_val[key]:
-                    re = res[prod_re[key]]
-                    if re.get(l):
-                        re[l] += res_val[key][l]
-                    else:
-                        re[l] = res_val[key][l]
-        return res
+        base_aggregates = [*(agg for agg in aggregates if agg not in SPECIAL), 'id:recordset']
+        base_result = super()._read_group(domain, groupby, base_aggregates, having, offset, limit, order)
 
-    def _compute_product_margin_fields_values(self, field_names=None):
-        if field_names is None:
-            field_names = []
+        # Force the compute with all records
+        all_records = self.browse().union(*(item[-1] for item in base_result))
+        all_records._compute_product_margin_fields_values()
+
+        # base_result = [(a1, b1, records), (a2, b2, records), ...]
+        result = []
+        for *other, records in base_result:
+            for index, spec in enumerate(itertools.chain(groupby, aggregates)):
+                if spec in SPECIAL:
+                    field_name = spec.split(':')[0]
+                    other.insert(index, sum(records.mapped(field_name)))
+            result.append(tuple(other))
+
+        return result
+
+    def _compute_product_margin_fields_values(self):
         date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
         date_to = self.env.context.get('date_to', time.strftime('%Y-12-31'))
         invoice_state = self.env.context.get('invoice_state', 'open_paid')
