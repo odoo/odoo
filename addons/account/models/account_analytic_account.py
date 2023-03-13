@@ -30,7 +30,7 @@ class AccountAnalyticAccount(models.Model):
 
         query_string, query_param = query.select(
             'jsonb_object_keys(account_move_line.analytic_distribution) as account_id',
-            'COUNT(DISTINCT(move_id)) as move_count',
+            'COUNT(DISTINCT(account_move_line.move_id)) as move_count',
         )
         query_string = f"{query_string} GROUP BY jsonb_object_keys(account_move_line.analytic_distribution)"
 
@@ -54,7 +54,7 @@ class AccountAnalyticAccount(models.Model):
 
         query_string, query_param = query.select(
             'jsonb_object_keys(account_move_line.analytic_distribution) as account_id',
-            'COUNT(DISTINCT(move_id)) as move_count',
+            'COUNT(DISTINCT(account_move_line.move_id)) as move_count',
         )
         query_string = f"{query_string} GROUP BY jsonb_object_keys(account_move_line.analytic_distribution)"
 
@@ -67,7 +67,7 @@ class AccountAnalyticAccount(models.Model):
         self.ensure_one()
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', self.env['account.move'].get_sale_types())])
         query.add_where('analytic_distribution ? %s', [str(self.id)])
-        query_string, query_param = query.select('DISTINCT move_id')
+        query_string, query_param = query.select('DISTINCT account_move_line.move_id')
         self._cr.execute(query_string, query_param)
         move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         result = {
@@ -84,7 +84,7 @@ class AccountAnalyticAccount(models.Model):
         self.ensure_one()
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())])
         query.add_where('analytic_distribution ? %s', [str(self.id)])
-        query_string, query_param = query.select('DISTINCT move_id')
+        query_string, query_param = query.select('DISTINCT account_move_line.move_id')
         self._cr.execute(query_string, query_param)
         move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         result = {
