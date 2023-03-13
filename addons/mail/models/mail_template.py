@@ -6,7 +6,7 @@ import itertools
 import logging
 
 from odoo import _, api, fields, models, tools, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -146,12 +146,22 @@ class MailTemplate(models.Model):
             record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
         return self
 
+    def _check_abstract_models(self, vals_list):
+        model_names = self.sudo().env['ir.model'].browse(filter(None, (
+            vals.get('model_id') for vals in vals_list
+        ))).mapped('model')
+        for model in model_names:
+            if self.env[model]._abstract:
+                raise ValidationError(_('You may not define a template on an abstract model: %s', model))
+
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_abstract_models(vals_list)
         return super().create(vals_list)\
             ._fix_attachment_ownership()
 
     def write(self, vals):
+        self._check_abstract_models([vals])
         super().write(vals)
         self._fix_attachment_ownership()
         return True

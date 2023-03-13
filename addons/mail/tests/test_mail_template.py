@@ -3,7 +3,7 @@
 from markupsafe import Markup
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.modules.module import get_module_resource
 from odoo.tests import Form, tagged, users
 from odoo.tools import convert_file
@@ -49,6 +49,26 @@ class TestMailTemplate(MailCommon):
 
         self.assertEqual(values[self.partner_employee.id]['subject'], '6', 'We must trust mail template values')
         self.assertIn('13', values[self.partner_employee.id]['body_html'], 'We must trust mail template values')
+
+    @users('admin')
+    def test_mail_template_abstract_model(self):
+        """Check abstract models cannot be set on templates."""
+        # create
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.env['mail.template'].create({
+                'name': 'Test abstract template',
+                'model_id': self.env['ir.model']._get('mail.thread').id, # abstract model
+            })
+        # write
+        template = self.env['mail.template'].create({
+            'name': 'Test abstract template',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            template.write({
+                'name': 'Test abstract template',
+                'model_id': self.env['ir.model']._get('mail.thread').id,
+            })
 
     def test_mail_template_acl(self):
         # Sanity check
