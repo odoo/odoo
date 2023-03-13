@@ -104,6 +104,7 @@
                     job.error = e;
                     failed.push(job);
                     console.error(`Error while loading ${job.name}: ${e.message}`, e);
+                    Promise.reject(e);
                 }
                 var def = new Promise(function (resolve) {
                     try {
