@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.models import regex_field_agg, VALID_AGGREGATE_FUNCTIONS
 from odoo.exceptions import UserError
-from odoo.tools import OrderedSet
 from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
