@@ -36,6 +36,7 @@ Ask questions, get answers, no distractions
         'data/badges_answer.xml',
         'data/badges_participation.xml',
         'data/badges_moderation.xml',
+        'wizards/merge_tags.xml',
     ],
     'demo': [
         'data/forum_demo.xml',

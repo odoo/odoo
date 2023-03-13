@@ -1,0 +1,80 @@
+<odoo>
+<!-- MERGE MANUALLY -->
+
+    <act_window id="act_merge_tag" name="Merge Tags"
+        res_model="forum.tag.merge_tags_manually" src_model="forum.tag"
+        view_mode="form" view_type="form" target="new"
+        key2="client_action_multi" />
+
+    <record id="merge_category_view" model="ir.ui.view">
+        <field name="name">Merge Tags</field>
+        <field name="model">forum.tag.merge_tags_manually</field>
+        <field name="arch" type="xml">
+            <form string="Merge Tags">
+                <group>
+                    <field name="master_id" domain="[('id', 'in', tag_ids)]" context="{'show_proposal': True}"/>
+                </group>
+                <field name="tag_ids" readonly="1" />
+                    <tree>
+                    </tree>
+                <footer>
+                    <button string="Merge" name="merge"
+                        type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+<!-- MERGE HALF-AUTO -->
+
+    <!-- server actions to add option in the menu "More" -->
+    <record id="action_merge_all_selected_tags" model="ir.actions.server">
+        <field name="name">Merge Selected Tags</field>
+        <field name="model_id" ref="website_forum.model_forum_tag_merge_tags_line"/>
+        <field name="binding_model_id" ref="website_forum.model_forum_tag_merge_tags_line"/>
+        <field name="state">code</field>
+        <field name="code">
+for record in records:
+    record.merge_ligne()
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="show_tag_to_merge_action">
+        <field name="name">Merge Tags</field>
+        <field name="res_model">forum.tag.merge_tags</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="show_tag_to_merge" name="Tags To Merge" action="show_tag_to_merge_action" sequence="31" parent="menu_website_forum_global"/>
+
+    <record id="merge_tags_view" model="ir.ui.view">
+        <field name="name">Merge Tags</field>
+        <field name="model">forum.tag.merge_tags</field>
+        <field name="arch" type="xml">
+            <form string="Merge Tags">
+                <span>Are you sure you want to open the wizard to merge tags ?</span>
+                <footer>
+                    <button string="Continue" name="generate_line_ids" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="merge_tags_lines_view" model="ir.ui.view">
+        <field name="name">Merge Tags Line</field>
+        <field name="model">forum.tag.merge_tags_line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="0" delete="1">
+                <field name="name" readonly="1"/>
+                <field name="master_id" domain="[('id', 'in', tag_ids)]" readonly="0"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <button string="Merge" name="merge_ligne" type="object" class="btn-primary"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
