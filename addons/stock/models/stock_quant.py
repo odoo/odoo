@@ -293,27 +293,16 @@ class StockQuant(models.Model):
         """ Only allowed fields should be modified """
         return super(StockQuant, self.with_context(inventory_mode=True))._load_records_write(values)
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Override to set the `inventory_quantity` field if we're in "inventory mode" as well
-        as to compute the sum of the `available_quantity` field.
-        """
-        if 'available_quantity' in fields:
-            if 'quantity' not in fields:
-                fields.append('quantity')
-            if 'reserved_quantity' not in fields:
-                fields.append('reserved_quantity')
-        if 'inventory_quantity_auto_apply' in fields and 'quantity' not in fields:
-            fields.append('quantity')
-        result = super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        for group in result:
-            if self.env.context.get('inventory_report_mode'):
-                group['inventory_quantity'] = False
-            if 'available_quantity' in fields:
-                group['available_quantity'] = group['quantity'] - group['reserved_quantity']
-            if 'inventory_quantity_auto_apply' in fields:
-                group['inventory_quantity_auto_apply'] = group['quantity']
-        return result
+    def _read_group_select(self, aggregate_spec, query):
+        if aggregate_spec == 'inventory_quantity:sum' and self.env.context.get('inventory_report_mode'):
+            return "NULL", []
+        if aggregate_spec == 'available_quantity:sum':
+            quantity_expr, quantity_fnames = self._read_group_select('quantity:sum', query)
+            reserved_quantity_expr, reserved_quantity_fnames = self._read_group_select('reserved_quantity:sum', query)
+            return f'{quantity_expr} - {reserved_quantity_expr}', quantity_fnames + reserved_quantity_fnames
+        if aggregate_spec == 'inventory_quantity_auto_apply:sum':
+            return self._read_group_select('quantity:sum', query)
+        return super()._read_group_select(aggregate_spec, query)
 
     @api.model
     def get_import_templates(self):
