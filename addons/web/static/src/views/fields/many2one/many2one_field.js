@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { standardFieldProps } from "../standard_field_props";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
+import { standardFieldProps } from "../standard_field_props";
 
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
@@ -113,6 +113,14 @@ export class Many2OneField extends Component {
     }
     get hasExternalButton() {
         return this.props.canOpen && !!this.props.value && !this.state.isFloating;
+    }
+    get classFromDecoration() {
+        for (const decorationName in this.props.decorations) {
+            if (this.props.decorations[decorationName]) {
+                return `text-${decorationName}`;
+            }
+        }
+        return "";
     }
     get displayName() {
         return this.props.value ? this.props.value[1].split("\n")[0] : "";
