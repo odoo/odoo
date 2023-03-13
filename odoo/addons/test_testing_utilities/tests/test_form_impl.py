@@ -513,15 +513,25 @@ class TestO2M(TransactionCase):
         Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
 
     def test_o2m_attrs(self):
-        Model = self.env['test_testing_utilities.parent'].with_context(
-            default_subs=[{
-                'value': 5,
-            }, {
-                'value': 7,
-            }]
-        )
-        f = Form(Model, view='test_testing_utilities.o2m_modifier')
-        f.save()
+        Model = self.env['test_testing_utilities.parent']
+        with Form(Model, view='test_testing_utilities.o2m_modifier') as form:
+            with form.subs.new() as line:
+                line.value = 5
+                # this makes 'value' readonly
+                line.v = 42
+                with self.assertRaises(AssertionError):
+                    line.value = 7
+
+    def test_o2m_attrs_parent(self):
+        Model = self.env['test_testing_utilities.parent']
+        with Form(Model, view='test_testing_utilities.o2m_modifier_parent') as form:
+            with form.subs.new() as line:
+                line.value = 5
+            # this makes 'value' readonly on lines
+            form.value = 42
+            with form.subs.new() as line:
+                with self.assertRaises(AssertionError):
+                    line.value = 7
 
     def test_o2m_widget(self):
         create = self.env['test_testing_utilities.sub'].create

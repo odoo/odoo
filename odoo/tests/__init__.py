@@ -5,6 +5,6 @@ Some files as case.py, resut.py, suite.py are higly modified versions of unitest
 See https://github.com/python/cpython/tree/3.10/Lib/unittest for reference files.
 """
 
-from . import common
+from . import common, form
 from .common import *
 from . import test_parse_inline_template
