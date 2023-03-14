@@ -7440,7 +7440,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="foo"/>
-                    <field name="timmy" context="{'key': parent.foo, 'key2': 'hello'}">
+                    <field name="timmy" context="{'key': foo, 'key2': 'hello'}">
                         <tree editable="top">
                             <field name="display_name"/>
                         </tree>
@@ -7489,6 +7489,60 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, ".o_field_widget[name=display_name] input", "abc");
         await clickSave(target);
+    });
+
+    QUnit.test("contexts of nested x2manys are correctly sent (add line)", async function (assert) {
+        assert.expect(2);
+
+        serverData.models.partner.fields.timmy.default = [12];
+
+        patchWithCleanup(session, { user_context: { someKey: "some value" } });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                            <field name="timmy" context="{'key': parent.foo, 'key2': 'hello'}" widget="many2many_tags"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.deepEqual(
+                        args.kwargs.context,
+                        {
+                            active_field: 2,
+                            someKey: "some value",
+                            uid: 7,
+                        },
+                        "onchange context"
+                    );
+                }
+                if (args.method === "read" && args.model === "partner_type") {
+                    assert.deepEqual(
+                        args.kwargs.context,
+                        {
+                            active_field: 2,
+                            key: "yop",
+                            key2: "hello",
+                            someKey: "some value",
+                            uid: 7,
+                        },
+                        "read timmy context"
+                    );
+                }
+            },
+            resId: 1,
+            context: { active_field: 2 },
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
     QUnit.test("resetting invisible one2manys", async function (assert) {

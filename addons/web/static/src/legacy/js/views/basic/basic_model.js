@@ -3128,7 +3128,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
-                    var def = self._readUngroupedList(list).then(function () {
+                    var def = self._readUngroupedList(list, { withoutRecordData: true }).then(function () {
                         return Promise.all([
                             self._fetchX2ManysBatched(list),
                             self._fetchReferencesBatched(list)
@@ -4762,7 +4762,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} fieldNames to check and read if missing
      * @returns {Promise<Object>}
      */
-    _readMissingFields: function (list, resIDs, fieldNames) {
+    _readMissingFields: function (list, resIDs, fieldNames, withoutRecordData) {
         var self = this;
 
         var missingIDs = [];
@@ -4783,7 +4783,7 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (missingIDs.length && fieldNames.length) {
             def = self._performRPC({
-                context: list.getContext({ withoutRecordData: true }),
+                context: list.getContext({ withoutRecordData: !!withoutRecordData }),
                 fieldNames: fieldNames,
                 ids: missingIDs,
                 method: 'read',
@@ -4989,7 +4989,8 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} list a valid resource object
      * @returns {Promise<Object>} resolves to the fetched list object
      */
-    _readUngroupedList: function (list) {
+    _readUngroupedList: function (list, options) {
+        options = options || {};
         var self = this;
         var def = Promise.resolve();
 
@@ -5001,7 +5002,7 @@ var BasicModel = AbstractModel.extend({
         if (list.res_ids.length > list.limit && list.orderedBy.length) {
             if (!list.orderedResIDs) {
                 var fieldNames = _.pluck(list.orderedBy, 'name');
-                def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames);
+                def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames, options.withoutRecordData);
             }
             def.then(function () {
                 self._sortList(list);
@@ -5034,7 +5035,7 @@ var BasicModel = AbstractModel.extend({
                     resIDs.push(resId);
                 }
             }
-            return self._readMissingFields(list, resIDs, fieldNames).then(function () {
+            return self._readMissingFields(list, resIDs, fieldNames, options.withoutRecordData).then(function () {
                 if (list.res_ids.length <= list.limit) {
                     self._sortList(list);
                 } else {
