@@ -455,6 +455,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         sale_order.invoice_ids.invoice_line_ids.quantity = 3
         self.assertEqual(
             sale_order.invoice_ids.partner_credit_warning,
-            "partner_a has reached its Credit Limit of : $\xa01,000.00\n"
-            "Total amount due (including this document) : $\xa01,500.00"
+            "partner_a has reached its Credit Limit of: $\xa01,000.00\n"
+            "Total amount due (including this document): $\xa01,500.00"
         )

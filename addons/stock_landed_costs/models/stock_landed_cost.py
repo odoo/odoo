@@ -322,11 +322,11 @@ class StockLandedCostLine(models.Model):
         SPLIT_METHOD,
         string='Split Method',
         required=True,
-        help="Equal : Cost will be equally divided.\n"
-             "By Quantity : Cost will be divided according to product's quantity.\n"
-             "By Current cost : Cost will be divided according to product's current cost.\n"
-             "By Weight : Cost will be divided depending on its weight.\n"
-             "By Volume : Cost will be divided depending on its volume.")
+        help="Equal: Cost will be equally divided.\n"
+             "By Quantity: Cost will be divided according to product's quantity.\n"
+             "By Current cost: Cost will be divided according to product's current cost.\n"
+             "By Weight: Cost will be divided depending on its weight.\n"
+             "By Volume: Cost will be divided depending on its volume.")
     account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
     currency_id = fields.Many2one('res.currency', related='cost_id.currency_id')
 

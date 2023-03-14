@@ -197,7 +197,7 @@ class SaleOrderLine(models.Model):
         string="Method to update delivered qty",
         compute='_compute_qty_delivered_method',
         store=True, precompute=True,
-        help="According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+        help="According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
              "  - Manual: the quantity is set manually on the line\n"
              "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
              "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"

@@ -83,8 +83,8 @@ class PricelistItem(models.Model):
         required=True,
         help="Base price for computation.\n"
              "Sales Price: The base price will be the Sales Price.\n"
-             "Cost Price : The base price will be the cost price.\n"
-             "Other Pricelist : Computation of the base price based on another Pricelist.")
+             "Cost Price: The base price will be the cost price.\n"
+             "Other Pricelist: Computation of the base price based on another Pricelist.")
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist', check_company=True)
 
     compute_price = fields.Selection(
@@ -197,7 +197,7 @@ class PricelistItem(models.Model):
     def _check_date_range(self):
         for item in self:
             if item.date_start and item.date_end and item.date_start >= item.date_end:
-                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
+                raise ValidationError(_('%s: end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
         return True
 
     @api.constrains('price_min_margin', 'price_max_margin')

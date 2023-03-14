@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     // Choose the element that is not going to be moved by the previous step.
     trigger: ".o_opportunity_kanban .o_kanban_group:nth-child(2) .o_kanban_record:not(.o_updating) .o-mail-ActivityButton",
     extra_trigger: ".o_opportunity_kanban",
-    content: Markup(_t("Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to keep track of everything you have to do!</i>")),
+    content: Markup(_t("Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep track of everything you have to do!</i>")),
     position: "bottom",
 }, {
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",

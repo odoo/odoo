@@ -229,7 +229,7 @@ class AccountPayment(models.Model):
         }
 
     def _check_get_pages(self):
-        """ Returns the data structure used by the template : a list of dicts containing what to print on pages.
+        """ Returns the data structure used by the template: a list of dicts containing what to print on pages.
         """
         stub_pages = self._check_make_stub_pages() or [False]
         pages = []

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- equiment.request : views -->
+    <!-- equiment.request: views -->
     <record id="hr_equipment_request_view_search" model="ir.ui.view">
         <field name="name">equipment.request.search</field>
         <field name="model">maintenance.request</field>
@@ -149,7 +149,7 @@
                                     <b class="o_kanban_record_title"><field name="name"/></b>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by : <field name="owner_user_id"/><br/></span>
+                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/><br/></span>
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
@@ -228,7 +228,7 @@
         </field>
     </record>
 
-    <!-- equiment.request : actions -->
+    <!-- equiment.request: actions -->
     <record id="hr_equipment_request_action" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
@@ -325,7 +325,7 @@
         </field>
     </record>
 
-    <!-- equiment : views -->
+    <!-- equiment: views -->
     <record id="hr_equipment_view_form" model="ir.ui.view">
         <field name="name">equipment.form</field>
         <field name="model">maintenance.equipment</field>
@@ -544,7 +544,7 @@
         </field>
     </record>
 
-    <!-- equiment : actions -->
+    <!-- equiment: actions -->
     <record id="hr_equipment_action_from_category_form" model="ir.actions.act_window">
         <field name="name">Equipment</field>
         <field name="res_model">maintenance.equipment</field>
@@ -565,7 +565,7 @@
         </field>
     </record>
 
-    <!-- equipment.category : views -->
+    <!-- equipment.category: views -->
     <record id="hr_equipment_category_view_form" model="ir.ui.view">
         <field name="name">equipment.category.form</field>
         <field name="model">maintenance.equipment.category</field>
@@ -675,7 +675,7 @@
         </field>
     </record>
 
-    <!-- equipment.category : actions -->
+    <!-- equipment.category: actions -->
     <record id="hr_equipment_category_action" model="ir.actions.act_window">
         <field name="name">Equipment Categories</field>
         <field name="res_model">maintenance.equipment.category</field>
@@ -688,7 +688,7 @@
         </field>
     </record>
 
-    <!-- equipment.stage : views -->
+    <!-- equipment.stage: views -->
     <record id="hr_equipment_stage_view_search" model="ir.ui.view">
         <field name="name">equipment.stage.search</field>
         <field name="model">maintenance.stage</field>
@@ -729,7 +729,7 @@
         </field>
     </record>
 
-    <!-- equipment.stages : actions -->
+    <!-- equipment.stages: actions -->
     <record id="hr_equipment_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">maintenance.stage</field>
@@ -925,7 +925,7 @@
         </field>
     </record>
 
-    <!-- equipment.team : actions -->
+    <!-- equipment.team: actions -->
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>

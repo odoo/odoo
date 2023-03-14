@@ -708,7 +708,7 @@ class Challenge(models.Model):
                     (first_user, second_user, third_user) = challenge._get_topN_users(MAX_VISIBILITY_RANKING)
                     if first_user:
                         challenge._reward_user(first_user, challenge.reward_first_id)
-                        message_body += _("<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :")
+                        message_body += _("<br/>Special rewards were sent to the top competing users. The ranking for this challenge is:")
                         message_body += reward_message % {
                             'rank': 1,
                             'user_name': first_user.name,
