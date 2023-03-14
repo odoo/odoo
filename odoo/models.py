@@ -3002,12 +3002,12 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
 
-        installed_lang = set(code for code, _ in self.env['res.lang'].get_installed())
-        missing_languages = set(translations) - installed_lang
-        if missing_languages:
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
+        missing_langs = set(translations) - valid_langs
+        if missing_langs:
             raise UserError(
-                _("The following language is not activated: %(missing_names)s",
-                missing_names=', '.join(missing_languages))
+                _("The following languages are not activated: %(missing_names)s",
+                missing_names=', '.join(missing_langs))
             )
 
         field = self._fields[field_name]
@@ -4725,6 +4725,7 @@ class BaseModel(metaclass=MetaModel):
         if old.id in seen_map[old._name]:
             return
         seen_map[old._name].add(old.id)
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
 
         for name, field in old._fields.items():
             if not field.copy:
@@ -4753,6 +4754,11 @@ class BaseModel(metaclass=MetaModel):
                     continue
                 lang = self.env.lang or 'en_US'
                 old_value_lang = old_translations.pop(lang, old_translations['en_US'])
+                old_translations = {
+                    lang: value
+                    for lang, value in old_translations.items()
+                    if lang in valid_langs
+                }
                 if not old_translations:
                     continue
                 if not callable(field.translate):
