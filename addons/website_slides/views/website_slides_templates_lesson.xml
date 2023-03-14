@@ -182,7 +182,7 @@
                             </t>
                             <div class="o_wslides_js_course_join ps-4" t-if="aside_slide._has_additional_resources()">
                                 <li t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file'">
-                                    <a t-att-href="resource._get_download_url()" class="text-decoration-none small">
+                                    <a t-att-href="resource.download_url" class="text-decoration-none small">
                                         <i class="fa fa-download me-1"/><span t-field="resource.name"/>
                                     </a>
                                 </li>
@@ -439,7 +439,7 @@
                         </span>
                         <div class="text-muted me-auto border-start ps-3">
                             <t t-foreach="slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file' and resource.data">
-                                <a t-att-href="resource._get_download_url()" t-esc="resource.name"/><br />
+                                <a t-att-href="resource.download_url" t-esc="resource.name"/><br />
                             </t>
                         </div>
                     </div>
