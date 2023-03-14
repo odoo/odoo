@@ -1314,8 +1314,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item b.text-capitalize").textContent,
-            "Wednesday, December 14, 2016",
-            "should display date 'Wednesday, December 14, 2016'"
+            "December 14, 2016",
+            "should display date 'December 14, 2016'"
         );
         assert.containsN(
             target,
@@ -3495,7 +3495,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item").textContent,
-            "Wednesday, December 14, 2016 (All day)"
+            "December 14, 2016 (All day)"
         );
     });
 
