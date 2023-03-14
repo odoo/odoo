@@ -598,10 +598,10 @@ QUnit.module("Fields", (hooks) => {
         await closePopover(target);
 
         await editValue("2", "2");
-        await editValue("2.11", "");
+        await editValue("2.11", "2");
         await editValue("azerty", "", "Wrong integer value should be interpreted as empty");
         await editValue("1,2,3,4,5,6", "123456");
-        await editValue("1,2,3,4,5,6.1,2,3", "");
+        await editValue("1,2,3,4,5,6.1,2,3", "123456");
     });
 
     /**

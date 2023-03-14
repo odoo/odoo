@@ -34,29 +34,94 @@ function evaluateMathematicalExpression(expr, context = {}) {
  * @param {Object} options - additional options
  * @param {string|RegExp} options.thousandsSep - the thousands separator used in the value
  * @param {string|RegExp} options.decimalPoint - the decimal point used in the value
+ * @param {boolean} options.truncate
  * @returns {number}
  */
-function parseNumber(value, options = {}) {
+export function parseNumber(value, options = {}) {
+    const { thousandsSep, decimalPoint, truncate } = options;
+    let parsed = NaN;
     if (value.startsWith("=")) {
-        value = evaluateMathematicalExpression(value.substring(1));
-        if (options.truncate) {
-            value = Math.trunc(value);
-        }
+        parsed = evaluateMathematicalExpression(value.substring(1));
     } else {
-        // A whitespace thousands separator is equivalent to any whitespace character.
-        // E.g. "1  000 000" should be parsed as 1000000 even if the
-        // thousands separator is nbsp.
-        const thousandsSepRegex = options.thousandsSep.match(/\s+/)
-            ? /\s+/g
-            : new RegExp(escapeRegExp(options.thousandsSep), "g") || ",";
+        if (!(thousandsSep == null && decimalPoint == null)) {
+            parsed = strictParseNumber(value, options);
+        }
+        if (isNaN(parsed)) {
+            parsed = lenientParseNumber(value, options);
+        }
+    }
+    if (isNaN(parsed)) {
+        throw new Error(`Unable to parse: '${value}'`);
+    }
+    return truncate ? Math.trunc(parsed) : parsed;
+}
 
-        // a number can have the thousand separator multiple times. ex: 1,000,000.00
-        value = value.replaceAll(thousandsSepRegex, "");
-        // a number only have one decimal separator
-        value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
+function strictParseNumber(value, options) {
+    const { thousandsSep, decimalPoint } = options;
+    // A whitespace thousands separator is equivalent to any whitespace character.
+    // E.g. "1  000 000" should be parsed as 1000000 even if the
+    // thousands separator is nbsp.
+    const thousandsSepRegex = thousandsSep.match(/\s+/)
+        ? /\s+/g
+        : new RegExp(escapeRegExp(thousandsSep), "g") || ",";
+
+    // a number can have the thousand separator multiple times. ex: 1,000,000.00
+    value = value.replaceAll(thousandsSepRegex, "");
+    // a number only have one decimal separator
+    value = value.replace(new RegExp(escapeRegExp(decimalPoint), "g") || ".", ".");
+    return Number(value);
+}
+
+/**
+ * group 1: sign
+ * group 2: the number to parse
+ */
+const POSSIBLE_NUMBER_REGEX = new RegExp("^([\\-+]*)([\\d\\.,\\s]*)$");
+
+function lenientParseNumber(value, options) {
+    const matchedValue = value.match(POSSIBLE_NUMBER_REGEX);
+    const sign = matchedValue[1];
+    value = matchedValue[2];
+
+    if (sign.length > 1) {
+        throw new Error("Invalid input. Can't have multiple signs.");
     }
 
-    return Number(value);
+    // Remove all whitespaces.
+    value = value.replaceAll(/\s+/g, "");
+
+    // Remove thousands separators and set decimal point as ".".
+    const separators = value.replaceAll(/\d/g, "");
+    if (separators.length === 1) {
+        const [char] = separators;
+        if (char === options.thousandsSep) {
+            value = value.replace(char, "");
+        } else {
+            value = value.replace(char, ".");
+        }
+    } else if (separators.length === 2) {
+        const [thousandsSep, decimalPoint] = [...separators];
+        if (thousandsSep === decimalPoint) {
+            // then no decimal point, all thousands sep
+            value = value.replaceAll(thousandsSep, "");
+        } else {
+            value = value.replace(thousandsSep, "").replace(decimalPoint, ".");
+        }
+    } else if (separators.length > 2) {
+        const [decimalPoint, ...thousandsSeps] = [...separators].reverse();
+        // thousandsSeps should all be the same
+        const [thousandsSep, invalid] = [...new Set(thousandsSeps)];
+        if (invalid) {
+            throw new Error("wrong sequence of thousands separators and decimal point");
+        }
+        if (thousandsSep === decimalPoint) {
+            value = value.replaceAll(thousandsSep, "");
+        } else {
+            value = value.replaceAll(thousandsSep, "").replace(decimalPoint, ".");
+        }
+    }
+
+    return Number(`${sign}${value}`);
 }
 
 // -----------------------------------------------------------------------------
@@ -74,20 +139,10 @@ export class InvalidNumberError extends Error {}
 export function parseFloat(value) {
     const thousandsSepRegex = localization.thousandsSep || "";
     const decimalPointRegex = localization.decimalPoint;
-    let parsed = parseNumber(value, {
+    return parseNumber(value, {
         thousandsSep: thousandsSepRegex,
         decimalPoint: decimalPointRegex,
     });
-    if (isNaN(parsed)) {
-        parsed = parseNumber(value, {
-            thousandsSep: ",",
-            decimalPoint: ".",
-        });
-        if (isNaN(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
-        }
-    }
-    return parsed;
 }
 
 /**
@@ -124,22 +179,11 @@ export function parseFloatTime(value) {
 export function parseInteger(value) {
     const thousandsSepRegex = localization.thousandsSep || "";
     const decimalPointRegex = localization.decimalPoint;
-    let parsed = parseNumber(value, {
+    return parseNumber(value, {
         thousandsSep: thousandsSepRegex,
         decimalPoint: decimalPointRegex,
         truncate: true,
     });
-    if (!Number.isInteger(parsed)) {
-        parsed = parseNumber(value, {
-            thousandsSep: ",",
-            decimalPoint: ".",
-            truncate: true,
-        });
-        if (!Number.isInteger(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
-        }
-    }
-    return parsed;
 }
 
 /**
