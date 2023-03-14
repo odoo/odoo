@@ -112,7 +112,7 @@ export const TimeOffCalendarController = CalendarController.extend({
                 args: [this.model.data.start_date, this.model.data.end_date],
                 context: this.context,
             }).then((stressDays) => {
-                this.$el.find('td.fc-day').toArray().forEach((td) => {
+                this.$el.find('td.fc-day-top').toArray().forEach((td) => {
                     if (stressDays[td.dataset.date]) {
                         td.classList.add('hr_stress_day_' + stressDays[td.dataset.date]);
                     }

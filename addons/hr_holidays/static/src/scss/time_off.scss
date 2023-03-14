@@ -47,7 +47,14 @@
 
     @for $size from 1 through length($o-colors) {
         .hr_stress_day_#{$size - 1} {
-            background-color: lighten(nth($o-colors, $size), 25%) !important;
+            .fc-day-number {
+                color: darken(nth($o-colors, $size), 20%) !important;
+            }
+            &.fc-today {
+                .fc-day-number {
+                    color: lighten(nth($o-colors, $size), 20%) !important;
+                }
+            }
         }
     }
 }
@@ -62,6 +69,15 @@
         list-style: none;
         padding-left: 0;
         margin: 0px;
+    }
+}
+
+.o_timeoff_legend {
+    .o_timeoff_legend_stressday {
+        display: inline-block;
+        width: 30px;
+        text-align: center;
+        color: $o-brand-odoo;
     }
 }
 
