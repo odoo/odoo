@@ -96,6 +96,6 @@ class ProjectSharingChatter(PortalChatter):
         project_sharing_id = kw.get('project_sharing_id')
         if project_sharing_id:
             token = self._check_project_access_and_get_token(project_sharing_id, res_model, res_id, kw.get('token'))
-            if token:
-                kw['token'] = token
+            if token is not None:
+                kw['token'] = token # Update token (either string which contains token value or False)
         return super().portal_message_fetch(res_model, res_id, domain=domain, limit=limit, offset=offset, **kw)
