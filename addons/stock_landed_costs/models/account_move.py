@@ -53,19 +53,21 @@ class AccountMoveLine(models.Model):
     product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     is_landed_costs_line = fields.Boolean()
 
+    def _get_landed_costs_account(self, accounts):
+        return accounts['stock_input' if self.move_id.company_id.anglo_saxon_accounting else 'expense']
+
     @api.onchange('is_landed_costs_line')
     def _onchange_is_landed_costs_line(self):
         """Mark an invoice line as a landed cost line and adapt `self.account_id`. The default
         value can be set according to `self.product_id.landed_cost_ok`."""
         if self.product_id:
             accounts = self.product_id.product_tmpl_id._get_product_accounts()
+            aml_account = accounts['expense']
             if self.product_type != 'service':
-                self.account_id = accounts['expense']
                 self.is_landed_costs_line = False
-            elif self.is_landed_costs_line and self.move_id.company_id.anglo_saxon_accounting:
-                self.account_id = accounts['stock_input']
-            else:
-                self.account_id = accounts['expense']
+            elif self.is_landed_costs_line:
+                aml_account = self._get_landed_costs_account(accounts)
+            self.account_id = aml_account
 
     @api.onchange('product_id')
     def _onchange_is_landed_costs_line_product(self):
@@ -73,3 +75,9 @@ class AccountMoveLine(models.Model):
             self.is_landed_costs_line = True
         else:
             self.is_landed_costs_line = False
+
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line in lines.filtered('is_landed_costs_line'):
+            line.account_id = line._get_landed_costs_account(line.product_id.product_tmpl_id._get_product_accounts())
+        return lines
