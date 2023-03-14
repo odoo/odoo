@@ -2,31 +2,53 @@
 
 from odoo import api, fields, models
 
+from odoo.tools import format_amount
+
+VARIABLE_SELECTION = [
+    ('weight', "Weight"),
+    ('volume', "Volume"),
+    ('wv', "Weight * Volume"),
+    ('price', "Price"),
+    ('quantity', "Quantity"),
+]
+
 
 class PriceRule(models.Model):
     _name = "delivery.price.rule"
     _description = "Delivery Price Rules"
     _order = 'sequence, list_price, id'
 
-    @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor')
+    @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor', 'currency_id')
     def _compute_name(self):
         for rule in self:
             name = 'if %s %s %.02f then' % (rule.variable, rule.operator, rule.max_value)
             if rule.list_base_price and not rule.list_price:
-                name = '%s fixed price %.02f' % (name, rule.list_base_price)
+                name = '%s fixed price %s' % (
+                    name, format_amount(self.env, rule.list_base_price, rule.currency_id)
+                )
             elif rule.list_price and not rule.list_base_price:
-                name = '%s %.02f times %s' % (name, rule.list_price, rule.variable_factor)
+                name = '%s %s times %s' % (name, format_amount(
+                    self.env, rule.list_price, rule.currency_id
+                ), rule.variable_factor)
             else:
-                name = '%s fixed price %.02f plus %.02f times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
+                name = '%s fixed price %s plus %s times %s' % (
+                    name,
+                    format_amount(self.env, rule.list_base_price, rule.currency_id),
+                    format_amount(self.env, rule.list_price, rule.currency_id),
+                    rule.variable_factor,
+                )
             rule.name = name
 
     name = fields.Char(compute='_compute_name')
     sequence = fields.Integer(required=True, default=10)
     carrier_id = fields.Many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade')
+    currency_id = fields.Many2one(related='carrier_id.currency_id')
 
-    variable = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], required=True, default='weight')
+    variable = fields.Selection(selection=VARIABLE_SELECTION, required=True, default='quantity')
     operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
     max_value = fields.Float('Maximum Value', required=True)
     list_base_price = fields.Float(string='Sale Base Price', digits='Product Price', required=True, default=0.0)
     list_price = fields.Float('Sale Price', digits='Product Price', required=True, default=0.0)
-    variable_factor = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], 'Variable Factor', required=True, default='weight')
+    variable_factor = fields.Selection(
+        selection=VARIABLE_SELECTION, string="Variable Factor", required=True, default='weight'
+    )

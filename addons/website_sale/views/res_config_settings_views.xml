@@ -131,7 +131,11 @@
                     </setting>
                     <setting id="delivery_method_setting" string="Shipping Costs" help="Compute shipping costs on orders"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_website_sale_delivery"/>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Shipping Methods" class="btn-link" icon="fa-arrow-right"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="ups_provider_setting" string="UPS" help="Compute shipping costs and ship with UPS"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
@@ -140,22 +144,47 @@
                     <setting id="shipping_provider_dhl_setting" string="DHL Express Connector" help="Compute shipping costs and ship with DHL"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" attrs="{'invisible': [('module_delivery_dhl', '=', False)]}">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="DHL Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'dhl'}"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="shipping_provider_fedex_setting" string="FedEx" help="Compute shipping costs and ship with FedEx"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" attrs="{'invisible': [('module_delivery_fedex', '=', False)]}">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="FedEx Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'fedex'}"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="shipping_provider_usps_setting" string="USPS" help="Compute shipping costs and ship with USPS"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" attrs="{'invisible': [('module_delivery_usps', '=', False)]}">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="USPS Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'usps'}"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="shipping_provider_bpost_setting" string="bpost" help="Compute shipping costs and ship with bpost"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" attrs="{'invisible': [('module_delivery_bpost', '=', False)]}">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="bpost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'bpost'}"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="shipping_provider_easypost_setting" string="Easypost" help="Compute shipping cost and ship with Easypost"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" attrs="{'invisible': [('module_delivery_easypost', '=', False)]}">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="Easypost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'easypost'}"/>
+                            </div>
+                        </div>
                     </setting>
                     <setting id="shipping_provider_mondialrelay_setting" string="Mondial Relay" help="Let the customer select a Mondial Relay shipping point">
                         <field name="module_delivery_mondialrelay"/>
