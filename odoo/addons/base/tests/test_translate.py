@@ -402,6 +402,40 @@ class TestTranslation(TransactionCase):
         self.assertEqual(categories.ids, [padawans.id, self.customers.id],
             "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")
 
+    def test_105_duplicate_record_multi_no_en(self):
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.customers.with_context(lang='nl_NL').name = 'Klanten'
+        self.env['res.lang']._activate_lang('zh_CN')
+        self.customers.with_context(lang='zh_CN').name = '客户'
+        self.env.ref('base.lang_en').active = False
+        self.env.ref('base.lang_zh_CN').active = False
+
+        category = self.customers
+        translations = category._fields['name']._get_stored_translations(category)
+        self.assertDictEqual(
+            translations,
+            {
+                'en_US': 'Customers',
+                'fr_FR': 'Clients',
+                'nl_NL': 'Klanten',
+                'zh_CN': '客户',
+            }
+        )
+
+        category_copy = self.customers.with_context(lang='fr_FR').copy()
+        translations = category_copy._fields['name']._get_stored_translations(category_copy)
+
+        self.assertDictEqual(
+            translations,
+            {
+                'en_US': 'Customers',
+                'fr_FR': 'Clients',
+                'nl_NL': 'Klanten',
+            },
+            'English, French and Dutch translation should be copied, Chinese translation should be dropped'
+        )
+
     def test_107_duplicate_record_en(self):
         category = self.customers.with_context({'lang': 'en_US'}).copy()
 
