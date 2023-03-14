@@ -6,6 +6,7 @@ from collections import defaultdict
 from datetime import timedelta
 from markupsafe import escape
 from operator import itemgetter
+from re import findall as regex_findall
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError
@@ -874,7 +875,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         """
         self.ensure_one()
         lot_names = self.env['stock.lot'].generate_lot_names(self.next_serial, next_serial_count or self.next_serial_count)
-        move_lines_commands = self._generate_serial_move_line_commands(lot_names)
+        field_data = [{'lot_name': lot_name, 'qty_done': 1} for lot_name in lot_names]
+        move_lines_commands = self._generate_serial_move_line_commands(field_data)
         self.write({'move_line_ids': move_lines_commands})
         return True
 
@@ -1104,35 +1106,66 @@ Please change the quantity done or the rounding precision of your unit of measur
             return
 
         breaking_char = '\n'
+        separation_char = '\t'
+        options = False
         if self.picking_type_id.show_reserved:
             move_lines = self.move_line_ids
         else:
             move_lines = self.move_line_nosuggest_ids
 
         for move_line in move_lines:
-            # Look if the `lot_name` contains multiple values.
-            if breaking_char in (move_line.lot_name or ''):
-                split_lines = move_line.lot_name.split(breaking_char)
-                split_lines = list(filter(None, split_lines))
-                move_line.lot_name = split_lines[0] if split_lines else ''
-                move_lines_commands = self._generate_serial_move_line_commands(
-                    split_lines[1:],
-                    origin_move_line=move_line,
-                )
-                if self.picking_type_id.show_reserved:
-                    self.update({'move_line_ids': move_lines_commands})
-                else:
-                    self.update({'move_line_nosuggest_ids': move_lines_commands})
-                existing_lots = self.env['stock.lot'].search([
-                    ('company_id', '=', self.company_id.id),
-                    ('product_id', '=', self.product_id.id),
-                    ('name', 'in', split_lines),
-                ])
-                if existing_lots:
-                    return {
-                        'warning': {'title': _('Warning'), 'message': _('Existing Serial Numbers (%s). Please correct the serial numbers encoded.') % ','.join(existing_lots.mapped('display_name'))}
-                    }
-                break
+            if not move_line.lot_name or (
+                breaking_char not in move_line.lot_name and
+                separation_char not in move_line.lot_name and ';' not in move_line.lot_name):
+                continue  # Skip if the `lot_name` doesn't contain multiple values.
+
+            # Checks the lines and prepares the move lines' values.
+            split_lines = move_line.lot_name.split(breaking_char)
+            split_lines = list(filter(None, split_lines))
+            # Checks the lines and prepares the move lines' values.
+            move_lines_vals = []
+            for lot_text in split_lines:
+                move_line_vals = {
+                    'lot_name': lot_text,
+                    'qty_done': move_line.qty_done or 1
+                }
+                # Semicolons are also used for separation but for convenience we
+                # replace them to work only with tabs.
+                lot_text_parts = lot_text.replace(';', separation_char).split(separation_char)
+                options = options or self._get_formating_options(lot_text_parts[1:])
+                for extra_string in lot_text_parts[1:]:
+                    field_data = self._convert_string_into_field_data(extra_string, options)
+                    if field_data == "ignore":
+                        # Got an unusable data for this move, updates only the lot_name part.
+                        move_line_vals.update(lot_name=lot_text_parts[0])
+                    elif field_data:
+                        move_line_vals.update(**field_data, lot_name=lot_text_parts[0])
+                    else:
+                        # At least this part of the string is erronous and can't be converted,
+                        # don't try to guess and simply use the full string as the lot name.
+                        move_line_vals['lot_name'] = lot_text
+                        break
+                move_lines_vals.append(move_line_vals)
+
+            move_lines_commands = self._generate_serial_move_line_commands(
+                move_lines_vals[1:], move_line,
+            )
+            if move_lines_vals:
+                move_lines_commands.append(Command.update(move_line.id, move_lines_vals[0]))
+            if self.picking_type_id.show_reserved:
+                self.move_line_ids = move_lines_commands
+            else:
+                self.move_line_nosuggest_ids = move_lines_commands
+            existing_lots = self.env['stock.lot'].search([
+                ('company_id', '=', self.company_id.id),
+                ('product_id', '=', self.product_id.id),
+                ('name', 'in', [move_line_vals['lot_name'] for move_line_vals in move_lines_vals]),
+            ])
+            if existing_lots:
+                return {
+                    'warning': {'title': _('Warning'), 'message': _('Existing Serial Numbers (%s). Please correct the serial numbers encoded.') % ','.join(existing_lots.mapped('display_name'))}
+                }
+            break
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
@@ -1213,64 +1246,62 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _assign_picking_post_process(self, new=False):
         pass
 
-    def _generate_serial_move_line_commands(self, lot_names, origin_move_line=None):
+    def _generate_serial_move_line_commands(self, field_data, origin_move_line=None):
         """Return a list of commands to update the move lines (write on
         existing ones or create new ones).
         Called when user want to create and assign multiple serial numbers in
         one time (using the button/wizard or copy-paste a list in the field).
 
-        :param lot_names: A list containing all serial number to assign.
-        :type lot_names: list
-        :param origin_move_line: A move line to duplicate the value from, default to None
+        :param field_data: A list containing dict with at least `lot_name` and `qty_done`
+        :type field_data: list
+        :param origin_move_line: A move line to duplicate the value from, empty record by default
         :type origin_move_line: record of :class:`stock.move.line`
         :return: A list of commands to create/update :class:`stock.move.line`
         :rtype: list
         """
         self.ensure_one()
-
-        # Select the right move lines depending of the picking type configuration.
-        move_lines = self.env['stock.move.line']
-        if self.picking_type_id.show_reserved:
-            move_lines = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
-        else:
-            move_lines = self.move_line_nosuggest_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
-
-        loc_dest = origin_move_line and origin_move_line.location_dest_id
+        origin_move_line = origin_move_line or self.env['stock.move.line']
+        loc_dest = origin_move_line.location_dest_id
         move_line_vals = {
             'picking_id': self.picking_id.id,
             'location_id': self.location_id.id,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_id.uom_id.id,
-            'qty_done': 1,
         }
+        # Select the right move lines depending of the picking type's configuration.
+        move_lines = self['move_line_ids' if self.picking_type_id.show_reserved else 'move_line_nosuggest_ids']
+        move_lines = move_lines.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
+
         if origin_move_line:
-            # `owner_id` and `package_id` are taken only in the case we create
-            # new move lines from an existing move line. Also, updates the
-            # `qty_done` because it could be usefull for products tracked by lot.
+            # Copies `owner_id` and `package_id` if new move lines are created from an existing one.
             move_line_vals.update({
                 'owner_id': origin_move_line.owner_id.id,
                 'package_id': origin_move_line.package_id.id,
-                'qty_done': origin_move_line.qty_done or 1,
             })
 
         move_lines_commands = []
         qty_by_location = defaultdict(float)
-        for lot_name in lot_names:
+        for command_vals in field_data:
+            qty_done = command_vals['qty_done']
             # We write the lot name on an existing move line (if we have still one)...
             if move_lines:
-                move_lines_commands.append((1, move_lines[0].id, {
-                    'lot_name': lot_name,
-                    'qty_done': 1,
-                }))
-                qty_by_location[move_lines[0].location_dest_id.id] += 1
+                move_lines_commands.append(Command.update(move_lines[0].id, command_vals))
+                qty_by_location[move_lines[0].location_dest_id.id] += qty_done
                 move_lines = move_lines[1:]
             # ... or create a new move line with the serial name.
             else:
-                loc = loc_dest or self.location_dest_id._get_putaway_strategy(self.product_id, quantity=1, packaging=self.product_packaging_id, additional_qty=qty_by_location)
-                move_line_cmd = dict(move_line_vals, lot_name=lot_name, location_dest_id=loc.id)
-                move_lines_commands.append((0, 0, move_line_cmd))
-                qty_by_location[loc.id] += 1
+                loc = loc_dest or self.location_dest_id._get_putaway_strategy(self.product_id, quantity=qty_done, packaging=self.product_packaging_id, additional_qty=qty_by_location)
+                new_move_line_vals = {
+                    **move_line_vals,
+                    **command_vals,
+                    'location_dest_id': loc.id
+                }
+                move_lines_commands.append(Command.create(new_move_line_vals))
+                qty_by_location[loc.id] += qty_done
         return move_lines_commands
+
+    def _get_formating_options(self, strings):
+        return {}
 
     def _get_new_picking_values(self):
         """ return create values for new picking that will be linked with group
@@ -2274,3 +2305,9 @@ Please change the quantity done or the rounding precision of your unit of measur
             'views': [[False, "form"]],
             'res_id': self.id,
         }
+
+    def _convert_string_into_field_data(self, string, options):
+        string = string.replace(',', '.')  # Parsing string as float works only with dot, not comma.
+        if regex_findall(r'^([0-9]+\.?[0-9]*|\.[0-9]+)$', string):  # Number => Quantity.
+            return {'qty_done': float(string) if self.has_tracking == 'lot' else 1}
+        return False
