@@ -900,7 +900,7 @@ class Lead(models.Model):
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self._context.get('default_team_id')
         if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
+            search_domain = ['&', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
         else:
             search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
 
