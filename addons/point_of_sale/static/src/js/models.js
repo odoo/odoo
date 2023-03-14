@@ -1844,6 +1844,7 @@ class Orderline extends PosModel {
             product_description_sale: this.get_product().description_sale,
             pack_lot_lines:      this.get_lot_lines(),
             customer_note:      this.get_customer_note(),
+            taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
         };
     }
     generate_wrapped_product_name() {
