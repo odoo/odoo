@@ -284,3 +284,41 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(
             po_1.order_line.price_unit, 16,
             "Line's unit price from the original PO shouldn't be changed")
+
+    def test_11_alternative_po_from_po_with_requisition_id(self):
+        """Create a purchase order from a blanket order, then check that the alternative purchase order
+            can be created and that the requisition_id is not set on it.
+        """
+        # create an empty blanket order
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none'
+        })
+        line1 = (0, 0, {
+            'product_id': self.product_13.id,
+            'product_uom_id': self.product_13.uom_po_id.id,
+            'price_unit': 41,
+            'product_qty': 10,
+        })
+        requisition_blanket = self.env['purchase.requisition'].create({
+            'line_ids': [line1],
+            'type_id': requisition_type.id,
+            'vendor_id': self.res_partner_1.id,
+        })
+        requisition_blanket.action_in_progress()
+        # lazy reproduction of clicking on "New Quotation" act_window button
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": requisition_blanket.id, "default_user_id": False}))
+        po_1 = po_form.save()
+        po_1.button_confirm()
+        self.assertTrue(po_1.requisition_id, "The requisition_id should be set in the purchase order")
+
+        # Creates an alternative PO.
+        action = po_1.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+
+        po_2 = po_1.alternative_po_ids - po_1
+        self.assertFalse(po_2.requisition_id, "The requisition_id should not be set in the alternative purchase order")
