@@ -1,3 +1,10 @@
+// ------- Kanban View -------
+.o_kanban_view {
+    @include media-breakpoint-down(md) {
+        --ControlPanel-border-bottom: none;
+    }
+}
+
 // ------- Kanban renderer -------
 .o_kanban_renderer {
     // ----------------------------------------------------------------------------
@@ -587,7 +594,7 @@
             margin: calc(var(--KanbanRecord-margin-v) * 0.5) var(--KanbanRecord-margin-h);
 
             @include media-breakpoint-down(md) {
-                margin: 0 0 -1px 0;
+                margin: 0 0 -1px 0 0 #{-$border-width};
                 flex-basis: 100%;
             }
 

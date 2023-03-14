@@ -5,7 +5,7 @@
     <Dropdown position="'bottom-end'" autoOpen="false" beforeOpen.bind="onBeforeOpen" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
-            <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge"><t t-esc="store.activityCounter"/></span>
+            <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-esc="store.activityCounter"/></span>
         </t>
         <t t-set-slot="default">
             <div class="o-mail-ActivityMenu bg-view flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto w-100 mh-100': store.isSmall }">
