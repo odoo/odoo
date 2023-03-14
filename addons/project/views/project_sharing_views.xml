@@ -157,11 +157,10 @@
                     <group>
                         <group>
                             <field name="project_id" invisible="1"/>
-                            <field name="display_project_id" string="Project" invisible="1"/>
                             <field name="allow_milestones" invisible="1"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id}"
+                                context="{'default_project_id': project_id}"
                                 attrs="{'invisible': [('allow_milestones', '=', False)]}"
                                 options="{'no_open': True, 'no_create': True, 'no_edit': True}"
                             />
@@ -186,18 +185,17 @@
                             <field name="description" type="html" options="{'collaborative': true}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+                            <field name="child_ids" context="{'default_project_id': project_id, 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
                                     <field name="name"/>
-                                    <field name="display_project_id" string="Project" optional="hide" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': display_project_id or project_id}"
+                                        context="{'default_project_id': project_id}"
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
                                     />
                                     <field name="company_id" invisible="1"/>
@@ -209,7 +207,7 @@
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
-                                            attrs="{'invisible': &quot;[('display_project_id', '!=', False), ('display_project_id', '!=', active_id)]&quot;}"/>
+                                            attrs="{'invisible': &quot;[('project_id', '!=', False), ('project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
                             </field>
                         </page>
@@ -236,7 +234,7 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="domain">[('display_project_id', '=', active_id)]</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No tasks found. Let's create one!
