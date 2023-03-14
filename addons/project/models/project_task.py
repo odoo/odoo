@@ -19,7 +19,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'active',
     'priority',
     'project_id',
-    'display_project_id',
     'color',
     'allow_subtasks',
     'subtask_count',
@@ -151,15 +150,9 @@ class Task(models.Model):
         help="Date on which the state of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
-    project_id = fields.Many2one('project.project', string='Project', recursive=True,
-        compute='_compute_project_id', store=True, readonly=False, precompute=True,
+    project_id = fields.Many2one('project.project', string='Project',
         index=True, tracking=True, check_company=True, change_default=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
-    # Defines in which project the task will be displayed / taken into account in statistics.
-    # Example: 1 task A with 1 subtask B in project P
-    # A -> project_id=P, display_project_id=P
-    # B -> project_id=P (to inherit from ACL/security rules), display_project_id=False
-    display_project_id = fields.Many2one('project.project', index=True)
     planned_hours = fields.Float("Initially Planned Hours", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
@@ -192,7 +185,7 @@ class Task(models.Model):
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one(
-        'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
+        'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True,
         required=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
     project_color = fields.Integer(related='project_id.color', string='Project Color')
@@ -311,10 +304,11 @@ class Task(models.Model):
             raise ValueError(_('Value should be True or False (not %s)'), value)
         if operator not in ['=', '!=']:
             raise NotImplementedError(_('Operation should be = or != (not %s)'), value)
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            return [('project_id', '=', False)]
-        else:
-            return [('project_id', '!=', False)]
+        domain = expression.normalize_domain([('project_id', '=', False), ('parent_id', '=', False)])
+        if (operator == '=') != value:
+            domain.insert(0, expression.NOT_OPERATOR)
+            domain = expression.distribute_not(domain)
+        return domain
 
     @api.depends('depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
@@ -566,10 +560,12 @@ class Task(models.Model):
         if self.project_id.company_id != self.company_id:
             self.project_id = False
 
-    @api.depends('project_id.company_id')
+    @api.depends('project_id.company_id', 'parent_id.company_id')
     def _compute_company_id(self):
-        for task in self.filtered(lambda task: task.project_id):
-            task.company_id = task.project_id.company_id
+        for task in self:
+            if not task.parent_id and not task.project_id:
+                continue
+            task.company_id = task.project_id.company_id or task.parent_id.company_id
 
     @api.depends('project_id')
     def _compute_stage_id(self):
@@ -919,9 +915,6 @@ class Task(models.Model):
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
             project_id = vals.get('project_id') or self.env.context.get('default_project_id')
-            if not vals.get('parent_id'):
-                # 1) We must initialize display_project_id to follow project_id if there is no parent_id
-                vals['display_project_id'] = project_id
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
@@ -1055,10 +1048,6 @@ class Task(models.Model):
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
             self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
-        for task in self:
-            if task.display_project_id != task.project_id and not task.parent_id:
-                # We must make the display_project_id follow the project_id if no parent_id set
-                task.display_project_id = task.project_id
 
         if 'state' in vals:
             # specific use case: when the blocked task goes from 'forced' done state to a not closed state, we fix the state back to waiting
@@ -1095,26 +1084,18 @@ class Task(models.Model):
     # Subtasks
     # ---------------------------------------------------
 
-    @api.depends('parent_id', 'project_id', 'display_project_id')
+    @api.depends('parent_id', 'project_id', 'is_private')
     def _compute_partner_id(self):
         """ Compute the partner_id when the tasks have no partner_id.
 
             Use the project partner_id if any, or else the parent task partner_id.
         """
         for task in self:
-            if task.partner_id and not task.project_id:
+            if task.partner_id and task.is_private:
                 task.partner_id = False
                 continue
             if not task.partner_id:
-                # When the task has a parent task, the display_project_id can be False or the project choose by the user for this task.
-                project = task.display_project_id if task.parent_id and task.display_project_id else task.project_id
-                task.partner_id = self._get_default_partner_id(project, task.parent_id)
-
-    @api.depends('parent_id.project_id', 'display_project_id')
-    def _compute_project_id(self):
-        for task in self:
-            if task.parent_id:
-                task.project_id = task.display_project_id or task.parent_id.project_id
+                task.partner_id = self._get_default_partner_id(task.project_id, task.parent_id)
 
     @api.depends('project_id')
     def _compute_milestone_id(self):

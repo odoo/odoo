@@ -66,7 +66,7 @@
                             <a t-attf-href="/my/projects/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                         </td>
                         <td class="text-end">
-                            <t t-out="project.task_count_with_subtasks" />
+                            <t t-out="project.task_count" />
                             <t t-out="project.label_tasks" />
                         </td>
                     </tr>

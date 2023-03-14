@@ -478,7 +478,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line as its project")
 
         # moving subtask in another project
-        subtask.write({'display_project_id': self.project_global.id})
+        subtask.write({'project_id': self.project_global.id})
 
         self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line as its mother, even when changing project")
         self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project)
