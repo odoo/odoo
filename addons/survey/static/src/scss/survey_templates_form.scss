@@ -139,20 +139,6 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         font-weight: 300;
     }
 
-    .o_survey_page_per_question.o_survey_simple_choice.o_survey_minimized_display,
-    .o_survey_page_per_question.o_survey_multiple_choice.o_survey_minimized_display,
-    .o_survey_page_per_question.o_survey_numerical_box,
-    .o_survey_page_per_question.o_survey_date,
-    .o_survey_page_per_question.o_survey_datetime {
-        // 'pixel perfect' layouting for choice questions having less than 5 choices in page_per_question mode
-        // we use media queries instead of bootstrap classes because they don't provide everything needed here
-        @media (min-width: 768px) {
-            width: 50%;
-            position: relative;
-            left: 25%;
-        }
-    }
-
     .o_survey_question_matrix {
         td {
             min-width: 100px;
