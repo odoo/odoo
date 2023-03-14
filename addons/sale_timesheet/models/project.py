@@ -555,7 +555,7 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.so_analytic_account_id.active
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
+    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         super()._compute_sale_line()
         for task in self:
@@ -575,10 +575,10 @@ class ProjectTask(models.Model):
     def _get_last_sol_of_customer(self):
         # Get the last SOL made for the customer in the current task where we need to compute
         self.ensure_one()
-        if not self.commercial_partner_id or not self.allow_billable:
+        if not self.partner_id.commercial_partner_id or not self.allow_billable:
             return False
-        domain = [('company_id', '=', self.company_id.id), ('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
-        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
+        domain = [('company_id', '=', self.company_id.id), ('is_service', '=', True), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
+        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)
 

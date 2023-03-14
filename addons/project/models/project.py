@@ -26,7 +26,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'project_id',
     'display_project_id',
     'color',
-    'commercial_partner_id',
     'allow_subtasks',
     'subtask_count',
     'is_private',
@@ -314,7 +313,6 @@ class Project(models.Model):
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, check_company=True)
-    commercial_partner_id = fields.Many2one(related="partner_id.commercial_partner_id")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
@@ -1189,7 +1187,6 @@ class Task(models.Model):
         string='Customer', recursive=True, tracking=True,
         compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Phone", readonly=False, store=True, copy=False)
