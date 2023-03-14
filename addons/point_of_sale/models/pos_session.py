@@ -787,7 +787,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income']
+            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))
