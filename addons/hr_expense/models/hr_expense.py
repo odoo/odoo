@@ -309,13 +309,13 @@ class HrExpense(models.Model):
     @api.depends('product_id', 'account_id')
     def _compute_analytic_distribution(self):
         for expense in self:
-            distribution = self.env['account.analytic.distribution.model']._get_distribution({
-                'product_id': expense.product_id.id,
-                'product_categ_id': expense.product_id.categ_id.id,
-                'account_prefix': expense.account_id.code,
-                'company_id': expense.company_id.id,
-            })
-            expense.analytic_distribution = distribution or expense.analytic_distribution
+            if not expense.analytic_distribution:
+                expense.analytic_distribution = self.env['account.analytic.distribution.model']._get_distribution({
+                    'product_id': expense.product_id.id,
+                    'product_categ_id': expense.product_id.categ_id.id,
+                    'account_prefix': expense.account_id.code,
+                    'company_id': expense.company_id.id,
+                })
 
     @api.constrains('payment_mode')
     def _check_payment_mode(self):

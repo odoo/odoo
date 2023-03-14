@@ -770,3 +770,33 @@ class TestExpenses(TestExpenseCommon):
 
         expense.unlink()
         self.analytic_account_1.unlink()
+
+    def test_expense_analytic_distribution_change(self):
+        self.env['account.analytic.distribution.model'].create([
+            {
+                'analytic_distribution': {self.analytic_account_1.id: 100},
+                'product_id': self.product_a.id,
+            },
+            {
+                'analytic_distribution': {self.analytic_account_2.id: 100},
+                'product_id': self.product_b.id,
+            },
+        ])
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense Sheet Test',
+            'employee_id': self.expense_employee.id,
+        })
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense Test',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': 700.00,
+            'sheet_id': expense_sheet.id,
+        })
+        self.assertEqual(expense.analytic_distribution, {str(self.analytic_account_1.id): 100}, "The analytic distribution should be set to analytic_account_1")
+        expense.write({'product_id': self.product_b.id})
+        self.assertEqual(expense.analytic_distribution, {str(self.analytic_account_1.id): 100}, "The analytic distribution should remain to analytic_account_1")
+        expense.write({'analytic_distribution': False})
+        expense.write({'product_id': self.product_b.id})
+        self.assertEqual(expense.analytic_distribution, {str(self.analytic_account_2.id): 100}, "The analytic distribution should be set to analytic_account_2")

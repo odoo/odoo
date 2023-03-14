@@ -894,7 +894,7 @@ class SaleOrderLine(models.Model):
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
         for line in self:
-            if not line.display_type and line.state == 'draft':
+            if not line.display_type and line.state == 'draft' and not line.analytic_distribution:
                 distribution = line.env['account.analytic.distribution.model']._get_distribution({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
@@ -902,7 +902,7 @@ class SaleOrderLine(models.Model):
                     "partner_category_id": line.order_id.partner_id.category_id.ids,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution = distribution or line.analytic_distribution
+                line.analytic_distribution = distribution
 
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):

@@ -503,6 +503,9 @@ class TestSalesTeam(SaleCommon):
 
         self.assertEqual(sol.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic distribution should be set to Super Account")
         sol.write({'product_id': great_product.id})
+        self.assertEqual(sol.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic distribution should remain to Super Account")
+        sol.write({'analytic_distribution': False})
+        sol.write({'product_id': great_product.id})
         self.assertEqual(sol.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic distribution should be set to Great Account")
 
         so_no_analytic_account = self.env['sale.order'].create({
