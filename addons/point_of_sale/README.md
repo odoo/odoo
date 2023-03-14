@@ -17,7 +17,7 @@ Work with the hardware you already have
 Odoo's POS is a web application that can run on any device that can display
 websites with little to no setup required.
 
-### Touchscreen or Keyboard ?
+### Touchscreen or Keyboard?
 
 The Point of Sale works perfectly on any kind of touch enabled device, whether
 it's multi-touch tablets like an iPad or keyboardless resistive touchscreen

@@ -20,13 +20,13 @@
             <t t-if="move.state != 'done'">
                 <t t-if="'product_uom_qty' in vals">
                     <li>
-                        Quantity : <t t-esc="move.product_uom_qty"/> -&gt; <t t-esc="float(vals.get('product_uom_qty'))"/>
+                        Quantity: <t t-esc="move.product_uom_qty"/> -&gt; <t t-esc="float(vals.get('product_uom_qty'))"/>
                     </li>
                 </t>
             </t>
             <t t-if="'qty_done' in vals">
                 <li>
-                    Quantity : <t t-esc="move.qty_done"/> -&gt; <t t-esc="float(vals.get('qty_done'))"/>
+                    Quantity: <t t-esc="move.qty_done"/> -&gt; <t t-esc="float(vals.get('qty_done'))"/>
                 </li>
             </t>
             <t t-if="'location_id' in vals">
@@ -49,7 +49,7 @@
             </t>
             <t t-if="'lot_name' in vals">
                 <li>
-                    Lot/Serial :
+                    Lot/Serial:
                     <t t-if="move.lot_id">
                         <t t-esc="move.lot_id.name"/> -&gt;
                     </t>
@@ -58,7 +58,7 @@
             </t>
             <t t-if="'package_name' in vals">
                 <li>
-                    Source Package :
+                    Source Package:
                     <t t-if="move.package_id">
                         <t t-esc="move.package_id.name"/> -&gt;
                     </t>
@@ -67,7 +67,7 @@
             </t>
             <t t-if="'result_package_name' in vals">
                 <li>
-                    Destination Package :
+                    Destination Package:
                     <t t-if="move.result_package_id">
                         <t t-esc="move.result_package_id.name"/> -&gt;
                     </t>
@@ -76,7 +76,7 @@
             </t>
             <t t-if="'owner_name' in vals">
                 <li>
-                    Owner :
+                    Owner:
                     <t t-if="move.owner_id">
                         <t t-esc="move.owner_id.name"/> -&gt;
                     </t>

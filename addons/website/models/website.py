@@ -688,12 +688,12 @@ class Website(models.Model):
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None):
         """ Create a new website page, and assign it a xmlid based on the given one
-            :param name : the name of the page
-            :param add_menu : if True, add a menu for that page
-            :param template : potential xml_id of the page to create
-            :param namespace : module part of the xml_id if none, the template module name is used
-            :param page_values : default values for the page to be created
-            :param menu_values : default values for the menu to be created
+            :param name: the name of the page
+            :param add_menu: if True, add a menu for that page
+            :param template: potential xml_id of the page to create
+            :param namespace: module part of the xml_id if none, the template module name is used
+            :param page_values: default values for the page to be created
+            :param menu_values: default values for the menu to be created
         """
         if namespace:
             template_module = namespace

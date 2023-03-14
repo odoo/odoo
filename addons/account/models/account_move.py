@@ -1415,11 +1415,11 @@ class AccountMove(models.Model):
         partner_id = record.partner_id.commercial_partner_id
         if not partner_id.credit_limit or updated_credit <= partner_id.credit_limit:
             return ''
-        msg = _('%s has reached its Credit Limit of : %s\nTotal amount due ',
+        msg = _('%s has reached its Credit Limit of: %s\nTotal amount due',
                 partner_id.name,
                 formatLang(self.env, partner_id.credit_limit, currency_obj=record.company_id.currency_id))
         if include:
-            msg += _('(including this document) ')
+            msg += _(' (including this document)')
         msg += ': %s' % formatLang(self.env, updated_credit, currency_obj=record.company_id.currency_id)
         return msg
 

@@ -67,7 +67,7 @@ class AccountJournal(models.Model):
         """ Create a check sequence for the journal """
         for journal in self:
             journal.check_sequence_id = self.env['ir.sequence'].sudo().create({
-                'name': journal.name + _(" : Check Number Sequence"),
+                'name': journal.name + _(": Check Number Sequence"),
                 'implementation': 'no_gap',
                 'padding': 5,
                 'number_increment': 1,
