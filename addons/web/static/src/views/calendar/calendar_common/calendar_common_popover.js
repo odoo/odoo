@@ -5,6 +5,7 @@ import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
 import { evalDomain } from "@web/views/utils";
+import { getFormattedDateSpan } from '@web/views/calendar/utils';
 
 import { Component } from "@odoo/owl";
 
@@ -55,7 +56,7 @@ export class CalendarCommonPopover extends Component {
         }
 
         if (!this.props.model.isDateHidden) {
-            this.date = this.getFormattedDate(start, end, record.isAllDay);
+            this.date = getFormattedDateSpan(start, end);
 
             if (record.isAllDay) {
                 if (isSameDay) {
@@ -65,17 +66,6 @@ export class CalendarCommonPopover extends Component {
                     this.dateDuration = duration.toFormat(`d '${this.env._t("days")}'`);
                 }
             }
-        }
-    }
-    getFormattedDate(start, end, isAllDay) {
-        const isSameDay = start.hasSame(end, "day");
-        if (!isSameDay && start.hasSame(end, "month")) {
-            // Simplify date-range if an event occurs into the same month (eg. "August, 4-5 2019")
-            return start.toFormat("LLLL d") + "-" + end.toFormat("d, y");
-        } else {
-            return isSameDay
-                ? start.toFormat("DDDD")
-                : start.toFormat("DDD") + " - " + end.toFormat("DDD");
         }
     }
 
