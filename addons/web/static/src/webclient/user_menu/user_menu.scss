@@ -1,5 +1,9 @@
 .o_user_menu .dropdown-toggle {
-    --Avatar-size: calc(var(--o-navbar-height) - 20px);
+    --NavBar-entry-padding-right: 0;
 
-    padding-right: $o-horizontal-padding;
+    margin-right: $o-horizontal-padding;
+
+    .o_user_avatar {
+        height: calc(var(--o-navbar-height) - 20px);
+    }
 }

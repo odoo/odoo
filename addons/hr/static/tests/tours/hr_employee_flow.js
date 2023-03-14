@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('hr_employee_tour', {
     },
     {
         content: "Open user account menu",
-        trigger: ".o_user_menu .oe_topbar_name",
+        trigger: ".o_user_menu .dropdown-toggle",
         run: 'click',
     }, {
         content: "Open My Profile",
