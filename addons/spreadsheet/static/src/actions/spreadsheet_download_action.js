@@ -10,16 +10,18 @@ import { _t } from "@web/core/l10n/translation";
 const { Model } = spreadsheet;
 
 async function downloadSpreadsheet(env, action) {
-    const { orm, name, data, stateUpdateMessages } = action.params;
-    const dataSources = new DataSources(orm);
-    const model = new Model(migrate(data), { custom: { dataSources } }, stateUpdateMessages);
-    await waitForDataLoaded(model);
-    const { files } = model.exportXLSX();
+    let { orm, name, data, stateUpdateMessages, xlsxData } = action.params;
+    if (!xlsxData) {
+        const dataSources = new DataSources(orm);
+        const model = new Model(migrate(data), { custom: { dataSources } }, stateUpdateMessages);
+        await waitForDataLoaded(model);
+        xlsxData = model.exportXLSX();
+    }
     await download({
         url: "/spreadsheet/xlsx",
         data: {
             zip_name: `${name}.xlsx`,
-            files: JSON.stringify(files),
+            files: JSON.stringify(xlsxData.files),
         },
     });
 }
