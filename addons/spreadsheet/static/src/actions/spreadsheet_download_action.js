@@ -9,15 +9,17 @@ import { createSpreadsheetModel, waitForDataLoaded } from "@spreadsheet/helpers/
  * @param {object} action
  */
 async function downloadSpreadsheet(env, action) {
-    const { name, data, stateUpdateMessages } = action.params;
-    const model = await createSpreadsheetModel({ env, data, revisions: stateUpdateMessages });
-    await waitForDataLoaded(model);
-    const { files } = model.exportXLSX();
+    let { name, data, stateUpdateMessages, xlsxData } = action.params;
+    if (!xlsxData) {
+        const model = await createSpreadsheetModel({ env, data, revisions: stateUpdateMessages });
+        await waitForDataLoaded(model);
+        xlsxData = model.exportXLSX();
+    }
     await download({
         url: "/spreadsheet/xlsx",
         data: {
             zip_name: `${name}.xlsx`,
-            files: JSON.stringify(files),
+            files: JSON.stringify(xlsxData.files),
         },
     });
 }
