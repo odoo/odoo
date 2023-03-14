@@ -21,7 +21,7 @@ function openRoot() {
 function openUserProfileAtSecurityTab() {
     return [{
         content: 'Open user account menu',
-        trigger: '.o_user_menu .oe_topbar_name',
+        trigger: '.o_user_menu .dropdown-toggle',
         run: 'click',
     }, {
         content: "Open preferences / profile screen",
@@ -154,7 +154,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     }
 }, {
     content: "check we're logged in",
-    trigger: ".o_user_menu .oe_topbar_name",
+    trigger: ".o_user_menu .dropdown-toggle",
     run() {}
 }]});
 
@@ -191,7 +191,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     }
 }, {
     content: "check we're logged in",
-    trigger: ".o_user_menu .oe_topbar_name",
+    trigger: ".o_user_menu .dropdown-toggle",
     run: 'click',
 }, {
     content: "click the Log out button",
@@ -212,7 +212,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: 'button:contains("Log in")',
 },  {
     content: "check we're logged in without 2FA",
-    trigger: ".o_user_menu .oe_topbar_name",
+    trigger: ".o_user_menu .dropdown-toggle",
     run() {}
 },
 // now go and disable two-factor authentication would be annoying to do in a separate tour
