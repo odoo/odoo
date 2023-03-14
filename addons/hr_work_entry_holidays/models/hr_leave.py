@@ -36,7 +36,7 @@ class HrLeave(models.Model):
             for contract in contracts:
                 if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
                     resource_leave_values += [{
-                        'name': _("%s: Time Off", leave.employee_id.name),
+                        'name': _("%s: Time Off") % leave.employee_id.name,
                         'holiday_id': leave.id,
                         'resource_id': leave.employee_id.resource_id.id,
                         'work_entry_type_id': leave.holiday_status_id.work_entry_type_id.id,

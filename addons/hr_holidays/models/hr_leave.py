@@ -989,7 +989,7 @@ class HolidaysRequest(models.Model):
         """Hook method for others to inject data
         """
         return [{
-            'name': _("%s: Time Off", leave.employee_id.name),
+            'name': _("%s: Time Off") % leave.employee_id.name,
             'date_from': leave.date_from,
             'holiday_id': leave.id,
             'date_to': leave.date_to,
