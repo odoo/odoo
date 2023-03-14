@@ -194,9 +194,9 @@ class TestTaskDependencies(TestProjectCommon):
             'name': 'Parent Task',
             'project_id': self.project_goats.id,
             'child_ids': [
-                Command.create({'name': 'Node 1'}),
-                Command.create({'name': 'SuperNode 2', 'child_ids': [Command.create({'name': 'Node 2'})]}),
-                Command.create({'name': 'Node 3'}),
+                Command.create({'name': 'Node 1', 'project_id': self.project_goats.id}),
+                Command.create({'name': 'SuperNode 2', 'project_id': self.project_goats.id, 'child_ids': [Command.create({'name': 'Node 2', 'project_id': self.project_goats.id})]}),
+                Command.create({'name': 'Node 3', 'project_id': self.project_goats.id}),
             ],
         })
 

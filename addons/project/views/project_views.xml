@@ -61,7 +61,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <field name="stage_id" position="after">
-                    <field name="display_project_id" string="Project"/>
+                    <field name="project_id" string="Project"/>
                 </field>
                 <field name="partner_id" position="after">
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -149,7 +149,7 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('display_project_id', '=', active_id)]</field>
+            <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{
                 'default_project_id': active_id,
                 'show_project_update': True,
@@ -1040,7 +1040,7 @@
                         <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', 'in', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
-                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
+                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('is_private', '=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
@@ -1062,7 +1062,7 @@
                         </button>
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_rating_buttons" invisible="1"/>
-                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
+                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
                         <button name="action_recurring_tasks" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
@@ -1110,13 +1110,11 @@
                             <field name="project_id"
                                    placeholder="Private"
                                    domain="[('active', '=', True), ('company_id', '=', company_id)]"
-                                   attrs="{'invisible': [('parent_id', '!=', False)]}"
                                    widget="project_private_task"
                             />
-                            <field name="display_project_id" string="Project" attrs="{'invisible': [('parent_id', '=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id}"
+                                context="{'default_project_id': project_id}"
                                 attrs="{'invisible': ['|', ('project_id', '=', False), ('allow_milestones', '=', False)]}"
                             />
                             <field name="user_ids"
@@ -1160,11 +1158,10 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
-                                   context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
+                                   context="{'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
                                    widget="subtasks_one2many">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
-                                    <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
@@ -1174,10 +1171,10 @@
                                     <field name="child_text" invisible="1"/>
                                     <field name="allow_subtasks" invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>
-                                    <field name="display_project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
+                                    <field name="project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': display_project_id or project_id}"
+                                        context="{'default_project_id': project_id}"
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
                                     />
                                     <field name="partner_id" optional="hide"/>
@@ -1198,11 +1195,10 @@
                         </page>
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1"
-                                   context="{'default_project_id' : project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_display_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view', 'search_default_open_tasks': 1}">
+                                   context="{'default_project_id': project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view', 'search_default_open_tasks': 1}">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
-                                    <field name="display_project_id" invisible="1" />
                                     <field name="is_closed" invisible="1" />
                                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
                                     <field name="state" widget="project_task_state_selection" optional="show" nolabel="1"/>
@@ -1213,7 +1209,7 @@
                                     <field name="project_id" optional="hide" options="{'no_open': 1}" />
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id}"
+                                        context="{'default_project_id': project_id}"
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
                                     />
                                     <field name="partner_id" optional="hide"/>
@@ -1236,7 +1232,7 @@
                         <page name="extra_info" string="Extra Info" groups="base.group_no_one">
                             <group>
                                 <group>
-                                    <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_display_project_id': project_id}"/>
+                                    <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id}"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="sequence" groups="base.group_no_one"/>
@@ -1449,7 +1445,7 @@
                     <field name="recurrence_id" invisible="1" />
                 </tree>
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="parent_id" optional="hide" context="{'search_view_ref' : 'project.view_task_search_form', 'search_default_display_project_id': project_id}" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                    <field name="parent_id" optional="hide" context="{'search_view_ref' : 'project.view_task_search_form', 'search_default_project_id': project_id}" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
@@ -1552,7 +1548,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1}</field>
-            <field name="domain">[('display_project_id', '!=', False)]</field>
+            <field name="domain">[('project_id', '!=', False)]</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -1679,6 +1675,7 @@
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="domain">['|', ('is_private', '=', True), ('project_id', '!=', False)]</field>
             <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -1737,7 +1734,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('display_project_id', '!=', False)]</field>
+            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -1787,7 +1784,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': [(6, 0, [active_id])]}</field>
-            <field name="domain">[('display_project_id', '!=', False)]</field>
+            <field name="domain">[('project_id', '!=', False)]</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
             <field name="binding_view_types">form</field>
         </record>

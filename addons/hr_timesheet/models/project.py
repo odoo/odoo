@@ -238,7 +238,6 @@ class Task(models.Model):
     _inherit = "project.task"
 
     project_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
-    display_project_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")

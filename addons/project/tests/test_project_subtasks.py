@@ -27,14 +27,12 @@ class TestProjectSubtasks(TestProjectCommon):
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned.")
-        self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id.")
 
         with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id})) as task_form:
             task_form.name = 'Test Task 2'
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project.")
-        self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id.")
 
     def test_task_display_project_with_task_form2(self):
         """
@@ -46,14 +44,12 @@ class TestProjectSubtasks(TestProjectCommon):
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned.")
-        self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id.")
 
         with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.view_task_form2") as task_form:
             task_form.name = 'Test Task 2'
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project.")
-        self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id.")
 
     def test_task_display_project_with_quick_create_task_form(self):
         """
@@ -64,7 +60,6 @@ class TestProjectSubtasks(TestProjectCommon):
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project.")
-        self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id.")
 
     def test_task_display_project_with_any_task_form(self):
         """
@@ -80,75 +75,62 @@ class TestProjectSubtasks(TestProjectCommon):
             task = task_form.save()
 
             self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project, form_view name : %s." % form_view.name)
-            self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id, form_view name : %s." % form_view.name)
 
-    def test_subtask_display_project(self):
+    def test_subtask_project(self):
         """
             1) Create a subtask
-                - Should have the same project as its parent
-                - Shouldn't have a display project set.
-            2) Set display project on subtask
+                - Shouldn't have a project set.
+            2) Set project on subtask
                 - Should not change parent project
-                - Should change the subtask project
-                - Display project should be correct
-            3) Reset the display project to False
-                - Should make the project equal to parent project
-                - Display project should be correct
+                - Project should be correct
+            3) Reset the project to False
+                - Project should be correct
             4) Change parent task project
-                - Should make the subtask project follow parent project
-                - Display project should stay false
-            5) Set display project on subtask and change parent task project
-                - Should make the subtask project follow new display project id
-                - Display project should be correct
+                - Project should stay false
+            5) Set project on subtask and change parent task project
+                - Project should be the one set by the user
             6) Remove parent task:
                 - The project id should remain unchanged
-                - The display project id should follow the project id
-            7) Remove display project id then parent id:
-                - The project id should be the one from the parent :
-                    - Since the display project id was removed, the project id is updated to the parent one
-                - The display project id should follow the project id
+            7) Remove project id then parent id:
+                - should not be possible since allow_subtasks is false when no project is set on the subtask
         """
         # 1)
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
             with task_form.child_ids.new() as child_task_form:
                 child_task_form.name = 'Test Subtask 1'
 
-        self.assertEqual(self.task_1.child_ids.project_id, self.project_pigs, "The project should be assigned from the default project.")
-        self.assertFalse(self.task_1.child_ids.display_project_id, "The display project of a sub task should be false to project_id.")
+        self.assertFalse(self.task_1.child_ids.project_id, "The project should be False by default.")
 
         # 2)
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
             with task_form.child_ids.edit(0) as child_task_form:
-                child_task_form.display_project_id = self.project_goats
+                child_task_form.project_id = self.project_goats
         self.assertEqual(self.task_1.project_id, self.project_pigs, "Changing the project of a subtask should not change parent project")
-        self.assertEqual(self.task_1.child_ids.display_project_id, self.project_goats, "Display Project of the task should be well assigned")
+        self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "Display Project of the task should be well assigned")
         self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "Changing display project id on a subtask should change project id")
 
         # 3)
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
             with task_form.child_ids.edit(0) as child_task_form:
-                child_task_form.display_project_id = self.env['project.project']
+                child_task_form.project_id = self.env['project.project']
 
-        self.assertFalse(self.task_1.child_ids.display_project_id, "Display Project of the task should be well assigned, to False")
-        self.assertEqual(self.task_1.child_ids.project_id, self.project_pigs, "Resetting display project to False on a subtask should change project id to parent project id")
+        self.assertFalse(self.task_1.child_ids.project_id, "The project of the subtask should be False")
 
         # 4)
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
             task_form.project_id = self.project_goats
 
         self.assertEqual(self.task_1.project_id, self.project_goats, "Parent project should change.")
-        self.assertFalse(self.task_1.child_ids.display_project_id, "Display Project of the task should be False")
-        self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "Resetting display project to False on a subtask should follow project of its parent")
+        self.assertFalse(self.task_1.child_ids.project_id, "The project of the subtask should stay False")
 
         # 5)
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
             with task_form.child_ids.edit(0) as child_task_form:
-                child_task_form.display_project_id = self.project_goats
+                child_task_form.project_id = self.project_goats
             task_form.project_id = self.project_pigs
 
         self.assertEqual(self.task_1.project_id, self.project_pigs, "Parent project should change back.")
-        self.assertEqual(self.task_1.child_ids.display_project_id, self.project_goats, "Display Project of the task should be well assigned")
-        self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "Changing display project id on a subtask should change project id")
+        self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "The project of the subtask should have the one set by the user")
 
         # Debug mode required for `parent_id` to be visible in the view
         with self.debug_mode():
@@ -157,22 +139,22 @@ class TestProjectSubtasks(TestProjectCommon):
                 subtask_form.parent_id = self.env['project.task']
             orphan_subtask = subtask_form.save()
 
-            self.assertEqual(orphan_subtask.display_project_id, self.project_goats, "Display Project of the task should be well assigned")
-            self.assertEqual(orphan_subtask.project_id, self.project_goats, "Changing display project id on a subtask should change project id")
+            self.assertEqual(orphan_subtask.project_id, self.project_goats, "The project of the orphan task should stay the same even if the subtask has no longer parent task")
             self.assertFalse(orphan_subtask.parent_id, "Parent should be false")
 
             # 7)
             with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
                 with task_form.child_ids.new() as child_task_form:
                     child_task_form.name = 'Test Subtask 1'
-                    child_task_form.display_project_id = self.project_goats
+                    child_task_form.project_id = self.project_goats
             with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
-                subtask_form.display_project_id = self.env['project.project']
-                subtask_form.parent_id = self.env['project.task']
+                subtask_form.project_id = self.env['project.project']
+                with self.assertRaises(AssertionError, msg="the parent_id field should not be visible since no project is set on the subtask and so allow_subtasks is false"):
+                    subtask_form.parent_id = self.env['project.task']
             orphan_subtask = subtask_form.save()
 
-            self.assertEqual(orphan_subtask.project_id, self.project_pigs, "Removing parent should not change project")
-            self.assertEqual(orphan_subtask.display_project_id, self.project_pigs, "Removing parent should make the display project set as project.")
+            self.assertFalse(orphan_subtask.project_id, "The project should be removed as expected.")
+            self.assertEqual(orphan_subtask.parent_id, self.task_1, "The parent should not be removed since the field was not there in the form view after project has been removed.")
 
     def test_subtask_stage(self):
         """
@@ -187,6 +169,11 @@ class TestProjectSubtasks(TestProjectCommon):
             with task_form.child_ids.new() as child_task_form:
                 child_task_form.name = 'Test Subtask 1'
 
+        self.assertFalse(self.task_1.child_ids.stage_id, "No stage should be set on the subtask since no project is set by default.")
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.edit(0) as subtask_form:
+                subtask_form.project_id = task_form.project_id
+
         self.assertEqual(self.task_1.child_ids.stage_id, stage_a, "The stage of the child task should be the default one of the project.")
 
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
@@ -198,12 +185,13 @@ class TestProjectSubtasks(TestProjectCommon):
             task_form.child_ids.remove(index=0)
             with task_form.child_ids.new() as child_task_form:
                 child_task_form.name = 'Test Subtask 2'
+                child_task_form.project_id = task_form.project_id
 
         self.assertEqual(self.task_1.child_ids.stage_id, stage_a, "The stage of the child task should be the default one of the project even if parent stage id is different.")
 
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
             with task_form.child_ids.edit(0) as child_task_form:
-                child_task_form.display_project_id = self.project_goats
+                child_task_form.project_id = self.project_goats
 
         self.assertEqual(self.task_1.child_ids.stage_id.name, "New", "The stage of the child task should be the default one of the display project id, once set.")
 
@@ -213,21 +201,31 @@ class TestProjectSubtasks(TestProjectCommon):
             'project_id': self.project_goats.id,
             'child_ids': [
                 Command.create({'name': 'child 1'}),
-                Command.create({'name': 'child 2', 'display_project_id': self.project_goats.id}),
-                Command.create({'name': 'child 3', 'display_project_id': self.project_pigs.id}),
-                Command.create({'name': 'child 4 with subtask', 'child_ids': [Command.create({'name': 'child 5'}), Command.create({'name': 'child 6 with project', 'display_project_id': self.project_goats.id})]}),
+                Command.create({'name': 'child 2', 'project_id': self.project_goats.id}),
+                Command.create({'name': 'child 3', 'project_id': self.project_pigs.id}),
+                Command.create({'name': 'child 4 with subtask', 'child_ids': [Command.create({'name': 'child 5'}), Command.create({'name': 'child 6 with project', 'project_id': self.project_goats.id})]}),
                 Command.create({'name': 'child archived', 'active': False}),
             ],
         })
 
-        task_count_with_subtasks_including_archived_in_project_goats = self.project_goats.with_context(active_test=False).task_count_with_subtasks
+        task_count_with_subtasks_including_archived_in_project_goats = 6
         task_count_in_project_pigs = self.project_pigs.task_count
         self.project_goats._compute_task_count()  # recompute without archived tasks and subtasks
         task_count_in_project_goats = self.project_goats.task_count
         project_goats_duplicated = self.project_goats.copy()
         self.project_pigs._compute_task_count()  # retrigger since a new task should be added in the project after the duplication of Project Goats
+
+        def subtask_in_project(tasks, project):
+            task_count = 0
+            for task in tasks:
+                if not task.project_id or task.project_id == project:
+                    task_count += 1 + subtask_in_project(task.child_ids, project)
+            return task_count
+
+        tasks_copied_count = subtask_in_project(project_goats_duplicated.tasks, project_goats_duplicated)
+
         self.assertEqual(
-            project_goats_duplicated.with_context(active_test=False).task_count_with_subtasks,
+            tasks_copied_count,
             task_count_with_subtasks_including_archived_in_project_goats - 1,
             'The number of duplicated tasks (subtasks included) should be equal to the number of all tasks (with active subtasks included) of both projects, '
             'that is only the active subtasks are duplicated.')
@@ -246,7 +244,7 @@ class TestProjectSubtasks(TestProjectCommon):
         task_form = Form(self.task_1.with_context({'tracking_disable': True}))
         with task_form.child_ids.new() as child_task_form:
             child_task_form.name = 'Test Subtask 1'
-            child_task_form.display_project_id = self.env['project.project']
+            child_task_form.project_id = task_form.project_id
         task = task_form.save()
 
         child_subtask = self.task_1.child_ids[0]
@@ -254,7 +252,7 @@ class TestProjectSubtasks(TestProjectCommon):
         with Form(child_subtask.with_context(tracking_disable=True)) as subtask_form:
             with subtask_form.child_ids.new() as child_subtask_form:
                 child_subtask_form.name = 'Test Subtask 2'
-                child_subtask_form.display_project_id = self.env['project.project']
+                self.assertFalse(child_subtask_form.project_id)
 
         self.assertEqual(task.subtask_count, 2, "Parent task should have 2 children")
         task_2 = task.copy()
