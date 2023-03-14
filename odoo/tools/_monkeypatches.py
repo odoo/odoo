@@ -1,5 +1,3 @@
-from shutil import copyfileobj
-
 from werkzeug.datastructures import FileStorage
 
 try:
@@ -21,4 +19,6 @@ else:
     xlsx.ET_has_iterparse = True
     xlsx.Element_has_iter = True
 
-FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
+save = FileStorage.save
+
+FileStorage.save = lambda self, dst, buffer_size=1<<20: save(self, dst, buffer_size=buffer_size)
