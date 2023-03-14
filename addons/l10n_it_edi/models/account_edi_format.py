@@ -531,7 +531,11 @@ class AccountEdiFormat(models.Model):
 
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
-                                 .with_context(default_move_type=move_type)
+                                 .with_context(
+                                    default_move_type=move_type,
+                                    account_predictive_bills_predict_product=False,
+                                    account_predictive_bills_predict_taxes=False
+                                )
 
             # move could be a single record (editing) or be empty (new).
             with invoice_ctx._get_edi_creation() as invoice_form:
@@ -808,7 +812,7 @@ class AccountEdiFormat(models.Model):
                         percentage = round(tax_amount / price_subtotal * 100)
 
         natura_element = element.xpath('.//Natura')
-        invoice_line_form.tax_ids = []
+        invoice_line_form.tax_ids = ()
         if percentage is not None:
             l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
             conditions = (
