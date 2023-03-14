@@ -102,6 +102,17 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.check.orderIsEmpty();
 
     Tour.register('ProductScreenTour', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.do.clickDisplayedProduct('Test Product');
+    ProductScreen.check.totalAmountIs('100.00');
+    ProductScreen.do.changeFiscalPosition('No Tax');
+    ProductScreen.check.noDiscountApplied("100.00");
+    ProductScreen.check.totalAmountIs('86.96');
+
+    Tour.register('FiscalPositionNoTax', { test: true, url: '/pos/ui' }, getSteps());
 });
 
 odoo.define('point_of_sale.tour.FixedPriceNegativeQty', function (require) {
