@@ -335,7 +335,13 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
+        ctx = dict(self.env.context)
+        if 'default_description_sale' in ctx and ctx.get('default_description_sale') is None:
+            ctx.pop('default_description_sale')
+        if 'default_lst_price' in ctx and ctx.get('default_lst_price') == 0:
+            ctx.pop('default_lst_price')
+        ctx['create_product_product'] = True
+        products = super(ProductProduct, self.with_context(ctx)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
         return products
