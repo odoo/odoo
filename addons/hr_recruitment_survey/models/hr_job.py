@@ -26,7 +26,6 @@ class Job(models.Model):
                 'view_mode': 'form,tree',
                 'res_model': 'survey.survey',
                 'type': 'ir.actions.act_window',
-                'context': {'form_view_initial_mode': 'edit'},
                 'res_id': survey.id,
             }
 

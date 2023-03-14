@@ -570,7 +570,6 @@ class MassMailing(models.Model):
         mass_mailing_copy = self.copy()
         if mass_mailing_copy:
             context = dict(self.env.context)
-            context['form_view_initial_mode'] = 'edit'
             action = {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
