@@ -329,9 +329,13 @@ class AccountEdiFormat(models.Model):
                     'type': 'binary',
                 })
 
+                # Invoice create
+
                 if not self.env.context.get('test_skip_commit'):
                     self.env.cr.commit() # In case something fails after, we still have the attachment
 
+                # Invoice delete
+                # Invoice stuff
                 self.env['account.journal'].with_company(company)\
                     .with_context(default_move_type='in_invoice')\
                     ._create_document_from_attachment(attachment.ids)
