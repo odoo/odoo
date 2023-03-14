@@ -5,16 +5,18 @@
             <attribute name="t-if">props.record.data[props.name]</attribute>
         </xpath>
         <xpath expr="//t[@t-if='!props.canOpen']/span" position="after">
-            <span t-else="" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+            <span t-elif="props.record.data.is_private" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
         </xpath>
         <xpath expr="//t[@t-else='']/a" position="attributes">
             <attribute name="t-if">displayName</attribute>
         </xpath>
         <xpath expr="//t[@t-else='']/a" position="after">
-            <span t-else="" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+            <span t-elif="props.record.data.is_private" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
         </xpath>
         <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="attributes">
-            <attribute name="class" separator=" " add="project_private_task_many2one_field"></attribute>
+            <attribute name="t-att-class">{
+                project_private_task_many2one_field: props.record.data.is_private,
+            }</attribute>
         </xpath>
     </t>
 
