@@ -6,7 +6,7 @@ Swiss localization
 ==================
 This module defines a chart of account for Switzerland (Swiss PME/KMU 2015), taxes and enables the generation of ISR and QR-bill when you print an invoice or send it by mail.
 
-An ISR will be generated if you specify the information it needs :
+An ISR will be generated if you specify the information it needs:
     - The bank account you expect to be paid on must be set, and have a valid postal reference.
     - Your invoice must have been set assigned a bank account to receive its payment
       (this can be done manually, but a default value is automatically set if you have defined a bank account).
@@ -23,7 +23,7 @@ The generation of the ISR and QR-bill is automatic if you meet the previous crit
 
 Here is how it works:
     - Printing the invoice will trigger the download of three files: the invoice, its ISR and its QR-bill
-    - Clicking the 'Send by mail' button will attach three files to your draft mail : the invoice, the ISR and the QR-bill.
+    - Clicking the 'Send by mail' button will attach three files to your draft mail: the invoice, the ISR and the QR-bill.
     """,
     'version': '11.0',
     'category': 'Accounting/Localizations/Account Charts',

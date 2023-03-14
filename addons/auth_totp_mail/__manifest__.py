@@ -4,9 +4,9 @@
 2FA Invite mail
 ===============
 Allow the users to invite another user to use Two-Factor authentication
-by sending an email to the target user. This email redirect them to :
+by sending an email to the target user. This email redirects them to:
 - the users security settings if the user is internal.
-- the portal security settings page if the user is not internal. 
+- the portal security settings page if the user is not internal.
     """,
     'depends': ['auth_totp', 'mail'],
     'category': 'Extra Tools',

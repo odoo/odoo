@@ -322,9 +322,9 @@ class MailRenderMixin(models.AbstractModel):
                         _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
                            group_name=group.name)
                     ) from e
-                _logger.info("Failed to render template : %s", template_src, exc_info=True)
+                _logger.info("Failed to render template: %s", template_src, exc_info=True)
                 raise UserError(
-                    _("Failed to render QWeb template : %(template_src)s)",
+                    _("Failed to render QWeb template: %(template_src)s)",
                       template_src=template_src)
                     ) from e
             results[record.id] = render_result
@@ -376,9 +376,9 @@ class MailRenderMixin(models.AbstractModel):
                 )
                 results[record.id] = render_result
             except Exception as e:
-                _logger.info("Failed to render template : %s", view_ref, exc_info=True)
+                _logger.info("Failed to render template: %s", view_ref, exc_info=True)
                 raise UserError(
-                    _("Failed to render template : %(view_ref)s", view_ref=view_ref)
+                    _("Failed to render template: %(view_ref)s", view_ref=view_ref)
                 ) from e
 
         return results
@@ -444,7 +444,7 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
                 raise UserError(
-                    _("Failed to render inline_template template : %(template_txt)s)",
+                    _("Failed to render inline_template template: %(template_txt)s)",
                       template_txt=template_txt)
                 ) from e
 

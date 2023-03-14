@@ -282,7 +282,7 @@
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <p>
         Hello <t t-out="object.common_name or ''">Gemini Furniture</t>,<br/><br/>
-        This is a reminder for the below event :
+        This is a reminder for the below event:
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
         <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"

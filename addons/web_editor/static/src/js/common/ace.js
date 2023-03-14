@@ -990,7 +990,7 @@ var ViewEditor = Widget.extend({
     _onResetClick: function () {
         var self = this;
         Dialog.confirm(this, _t("If you reset this file, all your customizations will be lost as it will be reverted to the default file."), {
-            title: _t("Careful !"),
+            title: _t("Careful!"),
             confirm_callback: function () {
                 self._resetResource(self._getSelectedResource());
             },

@@ -7,7 +7,7 @@
     'version': '1.0',
     'description': """
         E-Faktur Menu(Indonesia)
-        Format : 010.000-16.00000001
+        Format: 010.000-16.00000001
         * 2 (dua) digit pertama adalah Kode Transaksi
         * 1 (satu) digit berikutnya adalah Kode Status
         * 3 (tiga) digit berikutnya adalah Kode Cabang

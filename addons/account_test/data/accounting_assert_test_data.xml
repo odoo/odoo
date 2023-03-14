@@ -114,7 +114,7 @@ if result:
 
     <record model="accounting.assert.test" id="account_test_07">
         <field name="sequence">8</field>
-        <field name="name">Test 7 : Closing balance on bank statements</field>
+        <field name="name">Test 7: Closing balance on bank statements</field>
         <field name="desc">Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines</field>
         <field name="code_exec"><![CDATA[column_order = ['name','difference']
 cr.execute("SELECT s.balance_start+sum(m.amount)-s.balance_end_real as difference, s.name from account_bank_statement s inner join account_bank_statement_line m on m.statement_id=s.id group by s.id, s.balance_start, s.balance_end_real,s.name having abs(s.balance_start+sum(m.amount)-s.balance_end_real) > 0.000000001;")
@@ -126,7 +126,7 @@ if result:
     <!-- TODO account.period has been removed -->
     <!-- <record model="accounting.assert.test" id="account_test_08">
         <field name="sequence">9</field>
-        <field name="name">Test 8 : Accounts and partners on account moves</field>
+        <field name="name">Test 8: Accounts and partners on account moves</field>
         <field name="desc">Check that general accounts and partners on account moves are active</field>
         <field name="code_exec"><![CDATA[column_order=['partner_name','partner_active','account_name','move_line_id','period']
 res = []

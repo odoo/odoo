@@ -37,7 +37,7 @@ Rules when creating a new partner: We will only see the identification types tha
 
 * If the partner have not country address set: Will show the generic identification types plus the ones defined in the partner's related company country (If the partner has not specific company then will show the identification types related to the current user company)
 
-* If the partner has country address : will show the generic identification types plus the ones defined for the country of the partner.
+* If the partner has country address: will show the generic identification types plus the ones defined for the country of the partner.
 
 When creating a new company, will set to the related partner always the related country is_vat identification type.
 

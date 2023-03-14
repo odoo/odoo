@@ -13,7 +13,7 @@ const exampleData = {
     }, {
         name: _lt('Event-driven Flow'),
         columns: [_lt('Later'), _lt('This Month'), _lt('This Week'), _lt('Running'), _lt('Sent')],
-        description: _lt("Track incoming events (e.g. : Christmas, Black Friday, ...) and publish timely content."),
+        description: _lt("Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."),
     }, {
         name: _lt('Soft-Launch Flow'),
         columns: [_lt('Pre-Launch'), _lt('Soft-Launch'), _lt('Deploy'), _lt('Report'), _lt('Done')],

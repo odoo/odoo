@@ -29,19 +29,19 @@
                         </table>
                         <span t-field="o.description"/>
                         <div>
-                            <strong>Reports :</strong>
+                            <strong>Reports:</strong>
                         </div>
                         <span t-field="o.reports_by_module"/>
                         <div>
-                            <strong>Menu :</strong>
+                            <strong>Menu:</strong>
                         </div>
                         <span t-field="o.menus_by_module"/>
                         <div>
-                            <strong>View :</strong>
+                            <strong>View:</strong>
                         </div>
                         <span t-field="o.views_by_module"/>
                         <div>
-                            <strong>Dependencies :</strong>
+                            <strong>Dependencies:</strong>
                         </div>
                         <div t-foreach="o.dependencies_id" t-as="dependency_id">
                             <span t-field="dependency_id.name"/> - <span t-field="dependency_id.module_id.state"/>

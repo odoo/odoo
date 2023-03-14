@@ -272,7 +272,7 @@ class WebsiteForm(http.Controller):
             # we create a mail.message to link them to the record
             record._message_log(
                 attachment_ids=[(6, 0, orphan_attachment_ids)],
-                body=Markup(_('<p>Attached files : </p>')),
+                body=Markup(_('<p>Attached files: </p>')),
                 message_type='comment',
             )
         elif model_name == 'mail.mail' and orphan_attachment_ids:
