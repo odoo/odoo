@@ -1078,3 +1078,57 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         refund.action_pos_order_invoice()
         self.assertEqual(refund.picking_count, 1)
+
+    def test_journal_entries_category_without_account(self):
+        #create a new product category without account
+        category = self.env['product.category'].create({
+            'name': 'Category without account',
+            'property_account_income_categ_id': False,
+            'property_account_expense_categ_id': False,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product with category without account',
+            'type': 'product',
+            'categ_id': category.id,
+        })
+        account = self.env['account.account'].create({
+            'name': 'Account for category without account',
+            'code': 'X1111',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'reconcile': True,
+        })
+
+        self.pos_config.journal_id.default_account_id = account.id
+        #create a new pos order with the product
+        self.pos_config.open_session_cb(check_coa=False)
+        current_session = self.pos_config.current_session_id
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 10,
+                'discount': 0.0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_total': 10,
+            'amount_tax': 0.0,
+            'amount_paid': 10,
+            'amount_return': 0.0,
+            'to_invoice': True
+        })
+        #create a payment
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.move_id.line_ids[0].account_id.id, account.id)
