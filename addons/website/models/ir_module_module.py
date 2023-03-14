@@ -189,6 +189,7 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
         cur_lang = self.env.lang or 'en_US'
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         old_rec.flush_recordset()
         for (src_field, dst_field) in translated_fields:
             __, src_fname = src_field.split(',')
@@ -196,7 +197,11 @@ class IrModuleModule(models.Model):
             if dst_mname != new_rec._name:
                 continue
             old_field = old_rec._fields[src_fname]
-            old_translations = old_field._get_stored_translations(old_rec)
+            old_translations = {
+                lang: value
+                for lang, value in old_field._get_stored_translations(old_rec).items()
+                if lang in valid_langs
+            }
             if not old_translations:
                 continue
             if not callable(old_field.translate):
