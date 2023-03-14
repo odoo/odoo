@@ -475,8 +475,6 @@ function makeActionManager(env) {
                         }
                     };
                 }
-            } else if (context.form_view_initial_mode) {
-                viewProps.mode = context.form_view_initial_mode;
             }
             if (action.flags && "mode" in action.flags) {
                 viewProps.mode = action.flags.mode;

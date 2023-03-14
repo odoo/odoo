@@ -55,9 +55,6 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'res.company',
             'res_id': self.env.company.id,
             'target': 'current',
-            'context': {
-                'form_view_initial_mode': 'edit',
-            },
         }
 
     def open_default_user(self):

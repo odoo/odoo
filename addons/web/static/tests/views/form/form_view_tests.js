@@ -12701,40 +12701,29 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["error"]);
     });
 
-    QUnit.test(
-        "form with an initial mode (readonly) -- create new record from an existing one",
-        async (assert) => {
-            await makeView({
-                type: "form",
-                resId: 1, // important
-                resModel: "partner",
-                serverData,
-                arch: `<form><field name="display_name" /></form>`,
-                mode: "readonly", // important
-            });
-
-            assert.containsOnce(target, ".o_form_readonly");
-            assert.containsOnce(target, ".o_form_button_create");
-
-            await click(target, ".o_form_button_create");
-            assert.containsOnce(target, ".o_form_editable");
-            assert.containsOnce(target, ".o_form_button_save");
-            assert.containsOnce(target, ".o_form_button_cancel");
-        }
-    );
-
-    QUnit.test("form with an initial mode (edit) -- new record from scratch", async (assert) => {
+    QUnit.test("form view with edit='0' but create='1', existing record", async (assert) => {
         await makeView({
             type: "form",
-            resModel: "partner", // no resId: important
+            resModel: "partner",
             serverData,
-            arch: `<form><field name="display_name" /></form>`,
-            mode: "readonly", // important
+            arch: `<form edit="0"><field name="foo"/></form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_form_readonly");
+        await click(target.querySelector(".o_form_button_create"));
+        assert.containsOnce(target, ".o_form_editable");
+    });
+
+    QUnit.test("form view with edit='0' but create='1', new record", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form edit="0"><field name="foo"/></form>`,
         });
 
         assert.containsOnce(target, ".o_form_editable");
-        assert.containsOnce(target, ".o_form_button_save");
-        assert.containsOnce(target, ".o_form_button_cancel");
     });
 
     QUnit.test("save a form view with an invisible required field", async function (assert) {
@@ -13216,6 +13205,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
     });
+
     QUnit.test("setting : boolean field", async function (assert) {
         await makeView({
             type: "form",
@@ -13263,6 +13253,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".fa-building-o");
         assert.containsOnce(target, ".o_field_char input");
     });
+
     QUnit.test("setting : without field", async function (assert) {
         await makeView({
             type: "form",
@@ -13316,5 +13307,4 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(['danger:Please click on the "save" button first']);
         }
     );
-
 });
