@@ -1,5 +1,5 @@
 .o_control_panel {
-    border-bottom: 1px solid $border-color;
+    border-bottom: var(--ControlPanel-border-bottom, #{$o-control-panel-border-bottom});
     @include o-webclient-padding($top: map-get($spacers, 2), $bottom: map-get($spacers, 2));
     background-color: $o-control-panel-background-color;
 
