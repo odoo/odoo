@@ -3005,13 +3005,17 @@ class BaseModel(metaclass=MetaModel):
         installed_lang = set(code for code, _ in self.env['res.lang'].get_installed())
         missing_languages = set(translations) - installed_lang
         if missing_languages:
-            raise UserError(
-                _("The following language is not activated: %(missing_names)s",
-                missing_names=', '.join(missing_languages))
-            )
+            for missing_language in missing_languages:
+                del translations[missing_language]
+            _logger.warning(
+                "Translation(s) of '%s' ignored for "
+                "the following language(s) that are not activated: %s",
+                str(self._fields['display_name']), missing_languages)
+
+        if not translations:
+            return
 
         field = self._fields[field_name]
-
         if not field.translate:
             return False  # or raise error
 
