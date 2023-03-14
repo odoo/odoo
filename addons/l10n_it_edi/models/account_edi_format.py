@@ -531,7 +531,11 @@ class AccountEdiFormat(models.Model):
 
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
-                                 .with_context(default_move_type=move_type)
+                                 .with_context(
+                                    default_move_type=move_type,
+                                    account_predictive_bills_predict_product=False,
+                                    account_predictive_bills_predict_taxes=False
+                                )
 
             # move could be a single record (editing) or be empty (new).
             with invoice_ctx._get_edi_creation() as invoice_form:
