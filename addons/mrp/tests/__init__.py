@@ -15,5 +15,5 @@ from . import test_multicompany
 from . import test_backorder
 from . import test_smp
 from . import test_performance
-from . import test_consume_tracked_component
+from . import test_consume_component
 from . import test_manual_consumption
