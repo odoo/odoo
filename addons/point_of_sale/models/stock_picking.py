@@ -172,7 +172,8 @@ class StockPicking(models.Model):
                                 )
                             ml_vals.update({
                                 'lot_id': existing_lot.id,
-                                'location_id': quant.location_id.id or move.location_id.id
+                                'location_id': quant.location_id.id or move.location_id.id,
+                                'owner_id': quant.owner_id.id or False,
                             })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})
