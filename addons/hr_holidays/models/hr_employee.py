@@ -269,6 +269,14 @@ class HrEmployee(models.Model):
             },
         }
 
+    def _get_contextual_employee(self):
+        if self.env.context.get('employee_id'):
+            return self.browse(self.env.context['employee_id'])
+        return self.env.user.employee_id
+
+    def _is_leave_user(self):
+        return self == self.env.user.employee_id and self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
     def get_stress_days(self, start_date, end_date):
         all_days = {}
 
@@ -282,22 +290,82 @@ class HrEmployee(models.Model):
 
         return all_days
 
+    @api.model
+    def get_special_days_data(self, date_start, date_end):
+        return {
+            'stressDays': self.get_stress_days_data(date_start, date_end),
+            'bankHolidays': self.get_public_holidays_data(date_start, date_end),
+        }
+
+    @api.model
+    def get_public_holidays_data(self, date_start, date_end):
+        self = self._get_contextual_employee()
+        public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
+        return list(map(lambda bh: {
+            'id': -bh.id,
+            'colorIndex': 0,
+            'end': datetime.datetime.combine(bh.date_to, datetime.datetime.max.time()).isoformat(),
+            'endType': "datetime",
+            'isAllDay': True,
+            'start': datetime.datetime.combine(bh.date_from, datetime.datetime.min.time()).isoformat(),
+            'startType': "datetime",
+            'title': bh.name,
+        }, public_holidays))
+
+    def _get_public_holidays(self, date_start, date_end):
+        domain = [
+            ('resource_id', '=', False),
+            ('company_id', 'in', (self.company_id.id, False)),
+            ('date_from', '<=', date_end),
+            ('date_to', '>=', date_start),
+        ]
+
+        # a user with hr_holidays permissions will be able to see all public holidays from his calendar
+        if not self._is_leave_user():
+            domain += [
+                '|',
+                ('calendar_id', '=', False),
+                ('calendar_id', '=', self.resource_calendar_id.id),
+            ]
+
+        return self.env['resource.calendar.leaves'].search(domain)
+
+    @api.model
+    def get_stress_days_data(self, date_start, date_end):
+        self = self._get_contextual_employee()
+        stress_days = self._get_stress_days(date_start, date_end).sorted('start_date')
+        return list(map(lambda sd: {
+            'id': -sd.id,
+            'colorIndex': sd.color,
+            'end': datetime.datetime.combine(sd.end_date, datetime.datetime.max.time()).isoformat(),
+            'endType': "datetime",
+            'isAllDay': True,
+            'start': datetime.datetime.combine(sd.start_date, datetime.datetime.min.time()).isoformat(),
+            'startType': "datetime",
+            'title': sd.name,
+        }, stress_days))
+
     def _get_stress_days(self, start_date, end_date):
-        stress_days = self.env['hr.leave.stress.day'].search([
+        domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
-            '|',
-                ('resource_calendar_id', '=', False),
-                ('resource_calendar_id', 'in', (self.resource_calendar_id | self.env.company.resource_calendar_id).ids),
             ('company_id', 'in', self.env.companies.ids),
-        ])
+        ]
 
         # a user with hr_holidays permissions will be able to see all stress days from his calendar
-        is_leave_user = self == self.env.user.employee_id and self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        if not self._is_leave_user():
+            domain += [
+                '|',
+                ('resource_calendar_id', '=', False),
+                ('resource_calendar_id', '=', self.resource_calendar_id.id),
+            ]
+            if self.department_id:
+                domain += [
+                    '|',
+                    ('department_ids', '=', False),
+                    ('department_ids', 'parent_of', self.department_id.id),
+                ]
+            else:
+                domain += [('department_ids', '=', False)]
 
-        if not is_leave_user and stress_days.department_ids:
-            stress_days = stress_days.filtered(lambda sd:\
-                not sd.department_ids\
-                or self.department_id and not set(self.department_id.ids).isdisjoint(sd.department_ids.get_children_department_ids().ids))
-
-        return stress_days
+        return self.env['hr.leave.stress.day'].search(domain)
