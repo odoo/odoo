@@ -92,7 +92,7 @@ class ReportMoOverview(models.AbstractModel):
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, production.product_uom_id) if product.type == 'product' else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.type == 'product' else False,
             'quantity_reserved': 0.0,
-            'receipt': self._check_planned_start(production.date_start, self._get_replenishment_receipt(production, components)),
+            'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
             'mo_cost': company.currency_id.round(mo_cost + operations.get('summary', {}).get('mo_cost', 0.0)),
             'product_cost': company.currency_id.round(product.standard_price * production.product_uom_qty),
             'currency_id': company.currency_id.id,
@@ -218,7 +218,7 @@ class ReportMoOverview(models.AbstractModel):
         return component
 
     def _check_planned_start(self, mo_planned_start, receipt):
-        if receipt.get('date', False) and receipt['date'] > mo_planned_start:
+        if mo_planned_start and receipt.get('date', False) and receipt['date'] > mo_planned_start:
             receipt['decorator'] = 'danger'
         return receipt
 
