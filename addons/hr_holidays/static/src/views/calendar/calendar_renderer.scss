@@ -2,11 +2,13 @@
     .o_calendar_renderer {
         height: unset;
 
-        .o_calendar_widget {
-            @for $size from 1 through length($o-colors) {
-                .hr_stress_day_#{$size - 1}:not(.fc-disabled-day) {
-                    background: nth($o-colors, $size) !important;
-                    opacity: 0.4;
+        @for $size from 1 through length($o-colors) {
+            .o_calendar_widget {
+                .hr_stress_day_top_#{$size - 1}:not(.fc-disabled-day) {
+                    .fc-day-number {
+                        color: nth($o-colors, $size) !important;
+                        font-weight: 600;
+                    }
                 }
             }
         }
