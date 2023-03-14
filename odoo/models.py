@@ -3135,7 +3135,7 @@ class BaseModel(metaclass=MetaModel):
                                     vals[field_name] = field.convert_to_read(relational_record, self, use_name_get=True)
                                 else:
                                     # specification for more fields other than display_name on the many2one like
-                                    # 'many2one_id' : {'fields':{'id':{}, 'write_date':{}}}
+                                    # 'many2one_id': {'fields':{'id':{}, 'write_date':{}}}
                                     vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
                             else:
                                 # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
