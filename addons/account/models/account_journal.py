@@ -747,6 +747,8 @@ class AccountJournal(models.Model):
                 'journal_id': self.id,
                 'move_type': move_type,
             })
+            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            self.env.cr.commit()
 
             invoice._extend_with_attachments(attachment, new=True)
 
@@ -756,8 +758,9 @@ class AccountJournal(models.Model):
                 account_predictive_bills_disable_prediction=True,
                 no_new_invoice=True,
             ).message_post(attachment_ids=attachment.ids)
+            self.env.cr.commit()
 
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+
 
         return all_invoices
 
