@@ -238,14 +238,15 @@ class TestTimesheet(TestCommonTimesheet):
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project. """
         Timesheet = self.env['account.analytic.line']
+        Task = self.env['project.task'].with_context(default_project_id=self.task1.project_id.id)
 
         # create nested subtasks
-        task_child = self.env['project.task'].create({
+        task_child = Task.create({
             'name': 'Task Child',
             'parent_id': self.task1.id,
         })
 
-        task_grandchild = self.env['project.task'].create({
+        task_grandchild = Task.create({
             'name': 'Task Grandchild',
             'parent_id': task_child.id,
         })
@@ -290,8 +291,8 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 0, "There are still timesheets linked to Project1")
-        self.assertEqual(timesheet_count2, 3, "3 timesheets should be linked to Project2")
+        self.assertEqual(timesheet_count1, 2, "There are still timesheets linked to Project1")
+        self.assertEqual(timesheet_count2, 1, "1 timesheets should be linked to Project2")
         self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task1")
         self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet still should be linked to task_child")
         self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet still should be linked to task_grandchild")
