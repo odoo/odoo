@@ -500,6 +500,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      */
     start: function () {
         this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'end' : 'start';
+        this.isRtl = !!this.el.closest('#wrapwrap.o_rtl');
         return this._super.apply(this, arguments);
     },
 
@@ -517,7 +518,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'start') {
+        if (alignment === 'start' && !this.isRtl || alignment === 'end' && this.isRtl) {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -545,7 +546,8 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
         var alignment = this.defaultAlignment;
         if ($dropdown.nextAll(':visible').length === 0) {
-            // The dropdown is the last menu item, open to the left
+            // The dropdown is the last menu item, open to the left side
+            // (right side with rtl languages).
             alignment = 'end';
         }
 
