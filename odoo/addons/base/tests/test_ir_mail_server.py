@@ -432,6 +432,33 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter='test.com',
         )
 
+    def test_mail_server_get_email_addresses(self):
+        """Test the email used to test the mail server connection."""
+        self.server_notification.from_filter = 'example_2.com'
+
+        self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications@example.com')
+        email_from = self.server_notification._get_test_email_addresses()[0]
+        self.assertEqual(email_from, 'noreply@example_2.com')
+
+        self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications')
+        email_from = self.server_notification._get_test_email_addresses()[0]
+        self.assertEqual(email_from, 'notifications@example_2.com')
+
+        self.server_notification.from_filter = 'full_email@example_2.com'
+
+        self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications')
+        email_from = self.server_notification._get_test_email_addresses()[0]
+        self.assertEqual(email_from, 'full_email@example_2.com')
+
+        self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications@example.com')
+        email_from = self.server_notification._get_test_email_addresses()[0]
+        self.assertEqual(email_from, 'full_email@example_2.com')
+
+        self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications@example.com')
+        self.server_notification.from_filter = 'example.com'
+        email_from = self.server_notification._get_test_email_addresses()[0]
+        self.assertEqual(email_from, 'notifications@example.com')
+
     @mute_logger('odoo.models.unlink')
     @patch.dict(config.options, {'from_filter': 'test.com', 'smtp_server': 'example.com'})
     def test_mail_server_mail_default_from_filter(self):
