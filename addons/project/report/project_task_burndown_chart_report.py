@@ -18,7 +18,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     date = fields.Datetime('Date', readonly=True)
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
-    display_project_id = fields.Many2one('project.project', readonly=True)
     is_closed = fields.Boolean("Closing Stage", readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
@@ -37,7 +36,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     task_specific_fields = [
         'date_assign',
         'date_deadline',
-        'display_project_id',
         'has_late_and_unreached_milestone',
         'is_closed',
         'milestone_id',
@@ -97,7 +95,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                  SELECT count(*) as %(count_field)s,
                         sum(planned_hours) as planned_hours,
                         project_id,
-                        display_project_id,
                         %(date_begin)s as date_begin,
                         %(date_end)s as date_end,
                         stage_id
@@ -110,7 +107,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                             SELECT DISTINCT task_id,
                                    planned_hours,
                                    project_id,
-                                   display_project_id,
                                    %(date_begin)s as date_begin,
                                    %(date_end)s as date_end,
                                    first_value(stage_id) OVER task_date_begin_window AS stage_id
@@ -118,7 +114,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                                      SELECT pt.id as task_id,
                                             pt.planned_hours,
                                             pt.project_id,
-                                            pt.display_project_id,
                                             COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
                                             CASE WHEN mtv.id IS NOT NULL THEN mm.date
                                                 ELSE (now() at time zone 'utc')::date + INTERVAL '%(interval)s'
@@ -140,7 +135,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                           GROUP BY task_id,
                                    planned_hours,
                                    project_id,
-                                   display_project_id,
                                    %(date_begin)s,
                                    %(date_end)s,
                                    stage_id
@@ -152,7 +146,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                             SELECT pt.id as task_id,
                                    pt.planned_hours,
                                    pt.project_id,
-                                   pt.display_project_id,
                                    last_stage_id_change_mail_message.date as date_begin,
                                    (now() at time zone 'utc')::date + INTERVAL '%(interval)s' as date_end,
                                    pt.stage_id as old_value_integer
@@ -173,7 +166,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                         ) AS project_task_burndown_chart
                GROUP BY planned_hours,
                         project_id,
-                        display_project_id,
                         %(date_begin)s,
                         %(date_end)s,
                         stage_id
@@ -181,7 +173,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
               SELECT (project_id*10^13 + stage_id*10^7 + to_char(date, 'YYMMDD')::integer)::bigint as id,
                      planned_hours,
                      project_id,
-                     display_project_id,
                      stage_id,
                      date,
                      %(count_field)s

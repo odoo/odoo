@@ -188,7 +188,7 @@ class TestBurndownChart(TestBurndownChartCommon):
             )
 
     def test_burndown_chart(self):
-        burndown_chart_domain = [('display_project_id', '!=', False)]
+        burndown_chart_domain = [('project_id', '!=', False)]
         project_domain = [('project_id', '=', self.project.id)]
 
         # Check that we get the expected results for the complete data of `self.project`.

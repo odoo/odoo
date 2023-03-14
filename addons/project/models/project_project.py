@@ -50,25 +50,19 @@ class Project(models.Model):
             project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
-        domain = [('project_id', 'in', self.ids), ('is_closed', '=', False)]
-        fields = ['project_id', 'display_project_id:count']
-        groupby = ['project_id']
-        task_data = self.env['project.task']._read_group(domain, fields, groupby)
-        result_wo_subtask = defaultdict(int)
-        result_with_subtasks = defaultdict(int)
-        for data in task_data:
-            result_wo_subtask[data['project_id'][0]] += data['display_project_id']
-            result_with_subtasks[data['project_id'][0]] += data['project_id_count']
-        task_all_data = self.env['project.task'].with_context(active_test=False)._read_group(domain, fields, groupby)
-        all_tasks_wo_subtasks = defaultdict(int)
-        for data in task_all_data:
-            all_tasks_wo_subtasks[data['project_id'][0]] += data['display_project_id']
-
+        task_count_per_project = {
+            group['project_id'][0]: group['project_id_count']
+            for group in self.env['project.task'].with_context(
+                active_test=any(project.active for project in self)
+            )._read_group(
+                [('is_closed', '=', False), ('project_id', 'in', self.ids)],
+                ['project_id'],
+                ['project_id'],
+            )
+        }
         for project in self:
-            project.task_count = result_wo_subtask[project.id]
-            project.task_count_with_subtasks = result_with_subtasks[project.id]
-            if not project.active:
-                project.task_count = all_tasks_wo_subtasks[project.id]
+            task_count = task_count_per_project.get(project.id, 0)
+            project.task_count = task_count
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -134,7 +128,6 @@ class Project(models.Model):
         related='company_id.resource_calendar_id')
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
-    task_count_with_subtasks = fields.Integer(compute='_compute_task_count')
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=[('is_closed', '=', False)])
     color = fields.Integer(string='Color Index')
@@ -380,9 +373,9 @@ class Project(models.Model):
             new_task_ids.append(new_task.id)
             all_subtasks = new_task._get_all_subtasks()
             if all_subtasks:
-                new_subtasks += all_subtasks.filtered(lambda child: child.display_project_id == self)
+                new_subtasks += all_subtasks.filtered(lambda child: child.project_id == self)
         project.write({'tasks': [Command.set(new_task_ids)]})
-        new_subtasks.write({'display_project_id': project.id})
+        new_subtasks.write({'project_id': project.id})
         return True
 
     @api.returns('self', lambda value: value.id)

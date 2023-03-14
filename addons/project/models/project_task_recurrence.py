@@ -51,7 +51,6 @@ class ProjectTaskRecurrence(models.Model):
             'partner_phone',
             'planned_hours',
             'project_id',
-            'display_project_id',
             'project_privacy_visibility',
             'recurrence_id',
             'recurring_task',

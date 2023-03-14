@@ -194,7 +194,6 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             'name': 'Task Child without project',
             'parent_id': parent_task.id,
             'project_id': self.project_pigs.id,
-            'display_project_id': self.project_pigs.id,
             'planned_hours': 5,
         })
 
@@ -234,7 +233,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         # set a project with partner_id to a subtask without project partner_id
         child_task_1.write({
-            'display_project_id': self.project_pigs.id
+            'project_id': self.project_pigs.id
         })
 
         self.assertNotEqual(
@@ -248,7 +247,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         # set a project with partner_id to a subtask with a project partner_id
         child_task_2.write({
-            'display_project_id': self.project_goats.id
+            'project_id': self.project_goats.id
         })
 
         self.assertEqual(

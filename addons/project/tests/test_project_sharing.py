@@ -181,7 +181,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             with form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask'
                 with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
-                    subtask_form.display_project_id = self.project_portal
+                    subtask_form.project_id = self.project_portal
         self.assertEqual(task.child_ids.name, 'Test Subtask')
         self.assertEqual(task.child_ids.project_id, self.project_cows)
         self.assertFalse(task.child_ids.portal_user_names, 'by default no user should be assigned to a subtask created by the portal user.')
