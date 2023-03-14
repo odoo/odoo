@@ -576,7 +576,6 @@ class Applicant(models.Model):
             'default_address_id': self.company_id.partner_id.id,
             'default_work_email': self.department_id.company_id.email,
             'default_work_phone': self.department_id.company_id.phone,
-            'form_view_initial_mode': 'edit',
             'default_applicant_id': self.ids,
         }
         dict_act_window = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')

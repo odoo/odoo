@@ -323,7 +323,7 @@ class CRMLeadMiningRequest(models.Model):
                 'target': 'new',
                 'type': 'ir.actions.act_window',
                 'res_id': self.id,
-                'context': dict(self.env.context, edit=True, form_view_initial_mode='edit')
+                'context': dict(self.env.context, edit=True)
             }
         else:
             # will reload the form view and show the error message on top

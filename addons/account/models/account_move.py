@@ -3606,7 +3606,6 @@ class AccountMove(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
         action['context'] = dict(self.env.context)
-        action['context']['form_view_initial_mode'] = 'edit'
         action['context']['view_no_maturity'] = False
         action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
         action['res_id'] = self.copy().id
