@@ -587,7 +587,7 @@ class ProjectTask(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
 
-    @api.depends('sale_line_id', 'project_id', 'commercial_partner_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'partner_id.commercial_partner_id', 'allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
             if not task.allow_billable:
@@ -598,13 +598,13 @@ class ProjectTask(models.Model):
                 sale_order_id = task.sale_line_id.sudo().order_id
             elif task.project_id.sale_order_id:
                 sale_order_id = task.project_id.sale_order_id
-            if task.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
+            if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
                 sale_order_id = False
             if sale_order_id and not task.partner_id:
                 task.partner_id = sale_order_id.partner_id
             task.sale_order_id = sale_order_id
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
+    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
             if not task.allow_billable:
