@@ -2863,10 +2863,11 @@ class AccountMove(models.Model):
             decoder = self._get_edi_decoder(file_data, new=new)
 
             try:
-                if decoder and not success:
-                    with self._get_edi_creation() as invoice:
-                        # pylint: disable=not-callable
-                        success = decoder(invoice, file_data, new)
+                with self.env.cr.savepoint():
+                    if decoder and not success:
+                        with self._get_edi_creation_savepoint() as invoice:
+                            # pylint: disable=not-callable
+                            success = decoder(invoice, file_data, new)
 
             except RedirectWarning as rw:
                 raise rw
