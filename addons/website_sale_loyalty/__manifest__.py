@@ -28,6 +28,7 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
         'web.assets_frontend': [
             'website_sale_loyalty/static/src/js/coupon_toaster_widget.js',
             'website_sale_loyalty/static/src/js/website_sale_gift_card.js',
+            'website_sale_loyalty/static/src/js/website_sale_loyalty_delivery.js',
         ],
         'web.assets_tests': [
             'website_sale_loyalty/static/tests/**/*',

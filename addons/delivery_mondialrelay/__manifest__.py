@@ -11,7 +11,7 @@
     """,
     'category': 'Inventory/Delivery',
     'version': '0.1',
-    'depends': ['delivery'],
+    'depends': ['stock_delivery'],
     'data': [
         'data/data.xml',
         'views/views.xml',

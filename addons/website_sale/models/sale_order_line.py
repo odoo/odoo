@@ -57,7 +57,8 @@ class SaleOrderLine(models.Model):
 
     def _show_in_cart(self):
         self.ensure_one()
-        return True
+        # Exclude delivery line from showing up in the cart
+        return not self.is_delivery
 
     def _is_reorder_allowed(self):
         self.ensure_one()

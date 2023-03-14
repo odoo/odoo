@@ -149,6 +149,7 @@ class Website(main.Website):
 
 class WebsiteSale(http.Controller):
     _express_checkout_route = '/shop/express_checkout'
+    _express_checkout_shipping_route = '/shop/express/shipping_address_change'
 
     WRITABLE_PARTNER_FIELDS = [
         'name',
@@ -746,6 +747,12 @@ class WebsiteSale(http.Controller):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
         order = request.website.sale_get_order()
+        if order and order.carrier_id:
+            # Express checkout is based on the amout of the sale order. If there is already a
+            # delivery line, Express Checkout form will display and compute the price of the
+            # delivery two times (One already computed in the total amount of the SO and one added
+            # in the form while selecting the delivery carrier)
+            order._remove_delivery_line()
         if order and order.state != 'draft':
             request.session['sale_order_id'] = None
             order = request.website.sale_get_order()
@@ -1187,22 +1194,26 @@ class WebsiteSale(http.Controller):
         _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
         sitemap=False
     )
-    def process_express_checkout(self, billing_address, **kwargs):
+    def process_express_checkout(
+            self, billing_address, shipping_address=None, shipping_option=None, **kwargs
+        ):
         """ Records the partner information on the order when using express checkout flow.
 
         Depending on whether the partner is registered and logged in, either creates a new partner
         or uses an existing one that matches all received data.
 
         :param dict billing_address: Billing information sent by the express payment form.
+        :param dict shipping_address: Shipping information sent by the express payment form.
+        :param dict shipping_option: Carrier information sent by the express payment form.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return int: The order's partner id.
         """
+
         order_sudo = request.website.sale_get_order()
         public_partner = request.website.partner_id
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
-
         if order_sudo.partner_id == public_partner:
             billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
             order_sudo.partner_id = billing_partner_id
@@ -1220,20 +1231,42 @@ class WebsiteSale(http.Controller):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, billing_address
             )
-            if child_partner_id:
-                order_sudo.partner_invoice_id = child_partner_id
-            else:
-                billing_partner_id = self._create_or_edit_partner(
-                    billing_address,
-                    type='invoice',
-                    parent_id=order_sudo.partner_id.id,
-                )
-                order_sudo.partner_invoice_id = billing_partner_id
+            order_sudo.partner_invoice_id = child_partner_id or self._create_or_edit_partner(
+                billing_address, type='invoice', parent_id=order_sudo.partner_id.id
+            )
 
         # In a non-express flow, `sale_last_order_id` would be added in the session before the
         # payment. As we skip all the steps with the express checkout, `sale_last_order_id` must be
         # assigned to ensure the right behavior from `shop_payment_confirmation()`.
         request.session['sale_last_order_id'] = order_sudo.id
+
+        if shipping_address and shipping_option:
+            self._include_country_and_state_in_address(shipping_address)
+
+            if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+                # The existing partner was created by `process_express_checkout_delivery_choice`, it
+                # means that the partner is missing information, so we update it.
+                order_sudo.partner_shipping_id = self._create_or_edit_partner(
+                    shipping_address,
+                    edit=True,
+                    type='delivery',
+                    partner_id=order_sudo.partner_shipping_id.id,
+                )
+            elif any(
+                shipping_address[k] != order_sudo.partner_shipping_id[k] for k in shipping_address
+            ):
+                # The sale order's shipping partner's address is different from the one received. If
+                # all the sale order's child partners' address differs from the one received, we
+                # create a new partner. The phone isn't always checked because it isn't sent in
+                # shipping information with Google Pay.
+                child_partner_id = self._find_child_partner(
+                    order_sudo.partner_id.commercial_partner_id.id, shipping_address
+                )
+                order_sudo.partner_shipping_id = child_partner_id or self._create_or_edit_partner(
+                    shipping_address, type='delivery', parent_id=order_sudo.partner_id.id
+                )
+            # Process the delivery carrier
+            order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
 
         return order_sudo.partner_id.id
 
@@ -1429,6 +1462,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def _get_express_shop_payment_values(self, order, **kwargs):
+        request.session['sale_last_order_id'] = order.id
         payment_form_values = sale_portal.CustomerPortal._get_payment_values(
             self, order, website_id=request.website.id, is_express_checkout=True
         )
@@ -1444,6 +1478,11 @@ class WebsiteSale(http.Controller):
         })
         if request.website.is_public_user():
             payment_form_values['partner_id'] = -1
+        if request.website.enabled_delivery:
+            payment_form_values.update({
+                'shipping_info_required': not order.only_services,
+                'shipping_address_update_route': self._express_checkout_shipping_route,
+            })
         return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):
@@ -1461,7 +1500,29 @@ class WebsiteSale(http.Controller):
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
         }
-        return {**portal_page_values, **payment_form_values}
+        values = {**portal_page_values, **payment_form_values}
+        if request.website.enabled_delivery:
+            has_storable_products = any(
+                line.product_id.type in ['consu', 'product'] for line in order.order_line
+            )
+            if not order._get_delivery_methods() and has_storable_products:
+                values['errors'].append((
+                    _('Sorry, we are unable to ship your order'),
+                    _('No shipping method is available for your current order and shipping address.'
+                    ' Please contact us for more information.')
+                ))
+
+            if has_storable_products:
+                if order.carrier_id and not order.delivery_rating_success:
+                    order._remove_delivery_line()
+                values['deliveries'] = order._get_delivery_methods().sudo()
+
+            values['delivery_has_storable'] = has_storable_products
+            values['delivery_action_id'] = request.env.ref(
+                'delivery.action_delivery_carrier_form'
+            ).id
+
+        return values
 
     @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     def shop_payment(self, **post):
@@ -1474,7 +1535,18 @@ class WebsiteSale(http.Controller):
            did go to a payment.provider website but closed the tab without
            paying / canceling
         """
+        carrier_id = post.get('carrier_id')
+        keep_carrier = post.get('keep_carrier', False)
+        if keep_carrier:
+            keep_carrier = bool(int(keep_carrier))
+        if carrier_id:
+            carrier_id = int(carrier_id)
         order = request.website.sale_get_order()
+        if order:
+            order._check_carrier_quotation(force_carrier_id=carrier_id, keep_carrier=keep_carrier)
+            if carrier_id:
+                return request.redirect("/shop/payment")
+
         redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection
@@ -1633,7 +1705,7 @@ class WebsiteSale(http.Controller):
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
         ret = []
-        for line in order_lines:
+        for line in order_lines.filtered(lambda line: not line.is_delivery):
             product = line.product_id
             ret.append({
                 'item_id': product.barcode or product.id,
@@ -1646,7 +1718,7 @@ class WebsiteSale(http.Controller):
 
     def order_2_return_dict(self, order):
         """ Returns the tracking_cart dict of the order for Google analytics basically defined to be inherited """
-        return {
+        tracking_cart_dict = {
             'transaction_id': order.id,
             'affiliation': order.company_id.name,
             'value': order.amount_total,
@@ -1654,6 +1726,10 @@ class WebsiteSale(http.Controller):
             'currency': order.currency_id.name,
             'items': self.order_lines_2_google_api(order.order_line),
         }
+        delivery_line = order.order_line.filtered('is_delivery')
+        if delivery_line:
+            tracking_cart_dict['shipping'] = delivery_line.price_unit
+        return tracking_cart_dict
 
     @http.route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
     def country_infos(self, country, mode, **kw):

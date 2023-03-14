@@ -91,4 +91,17 @@
         parent="website.menu_content"
         sequence="30"/>
 
+    <menuitem
+        id="menu_ecommerce_delivery"
+        parent="website_sale.menu_ecommerce_settings"
+        name="Shipping Methods"
+        action="delivery.action_delivery_carrier_form"/>
+
+    <menuitem
+        id="menu_delivery_zip_prefix"
+        parent="website_sale.menu_ecommerce_settings"
+        groups="base.group_no_one"
+        sequence="100"
+        action="delivery.action_delivery_zip_prefix_list"/>
+
 </odoo>
