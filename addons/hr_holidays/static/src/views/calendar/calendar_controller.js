@@ -25,6 +25,13 @@ export class TimeOffCalendarController extends CalendarController {
         return this.model.employeeId;
     }
 
+    get filterPanelProps() {
+        return {
+            ...super.filterPanelProps,
+            employee_id: this.employeeId,
+        };
+    }
+
     newTimeOffRequest() {
         const context = {};
         if (this.employeeId) {
