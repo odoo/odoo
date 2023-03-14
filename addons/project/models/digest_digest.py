@@ -21,7 +21,7 @@ class Digest(models.Model):
                 ('create_date', '>=', start),
                 ('create_date', '<', end),
                 ('company_id', '=', company.id),
-                ('display_project_id', '!=', False),
+                ('project_id', '!=', False),
             ])
 
     def _compute_kpis_actions(self, company, user):

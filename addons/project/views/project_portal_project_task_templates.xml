@@ -37,7 +37,8 @@
                             <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <!-- This div is necessary for documents_project_sale -->
                                 <div name="project_name" class="d-flex w-100 align-items-center">
-                                    <span t-field="tasks[0].sudo().project_id.name"/>
+                                    <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
+                                    <span t-else="">No Project</span>
                                 </div>
                             </th>
                             <th t-if="groupby == 'milestone'" t-attf-colspan="{{grouped_tasks_colspan}}">
