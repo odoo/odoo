@@ -85,4 +85,4 @@ class TestResources(common.SlidesCase, HttpCase):
             resource.write({'name': name, 'file_name': file_name})
             with self.subTest(name=name, file_name=file_name, expected_download_name=expected_download_name):
                 self.assertIn(f"filename*=UTF-8''{url_quote(expected_download_name)}",
-                              self.url_open(resource._get_download_url()).headers['Content-Disposition'])
+                              self.url_open(resource.download_url).headers['Content-Disposition'])
