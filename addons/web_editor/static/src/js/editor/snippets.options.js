@@ -16,6 +16,7 @@ const {
     backgroundImagePartsToCss,
     DEFAULT_PALETTE,
     isBackgroundImageAttribute,
+    updateImageWrapping,
 } = weUtils;
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 import {
@@ -6781,6 +6782,54 @@ registry.ImageTools = ImageHandlerOption.extend({
         await this._reapplyCurrentShape();
     },
     /**
+     * set text wrapping options around the image.
+     *
+     * @see this.selectClass for parameters
+     */
+    setTextWrapping(previewMode, widgetValue, params) {
+        const imageEL = this._getImg();
+        updateImageWrapping(imageEL, widgetValue);
+    },
+    /**
+     * Sets alignment options for images
+     *
+     * @see this.selectClass for parameters
+     */
+    setAlignment(previewMode, widgetValue, params) {
+        const imgEL = this._getImg();
+
+        switch (widgetValue) {
+            case 'left':
+                if (imgEL.classList.contains('mx-auto') || !imgEL.classList.contains('float-end')) {
+                    imgEL.classList.remove('mx-auto', 'd-block', 'ms-auto');
+                    imgEL.classList.add('d-block', 'me-auto');
+                } else {
+                    imgEL.classList.remove('float-end', 'mx-auto', 'd-block', 'ms-auto');
+                    imgEL.classList.add('float-start', 'me-auto');
+                }
+                break;
+            case 'center':
+                if (imgEL.classList.contains('float-start') || imgEL.classList.contains('float-end') ||
+                    imgEL.classList.contains('me-auto') || imgEL.classList.contains('ms-auto')) {
+                    imgEL.classList.remove('float-start', 'float-end', 'me-auto', 'ms-auto');
+                    imgEL.classList.add('d-block', 'mx-auto');
+                } else {
+                    imgEL.classList.remove('d-flex', 'float-start', 'float-end', 'me-auto', 'ms-auto');
+                    imgEL.classList.add('mx-auto', 'd-block');
+                }
+                break;
+            case 'right':
+                if (imgEL.classList.contains('mx-auto') || !imgEL.classList.contains('float-start')) {
+                    imgEL.classList.remove('mx-auto', 'd-block', 'me-auto');
+                    imgEL.classList.add('d-block', 'ms-auto');
+                } else {
+                    imgEL.classList.remove('float-start', 'mx-auto', 'd-block', 'me-auto');
+                    imgEL.classList.add('float-end', 'ms-auto');
+                }
+                break;
+        }
+    },
+    /**
      * Resets the image rotation and translation
      *
      * @see this.selectClass for parameters
@@ -7499,6 +7548,27 @@ registry.ImageTools = ImageHandlerOption.extend({
             case "removeStretch": {
                 const imgEl = this._getImg();
                 return imgEl.dataset.aspectRatio !== "1/1";
+            }
+            case 'setTextWrapping': {
+                const imgEl = this._getImg();
+                if (!(imgEl.classList.contains('float-start') || imgEl.classList.contains('float-end') ||
+                imgEl.classList.contains('mx-auto') || imgEl.classList.contains('d-block'))){
+                    return 'inline';
+                } else if (imgEl.classList.contains('float-start') || imgEl.classList.contains('float-end')) {
+                    return 'wrap-text';
+                } else if (imgEl.classList.contains('mx-auto') || imgEl.classList.contains('d-block')) {
+                    return 'break-text';
+                }
+            }
+            case 'setAlignment': {
+                const imgEl = this._getImg();
+                if (imgEl.classList.contains('float-start') || imgEl.classList.contains('me-auto')) {
+                    return 'left';
+                } else if (imgEl.classList.contains('float-end') || imgEl.classList.contains('ms-auto')) {
+                    return 'right';
+                } else if (imgEl.classList.contains('mx-auto') || imgEl.classList.contains('d-block')) {
+                    return 'center';
+                }
             }
         }
         return this._super(...arguments);
