@@ -403,15 +403,9 @@ class BaseAutomation(models.Model):
                 # check preconditions on records
                 pre = {action: action._filter_pre(records) for action in actions}
                 # read old values before the update
-                # but skip readonly computed not stored fields
-                fields = [f for f in vals if f in self._fields and not (
-                    self._fields[f].readonly and
-                    self._fields[f].compute and
-                    not self._fields[f].store
-                )]
                 old_values = {
                     old_vals.pop('id'): old_vals
-                    for old_vals in (records.read(fields) if fields else [])
+                    for old_vals in (records.read(list(vals)) if vals else [])
                 }
                 # call original method
                 write.origin(self.with_env(actions.env), vals, **kw)
