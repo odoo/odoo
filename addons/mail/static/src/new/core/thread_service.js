@@ -871,10 +871,10 @@ export class ThreadService {
                 return url(`/mail/channel/${thread.id}/guest/${persona.id}/avatar_128`);
             }
         }
-        if (persona.type === "partner" && persona.partner?.id) {
+        if (persona.type === "partner" && persona?.id) {
             const avatar = url("/web/image", {
                 field: "avatar_128",
-                id: persona.partner.id,
+                id: persona.id,
                 model: "res.partner",
             });
             return avatar;

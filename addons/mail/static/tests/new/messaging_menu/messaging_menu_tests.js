@@ -69,6 +69,11 @@ QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
     assert.strictEqual($(".o-mail-MessagingMenu-counter").text(), "1");
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsOnce($, ".o-mail-NotificationItem");
+    assert.ok(
+        $(".o-mail-NotificationItem img")
+            .data("src")
+            .includes("/web/image?field=avatar_128&id=2&model=res.partner")
+    );
     assert.strictEqual($(".o-mail-NotificationItem-name").text().trim(), "OdooBot has a request");
 });
 
