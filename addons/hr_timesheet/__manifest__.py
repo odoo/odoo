@@ -55,6 +55,7 @@ up a management by affair.
             'hr_timesheet/static/tests/**/*',
         ],
         'project.webclient': [
+            'hr_timesheet/static/src/services/**/*',
             'hr_timesheet/static/src/components/**/*',
             'hr_timesheet/static/src/scss/timesheets_task_form.scss'
         ],
