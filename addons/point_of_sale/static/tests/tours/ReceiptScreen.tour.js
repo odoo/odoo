@@ -65,3 +65,17 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.check.customerNoteIsThere("Test customer note");
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Test Product', '1');
+ProductScreen.do.clickPricelistButton();
+ProductScreen.do.selectPriceList('special_pricelist');
+ProductScreen.check.discountOriginalPriceIs('7.0');
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.discountAmountIs('0.7');
+
+registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour", { test: true, url: "/pos/ui", steps: getSteps() });

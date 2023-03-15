@@ -81,6 +81,15 @@ class Check {
             },
         ];
     }
+
+    discountAmountIs(value) {
+        return [
+            {
+                trigger: `.pos-receipt>div:contains("Discounts")>span:contains("${value}")`,
+                run: () => {},
+            },
+        ];
+    }
 }
 
 class Execute {
