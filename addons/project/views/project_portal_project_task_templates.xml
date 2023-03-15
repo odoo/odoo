@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'project' or project" class="col-lg-2" t-attf-class="breadcrumb-item #{'active ' if not project else ''}">
-                <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
-                <t t-else="">Projects</t>
-            </li>
-            <li t-if="page_name in ['project_task', 'project_subtasks'] and project" class="breadcrumb-item active">
-                <a t-if="project" t-attf-href="/my/projects/{{ project.id }}?{{ keep_query() }}"><t t-esc="project.name"/></a>
-            </li>
-            <li t-elif="project" t-attf-class="breadcrumb-item #{'active ' if not project else ''} text-truncate col-8 col-lg-10">
-                <t t-esc="project.name"/>
-            </li>
-            <li t-if="page_name == 'task' or (task and not project)" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
-                <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
-                <t t-else="">Tasks</t>
-            </li>
-            <li t-if="page_name == 'project_subtasks' and task and project" class="breadcrumb-item active">
-                <a t-attf-href="/my/projects/{{ project.id }}/task/{{ task.id }}?{{ keep_query() }}"><t t-esc="task.name"/></a>
-            </li>
-            <li t-elif="task" class="breadcrumb-item active text-truncate">
-                <span t-field="task.name"/>
-            </li>
-            <li t-if="page_name == 'project_subtasks' or (task and subtask and project)" t-attf-class="breadcrumb-item text-truncate #{'active ' if not subtask else ''}">
-                <a t-if="subtask" t-attf-href="/my/tasks/{{ task.id }}/subtasks?{{ keep_query() }}">Sub-tasks</a>
-                <t t-else="">Sub-tasks</t>
-            </li>
-            <li t-if="subtask" class="breadcrumb-item active text-truncate">
-                <span t-field="subtask.name"/>
-            </li>
-        </xpath>
-    </template>
-
     <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
         <span t-attf-class="o_priority_star fa fa-star#{'' if task.priority == '1' else '-o'}" t-attf-title="Priority: {{'Important' if task.priority == '1' else 'Normal'}}"/>
     </template>
@@ -41,70 +9,6 @@
             t-att-title="dict(task.fields_get(allfields=['state'])['state']['selection'])[task.state]"
             t-attf-class="o_status rounded-circle #{'bg-success' if task.state == '1_done' else 'bg-danger' if task.state == '1_canceled' else 'bg-warning' if task.state == '02_changes_requested' else 'bg-success' if task.state == '03_approved' else ''}"
         />
-    </template>
-
-    <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="title">Projects</t>
-                <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="placeholder_count" t-value="'project_count'"/>
-            </t>
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="title">Tasks</t>
-                <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="placeholder_count" t-value="'task_count'"/>
-            </t>
-        </xpath>
-    </template>
-
-    <template id="portal_my_projects" name="My Projects">
-        <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
-
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Projects</t>
-            </t>
-            <t t-if="not projects">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no projects.
-                </div>
-            </t>
-            <t t-if="projects" t-call="portal.portal_table">
-                <tbody>
-                    <tr t-foreach="projects" t-as="project">
-                        <td>
-                            <a t-attf-href="/my/projects/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
-                        </td>
-                        <td class="text-end">
-                            <t t-out="project.task_count_with_subtasks" />
-                            <t t-out="project.label_tasks" />
-                        </td>
-                    </tr>
-                </tbody>
-            </t>
-        </t>
-    </template>
-
-    <template id="portal_my_project" name="My Project">
-        <t t-call="portal.portal_layout">
-            <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
-                <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#model=project.project&amp;id=%s&amp;view_type=kanban' % (project.id)"/>
-                </t>
-            </t>
-
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Tasks</t>
-            </t>
-            <t t-if="not grouped_tasks">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no tasks.
-                </div>
-            </t>
-
-            <t t-call="project.portal_tasks_list"/>
-        </t>
     </template>
 
     <template id="portal_tasks_list" name="Tasks List">
