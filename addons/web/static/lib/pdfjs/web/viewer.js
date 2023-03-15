@@ -2702,7 +2702,8 @@ const PDFViewerApplication = {
     pagesPromise.then(() => {
       this._unblockDocumentLoadEvent();
 
-      this._initializeAutoPrint(pdfDocument, openActionPromise);
+      // don't support scripting (#115302)
+      // this._initializeAutoPrint(pdfDocument, openActionPromise);
     }, reason => {
       this.l10n.get("loading_error").then(msg => {
         this._documentError(msg, {
@@ -16860,7 +16861,9 @@ class BasePreferences {
         "disablePageLabels": false,
         "enablePermissions": false,
         "enablePrintAutoRotate": true,
-        "enableScripting": true,
+        // don't support scripting (#115302)
+        "enableScripting": false,
+        // open links in new tabs to keep odoo document (#84594)
         "externalLinkTarget": 2,
         "historyUpdateUrl": false,
         "ignoreDestinationZoom": false,
