@@ -245,6 +245,7 @@ class Product(models.Model):
             return self.description_pickingout or self.name
         if picking_code == 'internal':
             return self.description_picking or description
+        return description
 
     def _get_domain_locations(self):
         '''
