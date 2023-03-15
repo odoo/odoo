@@ -180,7 +180,7 @@
         </template>
 
         <template id="notification_preview">
-<div style="display: none; max-height: 0px; overflow: hidden;">
+<div style="display: none; max-height: 0px; overflow: hidden; color:#fff; font-size:0px; line-height:0px">
     <t t-if="tracking_values">
         <t t-out="tracking_values[0][0]"/>: <t t-out="tracking_values[0][1]"/> &#8594; <t t-out="tracking_values[0][2]"/>
         <t t-if="len(tracking_values) > 1"> |...</t>
