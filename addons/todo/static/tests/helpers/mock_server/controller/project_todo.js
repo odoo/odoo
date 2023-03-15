@@ -5,7 +5,7 @@ import { MockServer } from '@web/../tests/helpers/mock_server';
 
 import { date_to_str } from 'web.time';
 
-patch(MockServer.prototype, 'note/controller/note', {
+patch(MockServer.prototype, 'project_todo/controller/project_todo', {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -14,8 +14,8 @@ patch(MockServer.prototype, 'note/controller/note', {
      * @override
      */
     async _performRPC(route, args) {
-        if (route === '/note/new') {
-            return this._mockRouteNoteNew(args);
+        if (route === '/project_todo/new') {
+            return this._mockRouteTodoNew(args);
         }
         return this._super(...arguments);
     },
@@ -25,17 +25,18 @@ patch(MockServer.prototype, 'note/controller/note', {
     //--------------------------------------------------------------------------
 
     /**
-     * Simulates the `/note/new` route.
+     * Simulates the `/project_todo/new` route.
      *
      * @private
      */
-    _mockRouteNoteNew(values) {
-        const noteId = this.pyEnv['note.note'].create({ memo: values['note'] });
+    _mockRouteTodoNew(values) {
+        const taskId = this.pyEnv['project.task'].create({ description: values['todo_description'] });
         if (values['date_deadline']) {
             this.pyEnv['mail.activity'].create({
                 date_deadline: date_to_str(new Date(values['date_deadline'])),
-                note_id: noteId,
-                res_model: 'note.note',
+                note: values['todo_description'],
+                res_model: 'project.task',
+                res_id: taskId,
             });
         }
     },

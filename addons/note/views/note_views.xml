@@ -171,6 +171,9 @@
                   </div>
                   <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
+                <div class="alert alert-warning oe_edit_only mb-0" role="status">
+                    <p>The Notes app is deprecated and has been replaced by Todo. All your existing notes have been converted to to-dos that you will find in this new app. The Notes app will be removed in the future. It is therefore adviced to not use it anymore as all the notes that would be created/modified in it will be lost during future upgrade.</p>
+                </div>
                 <sheet>
                     <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>
@@ -224,28 +227,5 @@
           </p>
         </field>
     </record>
-
-    <menuitem
-      id="menu_note_notes"
-      name="Notes"
-      sequence="15"
-      action="note.action_note_note"
-      web_icon="note,static/description/icon.svg">
-        <menuitem
-          id="menu_note_configuration"
-          name="Configuration"
-          sequence="100"
-          groups="base.group_no_one">
-            <menuitem
-              id="menu_notes_stage"
-              name="Stages"
-              action="note.action_note_stage"
-              sequence="21"/>
-            <menuitem
-              id="notes_tag_menu"
-              action="note_tag_action"
-              sequence="22"/>
-        </menuitem>
-    </menuitem>
 
 </odoo>

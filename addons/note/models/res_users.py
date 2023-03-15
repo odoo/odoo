@@ -45,30 +45,3 @@ GROUP BY id"""
                 stage.sudo().copy(default={'user_id': user.id})
         else:
             _logger.debug("Created note columns for %s", self)
-
-    @api.model
-    def systray_get_activities(self):
-        """ If user have not scheduled any note, it will not appear in activity menu.
-            Making note activity always visible with number of notes on label. If there is no notes,
-            activity menu not visible for note.
-        """
-        activities = super(Users, self).systray_get_activities()
-        notes_count = self.env['note.note'].search_count([('user_id', '=', self.env.uid)])
-        if notes_count:
-            note_index = next((index for (index, a) in enumerate(activities) if a["model"] == "note.note"), None)
-            note_label = _('Notes')
-            if note_index is not None:
-                activities[note_index]['name'] = note_label
-            else:
-                activities.append({
-                    'id': self.env['ir.model']._get('note.note').id,
-                    'type': 'activity',
-                    'name': note_label,
-                    'model': 'note.note',
-                    'icon': modules.module.get_module_icon(self.env['note.note']._original_module),
-                    'total_count': 0,
-                    'today_count': 0,
-                    'overdue_count': 0,
-                    'planned_count': 0
-                })
-        return activities
