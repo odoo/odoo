@@ -63,8 +63,9 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
         const recordDomain = new Domain(this.props.record.data[this.props.domain_field] || []).toString();
         const filterDomain = new Domain(this.props.record.data.mailing_filter_domain || []).toString();
         el.classList.toggle('d-none', recordDomain === '[]');
+        const $inputModelField = document.querySelector(`input#${this.props.model_field}`);
         this.filter.canSaveFilter = !this.props.record.data.mailing_filter_id
-            || !document.querySelector(`input#${this.props.model_field}`).value.length
+            || $inputModelField && !$inputModelField.value.length
             || this.state.isFloating
             || filterDomain !== recordDomain;
     }
