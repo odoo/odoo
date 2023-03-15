@@ -375,7 +375,10 @@ export class Powerbox {
                 this._context.selectedCommand = undefined;
             }
             this._render(this._context.filteredCommands, this._context.categories);
-            this.el.querySelector('.oe-powerbox-commandWrapper.active').scrollIntoView({block: 'nearest', inline: 'nearest'});
+            const activeCommand = this.el.querySelector('.oe-powerbox-commandWrapper.active');
+            if (activeCommand) {
+                activeCommand.scrollIntoView({block: 'nearest', inline: 'nearest'});
+            }
         }
     }
 }

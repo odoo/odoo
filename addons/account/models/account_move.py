@@ -20,6 +20,7 @@ from odoo.tools import (
     email_split,
     float_compare,
     float_is_zero,
+    float_repr,
     format_amount,
     format_date,
     formatLang,
@@ -30,9 +31,7 @@ from odoo.tools import (
 )
 
 
-#forbidden fields
-INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+MAX_HASH_VERSION = 3
 
 TYPE_REVERSE_MAP = {
     'entry': 'entry',
@@ -77,7 +76,7 @@ class AccountMove(models.Model):
     # === Accounting fields === #
     name = fields.Char(
         string='Number',
-        compute='_compute_name', readonly=False, store=True,
+        compute='_compute_name', inverse='_inverse_name', readonly=False, store=True,
         copy=False,
         tracking=True,
         index='trigram',
@@ -334,6 +333,7 @@ class AccountMove(models.Model):
         copy=False,
         help="The payment reference to set on journal items.",
         tracking=True,
+        compute='_compute_payment_reference', inverse='_inverse_payment_reference', store=True, readonly=False,
     )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
@@ -563,6 +563,15 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    def _compute_payment_reference(self):
+        for move in self.filtered(lambda m: (
+            m.state == 'posted'
+            and m.move_type == 'out_invoice'
+            and not m.payment_reference
+        )):
+            move.payment_reference = move._get_invoice_computed_reference()
+        self._inverse_payment_reference()
+
     @api.depends('invoice_date', 'company_id')
     def _compute_date(self):
         for move in self:
@@ -685,6 +694,7 @@ class AccountMove(models.Model):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
+        self._inverse_name()
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
@@ -946,18 +956,33 @@ class AccountMove(models.Model):
     @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
     def _compute_needed_terms(self):
         for invoice in self:
+            is_draft = invoice.id != invoice._origin.id
             invoice.needed_terms = {}
             invoice.needed_terms_dirty = True
             sign = 1 if invoice.is_inbound(include_receipts=True) else -1
             if invoice.is_invoice(True) and invoice.invoice_line_ids:
                 if invoice.invoice_payment_term_id:
+                    if is_draft:
+                        tax_amount_currency = 0.0
+                        untaxed_amount_currency = 0.0
+                        for line in invoice.invoice_line_ids:
+                            untaxed_amount_currency += line.price_subtotal
+                            for tax_result in (line.compute_all_tax or {}).values():
+                                tax_amount_currency += -sign * tax_result.get('amount_currency', 0.0)
+                        untaxed_amount = untaxed_amount_currency
+                        tax_amount = tax_amount_currency
+                    else:
+                        tax_amount_currency = invoice.amount_tax * sign
+                        tax_amount = invoice.amount_tax_signed
+                        untaxed_amount_currency = invoice.amount_untaxed * sign
+                        untaxed_amount = invoice.amount_untaxed_signed
                     invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
                         date_ref=invoice.invoice_date or invoice.date or fields.Date.today(),
                         currency=invoice.currency_id,
-                        tax_amount_currency=invoice.amount_tax * sign,
-                        tax_amount=invoice.amount_tax_signed,
-                        untaxed_amount_currency=invoice.amount_untaxed * sign,
-                        untaxed_amount=invoice.amount_untaxed_signed,
+                        tax_amount_currency=tax_amount_currency,
+                        tax_amount=tax_amount,
+                        untaxed_amount_currency=untaxed_amount_currency,
+                        untaxed_amount=untaxed_amount,
                         company=invoice.company_id,
                         sign=sign
                     )
@@ -971,7 +996,6 @@ class AccountMove(models.Model):
                         values = {
                             'balance': term['company_amount'],
                             'amount_currency': term['foreign_amount'],
-                            'name': invoice.payment_reference or '',
                             'discount_amount_currency': term['discount_amount_currency'] or 0.0,
                             'discount_balance': term['discount_balance'] or 0.0,
                             'discount_date': term['discount_date'],
@@ -991,7 +1015,6 @@ class AccountMove(models.Model):
                     })] = {
                         'balance': invoice.amount_total_signed,
                         'amount_currency': invoice.amount_total_in_currency_signed,
-                        'name': invoice.payment_reference or '',
                     }
 
     def _compute_payments_widget_to_reconcile_info(self):
@@ -1503,6 +1526,16 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.journal_id.currency_id and invoice.journal_id.currency_id != invoice.currency_id:
                 self.env.add_to_compute(self._fields['journal_id'], invoice)
+
+    def _inverse_payment_reference(self):
+        self.line_ids._conditional_add_to_compute('name', lambda line: (
+            line.display_type == 'payment_term'
+        ))
+
+    def _inverse_name(self):
+        self._conditional_add_to_compute('payment_reference', lambda move: (
+            move.name and move.name != '/'
+        ))
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -2049,7 +2082,6 @@ class AccountMove(models.Model):
         def existing():
             return {
                 move: {
-                    'payment_reference': move.payment_reference,
                     'commercial_partner_id': move.commercial_partner_id,
                 }
                 for move in container['records'].filtered(lambda m: m.is_invoice(True))
@@ -2063,8 +2095,6 @@ class AccountMove(models.Model):
         after = existing()
 
         for move in after:
-            if changed('payment_reference'):
-                move.line_ids.filtered(lambda l: l.display_type == 'payment_term').name = after[move]['payment_reference']
             if changed('commercial_partner_id'):
                 move.line_ids.partner_id = after[move]['commercial_partner_id']
 
@@ -2190,8 +2220,8 @@ class AccountMove(models.Model):
             return True
         self._sanitize_vals(vals)
         for move in self:
-            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
-                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
+            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
+                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(move._get_integrity_hash_fields()))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
@@ -2240,6 +2270,7 @@ class AccountMove(models.Model):
 
                 # Hash the move
                 if vals.get('state') == 'posted':
+                    self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
                     for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
                         new_number = move.journal_id.secure_sequence_id.next_by_id()
                         res |= super(AccountMove, move).write({
@@ -2626,6 +2657,18 @@ class AccountMove(models.Model):
     # HASH
     # -------------------------------------------------------------------------
 
+    def _get_integrity_hash_fields(self):
+        # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['date', 'journal_id', 'company_id']
+        elif hash_version in (2, 3):
+            return ['name', 'date', 'journal_id', 'company_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
+
+    def _get_integrity_hash_fields_and_subfields(self):
+        return self._get_integrity_hash_fields() + [f'line_ids.{subfield}' for subfield in self.line_ids._get_integrity_hash_fields()]
+
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on journal entries when they get posted"""
         self.ensure_one()
@@ -2649,20 +2692,25 @@ class AccountMove(models.Model):
         hash_string = sha256((previous_hash + self.string_to_hash).encode('utf-8'))
         return hash_string.hexdigest()
 
+    @api.depends(lambda self: self._get_integrity_hash_fields_and_subfields())
+    @api.depends_context('hash_version')
     def _compute_string_to_hash(self):
         def _getattrstring(obj, field_str):
+            hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
             field_value = obj[field_str]
             if obj._fields[field_str].type == 'many2one':
                 field_value = field_value.id
+            if obj._fields[field_str].type == 'monetary' and hash_version >= 3:
+                return float_repr(field_value, obj.currency_id.decimal_places)
             return str(field_value)
 
         for move in self:
             values = {}
-            for field in INTEGRITY_HASH_MOVE_FIELDS:
+            for field in move._get_integrity_hash_fields():
                 values[field] = _getattrstring(move, field)
 
             for line in move.line_ids:
-                for field in INTEGRITY_HASH_LINE_FIELDS:
+                for field in line._get_integrity_hash_fields():
                     k = 'line_%d_%s' % (line.id, field)
                     values[k] = _getattrstring(line, field)
             #make the json serialization canonical
@@ -3305,16 +3353,6 @@ class AccountMove(models.Model):
                 if p not in invoice.sudo().message_partner_ids
             ])
 
-            # Compute 'ref' for 'out_invoice'.
-            if invoice.move_type == 'out_invoice' and not invoice.payment_reference:
-                to_write = {
-                    'payment_reference': invoice._get_invoice_computed_reference(),
-                    'line_ids': []
-                }
-                for line in invoice.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable')):
-                    to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
-                invoice.write(to_write)
-
             if (
                 invoice.is_sale_document()
                 and invoice.journal_id.sale_activity_type_id
@@ -3348,6 +3386,12 @@ class AccountMove(models.Model):
     def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, prefer_purchase_line=False, timeout=10):
         # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders
         self.ensure_one()
+
+    def _link_invoice_origin_to_purchase_orders(self, timeout=10):
+        for move in self.filtered(lambda m: m.move_type in self.get_purchase_types()):
+            references = [move.invoice_origin] if move.invoice_origin else []
+            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout)
+        return self
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
@@ -4048,6 +4092,19 @@ class AccountMove(models.Model):
             subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
         render_context['subtitles'] = subtitles
         return render_context
+
+    # -------------------------------------------------------------------------
+    # TOOLING
+    # -------------------------------------------------------------------------
+
+    def _conditional_add_to_compute(self, fname, condition):
+        field = self._fields[fname]
+        to_reset = self.filtered(lambda move:
+            condition(move)
+            and not self.env.is_protected(field, move)
+        )
+        to_reset.invalidate_recordset([fname])
+        self.env.add_to_compute(field, to_reset)
 
     # -------------------------------------------------------------------------
     # HOOKS

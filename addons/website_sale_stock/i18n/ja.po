@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Andy Yiu, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Andy Yiu, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +62,7 @@ msgstr "親愛なるお客様へ、"
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
-msgstr "新規作成された保管可能な商品に設定したデフォルト入手可能性モード。商品レベルで変更できます。"
+msgstr "新規作成された保管可能なプロダクトに設定したデフォルト入手可能性モード。プロダクトレベルで変更できます。"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -78,7 +79,7 @@ msgstr "再入荷時に通知を受け取る"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
-msgstr "在庫数の少ない商品をどう表示するか (手持在庫 - 在庫引当)"
+msgstr "在庫数の少ないプロダクトをどう表示するか (手持在庫 - 在庫引当)"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/controllers/main.py:0
@@ -108,7 +109,7 @@ msgstr "只今"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
-msgstr "今すぐ注文"
+msgstr "今すぐオーダ"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -134,19 +135,19 @@ msgstr "在庫切れメッセージ"
 #: model:ir.model,name:website_sale_stock.model_product_template
 #, python-format
 msgid "Product"
-msgstr "商品"
+msgstr "プロダクト"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
-msgstr "商品バリエーション"
+msgstr "プロダクトバリエーション"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 #: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
 #: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
-msgstr "商品: 商品の在庫情報についてメールを送信"
+msgstr "プロダクト: プロダクトの在庫情報についてメールを送信"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -189,25 +190,25 @@ msgstr "入手可能数量を表示"
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
-msgstr "いくつの商品が販売不可になり、カートは更新されました。ご不便をおかけして申し訳ございません。"
+msgstr "いくつのプロダクトが販売不可になり、カートは更新されました。ご不便をおかけして申し訳ございません。"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The following product is now available."
-msgstr "次の商品は入手可能になりました。"
+msgstr "次のプロダクトは入手可能になりました。"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
-msgstr "商品「%(product_name)s」は入手可能になりました"
+msgstr "プロダクト「%(product_name)s」は入手可能になりました"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
-msgstr "この商品は只今在庫切れです。"
+msgstr "このプロダクトは只今在庫切れです。"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -231,7 +232,7 @@ msgstr "倉庫"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
-msgstr "商品が再入荷次第お知らせいたします。"
+msgstr "プロダクトが再入荷次第お知らせいたします。"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -242,7 +243,7 @@ msgstr "Webサイト"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
-msgstr "Eコマース注文に関し、注文をしたサイト。"
+msgstr "Eコマースオーダに関し、オーダをしたサイト。"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -256,7 +257,7 @@ msgstr "カートに既に"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
-msgstr "カートに全て入手可能な商品が追加されました。"
+msgstr "カートに全て入手可能なプロダクトが追加されました。"
 
 #. module: website_sale_stock
 #. openerp-web

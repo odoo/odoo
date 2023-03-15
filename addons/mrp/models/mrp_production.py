@@ -1030,6 +1030,7 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.warehouse_id.id,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
+            'manual_consumption': self.env['stock.move']._determine_is_manual_consumption(product_id, self, bom_line),
         }
         return data
 
@@ -1323,9 +1324,10 @@ class MrpProduction(models.Model):
         for workorder in final_workorders:
             workorder._plan_workorder(replan)
 
+        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
         self.with_context(force_date=True).write({
-            'date_planned_start': min([workorder.leave_id.date_from for workorder in self.workorder_ids]),
-            'date_planned_finished': max([workorder.leave_id.date_to for workorder in self.workorder_ids])
+            'date_planned_start': min([workorder.leave_id.date_from for workorder in workorders]),
+            'date_planned_finished': max([workorder.leave_id.date_to for workorder in workorders])
         })
 
     def button_unplan(self):
@@ -1571,7 +1573,8 @@ class MrpProduction(models.Model):
             if total_amount < production.product_qty and not cancel_remaining_qty:
                 amounts[production].append(production.product_qty - total_amount)
                 has_backorder_to_ignore[production] = True
-            elif total_amount > production.product_qty or production.state in ['done', 'cancel']:
+            elif float_compare(total_amount, production.product_qty, precision_rounding=production.product_uom_id.rounding) > 0 \
+                    or production.state in ['done', 'cancel']:
                 raise UserError(_("Unable to split with more than the quantity to produce."))
 
         backorder_vals_list = []

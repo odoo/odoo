@@ -146,7 +146,7 @@
                                         <field name="answer_score"
                                             attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
                                         <field name="value_image_filename" invisible="1"/>
-                                        <field name="value_image" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
+                                        <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
                                             attrs="{'column_invisible': [('parent.question_type', '=', 'matrix')]}"/>
                                     </tree>
                                 </field>

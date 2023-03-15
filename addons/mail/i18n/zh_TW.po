@@ -161,14 +161,14 @@ msgstr "%s 建立"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
-msgstr ""
+msgstr "過期 %s 天"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "%s days overdue:"
-msgstr ""
+msgstr "過期 %s 天："
 
 #. module: mail
 #. odoo-javascript
@@ -316,7 +316,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "10"
-msgstr "10"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -352,7 +352,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "11"
-msgstr "11"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -815,6 +815,8 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">關注文件的人，以及</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -831,7 +833,7 @@ msgstr "<strong>內部溝通</strong>: 回復會發佈內部留言， 關注者�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
-msgstr "<strong>初始備註：</strong>"
+msgstr "<strong>原始備註：</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1170,7 +1172,7 @@ msgstr "添加電子郵件黑名單"
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr "添加關注者"
+msgstr "加入關注者"
 
 #. module: mail
 #. odoo-python
@@ -1210,7 +1212,7 @@ msgstr "將電子郵件地址添加到黑名單"
 #: code:addons/mail/static/src/xml/text_emojis.xml:0
 #, python-format
 msgid "Add an emoji"
-msgstr "添加表情符號"
+msgstr "加入表情符號"
 
 #. module: mail
 #. odoo-javascript
@@ -1225,13 +1227,13 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Add attachment"
-msgstr "添加附件"
+msgstr "加入附件"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr "添加聯絡人以發出通知  ..."
+msgstr "加入要通知的聯絡人⋯"
 
 #. module: mail
 #. odoo-javascript
@@ -1404,7 +1406,7 @@ msgstr "和另外1名成員。"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Animals & Nature"
-msgstr ""
+msgstr "動物及大自然"
 
 #. module: mail
 #. odoo-javascript
@@ -1446,7 +1448,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Archived"
-msgstr "歸檔"
+msgstr "已封存"
 
 #. module: mail
 #. odoo-python
@@ -2357,7 +2359,7 @@ msgstr "公司"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "撰寫信件"
+msgstr "撰寫電郵"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -2585,7 +2587,7 @@ msgstr "建立或搜索頻道..."
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Created"
-msgstr "已建立"
+msgstr "建立"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2748,7 +2750,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
 msgid "Days"
-msgstr "天數"
+msgstr "天內"
 
 #. module: mail
 #. odoo-javascript
@@ -3177,7 +3179,7 @@ msgstr "到期時間"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "截止日期至"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3185,14 +3187,14 @@ msgstr "截止日期至"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Due in %s days"
-msgstr ""
+msgstr "%s 天內到期"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Due in %s days:"
-msgstr ""
+msgstr "%s 天內到期："
 
 #. module: mail
 #. odoo-javascript
@@ -3846,7 +3848,7 @@ msgstr "Font awesome 圖示，例如，fa-task"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Food & Drink"
-msgstr ""
+msgstr "食物及飲品"
 
 #. module: mail
 #. odoo-python
@@ -3926,7 +3928,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
-msgstr "完全創建者"
+msgstr "全功能編輯器"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__default_display_mode__video_full_screen
@@ -4550,7 +4552,7 @@ msgstr "表示這個活動是自動生成的，不是任何使用者建立。"
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
-msgstr "資訊"
+msgstr "詳細資訊"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__initial_res_model
@@ -5345,7 +5347,7 @@ msgstr "加載更多"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr ""
+msgstr "使用範本"
 
 #. module: mail
 #. odoo-javascript
@@ -5379,7 +5381,7 @@ msgstr "本地伺服器"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
-msgstr "日誌"
+msgstr "記錄"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -6303,7 +6305,7 @@ msgstr "暫無對話..."
 #: code:addons/mail/static/src/models/emoji_grid_no_search_content_view.js:0
 #, python-format
 msgid "No emoji match your search"
-msgstr ""
+msgstr "找不到相符的表情符號"
 
 #. module: mail
 #. odoo-javascript
@@ -6578,7 +6580,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Objects"
-msgstr ""
+msgstr "物件"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -7054,7 +7056,7 @@ msgstr "注意：通過電子郵件通知的此文檔的關注者仍然可以閱
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "People & Body"
-msgstr ""
+msgstr "人物及身體"
 
 #. module: mail
 #. odoo-javascript
@@ -7099,7 +7101,7 @@ msgstr "已安排"
 #: code:addons/mail/static/src/components/activity_box/activity_box.xml:0
 #, python-format
 msgid "Planned activities"
-msgstr "計劃的活動"
+msgstr "已計劃活動"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -7417,7 +7419,7 @@ msgstr "讀取日期"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "顯示較少"
 
 #. module: mail
 #. odoo-javascript
@@ -7634,7 +7636,7 @@ msgstr "從黑名單嚮導中刪除電子郵件"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Remove from Todo"
-msgstr ""
+msgstr "移除待辦"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7737,7 +7739,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Reset Template"
-msgstr ""
+msgstr "重設範本"
 
 #. module: mail
 #. odoo-javascript
@@ -7901,12 +7903,12 @@ msgstr "儲存"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as a new template"
-msgstr "儲存為新模版"
+msgstr "儲存為新範本"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr "儲存為新模版"
+msgstr "儲存為新範本"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -8023,7 +8025,7 @@ msgstr "搜索 RTC 會話"
 #: code:addons/mail/static/src/models/emoji_search_bar_view.js:0
 #, python-format
 msgid "Search an emoji"
-msgstr ""
+msgstr "搜尋表情符號"
 
 #. module: mail
 #. odoo-javascript
@@ -8136,7 +8138,7 @@ msgstr "發送電子信件"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Send Mail (%s)"
-msgstr "發送信件（ %s）"
+msgstr "發送信件（使用範本：%s）"
 
 #. module: mail
 #. odoo-javascript
@@ -8432,7 +8434,7 @@ msgstr "在相關單據模型之記錄提供此模板的邊欄按鈕"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Smileys & Emotion"
-msgstr ""
+msgstr "表情及情感"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -8598,7 +8600,7 @@ msgstr "格式化的字符串以表示具有以下模式的修飾符的鍵： sh
 #: model:ir.model.fields,field_description:mail.field_mail_template__subject
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__subject
 msgid "Subject"
-msgstr "來源"
+msgstr "主題"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__subject
@@ -8680,7 +8682,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Symbols"
-msgstr ""
+msgstr "符號"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -8821,7 +8823,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template description"
-msgstr ""
+msgstr "範本描述"
 
 #. module: mail
 #. odoo-python
@@ -8859,7 +8861,7 @@ msgstr "模板渲染僅支持 inline_template、qweb 或 qweb_view（視圖或�
 #: model_terms:ir.ui.view,arch_db:mail.email_template_tree
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
-msgstr "版型"
+msgstr "範本"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -9238,7 +9240,7 @@ msgstr "待辦事項"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "To:"
-msgstr "至:"
+msgstr "致："
 
 #. module: mail
 #. odoo-javascript
@@ -9356,7 +9358,7 @@ msgstr "追蹤值"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Travel & Places"
-msgstr ""
+msgstr "旅遊及地點"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -9614,7 +9616,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr "上傳文件"
+msgstr "上載文件"
 
 #. module: mail
 #. odoo-javascript
@@ -9963,7 +9965,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
 msgid "Weeks"
-msgstr "周"
+msgstr "星期"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10008,7 +10010,7 @@ msgstr "寫回饋"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "寫下訊息⋯"
 
 #. module: mail
 #. odoo-python
@@ -13052,7 +13054,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
-msgstr "by"
+msgstr "由"
 
 #. module: mail
 #. odoo-javascript
@@ -14913,7 +14915,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "cover"
-msgstr ""
+msgstr "封面"
 
 #. module: mail
 #. odoo-javascript
@@ -19502,7 +19504,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "graph"
-msgstr ""
+msgstr "圖表"
 
 #. module: mail
 #. odoo-javascript
@@ -34174,7 +34176,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
-msgstr "周"
+msgstr "星期"
 
 #. module: mail
 #. odoo-javascript

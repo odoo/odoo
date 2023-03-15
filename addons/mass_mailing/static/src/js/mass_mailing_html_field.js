@@ -244,6 +244,7 @@ export class MassMailingHtmlField extends HtmlField {
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
+            this.wysiwyg.snippetsMenu.activateSnippet(false);
             this.onIframeUpdated();
         });
         const $previewBtn = $snippetsSideBar.find('.o_mobile_preview_btn');
@@ -380,6 +381,8 @@ export class MassMailingHtmlField extends HtmlField {
                     selection.removeAllRanges();
                     selection.addRange(range);
                 }
+                // mark selection done for tour testing
+                $editable.addClass('theme_selection_done');
             }, 0);
         });
 

@@ -515,6 +515,7 @@ msgstr "Format de zone incorrect"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_bar_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Bar"
 msgstr "Barre"
@@ -669,21 +670,21 @@ msgstr "Valeurs des cellules"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Chart"
-msgstr "Graphe"
+msgstr "Graphique"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 #, python-format
 msgid "Chart - %s"
-msgstr "Graphe - %s"
+msgstr "Graphique - %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Chart type"
-msgstr "Type de graphe"
+msgstr "Type de graphique"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -755,6 +756,13 @@ msgstr "Effacer les lignes"
 #, python-format
 msgid "Clear rows %s - %s"
 msgstr "Effacer les lignes %s - %s"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Clip"
+msgstr "Agrafe"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1801,6 +1809,13 @@ msgstr "Valeur future d'un principal d'une série de taux."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Gauge"
+msgstr "Jauge"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Get the absolute ID of an element in the pivot"
@@ -2185,13 +2200,6 @@ msgstr "Formule de point d'inflexion inférieure non valide"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Invalid merge zone"
-msgstr "Zone de fusion non valide"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid ""
 "Invalid number of arguments for the %s function. Expected %s maximum, but "
 "got %s instead."
@@ -2527,6 +2535,7 @@ msgstr "Position de la légende"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_line_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Line"
 msgstr "Ligne"
@@ -2876,7 +2885,7 @@ msgstr "Jours ouvrables nets entre deux dates."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "New Chart"
-msgstr "Nouveau graphe"
+msgstr "Nouveau graphique"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3069,6 +3078,13 @@ msgstr "octobre"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Overflow"
+msgstr "Débordement"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Paint Format"
@@ -3171,6 +3187,7 @@ msgstr "Paiement périodique d'un placement de rente."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_pie_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Pie"
 msgstr "Tarte"
@@ -3524,6 +3541,13 @@ msgstr "Numéro de ligne d'une cellule spécifique"
 #, python-format
 msgid "Save"
 msgstr "Sauvegarder"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Scorecard"
+msgstr "Scorecard"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3968,7 +3992,7 @@ msgstr "Le caractère dans text_to_search où commencer la recherche."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The chart definition is invalid for an unknown reason"
-msgstr "Le graphe n'est pas valide pour une raison inconnue"
+msgstr "Le graphique n'est pas valide pour une raison inconnue"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4580,7 +4604,7 @@ msgstr "Le modèle à utiliser pour formater le nombre, entre guillemets."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period (%s) must be less than or equal life (%."
-msgstr "La période (%s) doit être inférieure à égale à la vie (%."
+msgstr "La période (%s) doit être inférieure ou égale à la vie (%."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5398,6 +5422,20 @@ msgstr "Afficher toutes les lignes"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Unhide columns"
+msgstr "Afficher colonnes"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Unhide rows"
+msgstr "Afficher lignes"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Unknown function: \"%s\""
 msgstr "Fonction inconnue : \"%s\""
 
@@ -5674,6 +5712,13 @@ msgstr "Si la valeur fournie est paire."
 #, python-format
 msgid "Whether the referenced cell is empty"
 msgstr "Si la cellule référencée est vide"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Wrap"
+msgstr "Envelopper"
 
 #. module: spreadsheet
 #. odoo-javascript

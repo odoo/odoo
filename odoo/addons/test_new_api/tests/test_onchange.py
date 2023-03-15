@@ -535,6 +535,20 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         self.assertFalse(called[0], "discussion.messages has been read")
 
+    def test_onchange_one2many_many2one_in_form(self):
+        order = self.env['test_new_api.monetary_order'].create({
+            'currency_id': self.env.ref('base.USD').id,
+        })
+
+        # this call to onchange() is made when creating a new line in field
+        # order.line_ids; check what happens when the line's form view contains
+        # the inverse many2one field
+        values = {'order_id': {'id': order.id, 'currency_id': order.currency_id.id}}
+        field_onchange = dict.fromkeys(['order_id', 'subtotal'], '')
+        result = self.env['test_new_api.monetary_order_line'].onchange(values, [], field_onchange)
+
+        self.assertEqual(result['value']['order_id'], (order.id, order.display_name))
+
     def test_onchange_inherited(self):
         """ Setting an inherited field should assign the field on the parent record. """
         foo, bar = self.env['test_new_api.multi.tag'].create([{'name': 'Foo'}, {'name': 'Bar'}])

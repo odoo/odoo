@@ -6,7 +6,7 @@
                 <span t-if="isAlone" class="fa fa-exclamation-circle"/>
                 <t t-esc="title"/>
             </div>
-            <span t-if="!isTimeHidden" class="fc-time"/>
+            <span t-if="!isTimeHidden" class="fc-time" t-esc="startTime" />
         </div>
     </t>
 </templates>

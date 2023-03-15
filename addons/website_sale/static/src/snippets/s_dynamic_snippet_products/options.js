@@ -29,6 +29,15 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         this.productCategories = {};
         this.isAlternativeProductSnippet = this.$target.hasClass('o_wsale_alternative_products');
     },
+    /**
+     * @override
+     */
+    onBuilt() {
+        this._super.apply(this, arguments);
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_dynamic_snippet_products';
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

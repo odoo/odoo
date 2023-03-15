@@ -6,11 +6,11 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date, float_is_zero, Query
+from odoo.tools import frozendict, formatLang, format_date, float_compare, Query
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 
 
 class AccountMoveLine(models.Model):
@@ -459,11 +459,14 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'journal_id')
     def _compute_name(self):
         for line in self:
+            if line.display_type == 'payment_term':
+                if line.move_id.payment_reference:
+                    line.name = line.move_id.payment_reference
+                elif not line.name:
+                    line.name = ''
+                continue
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
-            # YTI : Coming from conflicting onchange from account.move
-            # for line in self.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-            #     line.name = self.payment_reference or ''
             if line.partner_id.lang:
                 product = line.product_id.with_context(lang=line.partner_id.lang)
             else:
@@ -993,13 +996,14 @@ class AccountMoveLine(models.Model):
             if line.display_type != 'product' or not line.tax_ids.ids or line.company_id.early_pay_discount_computation != 'mixed':
                 continue
 
+            amount_total = abs(sum(x['amount_currency'] for x in needed_terms.values()))
             percentages_to_apply = []
             names = []
             for term in needed_terms.values():
                 if term.get('discount_percentage'):
                     percentages_to_apply.append({
                         'discount_percentage': term['discount_percentage'],
-                        'term_percentage': abs(term['amount_currency'] / line.move_id.amount_total) if line.move_id.amount_total else 0
+                        'term_percentage': abs(term['amount_currency'] / amount_total) if amount_total else 0
                     })
                     names.append(f"{term['discount_percentage']}%")
 
@@ -1412,6 +1416,17 @@ class AccountMoveLine(models.Model):
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
 
+        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash', 'secure_sequence_number'})
+        hashed_moves = self.move_id.filtered('inalterable_hash')
+        violated_fields = set(vals) & inalterable_fields
+        if hashed_moves and violated_fields:
+            raise UserError(_(
+                "You cannot edit the following fields: %s.\n"
+                "The following entries are already hashed:\n%s",
+                ', '.join(f['string'] for f in self.fields_get(violated_fields).values()),
+                '\n'.join(hashed_moves.mapped('name')),
+            ))
+
         line_to_write = self
         vals = self._sanitize_vals(vals)
         for line in self:
@@ -1420,8 +1435,6 @@ class AccountMoveLine(models.Model):
                 continue
 
             if line.parent_state == 'posted':
-                if line.move_id.restrict_mode_hash_table and set(vals).intersection(INTEGRITY_HASH_LINE_FIELDS):
-                    raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_LINE_FIELDS))
                 if any(key in vals for key in ('tax_ids', 'tax_line_id')):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
@@ -2479,7 +2492,7 @@ class AccountMoveLine(models.Model):
 
             for account_id, distribution in self.analytic_distribution.items():
                 line_values = self._prepare_analytic_distribution_line(float(distribution), account_id, distribution_on_each_plan)
-                if not float_is_zero(line_values.get("amount"), precision_digits=self.env.company.currency_id.decimal_places):
+                if not self.currency_id.is_zero(line_values.get('amount')):
                     analytic_line_vals.append(line_values)
         return analytic_line_vals
 
@@ -2491,7 +2504,8 @@ class AccountMoveLine(models.Model):
         account_id = int(account_id)
         account = self.env['account.analytic.account'].browse(account_id)
         distribution_plan = distribution_on_each_plan.get(account.root_plan_id, 0) + distribution
-        if self.env.company.currency_id.compare_amounts(distribution_plan, 100) == 0:
+        decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
+        if float_compare(distribution_plan, 100, precision_digits=decimal_precision) == 0:
             amount = -self.balance * (100 - distribution_on_each_plan.get(account.root_plan_id, 0)) / 100.0
         else:
             amount = -self.balance * distribution / 100.0
@@ -2516,6 +2530,15 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # MISC
     # -------------------------------------------------------------------------
+
+    def _get_integrity_hash_fields(self):
+        # Use the new hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['debit', 'credit', 'account_id', 'partner_id']
+        elif hash_version in (2, 3):
+            return ['name', 'debit', 'credit', 'account_id', 'partner_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
     def _reconciled_lines(self):
         ids = []

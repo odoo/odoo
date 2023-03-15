@@ -390,9 +390,9 @@ msgstr ""
 "            退款單\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            （參考編號： <t t-out=\"object.invoice_origin or ''\">SUB003</t>），\n"
+"            （參考編號： <t t-out=\"object.invoice_origin or ''\">SUB003</t>）\n"
 "        </t>\n"
-"        款項總額為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>，\n"
+"        ，款項總額為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>。\n"
 "        退款由 <t t-out=\"object.company_id.name or ''\">YourCompany</t> 作出。\n"
 "        <br/><br/>\n"
 "        如有疑問，歡迎聯絡我們。\n"
@@ -466,9 +466,9 @@ msgstr ""
 "            發票\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            （參考編號： <t t-out=\"object.invoice_origin or ''\">SUB003</t>），\n"
+"            （參考編號： <t t-out=\"object.invoice_origin or ''\">SUB003</t>）\n"
 "        </t>\n"
-"        款項總額為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>，\n"
+"        ，款項總額為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>，\n"
 "        由 <t t-out=\"object.company_id.name or ''\">YourCompany</t> 發出。\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "           發票款項已全數繳清。\n"
@@ -630,8 +630,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\"><span>選取所需記錄</span>，<strong>針對性發送電郵</strong></span>\n"
-"                                    <span>文件的關注者及</span>"
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        向 <span>所選取記錄</span>\n"
+"                                        <strong>傳送群發郵件</strong>\n"
+"                                    </span>\n"
+"                                    <span>關注文件的人，以及</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1988,7 +1991,7 @@ msgstr "啟用以建立銷售收據"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__active
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Active"
-msgstr "生效"
+msgstr "啟用"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2079,7 +2082,7 @@ msgstr "加入銀行帳戶"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
 msgid "Add a Note"
-msgstr "增加備註"
+msgstr "加入備註"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2106,7 +2109,7 @@ msgstr "增加日記帳分組"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a line"
-msgstr "新增資料行"
+msgstr "加入資料行"
 
 #. module: account
 #. odoo-javascript
@@ -2128,7 +2131,7 @@ msgstr "增加新會計項目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a note"
-msgstr "增加備註"
+msgstr "加入備註"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2226,7 +2229,7 @@ msgstr "進階設定"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr "影響後續稅金的基礎"
+msgstr "影響其後稅項的計稅基數"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__include_base_amount
@@ -2397,7 +2400,7 @@ msgstr "此匹配所涉及的金額始終為正，以外幣借方明細表示."
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Amount"
-msgstr "總額"
+msgstr "金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
@@ -2471,7 +2474,7 @@ msgstr "金額類型"
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Amount in Currency"
-msgstr "金額幣別"
+msgstr "外幣金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
@@ -2703,7 +2706,7 @@ msgstr "四月"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Archived"
-msgstr "已歸檔封存"
+msgstr "已封存"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__asset
@@ -3131,13 +3134,13 @@ msgstr "銀行"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__base
 msgid "Base"
-msgstr "基礎"
+msgstr "基數"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_base_affected
 #: model:ir.model.fields,field_description:account.field_account_tax_template__is_base_affected
 msgid "Base Affected by Previous Taxes"
-msgstr "受以前稅金影響的基數"
+msgstr "計稅基數受之前稅項影響"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
@@ -3549,7 +3552,7 @@ msgstr "現金收付稅"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "現金收付轉帳科目"
+msgstr "現金制中轉賬戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
@@ -3812,7 +3815,7 @@ msgstr "勾選此框可取消稅金報表計算中與此標記關聯的明細餘
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr "勾選, 如果您使用的產品和應收憑單價格含稅."
+msgstr "若產品及發票採用連稅價錢，請剔選。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__reconcile
@@ -4222,7 +4225,7 @@ msgstr "無法安裝新的科目表，因為會計科目分錄已經存在."
 #: code:addons/account/static/src/components/bills_upload/bills_upload.js:0
 #, python-format
 msgid "Could not upload files"
-msgstr "無法上傳檔案"
+msgstr "未能上載檔案"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4630,7 +4633,7 @@ msgstr "折讓單幣別"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr "折讓單: 發送中"
+msgstr "退款單：向外發送"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -5554,7 +5557,7 @@ msgstr "在你的應收憑單上增加支付二維碼QR-Code"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
 msgid "Display Rounding Warning"
-msgstr "顯示捨入提醒"
+msgstr "顯示捨入警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__qr_code
@@ -5585,12 +5588,12 @@ msgstr "在應付憑單上顯示支付條款"
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr "應收憑單的分配"
+msgstr "發票計稅方式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr "折讓應收憑單的分配"
+msgstr "退款發票計稅方式"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -5600,12 +5603,12 @@ msgstr "折讓分配"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr "稅款用於折讓時的分配"
+msgstr "退款計稅方式"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr "在應收憑單上使用稅時的分配"
+msgstr "發票計稅方式"
 
 #. module: account
 #. odoo-python
@@ -5698,7 +5701,7 @@ msgstr "帳單草稿"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "折讓單草稿"
+msgstr "退款單草稿"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
@@ -5752,7 +5755,7 @@ msgstr "銷售收據草稿"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "供應商折讓單草稿"
+msgstr "供應商退款單草稿"
 
 #. module: account
 #. odoo-python
@@ -6553,7 +6556,7 @@ msgstr "強制將這科目的所有傳票轉為第二幣別."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
 msgid "Foreign Currency"
-msgstr "外幣金額"
+msgstr "外幣幣種"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
@@ -7757,7 +7760,7 @@ msgstr "應收憑單/應付帳單 日期"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Sending"
-msgstr "應收憑單發送中"
+msgstr "發票：向外發送"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -7823,7 +7826,7 @@ msgstr "您的應收憑單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "應收憑單待審核"
+msgstr "張發票待審核"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -8355,7 +8358,7 @@ msgstr "標籤參數"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 msgid "Label on Invoices"
-msgstr "應收憑單上的標籤"
+msgstr "發票上標示為"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__lang
@@ -10620,13 +10623,13 @@ msgstr "百分比必須介於0到100之間"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__percent
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__percent
 msgid "Percentage of Price"
-msgstr "價格百分比"
+msgstr "價錢百分比"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "含稅價格百分比"
+msgstr "連稅價錢百分比"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage
@@ -11700,7 +11703,7 @@ msgstr "核銷模型的規則"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr "執行平衡"
+msgstr "未完成結餘"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -11821,12 +11824,12 @@ msgstr "儲存"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Save as a new template"
-msgstr "儲存為新模版"
+msgstr "儲存為新範本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Save as new template"
-msgstr "儲存為新模版"
+msgstr "儲存為新範本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12730,7 +12733,7 @@ msgstr "暫記科目"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr "切換至折讓/折讓單"
+msgstr "轉換為退款 / 退款單"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -12836,7 +12839,7 @@ msgstr "稅金結算分錄"
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr "稅金計算"
+msgstr "計稅方式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_id
@@ -12885,7 +12888,7 @@ msgstr "稅金陣列"
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_group_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_group_id
 msgid "Tax Group"
-msgstr "稅金組"
+msgstr "稅項組別"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_group
@@ -12942,7 +12945,7 @@ msgstr "稅金對應於財務狀況"
 #: model:ir.model.fields,field_description:account.field_account_tax__name
 #: model:ir.model.fields,field_description:account.field_account_tax_template__name
 msgid "Tax Name"
-msgstr "稅金名稱"
+msgstr "稅項名稱"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
@@ -12974,7 +12977,7 @@ msgstr "稅金鎖定日期"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_scope
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Scope"
-msgstr "稅範圍"
+msgstr "徵稅範圍"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_tax_signed
@@ -13019,7 +13022,7 @@ msgstr "稅模板"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr "稅類型"
+msgstr "稅種"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -13090,7 +13093,7 @@ msgstr "稅金分配明細應適用於應收憑單或折讓單，而不是同時
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
 #: model:ir.model.constraint,message:account.constraint_account_tax_template_name_company_uniq
 msgid "Tax names must be unique !"
-msgstr "稅金名稱必須唯一!"
+msgstr "稅項名稱須獨一無二。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -14230,7 +14233,7 @@ msgstr "日計帳預設貸方/借方科目的類型不應為'應收'或'應付'.
 msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
-msgstr "該警告通知捨入因子更改可能對 res.currency 的表單檢視有危險."
+msgstr "若更改捨入因數有危險、可能導致 res.currency 表單檢視畫面出錯，系統會顯示警告訊息。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -15960,9 +15963,13 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
-msgstr "由於在日記帳上啟用了限制模式，您無法編輯以下欄位: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
+msgstr ""
+"下列欄位不允許編輯： %s 。\n"
+"下列記項已進行雜湊演算處理（已產生數碼指紋）：\n"
+"%s"
 
 #. module: account
 #. odoo-python
@@ -16599,12 +16606,12 @@ msgstr "{{ (object.name or '').replace('/','-') }}"
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} 折讓單(編號 {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 退款單（參考編號： {{ object.name or '不適用' }}）"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} 應收憑單(編號 {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 發票（參考編號： {{ object.name or '不適用' }}）"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt

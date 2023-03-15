@@ -35,7 +35,7 @@ Master Data:
     "author": "TRESCLOUD, OPA CONSULTING",
     "category": "Accounting/Localizations/Account Charts",
     "maintainer": "TRESCLOUD",
-    "website": "https://opa-consulting.com",
+    "website": "https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/ecuador.html",
     "license": "LGPL-3",
     "depends": [
         "base",

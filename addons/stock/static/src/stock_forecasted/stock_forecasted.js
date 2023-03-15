@@ -32,6 +32,7 @@ class StockForecasted extends Component{
         this.title = this.props.action.name;
 
         this.docs = useState({});
+        this.warehouses = useState([]);
 
         onWillStart(this._getReportValues);
     }
@@ -53,6 +54,11 @@ class StockForecasted extends Component{
         }
         const isTemplate = !this.resModel || this.resModel === 'product.template';
         this.reportModelName = `report.stock.report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
+        this.warehouses.splice(0, this.warehouses.length);
+        this.warehouses.push(...await this.orm.call('report.stock.report_product_product_replenishment', 'get_warehouses', []));
+        if (!this.context.warehouse) {
+            this.updateWarehouse(this.warehouses[0].id);
+        }
         const reportValues = await this.orm.call(
             this.reportModelName, 'get_report_values',
             [],

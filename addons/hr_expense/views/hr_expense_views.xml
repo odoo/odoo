@@ -708,10 +708,12 @@
                         </button>
                     </div>
                     <field name="payment_state" invisible="True"/>
-                    <widget name="web_ribbon" title="Posted" bg_color="bg-success" attrs="{'invisible': ['|', ('payment_state', '!=', 'paid'), ('payment_mode', '==', 'own_account')]}"/>
-                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': ['|', ('payment_state', '!=', 'paid'), ('payment_mode', '==', 'company_account')]}"/>
-                    <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
-                    <widget name="web_ribbon" title="In Payment" attrs="{'invisible': [('payment_state', '!=', 'in_payment')]}"/>
+                    <!-- Paid by Company  -->
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': ['|', ('payment_mode', '=', 'own_account'), ('payment_state', 'not in', ['paid', 'in_payment', 'partial'])]}"/>
+                    <!-- Paid by Employee -->
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': ['|', ('payment_mode', '=', 'company_account'), ('payment_state', '!=', 'paid')]}"/>
+                    <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': ['|', ('payment_mode', '=', 'company_account'), ('payment_state', '!=', 'partial')]}"/>
+                    <widget name="web_ribbon" title="In Payment" attrs="{'invisible': ['|', ('payment_mode', '=', 'company_account'), ('payment_state', '!=', 'in_payment')]}"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>

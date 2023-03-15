@@ -205,17 +205,15 @@
                                     context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </div>
                             <label for="product_qty" string="Quantity"/>
-                            <div class="o_row g-0 d-flex">
-                                <div attrs="{'invisible': [('state', '=', 'draft')]}" class="o_row flex-grow-0">
-                                    <field name="qty_producing" class="text-start" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
-                                    /
-                                </div>
+                            <div class="d-flex flex-row">
+                                <field name="qty_producing" class="w-auto" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': [('state', '=', 'draft')]}"/>
+                                <span attrs="{'invisible': [('state', '=', 'draft')]}">/</span>
                                 <field name="product_qty" class="oe_inline text-start" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', 'not in', ('draft', 'done'))]}"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
                                     <field name="product_qty" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </button>
-                                <label for="product_uom_id" string="" class="oe_inline"/>
+                                <label for="product_uom_id" string="" class="oe_inline flex-grow-1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -360,8 +358,8 @@
                                         domain="[('product_id','=',product_id)]"
                                     />
                                     <field name="group_id" invisible="1"/>
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '=','none')]}" options="{&quot;warn&quot;: true}"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '=','none')]}"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}"/>
                                 </tree>
                             </field>
                         </page>
@@ -404,8 +402,8 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '=','none'), ('show_details_visible', '=', False)]}"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}"/>
                                 </tree>
                             </field>
                         </page>

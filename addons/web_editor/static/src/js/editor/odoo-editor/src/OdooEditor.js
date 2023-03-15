@@ -72,6 +72,7 @@ import {
     isVoidElement,
     cleanZWS,
     isZWS,
+    getDeepestPosition,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1056,6 +1057,7 @@ export class OdooEditor extends EventTarget {
         this._handleCommandHint();
         this.multiselectionRefresh();
         this.observerActive();
+        this.dispatchEvent(new Event('historyResetFromSteps'));
     }
     historyGetMissingSteps({fromStepId, toStepId}) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
@@ -1528,6 +1530,7 @@ export class OdooEditor extends EventTarget {
         this.historyResetLatestComputedSelection();
         this._handleCommandHint();
         this.multiselectionRefresh();
+        this.dispatchEvent(new Event('onExternalHistorySteps'));
     }
 
     // Multi selection
@@ -1560,26 +1563,34 @@ export class OdooEditor extends EventTarget {
     _multiselectionDisplayClient({ selection, color, clientId, clientAvatarUrl = '', clientName = this.options._t('Anonymous') }) {
         let clientRects;
 
-        const anchorNode = this.idFind(selection.anchorNodeOid);
-        const focusNode = this.idFind(selection.focusNodeOid);
+        let anchorNode = this.idFind(selection.anchorNodeOid);
+        let focusNode = this.idFind(selection.focusNodeOid);
+        let anchorOffset = selection.anchorOffset;
+        let focusOffset = selection.focusOffset;
         if (!anchorNode || !focusNode) {
-            return;
+            anchorNode = this.editable.children[0];
+            focusNode = this.editable.children[0];
+            anchorOffset = 0;
+            focusOffset = 0;
         }
+
+        [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
+        [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
 
         const direction = getCursorDirection(
             anchorNode,
-            selection.anchorOffset,
+            anchorOffset,
             focusNode,
-            selection.focusOffset,
+            focusOffset,
         );
         const range = new Range();
         try {
             if (direction === DIRECTIONS.RIGHT) {
-                range.setStart(anchorNode, selection.anchorOffset);
-                range.setEnd(focusNode, selection.focusOffset);
+                range.setStart(anchorNode, anchorOffset);
+                range.setEnd(focusNode, focusOffset);
             } else {
-                range.setStart(focusNode, selection.focusOffset);
-                range.setEnd(anchorNode, selection.anchorOffset);
+                range.setStart(focusNode, focusOffset);
+                range.setEnd(anchorNode, anchorOffset);
             }
 
             clientRects = Array.from(range.getClientRects());
@@ -2735,12 +2746,17 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (this.options.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
-            if (show !== undefined && !this.isMobile) {
-                this.toolbar.style.visibility = show ? 'visible' : 'hidden';
+            if (!this.isMobile) {
+                if (show !== undefined) {
+                    this.toolbar.style.visibility = show ? 'visible' : 'hidden';
+                }
+                if (show === false) {
+                    return;
+                }
             }
-            if (show === false) {
-                return;
-            }
+        }
+        if (!this.isSelectionInEditable(sel)) {
+            return;
         }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
         if (paragraphDropdownButton) {
@@ -3550,15 +3566,11 @@ export class OdooEditor extends EventTarget {
                 this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
             }
         }
+        const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
-            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
+            this._updateToolbar(!selection.isCollapsed && isSelectionInEditable);
         }
-
-        if (
-            !this.editable.contains(selection.anchorNode) &&
-            !this.editable.contains(selection.focusNode)
-        ) {
-            // Do not affect selection outside of the editable.
+        if (!isSelectionInEditable) {
             return;
         }
         // When CTRL+A in the editor, sometimes the browser use the editable
@@ -3653,13 +3665,17 @@ export class OdooEditor extends EventTarget {
 
     getCurrentCollaborativeSelection() {
         const selection = this._latestComputedSelection || this._computeHistorySelection();
-        if (!selection) return;
-        return Object.assign({
-            selection: serializeSelection(selection),
+        return {
+            selection: selection ? serializeSelection(selection) : {
+                anchorNodeOid: undefined,
+                anchorOffset: undefined,
+                focusNodeOid: undefined,
+                focusOffset: undefined,
+            },
             color: this._collabSelectionColor,
             clientId: this._collabClientId,
             clientAvatarUrl: this._collabClientAvatarUrl,
-        });
+        };
     }
 
     clean() {
@@ -4167,6 +4183,9 @@ export class OdooEditor extends EventTarget {
      * @param {int} length
      */
     _createLinkWithUrlInTextNode(textNode, url, index, length) {
+        const selection = this.document.getSelection();
+        const cloneRange = selection.getRangeAt(0).cloneRange();
+
         const link = this.document.createElement('a');
         link.setAttribute('href', url);
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
@@ -4177,6 +4196,10 @@ export class OdooEditor extends EventTarget {
         range.setEnd(textNode, index + length);
         link.appendChild(range.extractContents());
         range.insertNode(link);
+        // Inserting an element into a range clears the selection in Safari
+        // Hence, use the cloned range to reselect it.
+        selection.removeAllRanges();
+        selection.addRange(cloneRange);
     }
 
     /**
