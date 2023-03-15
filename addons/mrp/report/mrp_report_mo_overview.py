@@ -251,10 +251,14 @@ class ReportMoOverview(models.AbstractModel):
         product = move_raw.product_id
         currency = (production.company_id or self.env.company).currency_id
         forecast = replenish_data['products'][product.id].get('forecast', [])
-        current_lines = filter(lambda line: line.get('document_in', False) and line.get('document_out', False) and line['document_out'].get('id', False) == production.id, forecast)
+        current_lines = filter(lambda line: line.get('document_in', False) and line.get('document_out', False)
+                               and line['document_out'].get('id', False) == production.id and not line.get('already_used'), forecast)
         total_ordered = 0
         replenishments = []
         for count, forecast_line in enumerate(current_lines):
+            if float_compare(total_ordered, move_raw.product_uom_qty, precision_rounding=move_raw.product_uom.rounding) == 0:
+                # If a same product is used twice in the same MO, don't duplicate the replenishment lines
+                break
             doc_in = self.env[forecast_line['document_in']['_name']].browse(forecast_line['document_in']['id'])
             replenishment_index = f"{current_index}{count}"
             replenishment = {}
@@ -283,6 +287,7 @@ class ReportMoOverview(models.AbstractModel):
                 replenishment['summary']['mo_cost'] = currency.round(sum(component.get('summary', {}).get('mo_cost', 0.0) for component in replenishment['components']) + replenishment['operations'].get('summary', {}).get('mo_cost', 0.0))
             replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
             replenishments.append(replenishment)
+            forecast_line['already_used'] = True
             total_ordered += replenishment['summary']['quantity']
 
         reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
@@ -357,7 +362,7 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_replenishments_from_forecast(self, production, replenish_data):
         products = production.move_raw_ids.product_id
-        unknown_products = products.filtered(lambda product: product.id not in replenish_data)
+        unknown_products = products.filtered(lambda product: product.id not in replenish_data.get('products', {}))
         if unknown_products:
             warehouse = production.warehouse_id
             wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
