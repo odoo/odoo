@@ -579,7 +579,10 @@ export class HtmlField extends Component {
         }]));
     }
     _onWysiwygBlur() {
-        this.commitChanges();
+        // Avoid save on blur if the html field is in inline mode.
+        if (!this.props.isInlineStyle) {
+            this.commitChanges();
+        }
     }
     async _onReadonlyClickChecklist(ev) {
         if (ev.offsetX > 0) {
