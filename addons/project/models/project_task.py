@@ -91,7 +91,8 @@ class Task(models.Model):
 
     @api.model
     def _default_personal_stage_type_id(self):
-        return self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).id
+        default_id = self.env.context.get('default_personal_stage_type_ids')
+        return (default_id or self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).ids or [False])[0]
 
     @api.model
     def _default_company_id(self):

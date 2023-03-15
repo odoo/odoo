@@ -14,7 +14,6 @@
     'data': [
         'security/note_security.xml',
         'security/ir.model.access.csv',
-        'data/mail_activity_type_data.xml',
         'data/note_data.xml',
         'data/res_users_data.xml',
         'views/note_views.xml',
@@ -27,9 +26,6 @@
     'assets': {
         'web.assets_backend': [
             'note/static/src/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'note/static/tests/**/*',
         ],
     },
     'license': 'LGPL-3',

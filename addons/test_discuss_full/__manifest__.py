@@ -17,6 +17,7 @@
         'mail',
         'mail_bot',
         'note',
+        'project_todo',
         'website_livechat',
     ],
     'installable': True,
