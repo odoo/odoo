@@ -355,6 +355,8 @@ export class HtmlField extends Component {
             const t = document.createElement('T');
             t.setAttribute('t-out', dynamicPlaceholder);
             this.wysiwyg.odooEditor.execCommand('insert', t);
+            // Ensure the dynamic placeholder <t> element is sanitized.
+            this.wysiwyg.odooEditor.sanitize(t);
         }
     }
     onDynamicPlaceholderClose() {
