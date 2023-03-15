@@ -283,6 +283,7 @@ class AccountJournal(models.Model):
             AND NOT EXISTS (SELECT 1 FROM account_account acc
                             JOIN journal_account_type_control_rel rel ON acc.user_type_id = rel.type_id
                             WHERE acc.id = aml.account_id AND rel.journal_id = aml.journal_id)
+            AND aml.display_type IS NULL
         """, tuple(self.ids))
         if self._cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with accounts from different types than the allowed ones.'))
