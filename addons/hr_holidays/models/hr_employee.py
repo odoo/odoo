@@ -179,7 +179,10 @@ class HrEmployeeBase(models.AbstractModel):
             ('date_from', '<=', today_end),
             ('date_to', '>=', today_start),
         ])
-        return [('id', 'in', holidays.mapped('employee_id').ids)]
+        op = 'not in'
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            op = 'in'
+        return [('id', op, holidays.mapped('employee_id').ids)]
 
     @api.model_create_multi
     def create(self, vals_list):

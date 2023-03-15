@@ -117,7 +117,12 @@ class TestItEdiImport(TestItEdi):
 
         with patch.object(sql_db.Cursor, "commit", self.mock_commit):
             for dummy in range(2):
-                fattura_pa._save_incoming_attachment_fattura_pa(proxy_user, '9999999999', self.invoice_filename2, content)
+                fattura_pa._save_incoming_attachment_fattura_pa(
+                    proxy_user=proxy_user,
+                    id_transaction='9999999999',
+                    filename=self.invoice_filename2,
+                    content=content,
+                    key=None)
 
         # There should be one attachement with this filename
         attachments = self.env['ir.attachment'].search([('name', '=', self.invoice_filename2)])

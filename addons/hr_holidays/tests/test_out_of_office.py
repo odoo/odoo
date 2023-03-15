@@ -103,3 +103,18 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         self.leave.write({'state': 'validate'})
         with self.assertQueryCount(__system__=2, demo=2):
             self.assertEqual(self.hr_partner.im_status, 'leave_offline')
+
+    def test_search_absent_employee(self):
+        present_employees = self.env['hr.employee'].search([('is_absent', '!=', 'True')])
+        absent_employees = self.env['hr.employee'].search([('is_absent', '=', 'True')])
+        today_date = datetime.utcnow().date()
+        holidays = self.env['hr.leave'].sudo().search([
+            ('employee_id', '!=', False),
+            ('state', 'not in', ['cancel', 'refuse']),
+            ('date_from', '<=', today_date),
+            ('date_to', '>=', today_date),
+        ])
+        for employee in present_employees:
+            self.assertFalse(employee in holidays.employee_id)
+        for employee in absent_employees:
+            self.assertFalse(employee not in holidays.employee_id)
