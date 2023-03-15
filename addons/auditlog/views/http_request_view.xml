@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_auditlog_http_request_form" model="ir.ui.view">
+        <field name="name">auditlog.http.request.form</field>
+        <field name="model">auditlog.http.request</field>
+        <field name="arch" type="xml">
+            <form string="HTTP Request">
+                <sheet>
+                    <group string="HTTP Request">
+                        <field name="root_url" />
+                        <field name="name" />
+                        <field name="create_date" />
+                        <field name="user_context" />
+                        <field name="http_session_id" />
+                    </group>
+                    <group string="Logs">
+                        <field name="log_ids" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_auditlog_http_request_tree" model="ir.ui.view">
+        <field name="name">auditlog.http.request.tree</field>
+        <field name="model">auditlog.http.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="create_date" />
+                <field name="http_session_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_auditlog_http_request_search" model="ir.ui.view">
+        <field name="name">auditlog.http.request.search</field>
+        <field name="model">auditlog.http.request</field>
+        <field name="arch" type="xml">
+            <search string="HTTP Requests">
+                <field name="create_date" />
+                <field name="root_url" />
+                <field name="name" />
+                <field name="user_id" />
+                <field name="http_session_id" />
+                <group expand="0" string="Group By...">
+                    <filter
+                        name="group_by_root_url"
+                        string="Root URL"
+                        domain="[]"
+                        context="{'group_by':'root_url'}"
+                    />
+                    <filter
+                        name="group_by_name"
+                        string="Path"
+                        domain="[]"
+                        context="{'group_by':'name'}"
+                    />
+                    <filter
+                        name="group_by_create_date"
+                        string="Created on"
+                        domain="[]"
+                        context="{'group_by':'create_date'}"
+                    />
+                    <filter
+                        name="group_by_user_id"
+                        string="User"
+                        domain="[]"
+                        context="{'group_by':'user_id'}"
+                    />
+                    <filter
+                        name="group_by_http_session_id"
+                        string="User session"
+                        domain="[]"
+                        context="{'group_by':'http_session_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auditlog_http_request_tree">
+        <field name="name">HTTP Requests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">auditlog.http.request</field>
+        <field name="view_id" ref="view_auditlog_http_request_tree" />
+    </record>
+    <menuitem
+        id="menu_action_auditlog_http_request_tree"
+        parent="menu_audit"
+        action="action_auditlog_http_request_tree"
+        sequence="40"
+    />
+</odoo>

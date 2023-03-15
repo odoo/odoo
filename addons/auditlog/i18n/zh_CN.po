@@ -1,0 +1,607 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auditlog
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-26 01:45+0000\n"
+"PO-Revision-Date: 2019-09-01 04:34+0000\n"
+"Last-Translator: 黎伟杰 <674416404@qq.com>\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/oca/teams/23907/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.8\n"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__action_id
+msgid "Action"
+msgstr "动作"
+
+#. module: auditlog
+#: model:ir.ui.menu,name:auditlog.menu_audit
+msgid "Audit"
+msgstr "审计"
+
+#. module: auditlog
+#: model:ir.model,name:auditlog.model_auditlog_autovacuum
+msgid "Auditlog - Delete old logs"
+msgstr "审计日志 - 删除旧日志"
+
+#. module: auditlog
+#: model:ir.model,name:auditlog.model_auditlog_http_session
+msgid "Auditlog - HTTP User session log"
+msgstr "审计日志 - HTTP用户会话日志"
+
+#. module: auditlog
+#: model:ir.model,name:auditlog.model_auditlog_http_request
+msgid "Auditlog - HTTP request log"
+msgstr "审计日志 - HTTP请求日志"
+
+#. module: auditlog
+#: model:ir.model,name:auditlog.model_auditlog_log
+msgid "Auditlog - Log"
+msgstr "审核日志 - 日志"
+
+#. module: auditlog
+#: model:ir.model,name:auditlog.model_auditlog_log_line
+#: model:ir.model,name:auditlog.model_auditlog_log_line_view
+msgid "Auditlog - Log details (fields updated)"
+msgstr "审计日志 - 日志详细信息（更新的字段）"
+
+#. module: auditlog
+#: model:ir.model,name:auditlog.model_auditlog_rule
+msgid "Auditlog - Rule"
+msgstr "审计日志 - 规则"
+
+#. module: auditlog
+#: model:res.groups,name:auditlog.group_auditlog_manager
+msgid "Auditlog Manager"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.module.category,name:auditlog.security_auditlog_groups
+msgid "Auditlog Rights"
+msgstr ""
+
+#. module: auditlog
+#: model:res.groups,name:auditlog.group_auditlog_user
+msgid "Auditlog User"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.actions.server,name:auditlog.ir_cron_auditlog_autovacuum_ir_actions_server
+#: model:ir.cron,cron_name:auditlog.ir_cron_auditlog_autovacuum
+msgid "Auto-vacuum audit logs"
+msgstr "自动清空审核日志"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__capture_record
+msgid "Capture Record"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_context
+msgid "Context"
+msgstr "上下文"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__create_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__create_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__create_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__create_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__create_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__create_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__create_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__create_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__create_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__create_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__create_date
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "Date"
+msgstr "日期"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_description
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_description
+msgid "Description"
+msgstr "说明"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__display_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__display_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__display_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__display_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: auditlog
+#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__draft
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+msgid "Draft"
+msgstr "草稿"
+
+#. module: auditlog
+#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_log__log_type__fast
+#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__log_type__fast
+msgid "Fast log"
+msgstr "快速日志"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+msgid "Field"
+msgstr "字段"
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/rule.py:0
+#, python-format
+msgid "Field 'model_id' cannot be empty."
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__fields_to_exclude_ids
+msgid "Fields to Exclude"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__line_ids
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+msgid "Fields updated"
+msgstr "字段已更新"
+
+#. module: auditlog
+#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_log__log_type__full
+#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__log_type__full
+msgid "Full log"
+msgstr "完整日志"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_type
+msgid ""
+"Full log: make a diff between the data before and after the operation (log "
+"more info like computed fields which were updated, but it is slower)\n"
+"Fast log: only log the changes made through the create and write operations "
+"(less information, but it is faster)"
+msgstr ""
+"完整日志：在操作之前和之后的数据之间做一个差异（记录更多信息，如更新的计算字"
+"段，但速度较慢）\n"
+"快速日志：仅记录通过创建和写入操作所做的更改（信息越少，但速度越快）"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+msgid "Group By..."
+msgstr "分组..."
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+msgid "HTTP Context"
+msgstr "HTTP上下文"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_request_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__http_request_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_form
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "HTTP Request"
+msgstr "HTTP请求"
+
+#. module: auditlog
+#: model:ir.actions.act_window,name:auditlog.action_auditlog_http_request_tree
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__http_request_ids
+#: model:ir.ui.menu,name:auditlog.menu_action_auditlog_http_request_tree
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_form
+msgid "HTTP Requests"
+msgstr "HTTP请求"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum____last_update
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request____last_update
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session____last_update
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log____last_update
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line____last_update
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view____last_update
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__write_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__write_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__write_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__write_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__write_uid
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_uid
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__write_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__write_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__write_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__write_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__write_date
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__log_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__log_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+msgid "Log"
+msgstr "日志"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+msgid "Log - Field updated"
+msgstr "日志 - 字段已更新"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_create
+msgid "Log Creates"
+msgstr "日志创建"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_unlink
+msgid "Log Deletes"
+msgstr "日志删除"
+
+#. module: auditlog
+#: model:ir.actions.act_window,name:auditlog.action_auditlog_line
+#: model:ir.ui.menu,name:auditlog.menu_auditlog_line
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+msgid "Log Lines"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_read
+msgid "Log Reads"
+msgstr "日志读取"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_write
+msgid "Log Writes"
+msgstr "记录写入"
+
+#. module: auditlog
+#: model:ir.actions.act_window,name:auditlog.action_auditlog_log_tree
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__log_ids
+#: model:ir.ui.menu,name:auditlog.menu_audit_logs
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_form
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "Logs"
+msgstr "日志"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__method
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__method
+msgid "Method"
+msgstr "方法"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "Model"
+msgstr "模型"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_model
+msgid "Model Model"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_name
+msgid "Model Name"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__display_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__display_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__name
+msgid "Name"
+msgstr "名称"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__new_value
+msgid "New Value"
+msgstr "新值"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value_text
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__new_value_text
+msgid "New value Text"
+msgstr "新值文本"
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "No field defined to create line."
+msgstr ""
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/rule.py:0
+#, python-format
+msgid "No model defined to create line."
+msgstr ""
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "No model defined to create log."
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__old_value
+msgid "Old Value"
+msgstr "旧值"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value_text
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__old_value_text
+msgid "Old value Text"
+msgstr "旧值文本"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__name
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+msgid "Path"
+msgstr "路径"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__res_id
+msgid "Res"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__res_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "Resource ID"
+msgstr "资源ID"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__name
+msgid "Resource Name"
+msgstr "资源名称"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__root_url
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+msgid "Root URL"
+msgstr "Root URL"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
+msgid "Rule"
+msgstr "规则"
+
+#. module: auditlog
+#: model:ir.actions.act_window,name:auditlog.action_auditlog_rule_tree
+#: model:ir.ui.menu,name:auditlog.menu_action_auditlog_rule_tree
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+msgid "Rules"
+msgstr "规则"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__model_id
+msgid "Select model for which you want to generate log."
+msgstr "选择要为其生成日志的模型。"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__capture_record
+msgid "Select this if you want to keep track of Unlink Record"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_create
+msgid ""
+"Select this if you want to keep track of creation on any record of the model "
+"of this rule"
+msgstr "如果要在此规则的模型的任何记录上跟踪创建，请选择此选项"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_unlink
+msgid ""
+"Select this if you want to keep track of deletion on any record of the model "
+"of this rule"
+msgstr "如果要跟踪此规则模型的任何记录上的删除，请选择此选项"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_write
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"model of this rule"
+msgstr "如果要跟踪此规则模型的任何记录的修改，请选择此选项"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_read
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"model of this rule"
+msgstr "如果要在此规则的模型的任何记录上跟踪读取/打开，请选择此选项"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__http_session_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_session_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__http_session_id
+msgid "Session"
+msgstr "会话"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__name
+msgid "Session ID"
+msgstr "会话ID"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__state
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+msgid "State"
+msgstr "状态"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
+msgid "Subscribe"
+msgstr "订阅"
+
+#. module: auditlog
+#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__subscribed
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+msgid "Subscribed"
+msgstr "订阅"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_model
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_model
+msgid "Technical Model Name"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_name
+msgid "Technical name"
+msgstr "技术名称"
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "The field 'field_id' cannot be empty."
+msgstr ""
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "The field 'model_id' cannot be empty."
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.constraint,message:auditlog.constraint_auditlog_rule_model_uniq
+msgid ""
+"There is already a rule defined on this model\n"
+"You cannot define another: please edit the existing one."
+msgstr ""
+"此模型已定义规则\n"
+"您无法定义另一个：请编辑现有的。"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__log_type
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__log_type
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_type
+msgid "Type"
+msgstr "类型"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
+msgid "Unsubscribe"
+msgstr "退订"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__user_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__user_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__user_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "User"
+msgstr "用户"
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_form
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+msgid "User session"
+msgstr "用户会话"
+
+#. module: auditlog
+#: model:ir.actions.act_window,name:auditlog.action_auditlog_http_session_tree
+#: model:ir.ui.menu,name:auditlog.menu_action_auditlog_http_session_tree
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+msgid "User sessions"
+msgstr "用户会话"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__user_ids
+msgid "Users"
+msgstr "用户"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__users_to_exclude_ids
+msgid "Users to Exclude"
+msgstr ""
+
+#. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+msgid "Values"
+msgstr "值"
+
+#. module: auditlog
+#. odoo-python
+#: code:addons/auditlog/models/rule.py:0
+#, python-format
+msgid "View logs"
+msgstr "查看日志"
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__user_ids
+msgid "if  User is not added then it will applicable for all users"
+msgstr "如果未添加用户，则适用于所有用户"
