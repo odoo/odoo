@@ -17,7 +17,6 @@
         'resource',
         'utm',
         'web_tour',
-        'web_kanban_gauge',
         'contacts',
         'digest',
         'phone_validation',
