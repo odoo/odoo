@@ -1606,6 +1606,9 @@ ul.o_checklist > li.o_checked::after {
 // "value" will get HTML content as translation value for the attributes.
 // The goal here is to hide these values until the editor's code sets the right
 // ones on elements.
+.o_text_hide {
+    color: transparent !important;
+}
 [placeholder*="data-oe-translation-id"] {
     &::-webkit-input-placeholder{ /* WebKit */
         color: transparent;
@@ -1615,6 +1618,9 @@ ul.o_checklist > li.o_checked::after {
         color: transparent;
         opacity: 0;
     }
+}
+input[value*="data-oe-translation-id"] {
+    @extend .o_text_hide;
 }
 
 //------------------------------------------------------------------------------
