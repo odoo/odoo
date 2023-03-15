@@ -2026,10 +2026,10 @@
             if (right !== undefined && bottom !== undefined)
                 return { left, top, right, bottom };
             else if (bottom === undefined && right !== undefined) {
-                return { right, top, left, bottom: this.getSheetSize(this.sheetId).height - 1 };
+                return { right, top, left, bottom: this.getSheetSize(this.sheetId).numberOfRows - 1 };
             }
             else if (right === undefined && bottom !== undefined) {
-                return { bottom, left, top, right: this.getSheetSize(this.sheetId).width - 1 };
+                return { bottom, left, top, right: this.getSheetSize(this.sheetId).numberOfCols - 1 };
             }
             throw new Error(_lt("Bad zone format"));
         }
@@ -2652,13 +2652,13 @@
     }
     function zoneToDimension(zone) {
         return {
-            height: zone.bottom - zone.top + 1,
-            width: zone.right - zone.left + 1,
+            numberOfRows: zone.bottom - zone.top + 1,
+            numberOfCols: zone.right - zone.left + 1,
         };
     }
     function isOneDimensional(zone) {
-        const { width, height } = zoneToDimension(zone);
-        return width === 1 || height === 1;
+        const { numberOfCols, numberOfRows } = zoneToDimension(zone);
+        return numberOfCols === 1 || numberOfRows === 1;
     }
     /**
      * Array of all positions in the zone.
@@ -3133,7 +3133,7 @@
             return this.runtime.fontColor;
         }
         get secondaryFontColor() {
-            return relativeLuminance(this.primaryFontColor) <= 0.3 ? "#757575" : "#bbbbbb";
+            return relativeLuminance(this.backgroundColor) > 0.3 ? "#525252" : "#C8C8C8";
         }
         get figure() {
             return this.props.figure;
@@ -3255,59 +3255,676 @@
     };
 
     /**
-     * Convert a JS color hexadecimal to an excel compatible color.
+     * Registry
      *
-     * In Excel the color don't start with a '#' and the format is AARRGGBB instead of RRGGBBAA
+     * The Registry class is basically just a mapping from a string key to an object.
+     * It is really not much more than an object. It is however useful for the
+     * following reasons:
+     *
+     * 1. it let us react and execute code when someone add something to the registry
+     *   (for example, the FunctionRegistry subclass this for this purpose)
+     * 2. it throws an error when the get operation fails
+     * 3. it provides a chained API to add items to the registry.
      */
-    function toXlsxHexColor(color) {
-        color = toHex(color).replace("#", "");
-        // alpha channel goes first
-        if (color.length === 8) {
-            return color.slice(6) + color.slice(0, 6);
+    class Registry {
+        constructor() {
+            this.content = {};
         }
-        return color;
+        /**
+         * Add an item to the registry
+         *
+         * Note that this also returns the registry, so another add method call can
+         * be chained
+         */
+        add(key, value) {
+            this.content[key] = value;
+            return this;
+        }
+        /**
+         * Get an item from the registry
+         */
+        get(key) {
+            /**
+             * Note: key in {} is ~12 times slower than {}[key].
+             * So, we check the absence of key only when the direct access returns
+             * a falsy value. It's done to ensure that the registry can contains falsy values
+             */
+            const content = this.content[key];
+            if (!content) {
+                if (!(key in this.content)) {
+                    throw new Error(`Cannot find ${key} in this registry!`);
+                }
+            }
+            return content;
+        }
+        /**
+         * Check if the key is already in the registry
+         */
+        contains(key) {
+            return key in this.content;
+        }
+        /**
+         * Get a list of all elements in the registry
+         */
+        getAll() {
+            return Object.values(this.content);
+        }
+        /**
+         * Get a list of all keys in the registry
+         */
+        getKeys() {
+            return Object.keys(this.content);
+        }
+        /**
+         * Remove an item from the registry
+         */
+        remove(key) {
+            delete this.content[key];
+        }
     }
 
     /**
-     * AbstractChart is the class from which every Chart should inherit.
-     * The role of this class is to maintain the state of each chart.
+     * Add the `https` prefix to the url if it's missing
      */
-    class AbstractChart {
-        constructor(definition, sheetId, getters) {
-            this.title = definition.title;
-            this.sheetId = sheetId;
-            this.getters = getters;
+    function withHttps(url) {
+        return !/^https?:\/\//i.test(url) ? `https://${url}` : url;
+    }
+    const urlRegistry = new Registry();
+    function createWebLink(url, label) {
+        url = withHttps(url);
+        return {
+            url,
+            label: label || url,
+            isExternal: true,
+            isUrlEditable: true,
+        };
+    }
+    urlRegistry.add("sheet_URL", {
+        match: (url) => isSheetUrl(url),
+        createLink: (url, label) => {
+            return {
+                label,
+                url,
+                isExternal: false,
+                isUrlEditable: false,
+            };
+        },
+        urlRepresentation(url, getters) {
+            const sheetId = parseSheetUrl(url);
+            return getters.tryGetSheetName(sheetId) || _lt("Invalid sheet");
+        },
+        open(url, env) {
+            const sheetId = parseSheetUrl(url);
+            env.model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: env.model.getters.getActiveSheetId(),
+                sheetIdTo: sheetId,
+            });
+        },
+        sequence: 0,
+    });
+    const WebUrlSpec = {
+        createLink: createWebLink,
+        match: (url) => isWebLink(url),
+        open: (url) => window.open(url, "_blank"),
+        urlRepresentation: (url) => url,
+        sequence: 0,
+    };
+    function findMatchingSpec(url) {
+        return (urlRegistry
+            .getAll()
+            .sort((a, b) => a.sequence - b.sequence)
+            .find((urlType) => urlType.match(url)) || WebUrlSpec);
+    }
+    function urlRepresentation(link, getters) {
+        return findMatchingSpec(link.url).urlRepresentation(link.url, getters);
+    }
+    function openLink(link, env) {
+        findMatchingSpec(link.url).open(link.url, env);
+    }
+    function detectLink(value) {
+        if (typeof value !== "string") {
+            return undefined;
         }
-        /**
-         * Validate the chart definition given as arguments. This function will be
-         * called from allowDispatch function
-         */
-        static validateChartDefinition(validator, definition) {
-            throw new Error("This method should be implemented by sub class");
+        if (isMarkdownLink(value)) {
+            const { label, url } = parseMarkdownLink(value);
+            return findMatchingSpec(url).createLink(url, label);
         }
-        /**
-         * Get a new chart definition transformed with the executed command. This
-         * functions will be called during operational transform process
-         */
-        static transformDefinition(definition, executed) {
-            throw new Error("This method should be implemented by sub class");
+        else if (isWebLink(value)) {
+            return createWebLink(value);
         }
-        /**
-         * Get an empty definition based on the given context
-         */
-        static getDefinitionFromContextCreation(context) {
-            throw new Error("This method should be implemented by sub class");
-        }
+        return undefined;
     }
 
-    function transformZone(zone, executed) {
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            return reduceZoneOnDeletion(zone, executed.dimension === "COL" ? "left" : "top", executed.elements);
+    // HELPERS
+    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
+    function assert(condition, message) {
+        if (!condition()) {
+            throw new Error(message);
         }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
+    }
+    // -----------------------------------------------------------------------------
+    // FORMAT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
+    function toNumber(value) {
+        switch (typeof value) {
+            case "number":
+                return value;
+            case "boolean":
+                return value ? 1 : 0;
+            case "string":
+                if (isNumber(value) || value === "") {
+                    return parseNumber(value);
+                }
+                const internalDate = parseDateTime(value);
+                if (internalDate) {
+                    return internalDate.value;
+                }
+                throw new Error(expectNumberValueError(value));
+            default:
+                return 0;
         }
-        return { ...zone };
+    }
+    function strictToNumber(value) {
+        if (value === "") {
+            throw new Error(expectNumberValueError(value));
+        }
+        return toNumber(value);
+    }
+    function toString(value) {
+        switch (typeof value) {
+            case "string":
+                return value;
+            case "number":
+                return value.toString();
+            case "boolean":
+                return value ? "TRUE" : "FALSE";
+            default:
+                return "";
+        }
+    }
+    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
+    function normalizeString(str) {
+        return str
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    }
+    /**
+     * Normalize a value.
+     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
+     */
+    function normalizeValue(value) {
+        return typeof value === "string" ? normalizeString(value) : value;
+    }
+    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
+    function toBoolean(value) {
+        switch (typeof value) {
+            case "boolean":
+                return value;
+            case "string":
+                if (value) {
+                    let uppercaseVal = value.toUpperCase();
+                    if (uppercaseVal === "TRUE") {
+                        return true;
+                    }
+                    if (uppercaseVal === "FALSE") {
+                        return false;
+                    }
+                    throw new Error(expectBooleanValueError(value));
+                }
+                else {
+                    return false;
+                }
+            case "number":
+                return value ? true : false;
+            default:
+                return false;
+        }
+    }
+    function strictToBoolean(value) {
+        if (value === "") {
+            throw new Error(expectBooleanValueError(value));
+        }
+        return toBoolean(value);
+    }
+    function toJsDate(value) {
+        return numberToJsDate(toNumber(value));
+    }
+    // -----------------------------------------------------------------------------
+    // VISIT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function visitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        cellCb(arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                dataCb(arg);
+            }
+        }
+    }
+    function visitAny(args, cb) {
+        visitArgs(args, cb, cb);
+    }
+    function visitNumbers(args, cb) {
+        visitArgs(args, (cellValue) => {
+            if (typeof cellValue === "number") {
+                cb(cellValue);
+            }
+        }, (argValue) => {
+            cb(strictToNumber(argValue));
+        });
+    }
+    // -----------------------------------------------------------------------------
+    // REDUCE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function reduceArgs(args, cellCb, dataCb, initialValue) {
+        let val = initialValue;
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        val = cellCb(val, arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                val = dataCb(val, arg);
+            }
+        }
+        return val;
+    }
+    function reduceAny(args, cb, initialValue) {
+        return reduceArgs(args, cb, cb, initialValue);
+    }
+    function reduceNumbers(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (typeof ArgValue === "number") {
+                return cb(acc, ArgValue);
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, strictToNumber(argValue));
+        }, initialValue);
+    }
+    function reduceNumbersTextAs0(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (ArgValue !== undefined && ArgValue !== null) {
+                if (typeof ArgValue === "number") {
+                    return cb(acc, ArgValue);
+                }
+                else if (typeof ArgValue === "boolean") {
+                    return cb(acc, toNumber(ArgValue));
+                }
+                else {
+                    return cb(acc, 0);
+                }
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, toNumber(argValue));
+        }, initialValue);
+    }
+    // -----------------------------------------------------------------------------
+    // CONDITIONAL EXPLORE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    /**
+     * This function allows to visit arguments and stop the visit if necessary.
+     * It is mainly used to bypass argument evaluation for functions like OR or AND.
+     */
+    function conditionalVisitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        if (!cellCb(arg[x][y]))
+                            return;
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                if (!dataCb(arg))
+                    return;
+            }
+        }
+    }
+    function conditionalVisitBoolean(args, cb) {
+        return conditionalVisitArgs(args, (ArgValue) => {
+            if (typeof ArgValue === "boolean") {
+                return cb(ArgValue);
+            }
+            if (typeof ArgValue === "number") {
+                return cb(ArgValue ? true : false);
+            }
+            return true;
+        }, (argValue) => {
+            if (argValue !== undefined && argValue !== null) {
+                return cb(strictToBoolean(argValue));
+            }
+            return true;
+        });
+    }
+    function getPredicate(descr, isQuery) {
+        let operator;
+        let operand;
+        let subString = descr.substring(0, 2);
+        if (subString === "<=" || subString === ">=" || subString === "<>") {
+            operator = subString;
+            operand = descr.substring(2);
+        }
+        else {
+            subString = descr.substring(0, 1);
+            if (subString === "<" || subString === ">" || subString === "=") {
+                operator = subString;
+                operand = descr.substring(1);
+            }
+            else {
+                operator = "=";
+                operand = descr;
+            }
+        }
+        if (isNumber(operand)) {
+            operand = toNumber(operand);
+        }
+        else if (operand === "TRUE" || operand === "FALSE") {
+            operand = toBoolean(operand);
+        }
+        const result = { operator, operand };
+        if (typeof operand === "string") {
+            if (isQuery) {
+                operand += "*";
+            }
+            result.regexp = operandToRegExp(operand);
+        }
+        return result;
+    }
+    function operandToRegExp(operand) {
+        let exp = "";
+        let predecessor = "";
+        for (let char of operand) {
+            if (char === "?" && predecessor !== "~") {
+                exp += ".";
+            }
+            else if (char === "*" && predecessor !== "~") {
+                exp += ".*";
+            }
+            else {
+                if (char === "*" || char === "?") {
+                    //remove "~"
+                    exp = exp.slice(0, -1);
+                }
+                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
+                    exp += "\\";
+                }
+                exp += char;
+            }
+            predecessor = char;
+        }
+        return new RegExp("^" + exp + "$", "i");
+    }
+    function evaluatePredicate(value, criterion) {
+        const { operator, operand } = criterion;
+        if (value === undefined || operand === undefined) {
+            return false;
+        }
+        if (typeof operand === "number" && operator === "=") {
+            return toString(value) === toString(operand);
+        }
+        if (operator === "<>" || operator === "=") {
+            let result;
+            if (typeof value === typeof operand) {
+                if (typeof value === "string" && criterion.regexp) {
+                    result = criterion.regexp.test(value);
+                }
+                else {
+                    result = value === operand;
+                }
+            }
+            else {
+                result = false;
+            }
+            return operator === "=" ? result : !result;
+        }
+        if (typeof value === typeof operand) {
+            switch (operator) {
+                case "<":
+                    return value < operand;
+                case ">":
+                    return value > operand;
+                case "<=":
+                    return value <= operand;
+                case ">=":
+                    return value >= operand;
+            }
+        }
+        return false;
+    }
+    /**
+     * Functions used especially for predicate evaluation on ranges.
+     *
+     * Take ranges with same dimensions and take predicates, one for each range.
+     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
+     * range correspond to the associated predicate, then the function uses a callback
+     * function with the parameters "i" and "j".
+     *
+     * Syntax:
+     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
+     *
+     * - range1 (range): The range to check against predicate1.
+     * - predicate1 (string): The pattern or test to apply to range1.
+     * - range2: (range, repeatable) ranges to check.
+     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
+     *
+     * - cb(i: number, j: number) => void: the callback function.
+     *
+     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
+     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
+     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
+     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
+     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
+     */
+    function visitMatchingRanges(args, cb, isQuery = false) {
+        const countArg = args.length;
+        if (countArg % 2 === 1) {
+            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
+        }
+        const dimRow = args[0].length;
+        const dimCol = args[0][0].length;
+        let predicates = [];
+        for (let i = 0; i < countArg - 1; i += 2) {
+            const criteriaRange = args[i];
+            if (!Array.isArray(criteriaRange) ||
+                criteriaRange.length !== dimRow ||
+                criteriaRange[0].length !== dimCol) {
+                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
+            }
+            const description = toString(args[i + 1]);
+            predicates.push(getPredicate(description, isQuery));
+        }
+        for (let i = 0; i < dimRow; i++) {
+            for (let j = 0; j < dimCol; j++) {
+                let validatedPredicates = true;
+                for (let k = 0; k < countArg - 1; k += 2) {
+                    const criteriaValue = args[k][i][j];
+                    const criterion = predicates[k / 2];
+                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
+                    if (!validatedPredicates) {
+                        break;
+                    }
+                }
+                if (validatedPredicates) {
+                    cb(i, j);
+                }
+            }
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // COMMON FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function getNormalizedValueFromColumnRange(range, index) {
+        return normalizeValue(range[0][index]);
+    }
+    function getNormalizedValueFromRowRange(range, index) {
+        return normalizeValue(range[index][0]);
+    }
+    /**
+     * Perform a dichotomic search on an array and return the index of the nearest match.
+     *
+     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
+     * element of the array match the target, the method will return the first match if the array is sorted
+     * in descending order, and the last match if the array is in ascending order.
+     *
+     *
+     * @param data the array in which to search.
+     * @param target the value to search.
+     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
+     * @param sortOrder whether the array is sorted in ascending or descending order.
+     * @param rangeLength the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     */
+    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
+        if (target === null || target === undefined) {
+            return -1;
+        }
+        const targetType = typeof target;
+        let matchVal = undefined;
+        let matchValIndex = undefined;
+        let indexLeft = 0;
+        let indexRight = rangeLength - 1;
+        let indexMedian;
+        let currentIndex;
+        let currentVal;
+        let currentType;
+        while (indexRight - indexLeft >= 0) {
+            indexMedian = Math.floor((indexLeft + indexRight) / 2);
+            currentIndex = indexMedian;
+            currentVal = getValueInData(data, currentIndex);
+            currentType = typeof currentVal;
+            // 1 - linear search to find value with the same type
+            while (indexLeft < currentIndex && targetType !== currentType) {
+                currentIndex--;
+                currentVal = getValueInData(data, currentIndex);
+                currentType = typeof currentVal;
+            }
+            if (currentType !== targetType || currentVal === undefined) {
+                indexLeft = indexMedian + 1;
+                continue;
+            }
+            // 2 - check if value match
+            if (mode === "strict" && currentVal === target) {
+                matchVal = currentVal;
+                matchValIndex = currentIndex;
+            }
+            else if (mode === "nextSmaller" && currentVal <= target) {
+                if (matchVal === undefined ||
+                    matchVal < currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            else if (mode === "nextGreater" && currentVal >= target) {
+                if (matchVal === undefined ||
+                    matchVal > currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            // 3 - give new indexes for the Binary search
+            if ((sortOrder === "asc" && currentVal > target) ||
+                (sortOrder === "desc" && currentVal <= target)) {
+                indexRight = currentIndex - 1;
+            }
+            else {
+                indexLeft = indexMedian + 1;
+            }
+        }
+        // note that valMinIndex could be 0
+        return matchValIndex !== undefined ? matchValIndex : -1;
+    }
+    /**
+     * Perform a linear search and return the index of the match.
+     * -1 is returned if no value is found.
+     *
+     * Example:
+     * - [3, 6, 10], 3 => 0
+     * - [3, 6, 10], 6 => 1
+     * - [3, 6, 10], 9 => -1
+     * - [3, 6, 10], 2 => -1
+     *
+     * @param data the array to search in.
+     * @param target the value to search in the array.
+     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
+     * element from the target and "nextSmaller" the next smaller
+     * @param numberOfValues the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     * @param reverseSearch if true, search in the array starting from the end.
+
+     */
+    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
+        if (target === null || target === undefined)
+            return -1;
+        const getValue = reverseSearch
+            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
+            : getValueInData;
+        let closestMatch = undefined;
+        let closestMatchIndex = -1;
+        for (let i = 0; i < numberOfValues; i++) {
+            const value = getValue(data, i);
+            if (value === target) {
+                return reverseSearch ? numberOfValues - i - 1 : i;
+            }
+            if (mode === "nextSmaller") {
+                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
+                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
+            }
+            else if (mode === "nextGreater") {
+                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
+                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
+            }
+        }
+        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
+    }
+    function compareCellValues(left, right) {
+        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
+        if (typeOrder === 0) {
+            if (typeof left === "string" && typeof right === "string") {
+                typeOrder = left.localeCompare(right);
+            }
+            else if (typeof left === "number" && typeof right === "number") {
+                typeOrder = left - right;
+            }
+            else if (typeof left === "boolean" && typeof right === "boolean") {
+                typeOrder = Number(left) - Number(right);
+            }
+        }
+        return typeOrder;
     }
 
     var CellValueType;
@@ -3577,6 +4194,1735 @@
         LAYERS[LAYERS["Headers"] = 7] = "Headers";
     })(LAYERS || (LAYERS = {}));
 
+    function evaluateLiteral(content, format) {
+        return createEvaluatedCell(parseLiteral(content || ""), format);
+    }
+    function parseLiteral(content) {
+        if (content.startsWith("=")) {
+            throw new Error(`Cannot parse "${content}" because it's not a literal value. It's a formula`);
+        }
+        if (isNumber(content) || isDateTime(content)) {
+            return toNumber(content);
+        }
+        else if (isBoolean(content)) {
+            return content.toUpperCase() === "TRUE" ? true : false;
+        }
+        return content;
+    }
+    function createEvaluatedCell(value, format) {
+        const link = detectLink(value);
+        if (link) {
+            return {
+                ..._createEvaluatedCell(parseLiteral(link.label), format || detectFormat(link.label)),
+                link,
+            };
+        }
+        return _createEvaluatedCell(value, format);
+    }
+    function _createEvaluatedCell(value, format) {
+        try {
+            for (const builder of builders) {
+                const evaluateCell = builder(value, format);
+                if (evaluateCell) {
+                    return evaluateCell;
+                }
+            }
+            return textCell((value || "").toString(), format);
+        }
+        catch (error) {
+            return errorCell((value || "").toString(), new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
+        }
+    }
+    function textCell(value, format) {
+        return {
+            type: CellValueType.text,
+            value,
+            format,
+            isAutoSummable: true,
+            defaultAlign: "left",
+            formattedValue: formatValue(value, format),
+        };
+    }
+    function numberCell(value, format) {
+        return {
+            type: CellValueType.number,
+            value: value || 0,
+            format,
+            isAutoSummable: true,
+            defaultAlign: "right",
+            formattedValue: formatValue(value, format),
+        };
+    }
+    const EMPTY_EVALUATED_CELL = {
+        type: CellValueType.empty,
+        value: "",
+        format: undefined,
+        isAutoSummable: true,
+        defaultAlign: "left",
+        formattedValue: "",
+    };
+    function emptyCell(format) {
+        if (format === undefined) {
+            // share the same object to save memory
+            return EMPTY_EVALUATED_CELL;
+        }
+        return {
+            type: CellValueType.empty,
+            value: "",
+            format,
+            isAutoSummable: true,
+            defaultAlign: "left",
+            formattedValue: "",
+        };
+    }
+    function dateTimeCell(value, format) {
+        const formattedValue = formatValue(value, format);
+        return {
+            type: CellValueType.number,
+            value,
+            format,
+            isAutoSummable: false,
+            defaultAlign: "right",
+            formattedValue,
+        };
+    }
+    function booleanCell(value, format) {
+        const formattedValue = value ? "TRUE" : "FALSE";
+        return {
+            type: CellValueType.boolean,
+            value,
+            format,
+            isAutoSummable: false,
+            defaultAlign: "center",
+            formattedValue,
+        };
+    }
+    function errorCell(content, error) {
+        return {
+            type: CellValueType.error,
+            value: error.errorType,
+            error,
+            isAutoSummable: false,
+            defaultAlign: "center",
+            formattedValue: error.errorType,
+        };
+    }
+    const builders = [
+        function createEmpty(value, format) {
+            if (value === "") {
+                return emptyCell(format);
+            }
+            return undefined;
+        },
+        function createDateTime(value, format) {
+            if (!!format && typeof value === "number" && isDateTimeFormat(format)) {
+                return dateTimeCell(value, format);
+            }
+            return undefined;
+        },
+        function createNumber(value, format) {
+            if (typeof value === "number") {
+                return numberCell(value, format);
+            }
+            else if (value === null) {
+                return numberCell(0, format);
+            }
+            return undefined;
+        },
+        function createBoolean(value, format) {
+            if (typeof value === "boolean") {
+                return booleanCell(value, format);
+            }
+            return undefined;
+        },
+    ];
+
+    /**
+     * An AutofillModifierImplementation is used to describe how to handle a
+     * AutofillModifier.
+     */
+    const autofillModifiersRegistry = new Registry();
+    autofillModifiersRegistry
+        .add("ALPHANUMERIC_INCREMENT_MODIFIER", {
+        apply: (rule, data) => {
+            rule.current += rule.increment;
+            const content = `${rule.prefix}${rule.current
+            .toString()
+            .padStart(rule.numberPostfixLength || 0, "0")}`;
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: { props: { content } },
+            };
+        },
+    })
+        .add("INCREMENT_MODIFIER", {
+        apply: (rule, data) => {
+            var _a;
+            rule.current += rule.increment;
+            const content = rule.current.toString();
+            const tooltipValue = formatValue(rule.current, (_a = data.cell) === null || _a === void 0 ? void 0 : _a.format);
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: content ? { props: { content: tooltipValue } } : undefined,
+            };
+        },
+    })
+        .add("COPY_MODIFIER", {
+        apply: (rule, data, getters) => {
+            var _a, _b, _c;
+            const content = ((_a = data.cell) === null || _a === void 0 ? void 0 : _a.content) || "";
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: content
+                    ? {
+                        props: {
+                            content: evaluateLiteral((_b = data.cell) === null || _b === void 0 ? void 0 : _b.content, (_c = data.cell) === null || _c === void 0 ? void 0 : _c.format).formattedValue,
+                        },
+                    }
+                    : undefined,
+            };
+        },
+    })
+        .add("FORMULA_MODIFIER", {
+        apply: (rule, data, getters, direction) => {
+            rule.current += rule.increment;
+            let x = 0;
+            let y = 0;
+            switch (direction) {
+                case "up" /* DIRECTION.UP */:
+                    x = 0;
+                    y = -rule.current;
+                    break;
+                case "down" /* DIRECTION.DOWN */:
+                    x = 0;
+                    y = rule.current;
+                    break;
+                case "left" /* DIRECTION.LEFT */:
+                    x = -rule.current;
+                    y = 0;
+                    break;
+                case "right" /* DIRECTION.RIGHT */:
+                    x = rule.current;
+                    y = 0;
+                    break;
+            }
+            const cell = data.cell;
+            if (!cell || !cell.isFormula) {
+                return { cellData: {} };
+            }
+            const sheetId = data.sheetId;
+            const ranges = getters.createAdaptedRanges(cell.dependencies, x, y, sheetId);
+            const content = getters.buildFormulaContent(sheetId, cell, ranges);
+            return {
+                cellData: {
+                    border: data.border,
+                    style: cell.style,
+                    format: cell.format,
+                    content,
+                },
+                tooltip: content ? { props: { content } } : undefined,
+            };
+        },
+    });
+
+    const autofillRulesRegistry = new Registry();
+    const numberPostfixRegExp = /(\d+)$/;
+    const stringPrefixRegExp = /^(.*\D+)/;
+    const alphaNumericValueRegExp = /^(.*\D+)(\d+)$/;
+    /**
+     * Get the consecutive evaluated cells that can pass the filter function (e.g. certain type filter).
+     * Return the one which contains the given cell
+     */
+    function getGroup(cell, cells, filter) {
+        let group = [];
+        let found = false;
+        for (let x of cells) {
+            if (x === cell) {
+                found = true;
+            }
+            const cellValue = evaluateLiteral(x === null || x === void 0 ? void 0 : x.content);
+            if (filter(cellValue)) {
+                group.push(cellValue);
+            }
+            else {
+                if (found) {
+                    return group;
+                }
+                group = [];
+            }
+        }
+        return group;
+    }
+    /**
+     * Get the average steps between numbers
+     */
+    function getAverageIncrement(group) {
+        const averages = [];
+        let last = group[0];
+        for (let i = 1; i < group.length; i++) {
+            const current = group[i];
+            averages.push(current - last);
+            last = current;
+        }
+        return averages.reduce((a, b) => a + b, 0) / averages.length;
+    }
+    /**
+     * Get the step for a group
+     */
+    function calculateIncrementBasedOnGroup(group) {
+        let increment = 1;
+        if (group.length >= 2) {
+            increment = getAverageIncrement(group) * group.length;
+        }
+        return increment;
+    }
+    autofillRulesRegistry
+        .add("simple_value_copy", {
+        condition: (cell, cells) => {
+            var _a;
+            return cells.length === 1 && !cell.isFormula && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
+        },
+        generateRule: () => {
+            return { type: "COPY_MODIFIER" };
+        },
+        sequence: 10,
+    })
+        .add("increment_alphanumeric_value", {
+        condition: (cell) => !cell.isFormula &&
+            evaluateLiteral(cell.content).type === CellValueType.text &&
+            alphaNumericValueRegExp.test(cell.content),
+        generateRule: (cell, cells) => {
+            const numberPostfix = parseInt(cell.content.match(numberPostfixRegExp)[0]);
+            const prefix = cell.content.match(stringPrefixRegExp)[0];
+            const numberPostfixLength = cell.content.length - prefix.length;
+            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.text &&
+                alphaNumericValueRegExp.test(evaluatedCell.value)) // get consecutive alphanumeric cells, no matter what the prefix is
+                .filter((cell) => prefix === cell.value.toString().match(stringPrefixRegExp)[0])
+                .map((cell) => parseInt(cell.value.toString().match(numberPostfixRegExp)[0]));
+            const increment = calculateIncrementBasedOnGroup(group);
+            return {
+                type: "ALPHANUMERIC_INCREMENT_MODIFIER",
+                prefix,
+                current: numberPostfix,
+                increment,
+                numberPostfixLength,
+            };
+        },
+        sequence: 15,
+    })
+        .add("copy_text", {
+        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
+        generateRule: () => {
+            return { type: "COPY_MODIFIER" };
+        },
+        sequence: 20,
+    })
+        .add("update_formula", {
+        condition: (cell) => cell.isFormula,
+        generateRule: (_, cells) => {
+            return { type: "FORMULA_MODIFIER", increment: cells.length, current: 0 };
+        },
+        sequence: 30,
+    })
+        .add("increment_number", {
+        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
+        generateRule: (cell, cells) => {
+            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.number).map((cell) => Number(cell.value));
+            const increment = calculateIncrementBasedOnGroup(group);
+            const evaluation = evaluateLiteral(cell.content);
+            return {
+                type: "INCREMENT_MODIFIER",
+                increment,
+                current: evaluation.type === CellValueType.number ? evaluation.value : 0,
+            };
+        },
+        sequence: 40,
+    });
+
+    const ERROR_TOOLTIP_MAX_HEIGHT = 80;
+    const ERROR_TOOLTIP_WIDTH = 180;
+    css /* scss */ `
+  .o-error-tooltip {
+    font-size: 13px;
+    background-color: white;
+    border-left: 3px solid red;
+    padding: 10px;
+    width: ${ERROR_TOOLTIP_WIDTH}px;
+    box-sizing: border-box !important;
+  }
+`;
+    class ErrorToolTip extends owl.Component {
+    }
+    ErrorToolTip.maxSize = { maxHeight: ERROR_TOOLTIP_MAX_HEIGHT };
+    ErrorToolTip.template = "o-spreadsheet-ErrorToolTip";
+    ErrorToolTip.components = {};
+    ErrorToolTip.props = {
+        text: String,
+        onClosed: { type: Function, optional: true },
+    };
+    const ErrorToolTipPopoverBuilder = {
+        onHover: (position, getters) => {
+            const cell = getters.getEvaluatedCell(position);
+            if (cell.type === CellValueType.error && cell.error.logLevel > CellErrorLevel.silent) {
+                return {
+                    isOpen: true,
+                    props: { text: cell.error.message },
+                    Component: ErrorToolTip,
+                    cellCorner: "TopRight",
+                };
+            }
+            return { isOpen: false };
+        },
+    };
+
+    css /*SCSS*/ `
+  .o-filter-menu-value {
+    padding: 4px;
+    line-height: 20px;
+    height: 28px;
+    .o-filter-menu-value-checked {
+      width: 20px;
+    }
+  }
+`;
+    class FilterMenuValueItem extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.itemRef = owl.useRef("menuValueItem");
+        }
+        setup() {
+            owl.onWillPatch(() => {
+                if (this.props.scrolledTo) {
+                    this.scrollListToSelectedValue();
+                }
+            });
+        }
+        scrollListToSelectedValue() {
+            var _a, _b;
+            if (!this.itemRef.el) {
+                return;
+            }
+            (_b = (_a = this.itemRef.el).scrollIntoView) === null || _b === void 0 ? void 0 : _b.call(_a, {
+                block: this.props.scrolledTo === "bottom" ? "end" : "start",
+            });
+        }
+    }
+    FilterMenuValueItem.template = "o-spreadsheet-FilterMenuValueItem";
+    FilterMenuValueItem.props = {
+        value: String,
+        isChecked: Boolean,
+        isSelected: Boolean,
+        onMouseMove: Function,
+        onClick: Function,
+        scrolledTo: { type: String, optional: true },
+    };
+
+    const FILTER_MENU_HEIGHT = 295;
+    const CSS$2 = css /* scss */ `
+  .o-filter-menu {
+    box-sizing: border-box;
+    padding: 8px 16px;
+    height: ${FILTER_MENU_HEIGHT}px;
+    line-height: 1;
+
+    .o-filter-menu-item {
+      display: flex;
+      box-sizing: border-box;
+      height: ${MENU_ITEM_HEIGHT}px;
+      padding: 4px 4px 4px 0px;
+      cursor: pointer;
+      user-select: none;
+
+      &.selected {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    input {
+      box-sizing: border-box;
+      margin-bottom: 5px;
+      border: 1px solid #949494;
+      height: 24px;
+      padding-right: 28px;
+    }
+
+    .o-search-icon {
+      right: 5px;
+      top: 4px;
+
+      svg {
+        height: 16px;
+        width: 16px;
+        vertical-align: middle;
+      }
+    }
+
+    .o-filter-menu-actions {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 4px;
+
+      .o-filter-menu-action-text {
+        cursor: pointer;
+        margin-right: 10px;
+        color: blue;
+        text-decoration: underline;
+      }
+    }
+
+    .o-filter-menu-list {
+      flex: auto;
+      overflow-y: auto;
+      border: 1px solid #949494;
+
+      .o-filter-menu-no-values {
+        color: #949494;
+        font-style: italic;
+      }
+    }
+
+    .o-filter-menu-buttons {
+      margin-top: 9px;
+
+      .o-filter-menu-button {
+        border: 1px solid lightgrey;
+        padding: 6px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-weight: 500;
+        line-height: 16px;
+      }
+
+      .o-filter-menu-button-cancel {
+        background: white;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+      }
+
+      .o-filter-menu-button-primary {
+        background-color: #188038;
+        &:hover {
+          background-color: #1d9641;
+        }
+        color: white;
+        font-weight: bold;
+        margin-left: 10px;
+      }
+    }
+  }
+`;
+    class FilterMenu extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.state = owl.useState({
+                values: [],
+                textFilter: "",
+                selectedValue: undefined,
+            });
+            this.searchBar = owl.useRef("filterMenuSearchBar");
+        }
+        setup() {
+            owl.onWillUpdateProps((nextProps) => {
+                if (!deepEquals(nextProps.filterPosition, this.props.filterPosition)) {
+                    this.state.values = this.getFilterValues(nextProps.filterPosition);
+                }
+            });
+            this.state.values = this.getFilterValues(this.props.filterPosition);
+        }
+        getFilterValues(position) {
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const filter = this.env.model.getters.getFilter({ sheetId, ...position });
+            if (!filter) {
+                return [];
+            }
+            const cellValues = (filter.filteredZone ? positions(filter.filteredZone) : [])
+                .filter(({ row }) => !this.env.model.getters.isRowHidden(sheetId, row))
+                .map(({ col, row }) => this.env.model.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue);
+            const filterValues = this.env.model.getters.getFilterValues({ sheetId, ...position });
+            const strValues = [...cellValues, ...filterValues];
+            const normalizedFilteredValues = filterValues.map(toLowerCase);
+            // Set with lowercase values to avoid duplicates
+            const normalizedValues = [...new Set(strValues.map(toLowerCase))];
+            const sortedValues = normalizedValues.sort((val1, val2) => val1.localeCompare(val2, undefined, { numeric: true, sensitivity: "base" }));
+            return sortedValues.map((normalizedValue) => {
+                const checked = normalizedFilteredValues.findIndex((filteredValue) => filteredValue === normalizedValue) ===
+                    -1;
+                return {
+                    checked,
+                    string: strValues.find((val) => toLowerCase(val) === normalizedValue) || "",
+                };
+            });
+        }
+        checkValue(value) {
+            var _a;
+            this.state.selectedValue = value.string;
+            value.checked = !value.checked;
+            (_a = this.searchBar.el) === null || _a === void 0 ? void 0 : _a.focus();
+        }
+        onMouseMove(value) {
+            this.state.selectedValue = value.string;
+        }
+        selectAll() {
+            this.state.values.forEach((value) => (value.checked = true));
+        }
+        clearAll() {
+            this.state.values.forEach((value) => (value.checked = false));
+        }
+        get filterTable() {
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const position = this.props.filterPosition;
+            return this.env.model.getters.getFilterTable({ sheetId, ...position });
+        }
+        get displayedValues() {
+            if (!this.state.textFilter) {
+                return this.state.values;
+            }
+            return fuzzyLookup(this.state.textFilter, this.state.values, (val) => val.string);
+        }
+        confirm() {
+            var _a, _b;
+            const position = this.props.filterPosition;
+            this.env.model.dispatch("UPDATE_FILTER", {
+                ...position,
+                sheetId: this.env.model.getters.getActiveSheetId(),
+                values: this.state.values.filter((val) => !val.checked).map((val) => val.string),
+            });
+            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
+        }
+        cancel() {
+            var _a, _b;
+            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
+        }
+        onKeyDown(ev) {
+            const displayedValues = this.displayedValues;
+            if (displayedValues.length === 0)
+                return;
+            let selectedIndex = undefined;
+            if (this.state.selectedValue !== undefined) {
+                const index = displayedValues.findIndex((val) => val.string === this.state.selectedValue);
+                selectedIndex = index === -1 ? undefined : index;
+            }
+            switch (ev.key) {
+                case "ArrowDown":
+                    if (selectedIndex === undefined) {
+                        selectedIndex = 0;
+                    }
+                    else {
+                        selectedIndex = Math.min(selectedIndex + 1, displayedValues.length - 1);
+                    }
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    break;
+                case "ArrowUp":
+                    if (selectedIndex === undefined) {
+                        selectedIndex = displayedValues.length - 1;
+                    }
+                    else {
+                        selectedIndex = Math.max(selectedIndex - 1, 0);
+                    }
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    break;
+                case "Enter":
+                    if (selectedIndex !== undefined) {
+                        this.checkValue(displayedValues[selectedIndex]);
+                    }
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    break;
+            }
+            this.state.selectedValue =
+                selectedIndex !== undefined ? displayedValues[selectedIndex].string : undefined;
+            if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
+                this.scrollListToSelectedValue(ev.key);
+            }
+        }
+        clearScrolledToValue() {
+            this.state.values.forEach((val) => (val.scrolledTo = undefined));
+        }
+        scrollListToSelectedValue(arrow) {
+            this.clearScrolledToValue();
+            const selectedValue = this.state.values.find((val) => val.string === this.state.selectedValue);
+            if (selectedValue) {
+                selectedValue.scrolledTo = arrow === "ArrowUp" ? "top" : "bottom";
+            }
+        }
+        sortFilterZone(sortDirection) {
+            var _a, _b;
+            const filterPosition = this.props.filterPosition;
+            const filterTable = this.filterTable;
+            if (!filterPosition || !filterTable || !filterTable.contentZone) {
+                return;
+            }
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            this.env.model.dispatch("SORT_CELLS", {
+                sheetId,
+                col: filterPosition.col,
+                row: filterTable.contentZone.top,
+                zone: filterTable.contentZone,
+                sortDirection,
+                sortOptions: { emptyCellAsZero: true, sortHeaders: true },
+            });
+            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
+        }
+    }
+    FilterMenu.size = { width: MENU_WIDTH, height: FILTER_MENU_HEIGHT };
+    FilterMenu.template = "o-spreadsheet-FilterMenu";
+    FilterMenu.style = CSS$2;
+    FilterMenu.components = { FilterMenuValueItem };
+    FilterMenu.props = {
+        filterPosition: Object,
+        onClosed: { type: Function, optional: true },
+    };
+    const FilterMenuPopoverBuilder = {
+        onOpen: (position, getters) => {
+            return {
+                isOpen: true,
+                props: { filterPosition: position },
+                Component: FilterMenu,
+                cellCorner: "BottomLeft",
+            };
+        },
+    };
+
+    /**
+     * Return true if the event was triggered from
+     * a child element.
+     */
+    function isChildEvent(parent, ev) {
+        return !!ev.target && parent.contains(ev.target);
+    }
+    function gridOverlayPosition() {
+        const spreadsheetElement = document.querySelector(".o-grid-overlay");
+        if (spreadsheetElement) {
+            const { top, left } = spreadsheetElement === null || spreadsheetElement === void 0 ? void 0 : spreadsheetElement.getBoundingClientRect();
+            return { top, left };
+        }
+        throw new Error("Can't find spreadsheet position");
+    }
+    function getBoundingRectAsPOJO(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height,
+        };
+    }
+    /**
+     * Iterate over all the children of `el` in the dom tree starting at `el`, depth first.
+     */
+    function* iterateChildren(el) {
+        yield el;
+        if (el.hasChildNodes()) {
+            for (let child of el.childNodes) {
+                yield* iterateChildren(child);
+            }
+        }
+    }
+    function getElementScrollTop(el) {
+        return (el === null || el === void 0 ? void 0 : el.scrollTop) || 0;
+    }
+    function setElementScrollTop(el, scroll) {
+        if (!el)
+            return;
+        el.scrollTop = scroll;
+    }
+    function getOpenedMenus() {
+        return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
+    }
+
+    /**
+     * Return the o-spreadsheet element position relative
+     * to the browser viewport.
+     */
+    function useSpreadsheetRect() {
+        const position = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        let spreadsheetElement = document.querySelector(".o-spreadsheet");
+        updatePosition();
+        function updatePosition() {
+            if (!spreadsheetElement) {
+                spreadsheetElement = document.querySelector(".o-spreadsheet");
+            }
+            if (spreadsheetElement) {
+                const { top, left, width, height } = spreadsheetElement.getBoundingClientRect();
+                position.x = left;
+                position.y = top;
+                position.width = width;
+                position.height = height;
+            }
+        }
+        owl.onMounted(updatePosition);
+        owl.onPatched(updatePosition);
+        return position;
+    }
+    /**
+     * Return the component (or ref's component) BoundingRect, relative
+     * to the upper left corner of the screen (<body> element).
+     *
+     * Note: when used with a <Portal/> component, it will
+     * return the portal position, not the teleported position.
+     */
+    function useAbsoluteBoundingRect(ref) {
+        const rect = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        function updateElRect() {
+            const el = ref.el;
+            if (el === null) {
+                return;
+            }
+            const { top, left, width, height } = el.getBoundingClientRect();
+            rect.x = left;
+            rect.y = top;
+            rect.width = width;
+            rect.height = height;
+        }
+        owl.onMounted(updateElRect);
+        owl.onPatched(updateElRect);
+        return rect;
+    }
+    /**
+     * Get the rectangle inside which a popover should stay when being displayed.
+     * It's the value defined in `env.getPopoverContainerRect`, or the Rect of the "o-spreadsheet"
+     * element by default.
+     *
+     * Coordinates are expressed expressed as absolute DOM position.
+     */
+    function usePopoverContainer() {
+        const container = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        const component = owl.useComponent();
+        const spreadsheetRect = useSpreadsheetRect();
+        function updateRect() {
+            const env = component.env;
+            const newRect = "getPopoverContainerRect" in env ? env.getPopoverContainerRect() : spreadsheetRect;
+            container.x = newRect.x;
+            container.y = newRect.y;
+            container.width = newRect.width;
+            container.height = newRect.height;
+        }
+        updateRect();
+        owl.onMounted(updateRect);
+        owl.onPatched(updateRect);
+        return container;
+    }
+
+    /**
+     * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
+     */
+    function rectIntersection(rect1, rect2) {
+        return zoneToRect(intersection(rectToZone(rect1), rectToZone(rect2)));
+    }
+    function rectToZone(rect) {
+        return {
+            left: rect.x,
+            top: rect.y,
+            right: rect.x + rect.width,
+            bottom: rect.y + rect.height,
+        };
+    }
+    function zoneToRect(zone) {
+        if (!zone)
+            return undefined;
+        return {
+            x: zone.left,
+            y: zone.top,
+            width: zone.right - zone.left,
+            height: zone.bottom - zone.top,
+        };
+    }
+
+    css /* scss */ `
+  .o-popover {
+    position: absolute;
+    z-index: ${ComponentsImportance.Popover};
+    overflow: auto;
+    box-shadow: 1px 2px 5px 2px rgb(51 51 51 / 15%);
+    width: fit-content;
+    height: fit-content;
+  }
+`;
+    class Popover extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.popoverRef = owl.useRef("popover");
+            this.currentPosition = undefined;
+            this.currentDisplayValue = undefined;
+            this.spreadsheetRect = useSpreadsheetRect();
+        }
+        setup() {
+            this.containerRect = usePopoverContainer();
+            // useEffect occurs after the DOM is created and the element width/height are computed, but before
+            // the element in rendered, so we can still set its position
+            owl.useEffect(() => {
+                var _a, _b, _c, _d;
+                if (!this.containerRect)
+                    throw new Error("Popover container is not defined");
+                const el = this.popoverRef.el;
+                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
+                const newDisplay = anchor ? "block" : "none";
+                if (this.currentDisplayValue !== "none" && newDisplay === "none") {
+                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
+                }
+                el.style.display = newDisplay;
+                this.currentDisplayValue = newDisplay;
+                if (!anchor)
+                    return;
+                const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
+                const elDims = {
+                    width: el.getBoundingClientRect().width,
+                    height: el.getBoundingClientRect().height,
+                };
+                const spreadsheetRect = this.spreadsheetRect;
+                const popoverPositionHelper = this.props.positioning === "BottomLeft"
+                    ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
+                    : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
+                const style = popoverPositionHelper.getCss(elDims, this.props.verticalOffset);
+                for (const property of Object.keys(style)) {
+                    el.style[property] = style[property];
+                }
+                const newPosition = popoverPositionHelper.getCurrentPosition(elDims);
+                if (this.currentPosition && newPosition !== this.currentPosition) {
+                    (_d = (_c = this.props).onPopoverMoved) === null || _d === void 0 ? void 0 : _d.call(_c);
+                }
+                this.currentPosition = newPosition;
+            });
+        }
+    }
+    Popover.template = "o-spreadsheet-Popover";
+    Popover.defaultProps = {
+        positioning: "BottomLeft",
+        verticalOffset: 0,
+        onMouseWheel: () => { },
+        onPopoverMoved: () => { },
+        onPopoverHidden: () => { },
+    };
+    Popover.props = {
+        anchorRect: Object,
+        containerRect: { type: Object, optional: true },
+        positioning: { type: String, optional: true },
+        maxWidth: { type: Number, optional: true },
+        maxHeight: { type: Number, optional: true },
+        verticalOffset: { type: Number, optional: true },
+        onMouseWheel: { type: Function, optional: true },
+        onPopoverHidden: { type: Function, optional: true },
+        onPopoverMoved: { type: Function, optional: true },
+        slots: Object,
+    };
+    class PopoverPositionContext {
+        constructor(anchorRect, containerRect, propsMaxSize, spreadsheetOffset) {
+            this.anchorRect = anchorRect;
+            this.containerRect = containerRect;
+            this.propsMaxSize = propsMaxSize;
+            this.spreadsheetOffset = spreadsheetOffset;
+        }
+        /** Check if there is enough space for the popover to be rendered at the bottom of the anchorRect */
+        shouldRenderAtBottom(elementHeight) {
+            return (elementHeight <= this.availableHeightDown ||
+                this.availableHeightDown >= this.availableHeightUp);
+        }
+        /** Check if there is enough space for the popover to be rendered at the right of the anchorRect */
+        shouldRenderAtRight(elementWidth) {
+            return (elementWidth <= this.availableWidthRight ||
+                this.availableWidthRight >= this.availableWidthLeft);
+        }
+        getMaxHeight(elementHeight) {
+            const shouldRenderAtBottom = this.shouldRenderAtBottom(elementHeight);
+            const availableHeight = shouldRenderAtBottom
+                ? this.availableHeightDown
+                : this.availableHeightUp;
+            return this.propsMaxSize.height
+                ? Math.min(availableHeight, this.propsMaxSize.height)
+                : availableHeight;
+        }
+        getMaxWidth(elementWidth) {
+            const shouldRenderAtRight = this.shouldRenderAtRight(elementWidth);
+            const availableWidth = shouldRenderAtRight ? this.availableWidthRight : this.availableWidthLeft;
+            return this.propsMaxSize.width
+                ? Math.min(availableWidth, this.propsMaxSize.width)
+                : availableWidth;
+        }
+        getCss(elDims, verticalOffset) {
+            const maxHeight = this.getMaxHeight(elDims.height);
+            const maxWidth = this.getMaxWidth(elDims.width);
+            const actualHeight = Math.min(maxHeight, elDims.height);
+            const actualWidth = Math.min(maxWidth, elDims.width);
+            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
+            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
+            verticalOffset = shouldRenderAtBottom ? verticalOffset : -verticalOffset;
+            const cssProperties = {
+                "max-height": maxHeight + "px",
+                "max-width": maxWidth + "px",
+                top: this.getTopCoordinate(actualHeight, shouldRenderAtBottom) -
+                    this.spreadsheetOffset.y -
+                    verticalOffset +
+                    "px",
+                left: this.getLeftCoordinate(actualWidth, shouldRenderAtRight) - this.spreadsheetOffset.x + "px",
+            };
+            return cssProperties;
+        }
+        getCurrentPosition(elDims) {
+            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
+            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
+            if (shouldRenderAtBottom && shouldRenderAtRight)
+                return "BottomRight";
+            if (shouldRenderAtBottom && !shouldRenderAtRight)
+                return "BottomLeft";
+            if (!shouldRenderAtBottom && shouldRenderAtRight)
+                return "TopRight";
+            return "TopLeft";
+        }
+    }
+    class BottomLeftPopoverContext extends PopoverPositionContext {
+        get availableHeightUp() {
+            return this.anchorRect.y - this.containerRect.y;
+        }
+        get availableHeightDown() {
+            return this.containerRect.height - this.availableHeightUp - this.anchorRect.height;
+        }
+        get availableWidthRight() {
+            return this.containerRect.x + this.containerRect.width - this.anchorRect.x;
+        }
+        get availableWidthLeft() {
+            return this.anchorRect.x + this.anchorRect.width - this.containerRect.x;
+        }
+        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
+            if (shouldRenderAtBottom) {
+                return this.anchorRect.y + this.anchorRect.height;
+            }
+            else {
+                return this.anchorRect.y - elementHeight;
+            }
+        }
+        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
+            if (shouldRenderAtRight) {
+                return this.anchorRect.x;
+            }
+            else {
+                return this.anchorRect.x + this.anchorRect.width - elementWidth;
+            }
+        }
+    }
+    class TopRightPopoverContext extends PopoverPositionContext {
+        get availableHeightUp() {
+            return this.anchorRect.y + this.anchorRect.height - this.containerRect.y;
+        }
+        get availableHeightDown() {
+            return this.containerRect.y + this.containerRect.height - this.anchorRect.y;
+        }
+        get availableWidthRight() {
+            return this.containerRect.width - this.anchorRect.width - this.availableWidthLeft;
+        }
+        get availableWidthLeft() {
+            return this.anchorRect.x - this.containerRect.x;
+        }
+        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
+            if (shouldRenderAtBottom) {
+                return this.anchorRect.y;
+            }
+            else {
+                return this.anchorRect.y + this.anchorRect.height - elementHeight;
+            }
+        }
+        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
+            if (shouldRenderAtRight) {
+                return this.anchorRect.x + this.anchorRect.width;
+            }
+            else {
+                return this.anchorRect.x - elementWidth;
+            }
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    // Context Menu Component
+    //------------------------------------------------------------------------------
+    css /* scss */ `
+  .o-menu {
+    background-color: white;
+    padding: ${MENU_VERTICAL_PADDING}px 0px;
+    width: ${MENU_WIDTH}px;
+    box-sizing: border-box !important;
+
+    .o-menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      height: ${MENU_ITEM_HEIGHT}px;
+      padding: 4px 16px;
+      cursor: pointer;
+      user-select: none;
+
+      .o-menu-item-name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      &.o-menu-root {
+        display: flex;
+        justify-content: space-between;
+      }
+      .o-menu-item-icon {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+      .o-icon {
+        width: 10px;
+      }
+
+      &:not(.disabled) {
+        &:hover,
+        &.o-menu-item-active {
+          background-color: #ebebeb;
+        }
+        .o-menu-item-description {
+          color: grey;
+        }
+      }
+      &.disabled {
+        color: ${MENU_ITEM_DISABLED_COLOR};
+        cursor: not-allowed;
+      }
+    }
+  }
+`;
+    class Menu extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.subMenu = owl.useState({
+                isOpen: false,
+                position: null,
+                scrollOffset: 0,
+                menuItems: [],
+            });
+            this.menuRef = owl.useRef("menu");
+            this.position = useAbsoluteBoundingRect(this.menuRef);
+        }
+        setup() {
+            owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
+            owl.useExternalListener(window, "contextmenu", this.onExternalClick, { capture: true });
+            owl.onWillUpdateProps((nextProps) => {
+                if (nextProps.menuItems !== this.props.menuItems) {
+                    this.closeSubMenu();
+                }
+            });
+        }
+        get visibleMenuItems() {
+            return this.props.menuItems.filter((x) => x.isVisible(this.env));
+        }
+        get subMenuPosition() {
+            const position = Object.assign({}, this.subMenu.position);
+            position.y -= this.subMenu.scrollOffset || 0;
+            return position;
+        }
+        get menuHeight() {
+            const menuItems = this.visibleMenuItems;
+            let menuItemsHeight = this.getMenuItemsHeight(menuItems);
+            // We don't display separator at the end of a menu
+            if (menuItems[menuItems.length - 1].separator) {
+                menuItemsHeight -= MENU_SEPARATOR_HEIGHT;
+            }
+            const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
+            return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
+        }
+        get popoverProps() {
+            const isRoot = this.props.depth === 1;
+            return {
+                anchorRect: {
+                    x: this.props.position.x - MENU_WIDTH * (this.props.depth - 1),
+                    y: this.props.position.y,
+                    width: isRoot ? 0 : MENU_WIDTH,
+                    height: isRoot ? 0 : MENU_ITEM_HEIGHT,
+                },
+                positioning: "TopRight",
+                verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
+                onPopoverHidden: () => this.closeSubMenu(),
+                onPopoverMoved: () => this.closeSubMenu(),
+                maxHeight: this.menuHeight,
+            };
+        }
+        getColor(menu) {
+            return menu.textColor ? `color: ${menu.textColor}` : undefined;
+        }
+        async activateMenu(menu) {
+            var _a, _b, _c;
+            const result = await ((_a = menu.action) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
+            this.close();
+            (_c = (_b = this.props).onMenuClicked) === null || _c === void 0 ? void 0 : _c.call(_b, { detail: result });
+        }
+        close() {
+            this.closeSubMenu();
+            this.props.onClose();
+        }
+        /**
+         * Return the number of pixels between the top of the menu
+         * and the menu item at a given index.
+         */
+        subMenuVerticalPosition(menuIndex) {
+            const menusAbove = this.visibleMenuItems.slice(0, menuIndex);
+            return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
+        }
+        onExternalClick(ev) {
+            // Don't close a root menu when clicked to open the submenus.
+            const el = this.menuRef.el;
+            if (el && getOpenedMenus().some((el) => isChildEvent(el, ev))) {
+                return;
+            }
+            ev.closedMenuId = this.props.menuId;
+            this.close();
+        }
+        getMenuItemsHeight(menuItems) {
+            const numberOfSeparators = menuItems.filter((m) => m.separator).length;
+            return MENU_ITEM_HEIGHT * menuItems.length + MENU_SEPARATOR_HEIGHT * numberOfSeparators;
+        }
+        getName(menu) {
+            return menu.name(this.env);
+        }
+        isRoot(menu) {
+            return !menu.action;
+        }
+        isEnabled(menu) {
+            if (menu.isEnabled(this.env)) {
+                return this.env.model.getters.isReadonly() ? menu.isReadonlyAllowed : true;
+            }
+            return false;
+        }
+        onScroll(ev) {
+            this.subMenu.scrollOffset = ev.target.scrollTop;
+        }
+        /**
+         * If the given menu is not disabled, open it's submenu at the
+         * correct position according to available surrounding space.
+         */
+        openSubMenu(menu, menuIndex) {
+            const y = this.subMenuVerticalPosition(menuIndex);
+            this.subMenu.position = {
+                x: this.position.x + this.props.depth * MENU_WIDTH,
+                y: y - (this.subMenu.scrollOffset || 0),
+            };
+            this.subMenu.menuItems = menu.children(this.env);
+            this.subMenu.isOpen = true;
+            this.subMenu.parentMenu = menu;
+        }
+        isParentMenu(subMenu, menuItem) {
+            var _a;
+            return ((_a = subMenu.parentMenu) === null || _a === void 0 ? void 0 : _a.id) === menuItem.id;
+        }
+        closeSubMenu() {
+            this.subMenu.isOpen = false;
+            this.subMenu.parentMenu = undefined;
+        }
+        onClickMenu(menu, menuIndex) {
+            if (this.isEnabled(menu)) {
+                if (this.isRoot(menu)) {
+                    this.openSubMenu(menu, menuIndex);
+                }
+                else {
+                    this.activateMenu(menu);
+                }
+            }
+        }
+        onMouseOver(menu, position) {
+            if (menu.isEnabled(this.env)) {
+                if (this.isRoot(menu)) {
+                    this.openSubMenu(menu, position);
+                }
+                else {
+                    this.closeSubMenu();
+                }
+            }
+        }
+    }
+    Menu.template = "o-spreadsheet-Menu";
+    Menu.components = { Menu, Popover };
+    Menu.defaultProps = {
+        depth: 1,
+    };
+    Menu.props = {
+        position: Object,
+        menuItems: Array,
+        depth: { type: Number, optional: true },
+        maxHeight: { type: Number, optional: true },
+        onClose: Function,
+        onMenuClicked: { type: Function, optional: true },
+        menuId: { type: String, optional: true },
+    };
+
+    const LINK_TOOLTIP_HEIGHT = 32;
+    const LINK_TOOLTIP_WIDTH = 220;
+    css /* scss */ `
+  .o-link-tool {
+    font-size: 13px;
+    background-color: white;
+    box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
+    padding: 6px 12px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    height: ${LINK_TOOLTIP_HEIGHT}px;
+    width: ${LINK_TOOLTIP_WIDTH}px;
+    box-sizing: border-box !important;
+
+    img {
+      margin-right: 3px;
+      width: 16px;
+      height: 16px;
+    }
+
+    a.o-link {
+      color: #01666b;
+      text-decoration: none;
+      flex-grow: 2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    a.o-link:hover {
+      text-decoration: none;
+      color: #001d1f;
+      cursor: pointer;
+    }
+  }
+  .o-link-icon {
+    float: right;
+    padding-left: 5px;
+    .o-icon {
+      height: 16px;
+    }
+  }
+  .o-link-icon .o-icon {
+    height: 13px;
+  }
+  .o-link-icon:hover {
+    cursor: pointer;
+    color: #000;
+  }
+`;
+    class LinkDisplay extends owl.Component {
+        get cell() {
+            const { col, row } = this.props.cellPosition;
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            return this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+        }
+        get link() {
+            if (this.cell.link) {
+                return this.cell.link;
+            }
+            const { col, row } = this.props.cellPosition;
+            throw new Error(`LinkDisplay Component can only be used with link cells. ${toXC(col, row)} is not a link.`);
+        }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
+        }
+        openLink() {
+            openLink(this.link, this.env);
+        }
+        edit() {
+            const { col, row } = this.props.cellPosition;
+            this.env.model.dispatch("OPEN_CELL_POPOVER", {
+                col,
+                row,
+                popoverType: "LinkEditor",
+            });
+        }
+        unlink() {
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const { col, row } = this.props.cellPosition;
+            const style = this.env.model.getters.getCellComputedStyle({ sheetId, col, row });
+            const textColor = (style === null || style === void 0 ? void 0 : style.textColor) === LINK_COLOR ? undefined : style === null || style === void 0 ? void 0 : style.textColor;
+            this.env.model.dispatch("UPDATE_CELL", {
+                col,
+                row,
+                sheetId,
+                content: this.link.label,
+                style: { ...style, textColor, underline: undefined },
+            });
+        }
+    }
+    LinkDisplay.components = { Menu };
+    LinkDisplay.template = "o-spreadsheet-LinkDisplay";
+    const LinkCellPopoverBuilder = {
+        onHover: (position, getters) => {
+            const cell = getters.getEvaluatedCell(position);
+            const shouldDisplayLink = !getters.isDashboard() && cell.link && getters.isVisibleInViewport(position);
+            if (!shouldDisplayLink)
+                return { isOpen: false };
+            return {
+                isOpen: true,
+                Component: LinkDisplay,
+                props: { cellPosition: position },
+                cellCorner: "BottomLeft",
+            };
+        },
+    };
+    LinkDisplay.props = {
+        cellPosition: Object,
+        onClosed: { type: Function, optional: true },
+    };
+
+    function createMenu(menuItems) {
+        return menuItems.map(createMenuItem).sort((a, b) => a.sequence - b.sequence);
+    }
+    const uuidGenerator$1 = new UuidGenerator();
+    function createMenuItem(item) {
+        const name = item.name;
+        const children = item.children;
+        return {
+            id: item.id || uuidGenerator$1.uuidv4(),
+            name: typeof name === "function" ? name : () => name,
+            isVisible: item.isVisible ? item.isVisible : () => true,
+            isEnabled: item.isEnabled ? item.isEnabled : () => true,
+            action: item.action,
+            children: children
+                ? (env) => {
+                    return children
+                        .map((child) => (typeof child === "function" ? child(env) : child))
+                        .flat()
+                        .map(createMenuItem);
+                }
+                : () => [],
+            isReadonlyAllowed: item.isReadonlyAllowed || false,
+            separator: item.separator || false,
+            icon: item.icon,
+            description: item.description || "",
+            textColor: item.textColor,
+            sequence: item.sequence || 0,
+        };
+    }
+    /**
+     * The class Registry is extended in order to add the function addChild
+     *
+     */
+    class MenuItemRegistry extends Registry {
+        /**
+         * @override
+         */
+        add(key, value) {
+            if (value.id === undefined) {
+                value.id = key;
+            }
+            this.content[key] = value;
+            return this;
+        }
+        /**
+         * Add a subitem to an existing item
+         * @param path Path of items to add this subitem
+         * @param value Subitem to add
+         */
+        addChild(key, path, value) {
+            if (typeof value !== "function" && value.id === undefined) {
+                value.id = key;
+            }
+            const root = path.splice(0, 1)[0];
+            let node = this.content[root];
+            if (!node) {
+                throw new Error(`Path ${root + ":" + path.join(":")} not found`);
+            }
+            for (let p of path) {
+                const children = node.children;
+                if (!children || typeof children === "function") {
+                    throw new Error(`${p} is either not a node or it's dynamically computed`);
+                }
+                node = children.find((elt) => elt.id === p);
+                if (!node) {
+                    throw new Error(`Path ${root + ":" + path.join(":")} not found`);
+                }
+            }
+            if (!node.children) {
+                node.children = [];
+            }
+            node.children.push(value);
+            return this;
+        }
+        getMenuItems() {
+            return createMenu(this.getAll());
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    // Link Menu Registry
+    //------------------------------------------------------------------------------
+    const linkMenuRegistry = new MenuItemRegistry();
+    linkMenuRegistry
+        .add("sheet", {
+        name: _lt("Link sheet"),
+        sequence: 10,
+    })
+        .addChild("sheet_list", ["sheet"], (env) => {
+        const sheets = env.model.getters
+            .getSheetIds()
+            .map((sheetId) => env.model.getters.getSheet(sheetId));
+        return sheets.map((sheet) => ({
+            id: sheet.id,
+            name: sheet.name,
+            action: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
+        }));
+    });
+
+    const MENU_OFFSET_X = 320;
+    const MENU_OFFSET_Y = 100;
+    const PADDING = 12;
+    const LINK_EDITOR_WIDTH = 340;
+    const LINK_EDITOR_HEIGHT = 165;
+    css /* scss */ `
+  .o-link-editor {
+    font-size: 13px;
+    background-color: white;
+    box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
+    padding: ${PADDING}px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    height: ${LINK_EDITOR_HEIGHT}px;
+    width: ${LINK_EDITOR_WIDTH}px;
+
+    .o-section {
+      .o-section-title {
+        font-weight: bold;
+        color: dimgrey;
+        margin-bottom: 5px;
+      }
+    }
+    .o-buttons {
+      padding-left: 16px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      text-align: right;
+      .o-button {
+        border: 1px solid lightgrey;
+        padding: 0px 20px 0px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 14px;
+        height: 30px;
+        line-height: 16px;
+        background: white;
+        margin-right: 8px;
+        &:hover:enabled {
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+      }
+      .o-button:enabled {
+        cursor: pointer;
+      }
+      .o-button:last-child {
+        margin-right: 0px;
+      }
+    }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      border-radius: 4px;
+      padding: 4px 23px 4px 10px;
+      border: none;
+      height: 24px;
+      border: 1px solid lightgrey;
+    }
+    .o-link-url {
+      position: relative;
+      flex-grow: 1;
+      button {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        border: none;
+        height: 20px;
+        width: 20px;
+        background-color: #fff;
+        margin: 2px 3px 1px 0px;
+        padding: 0px 1px 0px 0px;
+      }
+      button:hover {
+        cursor: pointer;
+      }
+    }
+  }
+`;
+    class LinkEditor extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.menuItems = linkMenuRegistry.getMenuItems();
+            this.link = owl.useState(this.defaultState);
+            this.menu = owl.useState({
+                isOpen: false,
+            });
+            this.linkEditorRef = owl.useRef("linkEditor");
+            this.position = useAbsoluteBoundingRect(this.linkEditorRef);
+            this.urlInput = owl.useRef("urlInput");
+        }
+        setup() {
+            owl.onMounted(() => { var _a; return (_a = this.urlInput.el) === null || _a === void 0 ? void 0 : _a.focus(); });
+        }
+        get defaultState() {
+            const { col, row } = this.props.cellPosition;
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+            if (cell.link) {
+                return {
+                    url: cell.link.url,
+                    label: cell.formattedValue,
+                    isUrlEditable: cell.link.isUrlEditable,
+                };
+            }
+            return {
+                label: cell.formattedValue,
+                url: "",
+                isUrlEditable: true,
+            };
+        }
+        get menuPosition() {
+            return {
+                x: this.position.x + MENU_OFFSET_X - PADDING - 2,
+                y: this.position.y + MENU_OFFSET_Y,
+            };
+        }
+        onSpecialLink(ev) {
+            const { detail: markdownLink } = ev;
+            const link = detectLink(markdownLink);
+            if (!link) {
+                return;
+            }
+            this.link.url = link.url;
+            this.link.label = link.label;
+            this.link.isUrlEditable = link.isUrlEditable;
+        }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
+        }
+        openMenu() {
+            this.menu.isOpen = true;
+        }
+        removeLink() {
+            this.link.url = "";
+            this.link.isUrlEditable = true;
+        }
+        save() {
+            var _a, _b;
+            const { col, row } = this.props.cellPosition;
+            const label = this.link.label || this.link.url;
+            this.env.model.dispatch("UPDATE_CELL", {
+                col: col,
+                row: row,
+                sheetId: this.env.model.getters.getActiveSheetId(),
+                content: markdownLink(label, this.link.url),
+            });
+            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
+        }
+        cancel() {
+            var _a, _b;
+            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
+        }
+        onKeyDown(ev) {
+            switch (ev.key) {
+                case "Enter":
+                    if (this.link.url) {
+                        this.save();
+                    }
+                    ev.stopPropagation();
+                    break;
+                case "Escape":
+                    this.cancel();
+                    ev.stopPropagation();
+                    break;
+            }
+        }
+    }
+    LinkEditor.template = "o-spreadsheet-LinkEditor";
+    LinkEditor.components = { Menu };
+    const LinkEditorPopoverBuilder = {
+        onOpen: (position, getters) => {
+            return {
+                isOpen: true,
+                props: { cellPosition: position },
+                Component: LinkEditor,
+                cellCorner: "BottomLeft",
+            };
+        },
+    };
+    LinkEditor.props = {
+        cellPosition: Object,
+        onClosed: { type: Function, optional: true },
+    };
+
+    const cellPopoverRegistry = new Registry();
+    cellPopoverRegistry
+        .add("ErrorToolTip", ErrorToolTipPopoverBuilder)
+        .add("LinkCell", LinkCellPopoverBuilder)
+        .add("LinkEditor", LinkEditorPopoverBuilder)
+        .add("FilterMenu", FilterMenuPopoverBuilder);
+
+    /**
+     * Convert a JS color hexadecimal to an excel compatible color.
+     *
+     * In Excel the color don't start with a '#' and the format is AARRGGBB instead of RRGGBBAA
+     */
+    function toXlsxHexColor(color) {
+        color = toHex(color).replace("#", "");
+        // alpha channel goes first
+        if (color.length === 8) {
+            return color.slice(6) + color.slice(0, 6);
+        }
+        return color;
+    }
+
+    /**
+     * AbstractChart is the class from which every Chart should inherit.
+     * The role of this class is to maintain the state of each chart.
+     */
+    class AbstractChart {
+        constructor(definition, sheetId, getters) {
+            this.title = definition.title;
+            this.sheetId = sheetId;
+            this.getters = getters;
+        }
+        /**
+         * Validate the chart definition given as arguments. This function will be
+         * called from allowDispatch function
+         */
+        static validateChartDefinition(validator, definition) {
+            throw new Error("This method should be implemented by sub class");
+        }
+        /**
+         * Get a new chart definition transformed with the executed command. This
+         * functions will be called during operational transform process
+         */
+        static transformDefinition(definition, executed) {
+            throw new Error("This method should be implemented by sub class");
+        }
+        /**
+         * Get an empty definition based on the given context
+         */
+        static getDefinitionFromContextCreation(context) {
+            throw new Error("This method should be implemented by sub class");
+        }
+    }
+
+    function transformZone(zone, executed) {
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            return reduceZoneOnDeletion(zone, executed.dimension === "COL" ? "left" : "top", executed.elements);
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
+        }
+        return { ...zone };
+    }
+
     /**
      * This file contains helpers that are common to different charts (mainly
      * line, bar and pie charts)
@@ -3745,11 +6091,11 @@
         const labelZone = (_a = ds.labelCell) === null || _a === void 0 ? void 0 : _a.zone;
         let dataZone = ds.dataRange.zone;
         if (labelZone) {
-            const { height, width } = zoneToDimension(dataZone);
-            if (height === 1) {
+            const { numberOfRows, numberOfCols } = zoneToDimension(dataZone);
+            if (numberOfRows === 1) {
                 dataZone = { ...dataZone, left: dataZone.left + 1 };
             }
-            else if (width === 1) {
+            else if (numberOfCols === 1) {
                 dataZone = { ...dataZone, top: dataZone.top + 1 };
             }
         }
@@ -5332,75 +7678,6 @@
     }
 
     /**
-     * Registry
-     *
-     * The Registry class is basically just a mapping from a string key to an object.
-     * It is really not much more than an object. It is however useful for the
-     * following reasons:
-     *
-     * 1. it let us react and execute code when someone add something to the registry
-     *   (for example, the FunctionRegistry subclass this for this purpose)
-     * 2. it throws an error when the get operation fails
-     * 3. it provides a chained API to add items to the registry.
-     */
-    class Registry {
-        constructor() {
-            this.content = {};
-        }
-        /**
-         * Add an item to the registry
-         *
-         * Note that this also returns the registry, so another add method call can
-         * be chained
-         */
-        add(key, value) {
-            this.content[key] = value;
-            return this;
-        }
-        /**
-         * Get an item from the registry
-         */
-        get(key) {
-            /**
-             * Note: key in {} is ~12 times slower than {}[key].
-             * So, we check the absence of key only when the direct access returns
-             * a falsy value. It's done to ensure that the registry can contains falsy values
-             */
-            const content = this.content[key];
-            if (!content) {
-                if (!(key in this.content)) {
-                    throw new Error(`Cannot find ${key} in this registry!`);
-                }
-            }
-            return content;
-        }
-        /**
-         * Check if the key is already in the registry
-         */
-        contains(key) {
-            return key in this.content;
-        }
-        /**
-         * Get a list of all elements in the registry
-         */
-        getAll() {
-            return Object.values(this.content);
-        }
-        /**
-         * Get a list of all keys in the registry
-         */
-        getKeys() {
-            return Object.keys(this.content);
-        }
-        /**
-         * Remove an item from the registry
-         */
-        remove(key) {
-            delete this.content[key];
-        }
-    }
-
-    /**
      * This registry is intended to map a cell content (raw string) to
      * an instance of a cell.
      */
@@ -5462,647 +7739,11 @@
     chartComponentRegistry.add("gauge", ChartJsComponent);
     chartComponentRegistry.add("scorecard", ScorecardChart$1);
 
-    function createMenu(menuItems) {
-        return menuItems.map(createMenuItem).sort((a, b) => a.sequence - b.sequence);
-    }
-    const uuidGenerator$1 = new UuidGenerator();
-    function createMenuItem(item) {
-        const name = item.name;
-        const children = item.children;
-        return {
-            id: item.id || uuidGenerator$1.uuidv4(),
-            name: typeof name === "function" ? name : () => name,
-            isVisible: item.isVisible ? item.isVisible : () => true,
-            isEnabled: item.isEnabled ? item.isEnabled : () => true,
-            action: item.action,
-            children: children
-                ? (env) => {
-                    return children
-                        .map((child) => (typeof child === "function" ? child(env) : child))
-                        .flat()
-                        .map(createMenuItem);
-                }
-                : () => [],
-            isReadonlyAllowed: item.isReadonlyAllowed || false,
-            separator: item.separator || false,
-            icon: item.icon,
-            description: item.description || "",
-            textColor: item.textColor,
-            sequence: item.sequence || 0,
-        };
-    }
     /**
-     * The class Registry is extended in order to add the function addChild
-     *
+     * Registry intended to support usual currencies. It is mainly used to create
+     * currency formats that can be selected or modified when customizing formats.
      */
-    class MenuItemRegistry extends Registry {
-        /**
-         * @override
-         */
-        add(key, value) {
-            if (value.id === undefined) {
-                value.id = key;
-            }
-            this.content[key] = value;
-            return this;
-        }
-        /**
-         * Add a subitem to an existing item
-         * @param path Path of items to add this subitem
-         * @param value Subitem to add
-         */
-        addChild(key, path, value) {
-            if (typeof value !== "function" && value.id === undefined) {
-                value.id = key;
-            }
-            const root = path.splice(0, 1)[0];
-            let node = this.content[root];
-            if (!node) {
-                throw new Error(`Path ${root + ":" + path.join(":")} not found`);
-            }
-            for (let p of path) {
-                const children = node.children;
-                if (!children || typeof children === "function") {
-                    throw new Error(`${p} is either not a node or it's dynamically computed`);
-                }
-                node = children.find((elt) => elt.id === p);
-                if (!node) {
-                    throw new Error(`Path ${root + ":" + path.join(":")} not found`);
-                }
-            }
-            if (!node.children) {
-                node.children = [];
-            }
-            node.children.push(value);
-            return this;
-        }
-        getMenuItems() {
-            return createMenu(this.getAll());
-        }
-    }
-
-    /**
-     * Return the o-spreadsheet element position relative
-     * to the browser viewport.
-     */
-    function useSpreadsheetRect() {
-        const position = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        let spreadsheetElement = document.querySelector(".o-spreadsheet");
-        updatePosition();
-        function updatePosition() {
-            if (!spreadsheetElement) {
-                spreadsheetElement = document.querySelector(".o-spreadsheet");
-            }
-            if (spreadsheetElement) {
-                const { top, left, width, height } = spreadsheetElement.getBoundingClientRect();
-                position.x = left;
-                position.y = top;
-                position.width = width;
-                position.height = height;
-            }
-        }
-        owl.onMounted(updatePosition);
-        owl.onPatched(updatePosition);
-        return position;
-    }
-    /**
-     * Return the component (or ref's component) BoundingRect, relative
-     * to the upper left corner of the screen (<body> element).
-     *
-     * Note: when used with a <Portal/> component, it will
-     * return the portal position, not the teleported position.
-     */
-    function useAbsoluteBoundingRect(ref) {
-        const rect = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        function updateElRect() {
-            const el = ref.el;
-            if (el === null) {
-                return;
-            }
-            const { top, left, width, height } = el.getBoundingClientRect();
-            rect.x = left;
-            rect.y = top;
-            rect.width = width;
-            rect.height = height;
-        }
-        owl.onMounted(updateElRect);
-        owl.onPatched(updateElRect);
-        return rect;
-    }
-    /**
-     * Get the rectangle inside which a popover should stay when being displayed.
-     * It's the value defined in `env.getPopoverContainerRect`, or the Rect of the "o-spreadsheet"
-     * element by default.
-     *
-     * Coordinates are expressed expressed as absolute DOM position.
-     */
-    function usePopoverContainer() {
-        const container = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        const component = owl.useComponent();
-        const spreadsheetRect = useSpreadsheetRect();
-        function updateRect() {
-            const env = component.env;
-            const newRect = "getPopoverContainerRect" in env ? env.getPopoverContainerRect() : spreadsheetRect;
-            container.x = newRect.x;
-            container.y = newRect.y;
-            container.width = newRect.width;
-            container.height = newRect.height;
-        }
-        updateRect();
-        owl.onMounted(updateRect);
-        owl.onPatched(updateRect);
-        return container;
-    }
-
-    /**
-     * Return true if the event was triggered from
-     * a child element.
-     */
-    function isChildEvent(parent, ev) {
-        return !!ev.target && parent.contains(ev.target);
-    }
-    function gridOverlayPosition() {
-        const spreadsheetElement = document.querySelector(".o-grid-overlay");
-        if (spreadsheetElement) {
-            const { top, left } = spreadsheetElement === null || spreadsheetElement === void 0 ? void 0 : spreadsheetElement.getBoundingClientRect();
-            return { top, left };
-        }
-        throw new Error("Can't find spreadsheet position");
-    }
-    function getBoundingRectAsPOJO(el) {
-        const rect = el.getBoundingClientRect();
-        return {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width,
-            height: rect.height,
-        };
-    }
-    /**
-     * Iterate over all the children of `el` in the dom tree starting at `el`, depth first.
-     */
-    function* iterateChildren(el) {
-        yield el;
-        if (el.hasChildNodes()) {
-            for (let child of el.childNodes) {
-                yield* iterateChildren(child);
-            }
-        }
-    }
-    function getElementScrollTop(el) {
-        return (el === null || el === void 0 ? void 0 : el.scrollTop) || 0;
-    }
-    function setElementScrollTop(el, scroll) {
-        if (!el)
-            return;
-        el.scrollTop = scroll;
-    }
-    function getOpenedMenus() {
-        return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
-    }
-
-    /**
-     * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
-     */
-    function rectIntersection(rect1, rect2) {
-        return zoneToRect(intersection(rectToZone(rect1), rectToZone(rect2)));
-    }
-    function rectToZone(rect) {
-        return {
-            left: rect.x,
-            top: rect.y,
-            right: rect.x + rect.width,
-            bottom: rect.y + rect.height,
-        };
-    }
-    function zoneToRect(zone) {
-        if (!zone)
-            return undefined;
-        return {
-            x: zone.left,
-            y: zone.top,
-            width: zone.right - zone.left,
-            height: zone.bottom - zone.top,
-        };
-    }
-
-    css /* scss */ `
-  .o-popover {
-    position: absolute;
-    z-index: ${ComponentsImportance.Popover};
-    overflow: auto;
-    box-shadow: 1px 2px 5px 2px rgb(51 51 51 / 15%);
-    width: fit-content;
-    height: fit-content;
-  }
-`;
-    class Popover extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.popoverRef = owl.useRef("popover");
-            this.currentPosition = undefined;
-            this.currentDisplayValue = undefined;
-            this.spreadsheetRect = useSpreadsheetRect();
-        }
-        setup() {
-            this.containerRect = usePopoverContainer();
-            // useEffect occurs after the DOM is created and the element width/height are computed, but before
-            // the element in rendered, so we can still set its position
-            owl.useEffect(() => {
-                var _a, _b, _c, _d;
-                if (!this.containerRect)
-                    throw new Error("Popover container is not defined");
-                const el = this.popoverRef.el;
-                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
-                const newDisplay = anchor ? "block" : "none";
-                if (this.currentDisplayValue !== "none" && newDisplay === "none") {
-                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
-                }
-                el.style.display = newDisplay;
-                this.currentDisplayValue = newDisplay;
-                if (!anchor)
-                    return;
-                const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
-                const elDims = {
-                    width: el.getBoundingClientRect().width,
-                    height: el.getBoundingClientRect().height,
-                };
-                const spreadsheetRect = this.spreadsheetRect;
-                const popoverPositionHelper = this.props.positioning === "BottomLeft"
-                    ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
-                    : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
-                const style = popoverPositionHelper.getCss(elDims, this.props.verticalOffset);
-                for (const property of Object.keys(style)) {
-                    el.style[property] = style[property];
-                }
-                const newPosition = popoverPositionHelper.getCurrentPosition(elDims);
-                if (this.currentPosition && newPosition !== this.currentPosition) {
-                    (_d = (_c = this.props).onPopoverMoved) === null || _d === void 0 ? void 0 : _d.call(_c);
-                }
-                this.currentPosition = newPosition;
-            });
-        }
-    }
-    Popover.template = "o-spreadsheet-Popover";
-    Popover.defaultProps = {
-        positioning: "BottomLeft",
-        verticalOffset: 0,
-        onMouseWheel: () => { },
-        onPopoverMoved: () => { },
-        onPopoverHidden: () => { },
-    };
-    Popover.props = {
-        anchorRect: Object,
-        containerRect: { type: Object, optional: true },
-        positioning: { type: String, optional: true },
-        maxWidth: { type: Number, optional: true },
-        maxHeight: { type: Number, optional: true },
-        verticalOffset: { type: Number, optional: true },
-        onMouseWheel: { type: Function, optional: true },
-        onPopoverHidden: { type: Function, optional: true },
-        onPopoverMoved: { type: Function, optional: true },
-        slots: Object,
-    };
-    class PopoverPositionContext {
-        constructor(anchorRect, containerRect, propsMaxSize, spreadsheetOffset) {
-            this.anchorRect = anchorRect;
-            this.containerRect = containerRect;
-            this.propsMaxSize = propsMaxSize;
-            this.spreadsheetOffset = spreadsheetOffset;
-        }
-        /** Check if there is enough space for the popover to be rendered at the bottom of the anchorRect */
-        shouldRenderAtBottom(elementHeight) {
-            return (elementHeight <= this.availableHeightDown ||
-                this.availableHeightDown >= this.availableHeightUp);
-        }
-        /** Check if there is enough space for the popover to be rendered at the right of the anchorRect */
-        shouldRenderAtRight(elementWidth) {
-            return (elementWidth <= this.availableWidthRight ||
-                this.availableWidthRight >= this.availableWidthLeft);
-        }
-        getMaxHeight(elementHeight) {
-            const shouldRenderAtBottom = this.shouldRenderAtBottom(elementHeight);
-            const availableHeight = shouldRenderAtBottom
-                ? this.availableHeightDown
-                : this.availableHeightUp;
-            return this.propsMaxSize.height
-                ? Math.min(availableHeight, this.propsMaxSize.height)
-                : availableHeight;
-        }
-        getMaxWidth(elementWidth) {
-            const shouldRenderAtRight = this.shouldRenderAtRight(elementWidth);
-            const availableWidth = shouldRenderAtRight ? this.availableWidthRight : this.availableWidthLeft;
-            return this.propsMaxSize.width
-                ? Math.min(availableWidth, this.propsMaxSize.width)
-                : availableWidth;
-        }
-        getCss(elDims, verticalOffset) {
-            const maxHeight = this.getMaxHeight(elDims.height);
-            const maxWidth = this.getMaxWidth(elDims.width);
-            const actualHeight = Math.min(maxHeight, elDims.height);
-            const actualWidth = Math.min(maxWidth, elDims.width);
-            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
-            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
-            verticalOffset = shouldRenderAtBottom ? verticalOffset : -verticalOffset;
-            const cssProperties = {
-                "max-height": maxHeight + "px",
-                "max-width": maxWidth + "px",
-                top: this.getTopCoordinate(actualHeight, shouldRenderAtBottom) -
-                    this.spreadsheetOffset.y -
-                    verticalOffset +
-                    "px",
-                left: this.getLeftCoordinate(actualWidth, shouldRenderAtRight) - this.spreadsheetOffset.x + "px",
-            };
-            return cssProperties;
-        }
-        getCurrentPosition(elDims) {
-            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
-            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
-            if (shouldRenderAtBottom && shouldRenderAtRight)
-                return "BottomRight";
-            if (shouldRenderAtBottom && !shouldRenderAtRight)
-                return "BottomLeft";
-            if (!shouldRenderAtBottom && shouldRenderAtRight)
-                return "TopRight";
-            return "TopLeft";
-        }
-    }
-    class BottomLeftPopoverContext extends PopoverPositionContext {
-        get availableHeightUp() {
-            return this.anchorRect.y - this.containerRect.y;
-        }
-        get availableHeightDown() {
-            return this.containerRect.height - this.availableHeightUp - this.anchorRect.height;
-        }
-        get availableWidthRight() {
-            return this.containerRect.x + this.containerRect.width - this.anchorRect.x;
-        }
-        get availableWidthLeft() {
-            return this.anchorRect.x + this.anchorRect.width - this.containerRect.x;
-        }
-        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
-            if (shouldRenderAtBottom) {
-                return this.anchorRect.y + this.anchorRect.height;
-            }
-            else {
-                return this.anchorRect.y - elementHeight;
-            }
-        }
-        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
-            if (shouldRenderAtRight) {
-                return this.anchorRect.x;
-            }
-            else {
-                return this.anchorRect.x + this.anchorRect.width - elementWidth;
-            }
-        }
-    }
-    class TopRightPopoverContext extends PopoverPositionContext {
-        get availableHeightUp() {
-            return this.anchorRect.y + this.anchorRect.height - this.containerRect.y;
-        }
-        get availableHeightDown() {
-            return this.containerRect.y + this.containerRect.height - this.anchorRect.y;
-        }
-        get availableWidthRight() {
-            return this.containerRect.width - this.anchorRect.width - this.availableWidthLeft;
-        }
-        get availableWidthLeft() {
-            return this.anchorRect.x - this.containerRect.x;
-        }
-        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
-            if (shouldRenderAtBottom) {
-                return this.anchorRect.y;
-            }
-            else {
-                return this.anchorRect.y + this.anchorRect.height - elementHeight;
-            }
-        }
-        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
-            if (shouldRenderAtRight) {
-                return this.anchorRect.x + this.anchorRect.width;
-            }
-            else {
-                return this.anchorRect.x - elementWidth;
-            }
-        }
-    }
-
-    //------------------------------------------------------------------------------
-    // Context Menu Component
-    //------------------------------------------------------------------------------
-    css /* scss */ `
-  .o-menu {
-    background-color: white;
-    padding: ${MENU_VERTICAL_PADDING}px 0px;
-    width: ${MENU_WIDTH}px;
-    box-sizing: border-box !important;
-
-    .o-menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-      height: ${MENU_ITEM_HEIGHT}px;
-      padding: 4px 16px;
-      cursor: pointer;
-      user-select: none;
-
-      .o-menu-item-name {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-
-      &.o-menu-root {
-        display: flex;
-        justify-content: space-between;
-      }
-      .o-menu-item-icon {
-        margin-top: auto;
-        margin-bottom: auto;
-      }
-      .o-icon {
-        width: 10px;
-      }
-
-      &:not(.disabled) {
-        &:hover,
-        &.o-menu-item-active {
-          background-color: #ebebeb;
-        }
-        .o-menu-item-description {
-          color: grey;
-        }
-      }
-      &.disabled {
-        color: ${MENU_ITEM_DISABLED_COLOR};
-        cursor: not-allowed;
-      }
-    }
-  }
-`;
-    class Menu extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.subMenu = owl.useState({
-                isOpen: false,
-                position: null,
-                scrollOffset: 0,
-                menuItems: [],
-            });
-            this.menuRef = owl.useRef("menu");
-            this.position = useAbsoluteBoundingRect(this.menuRef);
-        }
-        setup() {
-            owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
-            owl.useExternalListener(window, "contextmenu", this.onExternalClick, { capture: true });
-            owl.onWillUpdateProps((nextProps) => {
-                if (nextProps.menuItems !== this.props.menuItems) {
-                    this.closeSubMenu();
-                }
-            });
-        }
-        get visibleMenuItems() {
-            return this.props.menuItems.filter((x) => x.isVisible(this.env));
-        }
-        get subMenuPosition() {
-            const position = Object.assign({}, this.subMenu.position);
-            position.y -= this.subMenu.scrollOffset || 0;
-            return position;
-        }
-        get menuHeight() {
-            const menuItems = this.visibleMenuItems;
-            let menuItemsHeight = this.getMenuItemsHeight(menuItems);
-            // We don't display separator at the end of a menu
-            if (menuItems[menuItems.length - 1].separator) {
-                menuItemsHeight -= MENU_SEPARATOR_HEIGHT;
-            }
-            const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
-            return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
-        }
-        get popoverProps() {
-            const isRoot = this.props.depth === 1;
-            return {
-                anchorRect: {
-                    x: this.props.position.x - MENU_WIDTH * (this.props.depth - 1),
-                    y: this.props.position.y,
-                    width: isRoot ? 0 : MENU_WIDTH,
-                    height: isRoot ? 0 : MENU_ITEM_HEIGHT,
-                },
-                positioning: "TopRight",
-                verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
-                onPopoverHidden: () => this.closeSubMenu(),
-                onPopoverMoved: () => this.closeSubMenu(),
-                maxHeight: this.menuHeight,
-            };
-        }
-        getColor(menu) {
-            return menu.textColor ? `color: ${menu.textColor}` : undefined;
-        }
-        async activateMenu(menu) {
-            var _a, _b, _c;
-            const result = await ((_a = menu.action) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
-            this.close();
-            (_c = (_b = this.props).onMenuClicked) === null || _c === void 0 ? void 0 : _c.call(_b, { detail: result });
-        }
-        close() {
-            this.closeSubMenu();
-            this.props.onClose();
-        }
-        /**
-         * Return the number of pixels between the top of the menu
-         * and the menu item at a given index.
-         */
-        subMenuVerticalPosition(menuIndex) {
-            const menusAbove = this.visibleMenuItems.slice(0, menuIndex);
-            return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
-        }
-        onExternalClick(ev) {
-            // Don't close a root menu when clicked to open the submenus.
-            const el = this.menuRef.el;
-            if (el && getOpenedMenus().some((el) => isChildEvent(el, ev))) {
-                return;
-            }
-            ev.closedMenuId = this.props.menuId;
-            this.close();
-        }
-        getMenuItemsHeight(menuItems) {
-            const numberOfSeparators = menuItems.filter((m) => m.separator).length;
-            return MENU_ITEM_HEIGHT * menuItems.length + MENU_SEPARATOR_HEIGHT * numberOfSeparators;
-        }
-        getName(menu) {
-            return menu.name(this.env);
-        }
-        isRoot(menu) {
-            return !menu.action;
-        }
-        isEnabled(menu) {
-            if (menu.isEnabled(this.env)) {
-                return this.env.model.getters.isReadonly() ? menu.isReadonlyAllowed : true;
-            }
-            return false;
-        }
-        onScroll(ev) {
-            this.subMenu.scrollOffset = ev.target.scrollTop;
-        }
-        /**
-         * If the given menu is not disabled, open it's submenu at the
-         * correct position according to available surrounding space.
-         */
-        openSubMenu(menu, menuIndex) {
-            const y = this.subMenuVerticalPosition(menuIndex);
-            this.subMenu.position = {
-                x: this.position.x + this.props.depth * MENU_WIDTH,
-                y: y - (this.subMenu.scrollOffset || 0),
-            };
-            this.subMenu.menuItems = menu.children(this.env);
-            this.subMenu.isOpen = true;
-            this.subMenu.parentMenu = menu;
-        }
-        isParentMenu(subMenu, menuItem) {
-            var _a;
-            return ((_a = subMenu.parentMenu) === null || _a === void 0 ? void 0 : _a.id) === menuItem.id;
-        }
-        closeSubMenu() {
-            this.subMenu.isOpen = false;
-            this.subMenu.parentMenu = undefined;
-        }
-        onClickMenu(menu, menuIndex) {
-            if (this.isEnabled(menu)) {
-                if (this.isRoot(menu)) {
-                    this.openSubMenu(menu, menuIndex);
-                }
-                else {
-                    this.activateMenu(menu);
-                }
-            }
-        }
-        onMouseOver(menu, position) {
-            if (menu.isEnabled(this.env)) {
-                if (this.isRoot(menu)) {
-                    this.openSubMenu(menu, position);
-                }
-                else {
-                    this.closeSubMenu();
-                }
-            }
-        }
-    }
-    Menu.template = "o-spreadsheet-Menu";
-    Menu.components = { Menu, Popover };
-    Menu.defaultProps = {
-        depth: 1,
-    };
-    Menu.props = {
-        position: Object,
-        menuItems: Array,
-        depth: { type: Number, optional: true },
-        maxHeight: { type: Number, optional: true },
-        onClose: Function,
-        onMenuClicked: { type: Function, optional: true },
-        menuId: { type: String, optional: true },
-    };
+    const currenciesRegistry = new Registry();
 
     // -----------------------------------------------------------------------------
     // STYLE
@@ -6115,78 +7756,8 @@
   }
 `;
     class ChartFigure extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
-            this.chartContainerRef = owl.useRef("chartContainer");
-            this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
-            this.position = useAbsoluteBoundingRect(this.chartContainerRef);
-        }
-        getMenuItemRegistry() {
-            const registry = new MenuItemRegistry();
-            registry.add("edit", {
-                name: _lt("Edit"),
-                sequence: 1,
-                action: () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-                    this.env.openSidePanel("ChartPanel");
-                },
-            });
-            registry.add("copy", {
-                name: _lt("Copy"),
-                sequence: 2,
-                action: async () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-                    this.env.model.dispatch("COPY");
-                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                },
-            });
-            registry.add("cut", {
-                name: _lt("Cut"),
-                sequence: 3,
-                action: async () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-                    this.env.model.dispatch("CUT");
-                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                },
-            });
-            registry.add("delete", {
-                name: _lt("Delete"),
-                sequence: 10,
-                action: () => {
-                    this.env.model.dispatch("DELETE_FIGURE", {
-                        sheetId: this.env.model.getters.getActiveSheetId(),
-                        id: this.props.figure.id,
-                    });
-                    this.props.onFigureDeleted();
-                },
-            });
-            return registry;
-        }
         get chartType() {
             return this.env.model.getters.getChartType(this.props.figure.id);
-        }
-        onContextMenu(ev) {
-            const position = {
-                x: this.position.x + ev.offsetX,
-                y: this.position.y + ev.offsetY,
-            };
-            this.openContextMenu(position);
-        }
-        showMenu() {
-            const { x, y, width } = this.menuButtonRect;
-            const menuPosition = {
-                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
-                y: y,
-            };
-            this.openContextMenu(menuPosition);
-        }
-        openContextMenu(position) {
-            const registry = this.getMenuItemRegistry();
-            this.menuState.isOpen = true;
-            this.menuState.menuItems = registry.getMenuItems();
-            this.menuState.position = position;
         }
         get chartComponent() {
             const type = this.chartType;
@@ -6198,50 +7769,250 @@
         }
     }
     ChartFigure.template = "o-spreadsheet-ChartFigure";
-    ChartFigure.components = { Menu };
+    ChartFigure.components = {};
     ChartFigure.props = {
         figure: Object,
         onFigureDeleted: Function,
     };
 
-    function interactiveCut(env) {
-        const result = env.model.dispatch("CUT");
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
-                env.raiseError(_lt("This operation is not allowed with multiple selections."));
-            }
+    class ImageFigure extends owl.Component {
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        get figureId() {
+            return this.props.figure.id;
         }
+        get getImagePath() {
+            return this.env.model.getters.getImagePath(this.figureId);
+        }
+    }
+    ImageFigure.template = "o-spreadsheet-ImageFigure";
+    ImageFigure.components = {};
+    ImageFigure.props = {
+        figure: Object,
+        onFigureDeleted: Function,
+    };
+
+    function centerFigurePosition(getters, size) {
+        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
+        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
+        const dim = getters.getSheetViewDimension();
+        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
+        const scrollableViewportWidth = Math.min(rect.width, dim.width - offsetCorrectionX);
+        const scrollableViewportHeight = Math.min(rect.height, dim.height - offsetCorrectionY);
+        const position = {
+            x: offsetCorrectionX + scrollX + Math.max(0, (scrollableViewportWidth - size.width) / 2),
+            y: offsetCorrectionY + scrollY + Math.max(0, (scrollableViewportHeight - size.height) / 2),
+        }; // Position at the center of the scrollable viewport
+        return position;
+    }
+    function getMaxFigureSize(getters, figureSize) {
+        const size = deepCopy(figureSize);
+        const dim = getters.getSheetViewDimension();
+        const maxWidth = dim.width;
+        const maxHeight = dim.height;
+        if (size.width > maxWidth) {
+            const ratio = maxWidth / size.width;
+            size.width = maxWidth;
+            size.height = size.height * ratio;
+        }
+        if (size.height > maxHeight) {
+            const ratio = maxHeight / size.height;
+            size.height = maxHeight;
+            size.width = size.width * ratio;
+        }
+        return size;
     }
 
-    const PasteInteractiveContent = {
-        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
-        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
-        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
-        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
-    };
-    function handlePasteResult(env, result) {
-        if (!result.isSuccessful) {
-            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
-                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
-            }
-            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
-                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
-            }
-            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
-                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
-            }
-            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
-                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
-            }
+    const figureRegistry = new Registry();
+    figureRegistry.add("chart", {
+        Component: ChartFigure,
+        SidePanelComponent: "ChartPanel",
+        menuBuilder: getChartMenu,
+    });
+    figureRegistry.add("image", {
+        Component: ImageFigure,
+        keepRatio: true,
+        minFigSize: 20,
+        borderWidth: 0,
+        menuBuilder: getImageMenuRegistry,
+    });
+    function getChartMenu(figureId, onFigureDeleted, env) {
+        const menuItemSpecs = [
+            {
+                id: "edit",
+                name: _lt("Edit"),
+                sequence: 1,
+                action: () => {
+                    env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                    env.openSidePanel("ChartPanel");
+                },
+            },
+            getCopyMenuItem(figureId, env),
+            getCutMenuItem(figureId, env),
+            getDeleteMenuItem(figureId, onFigureDeleted, env),
+        ];
+        return createMenu(menuItemSpecs);
+    }
+    function getImageMenuRegistry(figureId, onFigureDeleted, env) {
+        const menuItemSpecs = [
+            getCopyMenuItem(figureId, env),
+            getCutMenuItem(figureId, env),
+            {
+                id: "reset_size",
+                name: _lt("Reset size"),
+                sequence: 4,
+                action: () => {
+                    const size = env.model.getters.getImageSize(figureId);
+                    const { height, width } = getMaxFigureSize(env.model.getters, size);
+                    env.model.dispatch("UPDATE_FIGURE", {
+                        sheetId: env.model.getters.getActiveSheetId(),
+                        id: figureId,
+                        height,
+                        width,
+                    });
+                },
+            },
+            getDeleteMenuItem(figureId, onFigureDeleted, env),
+        ];
+        return createMenu(menuItemSpecs);
+    }
+    function getCopyMenuItem(figureId, env) {
+        return {
+            id: "copy",
+            name: _lt("Copy"),
+            sequence: 2,
+            description: "Ctrl+C",
+            action: async () => {
+                env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                env.model.dispatch("COPY");
+                await env.clipboard.write(env.model.getters.getClipboardContent());
+            },
+        };
+    }
+    function getCutMenuItem(figureId, env) {
+        return {
+            id: "cut",
+            name: _lt("Cut"),
+            sequence: 3,
+            description: "Ctrl+X",
+            action: async () => {
+                env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                env.model.dispatch("CUT");
+                await env.clipboard.write(env.model.getters.getClipboardContent());
+            },
+        };
+    }
+    function getDeleteMenuItem(figureId, onFigureDeleted, env) {
+        return {
+            id: "delete",
+            name: _lt("Delete"),
+            sequence: 10,
+            action: () => {
+                env.model.dispatch("DELETE_FIGURE", {
+                    sheetId: env.model.getters.getActiveSheetId(),
+                    id: figureId,
+                });
+                onFigureDeleted();
+            },
+        };
+    }
+
+    const inverseCommandRegistry = new Registry()
+        .add("ADD_COLUMNS_ROWS", inverseAddColumnsRows)
+        .add("REMOVE_COLUMNS_ROWS", inverseRemoveColumnsRows)
+        .add("ADD_MERGE", inverseAddMerge)
+        .add("REMOVE_MERGE", inverseRemoveMerge)
+        .add("CREATE_SHEET", inverseCreateSheet)
+        .add("DELETE_SHEET", inverseDeleteSheet)
+        .add("DUPLICATE_SHEET", inverseDuplicateSheet)
+        .add("CREATE_FIGURE", inverseCreateFigure)
+        .add("CREATE_CHART", inverseCreateChart)
+        .add("HIDE_COLUMNS_ROWS", inverseHideColumnsRows)
+        .add("UNHIDE_COLUMNS_ROWS", inverseUnhideColumnsRows);
+    for (const cmd of coreTypes.values()) {
+        if (!inverseCommandRegistry.contains(cmd)) {
+            inverseCommandRegistry.add(cmd, identity);
         }
     }
-    function interactivePaste(env, target, pasteOption) {
-        const result = env.model.dispatch("PASTE", { target, pasteOption });
-        handlePasteResult(env, result);
+    function identity(cmd) {
+        return [cmd];
     }
-    function interactivePasteFromOS(env, target, text) {
-        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text });
-        handlePasteResult(env, result);
+    function inverseAddColumnsRows(cmd) {
+        const elements = [];
+        let start = cmd.base;
+        if (cmd.position === "after") {
+            start++;
+        }
+        for (let i = 0; i < cmd.quantity; i++) {
+            elements.push(i + start);
+        }
+        return [
+            {
+                type: "REMOVE_COLUMNS_ROWS",
+                dimension: cmd.dimension,
+                elements,
+                sheetId: cmd.sheetId,
+            },
+        ];
+    }
+    function inverseAddMerge(cmd) {
+        return [{ type: "REMOVE_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
+    }
+    function inverseRemoveMerge(cmd) {
+        return [{ type: "ADD_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
+    }
+    function inverseCreateSheet(cmd) {
+        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetId }];
+    }
+    function inverseDuplicateSheet(cmd) {
+        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetIdTo }];
+    }
+    function inverseRemoveColumnsRows(cmd) {
+        const commands = [];
+        const elements = [...cmd.elements].sort((a, b) => a - b);
+        for (let group of groupConsecutive(elements)) {
+            const column = group[0] === 0 ? 0 : group[0] - 1;
+            const position = group[0] === 0 ? "before" : "after";
+            commands.push({
+                type: "ADD_COLUMNS_ROWS",
+                dimension: cmd.dimension,
+                quantity: group.length,
+                base: column,
+                sheetId: cmd.sheetId,
+                position,
+            });
+        }
+        return commands;
+    }
+    function inverseDeleteSheet(cmd) {
+        return [{ type: "CREATE_SHEET", sheetId: cmd.sheetId, position: 1 }];
+    }
+    function inverseCreateFigure(cmd) {
+        return [{ type: "DELETE_FIGURE", id: cmd.figure.id, sheetId: cmd.sheetId }];
+    }
+    function inverseCreateChart(cmd) {
+        return [{ type: "DELETE_FIGURE", id: cmd.id, sheetId: cmd.sheetId }];
+    }
+    function inverseHideColumnsRows(cmd) {
+        return [
+            {
+                type: "UNHIDE_COLUMNS_ROWS",
+                sheetId: cmd.sheetId,
+                dimension: cmd.dimension,
+                elements: cmd.elements,
+            },
+        ];
+    }
+    function inverseUnhideColumnsRows(cmd) {
+        return [
+            {
+                type: "HIDE_COLUMNS_ROWS",
+                sheetId: cmd.sheetId,
+                dimension: cmd.dimension,
+                elements: cmd.elements,
+            },
+        ];
     }
 
     /**
@@ -6393,37 +8164,6 @@
         };
     }
 
-    function centerFigurePosition(getters, size) {
-        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
-        const dim = getters.getSheetViewDimension();
-        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
-        const scrollableViewportWidth = Math.min(rect.width, dim.width - offsetCorrectionX);
-        const scrollableViewportHeight = Math.min(rect.height, dim.height - offsetCorrectionY);
-        const position = {
-            x: offsetCorrectionX + scrollX + Math.max(0, (scrollableViewportWidth - size.width) / 2),
-            y: offsetCorrectionY + scrollY + Math.max(0, (scrollableViewportHeight - size.height) / 2),
-        }; // Position at the center of the scrollable viewport
-        return position;
-    }
-    function getMaxFigureSize(getters, figureSize) {
-        const size = deepCopy(figureSize);
-        const dim = getters.getSheetViewDimension();
-        const maxWidth = dim.width;
-        const maxHeight = dim.height;
-        if (size.width > maxWidth) {
-            const ratio = maxWidth / size.width;
-            size.width = maxWidth;
-            size.height = size.height * ratio;
-        }
-        if (size.height > maxHeight) {
-            const ratio = maxHeight / size.height;
-            size.height = maxHeight;
-            size.width = size.width * ratio;
-        }
-        return size;
-    }
-
     const SORT_TYPES = [
         CellValueType.number,
         CellValueType.error,
@@ -6523,6 +8263,15 @@
         }
     }
 
+    function interactiveCut(env) {
+        const result = env.model.dispatch("CUT");
+        if (!result.isSuccessful) {
+            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
+                env.raiseError(_lt("This operation is not allowed with multiple selections."));
+            }
+        }
+    }
+
     const AddFilterInteractiveContent = {
         filterOverlap: _lt("You cannot create overlapping filters."),
         nonContinuousTargets: _lt("A filter can only be created on a continuous selection."),
@@ -6539,6 +8288,37 @@
         else if (result.isCancelledBecause(81 /* CommandResult.NonContinuousTargets */)) {
             env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
         }
+    }
+
+    const PasteInteractiveContent = {
+        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
+        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
+        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
+        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
+    };
+    function handlePasteResult(env, result) {
+        if (!result.isSuccessful) {
+            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
+                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
+            }
+            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
+                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
+            }
+            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
+                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
+            }
+            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
+                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
+            }
+        }
+    }
+    function interactivePaste(env, target, pasteOption) {
+        const result = env.model.dispatch("PASTE", { target, pasteOption });
+        handlePasteResult(env, result);
+    }
+    function interactivePasteFromOS(env, target, text) {
+        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text });
+        handlePasteResult(env, result);
     }
 
     //------------------------------------------------------------------------------
@@ -7441,313 +9221,70 @@
         action: OPEN_CF_SIDEPANEL_ACTION,
     });
 
-    function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
-        const _onMouseDown = (ev) => {
-            ev.preventDefault();
-            onMouseDown(ev);
-        };
-        const _onMouseMove = (ev) => {
-            ev.preventDefault();
-            onMouseMove(ev);
-        };
-        const _onMouseUp = (ev) => {
-            ev.preventDefault();
-            onMouseUp(ev);
-            window.removeEventListener("mousedown", _onMouseDown);
-            window.removeEventListener("mouseup", _onMouseUp);
-            window.removeEventListener("dragstart", _onDragStart);
-            window.removeEventListener("mousemove", _onMouseMove);
-            window.removeEventListener("wheel", _onMouseMove);
-        };
-        function _onDragStart(ev) {
-            ev.preventDefault();
-        }
-        window.addEventListener("mousedown", _onMouseDown);
-        window.addEventListener("mouseup", _onMouseUp);
-        window.addEventListener("dragstart", _onDragStart);
-        window.addEventListener("mousemove", _onMouseMove);
-        // mouse wheel on window is by default a passive event.
-        // preventDefault() is not allowed in passive event handler.
-        // https://chromestatus.com/feature/6662647093133312
-        window.addEventListener("wheel", _onMouseMove, { passive: false });
+    function getSheetMenuRegistry(args) {
+        const sheetMenuRegistry = new MenuItemRegistry();
+        sheetMenuRegistry
+            .add("delete", {
+            name: _lt("Delete"),
+            sequence: 10,
+            isVisible: (env) => {
+                return env.model.getters.getSheetIds().length > 1;
+            },
+            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
+                env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
+            }),
+        })
+            .add("duplicate", {
+            name: _lt("Duplicate"),
+            sequence: 20,
+            action: (env) => {
+                const sheetIdFrom = env.model.getters.getActiveSheetId();
+                const sheetIdTo = env.model.uuidGenerator.uuidv4();
+                env.model.dispatch("DUPLICATE_SHEET", {
+                    sheetId: sheetIdFrom,
+                    sheetIdTo,
+                });
+                env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
+            },
+        })
+            .add("rename", {
+            name: _lt("Rename"),
+            sequence: 30,
+            action: () => args.renameSheetCallback(),
+        })
+            .add("move_right", {
+            name: _lt("Move right"),
+            sequence: 40,
+            isVisible: (env) => {
+                const sheetId = env.model.getters.getActiveSheetId();
+                const sheetIds = env.model.getters.getVisibleSheetIds();
+                return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
+            },
+            action: (env) => env.model.dispatch("MOVE_SHEET", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                delta: 1,
+            }),
+        })
+            .add("move_left", {
+            name: _lt("Move left"),
+            sequence: 50,
+            isVisible: (env) => {
+                const sheetId = env.model.getters.getActiveSheetId();
+                return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
+            },
+            action: (env) => env.model.dispatch("MOVE_SHEET", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                delta: -1,
+            }),
+        })
+            .add("hide_sheet", {
+            name: _lt("Hide sheet"),
+            sequence: 60,
+            isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
+            action: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
+        });
+        return sheetMenuRegistry;
     }
-    /**
-     * Function to be used during a mousedown event, this function allows to
-     * perform actions related to the mousemove and mouseup events and adjusts the viewport
-     * when the new position related to the mousemove event is outside of it.
-     * Among inputs are two callback functions. First intended for actions performed during
-     * the mousemove event, it receives as parameters the current position of the mousemove
-     * (occurrence of the current column and the current row). Second intended for actions
-     * performed during the mouseup event.
-     */
-    function dragAndDropBeyondTheViewport(env, cbMouseMove, cbMouseUp, only = false) {
-        let timeOutId = null;
-        let currentEv;
-        let previousEv;
-        let startingEv;
-        let startingX;
-        let startingY;
-        const getters = env.model.getters;
-        const sheetId = getters.getActiveSheetId();
-        const position = gridOverlayPosition();
-        let colIndex;
-        let rowIndex;
-        const onMouseDown = (ev) => {
-            previousEv = ev;
-            startingEv = ev;
-            startingX = startingEv.clientX - position.left;
-            startingY = startingEv.clientY - position.top;
-        };
-        const onMouseMove = (ev) => {
-            currentEv = ev;
-            if (timeOutId) {
-                return;
-            }
-            const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-            let { top, left, bottom, right } = getters.getActiveMainViewport();
-            let { scrollX, scrollY } = getters.getActiveSheetDOMScrollInfo();
-            const { xSplit, ySplit } = getters.getPaneDivisions(sheetId);
-            let canEdgeScroll = false;
-            let timeoutDelay = MAX_DELAY;
-            const x = currentEv.clientX - position.left;
-            colIndex = getters.getColIndex(x);
-            if (only !== "vertical") {
-                const previousX = previousEv.clientX - position.left;
-                const edgeScrollInfoX = getters.getEdgeScrollCol(x, previousX, startingX);
-                if (edgeScrollInfoX.canEdgeScroll) {
-                    canEdgeScroll = true;
-                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoX.delay);
-                    let newTarget;
-                    switch (edgeScrollInfoX.direction) {
-                        case "reset":
-                            colIndex = xSplit;
-                            newTarget = xSplit;
-                            break;
-                        case 1:
-                            colIndex = right;
-                            newTarget = left + 1;
-                            break;
-                        case -1:
-                            colIndex = left - 1;
-                            while (env.model.getters.isColHidden(sheetId, colIndex)) {
-                                colIndex--;
-                            }
-                            newTarget = colIndex;
-                            break;
-                    }
-                    scrollX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
-                }
-            }
-            const y = currentEv.clientY - position.top;
-            rowIndex = getters.getRowIndex(y);
-            if (only !== "horizontal") {
-                const previousY = previousEv.clientY - position.top;
-                const edgeScrollInfoY = getters.getEdgeScrollRow(y, previousY, startingY);
-                if (edgeScrollInfoY.canEdgeScroll) {
-                    canEdgeScroll = true;
-                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoY.delay);
-                    let newTarget;
-                    switch (edgeScrollInfoY.direction) {
-                        case "reset":
-                            rowIndex = ySplit;
-                            newTarget = ySplit;
-                            break;
-                        case 1:
-                            rowIndex = bottom;
-                            newTarget = top + edgeScrollInfoY.direction;
-                            break;
-                        case -1:
-                            rowIndex = top - 1;
-                            while (env.model.getters.isRowHidden(sheetId, rowIndex)) {
-                                rowIndex--;
-                            }
-                            newTarget = rowIndex;
-                            break;
-                    }
-                    scrollY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
-                }
-            }
-            if (!canEdgeScroll) {
-                if (rowIndex === -1) {
-                    rowIndex = y < 0 ? 0 : getters.getNumberRows(sheetId) - 1;
-                }
-                if (colIndex === -1 && x < 0) {
-                    colIndex = x < 0 ? 0 : getters.getNumberCols(sheetId) - 1;
-                }
-            }
-            cbMouseMove(colIndex, rowIndex, currentEv);
-            if (canEdgeScroll) {
-                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: scrollX, offsetY: scrollY });
-                timeOutId = setTimeout(() => {
-                    timeOutId = null;
-                    onMouseMove(currentEv);
-                }, Math.round(timeoutDelay));
-            }
-            previousEv = currentEv;
-        };
-        const onMouseUp = () => {
-            clearTimeout(timeOutId);
-            cbMouseUp();
-        };
-        startDnd(onMouseMove, onMouseUp, onMouseDown);
-    }
-
-    // -----------------------------------------------------------------------------
-    // Autofill
-    // -----------------------------------------------------------------------------
-    css /* scss */ `
-  .o-autofill {
-    position: absolute;
-    height: ${AUTOFILL_EDGE_LENGTH}px;
-    width: ${AUTOFILL_EDGE_LENGTH}px;
-    border: 1px solid white;
-    box-sizing: border-box !important;
-    background-color: #1a73e8;
-  }
-
-  .o-autofill-handler {
-    position: absolute;
-    height: ${AUTOFILL_EDGE_LENGTH}px;
-    width: ${AUTOFILL_EDGE_LENGTH}px;
-    &:hover {
-      cursor: crosshair;
-    }
-  }
-
-  .o-autofill-nextvalue {
-    position: absolute;
-    background-color: #ffffff;
-    border: 1px solid black;
-    padding: 5px;
-    font-size: 12px;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-`;
-    class Autofill extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.state = owl.useState({
-                position: { left: 0, top: 0 },
-                handler: false,
-            });
-        }
-        get style() {
-            const { left, top } = this.props.position;
-            return cssPropertiesToCss({
-                top: `${top}px`,
-                left: `${left}px`,
-                visibility: this.props.isVisible ? "visible" : "hidden",
-            });
-        }
-        get handlerStyle() {
-            const { left, top } = this.state.handler ? this.state.position : this.props.position;
-            return cssPropertiesToCss({
-                top: `${top}px`,
-                left: `${left}px`,
-            });
-        }
-        get styleNextValue() {
-            const { left, top } = this.state.position;
-            return cssPropertiesToCss({
-                top: `${top + 5}px`,
-                left: `${left + 15}px`,
-            });
-        }
-        getTooltip() {
-            const tooltip = this.env.model.getters.getAutofillTooltip();
-            if (tooltip && !tooltip.component) {
-                tooltip.component = TooltipComponent;
-            }
-            return tooltip;
-        }
-        onMouseDown(ev) {
-            this.state.handler = true;
-            let lastCol;
-            let lastRow;
-            const start = {
-                left: ev.clientX - this.props.position.left,
-                top: ev.clientY - this.props.position.top,
-            };
-            const onMouseUp = () => {
-                this.state.handler = false;
-                this.state.position = { ...this.props.position };
-                this.env.model.dispatch("AUTOFILL");
-            };
-            const onMouseMove = (col, row, ev) => {
-                this.state.position = {
-                    left: ev.clientX - start.left,
-                    top: ev.clientY - start.top,
-                };
-                if (lastCol !== col || lastRow !== row) {
-                    const activeSheetId = this.env.model.getters.getActiveSheetId();
-                    const numberOfCols = this.env.model.getters.getNumberCols(activeSheetId);
-                    const numberOfRows = this.env.model.getters.getNumberRows(activeSheetId);
-                    lastCol = col === -1 ? lastCol : clip(col, 0, numberOfCols);
-                    lastRow = row === -1 ? lastRow : clip(row, 0, numberOfRows);
-                    if (lastCol !== undefined && lastRow !== undefined) {
-                        this.env.model.dispatch("AUTOFILL_SELECT", { col: lastCol, row: lastRow });
-                    }
-                }
-            };
-            dragAndDropBeyondTheViewport(this.env, onMouseMove, onMouseUp);
-        }
-        onDblClick() {
-            this.env.model.dispatch("AUTOFILL_AUTO");
-        }
-    }
-    Autofill.template = "o-spreadsheet-Autofill";
-    Autofill.props = {
-        position: Object,
-        isVisible: Boolean,
-    };
-    class TooltipComponent extends owl.Component {
-    }
-    TooltipComponent.template = owl.xml /* xml */ `
-    <div t-esc="props.content"/>
-  `;
-    TooltipComponent.props = {
-        content: String,
-    };
-
-    css /* scss */ `
-  .o-client-tag {
-    position: absolute;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    font-size: ${DEFAULT_FONT_SIZE};
-    color: white;
-    opacity: 0;
-    pointer-events: none;
-  }
-`;
-    class ClientTag extends owl.Component {
-        get tagStyle() {
-            const { col, row, color } = this.props;
-            const { height } = this.env.model.getters.getSheetViewDimensionWithHeaders();
-            const { x, y } = this.env.model.getters.getVisibleRect({
-                left: col,
-                top: row,
-                right: col,
-                bottom: row,
-            });
-            return cssPropertiesToCss({
-                bottom: `${height - y + 15}px`,
-                left: `${x - 1}px`,
-                border: `1px solid ${color}`,
-                "background-color": color,
-                opacity: this.props.active ? "opacity:1 !important" : undefined,
-            });
-        }
-    }
-    ClientTag.template = "o-spreadsheet-ClientTag";
-    ClientTag.props = {
-        active: Boolean,
-        name: String,
-        color: String,
-        col: Number,
-        row: Number,
-    };
 
     //------------------------------------------------------------------------------
     // Arg description DSL
@@ -7911,538 +9448,6 @@
             previousArgOptional = current.optional;
             previousArgDefault = current.default;
         }
-    }
-
-    // HELPERS
-    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
-    function assert(condition, message) {
-        if (!condition()) {
-            throw new Error(message);
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // FORMAT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
-    function toNumber(value) {
-        switch (typeof value) {
-            case "number":
-                return value;
-            case "boolean":
-                return value ? 1 : 0;
-            case "string":
-                if (isNumber(value) || value === "") {
-                    return parseNumber(value);
-                }
-                const internalDate = parseDateTime(value);
-                if (internalDate) {
-                    return internalDate.value;
-                }
-                throw new Error(expectNumberValueError(value));
-            default:
-                return 0;
-        }
-    }
-    function strictToNumber(value) {
-        if (value === "") {
-            throw new Error(expectNumberValueError(value));
-        }
-        return toNumber(value);
-    }
-    function toString(value) {
-        switch (typeof value) {
-            case "string":
-                return value;
-            case "number":
-                return value.toString();
-            case "boolean":
-                return value ? "TRUE" : "FALSE";
-            default:
-                return "";
-        }
-    }
-    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
-    function normalizeString(str) {
-        return str
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-    }
-    /**
-     * Normalize a value.
-     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
-     */
-    function normalizeValue(value) {
-        return typeof value === "string" ? normalizeString(value) : value;
-    }
-    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
-    function toBoolean(value) {
-        switch (typeof value) {
-            case "boolean":
-                return value;
-            case "string":
-                if (value) {
-                    let uppercaseVal = value.toUpperCase();
-                    if (uppercaseVal === "TRUE") {
-                        return true;
-                    }
-                    if (uppercaseVal === "FALSE") {
-                        return false;
-                    }
-                    throw new Error(expectBooleanValueError(value));
-                }
-                else {
-                    return false;
-                }
-            case "number":
-                return value ? true : false;
-            default:
-                return false;
-        }
-    }
-    function strictToBoolean(value) {
-        if (value === "") {
-            throw new Error(expectBooleanValueError(value));
-        }
-        return toBoolean(value);
-    }
-    function toJsDate(value) {
-        return numberToJsDate(toNumber(value));
-    }
-    // -----------------------------------------------------------------------------
-    // VISIT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function visitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        cellCb(arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                dataCb(arg);
-            }
-        }
-    }
-    function visitAny(args, cb) {
-        visitArgs(args, cb, cb);
-    }
-    function visitNumbers(args, cb) {
-        visitArgs(args, (cellValue) => {
-            if (typeof cellValue === "number") {
-                cb(cellValue);
-            }
-        }, (argValue) => {
-            cb(strictToNumber(argValue));
-        });
-    }
-    // -----------------------------------------------------------------------------
-    // REDUCE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function reduceArgs(args, cellCb, dataCb, initialValue) {
-        let val = initialValue;
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        val = cellCb(val, arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                val = dataCb(val, arg);
-            }
-        }
-        return val;
-    }
-    function reduceAny(args, cb, initialValue) {
-        return reduceArgs(args, cb, cb, initialValue);
-    }
-    function reduceNumbers(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (typeof ArgValue === "number") {
-                return cb(acc, ArgValue);
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, strictToNumber(argValue));
-        }, initialValue);
-    }
-    function reduceNumbersTextAs0(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (ArgValue !== undefined && ArgValue !== null) {
-                if (typeof ArgValue === "number") {
-                    return cb(acc, ArgValue);
-                }
-                else if (typeof ArgValue === "boolean") {
-                    return cb(acc, toNumber(ArgValue));
-                }
-                else {
-                    return cb(acc, 0);
-                }
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, toNumber(argValue));
-        }, initialValue);
-    }
-    // -----------------------------------------------------------------------------
-    // CONDITIONAL EXPLORE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    /**
-     * This function allows to visit arguments and stop the visit if necessary.
-     * It is mainly used to bypass argument evaluation for functions like OR or AND.
-     */
-    function conditionalVisitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        if (!cellCb(arg[x][y]))
-                            return;
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                if (!dataCb(arg))
-                    return;
-            }
-        }
-    }
-    function conditionalVisitBoolean(args, cb) {
-        return conditionalVisitArgs(args, (ArgValue) => {
-            if (typeof ArgValue === "boolean") {
-                return cb(ArgValue);
-            }
-            if (typeof ArgValue === "number") {
-                return cb(ArgValue ? true : false);
-            }
-            return true;
-        }, (argValue) => {
-            if (argValue !== undefined && argValue !== null) {
-                return cb(strictToBoolean(argValue));
-            }
-            return true;
-        });
-    }
-    function getPredicate(descr, isQuery) {
-        let operator;
-        let operand;
-        let subString = descr.substring(0, 2);
-        if (subString === "<=" || subString === ">=" || subString === "<>") {
-            operator = subString;
-            operand = descr.substring(2);
-        }
-        else {
-            subString = descr.substring(0, 1);
-            if (subString === "<" || subString === ">" || subString === "=") {
-                operator = subString;
-                operand = descr.substring(1);
-            }
-            else {
-                operator = "=";
-                operand = descr;
-            }
-        }
-        if (isNumber(operand)) {
-            operand = toNumber(operand);
-        }
-        else if (operand === "TRUE" || operand === "FALSE") {
-            operand = toBoolean(operand);
-        }
-        const result = { operator, operand };
-        if (typeof operand === "string") {
-            if (isQuery) {
-                operand += "*";
-            }
-            result.regexp = operandToRegExp(operand);
-        }
-        return result;
-    }
-    function operandToRegExp(operand) {
-        let exp = "";
-        let predecessor = "";
-        for (let char of operand) {
-            if (char === "?" && predecessor !== "~") {
-                exp += ".";
-            }
-            else if (char === "*" && predecessor !== "~") {
-                exp += ".*";
-            }
-            else {
-                if (char === "*" || char === "?") {
-                    //remove "~"
-                    exp = exp.slice(0, -1);
-                }
-                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
-                    exp += "\\";
-                }
-                exp += char;
-            }
-            predecessor = char;
-        }
-        return new RegExp("^" + exp + "$", "i");
-    }
-    function evaluatePredicate(value, criterion) {
-        const { operator, operand } = criterion;
-        if (value === undefined || operand === undefined) {
-            return false;
-        }
-        if (typeof operand === "number" && operator === "=") {
-            return toString(value) === toString(operand);
-        }
-        if (operator === "<>" || operator === "=") {
-            let result;
-            if (typeof value === typeof operand) {
-                if (typeof value === "string" && criterion.regexp) {
-                    result = criterion.regexp.test(value);
-                }
-                else {
-                    result = value === operand;
-                }
-            }
-            else {
-                result = false;
-            }
-            return operator === "=" ? result : !result;
-        }
-        if (typeof value === typeof operand) {
-            switch (operator) {
-                case "<":
-                    return value < operand;
-                case ">":
-                    return value > operand;
-                case "<=":
-                    return value <= operand;
-                case ">=":
-                    return value >= operand;
-            }
-        }
-        return false;
-    }
-    /**
-     * Functions used especially for predicate evaluation on ranges.
-     *
-     * Take ranges with same dimensions and take predicates, one for each range.
-     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
-     * range correspond to the associated predicate, then the function uses a callback
-     * function with the parameters "i" and "j".
-     *
-     * Syntax:
-     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
-     *
-     * - range1 (range): The range to check against predicate1.
-     * - predicate1 (string): The pattern or test to apply to range1.
-     * - range2: (range, repeatable) ranges to check.
-     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
-     *
-     * - cb(i: number, j: number) => void: the callback function.
-     *
-     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
-     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
-     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
-     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
-     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
-     */
-    function visitMatchingRanges(args, cb, isQuery = false) {
-        const countArg = args.length;
-        if (countArg % 2 === 1) {
-            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
-        }
-        const dimRow = args[0].length;
-        const dimCol = args[0][0].length;
-        let predicates = [];
-        for (let i = 0; i < countArg - 1; i += 2) {
-            const criteriaRange = args[i];
-            if (!Array.isArray(criteriaRange) ||
-                criteriaRange.length !== dimRow ||
-                criteriaRange[0].length !== dimCol) {
-                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
-            }
-            const description = toString(args[i + 1]);
-            predicates.push(getPredicate(description, isQuery));
-        }
-        for (let i = 0; i < dimRow; i++) {
-            for (let j = 0; j < dimCol; j++) {
-                let validatedPredicates = true;
-                for (let k = 0; k < countArg - 1; k += 2) {
-                    const criteriaValue = args[k][i][j];
-                    const criterion = predicates[k / 2];
-                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
-                    if (!validatedPredicates) {
-                        break;
-                    }
-                }
-                if (validatedPredicates) {
-                    cb(i, j);
-                }
-            }
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // COMMON FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function getNormalizedValueFromColumnRange(range, index) {
-        return normalizeValue(range[0][index]);
-    }
-    function getNormalizedValueFromRowRange(range, index) {
-        return normalizeValue(range[index][0]);
-    }
-    /**
-     * Perform a dichotomic search on an array and return the index of the nearest match.
-     *
-     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
-     * element of the array match the target, the method will return the first match if the array is sorted
-     * in descending order, and the last match if the array is in ascending order.
-     *
-     *
-     * @param data the array in which to search.
-     * @param target the value to search.
-     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
-     * @param sortOrder whether the array is sorted in ascending or descending order.
-     * @param rangeLength the number of elements to consider in the search array.
-     * @param getValueInData function returning the element at index i in the search array.
-     */
-    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
-        if (target === null || target === undefined) {
-            return -1;
-        }
-        const targetType = typeof target;
-        let matchVal = undefined;
-        let matchValIndex = undefined;
-        let indexLeft = 0;
-        let indexRight = rangeLength - 1;
-        let indexMedian;
-        let currentIndex;
-        let currentVal;
-        let currentType;
-        while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.floor((indexLeft + indexRight) / 2);
-            currentIndex = indexMedian;
-            currentVal = getValueInData(data, currentIndex);
-            currentType = typeof currentVal;
-            // 1 - linear search to find value with the same type
-            while (indexLeft < currentIndex && targetType !== currentType) {
-                currentIndex--;
-                currentVal = getValueInData(data, currentIndex);
-                currentType = typeof currentVal;
-            }
-            if (currentType !== targetType || currentVal === undefined) {
-                indexLeft = indexMedian + 1;
-                continue;
-            }
-            // 2 - check if value match
-            if (mode === "strict" && currentVal === target) {
-                matchVal = currentVal;
-                matchValIndex = currentIndex;
-            }
-            else if (mode === "nextSmaller" && currentVal <= target) {
-                if (matchVal === undefined ||
-                    matchVal < currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
-                    matchVal = currentVal;
-                    matchValIndex = currentIndex;
-                }
-            }
-            else if (mode === "nextGreater" && currentVal >= target) {
-                if (matchVal === undefined ||
-                    matchVal > currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
-                    matchVal = currentVal;
-                    matchValIndex = currentIndex;
-                }
-            }
-            // 3 - give new indexes for the Binary search
-            if ((sortOrder === "asc" && currentVal > target) ||
-                (sortOrder === "desc" && currentVal <= target)) {
-                indexRight = currentIndex - 1;
-            }
-            else {
-                indexLeft = indexMedian + 1;
-            }
-        }
-        // note that valMinIndex could be 0
-        return matchValIndex !== undefined ? matchValIndex : -1;
-    }
-    /**
-     * Perform a linear search and return the index of the match.
-     * -1 is returned if no value is found.
-     *
-     * Example:
-     * - [3, 6, 10], 3 => 0
-     * - [3, 6, 10], 6 => 1
-     * - [3, 6, 10], 9 => -1
-     * - [3, 6, 10], 2 => -1
-     *
-     * @param data the array to search in.
-     * @param target the value to search in the array.
-     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
-     * element from the target and "nextSmaller" the next smaller
-     * @param numberOfValues the number of elements to consider in the search array.
-     * @param getValueInData function returning the element at index i in the search array.
-     * @param reverseSearch if true, search in the array starting from the end.
-
-     */
-    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
-        if (target === null || target === undefined)
-            return -1;
-        const getValue = reverseSearch
-            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
-            : getValueInData;
-        let closestMatch = undefined;
-        let closestMatchIndex = -1;
-        for (let i = 0; i < numberOfValues; i++) {
-            const value = getValue(data, i);
-            if (value === target) {
-                return reverseSearch ? numberOfValues - i - 1 : i;
-            }
-            if (mode === "nextSmaller") {
-                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
-                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
-                    closestMatch = value;
-                    closestMatchIndex = i;
-                }
-            }
-            else if (mode === "nextGreater") {
-                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
-                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
-                    closestMatch = value;
-                    closestMatchIndex = i;
-                }
-            }
-        }
-        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
-    }
-    function compareCellValues(left, right) {
-        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
-        if (typeOrder === 0) {
-            if (typeof left === "string" && typeof right === "string") {
-                typeOrder = left.localeCompare(right);
-            }
-            else if (typeof left === "number" && typeof right === "number") {
-                typeOrder = left - right;
-            }
-            else if (typeof left === "boolean" && typeof right === "boolean") {
-                typeOrder = Number(left) - Number(right);
-            }
-        }
-        return typeOrder;
     }
 
     // -----------------------------------------------------------------------------
@@ -14931,2489 +15936,6 @@
         }
     }
 
-    const arrowMap = {
-        ArrowDown: "down",
-        ArrowLeft: "left",
-        ArrowRight: "right",
-        ArrowUp: "up",
-    };
-    function updateSelectionWithArrowKeys(ev, selection) {
-        const direction = arrowMap[ev.key];
-        if (ev.shiftKey) {
-            selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : 1);
-        }
-        else {
-            selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : 1);
-        }
-    }
-
-    css /* scss */ `
-  .o-autocomplete-dropdown {
-    pointer-events: auto;
-    background-color: #fff;
-    & > div:hover {
-      background-color: #f2f2f2;
-    }
-    .o-autocomplete-value-focus {
-      background-color: rgba(0, 0, 0, 0.08);
-    }
-
-    & > div {
-      padding: 1px 0 5px 5px;
-      .o-autocomplete-description {
-        padding-left: 5px;
-        font-size: 11px;
-      }
-    }
-  }
-`;
-    class TextValueProvider extends owl.Component {
-    }
-    TextValueProvider.template = "o-spreadsheet-TextValueProvider";
-    TextValueProvider.props = {
-        values: Array,
-        selectedIndex: Number,
-        onValueSelected: Function,
-    };
-
-    class ContentEditableHelper {
-        constructor(el) {
-            this.el = el;
-        }
-        updateEl(el) {
-            this.el = el;
-        }
-        /**
-         * select the text at position start to end, no matter the children
-         */
-        selectRange(start, end) {
-            let selection = window.getSelection();
-            this.removeSelection();
-            let range = document.createRange();
-            if (start == end && start === 0) {
-                range.setStart(this.el, 0);
-                range.setEnd(this.el, 0);
-                selection.addRange(range);
-            }
-            else {
-                const textLength = this.getText().length;
-                if (start < 0 || end > textLength) {
-                    console.warn(`wrong selection asked start ${start}, end ${end}, text content length ${textLength}`);
-                    if (start < 0)
-                        start = 0;
-                    if (end > textLength)
-                        end = textLength;
-                }
-                let startNode = this.findChildAtCharacterIndex(start);
-                let endNode = this.findChildAtCharacterIndex(end);
-                range.setStart(startNode.node, startNode.offset);
-                selection.addRange(range);
-                selection.extend(endNode.node, endNode.offset);
-            }
-        }
-        /**
-         * finds the dom element that contains the character at `offset`
-         */
-        findChildAtCharacterIndex(offset) {
-            let it = iterateChildren(this.el);
-            let current, previous;
-            let usedCharacters = offset;
-            let isFirstParagraph = true;
-            do {
-                current = it.next();
-                if (!current.done && !current.value.hasChildNodes()) {
-                    if (current.value.textContent && current.value.textContent.length < usedCharacters) {
-                        usedCharacters -= current.value.textContent.length;
-                    }
-                    else if (current.value.textContent &&
-                        current.value.textContent.length >= usedCharacters) {
-                        it.return(current.value);
-                    }
-                    previous = current.value;
-                }
-                // One new paragraph = one new line character, except for the first paragraph
-                if (!current.done && current.value.nodeName === "P") {
-                    if (isFirstParagraph) {
-                        isFirstParagraph = false;
-                    }
-                    else {
-                        usedCharacters--;
-                    }
-                }
-            } while (!current.done && usedCharacters);
-            if (current.value) {
-                return { node: current.value, offset: usedCharacters };
-            }
-            return { node: previous, offset: usedCharacters };
-        }
-        /**
-         * Sets (or Replaces all) the text inside the root element in the form of distinctive
-         * span for each element provided in `contents`.
-         *
-         * Each span will have its own fontcolor and specific class if provided in the HtmlContent object.
-         */
-        setText(contents) {
-            this.el.innerHTML = "";
-            if (contents.length === 0) {
-                return;
-            }
-            for (const line of contents) {
-                const p = document.createElement("p");
-                // Empty line
-                if (line.length === 0 || line.every((content) => !content.value && !content.class)) {
-                    p.appendChild(document.createElement("br"));
-                    this.el.appendChild(p);
-                    continue;
-                }
-                for (const content of line) {
-                    if (!content.value && !content.class) {
-                        continue;
-                    }
-                    const span = document.createElement("span");
-                    span.innerText = content.value;
-                    span.style.color = content.color || "";
-                    if (content.class) {
-                        span.classList.add(content.class);
-                    }
-                    p.appendChild(span);
-                }
-                this.el.appendChild(p);
-            }
-        }
-        scrollSelectionIntoView() {
-            var _a;
-            const focusedNode = (_a = document.getSelection()) === null || _a === void 0 ? void 0 : _a.focusNode;
-            if (!focusedNode || !this.el.contains(focusedNode))
-                return;
-            const element = focusedNode instanceof HTMLElement ? focusedNode : focusedNode.parentElement;
-            element === null || element === void 0 ? void 0 : element.scrollIntoView({ block: "nearest" });
-        }
-        /**
-         * remove the current selection of the user
-         * */
-        removeSelection() {
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-        }
-        removeAll() {
-            if (this.el) {
-                while (this.el.firstChild) {
-                    this.el.removeChild(this.el.firstChild);
-                }
-            }
-        }
-        /**
-         * finds the indexes of the current selection.
-         * */
-        getCurrentSelection() {
-            let { startElement, endElement, startSelectionOffset, endSelectionOffset } = this.getStartAndEndSelection();
-            let startSizeBefore = this.findSizeBeforeElement(startElement);
-            let endSizeBefore = this.findSizeBeforeElement(endElement);
-            return {
-                start: startSizeBefore + startSelectionOffset,
-                end: endSizeBefore + endSelectionOffset,
-            };
-        }
-        findSizeBeforeElement(nodeToFind) {
-            let usedCharacters = 0;
-            let it = iterateChildren(this.el);
-            let current = it.next();
-            let isFirstParagraph = true;
-            while (!current.done && current.value !== nodeToFind) {
-                if (!current.value.hasChildNodes()) {
-                    if (current.value.textContent) {
-                        usedCharacters += current.value.textContent.length;
-                    }
-                }
-                // One new paragraph = one new line character, except for the first paragraph
-                if (current.value.nodeName === "P" ||
-                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
-                ) {
-                    if (isFirstParagraph) {
-                        isFirstParagraph = false;
-                    }
-                    else {
-                        usedCharacters++;
-                    }
-                }
-                current = it.next();
-            }
-            if (current.value !== nodeToFind) {
-                throw new Error("Cannot find the node in the children of the element");
-            }
-            if (nodeToFind.nodeName === "P" && !isFirstParagraph && nodeToFind.textContent == "") {
-                usedCharacters++;
-            }
-            return usedCharacters;
-        }
-        getStartAndEndSelection() {
-            const selection = document.getSelection();
-            return {
-                startElement: selection.anchorNode || this.el,
-                startSelectionOffset: selection.anchorOffset,
-                endElement: selection.focusNode || this.el,
-                endSelectionOffset: selection.focusOffset,
-            };
-        }
-        getText() {
-            let text = "";
-            let it = iterateChildren(this.el);
-            let current = it.next();
-            let isFirstParagraph = true;
-            while (!current.done) {
-                if (!current.value.hasChildNodes()) {
-                    text += current.value.textContent;
-                }
-                if (current.value.nodeName === "P" ||
-                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
-                ) {
-                    if (isFirstParagraph) {
-                        isFirstParagraph = false;
-                    }
-                    else {
-                        text += NEWLINE;
-                    }
-                }
-                current = it.next();
-            }
-            return text;
-        }
-    }
-
-    // -----------------------------------------------------------------------------
-    // Formula Assistant component
-    // -----------------------------------------------------------------------------
-    css /* scss */ `
-  .o-formula-assistant {
-    .o-formula-assistant-head {
-      background-color: #f2f2f2;
-      padding: 10px;
-    }
-    .o-formula-assistant-core {
-      border-bottom: 1px solid gray;
-    }
-    .o-formula-assistant-arg-description {
-      font-size: 85%;
-    }
-    .o-formula-assistant-focus {
-      div:first-child,
-      span {
-        color: purple;
-        text-shadow: 0px 0px 1px purple;
-      }
-      div:last-child {
-        color: black;
-      }
-    }
-    .o-formula-assistant-gray {
-      color: gray;
-    }
-  }
-`;
-    class FunctionDescriptionProvider extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.assistantState = owl.useState({
-                allowCellSelectionBehind: false,
-            });
-            this.timeOutId = 0;
-        }
-        setup() {
-            owl.onWillUnmount(() => {
-                if (this.timeOutId) {
-                    clearTimeout(this.timeOutId);
-                }
-            });
-        }
-        getContext() {
-            return this.props;
-        }
-        onMouseMove() {
-            this.assistantState.allowCellSelectionBehind = true;
-            if (this.timeOutId) {
-                clearTimeout(this.timeOutId);
-            }
-            this.timeOutId = setTimeout(() => {
-                this.assistantState.allowCellSelectionBehind = false;
-            }, 2000);
-        }
-    }
-    FunctionDescriptionProvider.template = "o-spreadsheet-FunctionDescriptionProvider";
-    FunctionDescriptionProvider.props = {
-        functionName: String,
-        functionDescription: Object,
-        argToFocus: Number,
-    };
-
-    const functions$2 = functionRegistry.content;
-    const ASSISTANT_WIDTH = 300;
-    const selectionIndicatorClass = "selector-flag";
-    const selectionIndicatorColor = "#a9a9a9";
-    const selectionIndicator = "␣";
-    const functionColor = "#4a4e4d";
-    const operatorColor = "#3da4ab";
-    const tokenColors = {
-        OPERATOR: operatorColor,
-        NUMBER: "#02c39a",
-        STRING: "#00a82d",
-        FUNCTION: functionColor,
-        DEBUGGER: operatorColor,
-        LEFT_PAREN: functionColor,
-        RIGHT_PAREN: functionColor,
-        COMMA: functionColor,
-        MATCHING_PAREN: "#000000",
-    };
-    css /* scss */ `
-  .o-composer-container {
-    .o-composer {
-      overflow-y: auto;
-      overflow-x: hidden;
-      word-break: break-all;
-      padding-right: 2px;
-
-      box-sizing: border-box;
-
-      caret-color: black;
-      padding-left: 3px;
-      padding-right: 3px;
-      outline: none;
-
-      &.unfocusable {
-        pointer-events: none;
-      }
-
-      p {
-        margin-bottom: 0px;
-
-        span {
-          white-space: pre-wrap;
-          &.${selectionIndicatorClass}:after {
-            content: "${selectionIndicator}";
-            color: ${selectionIndicatorColor};
-          }
-        }
-      }
-    }
-
-    .o-composer-assistant {
-      position: absolute;
-      margin: 1px 4px;
-      pointer-events: none;
-    }
-  }
-`;
-    class Composer extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.composerRef = owl.useRef("o_composer");
-            this.contentHelper = new ContentEditableHelper(this.composerRef.el);
-            this.composerState = owl.useState({
-                positionStart: 0,
-                positionEnd: 0,
-            });
-            this.autoCompleteState = owl.useState({
-                showProvider: false,
-                values: [],
-                selectedIndex: 0,
-            });
-            this.functionDescriptionState = owl.useState({
-                showDescription: false,
-                functionName: "",
-                functionDescription: {},
-                argToFocus: 0,
-            });
-            this.isKeyStillDown = false;
-            this.compositionActive = false;
-            // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
-            this.shouldProcessInputEvents = false;
-            this.tokens = [];
-            this.keyMapping = {
-                ArrowUp: this.processArrowKeys,
-                ArrowDown: this.processArrowKeys,
-                ArrowLeft: this.processArrowKeys,
-                ArrowRight: this.processArrowKeys,
-                Enter: this.processEnterKey,
-                Escape: this.processEscapeKey,
-                F2: () => console.warn("Not implemented"),
-                F4: this.processF4Key,
-                Tab: (ev) => this.processTabKey(ev),
-            };
-        }
-        get assistantStyle() {
-            if (this.props.delimitation && this.props.rect) {
-                const { x: cellX, y: cellY, height: cellHeight } = this.props.rect;
-                const remainingHeight = this.props.delimitation.height - (cellY + cellHeight);
-                let assistantStyle = {};
-                if (cellY > remainingHeight) {
-                    // render top
-                    // We compensate 2 px of margin on the assistant style + 1px for design reasons
-                    assistantStyle.top = `-3px`;
-                    assistantStyle.transform = `translate(0, -100%)`;
-                }
-                if (cellX + ASSISTANT_WIDTH > this.props.delimitation.width) {
-                    // render left
-                    assistantStyle.right = `0px`;
-                }
-                assistantStyle.width = `${ASSISTANT_WIDTH}px`;
-                return cssPropertiesToCss(assistantStyle);
-            }
-            return cssPropertiesToCss({ width: `${ASSISTANT_WIDTH}px` });
-        }
-        setup() {
-            owl.onMounted(() => {
-                const el = this.composerRef.el;
-                this.contentHelper.updateEl(el);
-                this.processContent();
-                this.contentHelper.scrollSelectionIntoView();
-            });
-            owl.onWillUnmount(() => {
-                var _a, _b;
-                (_b = (_a = this.props).onComposerUnmounted) === null || _b === void 0 ? void 0 : _b.call(_a);
-            });
-            owl.onPatched(() => {
-                if (!this.isKeyStillDown) {
-                    this.processContent();
-                }
-            });
-        }
-        // ---------------------------------------------------------------------------
-        // Handlers
-        // ---------------------------------------------------------------------------
-        processArrowKeys(ev) {
-            if (this.env.model.getters.isSelectingForComposer()) {
-                this.functionDescriptionState.showDescription = false;
-                // Prevent the default content editable behavior which moves the cursor
-                ev.preventDefault();
-                ev.stopPropagation();
-                updateSelectionWithArrowKeys(ev, this.env.model.selection);
-                return;
-            }
-            const content = this.env.model.getters.getCurrentContent();
-            if (this.props.focus === "cellFocus" &&
-                !this.autoCompleteState.showProvider &&
-                !content.startsWith("=")) {
-                this.env.model.dispatch("STOP_EDITION");
-                return;
-            }
-            // All arrow keys are processed: up and down should move autocomplete, left
-            // and right should move the cursor.
-            ev.stopPropagation();
-            this.handleArrowKeysForAutocomplete(ev);
-        }
-        handleArrowKeysForAutocomplete(ev) {
-            // only for arrow up and down
-            if (["ArrowUp", "ArrowDown"].includes(ev.key) && this.autoCompleteState.showProvider) {
-                ev.preventDefault();
-                if (ev.key === "ArrowUp") {
-                    this.autoCompleteState.selectedIndex--;
-                    if (this.autoCompleteState.selectedIndex < 0) {
-                        this.autoCompleteState.selectedIndex = this.autoCompleteState.values.length - 1;
-                    }
-                }
-                else {
-                    this.autoCompleteState.selectedIndex =
-                        (this.autoCompleteState.selectedIndex + 1) % this.autoCompleteState.values.length;
-                }
-            }
-        }
-        processTabKey(ev) {
-            var _a;
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (this.autoCompleteState.showProvider) {
-                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
-                if (autoCompleteValue) {
-                    this.autoComplete(autoCompleteValue);
-                    return;
-                }
-            }
-            else {
-                // when completing with tab, if there is no value to complete, the active cell will be moved to the right.
-                // we can't let the model think that it is for a ref selection.
-                // todo: check if this can be removed someday
-                this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            }
-            const direction = ev.shiftKey ? "left" : "right";
-            this.env.model.dispatch("STOP_EDITION");
-            this.env.model.selection.moveAnchorCell(direction, 1);
-        }
-        processEnterKey(ev) {
-            var _a;
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (ev.altKey || ev.ctrlKey) {
-                const selection = this.contentHelper.getCurrentSelection();
-                const currentContent = this.env.model.getters.getCurrentContent();
-                const content = currentContent.slice(0, selection.start) + NEWLINE + currentContent.slice(selection.end);
-                this.env.model.dispatch("SET_CURRENT_CONTENT", {
-                    content,
-                    selection: { start: selection.start + 1, end: selection.start + 1 },
-                });
-                this.processContent();
-                this.contentHelper.scrollSelectionIntoView();
-                return;
-            }
-            this.isKeyStillDown = false;
-            if (this.autoCompleteState.showProvider) {
-                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
-                if (autoCompleteValue) {
-                    this.autoComplete(autoCompleteValue);
-                    return;
-                }
-            }
-            this.env.model.dispatch("STOP_EDITION");
-            const direction = ev.shiftKey ? "up" : "down";
-            this.env.model.selection.moveAnchorCell(direction, 1);
-        }
-        processEscapeKey() {
-            this.env.model.dispatch("STOP_EDITION", { cancel: true });
-        }
-        processF4Key() {
-            this.env.model.dispatch("CYCLE_EDITION_REFERENCES");
-            this.processContent();
-        }
-        onCompositionStart() {
-            this.compositionActive = true;
-        }
-        onCompositionEnd() {
-            this.compositionActive = false;
-        }
-        onKeydown(ev) {
-            let handler = this.keyMapping[ev.key];
-            if (handler) {
-                handler.call(this, ev);
-            }
-            else {
-                ev.stopPropagation();
-            }
-            const { start, end } = this.contentHelper.getCurrentSelection();
-            if (!this.env.model.getters.isSelectingForComposer() &&
-                !(ev.key === "Enter" && (ev.altKey || ev.ctrlKey))) {
-                this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
-                this.isKeyStillDown = true;
-            }
-        }
-        /*
-         * Triggered automatically by the content-editable between the keydown and key up
-         * */
-        onInput() {
-            if (this.props.focus === "inactive" || !this.shouldProcessInputEvents) {
-                return;
-            }
-            this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            this.env.model.dispatch("SET_CURRENT_CONTENT", {
-                content: this.contentHelper.getText(),
-                selection: this.contentHelper.getCurrentSelection(),
-            });
-        }
-        onKeyup(ev) {
-            this.isKeyStillDown = false;
-            if (this.props.focus === "inactive" ||
-                ["Control", "Alt", "Shift", "Tab", "Enter", "F4"].includes(ev.key)) {
-                return;
-            }
-            if (this.autoCompleteState.showProvider && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
-                return; // already processed in keydown
-            }
-            if (this.env.model.getters.isSelectingForComposer() &&
-                ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(ev.key)) {
-                return; // already processed in keydown
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-            this.autoCompleteState.showProvider = false;
-            if (ev.ctrlKey && ev.key === " ") {
-                this.showAutocomplete("");
-                this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-                return;
-            }
-            const { start: oldStart, end: oldEnd } = this.env.model.getters.getComposerSelection();
-            const { start, end } = this.contentHelper.getCurrentSelection();
-            if (start !== oldStart || end !== oldEnd) {
-                this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", this.contentHelper.getCurrentSelection());
-            }
-            this.processTokenAtCursor();
-            this.processContent();
-        }
-        showAutocomplete(searchTerm) {
-            this.autoCompleteState.showProvider = true;
-            let values = Object.entries(functionRegistry.content)
-                .filter(([_, { hidden }]) => !hidden)
-                .map(([text, { description }]) => {
-                return {
-                    text,
-                    description,
-                };
-            });
-            if (searchTerm) {
-                values = fuzzyLookup(searchTerm, values, (t) => t.text);
-            }
-            else {
-                // alphabetical order
-                values = values.sort((a, b) => a.text.localeCompare(b.text));
-            }
-            this.autoCompleteState.values = values.slice(0, 10);
-            this.autoCompleteState.selectedIndex = 0;
-        }
-        onMousedown(ev) {
-            if (ev.button > 0) {
-                // not main button, probably a context menu
-                return;
-            }
-            this.contentHelper.removeSelection();
-        }
-        onClick() {
-            if (this.env.model.getters.isReadonly()) {
-                return;
-            }
-            const newSelection = this.contentHelper.getCurrentSelection();
-            this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            if (this.props.focus === "inactive") {
-                this.props.onComposerContentFocused(newSelection);
-            }
-            this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
-            this.processTokenAtCursor();
-        }
-        onBlur() {
-            this.isKeyStillDown = false;
-        }
-        // ---------------------------------------------------------------------------
-        // Private
-        // ---------------------------------------------------------------------------
-        processContent() {
-            if (this.compositionActive) {
-                return;
-            }
-            const oldScroll = getElementScrollTop(this.composerRef.el);
-            this.contentHelper.removeAll(); // removes the content of the composer, to be added just after
-            this.shouldProcessInputEvents = false;
-            if (this.props.focus !== "inactive") {
-                this.contentHelper.el.focus();
-                this.contentHelper.selectRange(0, 0); // move the cursor inside the composer at 0 0.
-            }
-            const content = this.getContentLines();
-            if (content.length !== 0 && content.length[0] !== 0) {
-                this.contentHelper.setText(content);
-                const { start, end } = this.env.model.getters.getComposerSelection();
-                if (this.props.focus !== "inactive") {
-                    // Put the cursor back where it was before the rendering
-                    this.contentHelper.selectRange(start, end);
-                }
-                setElementScrollTop(this.composerRef.el, oldScroll);
-            }
-            this.shouldProcessInputEvents = true;
-        }
-        /**
-         * Get the HTML content corresponding to the current composer token, divided by lines.
-         */
-        getContentLines() {
-            let value = this.env.model.getters.getCurrentContent();
-            const isValidFormula = value.startsWith("=") && this.env.model.getters.getCurrentTokens().length > 0;
-            if (value === "") {
-                return [];
-            }
-            else if (isValidFormula && this.props.focus !== "inactive") {
-                return this.splitHtmlContentIntoLines(this.getColoredTokens());
-            }
-            return this.splitHtmlContentIntoLines([{ value }]);
-        }
-        getColoredTokens() {
-            const tokens = this.env.model.getters.getCurrentTokens();
-            const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
-            const result = [];
-            const { end, start } = this.env.model.getters.getComposerSelection();
-            for (const token of tokens) {
-                switch (token.type) {
-                    case "OPERATOR":
-                    case "NUMBER":
-                    case "FUNCTION":
-                    case "COMMA":
-                    case "STRING":
-                        result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
-                        break;
-                    case "REFERENCE":
-                        const { xc, sheetName } = splitReference(token.value);
-                        result.push({ value: token.value, color: this.rangeColor(xc, sheetName) || "#000" });
-                        break;
-                    case "SYMBOL":
-                        let value = token.value;
-                        if (["TRUE", "FALSE"].includes(value.toUpperCase())) {
-                            result.push({ value: token.value, color: tokenColors.NUMBER });
-                        }
-                        else {
-                            result.push({ value: token.value, color: "#000" });
-                        }
-                        break;
-                    case "LEFT_PAREN":
-                    case "RIGHT_PAREN":
-                        // Compute the matching parenthesis
-                        if (tokenAtCursor &&
-                            ["LEFT_PAREN", "RIGHT_PAREN"].includes(tokenAtCursor.type) &&
-                            tokenAtCursor.parenIndex &&
-                            tokenAtCursor.parenIndex === token.parenIndex) {
-                            result.push({ value: token.value, color: tokenColors.MATCHING_PAREN  });
-                        }
-                        else {
-                            result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
-                        }
-                        break;
-                    default:
-                        result.push({ value: token.value, color: "#000" });
-                        break;
-                }
-                if (this.env.model.getters.showSelectionIndicator() && end === start && end === token.end) {
-                    result[result.length - 1].class = selectionIndicatorClass;
-                }
-            }
-            return result;
-        }
-        /**
-         * Split an array of HTMLContents into lines. Each NEWLINE character encountered will create a new
-         * line. Contents can be split into multiple parts if they contain multiple NEWLINE characters.
-         */
-        splitHtmlContentIntoLines(contents) {
-            const contentSplitInLines = [];
-            let currentLine = [];
-            for (const content of contents) {
-                if (content.value.includes(NEWLINE)) {
-                    const lines = content.value.split(NEWLINE);
-                    const lastLine = lines.pop();
-                    for (const line of lines) {
-                        currentLine.push({ color: content.color, value: line }); // don't copy class, only last line should keep it
-                        contentSplitInLines.push(currentLine);
-                        currentLine = [];
-                    }
-                    currentLine.push({ ...content, value: lastLine });
-                }
-                else {
-                    currentLine.push(content);
-                }
-            }
-            if (currentLine.length) {
-                contentSplitInLines.push(currentLine);
-            }
-            // Remove useless empty contents
-            const filteredLines = [];
-            for (const line of contentSplitInLines) {
-                if (line.every(this.isContentEmpty)) {
-                    filteredLines.push([line[0]]);
-                }
-                else {
-                    filteredLines.push(line.filter((content) => !this.isContentEmpty(content)));
-                }
-            }
-            return filteredLines;
-        }
-        isContentEmpty(content) {
-            return !(content.value || content.class);
-        }
-        rangeColor(xc, sheetName) {
-            if (this.props.focus === "inactive") {
-                return undefined;
-            }
-            const highlights = this.env.model.getters.getHighlights();
-            const refSheet = sheetName
-                ? this.env.model.getters.getSheetIdByName(sheetName)
-                : this.env.model.getters.getEditionSheet();
-            const highlight = highlights.find((highlight) => {
-                if (highlight.sheetId !== refSheet)
-                    return false;
-                const range = this.env.model.getters.getRangeFromSheetXC(refSheet, xc);
-                let zone = range.zone;
-                const { height, width } = zoneToDimension(zone);
-                zone = height * width === 1 ? this.env.model.getters.expandZone(refSheet, zone) : zone;
-                return isEqual(zone, highlight.zone);
-            });
-            return highlight && highlight.color ? highlight.color : undefined;
-        }
-        /**
-         * Compute the state of the composer from the tokenAtCursor.
-         * If the token is a function or symbol (that isn't a cell/range reference) we have to initialize
-         * the autocomplete engine otherwise we initialize the formula assistant.
-         */
-        processTokenAtCursor() {
-            let content = this.env.model.getters.getCurrentContent();
-            this.autoCompleteState.showProvider = false;
-            this.functionDescriptionState.showDescription = false;
-            if (content.startsWith("=")) {
-                const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
-                if (tokenAtCursor) {
-                    const { xc } = splitReference(tokenAtCursor.value);
-                    if (tokenAtCursor.type === "FUNCTION" ||
-                        (tokenAtCursor.type === "SYMBOL" && !rangeReference.test(xc))) {
-                        // initialize Autocomplete Dropdown
-                        this.showAutocomplete(tokenAtCursor.value);
-                    }
-                    else if (tokenAtCursor.functionContext && tokenAtCursor.type !== "UNKNOWN") {
-                        // initialize Formula Assistant
-                        const tokenContext = tokenAtCursor.functionContext;
-                        const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions$2[parentFunction];
-                        const argPosition = tokenContext.argPosition;
-                        this.functionDescriptionState.functionName = parentFunction;
-                        this.functionDescriptionState.functionDescription = description;
-                        this.functionDescriptionState.argToFocus = description.getArgToFocus(argPosition + 1) - 1;
-                        this.functionDescriptionState.showDescription = true;
-                    }
-                }
-            }
-        }
-        autoComplete(value) {
-            if (value) {
-                const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
-                if (tokenAtCursor) {
-                    let start = tokenAtCursor.end;
-                    let end = tokenAtCursor.end;
-                    // shouldn't it be REFERENCE ?
-                    if (["SYMBOL", "FUNCTION"].includes(tokenAtCursor.type)) {
-                        start = tokenAtCursor.start;
-                    }
-                    const tokens = this.env.model.getters.getCurrentTokens();
-                    if (tokens.length) {
-                        value += "(";
-                        const currentTokenIndex = tokens.map((token) => token.start).indexOf(tokenAtCursor.start);
-                        if (currentTokenIndex + 1 < tokens.length) {
-                            const nextToken = tokens[currentTokenIndex + 1];
-                            if (nextToken.type === "LEFT_PAREN") {
-                                end++;
-                            }
-                        }
-                    }
-                    this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", {
-                        start,
-                        end,
-                    });
-                }
-                this.env.model.dispatch("REPLACE_COMPOSER_CURSOR_SELECTION", {
-                    text: value,
-                });
-            }
-            this.processTokenAtCursor();
-        }
-    }
-    Composer.template = "o-spreadsheet-Composer";
-    Composer.components = { TextValueProvider, FunctionDescriptionProvider };
-    Composer.defaultProps = {
-        inputStyle: "",
-    };
-    Composer.props = {
-        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
-        onComposerContentFocused: Function,
-        inputStyle: { type: String, optional: true },
-        rect: { type: Object, optional: true },
-        delimitation: { type: Object, optional: true },
-        onComposerUnmounted: { type: Function, optional: true },
-    };
-
-    const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
-    const GRID_CELL_REFERENCE_TOP_OFFSET = 28;
-    css /* scss */ `
-  div.o-grid-composer {
-    z-index: ${ComponentsImportance.GridComposer};
-    box-sizing: border-box;
-    position: absolute;
-    border: ${COMPOSER_BORDER_WIDTH}px solid ${SELECTION_BORDER_COLOR};
-
-    display: flex;
-    align-items: center;
-  }
-
-  div.o-cell-reference {
-    position: absolute;
-    z-index: ${ComponentsImportance.GridComposer};
-    background: ${SELECTION_BORDER_COLOR};
-    color: white;
-    font-size: 12px;
-    line-height: 14px;
-    padding: 6px 7px;
-    border-radius: 4px;
-  }
-`;
-    /**
-     * This component is a composer which positions itself on the grid at the anchor cell.
-     * It also applies the style of the cell to the composer input.
-     */
-    class GridComposer extends owl.Component {
-        setup() {
-            this.gridComposerRef = owl.useRef("gridComposer");
-            this.composerState = owl.useState({
-                rect: undefined,
-                delimitation: undefined,
-            });
-            const { sheetId, col, row } = this.env.model.getters.getActivePosition();
-            this.zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
-            this.rect = this.env.model.getters.getVisibleRect(this.zone);
-            this.isCellReferenceVisible = false;
-            owl.onMounted(() => {
-                const el = this.gridComposerRef.el;
-                this.composerState.rect = {
-                    x: this.rect.x,
-                    y: this.rect.y,
-                    width: el.clientWidth,
-                    height: el.clientHeight,
-                };
-                this.composerState.delimitation = {
-                    width: el.parentElement.clientWidth,
-                    height: el.parentElement.clientHeight,
-                };
-            });
-            owl.onWillUpdateProps(() => {
-                if (this.isCellReferenceVisible) {
-                    return;
-                }
-                const sheetId = this.env.model.getters.getActiveSheetId();
-                const zone = this.env.model.getters.getSelectedZone();
-                const rect = this.env.model.getters.getVisibleRect(zone);
-                if (!deepEquals(rect, this.rect) ||
-                    sheetId !== this.env.model.getters.getCurrentEditedCell().sheetId) {
-                    this.isCellReferenceVisible = true;
-                }
-            });
-        }
-        get shouldDisplayCellReference() {
-            return this.isCellReferenceVisible;
-        }
-        get cellReference() {
-            const { col, row, sheetId } = this.env.model.getters.getCurrentEditedCell();
-            const prefixSheet = sheetId !== this.env.model.getters.getActiveSheetId();
-            return `${prefixSheet ? getComposerSheetName(this.env.model.getters.getSheetName(sheetId)) + "!" : ""}${toXC(col, row)}`;
-        }
-        get cellReferenceStyle() {
-            const { x: left, y: top } = this.rect;
-            return cssPropertiesToCss({
-                left: `${left - COMPOSER_BORDER_WIDTH}px`,
-                top: `${top - GRID_CELL_REFERENCE_TOP_OFFSET}px`,
-            });
-        }
-        get containerStyle() {
-            const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
-            const cell = this.env.model.getters.getActiveCell();
-            const position = this.env.model.getters.getActivePosition();
-            const style = this.env.model.getters.getCellComputedStyle(position);
-            // position style
-            const { x: left, y: top, width, height } = this.rect;
-            // color style
-            const background = (!isFormula && style.fillColor) || "#ffffff";
-            const color = (!isFormula && style.textColor) || "#000000";
-            // font style
-            const fontSize = (!isFormula && style.fontSize) || 10;
-            const fontWeight = !isFormula && style.bold ? "bold" : undefined;
-            const fontStyle = !isFormula && style.italic ? "italic" : "normal";
-            const textDecoration = !isFormula ? getTextDecoration(style) : "none";
-            // align style
-            let textAlign = "left";
-            if (!isFormula) {
-                textAlign = style.align || cell.defaultAlign;
-            }
-            /**
-             * min-size is on the container, not the composer element, because we want to have the same size as the cell by default,
-             * including all the paddings/margins of the composer
-             *
-             * The +-1 are there to include cell borders in the composer sizing/positioning
-             */
-            return cssPropertiesToCss({
-                left: `${left - 1}px`,
-                top: `${top}px`,
-                "min-width": `${width + 1}px`,
-                "min-height": `${height + 1}px`,
-                background,
-                color,
-                "font-size": `${fontSizeInPixels(fontSize)}px`,
-                "font-weight": fontWeight,
-                "font-style": fontStyle,
-                "text-decoration": textDecoration,
-                "text-align": textAlign,
-            });
-        }
-        get composerStyle() {
-            const maxHeight = this.props.gridDims.height - this.rect.y;
-            const maxWidth = this.props.gridDims.width - this.rect.x;
-            return cssPropertiesToCss({
-                "max-width": `${maxWidth}px`,
-                "max-height": `${maxHeight}px`,
-            });
-        }
-    }
-    GridComposer.template = "o-spreadsheet-GridComposer";
-    GridComposer.components = { Composer };
-    GridComposer.props = {
-        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
-        onComposerUnmounted: Function,
-        onComposerContentFocused: Function,
-        gridDims: Object,
-    };
-
-    const CSS$2 = css /* scss */ `
-  .o-filter-icon {
-    color: ${FILTERS_COLOR};
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: ${FILTER_ICON_EDGE_LENGTH}px;
-    height: ${FILTER_ICON_EDGE_LENGTH}px;
-
-    svg {
-      path {
-        fill: ${FILTERS_COLOR};
-      }
-    }
-  }
-  .o-filter-icon:hover {
-    background: ${FILTERS_COLOR};
-    svg {
-      path {
-        fill: white;
-      }
-    }
-  }
-`;
-    class FilterIcon extends owl.Component {
-        get style() {
-            const { x, y } = this.props.position;
-            return `top:${y}px;left:${x}px`;
-        }
-    }
-    FilterIcon.style = CSS$2;
-    FilterIcon.template = "o-spreadsheet-FilterIcon";
-    FilterIcon.props = {
-        position: Object,
-        isActive: Boolean,
-        onClick: Function,
-    };
-
-    const CSS$1 = css /* scss */ ``;
-    class FilterIconsOverlay extends owl.Component {
-        getVisibleFilterHeaders() {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const headerPositions = this.env.model.getters.getFilterHeaders(sheetId);
-            return headerPositions.filter((position) => this.isPositionVisible(position.col, position.row));
-        }
-        getFilterHeaderPosition(position) {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const rowDims = this.env.model.getters.getRowDimensionsInViewport(sheetId, position.row);
-            const colDims = this.env.model.getters.getColDimensionsInViewport(sheetId, position.col);
-            // TODO : change this offset when we support vertical cell align
-            const centeringOffset = Math.floor((rowDims.size - FILTER_ICON_EDGE_LENGTH) / 2);
-            return {
-                x: colDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN - 1,
-                y: rowDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
-            };
-        }
-        isFilterActive(position) {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            return this.env.model.getters.isFilterActive({ sheetId, ...position });
-        }
-        toggleFilterMenu(position) {
-            const activePopoverType = this.env.model.getters.getPersistentPopoverTypeAtPosition(position);
-            if (activePopoverType && activePopoverType === "FilterMenu") {
-                this.env.model.dispatch("CLOSE_CELL_POPOVER");
-                return;
-            }
-            const { col, row } = position;
-            this.env.model.dispatch("OPEN_CELL_POPOVER", {
-                col,
-                row,
-                popoverType: "FilterMenu",
-            });
-        }
-        isPositionVisible(x, y) {
-            const rect = this.env.model.getters.getVisibleRect({
-                left: x,
-                right: x,
-                top: y,
-                bottom: y,
-            });
-            return !(rect.width === 0 || rect.height === 0);
-        }
-    }
-    FilterIconsOverlay.style = CSS$1;
-    FilterIconsOverlay.template = "o-spreadsheet-FilterIconsOverlay";
-    FilterIconsOverlay.components = {
-        FilterIcon,
-    };
-    FilterIconsOverlay.defaultProps = {
-        gridPosition: { x: 0, y: 0 },
-    };
-    FilterIconsOverlay.props = {
-        gridPosition: { type: Object, optional: true },
-    };
-
-    /**
-     * Add the `https` prefix to the url if it's missing
-     */
-    function withHttps(url) {
-        return !/^https?:\/\//i.test(url) ? `https://${url}` : url;
-    }
-    const urlRegistry = new Registry();
-    function createWebLink(url, label) {
-        url = withHttps(url);
-        return {
-            url,
-            label: label || url,
-            isExternal: true,
-            isUrlEditable: true,
-        };
-    }
-    urlRegistry.add("sheet_URL", {
-        match: (url) => isSheetUrl(url),
-        createLink: (url, label) => {
-            return {
-                label,
-                url,
-                isExternal: false,
-                isUrlEditable: false,
-            };
-        },
-        urlRepresentation(url, getters) {
-            const sheetId = parseSheetUrl(url);
-            return getters.tryGetSheetName(sheetId) || _lt("Invalid sheet");
-        },
-        open(url, env) {
-            const sheetId = parseSheetUrl(url);
-            env.model.dispatch("ACTIVATE_SHEET", {
-                sheetIdFrom: env.model.getters.getActiveSheetId(),
-                sheetIdTo: sheetId,
-            });
-        },
-        sequence: 0,
-    });
-    const WebUrlSpec = {
-        createLink: createWebLink,
-        match: (url) => isWebLink(url),
-        open: (url) => window.open(url, "_blank"),
-        urlRepresentation: (url) => url,
-        sequence: 0,
-    };
-    function findMatchingSpec(url) {
-        return (urlRegistry
-            .getAll()
-            .sort((a, b) => a.sequence - b.sequence)
-            .find((urlType) => urlType.match(url)) || WebUrlSpec);
-    }
-    function urlRepresentation(link, getters) {
-        return findMatchingSpec(link.url).urlRepresentation(link.url, getters);
-    }
-    function openLink(link, env) {
-        findMatchingSpec(link.url).open(link.url, env);
-    }
-    function detectLink(value) {
-        if (typeof value !== "string") {
-            return undefined;
-        }
-        if (isMarkdownLink(value)) {
-            const { label, url } = parseMarkdownLink(value);
-            return findMatchingSpec(url).createLink(url, label);
-        }
-        else if (isWebLink(value)) {
-            return createWebLink(value);
-        }
-        return undefined;
-    }
-
-    function evaluateLiteral(content, format) {
-        return createEvaluatedCell(parseLiteral(content || ""), format);
-    }
-    function parseLiteral(content) {
-        if (content.startsWith("=")) {
-            throw new Error(`Cannot parse "${content}" because it's not a literal value. It's a formula`);
-        }
-        if (isNumber(content) || isDateTime(content)) {
-            return toNumber(content);
-        }
-        else if (isBoolean(content)) {
-            return content.toUpperCase() === "TRUE" ? true : false;
-        }
-        return content;
-    }
-    function createEvaluatedCell(value, format) {
-        const link = detectLink(value);
-        if (link) {
-            return {
-                ..._createEvaluatedCell(parseLiteral(link.label), format || detectFormat(link.label)),
-                link,
-            };
-        }
-        return _createEvaluatedCell(value, format);
-    }
-    function _createEvaluatedCell(value, format) {
-        try {
-            for (const builder of builders) {
-                const evaluateCell = builder(value, format);
-                if (evaluateCell) {
-                    return evaluateCell;
-                }
-            }
-            return textCell((value || "").toString(), format);
-        }
-        catch (error) {
-            return errorCell((value || "").toString(), new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
-        }
-    }
-    function textCell(value, format) {
-        return {
-            type: CellValueType.text,
-            value,
-            format,
-            isAutoSummable: true,
-            defaultAlign: "left",
-            formattedValue: formatValue(value, format),
-        };
-    }
-    function numberCell(value, format) {
-        return {
-            type: CellValueType.number,
-            value: value || 0,
-            format,
-            isAutoSummable: true,
-            defaultAlign: "right",
-            formattedValue: formatValue(value, format),
-        };
-    }
-    const EMPTY_EVALUATED_CELL = {
-        type: CellValueType.empty,
-        value: "",
-        format: undefined,
-        isAutoSummable: true,
-        defaultAlign: "left",
-        formattedValue: "",
-    };
-    function emptyCell(format) {
-        if (format === undefined) {
-            // share the same object to save memory
-            return EMPTY_EVALUATED_CELL;
-        }
-        return {
-            type: CellValueType.empty,
-            value: "",
-            format,
-            isAutoSummable: true,
-            defaultAlign: "left",
-            formattedValue: "",
-        };
-    }
-    function dateTimeCell(value, format) {
-        const formattedValue = formatValue(value, format);
-        return {
-            type: CellValueType.number,
-            value,
-            format,
-            isAutoSummable: false,
-            defaultAlign: "right",
-            formattedValue,
-        };
-    }
-    function booleanCell(value, format) {
-        const formattedValue = value ? "TRUE" : "FALSE";
-        return {
-            type: CellValueType.boolean,
-            value,
-            format,
-            isAutoSummable: false,
-            defaultAlign: "center",
-            formattedValue,
-        };
-    }
-    function errorCell(content, error) {
-        return {
-            type: CellValueType.error,
-            value: error.errorType,
-            error,
-            isAutoSummable: false,
-            defaultAlign: "center",
-            formattedValue: error.errorType,
-        };
-    }
-    const builders = [
-        function createEmpty(value, format) {
-            if (value === "") {
-                return emptyCell(format);
-            }
-            return undefined;
-        },
-        function createDateTime(value, format) {
-            if (!!format && typeof value === "number" && isDateTimeFormat(format)) {
-                return dateTimeCell(value, format);
-            }
-            return undefined;
-        },
-        function createNumber(value, format) {
-            if (typeof value === "number") {
-                return numberCell(value, format);
-            }
-            else if (value === null) {
-                return numberCell(0, format);
-            }
-            return undefined;
-        },
-        function createBoolean(value, format) {
-            if (typeof value === "boolean") {
-                return booleanCell(value, format);
-            }
-            return undefined;
-        },
-    ];
-
-    /**
-     * An AutofillModifierImplementation is used to describe how to handle a
-     * AutofillModifier.
-     */
-    const autofillModifiersRegistry = new Registry();
-    autofillModifiersRegistry
-        .add("ALPHANUMERIC_INCREMENT_MODIFIER", {
-        apply: (rule, data) => {
-            rule.current += rule.increment;
-            const content = `${rule.prefix}${rule.current
-            .toString()
-            .padStart(rule.numberPostfixLength || 0, "0")}`;
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: { props: { content } },
-            };
-        },
-    })
-        .add("INCREMENT_MODIFIER", {
-        apply: (rule, data) => {
-            var _a;
-            rule.current += rule.increment;
-            const content = rule.current.toString();
-            const tooltipValue = formatValue(rule.current, (_a = data.cell) === null || _a === void 0 ? void 0 : _a.format);
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content: tooltipValue } } : undefined,
-            };
-        },
-    })
-        .add("COPY_MODIFIER", {
-        apply: (rule, data, getters) => {
-            var _a, _b, _c;
-            const content = ((_a = data.cell) === null || _a === void 0 ? void 0 : _a.content) || "";
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: content
-                    ? {
-                        props: {
-                            content: evaluateLiteral((_b = data.cell) === null || _b === void 0 ? void 0 : _b.content, (_c = data.cell) === null || _c === void 0 ? void 0 : _c.format).formattedValue,
-                        },
-                    }
-                    : undefined,
-            };
-        },
-    })
-        .add("FORMULA_MODIFIER", {
-        apply: (rule, data, getters, direction) => {
-            rule.current += rule.increment;
-            let x = 0;
-            let y = 0;
-            switch (direction) {
-                case "up" /* DIRECTION.UP */:
-                    x = 0;
-                    y = -rule.current;
-                    break;
-                case "down" /* DIRECTION.DOWN */:
-                    x = 0;
-                    y = rule.current;
-                    break;
-                case "left" /* DIRECTION.LEFT */:
-                    x = -rule.current;
-                    y = 0;
-                    break;
-                case "right" /* DIRECTION.RIGHT */:
-                    x = rule.current;
-                    y = 0;
-                    break;
-            }
-            const cell = data.cell;
-            if (!cell || !cell.isFormula) {
-                return { cellData: {} };
-            }
-            const sheetId = data.sheetId;
-            const ranges = getters.createAdaptedRanges(cell.dependencies, x, y, sheetId);
-            const content = getters.buildFormulaContent(sheetId, cell, ranges);
-            return {
-                cellData: {
-                    border: data.border,
-                    style: cell.style,
-                    format: cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content } } : undefined,
-            };
-        },
-    });
-
-    const autofillRulesRegistry = new Registry();
-    const numberPostfixRegExp = /(\d+)$/;
-    const stringPrefixRegExp = /^(.*\D+)/;
-    const alphaNumericValueRegExp = /^(.*\D+)(\d+)$/;
-    /**
-     * Get the consecutive evaluated cells that can pass the filter function (e.g. certain type filter).
-     * Return the one which contains the given cell
-     */
-    function getGroup(cell, cells, filter) {
-        let group = [];
-        let found = false;
-        for (let x of cells) {
-            if (x === cell) {
-                found = true;
-            }
-            const cellValue = evaluateLiteral(x === null || x === void 0 ? void 0 : x.content);
-            if (filter(cellValue)) {
-                group.push(cellValue);
-            }
-            else {
-                if (found) {
-                    return group;
-                }
-                group = [];
-            }
-        }
-        return group;
-    }
-    /**
-     * Get the average steps between numbers
-     */
-    function getAverageIncrement(group) {
-        const averages = [];
-        let last = group[0];
-        for (let i = 1; i < group.length; i++) {
-            const current = group[i];
-            averages.push(current - last);
-            last = current;
-        }
-        return averages.reduce((a, b) => a + b, 0) / averages.length;
-    }
-    /**
-     * Get the step for a group
-     */
-    function calculateIncrementBasedOnGroup(group) {
-        let increment = 1;
-        if (group.length >= 2) {
-            increment = getAverageIncrement(group) * group.length;
-        }
-        return increment;
-    }
-    autofillRulesRegistry
-        .add("simple_value_copy", {
-        condition: (cell, cells) => {
-            var _a;
-            return cells.length === 1 && !cell.isFormula && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
-        },
-        generateRule: () => {
-            return { type: "COPY_MODIFIER" };
-        },
-        sequence: 10,
-    })
-        .add("increment_alphanumeric_value", {
-        condition: (cell) => !cell.isFormula &&
-            evaluateLiteral(cell.content).type === CellValueType.text &&
-            alphaNumericValueRegExp.test(cell.content),
-        generateRule: (cell, cells) => {
-            const numberPostfix = parseInt(cell.content.match(numberPostfixRegExp)[0]);
-            const prefix = cell.content.match(stringPrefixRegExp)[0];
-            const numberPostfixLength = cell.content.length - prefix.length;
-            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.text &&
-                alphaNumericValueRegExp.test(evaluatedCell.value)) // get consecutive alphanumeric cells, no matter what the prefix is
-                .filter((cell) => prefix === cell.value.toString().match(stringPrefixRegExp)[0])
-                .map((cell) => parseInt(cell.value.toString().match(numberPostfixRegExp)[0]));
-            const increment = calculateIncrementBasedOnGroup(group);
-            return {
-                type: "ALPHANUMERIC_INCREMENT_MODIFIER",
-                prefix,
-                current: numberPostfix,
-                increment,
-                numberPostfixLength,
-            };
-        },
-        sequence: 15,
-    })
-        .add("copy_text", {
-        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
-        generateRule: () => {
-            return { type: "COPY_MODIFIER" };
-        },
-        sequence: 20,
-    })
-        .add("update_formula", {
-        condition: (cell) => cell.isFormula,
-        generateRule: (_, cells) => {
-            return { type: "FORMULA_MODIFIER", increment: cells.length, current: 0 };
-        },
-        sequence: 30,
-    })
-        .add("increment_number", {
-        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
-        generateRule: (cell, cells) => {
-            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.number).map((cell) => Number(cell.value));
-            const increment = calculateIncrementBasedOnGroup(group);
-            const evaluation = evaluateLiteral(cell.content);
-            return {
-                type: "INCREMENT_MODIFIER",
-                increment,
-                current: evaluation.type === CellValueType.number ? evaluation.value : 0,
-            };
-        },
-        sequence: 40,
-    });
-
-    const ERROR_TOOLTIP_MAX_HEIGHT = 80;
-    const ERROR_TOOLTIP_WIDTH = 180;
-    css /* scss */ `
-  .o-error-tooltip {
-    font-size: 13px;
-    background-color: white;
-    border-left: 3px solid red;
-    padding: 10px;
-    width: ${ERROR_TOOLTIP_WIDTH}px;
-    box-sizing: border-box !important;
-  }
-`;
-    class ErrorToolTip extends owl.Component {
-    }
-    ErrorToolTip.maxSize = { maxHeight: ERROR_TOOLTIP_MAX_HEIGHT };
-    ErrorToolTip.template = "o-spreadsheet-ErrorToolTip";
-    ErrorToolTip.components = {};
-    ErrorToolTip.props = {
-        text: String,
-        onClosed: { type: Function, optional: true },
-    };
-    const ErrorToolTipPopoverBuilder = {
-        onHover: (position, getters) => {
-            const cell = getters.getEvaluatedCell(position);
-            if (cell.type === CellValueType.error && cell.error.logLevel > CellErrorLevel.silent) {
-                return {
-                    isOpen: true,
-                    props: { text: cell.error.message },
-                    Component: ErrorToolTip,
-                    cellCorner: "TopRight",
-                };
-            }
-            return { isOpen: false };
-        },
-    };
-
-    css /*SCSS*/ `
-  .o-filter-menu-value {
-    padding: 4px;
-    line-height: 20px;
-    height: 28px;
-    .o-filter-menu-value-checked {
-      width: 20px;
-    }
-  }
-`;
-    class FilterMenuValueItem extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.itemRef = owl.useRef("menuValueItem");
-        }
-        setup() {
-            owl.onWillPatch(() => {
-                if (this.props.scrolledTo) {
-                    this.scrollListToSelectedValue();
-                }
-            });
-        }
-        scrollListToSelectedValue() {
-            var _a, _b;
-            if (!this.itemRef.el) {
-                return;
-            }
-            (_b = (_a = this.itemRef.el).scrollIntoView) === null || _b === void 0 ? void 0 : _b.call(_a, {
-                block: this.props.scrolledTo === "bottom" ? "end" : "start",
-            });
-        }
-    }
-    FilterMenuValueItem.template = "o-spreadsheet-FilterMenuValueItem";
-    FilterMenuValueItem.props = {
-        value: String,
-        isChecked: Boolean,
-        isSelected: Boolean,
-        onMouseMove: Function,
-        onClick: Function,
-        scrolledTo: { type: String, optional: true },
-    };
-
-    const FILTER_MENU_HEIGHT = 295;
-    const CSS = css /* scss */ `
-  .o-filter-menu {
-    box-sizing: border-box;
-    padding: 8px 16px;
-    height: ${FILTER_MENU_HEIGHT}px;
-    line-height: 1;
-
-    .o-filter-menu-item {
-      display: flex;
-      box-sizing: border-box;
-      height: ${MENU_ITEM_HEIGHT}px;
-      padding: 4px 4px 4px 0px;
-      cursor: pointer;
-      user-select: none;
-
-      &.selected {
-        background-color: rgba(0, 0, 0, 0.08);
-      }
-    }
-
-    input {
-      box-sizing: border-box;
-      margin-bottom: 5px;
-      border: 1px solid #949494;
-      height: 24px;
-      padding-right: 28px;
-    }
-
-    .o-search-icon {
-      right: 5px;
-      top: 4px;
-
-      svg {
-        height: 16px;
-        width: 16px;
-        vertical-align: middle;
-      }
-    }
-
-    .o-filter-menu-actions {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 4px;
-
-      .o-filter-menu-action-text {
-        cursor: pointer;
-        margin-right: 10px;
-        color: blue;
-        text-decoration: underline;
-      }
-    }
-
-    .o-filter-menu-list {
-      flex: auto;
-      overflow-y: auto;
-      border: 1px solid #949494;
-
-      .o-filter-menu-no-values {
-        color: #949494;
-        font-style: italic;
-      }
-    }
-
-    .o-filter-menu-buttons {
-      margin-top: 9px;
-
-      .o-filter-menu-button {
-        border: 1px solid lightgrey;
-        padding: 6px 10px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-weight: 500;
-        line-height: 16px;
-      }
-
-      .o-filter-menu-button-cancel {
-        background: white;
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.08);
-        }
-      }
-
-      .o-filter-menu-button-primary {
-        background-color: #188038;
-        &:hover {
-          background-color: #1d9641;
-        }
-        color: white;
-        font-weight: bold;
-        margin-left: 10px;
-      }
-    }
-  }
-`;
-    class FilterMenu extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.state = owl.useState({
-                values: [],
-                textFilter: "",
-                selectedValue: undefined,
-            });
-            this.searchBar = owl.useRef("filterMenuSearchBar");
-        }
-        setup() {
-            owl.onWillUpdateProps((nextProps) => {
-                if (!deepEquals(nextProps.filterPosition, this.props.filterPosition)) {
-                    this.state.values = this.getFilterValues(nextProps.filterPosition);
-                }
-            });
-            this.state.values = this.getFilterValues(this.props.filterPosition);
-        }
-        getFilterValues(position) {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const filter = this.env.model.getters.getFilter({ sheetId, ...position });
-            if (!filter) {
-                return [];
-            }
-            const cellValues = (filter.filteredZone ? positions(filter.filteredZone) : [])
-                .filter(({ row }) => !this.env.model.getters.isRowHidden(sheetId, row))
-                .map(({ col, row }) => this.env.model.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue);
-            const filterValues = this.env.model.getters.getFilterValues({ sheetId, ...position });
-            const strValues = [...cellValues, ...filterValues];
-            const normalizedFilteredValues = filterValues.map(toLowerCase);
-            // Set with lowercase values to avoid duplicates
-            const normalizedValues = [...new Set(strValues.map(toLowerCase))];
-            const sortedValues = normalizedValues.sort((val1, val2) => val1.localeCompare(val2, undefined, { numeric: true, sensitivity: "base" }));
-            return sortedValues.map((normalizedValue) => {
-                const checked = normalizedFilteredValues.findIndex((filteredValue) => filteredValue === normalizedValue) ===
-                    -1;
-                return {
-                    checked,
-                    string: strValues.find((val) => toLowerCase(val) === normalizedValue) || "",
-                };
-            });
-        }
-        checkValue(value) {
-            var _a;
-            this.state.selectedValue = value.string;
-            value.checked = !value.checked;
-            (_a = this.searchBar.el) === null || _a === void 0 ? void 0 : _a.focus();
-        }
-        onMouseMove(value) {
-            this.state.selectedValue = value.string;
-        }
-        selectAll() {
-            this.state.values.forEach((value) => (value.checked = true));
-        }
-        clearAll() {
-            this.state.values.forEach((value) => (value.checked = false));
-        }
-        get filterTable() {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const position = this.props.filterPosition;
-            return this.env.model.getters.getFilterTable({ sheetId, ...position });
-        }
-        get displayedValues() {
-            if (!this.state.textFilter) {
-                return this.state.values;
-            }
-            return fuzzyLookup(this.state.textFilter, this.state.values, (val) => val.string);
-        }
-        confirm() {
-            var _a, _b;
-            const position = this.props.filterPosition;
-            this.env.model.dispatch("UPDATE_FILTER", {
-                ...position,
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                values: this.state.values.filter((val) => !val.checked).map((val) => val.string),
-            });
-            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
-        }
-        cancel() {
-            var _a, _b;
-            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
-        }
-        onKeyDown(ev) {
-            const displayedValues = this.displayedValues;
-            if (displayedValues.length === 0)
-                return;
-            let selectedIndex = undefined;
-            if (this.state.selectedValue !== undefined) {
-                const index = displayedValues.findIndex((val) => val.string === this.state.selectedValue);
-                selectedIndex = index === -1 ? undefined : index;
-            }
-            switch (ev.key) {
-                case "ArrowDown":
-                    if (selectedIndex === undefined) {
-                        selectedIndex = 0;
-                    }
-                    else {
-                        selectedIndex = Math.min(selectedIndex + 1, displayedValues.length - 1);
-                    }
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    break;
-                case "ArrowUp":
-                    if (selectedIndex === undefined) {
-                        selectedIndex = displayedValues.length - 1;
-                    }
-                    else {
-                        selectedIndex = Math.max(selectedIndex - 1, 0);
-                    }
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    break;
-                case "Enter":
-                    if (selectedIndex !== undefined) {
-                        this.checkValue(displayedValues[selectedIndex]);
-                    }
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                    break;
-            }
-            this.state.selectedValue =
-                selectedIndex !== undefined ? displayedValues[selectedIndex].string : undefined;
-            if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
-                this.scrollListToSelectedValue(ev.key);
-            }
-        }
-        clearScrolledToValue() {
-            this.state.values.forEach((val) => (val.scrolledTo = undefined));
-        }
-        scrollListToSelectedValue(arrow) {
-            this.clearScrolledToValue();
-            const selectedValue = this.state.values.find((val) => val.string === this.state.selectedValue);
-            if (selectedValue) {
-                selectedValue.scrolledTo = arrow === "ArrowUp" ? "top" : "bottom";
-            }
-        }
-        sortFilterZone(sortDirection) {
-            var _a, _b;
-            const filterPosition = this.props.filterPosition;
-            const filterTable = this.filterTable;
-            if (!filterPosition || !filterTable || !filterTable.contentZone) {
-                return;
-            }
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            this.env.model.dispatch("SORT_CELLS", {
-                sheetId,
-                col: filterPosition.col,
-                row: filterTable.contentZone.top,
-                zone: filterTable.contentZone,
-                sortDirection,
-                sortOptions: { emptyCellAsZero: true, sortHeaders: true },
-            });
-            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
-        }
-    }
-    FilterMenu.size = { width: MENU_WIDTH, height: FILTER_MENU_HEIGHT };
-    FilterMenu.template = "o-spreadsheet-FilterMenu";
-    FilterMenu.style = CSS;
-    FilterMenu.components = { FilterMenuValueItem };
-    FilterMenu.props = {
-        filterPosition: Object,
-        onClosed: { type: Function, optional: true },
-    };
-    const FilterMenuPopoverBuilder = {
-        onOpen: (position, getters) => {
-            return {
-                isOpen: true,
-                props: { filterPosition: position },
-                Component: FilterMenu,
-                cellCorner: "BottomLeft",
-            };
-        },
-    };
-
-    const LINK_TOOLTIP_HEIGHT = 32;
-    const LINK_TOOLTIP_WIDTH = 220;
-    css /* scss */ `
-  .o-link-tool {
-    font-size: 13px;
-    background-color: white;
-    box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
-    padding: 6px 12px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    height: ${LINK_TOOLTIP_HEIGHT}px;
-    width: ${LINK_TOOLTIP_WIDTH}px;
-    box-sizing: border-box !important;
-
-    img {
-      margin-right: 3px;
-      width: 16px;
-      height: 16px;
-    }
-
-    a.o-link {
-      color: #01666b;
-      text-decoration: none;
-      flex-grow: 2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    a.o-link:hover {
-      text-decoration: none;
-      color: #001d1f;
-      cursor: pointer;
-    }
-  }
-  .o-link-icon {
-    float: right;
-    padding-left: 5px;
-    .o-icon {
-      height: 16px;
-    }
-  }
-  .o-link-icon .o-icon {
-    height: 13px;
-  }
-  .o-link-icon:hover {
-    cursor: pointer;
-    color: #000;
-  }
-`;
-    class LinkDisplay extends owl.Component {
-        get cell() {
-            const { col, row } = this.props.cellPosition;
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            return this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
-        }
-        get link() {
-            if (this.cell.link) {
-                return this.cell.link;
-            }
-            const { col, row } = this.props.cellPosition;
-            throw new Error(`LinkDisplay Component can only be used with link cells. ${toXC(col, row)} is not a link.`);
-        }
-        getUrlRepresentation(link) {
-            return urlRepresentation(link, this.env.model.getters);
-        }
-        openLink() {
-            openLink(this.link, this.env);
-        }
-        edit() {
-            const { col, row } = this.props.cellPosition;
-            this.env.model.dispatch("OPEN_CELL_POPOVER", {
-                col,
-                row,
-                popoverType: "LinkEditor",
-            });
-        }
-        unlink() {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const { col, row } = this.props.cellPosition;
-            const style = this.env.model.getters.getCellComputedStyle({ sheetId, col, row });
-            const textColor = (style === null || style === void 0 ? void 0 : style.textColor) === LINK_COLOR ? undefined : style === null || style === void 0 ? void 0 : style.textColor;
-            this.env.model.dispatch("UPDATE_CELL", {
-                col,
-                row,
-                sheetId,
-                content: this.link.label,
-                style: { ...style, textColor, underline: undefined },
-            });
-        }
-    }
-    LinkDisplay.components = { Menu };
-    LinkDisplay.template = "o-spreadsheet-LinkDisplay";
-    const LinkCellPopoverBuilder = {
-        onHover: (position, getters) => {
-            const cell = getters.getEvaluatedCell(position);
-            const shouldDisplayLink = !getters.isDashboard() && cell.link && getters.isVisibleInViewport(position);
-            if (!shouldDisplayLink)
-                return { isOpen: false };
-            return {
-                isOpen: true,
-                Component: LinkDisplay,
-                props: { cellPosition: position },
-                cellCorner: "BottomLeft",
-            };
-        },
-    };
-    LinkDisplay.props = {
-        cellPosition: Object,
-        onClosed: { type: Function, optional: true },
-    };
-
-    //------------------------------------------------------------------------------
-    // Link Menu Registry
-    //------------------------------------------------------------------------------
-    const linkMenuRegistry = new MenuItemRegistry();
-    linkMenuRegistry
-        .add("sheet", {
-        name: _lt("Link sheet"),
-        sequence: 10,
-    })
-        .addChild("sheet_list", ["sheet"], (env) => {
-        const sheets = env.model.getters
-            .getSheetIds()
-            .map((sheetId) => env.model.getters.getSheet(sheetId));
-        return sheets.map((sheet) => ({
-            id: sheet.id,
-            name: sheet.name,
-            action: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
-        }));
-    });
-
-    const MENU_OFFSET_X = 320;
-    const MENU_OFFSET_Y = 100;
-    const PADDING = 12;
-    const LINK_EDITOR_WIDTH = 340;
-    const LINK_EDITOR_HEIGHT = 165;
-    css /* scss */ `
-  .o-link-editor {
-    font-size: 13px;
-    background-color: white;
-    box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
-    padding: ${PADDING}px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 4px;
-    height: ${LINK_EDITOR_HEIGHT}px;
-    width: ${LINK_EDITOR_WIDTH}px;
-
-    .o-section {
-      .o-section-title {
-        font-weight: bold;
-        color: dimgrey;
-        margin-bottom: 5px;
-      }
-    }
-    .o-buttons {
-      padding-left: 16px;
-      padding-top: 16px;
-      padding-bottom: 16px;
-      text-align: right;
-      .o-button {
-        border: 1px solid lightgrey;
-        padding: 0px 20px 0px 20px;
-        border-radius: 4px;
-        font-weight: 500;
-        font-size: 14px;
-        height: 30px;
-        line-height: 16px;
-        background: white;
-        margin-right: 8px;
-        &:hover:enabled {
-          background-color: rgba(0, 0, 0, 0.08);
-        }
-      }
-      .o-button:enabled {
-        cursor: pointer;
-      }
-      .o-button:last-child {
-        margin-right: 0px;
-      }
-    }
-    input {
-      box-sizing: border-box;
-      width: 100%;
-      border-radius: 4px;
-      padding: 4px 23px 4px 10px;
-      border: none;
-      height: 24px;
-      border: 1px solid lightgrey;
-    }
-    .o-link-url {
-      position: relative;
-      flex-grow: 1;
-      button {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        border: none;
-        height: 20px;
-        width: 20px;
-        background-color: #fff;
-        margin: 2px 3px 1px 0px;
-        padding: 0px 1px 0px 0px;
-      }
-      button:hover {
-        cursor: pointer;
-      }
-    }
-  }
-`;
-    class LinkEditor extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.menuItems = linkMenuRegistry.getMenuItems();
-            this.link = owl.useState(this.defaultState);
-            this.menu = owl.useState({
-                isOpen: false,
-            });
-            this.linkEditorRef = owl.useRef("linkEditor");
-            this.position = useAbsoluteBoundingRect(this.linkEditorRef);
-            this.urlInput = owl.useRef("urlInput");
-        }
-        setup() {
-            owl.onMounted(() => { var _a; return (_a = this.urlInput.el) === null || _a === void 0 ? void 0 : _a.focus(); });
-        }
-        get defaultState() {
-            const { col, row } = this.props.cellPosition;
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
-            if (cell.link) {
-                return {
-                    url: cell.link.url,
-                    label: cell.formattedValue,
-                    isUrlEditable: cell.link.isUrlEditable,
-                };
-            }
-            return {
-                label: cell.formattedValue,
-                url: "",
-                isUrlEditable: true,
-            };
-        }
-        get menuPosition() {
-            return {
-                x: this.position.x + MENU_OFFSET_X - PADDING - 2,
-                y: this.position.y + MENU_OFFSET_Y,
-            };
-        }
-        onSpecialLink(ev) {
-            const { detail: markdownLink } = ev;
-            const link = detectLink(markdownLink);
-            if (!link) {
-                return;
-            }
-            this.link.url = link.url;
-            this.link.label = link.label;
-            this.link.isUrlEditable = link.isUrlEditable;
-        }
-        getUrlRepresentation(link) {
-            return urlRepresentation(link, this.env.model.getters);
-        }
-        openMenu() {
-            this.menu.isOpen = true;
-        }
-        removeLink() {
-            this.link.url = "";
-            this.link.isUrlEditable = true;
-        }
-        save() {
-            var _a, _b;
-            const { col, row } = this.props.cellPosition;
-            const label = this.link.label || this.link.url;
-            this.env.model.dispatch("UPDATE_CELL", {
-                col: col,
-                row: row,
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                content: markdownLink(label, this.link.url),
-            });
-            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
-        }
-        cancel() {
-            var _a, _b;
-            (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
-        }
-        onKeyDown(ev) {
-            switch (ev.key) {
-                case "Enter":
-                    if (this.link.url) {
-                        this.save();
-                    }
-                    ev.stopPropagation();
-                    break;
-                case "Escape":
-                    this.cancel();
-                    ev.stopPropagation();
-                    break;
-            }
-        }
-    }
-    LinkEditor.template = "o-spreadsheet-LinkEditor";
-    LinkEditor.components = { Menu };
-    const LinkEditorPopoverBuilder = {
-        onOpen: (position, getters) => {
-            return {
-                isOpen: true,
-                props: { cellPosition: position },
-                Component: LinkEditor,
-                cellCorner: "BottomLeft",
-            };
-        },
-    };
-    LinkEditor.props = {
-        cellPosition: Object,
-        onClosed: { type: Function, optional: true },
-    };
-
-    const cellPopoverRegistry = new Registry();
-    cellPopoverRegistry
-        .add("ErrorToolTip", ErrorToolTipPopoverBuilder)
-        .add("LinkCell", LinkCellPopoverBuilder)
-        .add("LinkEditor", LinkEditorPopoverBuilder)
-        .add("FilterMenu", FilterMenuPopoverBuilder);
-
-    /**
-     * Registry intended to support usual currencies. It is mainly used to create
-     * currency formats that can be selected or modified when customizing formats.
-     */
-    const currenciesRegistry = new Registry();
-
-    class ImageFigure extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.menuState = owl.useState({
-                isOpen: false,
-                position: null,
-            });
-            this.imageContainerRef = owl.useRef("o-image");
-            this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
-            this.position = useAbsoluteBoundingRect(this.imageContainerRef);
-            this.menuItems = createMenu([
-                {
-                    id: "copy",
-                    name: _lt("Copy"),
-                    description: "Ctrl+C",
-                    action: async () => {
-                        this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
-                        this.env.model.dispatch("COPY");
-                        await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                    },
-                },
-                {
-                    id: "cut",
-                    name: _lt("Cut"),
-                    description: "Ctrl+X",
-                    action: async () => {
-                        this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
-                        this.env.model.dispatch("CUT");
-                        await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                    },
-                },
-                {
-                    id: "reset_size",
-                    name: _lt("Reset size"),
-                    action: () => {
-                        const size = this.env.model.getters.getImageSize(this.figureId);
-                        const { height, width } = getMaxFigureSize(this.env.model.getters, size);
-                        this.env.model.dispatch("UPDATE_FIGURE", {
-                            sheetId: this.env.model.getters.getActiveSheetId(),
-                            id: this.figureId,
-                            height,
-                            width,
-                        });
-                    },
-                },
-                {
-                    id: "delete",
-                    name: _lt("Delete image"),
-                    description: "delete",
-                    action: () => {
-                        this.env.model.dispatch("DELETE_FIGURE", {
-                            sheetId: this.env.model.getters.getActiveSheetId(),
-                            id: this.figureId,
-                        });
-                    },
-                },
-            ]);
-        }
-        onContextMenu(ev) {
-            const position = {
-                x: this.position.x + ev.offsetX,
-                y: this.position.y + ev.offsetY,
-            };
-            this.openContextMenu(position);
-        }
-        showMenu() {
-            const { x, y, width } = this.menuButtonRect;
-            const menuPosition = {
-                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
-                y: y,
-            };
-            this.openContextMenu(menuPosition);
-        }
-        openContextMenu(position) {
-            this.menuState.isOpen = true;
-            this.menuState.position = position;
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        get figureId() {
-            return this.props.figure.id;
-        }
-        get getImagePath() {
-            return this.env.model.getters.getImagePath(this.figureId);
-        }
-    }
-    ImageFigure.template = "o-spreadsheet-ImageFigure";
-    ImageFigure.components = { Menu };
-    ImageFigure.props = {
-        figure: Object,
-        onFigureDeleted: Function,
-    };
-
-    const figureRegistry = new Registry();
-    figureRegistry.add("chart", { Component: ChartFigure, SidePanelComponent: "ChartPanel" });
-    figureRegistry.add("image", {
-        Component: ImageFigure,
-        keepRatio: true,
-        minFigSize: 20,
-        borderWidth: 0,
-    });
-
-    const inverseCommandRegistry = new Registry()
-        .add("ADD_COLUMNS_ROWS", inverseAddColumnsRows)
-        .add("REMOVE_COLUMNS_ROWS", inverseRemoveColumnsRows)
-        .add("ADD_MERGE", inverseAddMerge)
-        .add("REMOVE_MERGE", inverseRemoveMerge)
-        .add("CREATE_SHEET", inverseCreateSheet)
-        .add("DELETE_SHEET", inverseDeleteSheet)
-        .add("DUPLICATE_SHEET", inverseDuplicateSheet)
-        .add("CREATE_FIGURE", inverseCreateFigure)
-        .add("CREATE_CHART", inverseCreateChart)
-        .add("HIDE_COLUMNS_ROWS", inverseHideColumnsRows)
-        .add("UNHIDE_COLUMNS_ROWS", inverseUnhideColumnsRows);
-    for (const cmd of coreTypes.values()) {
-        if (!inverseCommandRegistry.contains(cmd)) {
-            inverseCommandRegistry.add(cmd, identity);
-        }
-    }
-    function identity(cmd) {
-        return [cmd];
-    }
-    function inverseAddColumnsRows(cmd) {
-        const elements = [];
-        let start = cmd.base;
-        if (cmd.position === "after") {
-            start++;
-        }
-        for (let i = 0; i < cmd.quantity; i++) {
-            elements.push(i + start);
-        }
-        return [
-            {
-                type: "REMOVE_COLUMNS_ROWS",
-                dimension: cmd.dimension,
-                elements,
-                sheetId: cmd.sheetId,
-            },
-        ];
-    }
-    function inverseAddMerge(cmd) {
-        return [{ type: "REMOVE_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
-    }
-    function inverseRemoveMerge(cmd) {
-        return [{ type: "ADD_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
-    }
-    function inverseCreateSheet(cmd) {
-        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetId }];
-    }
-    function inverseDuplicateSheet(cmd) {
-        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetIdTo }];
-    }
-    function inverseRemoveColumnsRows(cmd) {
-        const commands = [];
-        const elements = [...cmd.elements].sort((a, b) => a - b);
-        for (let group of groupConsecutive(elements)) {
-            const column = group[0] === 0 ? 0 : group[0] - 1;
-            const position = group[0] === 0 ? "before" : "after";
-            commands.push({
-                type: "ADD_COLUMNS_ROWS",
-                dimension: cmd.dimension,
-                quantity: group.length,
-                base: column,
-                sheetId: cmd.sheetId,
-                position,
-            });
-        }
-        return commands;
-    }
-    function inverseDeleteSheet(cmd) {
-        return [{ type: "CREATE_SHEET", sheetId: cmd.sheetId, position: 1 }];
-    }
-    function inverseCreateFigure(cmd) {
-        return [{ type: "DELETE_FIGURE", id: cmd.figure.id, sheetId: cmd.sheetId }];
-    }
-    function inverseCreateChart(cmd) {
-        return [{ type: "DELETE_FIGURE", id: cmd.id, sheetId: cmd.sheetId }];
-    }
-    function inverseHideColumnsRows(cmd) {
-        return [
-            {
-                type: "UNHIDE_COLUMNS_ROWS",
-                sheetId: cmd.sheetId,
-                dimension: cmd.dimension,
-                elements: cmd.elements,
-            },
-        ];
-    }
-    function inverseUnhideColumnsRows(cmd) {
-        return [
-            {
-                type: "HIDE_COLUMNS_ROWS",
-                sheetId: cmd.sheetId,
-                dimension: cmd.dimension,
-                elements: cmd.elements,
-            },
-        ];
-    }
-
-    function getSheetMenuRegistry(args) {
-        const sheetMenuRegistry = new MenuItemRegistry();
-        sheetMenuRegistry
-            .add("delete", {
-            name: _lt("Delete"),
-            sequence: 10,
-            isVisible: (env) => {
-                return env.model.getters.getSheetIds().length > 1;
-            },
-            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet?"), () => {
-                env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
-            }),
-        })
-            .add("duplicate", {
-            name: _lt("Duplicate"),
-            sequence: 20,
-            action: (env) => {
-                const sheetIdFrom = env.model.getters.getActiveSheetId();
-                const sheetIdTo = env.model.uuidGenerator.uuidv4();
-                env.model.dispatch("DUPLICATE_SHEET", {
-                    sheetId: sheetIdFrom,
-                    sheetIdTo,
-                });
-                env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
-            },
-        })
-            .add("rename", {
-            name: _lt("Rename"),
-            sequence: 30,
-            action: () => args.renameSheetCallback(),
-        })
-            .add("move_right", {
-            name: _lt("Move right"),
-            sequence: 40,
-            isVisible: (env) => {
-                const sheetId = env.model.getters.getActiveSheetId();
-                const sheetIds = env.model.getters.getVisibleSheetIds();
-                return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
-            },
-            action: (env) => env.model.dispatch("MOVE_SHEET", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                delta: 1,
-            }),
-        })
-            .add("move_left", {
-            name: _lt("Move left"),
-            sequence: 50,
-            isVisible: (env) => {
-                const sheetId = env.model.getters.getActiveSheetId();
-                return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
-            },
-            action: (env) => env.model.dispatch("MOVE_SHEET", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                delta: -1,
-            }),
-        })
-            .add("hide_sheet", {
-            name: _lt("Hide sheet"),
-            sequence: 60,
-            isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
-            action: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
-        });
-        return sheetMenuRegistry;
-    }
-
     function interactiveFreezeColumnsRows(env, dimension, base) {
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
@@ -17967,6 +16489,22 @@
     }
     const otRegistry = new OTRegistry();
 
+    const arrowMap = {
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+        ArrowUp: "up",
+    };
+    function updateSelectionWithArrowKeys(ev, selection) {
+        const direction = arrowMap[ev.key];
+        if (ev.shiftKey) {
+            selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : 1);
+        }
+        else {
+            selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : 1);
+        }
+    }
+
     const uuidGenerator = new UuidGenerator();
     css /* scss */ `
   .o-selection {
@@ -18425,7 +16963,7 @@
         }
         onColorClick(color) {
             if (color) {
-                this.props.onColorPicked(color);
+                this.props.onColorPicked(toHex(color));
             }
         }
         getCheckMarkColor() {
@@ -18440,8 +16978,10 @@
                 this.state.isCurrentColorInvalid = true;
                 return;
             }
+            const color = toHex(this.state.currentColor);
             this.state.isCurrentColorInvalid = false;
-            this.props.onColorPicked(this.state.currentColor);
+            this.props.onColorPicked(color);
+            this.state.currentColor = color;
         }
         toggleColorPicker() {
             this.state.showGradient = !this.state.showGradient;
@@ -20178,9 +18718,8 @@
 
     .o-figure-menu {
       right: 0px;
+      top: 0px;
       display: none;
-      position: absolute;
-      padding: 5px;
     }
 
     .o-figure-menu-item {
@@ -20198,7 +18737,10 @@
     class FigureComponent extends owl.Component {
         constructor() {
             super(...arguments);
+            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
             this.figureRef = owl.useRef("figure");
+            this.menuButtonRef = owl.useRef("menuButton");
+            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
         }
         get isSelected() {
             return this.env.model.getters.getSelectedFigureId() === this.props.figure.id;
@@ -20306,9 +18848,33 @@
                     break;
             }
         }
+        onContextMenu(ev) {
+            if (this.env.isDashboard())
+                return;
+            const position = {
+                x: ev.clientX,
+                y: ev.clientY,
+            };
+            this.openContextMenu(position);
+        }
+        showMenu() {
+            const { x, y, width } = this.menuButtonRect;
+            const menuPosition = {
+                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
+                y: y,
+            };
+            this.openContextMenu(menuPosition);
+        }
+        openContextMenu(position) {
+            this.menuState.isOpen = true;
+            this.menuState.position = position;
+            this.menuState.menuItems = figureRegistry
+                .get(this.props.figure.tag)
+                .menuBuilder(this.props.figure.id, this.props.onFigureDeleted, this.env);
+        }
     }
     FigureComponent.template = "o-spreadsheet-FigureComponent";
-    FigureComponent.components = {};
+    FigureComponent.components = { Menu };
     FigureComponent.defaultProps = {
         onFigureDeleted: () => { },
         onMouseDown: () => { },
@@ -20320,6 +18886,1405 @@
         onFigureDeleted: { type: Function, optional: true },
         onMouseDown: { type: Function, optional: true },
         onClickAnchor: { type: Function, optional: true },
+    };
+
+    function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
+        const _onMouseDown = (ev) => {
+            ev.preventDefault();
+            onMouseDown(ev);
+        };
+        const _onMouseMove = (ev) => {
+            ev.preventDefault();
+            onMouseMove(ev);
+        };
+        const _onMouseUp = (ev) => {
+            ev.preventDefault();
+            onMouseUp(ev);
+            window.removeEventListener("mousedown", _onMouseDown);
+            window.removeEventListener("mouseup", _onMouseUp);
+            window.removeEventListener("dragstart", _onDragStart);
+            window.removeEventListener("mousemove", _onMouseMove);
+            window.removeEventListener("wheel", _onMouseMove);
+        };
+        function _onDragStart(ev) {
+            ev.preventDefault();
+        }
+        window.addEventListener("mousedown", _onMouseDown);
+        window.addEventListener("mouseup", _onMouseUp);
+        window.addEventListener("dragstart", _onDragStart);
+        window.addEventListener("mousemove", _onMouseMove);
+        // mouse wheel on window is by default a passive event.
+        // preventDefault() is not allowed in passive event handler.
+        // https://chromestatus.com/feature/6662647093133312
+        window.addEventListener("wheel", _onMouseMove, { passive: false });
+    }
+    /**
+     * Function to be used during a mousedown event, this function allows to
+     * perform actions related to the mousemove and mouseup events and adjusts the viewport
+     * when the new position related to the mousemove event is outside of it.
+     * Among inputs are two callback functions. First intended for actions performed during
+     * the mousemove event, it receives as parameters the current position of the mousemove
+     * (occurrence of the current column and the current row). Second intended for actions
+     * performed during the mouseup event.
+     */
+    function dragAndDropBeyondTheViewport(env, cbMouseMove, cbMouseUp, only = false) {
+        let timeOutId = null;
+        let currentEv;
+        let previousEv;
+        let startingEv;
+        let startingX;
+        let startingY;
+        const getters = env.model.getters;
+        const sheetId = getters.getActiveSheetId();
+        const position = gridOverlayPosition();
+        let colIndex;
+        let rowIndex;
+        const onMouseDown = (ev) => {
+            previousEv = ev;
+            startingEv = ev;
+            startingX = startingEv.clientX - position.left;
+            startingY = startingEv.clientY - position.top;
+        };
+        const onMouseMove = (ev) => {
+            currentEv = ev;
+            if (timeOutId) {
+                return;
+            }
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
+            let { top, left, bottom, right } = getters.getActiveMainViewport();
+            let { scrollX, scrollY } = getters.getActiveSheetDOMScrollInfo();
+            const { xSplit, ySplit } = getters.getPaneDivisions(sheetId);
+            let canEdgeScroll = false;
+            let timeoutDelay = MAX_DELAY;
+            const x = currentEv.clientX - position.left;
+            colIndex = getters.getColIndex(x);
+            if (only !== "vertical") {
+                const previousX = previousEv.clientX - position.left;
+                const edgeScrollInfoX = getters.getEdgeScrollCol(x, previousX, startingX);
+                if (edgeScrollInfoX.canEdgeScroll) {
+                    canEdgeScroll = true;
+                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoX.delay);
+                    let newTarget;
+                    switch (edgeScrollInfoX.direction) {
+                        case "reset":
+                            colIndex = xSplit;
+                            newTarget = xSplit;
+                            break;
+                        case 1:
+                            colIndex = right;
+                            newTarget = left + 1;
+                            break;
+                        case -1:
+                            colIndex = left - 1;
+                            while (env.model.getters.isColHidden(sheetId, colIndex)) {
+                                colIndex--;
+                            }
+                            newTarget = colIndex;
+                            break;
+                    }
+                    scrollX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
+                }
+            }
+            const y = currentEv.clientY - position.top;
+            rowIndex = getters.getRowIndex(y);
+            if (only !== "horizontal") {
+                const previousY = previousEv.clientY - position.top;
+                const edgeScrollInfoY = getters.getEdgeScrollRow(y, previousY, startingY);
+                if (edgeScrollInfoY.canEdgeScroll) {
+                    canEdgeScroll = true;
+                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoY.delay);
+                    let newTarget;
+                    switch (edgeScrollInfoY.direction) {
+                        case "reset":
+                            rowIndex = ySplit;
+                            newTarget = ySplit;
+                            break;
+                        case 1:
+                            rowIndex = bottom;
+                            newTarget = top + edgeScrollInfoY.direction;
+                            break;
+                        case -1:
+                            rowIndex = top - 1;
+                            while (env.model.getters.isRowHidden(sheetId, rowIndex)) {
+                                rowIndex--;
+                            }
+                            newTarget = rowIndex;
+                            break;
+                    }
+                    scrollY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
+                }
+            }
+            if (!canEdgeScroll) {
+                if (rowIndex === -1) {
+                    rowIndex = y < 0 ? 0 : getters.getNumberRows(sheetId) - 1;
+                }
+                if (colIndex === -1 && x < 0) {
+                    colIndex = x < 0 ? 0 : getters.getNumberCols(sheetId) - 1;
+                }
+            }
+            cbMouseMove(colIndex, rowIndex, currentEv);
+            if (canEdgeScroll) {
+                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: scrollX, offsetY: scrollY });
+                timeOutId = setTimeout(() => {
+                    timeOutId = null;
+                    onMouseMove(currentEv);
+                }, Math.round(timeoutDelay));
+            }
+            previousEv = currentEv;
+        };
+        const onMouseUp = () => {
+            clearTimeout(timeOutId);
+            cbMouseUp();
+        };
+        startDnd(onMouseMove, onMouseUp, onMouseDown);
+    }
+
+    // -----------------------------------------------------------------------------
+    // Autofill
+    // -----------------------------------------------------------------------------
+    css /* scss */ `
+  .o-autofill {
+    position: absolute;
+    height: ${AUTOFILL_EDGE_LENGTH}px;
+    width: ${AUTOFILL_EDGE_LENGTH}px;
+    border: 1px solid white;
+    box-sizing: border-box !important;
+    background-color: #1a73e8;
+  }
+
+  .o-autofill-handler {
+    position: absolute;
+    height: ${AUTOFILL_EDGE_LENGTH}px;
+    width: ${AUTOFILL_EDGE_LENGTH}px;
+    &:hover {
+      cursor: crosshair;
+    }
+  }
+
+  .o-autofill-nextvalue {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid black;
+    padding: 5px;
+    font-size: 12px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+`;
+    class Autofill extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.state = owl.useState({
+                position: { left: 0, top: 0 },
+                handler: false,
+            });
+        }
+        get style() {
+            const { left, top } = this.props.position;
+            return cssPropertiesToCss({
+                top: `${top}px`,
+                left: `${left}px`,
+                visibility: this.props.isVisible ? "visible" : "hidden",
+            });
+        }
+        get handlerStyle() {
+            const { left, top } = this.state.handler ? this.state.position : this.props.position;
+            return cssPropertiesToCss({
+                top: `${top}px`,
+                left: `${left}px`,
+            });
+        }
+        get styleNextValue() {
+            const { left, top } = this.state.position;
+            return cssPropertiesToCss({
+                top: `${top + 5}px`,
+                left: `${left + 15}px`,
+            });
+        }
+        getTooltip() {
+            const tooltip = this.env.model.getters.getAutofillTooltip();
+            if (tooltip && !tooltip.component) {
+                tooltip.component = TooltipComponent;
+            }
+            return tooltip;
+        }
+        onMouseDown(ev) {
+            this.state.handler = true;
+            let lastCol;
+            let lastRow;
+            const start = {
+                left: ev.clientX - this.props.position.left,
+                top: ev.clientY - this.props.position.top,
+            };
+            const onMouseUp = () => {
+                this.state.handler = false;
+                this.state.position = { ...this.props.position };
+                this.env.model.dispatch("AUTOFILL");
+            };
+            const onMouseMove = (col, row, ev) => {
+                this.state.position = {
+                    left: ev.clientX - start.left,
+                    top: ev.clientY - start.top,
+                };
+                if (lastCol !== col || lastRow !== row) {
+                    const activeSheetId = this.env.model.getters.getActiveSheetId();
+                    const numberOfCols = this.env.model.getters.getNumberCols(activeSheetId);
+                    const numberOfRows = this.env.model.getters.getNumberRows(activeSheetId);
+                    lastCol = col === -1 ? lastCol : clip(col, 0, numberOfCols);
+                    lastRow = row === -1 ? lastRow : clip(row, 0, numberOfRows);
+                    if (lastCol !== undefined && lastRow !== undefined) {
+                        this.env.model.dispatch("AUTOFILL_SELECT", { col: lastCol, row: lastRow });
+                    }
+                }
+            };
+            dragAndDropBeyondTheViewport(this.env, onMouseMove, onMouseUp);
+        }
+        onDblClick() {
+            this.env.model.dispatch("AUTOFILL_AUTO");
+        }
+    }
+    Autofill.template = "o-spreadsheet-Autofill";
+    Autofill.props = {
+        position: Object,
+        isVisible: Boolean,
+    };
+    class TooltipComponent extends owl.Component {
+    }
+    TooltipComponent.template = owl.xml /* xml */ `
+    <div t-esc="props.content"/>
+  `;
+    TooltipComponent.props = {
+        content: String,
+    };
+
+    css /* scss */ `
+  .o-client-tag {
+    position: absolute;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    font-size: ${DEFAULT_FONT_SIZE};
+    color: white;
+    opacity: 0;
+    pointer-events: none;
+  }
+`;
+    class ClientTag extends owl.Component {
+        get tagStyle() {
+            const { col, row, color } = this.props;
+            const { height } = this.env.model.getters.getSheetViewDimensionWithHeaders();
+            const { x, y } = this.env.model.getters.getVisibleRect({
+                left: col,
+                top: row,
+                right: col,
+                bottom: row,
+            });
+            return cssPropertiesToCss({
+                bottom: `${height - y + 15}px`,
+                left: `${x - 1}px`,
+                border: `1px solid ${color}`,
+                "background-color": color,
+                opacity: this.props.active ? "opacity:1 !important" : undefined,
+            });
+        }
+    }
+    ClientTag.template = "o-spreadsheet-ClientTag";
+    ClientTag.props = {
+        active: Boolean,
+        name: String,
+        color: String,
+        col: Number,
+        row: Number,
+    };
+
+    css /* scss */ `
+  .o-autocomplete-dropdown {
+    pointer-events: auto;
+    background-color: #fff;
+    & > div:hover {
+      background-color: #f2f2f2;
+    }
+    .o-autocomplete-value-focus {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    & > div {
+      padding: 1px 0 5px 5px;
+      .o-autocomplete-description {
+        padding-left: 5px;
+        font-size: 11px;
+      }
+    }
+  }
+`;
+    class TextValueProvider extends owl.Component {
+    }
+    TextValueProvider.template = "o-spreadsheet-TextValueProvider";
+    TextValueProvider.props = {
+        values: Array,
+        selectedIndex: Number,
+        onValueSelected: Function,
+    };
+
+    class ContentEditableHelper {
+        constructor(el) {
+            this.el = el;
+        }
+        updateEl(el) {
+            this.el = el;
+        }
+        /**
+         * select the text at position start to end, no matter the children
+         */
+        selectRange(start, end) {
+            let selection = window.getSelection();
+            this.removeSelection();
+            let range = document.createRange();
+            if (start == end && start === 0) {
+                range.setStart(this.el, 0);
+                range.setEnd(this.el, 0);
+                selection.addRange(range);
+            }
+            else {
+                const textLength = this.getText().length;
+                if (start < 0 || end > textLength) {
+                    console.warn(`wrong selection asked start ${start}, end ${end}, text content length ${textLength}`);
+                    if (start < 0)
+                        start = 0;
+                    if (end > textLength)
+                        end = textLength;
+                }
+                let startNode = this.findChildAtCharacterIndex(start);
+                let endNode = this.findChildAtCharacterIndex(end);
+                range.setStart(startNode.node, startNode.offset);
+                selection.addRange(range);
+                selection.extend(endNode.node, endNode.offset);
+            }
+        }
+        /**
+         * finds the dom element that contains the character at `offset`
+         */
+        findChildAtCharacterIndex(offset) {
+            let it = iterateChildren(this.el);
+            let current, previous;
+            let usedCharacters = offset;
+            let isFirstParagraph = true;
+            do {
+                current = it.next();
+                if (!current.done && !current.value.hasChildNodes()) {
+                    if (current.value.textContent && current.value.textContent.length < usedCharacters) {
+                        usedCharacters -= current.value.textContent.length;
+                    }
+                    else if (current.value.textContent &&
+                        current.value.textContent.length >= usedCharacters) {
+                        it.return(current.value);
+                    }
+                    previous = current.value;
+                }
+                // One new paragraph = one new line character, except for the first paragraph
+                if (!current.done && current.value.nodeName === "P") {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        usedCharacters--;
+                    }
+                }
+            } while (!current.done && usedCharacters);
+            if (current.value) {
+                return { node: current.value, offset: usedCharacters };
+            }
+            return { node: previous, offset: usedCharacters };
+        }
+        /**
+         * Sets (or Replaces all) the text inside the root element in the form of distinctive
+         * span for each element provided in `contents`.
+         *
+         * Each span will have its own fontcolor and specific class if provided in the HtmlContent object.
+         */
+        setText(contents) {
+            this.el.innerHTML = "";
+            if (contents.length === 0) {
+                return;
+            }
+            for (const line of contents) {
+                const p = document.createElement("p");
+                // Empty line
+                if (line.length === 0 || line.every((content) => !content.value && !content.class)) {
+                    p.appendChild(document.createElement("br"));
+                    this.el.appendChild(p);
+                    continue;
+                }
+                for (const content of line) {
+                    if (!content.value && !content.class) {
+                        continue;
+                    }
+                    const span = document.createElement("span");
+                    span.innerText = content.value;
+                    span.style.color = content.color || "";
+                    if (content.class) {
+                        span.classList.add(content.class);
+                    }
+                    p.appendChild(span);
+                }
+                this.el.appendChild(p);
+            }
+        }
+        scrollSelectionIntoView() {
+            var _a;
+            const focusedNode = (_a = document.getSelection()) === null || _a === void 0 ? void 0 : _a.focusNode;
+            if (!focusedNode || !this.el.contains(focusedNode))
+                return;
+            const element = focusedNode instanceof HTMLElement ? focusedNode : focusedNode.parentElement;
+            element === null || element === void 0 ? void 0 : element.scrollIntoView({ block: "nearest" });
+        }
+        /**
+         * remove the current selection of the user
+         * */
+        removeSelection() {
+            let selection = window.getSelection();
+            selection.removeAllRanges();
+        }
+        removeAll() {
+            if (this.el) {
+                while (this.el.firstChild) {
+                    this.el.removeChild(this.el.firstChild);
+                }
+            }
+        }
+        /**
+         * finds the indexes of the current selection.
+         * */
+        getCurrentSelection() {
+            let { startElement, endElement, startSelectionOffset, endSelectionOffset } = this.getStartAndEndSelection();
+            let startSizeBefore = this.findSizeBeforeElement(startElement);
+            let endSizeBefore = this.findSizeBeforeElement(endElement);
+            return {
+                start: startSizeBefore + startSelectionOffset,
+                end: endSizeBefore + endSelectionOffset,
+            };
+        }
+        findSizeBeforeElement(nodeToFind) {
+            let usedCharacters = 0;
+            let it = iterateChildren(this.el);
+            let current = it.next();
+            let isFirstParagraph = true;
+            while (!current.done && current.value !== nodeToFind) {
+                if (!current.value.hasChildNodes()) {
+                    if (current.value.textContent) {
+                        usedCharacters += current.value.textContent.length;
+                    }
+                }
+                // One new paragraph = one new line character, except for the first paragraph
+                if (current.value.nodeName === "P" ||
+                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
+                ) {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        usedCharacters++;
+                    }
+                }
+                current = it.next();
+            }
+            if (current.value !== nodeToFind) {
+                throw new Error("Cannot find the node in the children of the element");
+            }
+            if (nodeToFind.nodeName === "P" && !isFirstParagraph && nodeToFind.textContent == "") {
+                usedCharacters++;
+            }
+            return usedCharacters;
+        }
+        getStartAndEndSelection() {
+            const selection = document.getSelection();
+            return {
+                startElement: selection.anchorNode || this.el,
+                startSelectionOffset: selection.anchorOffset,
+                endElement: selection.focusNode || this.el,
+                endSelectionOffset: selection.focusOffset,
+            };
+        }
+        getText() {
+            let text = "";
+            let it = iterateChildren(this.el);
+            let current = it.next();
+            let isFirstParagraph = true;
+            while (!current.done) {
+                if (!current.value.hasChildNodes()) {
+                    text += current.value.textContent;
+                }
+                if (current.value.nodeName === "P" ||
+                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
+                ) {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        text += NEWLINE;
+                    }
+                }
+                current = it.next();
+            }
+            return text;
+        }
+    }
+
+    // -----------------------------------------------------------------------------
+    // Formula Assistant component
+    // -----------------------------------------------------------------------------
+    css /* scss */ `
+  .o-formula-assistant {
+    .o-formula-assistant-head {
+      background-color: #f2f2f2;
+      padding: 10px;
+    }
+    .o-formula-assistant-core {
+      border-bottom: 1px solid gray;
+    }
+    .o-formula-assistant-arg-description {
+      font-size: 85%;
+    }
+    .o-formula-assistant-focus {
+      div:first-child,
+      span {
+        color: purple;
+        text-shadow: 0px 0px 1px purple;
+      }
+      div:last-child {
+        color: black;
+      }
+    }
+    .o-formula-assistant-gray {
+      color: gray;
+    }
+  }
+`;
+    class FunctionDescriptionProvider extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.assistantState = owl.useState({
+                allowCellSelectionBehind: false,
+            });
+            this.timeOutId = 0;
+        }
+        setup() {
+            owl.onWillUnmount(() => {
+                if (this.timeOutId) {
+                    clearTimeout(this.timeOutId);
+                }
+            });
+        }
+        getContext() {
+            return this.props;
+        }
+        onMouseMove() {
+            this.assistantState.allowCellSelectionBehind = true;
+            if (this.timeOutId) {
+                clearTimeout(this.timeOutId);
+            }
+            this.timeOutId = setTimeout(() => {
+                this.assistantState.allowCellSelectionBehind = false;
+            }, 2000);
+        }
+    }
+    FunctionDescriptionProvider.template = "o-spreadsheet-FunctionDescriptionProvider";
+    FunctionDescriptionProvider.props = {
+        functionName: String,
+        functionDescription: Object,
+        argToFocus: Number,
+    };
+
+    const functions$2 = functionRegistry.content;
+    const ASSISTANT_WIDTH = 300;
+    const selectionIndicatorClass = "selector-flag";
+    const selectionIndicatorColor = "#a9a9a9";
+    const selectionIndicator = "␣";
+    const functionColor = "#4a4e4d";
+    const operatorColor = "#3da4ab";
+    const tokenColors = {
+        OPERATOR: operatorColor,
+        NUMBER: "#02c39a",
+        STRING: "#00a82d",
+        FUNCTION: functionColor,
+        DEBUGGER: operatorColor,
+        LEFT_PAREN: functionColor,
+        RIGHT_PAREN: functionColor,
+        COMMA: functionColor,
+        MATCHING_PAREN: "#000000",
+    };
+    css /* scss */ `
+  .o-composer-container {
+    .o-composer {
+      overflow-y: auto;
+      overflow-x: hidden;
+      word-break: break-all;
+      padding-right: 2px;
+
+      box-sizing: border-box;
+
+      caret-color: black;
+      padding-left: 3px;
+      padding-right: 3px;
+      outline: none;
+
+      &.unfocusable {
+        pointer-events: none;
+      }
+
+      p {
+        margin-bottom: 0px;
+
+        span {
+          white-space: pre-wrap;
+          &.${selectionIndicatorClass}:after {
+            content: "${selectionIndicator}";
+            color: ${selectionIndicatorColor};
+          }
+        }
+      }
+    }
+
+    .o-composer-assistant {
+      position: absolute;
+      margin: 1px 4px;
+      pointer-events: none;
+    }
+  }
+`;
+    class Composer extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.composerRef = owl.useRef("o_composer");
+            this.contentHelper = new ContentEditableHelper(this.composerRef.el);
+            this.composerState = owl.useState({
+                positionStart: 0,
+                positionEnd: 0,
+            });
+            this.autoCompleteState = owl.useState({
+                showProvider: false,
+                values: [],
+                selectedIndex: 0,
+            });
+            this.functionDescriptionState = owl.useState({
+                showDescription: false,
+                functionName: "",
+                functionDescription: {},
+                argToFocus: 0,
+            });
+            this.isKeyStillDown = false;
+            this.compositionActive = false;
+            // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
+            this.shouldProcessInputEvents = false;
+            this.tokens = [];
+            this.keyMapping = {
+                ArrowUp: this.processArrowKeys,
+                ArrowDown: this.processArrowKeys,
+                ArrowLeft: this.processArrowKeys,
+                ArrowRight: this.processArrowKeys,
+                Enter: this.processEnterKey,
+                Escape: this.processEscapeKey,
+                F2: () => console.warn("Not implemented"),
+                F4: this.processF4Key,
+                Tab: (ev) => this.processTabKey(ev),
+            };
+        }
+        get assistantStyle() {
+            if (this.props.delimitation && this.props.rect) {
+                const { x: cellX, y: cellY, height: cellHeight } = this.props.rect;
+                const remainingHeight = this.props.delimitation.height - (cellY + cellHeight);
+                let assistantStyle = {};
+                if (cellY > remainingHeight) {
+                    // render top
+                    // We compensate 2 px of margin on the assistant style + 1px for design reasons
+                    assistantStyle.top = `-3px`;
+                    assistantStyle.transform = `translate(0, -100%)`;
+                }
+                if (cellX + ASSISTANT_WIDTH > this.props.delimitation.width) {
+                    // render left
+                    assistantStyle.right = `0px`;
+                }
+                assistantStyle.width = `${ASSISTANT_WIDTH}px`;
+                return cssPropertiesToCss(assistantStyle);
+            }
+            return cssPropertiesToCss({ width: `${ASSISTANT_WIDTH}px` });
+        }
+        setup() {
+            owl.onMounted(() => {
+                const el = this.composerRef.el;
+                this.contentHelper.updateEl(el);
+                this.processContent();
+                this.contentHelper.scrollSelectionIntoView();
+            });
+            owl.onWillUnmount(() => {
+                var _a, _b;
+                (_b = (_a = this.props).onComposerUnmounted) === null || _b === void 0 ? void 0 : _b.call(_a);
+            });
+            owl.onPatched(() => {
+                if (!this.isKeyStillDown) {
+                    this.processContent();
+                }
+            });
+        }
+        // ---------------------------------------------------------------------------
+        // Handlers
+        // ---------------------------------------------------------------------------
+        processArrowKeys(ev) {
+            if (this.env.model.getters.isSelectingForComposer()) {
+                this.functionDescriptionState.showDescription = false;
+                // Prevent the default content editable behavior which moves the cursor
+                ev.preventDefault();
+                ev.stopPropagation();
+                updateSelectionWithArrowKeys(ev, this.env.model.selection);
+                return;
+            }
+            const content = this.env.model.getters.getCurrentContent();
+            if (this.props.focus === "cellFocus" &&
+                !this.autoCompleteState.showProvider &&
+                !content.startsWith("=")) {
+                this.env.model.dispatch("STOP_EDITION");
+                return;
+            }
+            // All arrow keys are processed: up and down should move autocomplete, left
+            // and right should move the cursor.
+            ev.stopPropagation();
+            this.handleArrowKeysForAutocomplete(ev);
+        }
+        handleArrowKeysForAutocomplete(ev) {
+            // only for arrow up and down
+            if (["ArrowUp", "ArrowDown"].includes(ev.key) && this.autoCompleteState.showProvider) {
+                ev.preventDefault();
+                if (ev.key === "ArrowUp") {
+                    this.autoCompleteState.selectedIndex--;
+                    if (this.autoCompleteState.selectedIndex < 0) {
+                        this.autoCompleteState.selectedIndex = this.autoCompleteState.values.length - 1;
+                    }
+                }
+                else {
+                    this.autoCompleteState.selectedIndex =
+                        (this.autoCompleteState.selectedIndex + 1) % this.autoCompleteState.values.length;
+                }
+            }
+        }
+        processTabKey(ev) {
+            var _a;
+            ev.preventDefault();
+            ev.stopPropagation();
+            if (this.autoCompleteState.showProvider) {
+                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
+                if (autoCompleteValue) {
+                    this.autoComplete(autoCompleteValue);
+                    return;
+                }
+            }
+            else {
+                // when completing with tab, if there is no value to complete, the active cell will be moved to the right.
+                // we can't let the model think that it is for a ref selection.
+                // todo: check if this can be removed someday
+                this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+            }
+            const direction = ev.shiftKey ? "left" : "right";
+            this.env.model.dispatch("STOP_EDITION");
+            this.env.model.selection.moveAnchorCell(direction, 1);
+        }
+        processEnterKey(ev) {
+            var _a;
+            ev.preventDefault();
+            ev.stopPropagation();
+            if (ev.altKey || ev.ctrlKey) {
+                const selection = this.contentHelper.getCurrentSelection();
+                const currentContent = this.env.model.getters.getCurrentContent();
+                const content = currentContent.slice(0, selection.start) + NEWLINE + currentContent.slice(selection.end);
+                this.env.model.dispatch("SET_CURRENT_CONTENT", {
+                    content,
+                    selection: { start: selection.start + 1, end: selection.start + 1 },
+                });
+                this.processContent();
+                this.contentHelper.scrollSelectionIntoView();
+                return;
+            }
+            this.isKeyStillDown = false;
+            if (this.autoCompleteState.showProvider) {
+                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
+                if (autoCompleteValue) {
+                    this.autoComplete(autoCompleteValue);
+                    return;
+                }
+            }
+            this.env.model.dispatch("STOP_EDITION");
+            const direction = ev.shiftKey ? "up" : "down";
+            this.env.model.selection.moveAnchorCell(direction, 1);
+        }
+        processEscapeKey() {
+            this.env.model.dispatch("STOP_EDITION", { cancel: true });
+        }
+        processF4Key() {
+            this.env.model.dispatch("CYCLE_EDITION_REFERENCES");
+            this.processContent();
+        }
+        onCompositionStart() {
+            this.compositionActive = true;
+        }
+        onCompositionEnd() {
+            this.compositionActive = false;
+        }
+        onKeydown(ev) {
+            let handler = this.keyMapping[ev.key];
+            if (handler) {
+                handler.call(this, ev);
+            }
+            else {
+                ev.stopPropagation();
+            }
+            const { start, end } = this.contentHelper.getCurrentSelection();
+            if (!this.env.model.getters.isSelectingForComposer() &&
+                !(ev.key === "Enter" && (ev.altKey || ev.ctrlKey))) {
+                this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
+                this.isKeyStillDown = true;
+            }
+        }
+        /*
+         * Triggered automatically by the content-editable between the keydown and key up
+         * */
+        onInput() {
+            if (this.props.focus === "inactive" || !this.shouldProcessInputEvents) {
+                return;
+            }
+            this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+            this.env.model.dispatch("SET_CURRENT_CONTENT", {
+                content: this.contentHelper.getText(),
+                selection: this.contentHelper.getCurrentSelection(),
+            });
+        }
+        onKeyup(ev) {
+            this.isKeyStillDown = false;
+            if (this.props.focus === "inactive" ||
+                ["Control", "Alt", "Shift", "Tab", "Enter", "F4"].includes(ev.key)) {
+                return;
+            }
+            if (this.autoCompleteState.showProvider && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
+                return; // already processed in keydown
+            }
+            if (this.env.model.getters.isSelectingForComposer() &&
+                ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(ev.key)) {
+                return; // already processed in keydown
+            }
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.autoCompleteState.showProvider = false;
+            if (ev.ctrlKey && ev.key === " ") {
+                this.showAutocomplete("");
+                this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+                return;
+            }
+            const { start: oldStart, end: oldEnd } = this.env.model.getters.getComposerSelection();
+            const { start, end } = this.contentHelper.getCurrentSelection();
+            if (start !== oldStart || end !== oldEnd) {
+                this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", this.contentHelper.getCurrentSelection());
+            }
+            this.processTokenAtCursor();
+            this.processContent();
+        }
+        showAutocomplete(searchTerm) {
+            this.autoCompleteState.showProvider = true;
+            let values = Object.entries(functionRegistry.content)
+                .filter(([_, { hidden }]) => !hidden)
+                .map(([text, { description }]) => {
+                return {
+                    text,
+                    description,
+                };
+            });
+            if (searchTerm) {
+                values = fuzzyLookup(searchTerm, values, (t) => t.text);
+            }
+            else {
+                // alphabetical order
+                values = values.sort((a, b) => a.text.localeCompare(b.text));
+            }
+            this.autoCompleteState.values = values.slice(0, 10);
+            this.autoCompleteState.selectedIndex = 0;
+        }
+        onMousedown(ev) {
+            if (ev.button > 0) {
+                // not main button, probably a context menu
+                return;
+            }
+            this.contentHelper.removeSelection();
+        }
+        onClick() {
+            if (this.env.model.getters.isReadonly()) {
+                return;
+            }
+            const newSelection = this.contentHelper.getCurrentSelection();
+            this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+            if (this.props.focus === "inactive") {
+                this.props.onComposerContentFocused(newSelection);
+            }
+            this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
+            this.processTokenAtCursor();
+        }
+        onBlur() {
+            this.isKeyStillDown = false;
+        }
+        // ---------------------------------------------------------------------------
+        // Private
+        // ---------------------------------------------------------------------------
+        processContent() {
+            if (this.compositionActive) {
+                return;
+            }
+            const oldScroll = getElementScrollTop(this.composerRef.el);
+            this.contentHelper.removeAll(); // removes the content of the composer, to be added just after
+            this.shouldProcessInputEvents = false;
+            if (this.props.focus !== "inactive") {
+                this.contentHelper.el.focus();
+                this.contentHelper.selectRange(0, 0); // move the cursor inside the composer at 0 0.
+            }
+            const content = this.getContentLines();
+            if (content.length !== 0 && content.length[0] !== 0) {
+                this.contentHelper.setText(content);
+                const { start, end } = this.env.model.getters.getComposerSelection();
+                if (this.props.focus !== "inactive") {
+                    // Put the cursor back where it was before the rendering
+                    this.contentHelper.selectRange(start, end);
+                }
+                setElementScrollTop(this.composerRef.el, oldScroll);
+            }
+            this.shouldProcessInputEvents = true;
+        }
+        /**
+         * Get the HTML content corresponding to the current composer token, divided by lines.
+         */
+        getContentLines() {
+            let value = this.env.model.getters.getCurrentContent();
+            const isValidFormula = value.startsWith("=") && this.env.model.getters.getCurrentTokens().length > 0;
+            if (value === "") {
+                return [];
+            }
+            else if (isValidFormula && this.props.focus !== "inactive") {
+                return this.splitHtmlContentIntoLines(this.getColoredTokens());
+            }
+            return this.splitHtmlContentIntoLines([{ value }]);
+        }
+        getColoredTokens() {
+            const tokens = this.env.model.getters.getCurrentTokens();
+            const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
+            const result = [];
+            const { end, start } = this.env.model.getters.getComposerSelection();
+            for (const token of tokens) {
+                switch (token.type) {
+                    case "OPERATOR":
+                    case "NUMBER":
+                    case "FUNCTION":
+                    case "COMMA":
+                    case "STRING":
+                        result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
+                        break;
+                    case "REFERENCE":
+                        const { xc, sheetName } = splitReference(token.value);
+                        result.push({ value: token.value, color: this.rangeColor(xc, sheetName) || "#000" });
+                        break;
+                    case "SYMBOL":
+                        let value = token.value;
+                        if (["TRUE", "FALSE"].includes(value.toUpperCase())) {
+                            result.push({ value: token.value, color: tokenColors.NUMBER });
+                        }
+                        else {
+                            result.push({ value: token.value, color: "#000" });
+                        }
+                        break;
+                    case "LEFT_PAREN":
+                    case "RIGHT_PAREN":
+                        // Compute the matching parenthesis
+                        if (tokenAtCursor &&
+                            ["LEFT_PAREN", "RIGHT_PAREN"].includes(tokenAtCursor.type) &&
+                            tokenAtCursor.parenIndex &&
+                            tokenAtCursor.parenIndex === token.parenIndex) {
+                            result.push({ value: token.value, color: tokenColors.MATCHING_PAREN  });
+                        }
+                        else {
+                            result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
+                        }
+                        break;
+                    default:
+                        result.push({ value: token.value, color: "#000" });
+                        break;
+                }
+                if (this.env.model.getters.showSelectionIndicator() && end === start && end === token.end) {
+                    result[result.length - 1].class = selectionIndicatorClass;
+                }
+            }
+            return result;
+        }
+        /**
+         * Split an array of HTMLContents into lines. Each NEWLINE character encountered will create a new
+         * line. Contents can be split into multiple parts if they contain multiple NEWLINE characters.
+         */
+        splitHtmlContentIntoLines(contents) {
+            const contentSplitInLines = [];
+            let currentLine = [];
+            for (const content of contents) {
+                if (content.value.includes(NEWLINE)) {
+                    const lines = content.value.split(NEWLINE);
+                    const lastLine = lines.pop();
+                    for (const line of lines) {
+                        currentLine.push({ color: content.color, value: line }); // don't copy class, only last line should keep it
+                        contentSplitInLines.push(currentLine);
+                        currentLine = [];
+                    }
+                    currentLine.push({ ...content, value: lastLine });
+                }
+                else {
+                    currentLine.push(content);
+                }
+            }
+            if (currentLine.length) {
+                contentSplitInLines.push(currentLine);
+            }
+            // Remove useless empty contents
+            const filteredLines = [];
+            for (const line of contentSplitInLines) {
+                if (line.every(this.isContentEmpty)) {
+                    filteredLines.push([line[0]]);
+                }
+                else {
+                    filteredLines.push(line.filter((content) => !this.isContentEmpty(content)));
+                }
+            }
+            return filteredLines;
+        }
+        isContentEmpty(content) {
+            return !(content.value || content.class);
+        }
+        rangeColor(xc, sheetName) {
+            if (this.props.focus === "inactive") {
+                return undefined;
+            }
+            const highlights = this.env.model.getters.getHighlights();
+            const refSheet = sheetName
+                ? this.env.model.getters.getSheetIdByName(sheetName)
+                : this.env.model.getters.getEditionSheet();
+            const highlight = highlights.find((highlight) => {
+                if (highlight.sheetId !== refSheet)
+                    return false;
+                const range = this.env.model.getters.getRangeFromSheetXC(refSheet, xc);
+                let zone = range.zone;
+                zone = getZoneArea(zone) === 1 ? this.env.model.getters.expandZone(refSheet, zone) : zone;
+                return isEqual(zone, highlight.zone);
+            });
+            return highlight && highlight.color ? highlight.color : undefined;
+        }
+        /**
+         * Compute the state of the composer from the tokenAtCursor.
+         * If the token is a function or symbol (that isn't a cell/range reference) we have to initialize
+         * the autocomplete engine otherwise we initialize the formula assistant.
+         */
+        processTokenAtCursor() {
+            let content = this.env.model.getters.getCurrentContent();
+            this.autoCompleteState.showProvider = false;
+            this.functionDescriptionState.showDescription = false;
+            if (content.startsWith("=")) {
+                const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
+                if (tokenAtCursor) {
+                    const { xc } = splitReference(tokenAtCursor.value);
+                    if (tokenAtCursor.type === "FUNCTION" ||
+                        (tokenAtCursor.type === "SYMBOL" && !rangeReference.test(xc))) {
+                        // initialize Autocomplete Dropdown
+                        this.showAutocomplete(tokenAtCursor.value);
+                    }
+                    else if (tokenAtCursor.functionContext && tokenAtCursor.type !== "UNKNOWN") {
+                        // initialize Formula Assistant
+                        const tokenContext = tokenAtCursor.functionContext;
+                        const parentFunction = tokenContext.parent.toUpperCase();
+                        const description = functions$2[parentFunction];
+                        const argPosition = tokenContext.argPosition;
+                        this.functionDescriptionState.functionName = parentFunction;
+                        this.functionDescriptionState.functionDescription = description;
+                        this.functionDescriptionState.argToFocus = description.getArgToFocus(argPosition + 1) - 1;
+                        this.functionDescriptionState.showDescription = true;
+                    }
+                }
+            }
+        }
+        autoComplete(value) {
+            if (value) {
+                const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
+                if (tokenAtCursor) {
+                    let start = tokenAtCursor.end;
+                    let end = tokenAtCursor.end;
+                    // shouldn't it be REFERENCE ?
+                    if (["SYMBOL", "FUNCTION"].includes(tokenAtCursor.type)) {
+                        start = tokenAtCursor.start;
+                    }
+                    const tokens = this.env.model.getters.getCurrentTokens();
+                    if (tokens.length) {
+                        value += "(";
+                        const currentTokenIndex = tokens.map((token) => token.start).indexOf(tokenAtCursor.start);
+                        if (currentTokenIndex + 1 < tokens.length) {
+                            const nextToken = tokens[currentTokenIndex + 1];
+                            if (nextToken.type === "LEFT_PAREN") {
+                                end++;
+                            }
+                        }
+                    }
+                    this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", {
+                        start,
+                        end,
+                    });
+                }
+                this.env.model.dispatch("REPLACE_COMPOSER_CURSOR_SELECTION", {
+                    text: value,
+                });
+            }
+            this.processTokenAtCursor();
+        }
+    }
+    Composer.template = "o-spreadsheet-Composer";
+    Composer.components = { TextValueProvider, FunctionDescriptionProvider };
+    Composer.defaultProps = {
+        inputStyle: "",
+    };
+    Composer.props = {
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerContentFocused: Function,
+        inputStyle: { type: String, optional: true },
+        rect: { type: Object, optional: true },
+        delimitation: { type: Object, optional: true },
+        onComposerUnmounted: { type: Function, optional: true },
+    };
+
+    const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
+    const GRID_CELL_REFERENCE_TOP_OFFSET = 28;
+    css /* scss */ `
+  div.o-grid-composer {
+    z-index: ${ComponentsImportance.GridComposer};
+    box-sizing: border-box;
+    position: absolute;
+    border: ${COMPOSER_BORDER_WIDTH}px solid ${SELECTION_BORDER_COLOR};
+
+    display: flex;
+    align-items: center;
+  }
+
+  div.o-cell-reference {
+    position: absolute;
+    z-index: ${ComponentsImportance.GridComposer};
+    background: ${SELECTION_BORDER_COLOR};
+    color: white;
+    font-size: 12px;
+    line-height: 14px;
+    padding: 6px 7px;
+    border-radius: 4px;
+  }
+`;
+    /**
+     * This component is a composer which positions itself on the grid at the anchor cell.
+     * It also applies the style of the cell to the composer input.
+     */
+    class GridComposer extends owl.Component {
+        setup() {
+            this.gridComposerRef = owl.useRef("gridComposer");
+            this.composerState = owl.useState({
+                rect: undefined,
+                delimitation: undefined,
+            });
+            const { sheetId, col, row } = this.env.model.getters.getActivePosition();
+            this.zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
+            this.rect = this.env.model.getters.getVisibleRect(this.zone);
+            this.isCellReferenceVisible = false;
+            owl.onMounted(() => {
+                const el = this.gridComposerRef.el;
+                this.composerState.rect = {
+                    x: this.rect.x,
+                    y: this.rect.y,
+                    width: el.clientWidth,
+                    height: el.clientHeight,
+                };
+                this.composerState.delimitation = {
+                    width: el.parentElement.clientWidth,
+                    height: el.parentElement.clientHeight,
+                };
+            });
+            owl.onWillUpdateProps(() => {
+                if (this.isCellReferenceVisible) {
+                    return;
+                }
+                const sheetId = this.env.model.getters.getActiveSheetId();
+                const zone = this.env.model.getters.getSelectedZone();
+                const rect = this.env.model.getters.getVisibleRect(zone);
+                if (!deepEquals(rect, this.rect) ||
+                    sheetId !== this.env.model.getters.getCurrentEditedCell().sheetId) {
+                    this.isCellReferenceVisible = true;
+                }
+            });
+        }
+        get shouldDisplayCellReference() {
+            return this.isCellReferenceVisible;
+        }
+        get cellReference() {
+            const { col, row, sheetId } = this.env.model.getters.getCurrentEditedCell();
+            const prefixSheet = sheetId !== this.env.model.getters.getActiveSheetId();
+            return `${prefixSheet ? getComposerSheetName(this.env.model.getters.getSheetName(sheetId)) + "!" : ""}${toXC(col, row)}`;
+        }
+        get cellReferenceStyle() {
+            const { x: left, y: top } = this.rect;
+            return cssPropertiesToCss({
+                left: `${left - COMPOSER_BORDER_WIDTH}px`,
+                top: `${top - GRID_CELL_REFERENCE_TOP_OFFSET}px`,
+            });
+        }
+        get containerStyle() {
+            const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
+            const cell = this.env.model.getters.getActiveCell();
+            const position = this.env.model.getters.getActivePosition();
+            const style = this.env.model.getters.getCellComputedStyle(position);
+            // position style
+            const { x: left, y: top, width, height } = this.rect;
+            // color style
+            const background = (!isFormula && style.fillColor) || "#ffffff";
+            const color = (!isFormula && style.textColor) || "#000000";
+            // font style
+            const fontSize = (!isFormula && style.fontSize) || 10;
+            const fontWeight = !isFormula && style.bold ? "bold" : undefined;
+            const fontStyle = !isFormula && style.italic ? "italic" : "normal";
+            const textDecoration = !isFormula ? getTextDecoration(style) : "none";
+            // align style
+            let textAlign = "left";
+            if (!isFormula) {
+                textAlign = style.align || cell.defaultAlign;
+            }
+            /**
+             * min-size is on the container, not the composer element, because we want to have the same size as the cell by default,
+             * including all the paddings/margins of the composer
+             *
+             * The +-1 are there to include cell borders in the composer sizing/positioning
+             */
+            return cssPropertiesToCss({
+                left: `${left - 1}px`,
+                top: `${top}px`,
+                "min-width": `${width + 1}px`,
+                "min-height": `${height + 1}px`,
+                background,
+                color,
+                "font-size": `${fontSizeInPixels(fontSize)}px`,
+                "font-weight": fontWeight,
+                "font-style": fontStyle,
+                "text-decoration": textDecoration,
+                "text-align": textAlign,
+            });
+        }
+        get composerStyle() {
+            const maxHeight = this.props.gridDims.height - this.rect.y;
+            const maxWidth = this.props.gridDims.width - this.rect.x;
+            return cssPropertiesToCss({
+                "max-width": `${maxWidth}px`,
+                "max-height": `${maxHeight}px`,
+            });
+        }
+    }
+    GridComposer.template = "o-spreadsheet-GridComposer";
+    GridComposer.components = { Composer };
+    GridComposer.props = {
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerUnmounted: Function,
+        onComposerContentFocused: Function,
+        gridDims: Object,
+    };
+
+    const CSS$1 = css /* scss */ `
+  .o-filter-icon {
+    color: ${FILTERS_COLOR};
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: ${FILTER_ICON_EDGE_LENGTH}px;
+    height: ${FILTER_ICON_EDGE_LENGTH}px;
+
+    svg {
+      path {
+        fill: ${FILTERS_COLOR};
+      }
+    }
+  }
+  .o-filter-icon:hover {
+    background: ${FILTERS_COLOR};
+    svg {
+      path {
+        fill: white;
+      }
+    }
+  }
+`;
+    class FilterIcon extends owl.Component {
+        get style() {
+            const { x, y } = this.props.position;
+            return `top:${y}px;left:${x}px`;
+        }
+    }
+    FilterIcon.style = CSS$1;
+    FilterIcon.template = "o-spreadsheet-FilterIcon";
+    FilterIcon.props = {
+        position: Object,
+        isActive: Boolean,
+        onClick: Function,
+    };
+
+    const CSS = css /* scss */ ``;
+    class FilterIconsOverlay extends owl.Component {
+        getVisibleFilterHeaders() {
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const headerPositions = this.env.model.getters.getFilterHeaders(sheetId);
+            return headerPositions.filter((position) => this.isPositionVisible(position.col, position.row));
+        }
+        getFilterHeaderPosition(position) {
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const rowDims = this.env.model.getters.getRowDimensionsInViewport(sheetId, position.row);
+            const colDims = this.env.model.getters.getColDimensionsInViewport(sheetId, position.col);
+            // TODO : change this offset when we support vertical cell align
+            const centeringOffset = Math.floor((rowDims.size - FILTER_ICON_EDGE_LENGTH) / 2);
+            return {
+                x: colDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN - 1,
+                y: rowDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
+            };
+        }
+        isFilterActive(position) {
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            return this.env.model.getters.isFilterActive({ sheetId, ...position });
+        }
+        toggleFilterMenu(position) {
+            const activePopoverType = this.env.model.getters.getPersistentPopoverTypeAtPosition(position);
+            if (activePopoverType && activePopoverType === "FilterMenu") {
+                this.env.model.dispatch("CLOSE_CELL_POPOVER");
+                return;
+            }
+            const { col, row } = position;
+            this.env.model.dispatch("OPEN_CELL_POPOVER", {
+                col,
+                row,
+                popoverType: "FilterMenu",
+            });
+        }
+        isPositionVisible(x, y) {
+            const rect = this.env.model.getters.getVisibleRect({
+                left: x,
+                right: x,
+                top: y,
+                bottom: y,
+            });
+            return !(rect.width === 0 || rect.height === 0);
+        }
+    }
+    FilterIconsOverlay.style = CSS;
+    FilterIconsOverlay.template = "o-spreadsheet-FilterIconsOverlay";
+    FilterIconsOverlay.components = {
+        FilterIcon,
+    };
+    FilterIconsOverlay.defaultProps = {
+        gridPosition: { x: 0, y: 0 },
+    };
+    FilterIconsOverlay.props = {
+        gridPosition: { type: Object, optional: true },
     };
 
     /**
@@ -22393,6 +22358,7 @@
         theme: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
         table: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/table",
         hyperlink: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+        image: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
     };
     const RELATIONSHIP_NSR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     const HEIGHT_FACTOR = 0.75; // 100px => 75 u
@@ -23416,12 +23382,8 @@
                 return "n";
         }
     }
-    /**
-     * For some reason, Excel will only take the devicePixelRatio (i.e. interface scale on Windows desktop)
-     * into account for the height.
-     */
     function convertHeightToExcel(height) {
-        return Math.round(HEIGHT_FACTOR * height * window.devicePixelRatio * 100) / 100;
+        return Math.round(HEIGHT_FACTOR * height * 100) / 100;
     }
     function convertWidthToExcel(width) {
         return Math.round(WIDTH_FACTOR * width * 100) / 100;
@@ -23560,6 +23522,19 @@
         if (xlsxId === -1) {
             chartIds.push(chartId);
             return chartIds.length;
+        }
+        return xlsxId + 1;
+    }
+    const imageIds = [];
+    /**
+     * Convert a image o-spreadsheet id to a xlsx id which
+     * are unsigned integers (starting from 1).
+     */
+    function convertImageId(imageId) {
+        const xlsxId = imageIds.findIndex((id) => id === imageId);
+        if (xlsxId === -1) {
+            imageIds.push(imageId);
+            return imageIds.length;
         }
         return xlsxId + 1;
     }
@@ -26324,6 +26299,7 @@
         return {
             ...createEmptySheet(sheetId, name),
             charts: [],
+            images: [],
         };
     }
     function createEmptyExcelWorkbookData() {
@@ -28959,7 +28935,7 @@
                     filters.push(new Filter(filter.id, filterZone));
                 }
                 // Add filters for new columns
-                if (filters.length < zoneToDimension(zone).width) {
+                if (filters.length < zoneToDimension(zone).numberOfCols) {
                     for (let col = zone.left; col <= zone.right; col++) {
                         if (!filters.find((filter) => filter.col === col)) {
                             filters.push(new Filter(this.uuidGenerator.uuidv4(), { ...zone, left: col, right: col }));
@@ -29610,6 +29586,24 @@
                 }
             }
         }
+        exportForExcel(data) {
+            for (const sheet of data.sheets) {
+                const figures = this.getters.getFigures(sheet.id);
+                const images = [];
+                for (const figure of figures) {
+                    if ((figure === null || figure === void 0 ? void 0 : figure.tag) === "image") {
+                        const image = this.getImage(figure.id);
+                        if (image) {
+                            images.push({
+                                ...figure,
+                                data: deepCopy(image),
+                            });
+                        }
+                    }
+                }
+                sheet.images = images;
+            }
+        }
         getAllImages() {
             const images = [];
             for (const sheetId in this.images) {
@@ -29807,8 +29801,8 @@
             if (merge) {
                 return isEqual(zone, merge);
             }
-            const { width, height } = zoneToDimension(zone);
-            return width === 1 && height === 1;
+            const { numberOfCols, numberOfRows } = zoneToDimension(zone);
+            return numberOfCols === 1 && numberOfRows === 1;
         }
         // ---------------------------------------------------------------------------
         // Merges
@@ -29976,8 +29970,8 @@
                             this.removeMerge(sheetId, currentZone);
                             break;
                         default:
-                            const { width, height } = zoneToDimension(result.range.zone);
-                            if (width === 1 && height === 1) {
+                            const { numberOfCols, numberOfRows } = zoneToDimension(result.range.zone);
+                            if (numberOfCols === 1 && numberOfRows === 1) {
                                 this.removeMerge(sheetId, currentZone);
                             }
                             else {
@@ -30736,8 +30730,8 @@
         }
         getSheetSize(sheetId) {
             return {
-                height: this.getNumberRows(sheetId),
-                width: this.getNumberCols(sheetId),
+                numberOfRows: this.getNumberRows(sheetId),
+                numberOfCols: this.getNumberCols(sheetId),
             };
         }
         getSheetZone(sheetId) {
@@ -32253,6 +32247,9 @@
                 case "CREATE_SHEET":
                     this.filterValues[cmd.sheetId] = {};
                     break;
+                case "HIDE_COLUMNS_ROWS":
+                    this.updateHiddenRows();
+                    break;
                 case "UPDATE_FILTER":
                     this.updateFilter(cmd);
                     this.updateHiddenRows();
@@ -32361,9 +32358,16 @@
         updateHiddenRows() {
             var _a, _b;
             const sheetId = this.getters.getActiveSheetId();
-            const filters = this.getters.getFilters(sheetId);
+            const filters = this.getters
+                .getFilters(sheetId)
+                .sort((filter1, filter2) => filter1.zoneWithHeaders.top - filter2.zoneWithHeaders.top);
             const hiddenRows = new Set();
             for (let filter of filters) {
+                // Disable filters whose header are hidden
+                if (this.getters.isRowHiddenByUser(sheetId, filter.zoneWithHeaders.top))
+                    continue;
+                if (hiddenRows.has(filter.zoneWithHeaders.top))
+                    continue;
                 const filteredValues = (_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[filter.id]) === null || _b === void 0 ? void 0 : _b.map(toLowerCase);
                 if (!filteredValues || !filter.filteredZone)
                     continue;
@@ -32386,7 +32390,7 @@
                     const tableZone = toZone(tableData.range);
                     const filters = [];
                     const headerNames = [];
-                    for (const i of range(0, zoneToDimension(tableZone).width)) {
+                    for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
                         const position = {
                             sheetId: sheetData.id,
                             col: tableZone.left + i,
@@ -33897,7 +33901,7 @@
         dimensionsToSum(sheetId, zone) {
             const dimensions = new Set();
             if (isOneDimensional(zone)) {
-                dimensions.add(zoneToDimension(zone).width === 1 ? "COL" : "ROW");
+                dimensions.add(zoneToDimension(zone).numberOfCols === 1 ? "COL" : "ROW");
                 return dimensions;
             }
             if (this.lastColIsEmpty(sheetId, zone)) {
@@ -34485,8 +34489,8 @@
                 x.zone.bottom < this.getters.getNumberRows(x.sheetId) &&
                 x.zone.right < this.getters.getNumberCols(x.sheetId))
                 .map((highlight) => {
-                const { height, width } = zoneToDimension(highlight.zone);
-                const zone = height * width === 1
+                const { numberOfRows, numberOfCols } = zoneToDimension(highlight.zone);
+                const zone = numberOfRows * numberOfCols === 1
                     ? this.getters.expandZone(highlight.sheetId, highlight.zone)
                     : highlight.zone;
                 return {
@@ -36393,7 +36397,7 @@
             const merges = this.getters.getMerges(sheetId).filter((merge) => overlap(merge, zone));
             /*Test the presence of merges of different sizes*/
             const mergeDimension = zoneToDimension(merges[0]);
-            let [widthFirst, heightFirst] = [mergeDimension.width, mergeDimension.height];
+            let [widthFirst, heightFirst] = [mergeDimension.numberOfCols, mergeDimension.numberOfRows];
             if (!merges.every((merge) => {
                 let [widthCurrent, heightCurrent] = [
                     merge.right - merge.left + 1,
@@ -37526,9 +37530,9 @@
             const values = this.values;
             const pasteZone = this.getPasteZone(target);
             const { left: activeCol, top: activeRow } = pasteZone;
-            const { width, height } = zoneToDimension(pasteZone);
+            const { numberOfCols, numberOfRows } = zoneToDimension(pasteZone);
             const sheetId = this.getters.getActiveSheetId();
-            this.addMissingDimensions(width, height, activeCol, activeRow);
+            this.addMissingDimensions(numberOfCols, numberOfRows, activeCol, activeRow);
             for (let i = 0; i < values.length; i++) {
                 for (let j = 0; j < values[i].length; j++) {
                     this.dispatch("UPDATE_CELL", {
@@ -37542,8 +37546,8 @@
             const zone = {
                 left: activeCol,
                 top: activeRow,
-                right: activeCol + width - 1,
-                bottom: activeRow + height - 1,
+                right: activeCol + numberOfCols - 1,
+                bottom: activeRow + numberOfRows - 1,
             };
             this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone });
         }
@@ -43642,7 +43646,7 @@
         }
     }
 
-    function createDrawing(chartRelIds, sheet, figures) {
+    function createDrawing(drawingRelIds, sheet, figures) {
         const namespaces = [
             ["xmlns:xdr", NAMESPACE.drawing],
             ["xmlns:r", RELATIONSHIP_NSR],
@@ -43651,46 +43655,14 @@
         ];
         const figuresNodes = [];
         for (const [figureIndex, figure] of Object.entries(figures)) {
-            // position
-            const { from, to } = convertFigureData(figure, sheet);
-            const chartId = convertChartId(figure.id);
-            const cNvPrAttrs = [
-                ["id", chartId],
-                ["name", `Chart ${chartId}`],
-                ["title", "Chart"],
-            ];
-            figuresNodes.push(escapeXml /*xml*/ `
-      <xdr:twoCellAnchor>
-        <xdr:from>
-          <xdr:col>${from.col}</xdr:col>
-          <xdr:colOff>${from.colOff}</xdr:colOff>
-          <xdr:row>${from.row}</xdr:row>
-          <xdr:rowOff>${from.rowOff}</xdr:rowOff>
-        </xdr:from>
-        <xdr:to>
-          <xdr:col>${to.col}</xdr:col>
-          <xdr:colOff>${to.colOff}</xdr:colOff>
-          <xdr:row>${to.row}</xdr:row>
-          <xdr:rowOff>${to.rowOff}</xdr:rowOff>
-        </xdr:to>
-        <xdr:graphicFrame>
-          <xdr:nvGraphicFramePr>
-            <xdr:cNvPr ${formatAttributes(cNvPrAttrs)} />
-            <xdr:cNvGraphicFramePr />
-          </xdr:nvGraphicFramePr>
-          <xdr:xfrm>
-            <a:off x="0" y="0"/>
-            <a:ext cx="0" cy="0"/>
-          </xdr:xfrm>
-          <a:graphic>
-            <a:graphicData uri="${DRAWING_NS_C}">
-              <c:chart r:id="${chartRelIds[figureIndex]}" />
-            </a:graphicData>
-          </a:graphic>
-        </xdr:graphicFrame>
-        <xdr:clientData fLocksWithSheet="0"/>
-      </xdr:twoCellAnchor>
-    `);
+            switch (figure === null || figure === void 0 ? void 0 : figure.tag) {
+                case "chart":
+                    figuresNodes.push(createChartDrawing(figure, sheet, drawingRelIds[figureIndex]));
+                    break;
+                case "image":
+                    figuresNodes.push(createImageDrawing(figure, sheet, drawingRelIds[figureIndex]));
+                    break;
+            }
         }
         const xml = escapeXml /*xml*/ `
     <xdr:wsDr ${formatAttributes(namespaces)}>
@@ -43745,6 +43717,93 @@
             index: headers.length - 1,
             offset: convertDotValueToEMU(position - currentPosition + FIGURE_BORDER_SIZE),
         };
+    }
+    function createChartDrawing(figure, sheet, chartRelId) {
+        // position
+        const { from, to } = convertFigureData(figure, sheet);
+        const chartId = convertChartId(figure.id);
+        const cNvPrAttrs = [
+            ["id", chartId],
+            ["name", `Chart ${chartId}`],
+            ["title", "Chart"],
+        ];
+        return escapeXml /*xml*/ `
+    <xdr:twoCellAnchor>
+      <xdr:from>
+        <xdr:col>${from.col}</xdr:col>
+        <xdr:colOff>${from.colOff}</xdr:colOff>
+        <xdr:row>${from.row}</xdr:row>
+        <xdr:rowOff>${from.rowOff}</xdr:rowOff>
+      </xdr:from>
+      <xdr:to>
+        <xdr:col>${to.col}</xdr:col>
+        <xdr:colOff>${to.colOff}</xdr:colOff>
+        <xdr:row>${to.row}</xdr:row>
+        <xdr:rowOff>${to.rowOff}</xdr:rowOff>
+      </xdr:to>
+      <xdr:graphicFrame>
+        <xdr:nvGraphicFramePr>
+          <xdr:cNvPr ${formatAttributes(cNvPrAttrs)} />
+          <xdr:cNvGraphicFramePr />
+        </xdr:nvGraphicFramePr>
+        <xdr:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+        </xdr:xfrm>
+        <a:graphic>
+          <a:graphicData uri="${DRAWING_NS_C}">
+            <c:chart r:id="${chartRelId}" />
+          </a:graphicData>
+        </a:graphic>
+      </xdr:graphicFrame>
+      <xdr:clientData fLocksWithSheet="0"/>
+    </xdr:twoCellAnchor>
+  `;
+    }
+    function createImageDrawing(figure, sheet, imageRelId) {
+        // position
+        const { from, to } = convertFigureData(figure, sheet);
+        const imageId = convertImageId(figure.id);
+        const cNvPrAttrs = [
+            ["id", imageId],
+            ["name", `Image ${imageId}`],
+            ["title", "Image"],
+        ];
+        return escapeXml /*xml*/ `
+    <xdr:twoCellAnchor editAs="oneCell">
+      <xdr:from>
+        <xdr:col>${from.col}</xdr:col>
+        <xdr:colOff>${from.colOff}</xdr:colOff>
+        <xdr:row>${from.row}</xdr:row>
+        <xdr:rowOff>${from.rowOff}</xdr:rowOff>
+      </xdr:from>
+      <xdr:to>
+        <xdr:col>${to.col}</xdr:col>
+        <xdr:colOff>${to.colOff}</xdr:colOff>
+        <xdr:row>${to.row}</xdr:row>
+        <xdr:rowOff>${to.rowOff}</xdr:rowOff>
+      </xdr:to>
+      <xdr:pic>
+        <xdr:nvPicPr>
+          <xdr:cNvPr ${formatAttributes(cNvPrAttrs)}/>
+          <xdr:cNvPicPr preferRelativeResize="0"/>
+        </xdr:nvPicPr>
+        <xdr:blipFill>
+          <a:blip cstate="print" r:embed="${imageRelId}"/>
+          <a:stretch>
+            <a:fillRect/>
+          </a:stretch>
+        </xdr:blipFill>
+        <xdr:spPr>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </xdr:spPr>
+      </xdr:pic>
+      <xdr:clientData fLocksWithSheet="0"/>
+    </xdr:twoCellAnchor>
+  `;
     }
 
     function addNumberFormats(numFmts) {
@@ -43940,7 +43999,7 @@
     function addFilterColumns(table) {
         const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).width)) {
+        for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
             const filter = table.filters[i];
             if (!filter || !filter.filteredValues.length) {
                 continue;
@@ -43966,7 +44025,7 @@
         var _a;
         const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).width)) {
+        for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
             const colHeaderXc = toXC(tableZone.left + i, tableZone.top);
             const colName = ((_a = sheetData.cells[colHeaderXc]) === null || _a === void 0 ? void 0 : _a.content) || `col${i}`;
             const colAttributes = [
@@ -44214,23 +44273,37 @@
             currentTableIndex += sheet.filterTables.length;
             // Figures and Charts
             let drawingNode = escapeXml ``;
+            const drawingRelIds = [];
             const charts = sheet.charts;
-            if (charts.length) {
-                const chartRelIds = [];
-                for (const chart of charts) {
-                    const xlsxChartId = convertChartId(chart.id);
-                    const chartRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
-                        target: `../charts/chart${xlsxChartId}.xml`,
-                        type: XLSX_RELATION_TYPE.chart,
-                    });
-                    chartRelIds.push(chartRelId);
-                    files.push(createXMLFile(createChart(chart, sheetIndex, data), `xl/charts/chart${xlsxChartId}.xml`, "chart"));
-                }
+            for (const chart of charts) {
+                const xlsxChartId = convertChartId(chart.id);
+                const chartRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
+                    target: `../charts/chart${xlsxChartId}.xml`,
+                    type: XLSX_RELATION_TYPE.chart,
+                });
+                drawingRelIds.push(chartRelId);
+                files.push(createXMLFile(createChart(chart, sheetIndex, data), `xl/charts/chart${xlsxChartId}.xml`, "chart"));
+            }
+            const images = sheet.images;
+            for (const image of images) {
+                const xlsxImageId = convertImageId(image.id);
+                const imageRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
+                    target: `../media/image${xlsxImageId}`,
+                    type: XLSX_RELATION_TYPE.image,
+                });
+                drawingRelIds.push(imageRelId);
+                files.push({
+                    path: `xl/media/image${xlsxImageId}`,
+                    imagePath: image.data.path,
+                });
+            }
+            const drawings = [...charts, ...images];
+            if (drawings.length) {
                 const drawingRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
                     target: `../drawings/drawing${sheetIndex}.xml`,
                     type: XLSX_RELATION_TYPE.drawing,
                 });
-                files.push(createXMLFile(createDrawing(chartRelIds, sheet, charts), `xl/drawings/drawing${sheetIndex}.xml`, "drawing"));
+                files.push(createXMLFile(createDrawing(drawingRelIds, sheet, drawings), `xl/drawings/drawing${sheetIndex}.xml`, "drawing"));
                 drawingNode = escapeXml /*xml*/ `<drawing r:id="${drawingRelId}" />`;
             }
             const sheetXml = escapeXml /*xml*/ `
@@ -44344,7 +44417,7 @@
     function createContentTypes(files) {
         const overrideNodes = [];
         for (const file of files) {
-            if (file.contentType) {
+            if ("contentType" in file && file.contentType) {
                 overrideNodes.push(createOverride("/" + file.path, CONTENT_TYPES[file.contentType]));
             }
         }
@@ -44864,6 +44937,7 @@
         GaugeChartDesignPanel,
         ScorecardChartConfigPanel,
         ScorecardChartDesignPanel,
+        FigureComponent,
     };
     function addFunction(functionName, functionDescription) {
         functionRegistry.add(functionName, functionDescription);
@@ -44902,9 +44976,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.0-alpha.3';
-    __info__.date = '2023-03-06T07:35:02.317Z';
-    __info__.hash = 'ec749cf';
+    __info__.version = '16.2.0';
+    __info__.date = '2023-03-15T16:34:23.251Z';
+    __info__.hash = 'c74b1d1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
