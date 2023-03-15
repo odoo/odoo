@@ -758,7 +758,9 @@ export class ListRenderer extends Component {
         const { _t } = this.env;
         if (group.groupByField.type === "boolean") {
             return group.value === undefined ? _t("None") : group.value ? _t("Yes") : _t("No");
-        } else {
+        } else if(group.groupByField.type === "json" && group.value !== false) {
+            return JSON.stringify(group.displayName);
+        }else {
             return group.value === undefined || group.value === false
                 ? _t("None")
                 : group.displayName;

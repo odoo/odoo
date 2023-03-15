@@ -13,6 +13,7 @@ export const GROUPABLE_TYPES = [
     "date",
     "datetime",
     "integer",
+    "json",
     "many2one",
     "many2many",
     "selection",

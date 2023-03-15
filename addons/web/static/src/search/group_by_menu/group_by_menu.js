@@ -50,7 +50,7 @@ export class GroupByMenu extends Component {
     validateField(fieldName, field) {
         const { sortable, store, type } = field;
         return (
-            (type === "many2many" ? store : sortable) &&
+            (type === "many2many" || type === "json" ? store : sortable) &&
             fieldName !== "id" &&
             GROUPABLE_TYPES.includes(type)
         );

@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.exceptions import ValidationError
 
+
 class AnalyticMixin(models.AbstractModel):
     _name = 'analytic.mixin'
     _description = 'Analytic Mixin'
@@ -13,10 +14,22 @@ class AnalyticMixin(models.AbstractModel):
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
         precompute=True
     )
+    # Json non stored to be able to search on analytic_distribution.
+    analytic_distribution_search = fields.Json(
+        store=False,
+        search="_search_analytic_distribution"
+    )
     analytic_precision = fields.Integer(
         store=False,
         default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
     )
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('analytic_distribution_search'):
+            res['analytic_distribution_search']['searchable'] = False
+        return res
 
     def init(self):
         # Add a gin index for json search on the keys, on the models that actually have a table
@@ -32,8 +45,58 @@ class AnalyticMixin(models.AbstractModel):
             self.env.cr.execute(query)
         super().init()
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        res = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        if 'analytic_distribution' in groupby:
+            new_res = {}
+            accounts = self.env['account.analytic.account'].browse({int(key) for data in res if data.get('analytic_distribution') for key in data.get('analytic_distribution').keys()})
+            account_dict = {str(account.id): account.name for account in accounts}
+            for data in res:
+                if data.get('analytic_distribution'):
+                    for account_id in data['analytic_distribution'].keys():
+                        if account_id in new_res.keys():
+                            new_res[account_id] = {
+                                key:
+                                new_res[account_id][key] + value
+                                if key not in ('analytic_distribution', 'date', '__domain')
+                                else new_res[account_id][key]
+                                for key, value in data.items()
+                            }
+                        else:
+                            new_res[account_id] = {key: value if key != 'analytic_distribution' else account_dict[account_id] for key, value in data.items()}
+                            new_res[account_id]['__domain'] = [
+                                (elem[0], 'ilike', account_dict[account_id])
+                                if isinstance(elem, (list, tuple)) and elem[0] == 'analytic_distribution'
+                                else elem
+                                for elem in new_res[account_id]['__domain']
+                            ]
+                else:
+                    new_res[False] = data
+            return list(new_res.values())
+        return res
+
     def _compute_analytic_distribution(self):
         pass
+
+    def _search_analytic_distribution(self, operator, value):
+        operator_name_search = '=' if operator in ('=', '!=') else 'ilike'
+        accounts = self.env['account.analytic.account'].name_search(name=value, operator=operator_name_search)
+
+        query = f"""
+            SELECT id 
+            FROM {self._table}
+            WHERE analytic_distribution ?| array[%s]
+        """
+        operator_inselect = 'inselect' if operator == '=' or operator == 'ilike' else 'not inselect'
+        return [('id', operator_inselect, (query, [[str(account[0]) for account in accounts]]))]
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        for arg in args:
+            if isinstance(arg, (list, tuple)) and arg[0] == 'analytic_distribution' and isinstance(arg[2], str):
+                arg[0] = 'analytic_distribution_search'
+        return super()._search(args, offset, limit, order, count, access_rights_uid)
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
