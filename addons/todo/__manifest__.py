@@ -23,6 +23,7 @@
     'uninstall_hook': '_todo_uninstall',
     'assets': {
         'web.assets_backend': [
+            'todo/static/src/components/**/*',
             'todo/static/src/scss/todo.scss',
             'todo/static/src/views/**/*',
             'todo/static/src/web/**/*',
