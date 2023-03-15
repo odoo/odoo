@@ -64,6 +64,16 @@ class ReportMoOverview(models.AbstractModel):
                 }
         return res
 
+    def _is_doc_in_done(self, doc_in):
+        if doc_in._name == 'purchase.order':
+            return doc_in.state == 'purchase' and all(move.state in ('done', 'cancel') for move in doc_in.order_line.move_ids)
+        return super()._is_doc_in_done(doc_in)
+
+    def _get_origin(self, move):
+        if move.purchase_line_id:
+            return move.purchase_line_id.order_id
+        return super()._get_origin(move)
+
     def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):
         if move_in and move_in.purchase_line_id:
             po_line = move_in.purchase_line_id
