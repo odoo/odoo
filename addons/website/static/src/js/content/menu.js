@@ -641,28 +641,24 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        // The user must click on the dropdown if he is on mobile (no way to
+        // hover) or if the dropdown is the extra menu ('+').
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.addClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
-        $dropdown.find(this.$dropdownMenus).addClass('show');
+        $(ev.currentTarget.querySelector('.dropdown-toggle')).dropdown('show');
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.removeClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
-        $dropdown.find(this.$dropdownMenus).removeClass('show');
+        $(ev.currentTarget.querySelector('.dropdown-toggle')).dropdown('hide');
     },
 });
 
