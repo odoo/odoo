@@ -93,7 +93,7 @@
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-on-click="onClickRejectCall">
                     <div class="fa-stack">
-                        <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                        <i class="fa fa-times fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                     </div>
                 </button>
                 <t t-if="props.thread === rtc.state.channel" t-set="callText">Disconnect</t>
