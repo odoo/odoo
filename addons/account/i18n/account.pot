@@ -297,6 +297,15 @@ msgid "45 Days"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
 msgstr ""
@@ -5406,6 +5415,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_percentage
 msgid "Early Payment Discount granted for this payment term"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
 
 #. module: account
