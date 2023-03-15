@@ -243,7 +243,10 @@ class ReportMoOverview(models.AbstractModel):
             }
         components = []
         company = production.company_id or self.env.company
-        replenish_data = self._get_replenishments_from_forecast(production, replenish_data)
+        if production.state == 'done':
+            replenish_data = self._get_replenishment_from_moves(production, replenish_data)
+        else:
+            replenish_data = self._get_replenishments_from_forecast(production, replenish_data)
         for count, move_raw in enumerate(production.move_raw_ids):
             component_index = f"{current_index}{count}"
             replenishments = self._get_replenishment_lines(production, move_raw, replenish_data, level, component_index)
@@ -305,7 +308,7 @@ class ReportMoOverview(models.AbstractModel):
 
         if any(get(rep, 'type', True) == 'unavailable' for rep in replenishments):
             return self._format_receipt_date('unavailable')
-        if product.type != 'product':
+        if product.type != 'product' or move.state == 'done':
             return self._format_receipt_date('available')
 
         has_to_order_line = any(rep.get('summary', {}).get('model') == 'to_order' for rep in replenishments)
@@ -317,7 +320,8 @@ class ReportMoOverview(models.AbstractModel):
                and float_compare(missing_quantity, free_qty, precision_rounding=move.product_uom.rounding) <= 0):
             return self._format_receipt_date('available')
 
-        max_date = max(map(lambda rep: get(rep, 'date', True), replenishments), default=fields.datetime.today())
+        replenishments_with_date = list(filter(lambda r: r.get('summary', {}).get('receipt', {}).get('date'), replenishments))
+        max_date = max([get(rep, 'date', True) for rep in replenishments_with_date], default=fields.datetime.today())
         if has_to_order_line or any(get(rep, 'type', True) == 'estimated' for rep in replenishments):
             return self._format_receipt_date('estimated', max_date)
         else:
@@ -368,7 +372,10 @@ class ReportMoOverview(models.AbstractModel):
                 byproducts_cost_share = float_round(1 - byproducts_cost_portion, precision_rounding=0.0001)
                 replenishment['byproducts'] = byproducts
                 replenishment['summary']['mo_cost'] = initial_mo_cost * byproducts_cost_share
-            replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
+            if self._is_doc_in_done(doc_in):
+                replenishment['summary']['receipt'] = self._format_receipt_date('available')
+            else:
+                replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
             replenishments.append(replenishment)
             forecast_line['already_used'] = True
             total_ordered += replenishment['summary']['quantity']
@@ -383,7 +390,8 @@ class ReportMoOverview(models.AbstractModel):
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
         missing_quantity = quantity - (reserved_quantity + free_qty + total_ordered)
-        if product.type == 'product' and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
+        if product.type == 'product' and production.state not in ('done', 'cancel')\
+           and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
             # Need to order more products to fulfill the need
             resupply_rules = replenish_data['products'][product.id].get('resupply_rules', [])
             rules_delay = sum(rule.delay for rule in resupply_rules)
@@ -443,6 +451,11 @@ class ReportMoOverview(models.AbstractModel):
     def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):
         return currency.round(product.standard_price * uom_id._compute_quantity(quantity, product.uom_id))
 
+    def _is_doc_in_done(self, doc_in):
+        if doc_in._name == 'mrp.production':
+            return doc_in.state == 'done'
+        return False
+
     def _get_replenishment_receipt(self, doc_in, components):
         if doc_in._name == 'stock.picking':
             return self._format_receipt_date('expected', doc_in.scheduled_date)
@@ -486,17 +499,89 @@ class ReportMoOverview(models.AbstractModel):
             warehouse = production.warehouse_id
             wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
             forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, wh_location_ids, warehouse.lot_stock_id, read=False)
+            forecast_lines = self._add_origins_to_forecast(forecast_lines)
             for product in unknown_products:
                 extra_docs = self._get_extra_replenishments(product)
                 # Sorting the extra documents so that the ones flagged with an explicit production_id are on top of the list.
                 extra_docs.sort(key=lambda ex: ex.get('production_id', False), reverse=True)
                 product_forecast_lines = list(filter(lambda line: line.get('product', {}).get('id') == product.id, forecast_lines))
-                replenish_data['products'][product.id] = {
-                    'forecast': self._add_extra_in_forecast(product_forecast_lines, extra_docs, product.uom_id.rounding),
-                    'resupply_rules': product._get_rules_from_location(production.warehouse_id.lot_stock_id),
-                }
+                updated_forecast_lines = self._add_extra_in_forecast(product_forecast_lines, extra_docs, product.uom_id.rounding)
+                replenish_data = self._set_replenish_data(updated_forecast_lines, product, production, replenish_data)
 
         return replenish_data
+
+    def _get_replenishment_from_moves(self, production, replenish_data):
+        # Go through the component's move see if we can find an incoming origin
+        for component_move in production.move_raw_ids:
+            product_lines = []
+            product = component_move.product_id
+            required_qty = component_move.product_uom_qty
+            for move_origin in self.env['stock.move'].browse(component_move._rollup_move_origs()):
+                doc_origin = self._get_origin(move_origin)
+                if doc_origin:
+                    to_uom_qty = move_origin.product_uom._compute_quantity(move_origin.product_uom_qty, component_move.product_uom)
+                    used_qty = min(required_qty, to_uom_qty)
+                    required_qty -= used_qty
+                    # Create a fake "forecast line" so it will be processed as normal afterwards with only the required info
+                    product_lines.append({
+                        'document_in': {'_name': doc_origin._name, 'id': doc_origin.id},
+                        'document_out': {'_name': 'mrp.production', 'id': production.id},
+                        'quantity': used_qty,
+                        'uom_id': component_move.product_uom,
+                        'move_in': move_origin,
+                        'product': product,
+                    })
+                if float_compare(required_qty, 0, precision_rounding=component_move.product_uom.rounding) <= 0:
+                    break
+            replenish_data = self._set_replenish_data(product_lines, product, production, replenish_data)
+
+        return replenish_data
+
+    def _set_replenish_data(self, new_lines, product, production, replenish_data):
+        if product.id not in replenish_data['products']:
+            replenish_data['products'][product.id] = {
+                'forecast': [],
+                'resupply_rules': product._get_rules_from_location(production.warehouse_id.lot_stock_id),
+            }
+        replenish_data['products'][product.id]['forecast'] += new_lines
+        return replenish_data
+
+    def _add_origins_to_forecast(self, forecast_lines):
+        # Keeps the link to its origin even when the product is now in stock.
+        new_lines = []
+        for line in filter(lambda line: not line.get('document_in', False) and line.get('move_out', False), forecast_lines):
+            move_out_qty = line['move_out'].product_uom._compute_quantity(line['move_out'].product_uom_qty, line['uom_id'])
+            for move_origin in self.env['stock.move'].browse(line['move_out']._rollup_move_origs()):
+                doc_origin = self._get_origin(move_origin)
+                if doc_origin:
+                    # Remove 'in_transit' for MTO replenishments
+                    line['in_transit'] = False
+                    move_origin_qty = move_origin.product_uom._compute_quantity(move_origin.product_uom_qty, line['uom_id'])
+                    # Move quantity matches forecast, can add origin to the line
+                    if float_compare(line['quantity'], move_origin_qty, precision_rounding=line['uom_id'].rounding) == 0:
+                        line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
+                        line['move_in'] = move_origin
+                        break
+
+                    # Quantity doesn't match, either multiple origins for a single line or multiple lines for a single origin
+                    used_quantity = min(move_out_qty, move_origin_qty)
+                    new_line = copy.copy(line)
+                    new_line['quantity'] = used_quantity
+                    new_line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
+                    new_line['move_in'] = move_origin
+                    new_lines.append(new_line)
+                    # Remove used quantity from original forecast line
+                    line['quantity'] -= used_quantity
+
+                    move_out_qty -= used_quantity
+                    if float_compare(move_out_qty, 0, line['move_out'].product_uom.rounding) <= 0:
+                        break
+        return new_lines + forecast_lines
+
+    def _get_origin(self, move):
+        if move.production_id:
+            return move.production_id
+        return False
 
     def _add_extra_in_forecast(self, forecast_lines, extras, product_rounding):
         if not extras:
