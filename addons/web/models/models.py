@@ -71,6 +71,58 @@ class Base(models.AbstractModel):
         }
 
     @api.model
+    def web_search_read_unity(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
+        """
+        Performs a search_read and a search_count.
+
+        :param domain: search domain
+        :param fields: list of fields to read
+        :param limit: maximum number of records to read
+        :param offset: number of records to skip
+        :param order: columns to sort results
+        :return: {
+            'records': array of read records (result of a call to 'search_read')
+            'length': number of records matching the domain (result of a call to 'search_count')
+        }
+        """
+        # records = self.search_read(domain, fields, offset=offset, limit=limit, order=order)
+        fields = self.check_field_access_rights('read', fields)
+        records = self.search_fetch(domain or [], fields, offset=offset, limit=limit, order=order)
+
+        # Method _read_format() ignores 'active_test', but it would forward it
+        # to any downstream search call(e.g. for x2m or computed fields), and
+        # this is not the desired behavior. The flag was presumably only meant
+        # for the main search().
+        if 'active_test' in self._context:
+            context = dict(self._context)
+            del context['active_test']
+            records = records.with_context(context)
+
+        records = records._read_main(fields, offset=offset, limit=limit, order=order)
+        if not records:
+            return {
+                'length': 0,
+                'records': []
+            }
+        current_length = len(records) + offset
+        limit_reached = len(records) == limit
+        force_search_count = self._context.get('force_search_count')
+        count_limit_reached = count_limit and count_limit <= current_length
+        if limit and ((limit_reached and not count_limit_reached) or force_search_count):
+            length = self.search_count(domain, limit=count_limit)
+        else:
+            length = current_length
+        return {
+            'length': length,
+            'records': records
+        }
+
+    def web_read_unity(self, fields=None):
+        fields = self.check_field_access_rights('read', fields)
+        self.fetch(fields)
+        return self._read_main(fields)
+
+    @api.model
     def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
                        lazy=True, expand=False, expand_limit=None, expand_orderby=False):
         """

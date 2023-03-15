@@ -42,6 +42,7 @@ from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
+from typing import TypedDict
 
 import babel
 import babel.dates
@@ -1533,7 +1534,7 @@ class BaseModel(metaclass=MetaModel):
             return self.browse()
 
         # determine fields to fetch
-        fields_to_fetch = OrderedSet()
+        fields_to_fetch = OrderedDict()
         if field_names:
             field_names = self.check_field_access_rights('read', field_names)
         for field_name in field_names:
@@ -1541,13 +1542,13 @@ class BaseModel(metaclass=MetaModel):
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
             if field.store:
-                fields_to_fetch.add(field)
+                fields_to_fetch[field] = dict()
             elif field.compute:
                 # optimization: fetch direct field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep = self._fields[dotname.split('.', 1)[0]]
                     if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_fetch.add(dep)
+                        fields_to_fetch[dep] = dict()
 
         return self._fetch_query(query, fields_to_fetch)
 
@@ -2899,12 +2900,12 @@ class BaseModel(metaclass=MetaModel):
         return res
 
     @api.model
-    def check_field_access_rights(self, operation, fields):
+    def check_field_access_rights(self, operation, field_names):
         """Check the user access rights on the given fields.
 
         :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :param fields: names of the fields
-        :type fields: list or None
+        :param field_names: names of the fields
+        :type field_names: list or None
         :return: provided fields if fields is truthy (or the fields
           readable by the current user).
         :rtype: list
@@ -2912,7 +2913,7 @@ class BaseModel(metaclass=MetaModel):
           the provided fields.
         """
         if self.env.su:
-            return fields or list(self._fields)
+            return field_names or list(self._fields)
 
         def valid(fname):
             """ determine whether user has access to field ``fname`` """
@@ -2922,10 +2923,10 @@ class BaseModel(metaclass=MetaModel):
             else:
                 return True
 
-        if not fields:
-            fields = [name for name in self._fields if valid(name)]
+        if not field_names:
+            field_names = [name for name in self._fields if valid(name)]
         else:
-            invalid_fields = {name for name in fields if not valid(name)}
+            invalid_fields = {name for name in field_names if not valid(name)}
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                              operation, self._uid, self._name, ', '.join(invalid_fields))
@@ -2990,7 +2991,7 @@ class BaseModel(metaclass=MetaModel):
                     ),
                 ))
 
-        return fields
+        return field_names
 
     def read(self, fields=None, load='_classic_read'):
         """ read([fields])
@@ -3014,6 +3015,78 @@ class BaseModel(metaclass=MetaModel):
         fields = self.check_field_access_rights('read', fields)
         self.fetch(fields)
         return self._read_format(fnames=fields, load=load)
+
+    def _read_main(self, specification: list | dict, limit: int | None = None, offset: int | None = None, order: str|None = None) -> list[dict]:
+        # TODO VSC: replace _read_format
+        #  and remove load=_classic_read : the specification should be able to support it correctly
+
+        if isinstance(specification, collections.abc.Sequence):
+            specification = { field_name : {} for field_name in specification }
+            for field_name, field_spec in specification.items():
+                field = self._fields.get(field_name)
+                if field and field.type in ['many2one']:
+                    specification[field_name] = {'fields': {'display_name': {}}}
+
+        # TODO VSC: should only prefetch the fields for the records respecting the limit
+        # TODO VSC: for x2many reentry in this function, the prefetch should have already fetched
+        self.browse(self._prefetch_ids).fetch(specification.keys())
+        records = []
+
+        if offset is not None and offset > 0:
+            for record in self[0:offset]:
+                records.append( {'id': record['id']})
+        else:
+            offset = 0
+
+        if limit is not None and limit > 0:
+            limit = offset+limit
+        else:
+            limit = len(self)
+
+        for record in self[offset:limit]:
+            vals = {'id': record['id']}
+            try:
+                for field_name, field_spec in specification.items():
+                    field = record._fields[field_name]
+
+                    if field_spec == {}:
+                        vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
+                    else:
+                        if "context" in field_spec:
+                            relational_record = record[field_name].with_context(**field_spec["context"])
+                        else:
+                            relational_record = record[field_name]
+
+                        if field.type == "many2one":
+                            # TODO VSC: move all this to the convert_to_read of the many2one
+                            if 'fields' in field_spec and len(field_spec['fields']):
+                                if len(field_spec["fields"]) == 1 and 'display_name' in field_spec["fields"]:
+                                    # specificaton like 'many2one_id': {'fields': {'display_name':{}}
+                                    # TODO VSC: while we are in the temp phase, convert the result tuple of convert_to_read
+                                    temp = field.convert_to_read(relational_record, self, use_name_get=True)
+                                    vals[field_name] = {'id': temp[0], 'display_name': temp[1]} if temp else False
+                                else:
+                                    # specification for more fields other than display_name on the many2one like
+                                    # 'many2one_id': {'fields':{'id':{}, 'write_date':{}}}
+                                    vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
+                            else:
+                                # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
+                                vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
+                        else:
+                            assert field.type in ["many2many", "one2many"]
+
+                            vals[field_name] = relational_record._read_main(field_spec["fields"],
+                                                                            limit=field_spec.get('limit'),
+                                                                            offset=field_spec.get('offset'))
+                records.append(vals)
+            except MissingError:
+                # if we can't access the fields of a record, that means that either the record has been deleted or it is not accessible
+                continue
+
+        for record in self[limit:]:
+            records.append( {'id': record['id']})
+
+        return records
 
     def update_field_translations(self, field_name, translations):
         """ Update the values of a translated field.
@@ -3233,24 +3306,36 @@ class BaseModel(metaclass=MetaModel):
         if not self or not field_names:
             return
 
+        is_unity = isinstance(field_names, dict)
+
         # determine fields to fetch
-        fields_to_fetch = OrderedSet()
+        fields_to_fetch  = OrderedDict()
         cache = self.env.cache
-        field_names = self.check_field_access_rights('read', field_names)
-        for field_name in field_names:
+        if is_unity:
+            # restore the field specification for the accessible fields
+            field_names = { field_name: field_names.get(field_name, dict()) for field_name in
+                            self.check_field_access_rights('read', field_names) }
+        else:
+            field_names = {field_name: dict() for field_name in
+                           self.check_field_access_rights('read', field_names)}
+
+        for field_name, specification in field_names.items():
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
             if not any(cache.get_missing_ids(self, field)):
                 continue
             if field.store:
-                fields_to_fetch.add(field)
+                fields_to_fetch[field] = specification
             elif field.compute:
+                # TODO VSC: if a dependency of a compute is also requested in the fields to read after the compute, and has
+                #           has extra info (like it's an x2many and needs to be sorted a special way), this information is lost.
+                #           Should we add the dependencies only after all fields from field_names are processed ?
                 # optimization: fetch direct field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep = self._fields[dotname.split('.', 1)[0]]
                     if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_fetch.add(dep)
+                        fields_to_fetch[dep] = dict()
 
         if not fields_to_fetch:
             # there is nothing to fetch, but we expect an error anyway in case
@@ -3298,10 +3383,14 @@ class BaseModel(metaclass=MetaModel):
         This method may be overridden to change what fields to actually fetch,
         or to change the values that are put in cache.
         """
+
+        if isinstance(fields, collections.abc.Sequence):
+            fields = { field_name : {} for field_name in fields }
+
         # determine columns fields and those with their own read() method
         column_fields = OrderedSet()
         other_fields = OrderedSet()
-        for field in fields:
+        for field, specification in fields.items():
             if field.name == 'id':
                 continue
             assert field.store
@@ -3357,7 +3446,12 @@ class BaseModel(metaclass=MetaModel):
         # process non-column fields
         if fetched:
             for field in other_fields:
-                field.read(fetched)
+                try:
+                    orderby = fields[field].get('order')
+                except AttributeError:
+                    # fields is a list and not a dict, so it doesn't have any information about a specific order
+                    orderby = None
+                field.read(fetched, orderby)
 
         return fetched
 
