@@ -378,8 +378,49 @@ class AccountJournal(models.Model):
 
     @api.depends('alias_id', 'alias_id.alias_name')
     def _compute_alias_name(self):
+<<<<<<< HEAD
         for journal in self:
             journal.alias_name = journal.alias_id.alias_name
+||||||| parent of f5b046d0239 (temp)
+        for record in self:
+            record.alias_name = record.alias_id.alias_name
+
+    @api.constrains('type_control_ids')
+    def _constrains_type_control_ids(self):
+        self.env['account.move.line'].flush(['account_id', 'journal_id'])
+        self.flush(['type_control_ids'])
+        self._cr.execute("""
+            SELECT aml.id
+            FROM account_move_line aml
+            WHERE aml.journal_id in (%s)
+            AND EXISTS (SELECT 1 FROM journal_account_type_control_rel rel WHERE rel.journal_id = aml.journal_id)
+            AND NOT EXISTS (SELECT 1 FROM account_account acc
+                            JOIN journal_account_type_control_rel rel ON acc.user_type_id = rel.type_id
+                            WHERE acc.id = aml.account_id AND rel.journal_id = aml.journal_id)
+        """, tuple(self.ids))
+        if self._cr.fetchone():
+            raise ValidationError(_('Some journal items already exist in this journal but with accounts from different types than the allowed ones.'))
+=======
+        for record in self:
+            record.alias_name = record.alias_id.alias_name
+
+    @api.constrains('type_control_ids')
+    def _constrains_type_control_ids(self):
+        self.env['account.move.line'].flush(['account_id', 'journal_id'])
+        self.flush(['type_control_ids'])
+        self._cr.execute("""
+            SELECT aml.id
+            FROM account_move_line aml
+            WHERE aml.journal_id in (%s)
+            AND EXISTS (SELECT 1 FROM journal_account_type_control_rel rel WHERE rel.journal_id = aml.journal_id)
+            AND NOT EXISTS (SELECT 1 FROM account_account acc
+                            JOIN journal_account_type_control_rel rel ON acc.user_type_id = rel.type_id
+                            WHERE acc.id = aml.account_id AND rel.journal_id = aml.journal_id)
+            AND aml.display_type IS NULL
+        """, tuple(self.ids))
+        if self._cr.fetchone():
+            raise ValidationError(_('Some journal items already exist in this journal but with accounts from different types than the allowed ones.'))
+>>>>>>> f5b046d0239 (temp)
 
     @api.constrains('account_control_ids')
     def _constrains_account_control_ids(self):
