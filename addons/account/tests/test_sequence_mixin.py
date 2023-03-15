@@ -382,6 +382,20 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             move_form.journal_id = journal
         self.assertEqual(move.name, 'AJ/2021/10/0001')
 
+    @freeze_time('2021-10-01 00:00:00')
+    def test_change_journal_account_move(self):
+        """Changing the journal should change the name of the move"""
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        move = self.env['account.move']
+        with Form(move) as move_form:
+            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            move_form.journal_id = journal
+            self.assertEqual(move_form.name, 'AJ/2021/10/0001')
+
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
