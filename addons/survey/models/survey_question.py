@@ -345,14 +345,14 @@ class SurveyQuestion(models.Model):
                     or question.triggering_answer_id is None:
                 question.triggering_answer_id = False
 
-    @api.depends('question_type', 'scoring_type', 'answer_date', 'answer_datetime', 'answer_numerical_box')
+    @api.depends('question_type', 'scoring_type', 'answer_date', 'answer_datetime', 'answer_numerical_box', 'suggested_answer_ids.is_correct')
     def _compute_is_scored_question(self):
         """ Computes whether a question "is scored" or not. Handles following cases:
           - inconsistent Boolean=None edge case that breaks tests => False
           - survey is not scored => False
           - 'date'/'datetime'/'numerical_box' question types w/correct answer => True
             (implied without user having to activate, except for numerical whose correct value is 0.0)
-          - 'simple_choice / multiple_choice': set to True even if logic is a bit different (coming from answers)
+          - 'simple_choice / multiple_choice': set to True if any of suggested answers are marked as correct
           - question_type isn't scoreable (note: choice questions scoring logic handled separately) => False
         """
         for question in self:
@@ -365,7 +365,7 @@ class SurveyQuestion(models.Model):
             elif question.question_type == 'numerical_box' and question.answer_numerical_box:
                 question.is_scored_question = True
             elif question.question_type in ['simple_choice', 'multiple_choice']:
-                question.is_scored_question = True
+                question.is_scored_question = any(question.suggested_answer_ids.mapped('is_correct'))
             else:
                 question.is_scored_question = False
 

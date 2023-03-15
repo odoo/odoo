@@ -115,6 +115,25 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertEqual(user_inputs.scoring_percentage, 87.5)
         self.assertTrue(user_inputs.scoring_success)
 
+        # assert statistics
+        statistics = user_inputs._prepare_statistics()[user_inputs]
+        total_statistics = statistics['totals']
+        self.assertEqual(
+            sorted(
+                total_statistics,
+                key=lambda item: item['text']
+            ),
+            sorted(
+                [
+                    {'text': 'Correct', 'count': 2},
+                    {'text': 'Partially', 'count': 1},
+                    {'text': 'Incorrect', 'count': 0},
+                    {'text': 'Unanswered', 'count': 0},
+                ],
+                key=lambda item: item['text']
+            )
+        )
+
         # Check that the certification is still successful even if scoring_success_min of certification is modified
         certification.write({'scoring_success_min': 90})
         self.assertTrue(user_inputs.scoring_success)
@@ -197,12 +216,22 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
 
         statistics = user_inputs._prepare_statistics()[user_inputs]
         total_statistics = statistics['totals']
-        self.assertEqual(total_statistics, [
-            {'text': 'Correct', 'count': 1},
-            {'text': 'Partially', 'count': 0},
-            {'text': 'Incorrect', 'count': 0},
-            {'text': 'Unanswered', 'count': 0},
-        ], "With the configured randomization, there should be exactly 1 correctly answered question and none skipped.")
+        self.assertEqual(
+            sorted(
+                total_statistics,
+                key=lambda item: item['text']
+            ),
+            sorted(
+                [
+                    {'text': 'Correct', 'count': 1},
+                    {'text': 'Partially', 'count': 0},
+                    {'text': 'Incorrect', 'count': 0},
+                    {'text': 'Unanswered', 'count': 0},
+                ],
+                key=lambda item: item['text']
+            ),
+            "With the configured randomization, there should be exactly 1 correctly answered question and none skipped."
+        )
 
         section_statistics = statistics['by_section']
         self.assertEqual(section_statistics, {
