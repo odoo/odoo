@@ -69,3 +69,23 @@ class TestIrAttachment(TransactionCase):
 
         a2_fn = os.path.join(self.filestore, a2_store_fname2)
         self.assertTrue(os.path.isfile(a2_fn))
+
+    def test_06_write_mimetype(self):
+        """
+        Tests the consistency of documents mimetypes and SVG with others users
+        """
+        Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
+        a2 = Attachment.create({'name': 'a2', 'datas': self.blob1_b64, 'mimetype': 'image/png'})
+        self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
+        a3 = Attachment.create({'name': 'a3', 'datas': self.blob1_b64, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
+        self.assertEqual(a3.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type")
+        a4 = Attachment.create({'name': 'a4', 'datas': self.blob1_b64, 'mimetype': 'image/svg+xml'})
+        self.assertEqual(a4.mimetype, 'image/svg+xml', "should preserve svg mime type")
+
+    def test_07_dont_neuter_xml_mimetype_for_admin(self):
+        """
+        Admin user does not have a mime type filter
+        """
+        document = self.Attachment.create({'name': 'document', 'datas': self.blob1_b64})
+        document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
+        self.assertEqual(document.mimetype, 'text/xml', "XML mimetype should not be forced to text, for admin user")

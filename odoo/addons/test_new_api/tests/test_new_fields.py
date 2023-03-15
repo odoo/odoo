@@ -1132,7 +1132,7 @@ class TestFields(common.TransactionCase):
             ('res_field', '=', 'image_attachment'),
             ('res_id', '=', record.id),
         ])
-        self.assertEqual(attachment.mimetype, 'text/plain')
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
 
     def test_92_binary_self_avatar_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
@@ -1145,7 +1145,7 @@ class TestFields(common.TransactionCase):
             ('res_field', '=', 'image'),
             ('res_id', '=', demo_user.partner_id.id),
         ])
-        self.assertEqual(attachment.mimetype, 'text/plain')
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
 
     def test_93_monetary_related(self):
         """ Check the currency field on related monetary fields. """
