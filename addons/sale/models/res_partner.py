@@ -62,3 +62,14 @@ class ResPartner(models.Model):
         for res in group:
             partner = self.browse(res['partner_id'][0])
             partner.credit += res['amount_to_invoice']
+
+    def unlink(self):
+        # Unlink draft/cancelled SO so that the partner can be removed from database
+        self.env['sale.order'].sudo().search([
+            ('state', 'in', ['draft', 'cancel']),
+            '|', '|',
+            ('partner_id', 'in', self.ids),
+            ('partner_invoice_id', 'in', self.ids),
+            ('partner_shipping_id', 'in', self.ids),
+        ]).unlink()
+        return super().unlink()
