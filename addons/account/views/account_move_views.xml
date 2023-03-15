@@ -366,6 +366,84 @@
             </field>
         </record>
 
+        <!-- Search view on aml to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_move_line_search_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.search.bank_rec_widget</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"
+                           string="Journal Item"
+                           filter_domain="['|', '|', '|', '|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self), ('amount_residual', 'ilike', self), ('amount_residual_currency', 'ilike', self), ('discount_amount_currency', 'ilike', self)]"/>
+                    <field name="date"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="move_id"
+                           string="Journal Entry"
+                           filter_domain="['|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]"/>
+                    <separator/>
+                    <filter name="amount_received" string="Received" domain="[('balance', '>', 0.0)]"/>
+                    <filter name="amount_paid" string="Paid" domain="[('balance', '&lt;', 0.0)]"/>
+                    <separator name="inject_after"/>
+                    <filter name="date" string="Date" date="date"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree view on aml to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_move_line_list_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.list.bank_rec_widget</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="Suggestions"
+                      create="false"
+                      edit="false"
+                      limit="40"
+                      count_limit="40"
+                      js_class="bank_rec_widget_form_amls_list">
+                    <!-- Invisible fields -->
+                    <field name="company_id" invisible="1"/>
+                    <field name="payment_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+
+                    <field name="account_id"
+                           options="{'no_open': True, 'no_create': True}"
+                           optional="show"/>
+                    <field name="journal_id"
+                           optional="hidden"/>
+                    <field name="partner_id"
+                           optional="show"/>
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="date_maturity" optional="hidden"/>
+                    <field name="ref"
+                           optional="hidden"/>
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           optional="hidden"
+                           options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
+                    <field name="amount_residual_currency"
+                           decoration-danger="amount_residual_currency &lt; 0"
+                           groups="base.group_multi_currency"
+                           string="Open Amount in Currency"/>
+                    <field name="amount_residual"
+                           decoration-danger="amount_residual &lt; 0"
+                           string="Open Amount"/>
+
+                    <button name="action_open_business_doc"
+                            type="object"
+                            string="View"
+                            class="btn btn-sm btn-secondary"/>
+                </tree>
+            </field>
+        </record>
+
         <!-- account.move (Journal Entry) -->
 
         <record id="view_move_tree" model="ir.ui.view">

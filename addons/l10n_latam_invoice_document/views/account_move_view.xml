@@ -27,6 +27,9 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_move_filter"/>
         <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', ('l10n_latam_full_document_number', 'ilike', self), ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self)]</attribute>
+            </field>
             <field name="partner_id" position="after">
                 <field name="l10n_latam_document_type_id"/>
             </field>
