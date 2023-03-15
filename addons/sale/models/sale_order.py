@@ -269,8 +269,7 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
     partner_credit_warning = fields.Text(
-        compute='_compute_partner_credit_warning',
-        groups='account.group_account_invoice,account.group_account_readonly')
+        compute='_compute_partner_credit_warning')
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
@@ -1028,8 +1027,7 @@ class SaleOrder(models.Model):
         return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
-            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
-            "(top-right of your screen) and follow instructions.\n"
+            "- You should deliver your products before invoicing them.\n"
             "- You should modify the invoicing policy of your product: Open the product, go to the "
             "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
             "quantities\". For Services, you should modify the Service Invoicing Policy to "

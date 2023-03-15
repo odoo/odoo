@@ -20,7 +20,6 @@
 # Maja Stawicka <mjstwck@wp.pl>, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
-# Maksym <ms@myodoo.pl>, 2022
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
 # Tomasz Leppich <t.leppich@gmail.com>, 2022
 # Piotr Strębski <strebski@gmail.com>, 2022
@@ -30,6 +29,7 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Maksym <ms@myodoo.pl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2023\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,13 +218,13 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Szanse</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Możliwości</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Sygnały</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Szanse</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr "<span class=\"o_stat_text\"> Szanse</span>"
+msgstr "<span class=\"o_stat_text\"> Sygnały</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -574,7 +574,7 @@ msgstr "Przypisz dokumentację"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr "Przypisz szansy"
+msgstr "Przypisz sygnały"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -599,7 +599,7 @@ msgstr "Przypisz tę szansę do"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assigned Leads Count"
-msgstr "Ilość przypisanych szans"
+msgstr "Ilość przypisanych sygnałów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -791,7 +791,7 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Klasyfikuj i analizuj swoje kategorie potencjalnych sygnałów / szans, takie "
+"Klasyfikuj i analizuj swoje kategorie potencjalnych sygnałów/szans, takie "
 "jak: szkolenie, serwis"
 
 #. module: crm
@@ -817,7 +817,7 @@ msgstr "Data zamknięcia"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Szansy zamknięte/martwe nie mogą być konwertowane do możliwości."
+msgstr "Sygnały zamknięte/martwe nie mogą być konwertowane do szans."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -934,7 +934,7 @@ msgstr "Data konwersji"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Data konwersji z szansy do możliwości"
+msgstr "Data konwersji z sygnału do szansy."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1016,7 +1016,7 @@ msgstr "Kraj"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Twórz sygnały / szanse z ruchu w Twojej witrynie"
+msgstr "Twórz sygnały/szanse z ruchu w Twojej witrynie"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1026,7 +1026,7 @@ msgstr "Utwórz szansę"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr "Utwórz szansę"
+msgstr "Utwórz sygnał"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -1055,7 +1055,7 @@ msgstr "Utwórz nowego klienta"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr "Utwórz nową szansę"
+msgstr "Utwórz nowy sygnał"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -1540,7 +1540,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
-"Wygeneruj potencjalne szanse bazując na ich kraju, sektorze, rozmiarze itp."
+"Wygeneruj potencjalne sygnały bazując na ich kraju, sektorze, rozmiarze, "
+"itp."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1650,6 +1651,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Jeżeli ustawione, ta treść będzie wysyłana automatycznie do "
+"nieautoryzowanych użytkowników zamiast wiadomości domyślnej."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1866,7 +1869,7 @@ msgstr "Czynności zaległe"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead"
-msgstr "Szansa"
+msgstr "Sygnał"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
@@ -1893,7 +1896,7 @@ msgstr "Wzbogacanie potencjalnych klientów"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Generation"
-msgstr "Generacja potencjalnych szans"
+msgstr "Generacja potencjalnych sygnałów"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1952,12 +1955,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Szansa/Możliwość"
+msgstr "Sygnał/Szansa"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
-msgstr " utworzono szansę/możliwość"
+msgstr "Utworzony Sygnał/Szansa"
 
 #. module: crm
 #: code:addons/crm/models/crm_lost_reason.py:0
@@ -1974,7 +1977,7 @@ msgstr " utworzono szansę/możliwość"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #, python-format
 msgid "Leads"
-msgstr "Szanse"
+msgstr "Sygnały"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
@@ -2010,12 +2013,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr "Ilość szans"
+msgstr "Ilość sygnałów"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "Tworzenie szans"
+msgstr "Tworzenie sygnałów"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
@@ -2339,7 +2342,7 @@ msgstr "Mój termin"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr "Moje szanse"
+msgstr "Moje sygnały"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
@@ -2544,7 +2547,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr "Liczba sygnałów i możliwości przypisanych w zeszłym miesiącu."
+msgstr "Liczba sygnałów i szans przypisanych w zeszłym miesiącu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3162,7 +3165,7 @@ msgstr "Szukaj szans"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "Wybierz szansę/możliwość"
+msgstr "Wybierz Sygnał/Szansę"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3197,7 +3200,7 @@ msgstr "Ustawienia"
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr "Pokaż menu szans"
+msgstr "Pokaż menu Sygnałów"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
@@ -3216,7 +3219,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Show only lead"
-msgstr "Pokaż tylko szanse"
+msgstr "Pokaż tylko sygnały"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -3517,6 +3520,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Ten email znajduje się na czarnej liście dla masowej wysyłki. Kliknij, aby "
+"odblokować."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -3664,7 +3669,7 @@ msgstr "Typ"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Typ jest stosowany do rozróżnienia szans od możliwości"
+msgstr "Typ jest stosowany do rozróżnienia sygnałów od szans"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
@@ -3726,7 +3731,7 @@ msgstr "Zaktualizuj prawdopodobieństwa"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
 msgid "Use Leads"
-msgstr "Użyj szans"
+msgstr "Użyj Sygnałów"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action

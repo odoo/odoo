@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import product
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -70,10 +71,18 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
             'email_to': '{{ (object.email_from if not object.customer_id else "") }}',
             'email_from': '{{ (object.user_id.email_formatted or user.email_formatted) }}',
+            'lang': '{{ object.customer_id.lang }}',
             'mail_server_id': cls.mail_server_domain.id,
             'model_id': cls.env['ir.model']._get('mail.test.ticket').id,
             'reply_to': '{{ ctx.get("custom_reply_to") or "info@test.example.com" }}',
         })
+
+        # activate translations
+        cls._activate_multi_lang(
+            layout_arch_db=None,  # use default mail.test_layout
+            test_record=cls.test_records,
+            test_template=cls.template,
+        )
 
     def _get_web_context(self, records, add_web=True, **values):
         """ Helper to generate composer context. Will make tests a bit less
@@ -101,6 +110,14 @@ class TestMailComposer(TestMailCommon, TestRecipients):
 
 @tagged('mail_composer')
 class TestComposerForm(TestMailComposer):
+
+    def test_assert_initial_data(self):
+        """ Ensure class initial data to ease understanding """
+        self.assertTrue(self.template.auto_delete)
+
+        self.assertEqual(len(self.test_records), 2)
+        self.assertEqual(self.test_records.user_id, self.user_employee_2)
+        self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
 
     @users('employee')
     def test_mail_composer_comment(self):
@@ -967,10 +984,25 @@ class TestComposerInternals(TestMailComposer):
         self.assertEqual(template.body_html, '<p>Template Body</p>', 'email_template incorrect body_html')
 
 
-@tagged('mail_composer')
+@tagged('mail_composer', 'multi_lang')
 class TestComposerResultsComment(TestMailComposer):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
+
+    def test_assert_initial_data(self):
+        """ Ensure class initial data to ease understanding """
+        self.assertTrue(self.template.auto_delete)
+
+        self.assertEqual(len(self.test_records), 2)
+        self.assertEqual(self.test_records.user_id, self.user_employee_2)
+        self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
+        self.assertEqual(self.test_records[0].customer_id.lang, 'en_US')
+        self.assertEqual(self.test_records[1].customer_id.lang, 'en_US')
+
+        self.assertEqual(len(self.test_partners), 2)
+
+        self.assertEqual(self.user_employee.lang, 'en_US')
+        self.assertEqual(self.user_employee_2.lang, 'en_US')
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -1112,7 +1144,12 @@ class TestComposerResultsComment(TestMailComposer):
         additional recipients and attachments.
 
         This tests notifies: 2 new email_to (+ 1 duplicated), 1 email_cc,
-        test_record followers and partner_admin added in partner_to."""
+        test_record followers and partner_admin added in partner_to.
+
+        Test with and without notification layout specified.
+
+        Test with and without languages.
+        """
         attachment_data = self._generate_attachments_data(2, self.template._name, self.template.id)
         email_to_1 = 'test.to.1@test.example.com'
         email_to_2 = 'test.to.2@test.example.com'
@@ -1134,79 +1171,161 @@ class TestComposerResultsComment(TestMailComposer):
         self.assertEqual(self.test_record.user_id, self.user_employee_2)
         self.assertEqual(self.test_record.message_partner_ids, self.partner_employee_2)
 
-        # open a composer and run it in comment mode
-        composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_record, add_web=True,
-                                  default_template_id=self.template.id)
-        ))
-        composer = composer_form.save()
-        self.assertFalse(composer.reply_to_force_new, 'Mail: thread-enabled models should use auto thread by default')
-        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            composer._action_send_mail()
+        for email_layout_xmlid, use_lang in product(
+            (False, 'mail.test_layout'),
+            (False, True),
+        ):
+            with self.subTest(email_layout_xmlid=email_layout_xmlid,
+                              use_lang=use_lang):
+                # update test configuration
+                if use_lang:
+                    exp_lang = 'es_ES'
+                    self.partner_1.lang = exp_lang
+                if not use_lang:
+                    exp_lang = False
+                    self.partner_1.lang = False
 
-        # check new partners have been created based on emails given
-        new_partners = self.env['res.partner'].search([
-            ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
-        ])
-        self.assertEqual(len(new_partners), 3)
-        self.assertEqual(set(new_partners.mapped('email')),
-                         set(['test.to.1@test.example.com', 'test.to.2@test.example.com', 'test.cc.1@test.example.com'])
-                        )
+                test_record = self.test_record.with_env(self.env)
 
-        # global outgoing: one mail.mail (all customer recipients, then all employee recipients)
-        # and 5 emails, and 1 inbox notification (admin)
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail')
-        self.assertEqual(len(self._mails), 5, 'Should have sent 5 emails, one per recipient')
+                # ensure initial data
+                self.assertEqual(test_record.user_id, self.user_employee_2)
+                self.assertEqual(test_record.message_partner_ids, self.partner_employee_2)
 
-        # template is sent only to partners (email_to are transformed)
-        message = self.test_record.message_ids[0]
-        self.assertMailMail(self.partner_employee_2, 'sent',
-                            mail_message=message,
-                            author=self.partner_employee,  # author != email_from (template sets only email_from)
-                            email_values={
-                                'body_content': 'TemplateBody %s' % self.test_record.name,
-                                'email_from': self.test_record.user_id.email_formatted,  # set by template
-                                'subject': 'TemplateSubject %s' % self.test_record.name,
-                                'attachments_info': [
-                                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
-                                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
-                                    {'name': 'TestReport for %s.html' % self.test_record.name, 'type': 'text/plain'},
-                                ]
-                            },
-                            fields_values={
-                                'mail_server_id': self.mail_server_domain,
-                            },
-                           )
-        self.assertMailMail(self.test_record.customer_id + new_partners, 'sent',
-                            mail_message=message,
-                            author=self.partner_employee,  # author != email_from (template sets only email_from)
-                            email_values={
-                                'body_content': 'TemplateBody %s' % self.test_record.name,
-                                'email_from': self.test_record.user_id.email_formatted,  # set by template
-                                'subject': 'TemplateSubject %s' % self.test_record.name,
-                                'attachments_info': [
-                                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
-                                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
-                                    {'name': 'TestReport for %s.html' % self.test_record.name, 'type': 'text/plain'},
-                                ]
-                            },
-                            fields_values={
-                                'mail_server_id': self.mail_server_domain,
-                            },
-                           )
+                ctx = {
+                    'default_model': test_record._name,
+                    'default_composition_mode': 'comment',
+                    'default_res_id': test_record.id,
+                    'default_template_id': self.template.id,
+                    # avoid successive tests issues with followers
+                    'mail_create_nosubscribe': True,
+                }
+                if email_layout_xmlid:
+                    ctx['default_email_layout_xmlid'] = email_layout_xmlid
 
-        # message is posted and notified admin
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
-        self.assertNotified(message, [{'partner': self.partner_admin, 'is_read': False, 'type': 'inbox'}])
-        # attachments are copied on message and linked to document
-        self.assertEqual(
-            set(message.attachment_ids.mapped('name')),
-            set(['AttFileName_00.txt', 'AttFileName_01.txt', 'TestReport for %s.html' % self.test_record.name])
-        )
-        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set([self.test_record._name]))
-        self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(self.test_record.ids))
-        self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
+                # open a composer and run it in comment mode
+                composer_form = Form(self.env['mail.compose.message'].with_context(ctx))
+                composer = composer_form.save()
 
+                # ensure some parameters used afterwards
+                author = self.partner_employee
+                self.assertEqual(composer.author_id, author,
+                                 'Author is synchronized with rendered email_from')
+                self.assertEqual(composer.email_from, self.partner_employee_2.email_formatted)
+                self.assertFalse(composer.reply_to_force_new, 'Mail: thread-enabled models should use auto thread by default')
+
+                with self.mock_mail_gateway(mail_unlink_sent=False), \
+                     self.mock_mail_app():
+                    composer._action_send_mail()
+
+                    # monorecord: force_send notifications
+                    self.assertEqual(self._new_mails.mapped('state'), ['sent'] * len(self._new_mails))
+                    self.assertEqual(len(self._mails), 5, 'Should have sent 5 emails, one per recipient per record')
+
+                # check new partners have been created based on emails given
+                new_partners = self.env['res.partner'].search([
+                    ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
+                ])
+                self.assertEqual(len(new_partners), 3)
+                self.assertEqual(
+                    set(new_partners.mapped('email')),
+                    {'test.to.1@test.example.com', 'test.to.2@test.example.com', 'test.cc.1@test.example.com'},
+                )
+                self.assertEqual(
+                    set(new_partners.mapped('lang')),
+                    {'en_US'},
+                )
+
+                message = test_record.message_ids[0]
+
+                # check created mail.mail and outgoing emails. In comment
+                # 2 mails are generated (due to group-based layouting):
+                # - one for recipient that is a user
+                # - one for recipients that are customers
+                # Then each recipient receives its own outging email. See
+                # 'assertMailMail' for more details.
+                if exp_lang == 'es_ES':
+                    exp_body = f'SpanishBody for {test_record.name}'
+                    exp_subject = f'SpanishSubject for {test_record.name}'
+                else:
+                    exp_body = f'TemplateBody {test_record.name}'
+                    exp_subject = f'TemplateSubject {test_record.name}'
+                self.assertMailMail(self.partner_employee_2, 'sent',
+                                    mail_message=message,
+                                    author=author,  # author is different in batch and monorecord mode (raw or rendered email_from)
+                                    email_values={
+                                        'body_content': exp_body,
+                                        'email_from': test_record.user_id.email_formatted,  # set by template
+                                        'subject': exp_subject,
+                                        'attachments_info': [
+                                            {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                                            {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
+                                            {'name': f'TestReport for {test_record.name}.html', 'type': 'text/plain'},
+                                        ]
+                                    },
+                                    fields_values={
+                                        'mail_server_id': self.mail_server_domain,
+                                    },
+                                   )
+                self.assertMailMail(test_record.customer_id + new_partners, 'sent',
+                                    mail_message=message,
+                                    author=author,  # author is different in batch and monorecord mode (raw or rendered email_from)
+                                    email_values={
+                                        'body_content': exp_body,
+                                        'email_from': test_record.user_id.email_formatted,  # set by template
+                                        'subject': exp_subject,
+                                        'attachments_info': [
+                                            {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                                            {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
+                                            {'name': f'TestReport for {test_record.name}.html', 'type': 'text/plain'},
+                                        ]
+                                    },
+                                    fields_values={
+                                        'mail_server_id': self.mail_server_domain,
+                                    },
+                                   )
+
+                # Low-level checks on outgoing email for the recipient to
+                # check layouting and language. Note that standard layout
+                # is not tested against translations, only the custom one
+                # to ease translations checks.
+                email = self._find_sent_email(test_record.user_id.email_formatted, [test_record.customer_id.email_formatted])
+                self.assertTrue(bool(email), 'Email not found, check recipients')
+
+                # TDE FIXME: as it currently depends on a context-based hack
+                # translation is not supported when scheduling notifications
+                # or when a domain is given. Moreover access buttons are not
+                # translated
+                exp_layout_content_en = 'English Layout for Ticket-like model'
+                exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
+                exp_button_en = 'View Ticket-like model'
+                # exp_button_es = 'SpanishView Spanish Model Description'
+                if email_layout_xmlid:
+                    if exp_lang == 'es_ES':
+                        self.assertIn(exp_layout_content_es, email['body'])
+                        self.assertIn(exp_button_en, email['body'],
+                                      'TODO: buttons should be translated')
+                    else:
+                        self.assertIn(exp_layout_content_en, email['body'])
+                        self.assertIn(exp_button_en, email['body'])
+                else:
+                    # check default layouting applies
+                    if exp_lang == 'es_ES':
+                        self.assertIn('html lang="es_ES"', email['body'])
+                    else:
+                        self.assertIn('html lang="en_US"', email['body'])
+
+                # message is posted and notified admin
+                self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
+                self.assertNotified(message, [{'partner': self.partner_admin, 'is_read': False, 'type': 'inbox'}])
+                # attachments are copied on message and linked to document
+                self.assertEqual(
+                    set(message.attachment_ids.mapped('name')),
+                    set(['AttFileName_00.txt', 'AttFileName_01.txt',
+                         f'TestReport for {test_record.name}.html'])
+                )
+                self.assertEqual(set(message.attachment_ids.mapped('res_model')), set([test_record._name]))
+                self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(test_record.ids))
+                self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
 
 
 @tagged('mail_composer', 'mail_blacklist')
@@ -1262,7 +1381,7 @@ class TestComposerResultsCommentStatus(TestMailComposer):
             'model_id': cls.env['ir.model']._get_id(cls.test_records._name),
         })
 
-    def test_initial_data(self):
+    def test_assert_initial_data(self):
         """ Ensure class initial data to ease understanding """
         self.assertFalse(self.template.auto_delete)
 
@@ -1305,7 +1424,7 @@ class TestComposerResultsCommentStatus(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails, skipping the exclusion list')
 
 
-@tagged('mail_composer')
+@tagged('mail_composer', 'multi_lang')
 class TestComposerResultsMass(TestMailComposer):
 
     @classmethod
@@ -1421,7 +1540,13 @@ class TestComposerResultsMass(TestMailComposer):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_complete(self):
         """ Test a composer in mass mode with a quite complete template, containing
-        notably email-based recipients and attachments. """
+        notably email-based recipients and attachments.
+
+        Translations and email layout supported are also tested.
+        """
+        # as we use the email queue, don't have failing tests due to other outgoing emails
+        self.env['mail.mail'].sudo().search([]).unlink()
+
         attachment_data = self._generate_attachments_data(2, self.template._name, self.template.id)
         email_to_1 = 'test.to.1@test.example.com'
         email_to_2 = 'test.to.2@test.example.com'
@@ -1443,94 +1568,108 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(self.test_records.user_id, self.user_employee_2)
         self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
 
-        # launch composer in mass mode
-        composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_records, add_web=True,
-                                  default_template_id=self.template.id)
-        ))
-        composer = composer_form.save()
-        with self.mock_mail_gateway(mail_unlink_sent=False):
-            composer._action_send_mail()
+        for email_layout_xmlid, use_lang in product(
+            (False, 'mail.test_layout'),
+            (False, True),
+        ):
+            with self.subTest(email_layout_xmlid=email_layout_xmlid,
+                              use_lang=use_lang):
+                # update test configuration
+                if use_lang:
+                    langs = ('es_ES', 'en_US')
+                    self.test_partners[0].lang = langs[0]
+                    self.test_partners[1].lang = langs[1]
+                else:
+                    langs = (False, False)
+                    self.test_partners.lang = False
 
-        new_partners = self.env['res.partner'].search([
-            ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
-        ])
-        self.assertEqual(len(new_partners), 3)
+                ctx = {
+                    'active_ids': self.test_records.ids,
+                    'default_model': self.test_records._name,
+                    'default_composition_mode': 'mass_mail',
+                    'default_template_id': self.template.id,
+                }
+                if email_layout_xmlid:
+                    ctx['default_email_layout_xmlid'] = email_layout_xmlid
 
-        # global outgoing
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
-        self.assertEqual(len(self._mails), 10, 'Should have sent 5 emails per record')
+                # launch composer in mass mode
+                composer_form = Form(self.env['mail.compose.message'].with_context(ctx))
+                composer = composer_form.save()
 
-        # hack to use assertEmails: filtering on from/to only is not sufficient to distinguish emails
-        _mails_records = [
-            [mail for mail in self._mails if '%s-%s' % (record.id, record._name) in mail['message_id']]
-            for record in self.test_records
-        ]
+                # ensure some parameters used afterwards
+                author = self.env.user.partner_id
+                self.assertEqual(composer.author_id, author,
+                                 'Author cannot be synchronized with a raw email_from')
+                self.assertEqual(composer.email_from, self.template.email_from)
 
-        for record, _mails in zip(self.test_records, _mails_records):
-            # message copy is kept
-            message = record.message_ids[0]
+                with self.mock_mail_gateway(mail_unlink_sent=False):
+                    composer._action_send_mail()
 
-            # template is sent only to partners (email_to are transformed)
-            self._mails = _mails
-            self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
-                                'sent',
-                                mail_message=message,
-                                author=self.partner_employee,
-                                email_values={
-                                    'attachments_info': [
-                                        {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
-                                        {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
-                                        {'name': 'TestReport for %s.html' % record.name, 'type': 'text/plain'},
-                                    ],
-                                    'body_content': 'TemplateBody %s' % record.name,
-                                    'email_from': self.partner_employee_2.email_formatted,
-                                    'subject': 'TemplateSubject %s' % record.name,
-                                },
-                                fields_values={
-                                    'email_from': self.partner_employee_2.email_formatted,
-                                    'mail_server_id': self.mail_server_domain,
-                                    'reply_to': formataddr((
-                                        f'{self.env.user.company_id.name} {record.name}',
-                                        f'{self.alias_catchall}@{self.alias_domain}'
-                                    )),
-                                    'subject': 'TemplateSubject %s' % record.name,
-                                },
-                               )
+                    new_partners = self.env['res.partner'].search([
+                        ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
+                    ])
+                    self.assertEqual(len(new_partners), 3)
 
-        # test without catchall filling reply-to
-        composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_records, add_web=True,
-                                  default_template_id=self.template.id)
-        ))
-        composer = composer_form.save()
-        with self.mock_mail_gateway(mail_unlink_sent=True):
-            # remove alias so that _notify_get_reply_to will return the default value instead of alias
-            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
-            composer.action_send_mail()
+                    # global outgoing: emails sent
+                    self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+                    self.assertEqual(len(self._mails), 10, 'Should have sent emails')
+                    self.assertEqual(self._new_mails.mapped('scheduled_date'),
+                                     [False] * 2)
+                self.assertEqual(len(self._mails), 10, 'Should have sent 5 emails per record')
 
-        # hack to use assertEmails: filtering on from/to only is not sufficient to distinguish emails
-        _mails_records = [
-            [mail for mail in self._mails if '%s-%s' % (record.id, record._name) in mail['message_id']]
-            for record in self.test_records
-        ]
+                for record, exp_lang in zip(self.test_records, langs):
+                    # message copy is kept
+                    message = record.message_ids[0]
 
-        for record, _mails in zip(self.test_records, _mails_records):
-            # template is sent only to partners (email_to are transformed)
-            self._mails = _mails
-            self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
-                                'sent',
-                                mail_message=record.message_ids[0],
-                                author=self.partner_employee,
-                                email_values={
-                                    'email_from': self.partner_employee_2.email_formatted,
-                                    'reply_to': self.partner_employee_2.email_formatted,
-                                },
-                                fields_values={
-                                    'email_from': self.partner_employee_2.email_formatted,
-                                    'reply_to': self.partner_employee_2.email_formatted,
-                                },
-                               )
+                    # translation are currently not supported at all as they
+                    # are fetched composer side, which is most probably not
+                    # translated (only template is)
+                    if False and exp_lang == 'es_ES':
+                        exp_body = f'SpanishBody for {record.name}'
+                        exp_subject = f'SpanishSubject for {record.name}'
+                    else:
+                        exp_body = f'TemplateBody {record.name}'
+                        exp_subject = f'TemplateSubject {record.name}'
+
+                    # template is sent only to partners (email_to are transformed)
+                    self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
+                                        'sent',
+                                        mail_message=message,
+                                        author=author,
+                                        email_values={
+                                            'attachments_info': [
+                                                {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                                                {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
+                                                {'name': 'TestReport for %s.html' % record.name, 'type': 'text/plain'},
+                                            ],
+                                            'body_content': exp_body,
+                                            'email_from': self.partner_employee_2.email_formatted,
+                                            'subject': exp_subject,
+                                        },
+                                        fields_values={
+                                            'email_from': self.partner_employee_2.email_formatted,
+                                            'mail_server_id': self.mail_server_domain,
+                                            'reply_to': formataddr((
+                                                f'{self.env.user.company_id.name} {record.name}',
+                                                f'{self.alias_catchall}@{self.alias_domain}'
+                                            )),
+                                            'subject': exp_subject,
+                                        },
+                                       )
+
+                    # Low-level checks on outgoing email for the recipient to
+                    # check layouting and language. Note that standard layout
+                    # is not tested against translations, only the custom one
+                    # to ease translations checks.
+                    email = self._find_sent_email(self.partner_employee_2.email_formatted, [record.customer_id.email_formatted])
+                    self.assertTrue(bool(email), 'Email not found, check recipients')
+
+                    # Currently layouting in mailing mode is not supported.
+                    # Hence no translations.
+                    self.assertEqual(
+                        email['body'],
+                        f'<p>TemplateBody {record.name}</p>'
+                    )
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -1608,6 +1747,36 @@ class TestComposerResultsMass(TestMailComposer):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
         self.assertNotSentEmail()
+
+    @users('employee')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_wtpl_reply_to(self):
+        # test without catchall filling reply-to
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_records, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            # remove alias so that _notify_get_reply_to will return the default value instead of alias
+            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
+            composer.action_send_mail()
+
+        for record in self.test_records:
+            # template is sent only to partners (email_to are transformed)
+            self.assertMailMail(record.customer_id,
+                                'sent',
+                                mail_message=record.message_ids[0],
+                                author=self.partner_employee,
+                                email_values={
+                                    'email_from': self.partner_employee_2.email_formatted,
+                                    'reply_to': self.partner_employee_2.email_formatted,
+                                },
+                                fields_values={
+                                    'email_from': self.partner_employee_2.email_formatted,
+                                    'reply_to': self.partner_employee_2.email_formatted,
+                                },
+                               )
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -1700,7 +1869,7 @@ class TestComposerResultsMassStatus(TestMailComposer):
             'model_id': cls.env['ir.model']._get_id(cls.test_records._name),
         })
 
-    def test_initial_data(self):
+    def test_assert_initial_data(self):
         """ Ensure class initial data to ease understanding """
         self.assertTrue(self.template.auto_delete)
 

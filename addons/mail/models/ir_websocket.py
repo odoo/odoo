@@ -24,7 +24,7 @@ class IrWebsocket(models.AbstractModel):
         channels = list(channels)  # do not alter original list
         guest_sudo = self.env['mail.guest']._get_guest_from_request(req).sudo()
         mail_channels = self.env['mail.channel']
-        if self.env.uid:
+        if req.session.uid:
             partner = self.env.user.partner_id
             mail_channels = partner.channel_ids
             channels.append(partner)

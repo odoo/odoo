@@ -13,11 +13,11 @@
 # YIMIN XUAN, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
 # Pierre Masereel, 2023
 # Emily Jia <eji@odoo.com>, 2023
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9718,13 +9718,13 @@ msgstr "Odoo帮助您轻松跟踪与供应商相关的所有活动。"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__off_balance
 msgid "Off Balance"
-msgstr "资产负债"
+msgstr "不平"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__off_balance
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__off_balance
 msgid "Off-Balance Sheet"
-msgstr "资产负债表"
+msgstr "资产负债表不平"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_office_furniture_account
@@ -16008,9 +16008,10 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
-msgstr "由于在凭证上启用了限制模式，您无法编辑以下字段:%s。"
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
+msgstr ""
 
 #. module: account
 #. odoo-python
