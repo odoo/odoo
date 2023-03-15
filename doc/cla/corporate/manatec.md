@@ -21,3 +21,5 @@ Philipp Köhler bandsache@gmx.net https://github.com/fploetzlich
 Alexander Heyber alexander.heyber@manatec.de https://github.com/alexander-heyber-manatec
 
 Walter Salzmann walter.salzmann@manatec.de https://github.com/ws-manatec
+
+Gerald Malsch gerald.malsch@manatec.de https://github.com/AlienAtSystem
