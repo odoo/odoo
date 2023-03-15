@@ -135,6 +135,17 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        clickPricelistButton() {
+            return [{ trigger: '.o_pricelist_button' }];
+        }
+        selectPriceList(name) {
+            return [
+                {
+                    content: `select price list '${name}'`,
+                    trigger: `.selection-item:contains("${name}")`,
+                },
+            ];
+        }
     }
 
     class Check {
@@ -219,6 +230,15 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 {
                     content: 'no discount is applied',
                     trigger: `.info:not(:contains(${originalPrice}))`,
+                },
+            ];
+        }
+        discountOriginalPriceIs(original_price) {
+            return [
+                {
+                    content: `discount original price is shown`,
+                    trigger: `s:contains('${original_price}')`,
+                    run: function () {},
                 },
             ];
         }

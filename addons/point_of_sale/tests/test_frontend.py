@@ -617,3 +617,45 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="admin")
+
+    def test_06_pos_discount_display_with_multiple_pricelist(self):
+        """ Test the discount display on the POS screen when multiple pricelists are used."""
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 10,
+        })
+
+        base_pricelist = self.env['product.pricelist'].create({
+            'name': 'base_pricelist',
+            'discount_policy': 'without_discount',
+        })
+
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': base_pricelist.id,
+            'product_tmpl_id': test_product.product_tmpl_id.id,
+            'compute_price': 'fixed',
+            'applied_on': '1_product',
+            'fixed_price': 7,
+        })
+
+        special_pricelist = self.env['product.pricelist'].create({
+            'name': 'special_pricelist',
+            'discount_policy': 'without_discount',
+        })
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': special_pricelist.id,
+            'base': 'pricelist',
+            'base_pricelist_id': base_pricelist.id,
+            'compute_price': 'formula',
+            'applied_on': '3_global',
+            'price_discount': 10,
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': base_pricelist.id,
+            'available_pricelist_ids': [(6, 0, [base_pricelist.id, special_pricelist.id])],
+        })
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="admin")
