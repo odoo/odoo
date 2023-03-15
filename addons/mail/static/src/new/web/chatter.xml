@@ -3,14 +3,14 @@
 
 <t t-name="mail.Chatter" owl="1">
     <div class="o-mail-Chatter bg-view h-100 flex-grow-1 d-flex flex-column overflow-auto" t-att-class="props.threadId === false ? 'o-chatter-disabled' : ''" t-ref="root">
-        <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 pe-2">
+        <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0">
             <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-2" t-att-class="{ 'btn-odoo': state.thread.composer.type !== 'note', 'btn-light': state.thread.composer.type === 'note', 'o-active': state.thread.composer.type === 'message', 'my-2': !props.compactHeight }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                 Send message
             </button>
             <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{ 'btn-odoo o-active': state.thread.composer.type === 'note', 'btn-light': state.thread.composer.type !== 'note', 'my-2': !props.compactHeight }" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                 Log note
             </button>
-            <div class="border-bottom flex-grow-1 d-flex" t-att-class="{ 'border-start ps-2': props.hasActivities }">
+            <div class="border-bottom flex-grow-1 d-flex" t-att-class="{ 'border-start ps-2 pe-4': props.hasActivities }">
                 <button t-if="props.hasActivities" class="btn btn-light text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
                     <i class="fa fa-clock-o me-1"/>
                     <span>Activities</span>
@@ -74,10 +74,8 @@
         </div>
         <t t-if="state.thread.composer.type">
             <t t-if="state.thread.composer.type === 'message'">
-                <div class="flex-shrink-0 px-3 pb-1 pt-2 text-truncate" style="margin-left:48px;">
-                    <em class="text-muted">
-                        To followers of:
-                    </em>
+                <small class="flex-shrink-0 px-3 pt-3 text-truncate" style="margin-left:48px;">
+                    <b>To:</b> <em class="text-muted"> Followers of </em>
                     <b class="px-1">
                         <t t-if="state.thread.displayName or state.thread.name">
                             "<t t-out="state.thread.displayName or state.thread.name"/>"
@@ -86,12 +84,12 @@
                             this document
                         </t>
                     </b>
-                </div>
+                </small>
             </t>
             <t t-if="state.thread.composer.type === 'message'" t-set="placeholder">Send a message to followers...</t>
             <t t-else="" t-set="placeholder">Log an internal note...</t>
             <t t-set="type" t-value="state.thread.composer.type === 'message' ? 'message' : 'note'"/>
-            <SuggestedRecipientsList t-if="props.hasFollowers and state.thread.composer.type !== 'note'" className="'px-3 pb-1 pt-2'" styleString="'margin-left:48px;'" thread="state.thread"/>
+            <SuggestedRecipientsList t-if="props.hasFollowers and state.thread.composer.type !== 'note'" className="'px-3'" styleString="'margin-left:48px;'" thread="state.thread"/>
             <Composer composer="state.thread.composer" autofocus="true" mode="'extended'" onPostCallback.bind="onPostCallback" placeholder="placeholder" dropzoneRef="rootRef"/>
             <hr/>
         </t>
