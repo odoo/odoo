@@ -14,7 +14,6 @@
         'utm',
         'link_tracker',
         'web_editor',
-        'web_kanban_gauge',
         'social_media',
         'web_tour',
         'digest',

@@ -5,7 +5,7 @@
     'version': '1.0',
     'sequence': 160,
     'category': 'Human Resources',
-    'depends': ['mail', 'web_kanban_gauge'],
+    'depends': ['mail'],
     'description': """
 Gamification process
 ====================
