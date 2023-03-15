@@ -9,7 +9,7 @@
           <RippleEffect t-props="getRippleEffectProps(ripple.id)"/>
         </t>
       </div>
-      <div t-ref="childContainer">
+      <div class="position-relative" t-ref="childContainer">
         <t t-slot="default"/>
       </div>
     </div>
@@ -46,16 +46,14 @@
       t-on-contextmenu.prevent="">
       <Ripple>
         <div
-          class="o-sheet-item o-add-sheet position-relative me-2 p-1"
+          class="o-sheet-item o-add-sheet me-2 p-1"
           t-att-class="{'disabled': env.model.getters.isReadonly()}"
           t-on-click="clickAddSheet">
           <t t-call="o-spreadsheet-Icon.PLUS"/>
         </div>
       </Ripple>
       <Ripple>
-        <div
-          class="o-sheet-item o-list-sheets position-relative me-2 p-1"
-          t-on-click="clickListSheets">
+        <div class="o-sheet-item o-list-sheets me-2 p-1" t-on-click="clickListSheets">
           <t t-call="o-spreadsheet-Icon.LIST"/>
         </div>
       </Ripple>
@@ -135,7 +133,7 @@
   <t t-name="o-spreadsheet-BottomBarSheet" owl="1">
     <Ripple>
       <div
-        class="o-sheet position-relative d-flex align-items-center user-select-none text-nowrap "
+        class="o-sheet d-flex align-items-center user-select-none text-nowrap "
         t-on-mousedown="(ev) => this.onMouseDown(ev)"
         t-on-contextmenu.prevent="(ev) => this.onContextMenu(ev)"
         t-ref="sheetDiv"
@@ -154,9 +152,7 @@
           t-on-keydown="(ev) => this.onKeyDown(ev)"
           t-att-contenteditable="state.isEditing.toString()"
         />
-        <span
-          class="o-sheet-icon position-relative ms-1"
-          t-on-click.stop="(ev) => this.onIconClick(ev)">
+        <span class="o-sheet-icon ms-1" t-on-click.stop="(ev) => this.onIconClick(ev)">
           <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
         </span>
       </div>
@@ -167,7 +163,7 @@
     <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
     <Ripple class="'ms-auto'" t-if="selectedStatistic !== undefined">
       <div
-        class="o-selection-statistic position-relative text-truncate user-select-none me-4 bg-white rounded shadow"
+        class="o-selection-statistic text-truncate user-select-none me-4 bg-white rounded shadow"
         t-on-click="listSelectionStatistics">
         <t t-esc="selectedStatistic"/>
         <span class="ms-2">
@@ -521,6 +517,7 @@
       <div
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
+        t-on-contextmenu.prevent.stop="onContextMenu"
         t-ref="figure"
         t-att-style="props.style"
         tabindex="0"
@@ -532,6 +529,21 @@
           onFigureDeleted="props.onFigureDeleted"
           figure="props.figure"
         />
+        <div class="o-figure-menu position-absolute m-2" t-if="!env.isDashboard()">
+          <div
+            class="o-figure-menu-item"
+            t-on-click="showMenu"
+            t-ref="menuButton"
+            t-on-contextmenu.prevent.stop="showMenu">
+            <t t-call="o-spreadsheet-Icon.LIST"/>
+          </div>
+          <Menu
+            t-if="menuState.isOpen"
+            position="menuState.position"
+            menuItems="menuState.menuItems"
+            onClose="() => this.menuState.isOpen=false"
+          />
+        </div>
       </div>
       <div class="o-figure-border w-100 h-100 position-absolute pe-none" t-att-style="borderStyle"/>
       <t t-if="isSelected">
@@ -580,30 +592,11 @@
   </t>
 
   <t t-name="o-spreadsheet-ChartFigure" owl="1">
-    <div
-      class="o-chart-container w-100 h-100"
-      t-ref="chartContainer"
-      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and this.onContextMenu(ev)">
-      <div class="o-figure-menu" t-if="!env.isDashboard()">
-        <div
-          class="o-figure-menu-item"
-          t-on-click="showMenu"
-          t-ref="menuButton"
-          t-on-contextmenu.prevent.stop="showMenu">
-          <t t-call="o-spreadsheet-Icon.LIST"/>
-        </div>
-      </div>
+    <div class="o-chart-container w-100 h-100">
       <t
         t-component="chartComponent"
         figure="this.props.figure"
         t-key="this.props.figure.id + '-' + chartType"
-      />
-
-      <Menu
-        t-if="menuState.isOpen"
-        position="menuState.position"
-        menuItems="menuState.menuItems"
-        onClose="() => this.menuState.isOpen=false"
       />
     </div>
   </t>
@@ -634,27 +627,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ImageFigure" owl="1">
-    <div class="o-figure-menu" t-if="!env.isDashboard()">
-      <div
-        class="o-figure-menu-item"
-        t-on-click="showMenu"
-        t-ref="menuButton"
-        t-on-contextmenu.prevent.stop="showMenu">
-        <t t-call="o-spreadsheet-Icon.LIST"/>
-      </div>
-    </div>
-    <img
-      t-ref="o-image"
-      t-att-src="getImagePath"
-      class="w-100 h-100"
-      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and this.onContextMenu(ev)"
-    />
-    <Menu
-      t-if="menuState.isOpen"
-      position="menuState.position"
-      menuItems="menuItems"
-      onClose="() => this.menuState.isOpen=false"
-    />
+    <img t-att-src="getImagePath" class="w-100 h-100"/>
   </t>
 
   <t t-name="o-spreadsheet-FilterIcon" owl="1">
@@ -3526,3 +3499,8 @@
     </div>
   </t>
 </odoo>
+<!--
+  __info__.version = '16.2.0-alpha.4';
+  __info__.date = '2023-03-15T09:37:53.283Z';
+  __info__.hash = '2c6fe88';
+-->

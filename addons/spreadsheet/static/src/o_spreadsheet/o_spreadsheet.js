@@ -2026,10 +2026,10 @@
             if (right !== undefined && bottom !== undefined)
                 return { left, top, right, bottom };
             else if (bottom === undefined && right !== undefined) {
-                return { right, top, left, bottom: this.getSheetSize(this.sheetId).height - 1 };
+                return { right, top, left, bottom: this.getSheetSize(this.sheetId).numberOfRows - 1 };
             }
             else if (right === undefined && bottom !== undefined) {
-                return { bottom, left, top, right: this.getSheetSize(this.sheetId).width - 1 };
+                return { bottom, left, top, right: this.getSheetSize(this.sheetId).numberOfCols - 1 };
             }
             throw new Error(_lt("Bad zone format"));
         }
@@ -2652,13 +2652,13 @@
     }
     function zoneToDimension(zone) {
         return {
-            height: zone.bottom - zone.top + 1,
-            width: zone.right - zone.left + 1,
+            numberOfRows: zone.bottom - zone.top + 1,
+            numberOfCols: zone.right - zone.left + 1,
         };
     }
     function isOneDimensional(zone) {
-        const { width, height } = zoneToDimension(zone);
-        return width === 1 || height === 1;
+        const { numberOfCols, numberOfRows } = zoneToDimension(zone);
+        return numberOfCols === 1 || numberOfRows === 1;
     }
     /**
      * Array of all positions in the zone.
@@ -3133,7 +3133,7 @@
             return this.runtime.fontColor;
         }
         get secondaryFontColor() {
-            return relativeLuminance(this.primaryFontColor) <= 0.3 ? "#757575" : "#bbbbbb";
+            return relativeLuminance(this.backgroundColor) > 0.3 ? "#525252" : "#C8C8C8";
         }
         get figure() {
             return this.props.figure;
@@ -3745,11 +3745,11 @@
         const labelZone = (_a = ds.labelCell) === null || _a === void 0 ? void 0 : _a.zone;
         let dataZone = ds.dataRange.zone;
         if (labelZone) {
-            const { height, width } = zoneToDimension(dataZone);
-            if (height === 1) {
+            const { numberOfRows, numberOfCols } = zoneToDimension(dataZone);
+            if (numberOfRows === 1) {
                 dataZone = { ...dataZone, left: dataZone.left + 1 };
             }
-            else if (width === 1) {
+            else if (numberOfCols === 1) {
                 dataZone = { ...dataZone, top: dataZone.top + 1 };
             }
         }
@@ -5462,6 +5462,76 @@
     chartComponentRegistry.add("gauge", ChartJsComponent);
     chartComponentRegistry.add("scorecard", ScorecardChart$1);
 
+    // -----------------------------------------------------------------------------
+    // STYLE
+    // -----------------------------------------------------------------------------
+    css /* scss */ `
+  .o-chart-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+`;
+    class ChartFigure extends owl.Component {
+        get chartType() {
+            return this.env.model.getters.getChartType(this.props.figure.id);
+        }
+        get chartComponent() {
+            const type = this.chartType;
+            const component = chartComponentRegistry.get(type);
+            if (!component) {
+                throw new Error(`Component is not defined for type ${type}`);
+            }
+            return component;
+        }
+    }
+    ChartFigure.template = "o-spreadsheet-ChartFigure";
+    ChartFigure.components = {};
+    ChartFigure.props = {
+        figure: Object,
+        onFigureDeleted: Function,
+    };
+
+    function interactiveCut(env) {
+        const result = env.model.dispatch("CUT");
+        if (!result.isSuccessful) {
+            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
+                env.raiseError(_lt("This operation is not allowed with multiple selections."));
+            }
+        }
+    }
+
+    const PasteInteractiveContent = {
+        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
+        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
+        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
+        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
+    };
+    function handlePasteResult(env, result) {
+        if (!result.isSuccessful) {
+            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
+                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
+            }
+            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
+                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
+            }
+            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
+                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
+            }
+            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
+                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
+            }
+        }
+    }
+    function interactivePaste(env, target, pasteOption) {
+        const result = env.model.dispatch("PASTE", { target, pasteOption });
+        handlePasteResult(env, result);
+    }
+    function interactivePasteFromOS(env, target, text) {
+        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text });
+        handlePasteResult(env, result);
+    }
+
     function createMenu(menuItems) {
         return menuItems.map(createMenuItem).sort((a, b) => a.sequence - b.sequence);
     }
@@ -5539,709 +5609,6 @@
         getMenuItems() {
             return createMenu(this.getAll());
         }
-    }
-
-    /**
-     * Return the o-spreadsheet element position relative
-     * to the browser viewport.
-     */
-    function useSpreadsheetRect() {
-        const position = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        let spreadsheetElement = document.querySelector(".o-spreadsheet");
-        updatePosition();
-        function updatePosition() {
-            if (!spreadsheetElement) {
-                spreadsheetElement = document.querySelector(".o-spreadsheet");
-            }
-            if (spreadsheetElement) {
-                const { top, left, width, height } = spreadsheetElement.getBoundingClientRect();
-                position.x = left;
-                position.y = top;
-                position.width = width;
-                position.height = height;
-            }
-        }
-        owl.onMounted(updatePosition);
-        owl.onPatched(updatePosition);
-        return position;
-    }
-    /**
-     * Return the component (or ref's component) BoundingRect, relative
-     * to the upper left corner of the screen (<body> element).
-     *
-     * Note: when used with a <Portal/> component, it will
-     * return the portal position, not the teleported position.
-     */
-    function useAbsoluteBoundingRect(ref) {
-        const rect = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        function updateElRect() {
-            const el = ref.el;
-            if (el === null) {
-                return;
-            }
-            const { top, left, width, height } = el.getBoundingClientRect();
-            rect.x = left;
-            rect.y = top;
-            rect.width = width;
-            rect.height = height;
-        }
-        owl.onMounted(updateElRect);
-        owl.onPatched(updateElRect);
-        return rect;
-    }
-    /**
-     * Get the rectangle inside which a popover should stay when being displayed.
-     * It's the value defined in `env.getPopoverContainerRect`, or the Rect of the "o-spreadsheet"
-     * element by default.
-     *
-     * Coordinates are expressed expressed as absolute DOM position.
-     */
-    function usePopoverContainer() {
-        const container = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        const component = owl.useComponent();
-        const spreadsheetRect = useSpreadsheetRect();
-        function updateRect() {
-            const env = component.env;
-            const newRect = "getPopoverContainerRect" in env ? env.getPopoverContainerRect() : spreadsheetRect;
-            container.x = newRect.x;
-            container.y = newRect.y;
-            container.width = newRect.width;
-            container.height = newRect.height;
-        }
-        updateRect();
-        owl.onMounted(updateRect);
-        owl.onPatched(updateRect);
-        return container;
-    }
-
-    /**
-     * Return true if the event was triggered from
-     * a child element.
-     */
-    function isChildEvent(parent, ev) {
-        return !!ev.target && parent.contains(ev.target);
-    }
-    function gridOverlayPosition() {
-        const spreadsheetElement = document.querySelector(".o-grid-overlay");
-        if (spreadsheetElement) {
-            const { top, left } = spreadsheetElement === null || spreadsheetElement === void 0 ? void 0 : spreadsheetElement.getBoundingClientRect();
-            return { top, left };
-        }
-        throw new Error("Can't find spreadsheet position");
-    }
-    function getBoundingRectAsPOJO(el) {
-        const rect = el.getBoundingClientRect();
-        return {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width,
-            height: rect.height,
-        };
-    }
-    /**
-     * Iterate over all the children of `el` in the dom tree starting at `el`, depth first.
-     */
-    function* iterateChildren(el) {
-        yield el;
-        if (el.hasChildNodes()) {
-            for (let child of el.childNodes) {
-                yield* iterateChildren(child);
-            }
-        }
-    }
-    function getElementScrollTop(el) {
-        return (el === null || el === void 0 ? void 0 : el.scrollTop) || 0;
-    }
-    function setElementScrollTop(el, scroll) {
-        if (!el)
-            return;
-        el.scrollTop = scroll;
-    }
-    function getOpenedMenus() {
-        return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
-    }
-
-    /**
-     * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
-     */
-    function rectIntersection(rect1, rect2) {
-        return zoneToRect(intersection(rectToZone(rect1), rectToZone(rect2)));
-    }
-    function rectToZone(rect) {
-        return {
-            left: rect.x,
-            top: rect.y,
-            right: rect.x + rect.width,
-            bottom: rect.y + rect.height,
-        };
-    }
-    function zoneToRect(zone) {
-        if (!zone)
-            return undefined;
-        return {
-            x: zone.left,
-            y: zone.top,
-            width: zone.right - zone.left,
-            height: zone.bottom - zone.top,
-        };
-    }
-
-    css /* scss */ `
-  .o-popover {
-    position: absolute;
-    z-index: ${ComponentsImportance.Popover};
-    overflow: auto;
-    box-shadow: 1px 2px 5px 2px rgb(51 51 51 / 15%);
-    width: fit-content;
-    height: fit-content;
-  }
-`;
-    class Popover extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.popoverRef = owl.useRef("popover");
-            this.currentPosition = undefined;
-            this.currentDisplayValue = undefined;
-            this.spreadsheetRect = useSpreadsheetRect();
-        }
-        setup() {
-            this.containerRect = usePopoverContainer();
-            // useEffect occurs after the DOM is created and the element width/height are computed, but before
-            // the element in rendered, so we can still set its position
-            owl.useEffect(() => {
-                var _a, _b, _c, _d;
-                if (!this.containerRect)
-                    throw new Error("Popover container is not defined");
-                const el = this.popoverRef.el;
-                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
-                const newDisplay = anchor ? "block" : "none";
-                if (this.currentDisplayValue !== "none" && newDisplay === "none") {
-                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
-                }
-                el.style.display = newDisplay;
-                this.currentDisplayValue = newDisplay;
-                if (!anchor)
-                    return;
-                const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
-                const elDims = {
-                    width: el.getBoundingClientRect().width,
-                    height: el.getBoundingClientRect().height,
-                };
-                const spreadsheetRect = this.spreadsheetRect;
-                const popoverPositionHelper = this.props.positioning === "BottomLeft"
-                    ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
-                    : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
-                const style = popoverPositionHelper.getCss(elDims, this.props.verticalOffset);
-                for (const property of Object.keys(style)) {
-                    el.style[property] = style[property];
-                }
-                const newPosition = popoverPositionHelper.getCurrentPosition(elDims);
-                if (this.currentPosition && newPosition !== this.currentPosition) {
-                    (_d = (_c = this.props).onPopoverMoved) === null || _d === void 0 ? void 0 : _d.call(_c);
-                }
-                this.currentPosition = newPosition;
-            });
-        }
-    }
-    Popover.template = "o-spreadsheet-Popover";
-    Popover.defaultProps = {
-        positioning: "BottomLeft",
-        verticalOffset: 0,
-        onMouseWheel: () => { },
-        onPopoverMoved: () => { },
-        onPopoverHidden: () => { },
-    };
-    Popover.props = {
-        anchorRect: Object,
-        containerRect: { type: Object, optional: true },
-        positioning: { type: String, optional: true },
-        maxWidth: { type: Number, optional: true },
-        maxHeight: { type: Number, optional: true },
-        verticalOffset: { type: Number, optional: true },
-        onMouseWheel: { type: Function, optional: true },
-        onPopoverHidden: { type: Function, optional: true },
-        onPopoverMoved: { type: Function, optional: true },
-        slots: Object,
-    };
-    class PopoverPositionContext {
-        constructor(anchorRect, containerRect, propsMaxSize, spreadsheetOffset) {
-            this.anchorRect = anchorRect;
-            this.containerRect = containerRect;
-            this.propsMaxSize = propsMaxSize;
-            this.spreadsheetOffset = spreadsheetOffset;
-        }
-        /** Check if there is enough space for the popover to be rendered at the bottom of the anchorRect */
-        shouldRenderAtBottom(elementHeight) {
-            return (elementHeight <= this.availableHeightDown ||
-                this.availableHeightDown >= this.availableHeightUp);
-        }
-        /** Check if there is enough space for the popover to be rendered at the right of the anchorRect */
-        shouldRenderAtRight(elementWidth) {
-            return (elementWidth <= this.availableWidthRight ||
-                this.availableWidthRight >= this.availableWidthLeft);
-        }
-        getMaxHeight(elementHeight) {
-            const shouldRenderAtBottom = this.shouldRenderAtBottom(elementHeight);
-            const availableHeight = shouldRenderAtBottom
-                ? this.availableHeightDown
-                : this.availableHeightUp;
-            return this.propsMaxSize.height
-                ? Math.min(availableHeight, this.propsMaxSize.height)
-                : availableHeight;
-        }
-        getMaxWidth(elementWidth) {
-            const shouldRenderAtRight = this.shouldRenderAtRight(elementWidth);
-            const availableWidth = shouldRenderAtRight ? this.availableWidthRight : this.availableWidthLeft;
-            return this.propsMaxSize.width
-                ? Math.min(availableWidth, this.propsMaxSize.width)
-                : availableWidth;
-        }
-        getCss(elDims, verticalOffset) {
-            const maxHeight = this.getMaxHeight(elDims.height);
-            const maxWidth = this.getMaxWidth(elDims.width);
-            const actualHeight = Math.min(maxHeight, elDims.height);
-            const actualWidth = Math.min(maxWidth, elDims.width);
-            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
-            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
-            verticalOffset = shouldRenderAtBottom ? verticalOffset : -verticalOffset;
-            const cssProperties = {
-                "max-height": maxHeight + "px",
-                "max-width": maxWidth + "px",
-                top: this.getTopCoordinate(actualHeight, shouldRenderAtBottom) -
-                    this.spreadsheetOffset.y -
-                    verticalOffset +
-                    "px",
-                left: this.getLeftCoordinate(actualWidth, shouldRenderAtRight) - this.spreadsheetOffset.x + "px",
-            };
-            return cssProperties;
-        }
-        getCurrentPosition(elDims) {
-            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
-            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
-            if (shouldRenderAtBottom && shouldRenderAtRight)
-                return "BottomRight";
-            if (shouldRenderAtBottom && !shouldRenderAtRight)
-                return "BottomLeft";
-            if (!shouldRenderAtBottom && shouldRenderAtRight)
-                return "TopRight";
-            return "TopLeft";
-        }
-    }
-    class BottomLeftPopoverContext extends PopoverPositionContext {
-        get availableHeightUp() {
-            return this.anchorRect.y - this.containerRect.y;
-        }
-        get availableHeightDown() {
-            return this.containerRect.height - this.availableHeightUp - this.anchorRect.height;
-        }
-        get availableWidthRight() {
-            return this.containerRect.x + this.containerRect.width - this.anchorRect.x;
-        }
-        get availableWidthLeft() {
-            return this.anchorRect.x + this.anchorRect.width - this.containerRect.x;
-        }
-        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
-            if (shouldRenderAtBottom) {
-                return this.anchorRect.y + this.anchorRect.height;
-            }
-            else {
-                return this.anchorRect.y - elementHeight;
-            }
-        }
-        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
-            if (shouldRenderAtRight) {
-                return this.anchorRect.x;
-            }
-            else {
-                return this.anchorRect.x + this.anchorRect.width - elementWidth;
-            }
-        }
-    }
-    class TopRightPopoverContext extends PopoverPositionContext {
-        get availableHeightUp() {
-            return this.anchorRect.y + this.anchorRect.height - this.containerRect.y;
-        }
-        get availableHeightDown() {
-            return this.containerRect.y + this.containerRect.height - this.anchorRect.y;
-        }
-        get availableWidthRight() {
-            return this.containerRect.width - this.anchorRect.width - this.availableWidthLeft;
-        }
-        get availableWidthLeft() {
-            return this.anchorRect.x - this.containerRect.x;
-        }
-        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
-            if (shouldRenderAtBottom) {
-                return this.anchorRect.y;
-            }
-            else {
-                return this.anchorRect.y + this.anchorRect.height - elementHeight;
-            }
-        }
-        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
-            if (shouldRenderAtRight) {
-                return this.anchorRect.x + this.anchorRect.width;
-            }
-            else {
-                return this.anchorRect.x - elementWidth;
-            }
-        }
-    }
-
-    //------------------------------------------------------------------------------
-    // Context Menu Component
-    //------------------------------------------------------------------------------
-    css /* scss */ `
-  .o-menu {
-    background-color: white;
-    padding: ${MENU_VERTICAL_PADDING}px 0px;
-    width: ${MENU_WIDTH}px;
-    box-sizing: border-box !important;
-
-    .o-menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-      height: ${MENU_ITEM_HEIGHT}px;
-      padding: 4px 16px;
-      cursor: pointer;
-      user-select: none;
-
-      .o-menu-item-name {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-
-      &.o-menu-root {
-        display: flex;
-        justify-content: space-between;
-      }
-      .o-menu-item-icon {
-        margin-top: auto;
-        margin-bottom: auto;
-      }
-      .o-icon {
-        width: 10px;
-      }
-
-      &:not(.disabled) {
-        &:hover,
-        &.o-menu-item-active {
-          background-color: #ebebeb;
-        }
-        .o-menu-item-description {
-          color: grey;
-        }
-      }
-      &.disabled {
-        color: ${MENU_ITEM_DISABLED_COLOR};
-        cursor: not-allowed;
-      }
-    }
-  }
-`;
-    class Menu extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.subMenu = owl.useState({
-                isOpen: false,
-                position: null,
-                scrollOffset: 0,
-                menuItems: [],
-            });
-            this.menuRef = owl.useRef("menu");
-            this.position = useAbsoluteBoundingRect(this.menuRef);
-        }
-        setup() {
-            owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
-            owl.useExternalListener(window, "contextmenu", this.onExternalClick, { capture: true });
-            owl.onWillUpdateProps((nextProps) => {
-                if (nextProps.menuItems !== this.props.menuItems) {
-                    this.closeSubMenu();
-                }
-            });
-        }
-        get visibleMenuItems() {
-            return this.props.menuItems.filter((x) => x.isVisible(this.env));
-        }
-        get subMenuPosition() {
-            const position = Object.assign({}, this.subMenu.position);
-            position.y -= this.subMenu.scrollOffset || 0;
-            return position;
-        }
-        get menuHeight() {
-            const menuItems = this.visibleMenuItems;
-            let menuItemsHeight = this.getMenuItemsHeight(menuItems);
-            // We don't display separator at the end of a menu
-            if (menuItems[menuItems.length - 1].separator) {
-                menuItemsHeight -= MENU_SEPARATOR_HEIGHT;
-            }
-            const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
-            return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
-        }
-        get popoverProps() {
-            const isRoot = this.props.depth === 1;
-            return {
-                anchorRect: {
-                    x: this.props.position.x - MENU_WIDTH * (this.props.depth - 1),
-                    y: this.props.position.y,
-                    width: isRoot ? 0 : MENU_WIDTH,
-                    height: isRoot ? 0 : MENU_ITEM_HEIGHT,
-                },
-                positioning: "TopRight",
-                verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
-                onPopoverHidden: () => this.closeSubMenu(),
-                onPopoverMoved: () => this.closeSubMenu(),
-                maxHeight: this.menuHeight,
-            };
-        }
-        getColor(menu) {
-            return menu.textColor ? `color: ${menu.textColor}` : undefined;
-        }
-        async activateMenu(menu) {
-            var _a, _b, _c;
-            const result = await ((_a = menu.action) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
-            this.close();
-            (_c = (_b = this.props).onMenuClicked) === null || _c === void 0 ? void 0 : _c.call(_b, { detail: result });
-        }
-        close() {
-            this.closeSubMenu();
-            this.props.onClose();
-        }
-        /**
-         * Return the number of pixels between the top of the menu
-         * and the menu item at a given index.
-         */
-        subMenuVerticalPosition(menuIndex) {
-            const menusAbove = this.visibleMenuItems.slice(0, menuIndex);
-            return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
-        }
-        onExternalClick(ev) {
-            // Don't close a root menu when clicked to open the submenus.
-            const el = this.menuRef.el;
-            if (el && getOpenedMenus().some((el) => isChildEvent(el, ev))) {
-                return;
-            }
-            ev.closedMenuId = this.props.menuId;
-            this.close();
-        }
-        getMenuItemsHeight(menuItems) {
-            const numberOfSeparators = menuItems.filter((m) => m.separator).length;
-            return MENU_ITEM_HEIGHT * menuItems.length + MENU_SEPARATOR_HEIGHT * numberOfSeparators;
-        }
-        getName(menu) {
-            return menu.name(this.env);
-        }
-        isRoot(menu) {
-            return !menu.action;
-        }
-        isEnabled(menu) {
-            if (menu.isEnabled(this.env)) {
-                return this.env.model.getters.isReadonly() ? menu.isReadonlyAllowed : true;
-            }
-            return false;
-        }
-        onScroll(ev) {
-            this.subMenu.scrollOffset = ev.target.scrollTop;
-        }
-        /**
-         * If the given menu is not disabled, open it's submenu at the
-         * correct position according to available surrounding space.
-         */
-        openSubMenu(menu, menuIndex) {
-            const y = this.subMenuVerticalPosition(menuIndex);
-            this.subMenu.position = {
-                x: this.position.x + this.props.depth * MENU_WIDTH,
-                y: y - (this.subMenu.scrollOffset || 0),
-            };
-            this.subMenu.menuItems = menu.children(this.env);
-            this.subMenu.isOpen = true;
-            this.subMenu.parentMenu = menu;
-        }
-        isParentMenu(subMenu, menuItem) {
-            var _a;
-            return ((_a = subMenu.parentMenu) === null || _a === void 0 ? void 0 : _a.id) === menuItem.id;
-        }
-        closeSubMenu() {
-            this.subMenu.isOpen = false;
-            this.subMenu.parentMenu = undefined;
-        }
-        onClickMenu(menu, menuIndex) {
-            if (this.isEnabled(menu)) {
-                if (this.isRoot(menu)) {
-                    this.openSubMenu(menu, menuIndex);
-                }
-                else {
-                    this.activateMenu(menu);
-                }
-            }
-        }
-        onMouseOver(menu, position) {
-            if (menu.isEnabled(this.env)) {
-                if (this.isRoot(menu)) {
-                    this.openSubMenu(menu, position);
-                }
-                else {
-                    this.closeSubMenu();
-                }
-            }
-        }
-    }
-    Menu.template = "o-spreadsheet-Menu";
-    Menu.components = { Menu, Popover };
-    Menu.defaultProps = {
-        depth: 1,
-    };
-    Menu.props = {
-        position: Object,
-        menuItems: Array,
-        depth: { type: Number, optional: true },
-        maxHeight: { type: Number, optional: true },
-        onClose: Function,
-        onMenuClicked: { type: Function, optional: true },
-        menuId: { type: String, optional: true },
-    };
-
-    // -----------------------------------------------------------------------------
-    // STYLE
-    // -----------------------------------------------------------------------------
-    css /* scss */ `
-  .o-chart-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-`;
-    class ChartFigure extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
-            this.chartContainerRef = owl.useRef("chartContainer");
-            this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
-            this.position = useAbsoluteBoundingRect(this.chartContainerRef);
-        }
-        getMenuItemRegistry() {
-            const registry = new MenuItemRegistry();
-            registry.add("edit", {
-                name: _lt("Edit"),
-                sequence: 1,
-                action: () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-                    this.env.openSidePanel("ChartPanel");
-                },
-            });
-            registry.add("copy", {
-                name: _lt("Copy"),
-                sequence: 2,
-                action: async () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-                    this.env.model.dispatch("COPY");
-                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                },
-            });
-            registry.add("cut", {
-                name: _lt("Cut"),
-                sequence: 3,
-                action: async () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-                    this.env.model.dispatch("CUT");
-                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                },
-            });
-            registry.add("delete", {
-                name: _lt("Delete"),
-                sequence: 10,
-                action: () => {
-                    this.env.model.dispatch("DELETE_FIGURE", {
-                        sheetId: this.env.model.getters.getActiveSheetId(),
-                        id: this.props.figure.id,
-                    });
-                    this.props.onFigureDeleted();
-                },
-            });
-            return registry;
-        }
-        get chartType() {
-            return this.env.model.getters.getChartType(this.props.figure.id);
-        }
-        onContextMenu(ev) {
-            const position = {
-                x: this.position.x + ev.offsetX,
-                y: this.position.y + ev.offsetY,
-            };
-            this.openContextMenu(position);
-        }
-        showMenu() {
-            const { x, y, width } = this.menuButtonRect;
-            const menuPosition = {
-                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
-                y: y,
-            };
-            this.openContextMenu(menuPosition);
-        }
-        openContextMenu(position) {
-            const registry = this.getMenuItemRegistry();
-            this.menuState.isOpen = true;
-            this.menuState.menuItems = registry.getMenuItems();
-            this.menuState.position = position;
-        }
-        get chartComponent() {
-            const type = this.chartType;
-            const component = chartComponentRegistry.get(type);
-            if (!component) {
-                throw new Error(`Component is not defined for type ${type}`);
-            }
-            return component;
-        }
-    }
-    ChartFigure.template = "o-spreadsheet-ChartFigure";
-    ChartFigure.components = { Menu };
-    ChartFigure.props = {
-        figure: Object,
-        onFigureDeleted: Function,
-    };
-
-    function interactiveCut(env) {
-        const result = env.model.dispatch("CUT");
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
-                env.raiseError(_lt("This operation is not allowed with multiple selections."));
-            }
-        }
-    }
-
-    const PasteInteractiveContent = {
-        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
-        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
-        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
-        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
-    };
-    function handlePasteResult(env, result) {
-        if (!result.isSuccessful) {
-            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
-                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
-            }
-            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
-                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
-            }
-            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
-                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
-            }
-            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
-                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
-            }
-        }
-    }
-    function interactivePaste(env, target, pasteOption) {
-        const result = env.model.dispatch("PASTE", { target, pasteOption });
-        handlePasteResult(env, result);
-    }
-    function interactivePasteFromOS(env, target, text) {
-        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text });
-        handlePasteResult(env, result);
     }
 
     /**
@@ -7440,6 +6807,53 @@
         sequence: 90,
         action: OPEN_CF_SIDEPANEL_ACTION,
     });
+
+    /**
+     * Return true if the event was triggered from
+     * a child element.
+     */
+    function isChildEvent(parent, ev) {
+        return !!ev.target && parent.contains(ev.target);
+    }
+    function gridOverlayPosition() {
+        const spreadsheetElement = document.querySelector(".o-grid-overlay");
+        if (spreadsheetElement) {
+            const { top, left } = spreadsheetElement === null || spreadsheetElement === void 0 ? void 0 : spreadsheetElement.getBoundingClientRect();
+            return { top, left };
+        }
+        throw new Error("Can't find spreadsheet position");
+    }
+    function getBoundingRectAsPOJO(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height,
+        };
+    }
+    /**
+     * Iterate over all the children of `el` in the dom tree starting at `el`, depth first.
+     */
+    function* iterateChildren(el) {
+        yield el;
+        if (el.hasChildNodes()) {
+            for (let child of el.childNodes) {
+                yield* iterateChildren(child);
+            }
+        }
+    }
+    function getElementScrollTop(el) {
+        return (el === null || el === void 0 ? void 0 : el.scrollTop) || 0;
+    }
+    function setElementScrollTop(el, scroll) {
+        if (!el)
+            return;
+        el.scrollTop = scroll;
+    }
+    function getOpenedMenus() {
+        return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
+    }
 
     function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
         const _onMouseDown = (ev) => {
@@ -15720,8 +15134,7 @@
                     return false;
                 const range = this.env.model.getters.getRangeFromSheetXC(refSheet, xc);
                 let zone = range.zone;
-                const { height, width } = zoneToDimension(zone);
-                zone = height * width === 1 ? this.env.model.getters.expandZone(refSheet, zone) : zone;
+                zone = getZoneArea(zone) === 1 ? this.env.model.getters.expandZone(refSheet, zone) : zone;
                 return isEqual(zone, highlight.zone);
             });
             return highlight && highlight.color ? highlight.color : undefined;
@@ -16818,6 +16231,522 @@
         },
     };
 
+    /**
+     * Return the o-spreadsheet element position relative
+     * to the browser viewport.
+     */
+    function useSpreadsheetRect() {
+        const position = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        let spreadsheetElement = document.querySelector(".o-spreadsheet");
+        updatePosition();
+        function updatePosition() {
+            if (!spreadsheetElement) {
+                spreadsheetElement = document.querySelector(".o-spreadsheet");
+            }
+            if (spreadsheetElement) {
+                const { top, left, width, height } = spreadsheetElement.getBoundingClientRect();
+                position.x = left;
+                position.y = top;
+                position.width = width;
+                position.height = height;
+            }
+        }
+        owl.onMounted(updatePosition);
+        owl.onPatched(updatePosition);
+        return position;
+    }
+    /**
+     * Return the component (or ref's component) BoundingRect, relative
+     * to the upper left corner of the screen (<body> element).
+     *
+     * Note: when used with a <Portal/> component, it will
+     * return the portal position, not the teleported position.
+     */
+    function useAbsoluteBoundingRect(ref) {
+        const rect = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        function updateElRect() {
+            const el = ref.el;
+            if (el === null) {
+                return;
+            }
+            const { top, left, width, height } = el.getBoundingClientRect();
+            rect.x = left;
+            rect.y = top;
+            rect.width = width;
+            rect.height = height;
+        }
+        owl.onMounted(updateElRect);
+        owl.onPatched(updateElRect);
+        return rect;
+    }
+    /**
+     * Get the rectangle inside which a popover should stay when being displayed.
+     * It's the value defined in `env.getPopoverContainerRect`, or the Rect of the "o-spreadsheet"
+     * element by default.
+     *
+     * Coordinates are expressed expressed as absolute DOM position.
+     */
+    function usePopoverContainer() {
+        const container = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        const component = owl.useComponent();
+        const spreadsheetRect = useSpreadsheetRect();
+        function updateRect() {
+            const env = component.env;
+            const newRect = "getPopoverContainerRect" in env ? env.getPopoverContainerRect() : spreadsheetRect;
+            container.x = newRect.x;
+            container.y = newRect.y;
+            container.width = newRect.width;
+            container.height = newRect.height;
+        }
+        updateRect();
+        owl.onMounted(updateRect);
+        owl.onPatched(updateRect);
+        return container;
+    }
+
+    /**
+     * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
+     */
+    function rectIntersection(rect1, rect2) {
+        return zoneToRect(intersection(rectToZone(rect1), rectToZone(rect2)));
+    }
+    function rectToZone(rect) {
+        return {
+            left: rect.x,
+            top: rect.y,
+            right: rect.x + rect.width,
+            bottom: rect.y + rect.height,
+        };
+    }
+    function zoneToRect(zone) {
+        if (!zone)
+            return undefined;
+        return {
+            x: zone.left,
+            y: zone.top,
+            width: zone.right - zone.left,
+            height: zone.bottom - zone.top,
+        };
+    }
+
+    css /* scss */ `
+  .o-popover {
+    position: absolute;
+    z-index: ${ComponentsImportance.Popover};
+    overflow: auto;
+    box-shadow: 1px 2px 5px 2px rgb(51 51 51 / 15%);
+    width: fit-content;
+    height: fit-content;
+  }
+`;
+    class Popover extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.popoverRef = owl.useRef("popover");
+            this.currentPosition = undefined;
+            this.currentDisplayValue = undefined;
+            this.spreadsheetRect = useSpreadsheetRect();
+        }
+        setup() {
+            this.containerRect = usePopoverContainer();
+            // useEffect occurs after the DOM is created and the element width/height are computed, but before
+            // the element in rendered, so we can still set its position
+            owl.useEffect(() => {
+                var _a, _b, _c, _d;
+                if (!this.containerRect)
+                    throw new Error("Popover container is not defined");
+                const el = this.popoverRef.el;
+                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
+                const newDisplay = anchor ? "block" : "none";
+                if (this.currentDisplayValue !== "none" && newDisplay === "none") {
+                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
+                }
+                el.style.display = newDisplay;
+                this.currentDisplayValue = newDisplay;
+                if (!anchor)
+                    return;
+                const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
+                const elDims = {
+                    width: el.getBoundingClientRect().width,
+                    height: el.getBoundingClientRect().height,
+                };
+                const spreadsheetRect = this.spreadsheetRect;
+                const popoverPositionHelper = this.props.positioning === "BottomLeft"
+                    ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
+                    : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
+                const style = popoverPositionHelper.getCss(elDims, this.props.verticalOffset);
+                for (const property of Object.keys(style)) {
+                    el.style[property] = style[property];
+                }
+                const newPosition = popoverPositionHelper.getCurrentPosition(elDims);
+                if (this.currentPosition && newPosition !== this.currentPosition) {
+                    (_d = (_c = this.props).onPopoverMoved) === null || _d === void 0 ? void 0 : _d.call(_c);
+                }
+                this.currentPosition = newPosition;
+            });
+        }
+    }
+    Popover.template = "o-spreadsheet-Popover";
+    Popover.defaultProps = {
+        positioning: "BottomLeft",
+        verticalOffset: 0,
+        onMouseWheel: () => { },
+        onPopoverMoved: () => { },
+        onPopoverHidden: () => { },
+    };
+    Popover.props = {
+        anchorRect: Object,
+        containerRect: { type: Object, optional: true },
+        positioning: { type: String, optional: true },
+        maxWidth: { type: Number, optional: true },
+        maxHeight: { type: Number, optional: true },
+        verticalOffset: { type: Number, optional: true },
+        onMouseWheel: { type: Function, optional: true },
+        onPopoverHidden: { type: Function, optional: true },
+        onPopoverMoved: { type: Function, optional: true },
+        slots: Object,
+    };
+    class PopoverPositionContext {
+        constructor(anchorRect, containerRect, propsMaxSize, spreadsheetOffset) {
+            this.anchorRect = anchorRect;
+            this.containerRect = containerRect;
+            this.propsMaxSize = propsMaxSize;
+            this.spreadsheetOffset = spreadsheetOffset;
+        }
+        /** Check if there is enough space for the popover to be rendered at the bottom of the anchorRect */
+        shouldRenderAtBottom(elementHeight) {
+            return (elementHeight <= this.availableHeightDown ||
+                this.availableHeightDown >= this.availableHeightUp);
+        }
+        /** Check if there is enough space for the popover to be rendered at the right of the anchorRect */
+        shouldRenderAtRight(elementWidth) {
+            return (elementWidth <= this.availableWidthRight ||
+                this.availableWidthRight >= this.availableWidthLeft);
+        }
+        getMaxHeight(elementHeight) {
+            const shouldRenderAtBottom = this.shouldRenderAtBottom(elementHeight);
+            const availableHeight = shouldRenderAtBottom
+                ? this.availableHeightDown
+                : this.availableHeightUp;
+            return this.propsMaxSize.height
+                ? Math.min(availableHeight, this.propsMaxSize.height)
+                : availableHeight;
+        }
+        getMaxWidth(elementWidth) {
+            const shouldRenderAtRight = this.shouldRenderAtRight(elementWidth);
+            const availableWidth = shouldRenderAtRight ? this.availableWidthRight : this.availableWidthLeft;
+            return this.propsMaxSize.width
+                ? Math.min(availableWidth, this.propsMaxSize.width)
+                : availableWidth;
+        }
+        getCss(elDims, verticalOffset) {
+            const maxHeight = this.getMaxHeight(elDims.height);
+            const maxWidth = this.getMaxWidth(elDims.width);
+            const actualHeight = Math.min(maxHeight, elDims.height);
+            const actualWidth = Math.min(maxWidth, elDims.width);
+            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
+            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
+            verticalOffset = shouldRenderAtBottom ? verticalOffset : -verticalOffset;
+            const cssProperties = {
+                "max-height": maxHeight + "px",
+                "max-width": maxWidth + "px",
+                top: this.getTopCoordinate(actualHeight, shouldRenderAtBottom) -
+                    this.spreadsheetOffset.y -
+                    verticalOffset +
+                    "px",
+                left: this.getLeftCoordinate(actualWidth, shouldRenderAtRight) - this.spreadsheetOffset.x + "px",
+            };
+            return cssProperties;
+        }
+        getCurrentPosition(elDims) {
+            const shouldRenderAtBottom = this.shouldRenderAtBottom(elDims.height);
+            const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
+            if (shouldRenderAtBottom && shouldRenderAtRight)
+                return "BottomRight";
+            if (shouldRenderAtBottom && !shouldRenderAtRight)
+                return "BottomLeft";
+            if (!shouldRenderAtBottom && shouldRenderAtRight)
+                return "TopRight";
+            return "TopLeft";
+        }
+    }
+    class BottomLeftPopoverContext extends PopoverPositionContext {
+        get availableHeightUp() {
+            return this.anchorRect.y - this.containerRect.y;
+        }
+        get availableHeightDown() {
+            return this.containerRect.height - this.availableHeightUp - this.anchorRect.height;
+        }
+        get availableWidthRight() {
+            return this.containerRect.x + this.containerRect.width - this.anchorRect.x;
+        }
+        get availableWidthLeft() {
+            return this.anchorRect.x + this.anchorRect.width - this.containerRect.x;
+        }
+        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
+            if (shouldRenderAtBottom) {
+                return this.anchorRect.y + this.anchorRect.height;
+            }
+            else {
+                return this.anchorRect.y - elementHeight;
+            }
+        }
+        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
+            if (shouldRenderAtRight) {
+                return this.anchorRect.x;
+            }
+            else {
+                return this.anchorRect.x + this.anchorRect.width - elementWidth;
+            }
+        }
+    }
+    class TopRightPopoverContext extends PopoverPositionContext {
+        get availableHeightUp() {
+            return this.anchorRect.y + this.anchorRect.height - this.containerRect.y;
+        }
+        get availableHeightDown() {
+            return this.containerRect.y + this.containerRect.height - this.anchorRect.y;
+        }
+        get availableWidthRight() {
+            return this.containerRect.width - this.anchorRect.width - this.availableWidthLeft;
+        }
+        get availableWidthLeft() {
+            return this.anchorRect.x - this.containerRect.x;
+        }
+        getTopCoordinate(elementHeight, shouldRenderAtBottom) {
+            if (shouldRenderAtBottom) {
+                return this.anchorRect.y;
+            }
+            else {
+                return this.anchorRect.y + this.anchorRect.height - elementHeight;
+            }
+        }
+        getLeftCoordinate(elementWidth, shouldRenderAtRight) {
+            if (shouldRenderAtRight) {
+                return this.anchorRect.x + this.anchorRect.width;
+            }
+            else {
+                return this.anchorRect.x - elementWidth;
+            }
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    // Context Menu Component
+    //------------------------------------------------------------------------------
+    css /* scss */ `
+  .o-menu {
+    background-color: white;
+    padding: ${MENU_VERTICAL_PADDING}px 0px;
+    width: ${MENU_WIDTH}px;
+    box-sizing: border-box !important;
+
+    .o-menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      height: ${MENU_ITEM_HEIGHT}px;
+      padding: 4px 16px;
+      cursor: pointer;
+      user-select: none;
+
+      .o-menu-item-name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      &.o-menu-root {
+        display: flex;
+        justify-content: space-between;
+      }
+      .o-menu-item-icon {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+      .o-icon {
+        width: 10px;
+      }
+
+      &:not(.disabled) {
+        &:hover,
+        &.o-menu-item-active {
+          background-color: #ebebeb;
+        }
+        .o-menu-item-description {
+          color: grey;
+        }
+      }
+      &.disabled {
+        color: ${MENU_ITEM_DISABLED_COLOR};
+        cursor: not-allowed;
+      }
+    }
+  }
+`;
+    class Menu extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.subMenu = owl.useState({
+                isOpen: false,
+                position: null,
+                scrollOffset: 0,
+                menuItems: [],
+            });
+            this.menuRef = owl.useRef("menu");
+            this.position = useAbsoluteBoundingRect(this.menuRef);
+        }
+        setup() {
+            owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
+            owl.useExternalListener(window, "contextmenu", this.onExternalClick, { capture: true });
+            owl.onWillUpdateProps((nextProps) => {
+                if (nextProps.menuItems !== this.props.menuItems) {
+                    this.closeSubMenu();
+                }
+            });
+        }
+        get visibleMenuItems() {
+            return this.props.menuItems.filter((x) => x.isVisible(this.env));
+        }
+        get subMenuPosition() {
+            const position = Object.assign({}, this.subMenu.position);
+            position.y -= this.subMenu.scrollOffset || 0;
+            return position;
+        }
+        get menuHeight() {
+            const menuItems = this.visibleMenuItems;
+            let menuItemsHeight = this.getMenuItemsHeight(menuItems);
+            // We don't display separator at the end of a menu
+            if (menuItems[menuItems.length - 1].separator) {
+                menuItemsHeight -= MENU_SEPARATOR_HEIGHT;
+            }
+            const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
+            return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
+        }
+        get popoverProps() {
+            const isRoot = this.props.depth === 1;
+            return {
+                anchorRect: {
+                    x: this.props.position.x - MENU_WIDTH * (this.props.depth - 1),
+                    y: this.props.position.y,
+                    width: isRoot ? 0 : MENU_WIDTH,
+                    height: isRoot ? 0 : MENU_ITEM_HEIGHT,
+                },
+                positioning: "TopRight",
+                verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
+                onPopoverHidden: () => this.closeSubMenu(),
+                onPopoverMoved: () => this.closeSubMenu(),
+                maxHeight: this.menuHeight,
+            };
+        }
+        getColor(menu) {
+            return menu.textColor ? `color: ${menu.textColor}` : undefined;
+        }
+        async activateMenu(menu) {
+            var _a, _b, _c;
+            const result = await ((_a = menu.action) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
+            this.close();
+            (_c = (_b = this.props).onMenuClicked) === null || _c === void 0 ? void 0 : _c.call(_b, { detail: result });
+        }
+        close() {
+            this.closeSubMenu();
+            this.props.onClose();
+        }
+        /**
+         * Return the number of pixels between the top of the menu
+         * and the menu item at a given index.
+         */
+        subMenuVerticalPosition(menuIndex) {
+            const menusAbove = this.visibleMenuItems.slice(0, menuIndex);
+            return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
+        }
+        onExternalClick(ev) {
+            // Don't close a root menu when clicked to open the submenus.
+            const el = this.menuRef.el;
+            if (el && getOpenedMenus().some((el) => isChildEvent(el, ev))) {
+                return;
+            }
+            ev.closedMenuId = this.props.menuId;
+            this.close();
+        }
+        getMenuItemsHeight(menuItems) {
+            const numberOfSeparators = menuItems.filter((m) => m.separator).length;
+            return MENU_ITEM_HEIGHT * menuItems.length + MENU_SEPARATOR_HEIGHT * numberOfSeparators;
+        }
+        getName(menu) {
+            return menu.name(this.env);
+        }
+        isRoot(menu) {
+            return !menu.action;
+        }
+        isEnabled(menu) {
+            if (menu.isEnabled(this.env)) {
+                return this.env.model.getters.isReadonly() ? menu.isReadonlyAllowed : true;
+            }
+            return false;
+        }
+        onScroll(ev) {
+            this.subMenu.scrollOffset = ev.target.scrollTop;
+        }
+        /**
+         * If the given menu is not disabled, open it's submenu at the
+         * correct position according to available surrounding space.
+         */
+        openSubMenu(menu, menuIndex) {
+            const y = this.subMenuVerticalPosition(menuIndex);
+            this.subMenu.position = {
+                x: this.position.x + this.props.depth * MENU_WIDTH,
+                y: y - (this.subMenu.scrollOffset || 0),
+            };
+            this.subMenu.menuItems = menu.children(this.env);
+            this.subMenu.isOpen = true;
+            this.subMenu.parentMenu = menu;
+        }
+        isParentMenu(subMenu, menuItem) {
+            var _a;
+            return ((_a = subMenu.parentMenu) === null || _a === void 0 ? void 0 : _a.id) === menuItem.id;
+        }
+        closeSubMenu() {
+            this.subMenu.isOpen = false;
+            this.subMenu.parentMenu = undefined;
+        }
+        onClickMenu(menu, menuIndex) {
+            if (this.isEnabled(menu)) {
+                if (this.isRoot(menu)) {
+                    this.openSubMenu(menu, menuIndex);
+                }
+                else {
+                    this.activateMenu(menu);
+                }
+            }
+        }
+        onMouseOver(menu, position) {
+            if (menu.isEnabled(this.env)) {
+                if (this.isRoot(menu)) {
+                    this.openSubMenu(menu, position);
+                }
+                else {
+                    this.closeSubMenu();
+                }
+            }
+        }
+    }
+    Menu.template = "o-spreadsheet-Menu";
+    Menu.components = { Menu, Popover };
+    Menu.defaultProps = {
+        depth: 1,
+    };
+    Menu.props = {
+        position: Object,
+        menuItems: Array,
+        depth: { type: Number, optional: true },
+        maxHeight: { type: Number, optional: true },
+        onClose: Function,
+        onMenuClicked: { type: Function, optional: true },
+        menuId: { type: String, optional: true },
+    };
+
     const LINK_TOOLTIP_HEIGHT = 32;
     const LINK_TOOLTIP_WIDTH = 220;
     css /* scss */ `
@@ -17149,83 +17078,6 @@
     const currenciesRegistry = new Registry();
 
     class ImageFigure extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.menuState = owl.useState({
-                isOpen: false,
-                position: null,
-            });
-            this.imageContainerRef = owl.useRef("o-image");
-            this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
-            this.position = useAbsoluteBoundingRect(this.imageContainerRef);
-            this.menuItems = createMenu([
-                {
-                    id: "copy",
-                    name: _lt("Copy"),
-                    description: "Ctrl+C",
-                    action: async () => {
-                        this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
-                        this.env.model.dispatch("COPY");
-                        await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                    },
-                },
-                {
-                    id: "cut",
-                    name: _lt("Cut"),
-                    description: "Ctrl+X",
-                    action: async () => {
-                        this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
-                        this.env.model.dispatch("CUT");
-                        await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
-                    },
-                },
-                {
-                    id: "reset_size",
-                    name: _lt("Reset size"),
-                    action: () => {
-                        const size = this.env.model.getters.getImageSize(this.figureId);
-                        const { height, width } = getMaxFigureSize(this.env.model.getters, size);
-                        this.env.model.dispatch("UPDATE_FIGURE", {
-                            sheetId: this.env.model.getters.getActiveSheetId(),
-                            id: this.figureId,
-                            height,
-                            width,
-                        });
-                    },
-                },
-                {
-                    id: "delete",
-                    name: _lt("Delete image"),
-                    description: "delete",
-                    action: () => {
-                        this.env.model.dispatch("DELETE_FIGURE", {
-                            sheetId: this.env.model.getters.getActiveSheetId(),
-                            id: this.figureId,
-                        });
-                    },
-                },
-            ]);
-        }
-        onContextMenu(ev) {
-            const position = {
-                x: this.position.x + ev.offsetX,
-                y: this.position.y + ev.offsetY,
-            };
-            this.openContextMenu(position);
-        }
-        showMenu() {
-            const { x, y, width } = this.menuButtonRect;
-            const menuPosition = {
-                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
-                y: y,
-            };
-            this.openContextMenu(menuPosition);
-        }
-        openContextMenu(position) {
-            this.menuState.isOpen = true;
-            this.menuState.position = position;
-        }
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
@@ -17237,20 +17089,105 @@
         }
     }
     ImageFigure.template = "o-spreadsheet-ImageFigure";
-    ImageFigure.components = { Menu };
+    ImageFigure.components = {};
     ImageFigure.props = {
         figure: Object,
         onFigureDeleted: Function,
     };
 
     const figureRegistry = new Registry();
-    figureRegistry.add("chart", { Component: ChartFigure, SidePanelComponent: "ChartPanel" });
+    figureRegistry.add("chart", {
+        Component: ChartFigure,
+        SidePanelComponent: "ChartPanel",
+        menuBuilder: getChartMenu,
+    });
     figureRegistry.add("image", {
         Component: ImageFigure,
         keepRatio: true,
         minFigSize: 20,
         borderWidth: 0,
+        menuBuilder: getImageMenuRegistry,
     });
+    function getChartMenu(figureId, onFigureDeleted, env) {
+        const menuItemSpecs = [
+            {
+                id: "edit",
+                name: _lt("Edit"),
+                sequence: 1,
+                action: () => {
+                    env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                    env.openSidePanel("ChartPanel");
+                },
+            },
+            getCopyMenuItem(figureId, env),
+            getCutMenuItem(figureId, env),
+            getDeleteMenuItem(figureId, onFigureDeleted, env),
+        ];
+        return createMenu(menuItemSpecs);
+    }
+    function getImageMenuRegistry(figureId, onFigureDeleted, env) {
+        const menuItemSpecs = [
+            getCopyMenuItem(figureId, env),
+            getCutMenuItem(figureId, env),
+            {
+                id: "reset_size",
+                name: _lt("Reset size"),
+                sequence: 4,
+                action: () => {
+                    const size = env.model.getters.getImageSize(figureId);
+                    const { height, width } = getMaxFigureSize(env.model.getters, size);
+                    env.model.dispatch("UPDATE_FIGURE", {
+                        sheetId: env.model.getters.getActiveSheetId(),
+                        id: figureId,
+                        height,
+                        width,
+                    });
+                },
+            },
+            getDeleteMenuItem(figureId, onFigureDeleted, env),
+        ];
+        return createMenu(menuItemSpecs);
+    }
+    function getCopyMenuItem(figureId, env) {
+        return {
+            id: "copy",
+            name: _lt("Copy"),
+            sequence: 2,
+            description: "Ctrl+C",
+            action: async () => {
+                env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                env.model.dispatch("COPY");
+                await env.clipboard.write(env.model.getters.getClipboardContent());
+            },
+        };
+    }
+    function getCutMenuItem(figureId, env) {
+        return {
+            id: "cut",
+            name: _lt("Cut"),
+            sequence: 3,
+            description: "Ctrl+X",
+            action: async () => {
+                env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                env.model.dispatch("CUT");
+                await env.clipboard.write(env.model.getters.getClipboardContent());
+            },
+        };
+    }
+    function getDeleteMenuItem(figureId, onFigureDeleted, env) {
+        return {
+            id: "delete",
+            name: _lt("Delete"),
+            sequence: 10,
+            action: () => {
+                env.model.dispatch("DELETE_FIGURE", {
+                    sheetId: env.model.getters.getActiveSheetId(),
+                    id: figureId,
+                });
+                onFigureDeleted();
+            },
+        };
+    }
 
     const inverseCommandRegistry = new Registry()
         .add("ADD_COLUMNS_ROWS", inverseAddColumnsRows)
@@ -17358,7 +17295,7 @@
             isVisible: (env) => {
                 return env.model.getters.getSheetIds().length > 1;
             },
-            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet?"), () => {
+            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
                 env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
             }),
         })
@@ -18425,7 +18362,7 @@
         }
         onColorClick(color) {
             if (color) {
-                this.props.onColorPicked(color);
+                this.props.onColorPicked(toHex(color));
             }
         }
         getCheckMarkColor() {
@@ -18440,8 +18377,10 @@
                 this.state.isCurrentColorInvalid = true;
                 return;
             }
+            const color = toHex(this.state.currentColor);
             this.state.isCurrentColorInvalid = false;
-            this.props.onColorPicked(this.state.currentColor);
+            this.props.onColorPicked(color);
+            this.state.currentColor = color;
         }
         toggleColorPicker() {
             this.state.showGradient = !this.state.showGradient;
@@ -20178,9 +20117,8 @@
 
     .o-figure-menu {
       right: 0px;
+      top: 0px;
       display: none;
-      position: absolute;
-      padding: 5px;
     }
 
     .o-figure-menu-item {
@@ -20198,7 +20136,10 @@
     class FigureComponent extends owl.Component {
         constructor() {
             super(...arguments);
+            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
             this.figureRef = owl.useRef("figure");
+            this.menuButtonRef = owl.useRef("menuButton");
+            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
         }
         get isSelected() {
             return this.env.model.getters.getSelectedFigureId() === this.props.figure.id;
@@ -20306,9 +20247,33 @@
                     break;
             }
         }
+        onContextMenu(ev) {
+            if (this.env.isDashboard())
+                return;
+            const position = {
+                x: ev.clientX,
+                y: ev.clientY,
+            };
+            this.openContextMenu(position);
+        }
+        showMenu() {
+            const { x, y, width } = this.menuButtonRect;
+            const menuPosition = {
+                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
+                y: y,
+            };
+            this.openContextMenu(menuPosition);
+        }
+        openContextMenu(position) {
+            this.menuState.isOpen = true;
+            this.menuState.position = position;
+            this.menuState.menuItems = figureRegistry
+                .get(this.props.figure.tag)
+                .menuBuilder(this.props.figure.id, this.props.onFigureDeleted, this.env);
+        }
     }
     FigureComponent.template = "o-spreadsheet-FigureComponent";
-    FigureComponent.components = {};
+    FigureComponent.components = { Menu };
     FigureComponent.defaultProps = {
         onFigureDeleted: () => { },
         onMouseDown: () => { },
@@ -22393,6 +22358,7 @@
         theme: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
         table: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/table",
         hyperlink: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+        image: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
     };
     const RELATIONSHIP_NSR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     const HEIGHT_FACTOR = 0.75; // 100px => 75 u
@@ -23416,12 +23382,8 @@
                 return "n";
         }
     }
-    /**
-     * For some reason, Excel will only take the devicePixelRatio (i.e. interface scale on Windows desktop)
-     * into account for the height.
-     */
     function convertHeightToExcel(height) {
-        return Math.round(HEIGHT_FACTOR * height * window.devicePixelRatio * 100) / 100;
+        return Math.round(HEIGHT_FACTOR * height * 100) / 100;
     }
     function convertWidthToExcel(width) {
         return Math.round(WIDTH_FACTOR * width * 100) / 100;
@@ -23560,6 +23522,19 @@
         if (xlsxId === -1) {
             chartIds.push(chartId);
             return chartIds.length;
+        }
+        return xlsxId + 1;
+    }
+    const imageIds = [];
+    /**
+     * Convert a image o-spreadsheet id to a xlsx id which
+     * are unsigned integers (starting from 1).
+     */
+    function convertImageId(imageId) {
+        const xlsxId = imageIds.findIndex((id) => id === imageId);
+        if (xlsxId === -1) {
+            imageIds.push(imageId);
+            return imageIds.length;
         }
         return xlsxId + 1;
     }
@@ -26324,6 +26299,7 @@
         return {
             ...createEmptySheet(sheetId, name),
             charts: [],
+            images: [],
         };
     }
     function createEmptyExcelWorkbookData() {
@@ -28959,7 +28935,7 @@
                     filters.push(new Filter(filter.id, filterZone));
                 }
                 // Add filters for new columns
-                if (filters.length < zoneToDimension(zone).width) {
+                if (filters.length < zoneToDimension(zone).numberOfCols) {
                     for (let col = zone.left; col <= zone.right; col++) {
                         if (!filters.find((filter) => filter.col === col)) {
                             filters.push(new Filter(this.uuidGenerator.uuidv4(), { ...zone, left: col, right: col }));
@@ -29610,6 +29586,24 @@
                 }
             }
         }
+        exportForExcel(data) {
+            for (const sheet of data.sheets) {
+                const figures = this.getters.getFigures(sheet.id);
+                const images = [];
+                for (const figure of figures) {
+                    if ((figure === null || figure === void 0 ? void 0 : figure.tag) === "image") {
+                        const image = this.getImage(figure.id);
+                        if (image) {
+                            images.push({
+                                ...figure,
+                                data: deepCopy(image),
+                            });
+                        }
+                    }
+                }
+                sheet.images = images;
+            }
+        }
         getAllImages() {
             const images = [];
             for (const sheetId in this.images) {
@@ -29807,8 +29801,8 @@
             if (merge) {
                 return isEqual(zone, merge);
             }
-            const { width, height } = zoneToDimension(zone);
-            return width === 1 && height === 1;
+            const { numberOfCols, numberOfRows } = zoneToDimension(zone);
+            return numberOfCols === 1 && numberOfRows === 1;
         }
         // ---------------------------------------------------------------------------
         // Merges
@@ -29976,8 +29970,8 @@
                             this.removeMerge(sheetId, currentZone);
                             break;
                         default:
-                            const { width, height } = zoneToDimension(result.range.zone);
-                            if (width === 1 && height === 1) {
+                            const { numberOfCols, numberOfRows } = zoneToDimension(result.range.zone);
+                            if (numberOfCols === 1 && numberOfRows === 1) {
                                 this.removeMerge(sheetId, currentZone);
                             }
                             else {
@@ -30736,8 +30730,8 @@
         }
         getSheetSize(sheetId) {
             return {
-                height: this.getNumberRows(sheetId),
-                width: this.getNumberCols(sheetId),
+                numberOfRows: this.getNumberRows(sheetId),
+                numberOfCols: this.getNumberCols(sheetId),
             };
         }
         getSheetZone(sheetId) {
@@ -32253,6 +32247,9 @@
                 case "CREATE_SHEET":
                     this.filterValues[cmd.sheetId] = {};
                     break;
+                case "HIDE_COLUMNS_ROWS":
+                    this.updateHiddenRows();
+                    break;
                 case "UPDATE_FILTER":
                     this.updateFilter(cmd);
                     this.updateHiddenRows();
@@ -32361,9 +32358,16 @@
         updateHiddenRows() {
             var _a, _b;
             const sheetId = this.getters.getActiveSheetId();
-            const filters = this.getters.getFilters(sheetId);
+            const filters = this.getters
+                .getFilters(sheetId)
+                .sort((filter1, filter2) => filter1.zoneWithHeaders.top - filter2.zoneWithHeaders.top);
             const hiddenRows = new Set();
             for (let filter of filters) {
+                // Disable filters whose header are hidden
+                if (this.getters.isRowHiddenByUser(sheetId, filter.zoneWithHeaders.top))
+                    continue;
+                if (hiddenRows.has(filter.zoneWithHeaders.top))
+                    continue;
                 const filteredValues = (_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[filter.id]) === null || _b === void 0 ? void 0 : _b.map(toLowerCase);
                 if (!filteredValues || !filter.filteredZone)
                     continue;
@@ -32386,7 +32390,7 @@
                     const tableZone = toZone(tableData.range);
                     const filters = [];
                     const headerNames = [];
-                    for (const i of range(0, zoneToDimension(tableZone).width)) {
+                    for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
                         const position = {
                             sheetId: sheetData.id,
                             col: tableZone.left + i,
@@ -33897,7 +33901,7 @@
         dimensionsToSum(sheetId, zone) {
             const dimensions = new Set();
             if (isOneDimensional(zone)) {
-                dimensions.add(zoneToDimension(zone).width === 1 ? "COL" : "ROW");
+                dimensions.add(zoneToDimension(zone).numberOfCols === 1 ? "COL" : "ROW");
                 return dimensions;
             }
             if (this.lastColIsEmpty(sheetId, zone)) {
@@ -34485,8 +34489,8 @@
                 x.zone.bottom < this.getters.getNumberRows(x.sheetId) &&
                 x.zone.right < this.getters.getNumberCols(x.sheetId))
                 .map((highlight) => {
-                const { height, width } = zoneToDimension(highlight.zone);
-                const zone = height * width === 1
+                const { numberOfRows, numberOfCols } = zoneToDimension(highlight.zone);
+                const zone = numberOfRows * numberOfCols === 1
                     ? this.getters.expandZone(highlight.sheetId, highlight.zone)
                     : highlight.zone;
                 return {
@@ -36393,7 +36397,7 @@
             const merges = this.getters.getMerges(sheetId).filter((merge) => overlap(merge, zone));
             /*Test the presence of merges of different sizes*/
             const mergeDimension = zoneToDimension(merges[0]);
-            let [widthFirst, heightFirst] = [mergeDimension.width, mergeDimension.height];
+            let [widthFirst, heightFirst] = [mergeDimension.numberOfCols, mergeDimension.numberOfRows];
             if (!merges.every((merge) => {
                 let [widthCurrent, heightCurrent] = [
                     merge.right - merge.left + 1,
@@ -37526,9 +37530,9 @@
             const values = this.values;
             const pasteZone = this.getPasteZone(target);
             const { left: activeCol, top: activeRow } = pasteZone;
-            const { width, height } = zoneToDimension(pasteZone);
+            const { numberOfCols, numberOfRows } = zoneToDimension(pasteZone);
             const sheetId = this.getters.getActiveSheetId();
-            this.addMissingDimensions(width, height, activeCol, activeRow);
+            this.addMissingDimensions(numberOfCols, numberOfRows, activeCol, activeRow);
             for (let i = 0; i < values.length; i++) {
                 for (let j = 0; j < values[i].length; j++) {
                     this.dispatch("UPDATE_CELL", {
@@ -37542,8 +37546,8 @@
             const zone = {
                 left: activeCol,
                 top: activeRow,
-                right: activeCol + width - 1,
-                bottom: activeRow + height - 1,
+                right: activeCol + numberOfCols - 1,
+                bottom: activeRow + numberOfRows - 1,
             };
             this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone });
         }
@@ -43642,7 +43646,7 @@
         }
     }
 
-    function createDrawing(chartRelIds, sheet, figures) {
+    function createDrawing(drawingRelIds, sheet, figures) {
         const namespaces = [
             ["xmlns:xdr", NAMESPACE.drawing],
             ["xmlns:r", RELATIONSHIP_NSR],
@@ -43651,46 +43655,14 @@
         ];
         const figuresNodes = [];
         for (const [figureIndex, figure] of Object.entries(figures)) {
-            // position
-            const { from, to } = convertFigureData(figure, sheet);
-            const chartId = convertChartId(figure.id);
-            const cNvPrAttrs = [
-                ["id", chartId],
-                ["name", `Chart ${chartId}`],
-                ["title", "Chart"],
-            ];
-            figuresNodes.push(escapeXml /*xml*/ `
-      <xdr:twoCellAnchor>
-        <xdr:from>
-          <xdr:col>${from.col}</xdr:col>
-          <xdr:colOff>${from.colOff}</xdr:colOff>
-          <xdr:row>${from.row}</xdr:row>
-          <xdr:rowOff>${from.rowOff}</xdr:rowOff>
-        </xdr:from>
-        <xdr:to>
-          <xdr:col>${to.col}</xdr:col>
-          <xdr:colOff>${to.colOff}</xdr:colOff>
-          <xdr:row>${to.row}</xdr:row>
-          <xdr:rowOff>${to.rowOff}</xdr:rowOff>
-        </xdr:to>
-        <xdr:graphicFrame>
-          <xdr:nvGraphicFramePr>
-            <xdr:cNvPr ${formatAttributes(cNvPrAttrs)} />
-            <xdr:cNvGraphicFramePr />
-          </xdr:nvGraphicFramePr>
-          <xdr:xfrm>
-            <a:off x="0" y="0"/>
-            <a:ext cx="0" cy="0"/>
-          </xdr:xfrm>
-          <a:graphic>
-            <a:graphicData uri="${DRAWING_NS_C}">
-              <c:chart r:id="${chartRelIds[figureIndex]}" />
-            </a:graphicData>
-          </a:graphic>
-        </xdr:graphicFrame>
-        <xdr:clientData fLocksWithSheet="0"/>
-      </xdr:twoCellAnchor>
-    `);
+            switch (figure === null || figure === void 0 ? void 0 : figure.tag) {
+                case "chart":
+                    figuresNodes.push(createChartDrawing(figure, sheet, drawingRelIds[figureIndex]));
+                    break;
+                case "image":
+                    figuresNodes.push(createImageDrawing(figure, sheet, drawingRelIds[figureIndex]));
+                    break;
+            }
         }
         const xml = escapeXml /*xml*/ `
     <xdr:wsDr ${formatAttributes(namespaces)}>
@@ -43745,6 +43717,93 @@
             index: headers.length - 1,
             offset: convertDotValueToEMU(position - currentPosition + FIGURE_BORDER_SIZE),
         };
+    }
+    function createChartDrawing(figure, sheet, chartRelId) {
+        // position
+        const { from, to } = convertFigureData(figure, sheet);
+        const chartId = convertChartId(figure.id);
+        const cNvPrAttrs = [
+            ["id", chartId],
+            ["name", `Chart ${chartId}`],
+            ["title", "Chart"],
+        ];
+        return escapeXml /*xml*/ `
+    <xdr:twoCellAnchor>
+      <xdr:from>
+        <xdr:col>${from.col}</xdr:col>
+        <xdr:colOff>${from.colOff}</xdr:colOff>
+        <xdr:row>${from.row}</xdr:row>
+        <xdr:rowOff>${from.rowOff}</xdr:rowOff>
+      </xdr:from>
+      <xdr:to>
+        <xdr:col>${to.col}</xdr:col>
+        <xdr:colOff>${to.colOff}</xdr:colOff>
+        <xdr:row>${to.row}</xdr:row>
+        <xdr:rowOff>${to.rowOff}</xdr:rowOff>
+      </xdr:to>
+      <xdr:graphicFrame>
+        <xdr:nvGraphicFramePr>
+          <xdr:cNvPr ${formatAttributes(cNvPrAttrs)} />
+          <xdr:cNvGraphicFramePr />
+        </xdr:nvGraphicFramePr>
+        <xdr:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+        </xdr:xfrm>
+        <a:graphic>
+          <a:graphicData uri="${DRAWING_NS_C}">
+            <c:chart r:id="${chartRelId}" />
+          </a:graphicData>
+        </a:graphic>
+      </xdr:graphicFrame>
+      <xdr:clientData fLocksWithSheet="0"/>
+    </xdr:twoCellAnchor>
+  `;
+    }
+    function createImageDrawing(figure, sheet, imageRelId) {
+        // position
+        const { from, to } = convertFigureData(figure, sheet);
+        const imageId = convertImageId(figure.id);
+        const cNvPrAttrs = [
+            ["id", imageId],
+            ["name", `Image ${imageId}`],
+            ["title", "Image"],
+        ];
+        return escapeXml /*xml*/ `
+    <xdr:twoCellAnchor editAs="oneCell">
+      <xdr:from>
+        <xdr:col>${from.col}</xdr:col>
+        <xdr:colOff>${from.colOff}</xdr:colOff>
+        <xdr:row>${from.row}</xdr:row>
+        <xdr:rowOff>${from.rowOff}</xdr:rowOff>
+      </xdr:from>
+      <xdr:to>
+        <xdr:col>${to.col}</xdr:col>
+        <xdr:colOff>${to.colOff}</xdr:colOff>
+        <xdr:row>${to.row}</xdr:row>
+        <xdr:rowOff>${to.rowOff}</xdr:rowOff>
+      </xdr:to>
+      <xdr:pic>
+        <xdr:nvPicPr>
+          <xdr:cNvPr ${formatAttributes(cNvPrAttrs)}/>
+          <xdr:cNvPicPr preferRelativeResize="0"/>
+        </xdr:nvPicPr>
+        <xdr:blipFill>
+          <a:blip cstate="print" r:embed="${imageRelId}"/>
+          <a:stretch>
+            <a:fillRect/>
+          </a:stretch>
+        </xdr:blipFill>
+        <xdr:spPr>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </xdr:spPr>
+      </xdr:pic>
+      <xdr:clientData fLocksWithSheet="0"/>
+    </xdr:twoCellAnchor>
+  `;
     }
 
     function addNumberFormats(numFmts) {
@@ -43940,7 +43999,7 @@
     function addFilterColumns(table) {
         const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).width)) {
+        for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
             const filter = table.filters[i];
             if (!filter || !filter.filteredValues.length) {
                 continue;
@@ -43966,7 +44025,7 @@
         var _a;
         const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).width)) {
+        for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
             const colHeaderXc = toXC(tableZone.left + i, tableZone.top);
             const colName = ((_a = sheetData.cells[colHeaderXc]) === null || _a === void 0 ? void 0 : _a.content) || `col${i}`;
             const colAttributes = [
@@ -44214,23 +44273,37 @@
             currentTableIndex += sheet.filterTables.length;
             // Figures and Charts
             let drawingNode = escapeXml ``;
+            const drawingRelIds = [];
             const charts = sheet.charts;
-            if (charts.length) {
-                const chartRelIds = [];
-                for (const chart of charts) {
-                    const xlsxChartId = convertChartId(chart.id);
-                    const chartRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
-                        target: `../charts/chart${xlsxChartId}.xml`,
-                        type: XLSX_RELATION_TYPE.chart,
-                    });
-                    chartRelIds.push(chartRelId);
-                    files.push(createXMLFile(createChart(chart, sheetIndex, data), `xl/charts/chart${xlsxChartId}.xml`, "chart"));
-                }
+            for (const chart of charts) {
+                const xlsxChartId = convertChartId(chart.id);
+                const chartRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
+                    target: `../charts/chart${xlsxChartId}.xml`,
+                    type: XLSX_RELATION_TYPE.chart,
+                });
+                drawingRelIds.push(chartRelId);
+                files.push(createXMLFile(createChart(chart, sheetIndex, data), `xl/charts/chart${xlsxChartId}.xml`, "chart"));
+            }
+            const images = sheet.images;
+            for (const image of images) {
+                const xlsxImageId = convertImageId(image.id);
+                const imageRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
+                    target: `../media/image${xlsxImageId}`,
+                    type: XLSX_RELATION_TYPE.image,
+                });
+                drawingRelIds.push(imageRelId);
+                files.push({
+                    path: `xl/media/image${xlsxImageId}`,
+                    imagePath: image.data.path,
+                });
+            }
+            const drawings = [...charts, ...images];
+            if (drawings.length) {
                 const drawingRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
                     target: `../drawings/drawing${sheetIndex}.xml`,
                     type: XLSX_RELATION_TYPE.drawing,
                 });
-                files.push(createXMLFile(createDrawing(chartRelIds, sheet, charts), `xl/drawings/drawing${sheetIndex}.xml`, "drawing"));
+                files.push(createXMLFile(createDrawing(drawingRelIds, sheet, drawings), `xl/drawings/drawing${sheetIndex}.xml`, "drawing"));
                 drawingNode = escapeXml /*xml*/ `<drawing r:id="${drawingRelId}" />`;
             }
             const sheetXml = escapeXml /*xml*/ `
@@ -44344,7 +44417,7 @@
     function createContentTypes(files) {
         const overrideNodes = [];
         for (const file of files) {
-            if (file.contentType) {
+            if ("contentType" in file && file.contentType) {
                 overrideNodes.push(createOverride("/" + file.path, CONTENT_TYPES[file.contentType]));
             }
         }
@@ -44902,9 +44975,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.0-alpha.3';
-    __info__.date = '2023-03-06T07:35:02.317Z';
-    __info__.hash = 'ec749cf';
+    __info__.version = '16.2.0-alpha.4';
+    __info__.date = '2023-03-15T09:37:49.222Z';
+    __info__.hash = '2c6fe88';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
