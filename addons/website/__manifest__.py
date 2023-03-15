@@ -197,7 +197,6 @@
             'website/static/src/js/tours/tour_utils.js',
         ],
         'web.qunit_suite_tests': [
-            'website/static/tests/dashboard_tests.js',
             'website/static/tests/redirect_field_tests.js',
         ],
         'web.tests_assets': [
