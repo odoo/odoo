@@ -65,6 +65,23 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="l10n_latam_full_document_number" position="after" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_tree" model="ir.ui.view">
+        <field name="name">account.move.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
             <field name="name" position="after">
                 <field name="l10n_latam_full_document_number" position="after" optional="show"/>
             </field>

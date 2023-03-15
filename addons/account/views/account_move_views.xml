@@ -170,8 +170,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
-                    <field name="move_name"/>
-                    <!-- <field name="move_name" string="Journal Entry" widget="open_move_widget"/> -->
+                    <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
                     <field name="partner_id" optional="show" attrs="{'readonly':[('move_type', '!=', 'entry')]}"/>
                     <field name="ref" optional="hide" readonly="False"/>

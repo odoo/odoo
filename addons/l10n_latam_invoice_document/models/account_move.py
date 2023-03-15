@@ -235,7 +235,7 @@ class AccountMove(models.Model):
         return self.l10n_latam_full_document_number
 
     def _get_move_display_name(self, show_ref=False):
-        if not self.l10n_latam_use_documents:
+        if self._context.get('latam_display_internal_name') or not self.l10n_latam_use_documents:
             return super()._get_move_display_name(show_ref=show_ref)
         self.ensure_one()
         name = ''
