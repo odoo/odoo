@@ -295,8 +295,9 @@ class AccountEdiFormat(models.Model):
         if self.env['account_edi_proxy_client.user']._get_demo_state() == 'demo':
             return
 
+        fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for proxy_user in self.env['account_edi_proxy_client.user'].search([('edi_format_code', '=', 'fattura_pa')]):
-            self._receive_fattura_pa(proxy_user)
+            fattura_pa._receive_fattura_pa(proxy_user)
 
     def _receive_fattura_pa(self, proxy_user):
         ''' Check the proxy for incoming invoices for a specified proxy user.
@@ -311,7 +312,7 @@ class AccountEdiFormat(models.Model):
 
         proxy_acks = []
         for id_transaction, fattura in res.items():
-            if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['key']):
+            if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['file'], fattura['key']):
                 proxy_acks.append(id_transaction)
 
         if proxy_acks:
@@ -322,12 +323,13 @@ class AccountEdiFormat(models.Model):
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
-    def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, key):
+    def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, content, key):
         ''' Save an incoming file from the SdI as an attachment.
 
             :param proxy_user:     the user that saves the attachment.
             :param id_transaction: id of the SdI transaction for communication with the IAP proxy.
             :param filename:       name of the file to be saved.
+            :param content:        encrypted content of the file to be saved.
             :param key:            key to decrypt the file.
             :returns:              True if everything went well, or the file already exists.
                                    False if the file cannot be parsed as an XML.
@@ -339,7 +341,7 @@ class AccountEdiFormat(models.Model):
             _logger.info('E-invoice already exists: %s', filename)
             return True
 
-        raw_content = proxy_user._decrypt_data(filename, key)
+        raw_content = proxy_user._decrypt_data(content, key)
         invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
         attachment = self.env['ir.attachment'].create({
             'name': filename,
