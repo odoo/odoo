@@ -333,7 +333,8 @@ class PosSession(models.Model):
             # Users without any accounting rights won't be able to create the journal entry. If this
             # case, switch to sudo for creation and posting.
             try:
-                self.with_company(self.company_id)._create_account_move()
+                with self.env.cr.savepoint():
+                    self.with_company(self.company_id)._create_account_move()
             except AccessError as e:
                 if sudo:
                     self.sudo().with_company(self.company_id)._create_account_move()
