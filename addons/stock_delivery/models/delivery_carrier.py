@@ -200,7 +200,7 @@ class DeliveryCarrier(models.Model):
     def _get_commodities_from_stock_move_lines(self, move_lines):
         commodities = []
         for line in move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu']):
-            qty = line.qty_done if line.state == 'done' else line.product_uom_qty
+            qty = line.qty_done if line.state == 'done' else line.reserved_uom_qty
             unit_quantity = line.product_uom_id._compute_quantity(qty, line.product_id.uom_id)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = line.product_id.country_of_origin.code or \
