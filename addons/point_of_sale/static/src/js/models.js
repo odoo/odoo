@@ -2290,14 +2290,14 @@ exports.Orderline = Backbone.Model.extend({
         }
     },
     get_taxed_lst_unit_price: function(){
-        var base_price = this.compute_fixed_price(this.get_base_price());
+        var lst_price = this.compute_fixed_price(this.get_lst_price());
         if (this.pos.config.iface_tax_included === 'total') {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
             var product_taxes = this.get_taxes_after_fp(taxes_ids);
-            return this.compute_all(product_taxes, base_price, 1, this.pos.currency.rounding).total_included;
+            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
         }
-        return base_price;
+        return lst_price;
     },
     get_price_without_tax: function(){
         return this.get_all_prices().priceWithoutTax;
@@ -2423,7 +2423,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.compute_fixed_price(this.get_lst_price());
     },
     get_lst_price: function(){
-        return this.product.lst_price;
+        return this.product.get_price(this.pos.default_pricelist, 1, 0)
     },
     set_lst_price: function(price){
       this.order.assert_editable();
