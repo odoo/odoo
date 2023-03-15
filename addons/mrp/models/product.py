@@ -162,6 +162,13 @@ class ProductProduct(models.Model):
         else:
             return super(ProductProduct, self).get_components()
 
+    def _get_description(self, picking_type_id):
+        self.ensure_one()
+        if picking_type_id.code == 'mrp_operation':
+            return self._get_description_or_name()
+
+        return super()._get_description(picking_type_id)
+
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")

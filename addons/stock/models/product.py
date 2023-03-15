@@ -228,19 +228,23 @@ class Product(models.Model):
         self.ensure_one()
         return self.ids
 
+    def _get_description_or_name(self):
+        return html2plaintext(self.description) if not is_html_empty(self.description) else self.name
+
     def _get_description(self, picking_type_id):
         """ return product receipt/delivery/picking description depending on
         picking type passed as argument.
         """
         self.ensure_one()
         picking_code = picking_type_id.code
-        description = html2plaintext(self.description) if not is_html_empty(self.description) else self.name
+        description = self._get_description_or_name()
         if picking_code == 'incoming':
             return self.description_pickingin or description
         if picking_code == 'outgoing':
             return self.description_pickingout or self.name
         if picking_code == 'internal':
             return self.description_picking or description
+        return description
 
     def _get_domain_locations(self):
         '''
