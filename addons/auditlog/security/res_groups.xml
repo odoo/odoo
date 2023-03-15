@@ -1,0 +1,24 @@
+<odoo>
+    <record model="ir.module.category" id="security_auditlog_groups">
+        <field name="name">Auditlog Rights</field>
+    </record>
+
+    <record model="res.groups" id="group_auditlog_user">
+        <field name="name">Auditlog User</field>
+        <field name="category_id" ref="auditlog.security_auditlog_groups" />
+    </record>
+
+    <record model="res.groups" id="group_auditlog_manager">
+        <field name="name">Auditlog Manager</field>
+        <field name="category_id" ref="auditlog.security_auditlog_groups" />
+        <field name="implied_ids" eval="[(4, ref('auditlog.group_auditlog_user'))]" />
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field
+            name="implied_ids"
+            eval="[(4, ref('auditlog.group_auditlog_manager'))]"
+        />
+    </record>
+
+</odoo>

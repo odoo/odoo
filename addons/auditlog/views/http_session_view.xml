@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_auditlog_http_session_form" model="ir.ui.view">
+        <field name="name">auditlog.http.session.form</field>
+        <field name="model">auditlog.http.session</field>
+        <field name="arch" type="xml">
+            <form string="User session">
+                <sheet>
+                    <group string="User session">
+                        <field name="user_id" />
+                        <field name="create_date" />
+                        <field name="name" />
+                    </group>
+                    <group string="HTTP Requests">
+                        <field name="http_request_ids" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_auditlog_http_session_tree" model="ir.ui.view">
+        <field name="name">auditlog.http.session.tree</field>
+        <field name="model">auditlog.http.session</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="user_id" />
+                <field name="create_date" />
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_auditlog_http_session_search" model="ir.ui.view">
+        <field name="name">auditlog.http.session.search</field>
+        <field name="model">auditlog.http.session</field>
+        <field name="arch" type="xml">
+            <search string="User sessions">
+                <field name="user_id" />
+                <field name="name" />
+                <field name="create_date" />
+                <group expand="0" string="Group By...">
+                    <filter
+                        name="group_by_user_id"
+                        string="User"
+                        domain="[]"
+                        context="{'group_by':'user_id'}"
+                    />
+                    <filter
+                        name="group_by_create_date"
+                        string="Created on"
+                        domain="[]"
+                        context="{'group_by':'create_date'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auditlog_http_session_tree">
+        <field name="name">User sessions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">auditlog.http.session</field>
+        <field name="view_id" ref="view_auditlog_http_session_tree" />
+    </record>
+    <menuitem
+        id="menu_action_auditlog_http_session_tree"
+        parent="menu_audit"
+        action="action_auditlog_http_session_tree"
+        sequence="30"
+    />
+</odoo>

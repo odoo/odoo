@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="login_user_detail_form_view">
+            <field name="name">Login User Details</field>
+            <field name="model">login.detail</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="date_time"/>
+                        <field name="ip_address"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="login_user_detail_tree_view">
+            <field name="name">Login User Details</field>
+            <field name="model">login.detail</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date_time"/>
+                    <field name="ip_address"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="login_user_detail_action_window">
+            <field name="name">Login User Details</field>
+            <field name="res_model">login.detail</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem name="Login Details" id="login_user_detail.menu_1_list" parent="base.menu_users"
+              action="login_user_detail_action_window"/>
+
+  </data>
+</odoo>
