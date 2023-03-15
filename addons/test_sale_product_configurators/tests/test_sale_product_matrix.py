@@ -26,7 +26,7 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.env['res.partner'].create({'name': 'Agrolait'})
 
         # Setup currency
-        cls.env['res.currency'].search([('name', '!=', 'USD')]).action_archive()
+        cls.env['res.currency'].search([('name', '!=', 'USD')]).with_context(force_deactivate=True).action_archive()
         cls.currency = cls.env['res.currency'].search([('name', '=', 'USD')])
         cls.currency.action_unarchive()
 

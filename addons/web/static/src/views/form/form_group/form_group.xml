@@ -44,7 +44,7 @@
             <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
         </div>
         <div
-        class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+        class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 text-break"
         t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}{{ cell.width ? 'width: ' + cell.width + '%' + ';' : '' }}">
             <t t-slot="{{ cell.name }}"/>
         </div>

@@ -30,10 +30,8 @@ class IrConfigParameter(models.Model):
                 group_user.implied_ids |= group_mail_template_editor
 
             elif value and group_mail_template_editor in group_user.implied_ids:
-                group_user.implied_ids -= group_mail_template_editor
                 # remove existing users, including inactive template user
                 # admin will regain the right via implied_ids on group_system
-                group_mail_template_editor.with_context(active_test=False).users.write(
-                    {'groups_id': [(3, group_mail_template_editor.id)]})
+                group_user._remove_group(group_mail_template_editor)
 
         return super(IrConfigParameter, self).set_param(key, value)
