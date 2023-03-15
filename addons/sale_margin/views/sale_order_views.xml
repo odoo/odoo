@@ -5,6 +5,7 @@
         <field name="name">sale.order.margin.view.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority" eval="15"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tax_totals']" position="after">
                 <label for="margin" groups="base.group_user"/>
