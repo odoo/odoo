@@ -699,7 +699,7 @@ export class OdooEditor extends EventTarget {
     resetContent(value) {
         value = value || '<p><br></p>';
         this.editable.innerHTML = value;
-        this.sanitize();
+        this.sanitize(this.editable);
         this.historyStep(true);
         // The unbreakable protection mechanism detects an anomaly and attempts
         // to trigger a rollback when the content is reset using `innerHTML`.
@@ -711,17 +711,22 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    sanitize() {
+    sanitize(target) {
         this.observerFlush();
 
-        let commonAncestor, record;
-        for (record of this._currentStep.mutations) {
-            const node = this.idFind(record.parentId || record.id) || this.editable;
-            commonAncestor = commonAncestor
-                ? commonParentGet(commonAncestor, node, this.editable)
-                : node;
+        let record;
+        if (!target) {
+            // If the target is not given,
+            // find the closest common ancestor to all the nodes referenced
+            // in the mutations from the last step.
+            for (record of this._currentStep.mutations) {
+                const node = this.idFind(record.parentId || record.id) || this.editable;
+                target = target
+                    ? commonParentGet(target, node, this.editable)
+                    : node;
+            }
         }
-        if (!commonAncestor) {
+        if (!target) {
             return false;
         }
 
@@ -733,15 +738,16 @@ export class OdooEditor extends EventTarget {
         //          <li class="oe-nested"><ul>...</ul></li>
         //      </ol>: these two lists should be merged together so the common
         // ancestor should be the <ol> element).
-        const nestedListAncestor = closestElement(commonAncestor, '.oe-nested');
+        const nestedListAncestor = closestElement(target, '.oe-nested');
         if (nestedListAncestor && nestedListAncestor.parentElement) {
-            commonAncestor = nestedListAncestor.parentElement;
+            target = nestedListAncestor.parentElement;
         }
 
         // sanitize and mark current position as sanitized
-        sanitize(commonAncestor);
-        this._pluginCall('sanitizeElement', [commonAncestor]);
-        this.options.onPostSanitize(commonAncestor);
+        sanitize(target);
+        this._pluginCall('sanitizeElement',
+                         [target.parentElement]);
+        this.options.onPostSanitize(target);
     }
 
     addDomListener(element, eventName, callback) {
