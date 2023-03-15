@@ -10,7 +10,7 @@ from odoo.http import request
 class WebsiteBackend(http.Controller):
 
     @http.route('/website/fetch_dashboard_data', type="json", auth='user')
-    def fetch_dashboard_data(self, website_id, date_from, date_to):
+    def fetch_dashboard_data(self, website_id):
         Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
         has_group_designer = request.env.user.has_group('website.group_website_designer')
@@ -19,7 +19,6 @@ class WebsiteBackend(http.Controller):
                 'system': has_group_system,
                 'website_designer': has_group_designer
             },
-            'currency': request.env.company.currency_id.id,
             'dashboards': {}
         }
 
