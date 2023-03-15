@@ -282,6 +282,15 @@ class Check {
             },
         ];
     }
+    discountOriginalPriceIs(original_price) {
+        return [
+            {
+                content: `discount original price is shown`,
+                trigger: `s:contains('${original_price}')`,
+                run: function () {},
+            },
+        ];
+    }
 }
 
 class Execute {
