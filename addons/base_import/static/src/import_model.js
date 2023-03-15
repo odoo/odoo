@@ -432,7 +432,7 @@ export class BaseImportModel {
             }
         }
 
-        if (!this.fields.length) {
+        if (!res.fields.length) {
             this.importOptionsValues.advanced.value = res.advanced_mode;
         }
 
