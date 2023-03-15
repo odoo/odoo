@@ -553,8 +553,6 @@ export class HtmlField extends Component {
         const html = this.wysiwyg.getValue();
         const $odooEditor = $editable.closest('.odoo-editor-editable');
         // Save correct nodes references.
-        const originalContents = document.createDocumentFragment();
-        originalContents.append(...$editable[0].childNodes);
         // Remove temporarily the class so that css editing will not be converted.
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
@@ -562,7 +560,8 @@ export class HtmlField extends Component {
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor-editable');
 
-        $editable[0].replaceChildren(...originalContents.childNodes);
+        this.wysiwyg.setValue($editable.html());
+        this.wysiwyg.odooEditor.sanitize(this.wysiwyg.odooEditor.editable);
     }
     async _getWysiwygClass() {
         return getWysiwygClass();
