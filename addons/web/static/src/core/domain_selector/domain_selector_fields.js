@@ -328,6 +328,16 @@ const PROPERTIES_RELATIONAL = {
     defaultValue: (fieldDef) => (fieldDef.type === "many2one" ? 1 : []),
 };
 
+// ----------------------------------------------------------------------------
+
+const JSON_FIELD = {
+    operators: ["equal", "not_equal", "ilike", "not_ilike","set", "not_set"],
+    editors: {
+        default: makeEditor(Input),
+    },
+    defaultValue: () => "",
+};
+
 // ============================================================================
 
 export const FIELD_DESCRIPTIONS = {
@@ -338,6 +348,7 @@ export const FIELD_DESCRIPTIONS = {
     float: NUMBER,
     html: TEXT,
     integer: NUMBER,
+    json: JSON_FIELD,
     many2many: RELATIONAL,
     many2one: RELATIONAL,
     monetary: NUMBER,
