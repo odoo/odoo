@@ -9,6 +9,8 @@ import { escape } from "@web/core/utils/strings";
 import { mapDoActionOptionAPI } from "@web/legacy/backend_utils";
 import { Model } from "@web/views/model";
 import { evalDomain } from "@web/views/utils";
+import { localization } from "@web/core/l10n/localization";
+import { TranslationDialog } from "@web/views/fields/translation_dialog";
 import {
     mapWowlValueToLegacy,
     mapViews,
@@ -611,6 +613,12 @@ export class Record extends DataPoint {
             reload: !options.noReload,
             savePoint: options.savePoint,
         };
+
+        // Before we save, we gather dirty translate fields data. It needs to be done before the
+        // save as nothing will be dirty after. It is why there is a compute part and a show part.
+        const dirtyTranslatableFields = localization.multiLang
+            ? Object.values(this.fields).filter((f) => f.translate && this.isFieldDirty(f.name))
+            : [];
         try {
             await this.model.__bm__.save(this.__bm_handle__, saveOptions);
         } catch (_e) {
@@ -636,6 +644,41 @@ export class Record extends DataPoint {
             }
             return canProceed;
         }
+
+        // After we saved, we show the previously computed data in the alert (if there is any).
+        // It needs to be done after the save because if we were in record creation, the resId
+        for (const field of dirtyTranslatableFields) {
+            const closefn = this.model.notificationService.add(
+                "Please update translations of " + field.name,
+                {
+                    type: "info",
+                    sticky: true,
+                    buttons: [
+                        {
+                            name: "Translate",
+                            primary: true,
+                            onClick: () => {
+                                closefn();
+                                this.model.dialogService.add(TranslationDialog, {
+                                    fieldName: field.name,
+                                    resId: this.resId,
+                                    resModel: this.resModel,
+                                    userLanguageValue: this.data[field.name] || "",
+                                    isComingFromTranslationAlert: true,
+                                    onSave: async () => {
+                                        if (owl.status(this.model.__component) !== "destroyed") {
+                                            await this.load({}, { keepChanges: true });
+                                            this.model.notify();
+                                        }
+                                    },
+                                });
+                            },
+                        },
+                    ],
+                }
+            );
+        }
+
         this.__syncData(true);
         if (shouldSwitchToReadonly) {
             this.switchMode("readonly");

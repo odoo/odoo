@@ -25,6 +25,8 @@ import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { ListConfirmationDialog } from "@web/views/list/list_confirmation_dialog";
 import { Model } from "@web/views/model";
 import { evalDomain, isNumeric, isRelational, isX2Many, orderByToString } from "@web/views/utils";
+import { localization } from "@web/core/l10n/localization";
+import { TranslationDialog } from "@web/views/fields/translation_dialog";
 
 const { DateTime } = luxon;
 
@@ -1468,6 +1470,12 @@ export class Record extends DataPoint {
         const shouldReload = hasChanges ? !options.noReload : false;
         const context = this.context;
 
+        // Before we save, we gather dirty translate fields data. It needs to be done before the
+        // save as nothing will be dirty after. It is why there is a compute part and a show part.
+        const dirtyTranslatableFields = localization.multiLang
+            ? Object.values(this.fields).filter((f) => f.translate && this.isFieldDirty(f.name))
+            : [];
+
         if (this.isNew) {
             if (keys.length === 1 && keys[0] === "display_name") {
                 const [resId] = await this.model.orm.call(
@@ -1505,6 +1513,39 @@ export class Record extends DataPoint {
         }
         if (!options.stayInEdition) {
             this.switchMode("readonly");
+        }
+        // After we saved, we show the previously computed data in the alert (if there is any).
+        // It needs to be done after the save because if we were in record creation, the resId
+        for (const field of dirtyTranslatableFields) {
+            const closefn = this.model.notificationService.add(
+                "Please update translations of " + field.name,
+                {
+                    type: "info",
+                    sticky: true,
+                    buttons: [
+                        {
+                            name: "Translate",
+                            primary: true,
+                            onClick: () => {
+                                closefn();
+                                this.model.dialogService.add(TranslationDialog, {
+                                    fieldName: field.name,
+                                    resId: this.resId,
+                                    resModel: this.resModel,
+                                    userLanguageValue: this.data[field.name] || "",
+                                    isComingFromTranslationAlert: true,
+                                    onSave: async () => {
+                                        // if (owl.status(this.model.__component) !== "destroyed") {
+                                        await this.load({}, { keepChanges: true });
+                                        this.model.notify();
+                                        // }
+                                    },
+                                });
+                            },
+                        },
+                    ],
+                }
+            );
         }
         await this.onRecordSaved(this);
         return true;
@@ -1734,6 +1775,13 @@ class DynamicList extends DataPoint {
         if (!changes) {
             return;
         }
+
+        // Before we save, we gather dirty translate fields data. It needs to be done before the
+        // save as nothing will be dirty after. It is why there is a compute part and a show part.
+        const dirtyTranslatableFields = localization.multiLang
+            ? Object.values(record.fields).filter((f) => f.translate && record.isFieldDirty(f.name))
+            : [];
+
         const validSelection = selection.reduce((result, record) => {
             if (
                 !Object.keys(changes).filter(
@@ -1770,6 +1818,40 @@ class DynamicList extends DataPoint {
                         await Promise.all(validSelection.map((record) => record.load()));
                         record.switchMode("readonly");
                         this.model.notify();
+
+                        // After we saved, we show the previously computed data in the alert (if there is any).
+                        // It needs to be done after the save because if we were in record creation, the resId
+                        for (const field of dirtyTranslatableFields) {
+                            const closefn = this.model.notificationService.add(
+                                "Please update translations of " + field.name,
+                                {
+                                    type: "info",
+                                    sticky: true,
+                                    buttons: [
+                                        {
+                                            name: "Translate",
+                                            primary: true,
+                                            onClick: () => {
+                                                closefn();
+                                                this.model.dialogService.add(TranslationDialog, {
+                                                    fieldName: field.name,
+                                                    resIds: resIds,
+                                                    resModel: this.resModel,
+                                                    userLanguageValue: changes[field.name] || "",
+                                                    isComingFromTranslationAlert: true,
+                                                    onSave: async () => {
+                                                        // if (owl.status(this.model.__component) !== "destroyed") {
+                                                        await this.load({}, { keepChanges: true });
+                                                        this.model.notify();
+                                                        // }
+                                                    },
+                                                });
+                                            },
+                                        },
+                                    ],
+                                }
+                            );
+                        }
                     } catch {
                         record.discard();
                     }

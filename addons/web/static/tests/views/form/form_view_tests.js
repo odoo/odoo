@@ -9006,6 +9006,125 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".alert", "should have closed the translate alert");
     });
 
+    QUnit.test("translation alert open dialog", async function (assert) {
+        serverData.models.partner.fields.foo.translate = true;
+        serverData.models.partner.fields.display_name.translate = true;
+
+        patchWithCleanup(localization, {
+            multiLang: true,
+        });
+
+        let call_get_field_translations = 0;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <button string="Additionnal button" class="btn btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="foo"/>
+                            <field name="display_name"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    if (call_get_field_translations === 0) {
+                        call_get_field_translations = 1;
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "test2", value: "test2" },
+                                { lang: "fr_BE", source: "test2", value: "test2 français" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
+                    if (call_get_field_translations === 1) {
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "test3", value: "test3" },
+                                { lang: "fr_BE", source: "test3", value: "test3 français" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
+                }
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
+                    return Promise.resolve(null);
+                }
+            },
+        });
+
+        await editInput(target, '[name="foo"] input', "test");
+        await clickSave(target);
+        assert.containsOnce(
+            target,
+            ".alert .o_field_translate",
+            "should have single translation alert"
+        );
+
+        await editInput(target, '[name="foo"] input', "test2");
+        await editInput(target, '[name="display_name"] input', "test3");
+        await clickSave(target);
+        assert.containsN(
+            target,
+            ".alert .o_field_translate",
+            2,
+            "should have two translate fields in translation alert"
+        );
+        const statusBarY = target.querySelector(".o_form_statusbar").getBoundingClientRect().top;
+        const translateAlertY = target
+            .querySelector(".alert .o_field_translate")
+            .getBoundingClientRect().top;
+        assert.ok(translateAlertY > statusBarY, "translation alert should be below status bar");
+        await click(target.querySelector(".alert .o_field_translate")); // open the first dialog (foo)
+        assert.containsOnce(
+            target,
+            ".modal .o_translation_dialog",
+            "should have opened a translation dialog"
+        );
+        await click(target, ".modal button.btn-primary"); // save
+        assert.containsNone(
+            target,
+            ".modal .o_translation_dialog",
+            "translation dialog should be closed"
+        );
+        assert.containsOnce(
+            target,
+            ".alert .o_field_translate",
+            "should have one translate fields in translation alert foo was already opened"
+        );
+        await click(target.querySelector(".alert .o_field_translate")); // open the second dialog (display_name)
+        assert.containsOnce(
+            target,
+            ".modal .o_translation_dialog",
+            "should have opened a translation dialog"
+        );
+        await click(target, ".modal button.btn-primary"); // save
+        assert.containsNone(
+            target,
+            ".modal .o_translation_dialog",
+            "translation dialog should be closed"
+        );
+        assert.containsNone(
+            target,
+            ".alert .o_field_translate",
+            "should not have translation alert foo and display_name were already opened"
+        );
+    });
+
     QUnit.test("can save without any dirty translatable fields", async function (assert) {
         serverData.models.partner.fields.foo.translate = true;
 
