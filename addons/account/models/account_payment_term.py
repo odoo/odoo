@@ -85,9 +85,11 @@ class AccountPaymentTerm(models.Model):
             if record.early_discount:
                 date = record._get_last_discount_date_formatted(record.example_date)
                 discount_amount = record._get_amount_due_after_discount(record.example_amount, 0.0)
-                record.example_preview_discount = f"""
-                    Early Payment Discount: <b>{formatLang(self.env, discount_amount, monetary=True, currency_obj=currency)}</b> if paid before <b>{date}</b>
-                """
+                record.example_preview_discount = _(
+                    "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>",
+                    amount=formatLang(self.env, discount_amount, monetary=True, currency_obj=currency),
+                    date=date,
+                )
 
             if not record.example_invalid:
                 terms = record._compute_terms(
@@ -102,14 +104,13 @@ class AccountPaymentTerm(models.Model):
                 for i, info_by_dates in enumerate(record._get_amount_by_date(terms).values()):
                     date = info_by_dates['date']
                     amount = info_by_dates['amount']
-                    example_preview += f"""
-                        <div>
-                            <b>{i+1}#</b>
-                            Installment of
-                            <b>{formatLang(self.env, amount, monetary=True, currency_obj=currency)}</b>
-                            due on 
-                            <b style='color: #704A66;'>{date}</b>
-                    """
+                    example_preview += "<div>"
+                    example_preview += _(
+                        "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: #704A66;'>%(date)s</b>",
+                        count=i+1,
+                        amount=formatLang(self.env, amount, monetary=True, currency_obj=currency),
+                        date=date,
+                    )
                     example_preview += "</div>"
 
             record.example_preview = example_preview
