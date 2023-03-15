@@ -9,7 +9,7 @@
           <RippleEffect t-props="getRippleEffectProps(ripple.id)"/>
         </t>
       </div>
-      <div t-ref="childContainer">
+      <div class="position-relative" t-ref="childContainer">
         <t t-slot="default"/>
       </div>
     </div>
@@ -46,16 +46,14 @@
       t-on-contextmenu.prevent="">
       <Ripple>
         <div
-          class="o-sheet-item o-add-sheet position-relative me-2 p-1"
+          class="o-sheet-item o-add-sheet me-2 p-1"
           t-att-class="{'disabled': env.model.getters.isReadonly()}"
           t-on-click="clickAddSheet">
           <t t-call="o-spreadsheet-Icon.PLUS"/>
         </div>
       </Ripple>
       <Ripple>
-        <div
-          class="o-sheet-item o-list-sheets position-relative me-2 p-1"
-          t-on-click="clickListSheets">
+        <div class="o-sheet-item o-list-sheets me-2 p-1" t-on-click="clickListSheets">
           <t t-call="o-spreadsheet-Icon.LIST"/>
         </div>
       </Ripple>
@@ -135,7 +133,7 @@
   <t t-name="o-spreadsheet-BottomBarSheet" owl="1">
     <Ripple>
       <div
-        class="o-sheet position-relative d-flex align-items-center user-select-none text-nowrap "
+        class="o-sheet d-flex align-items-center user-select-none text-nowrap "
         t-on-mousedown="(ev) => this.onMouseDown(ev)"
         t-on-contextmenu.prevent="(ev) => this.onContextMenu(ev)"
         t-ref="sheetDiv"
@@ -154,9 +152,7 @@
           t-on-keydown="(ev) => this.onKeyDown(ev)"
           t-att-contenteditable="state.isEditing.toString()"
         />
-        <span
-          class="o-sheet-icon position-relative ms-1"
-          t-on-click.stop="(ev) => this.onIconClick(ev)">
+        <span class="o-sheet-icon ms-1" t-on-click.stop="(ev) => this.onIconClick(ev)">
           <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
         </span>
       </div>
@@ -167,7 +163,7 @@
     <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
     <Ripple class="'ms-auto'" t-if="selectedStatistic !== undefined">
       <div
-        class="o-selection-statistic position-relative text-truncate user-select-none me-4 bg-white rounded shadow"
+        class="o-selection-statistic text-truncate user-select-none me-4 bg-white rounded shadow"
         t-on-click="listSelectionStatistics">
         <t t-esc="selectedStatistic"/>
         <span class="ms-2">
@@ -521,6 +517,7 @@
       <div
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
+        t-on-contextmenu.prevent.stop="onContextMenu"
         t-ref="figure"
         t-att-style="props.style"
         tabindex="0"
@@ -532,6 +529,21 @@
           onFigureDeleted="props.onFigureDeleted"
           figure="props.figure"
         />
+        <div class="o-figure-menu position-absolute m-2" t-if="!env.isDashboard()">
+          <div
+            class="o-figure-menu-item"
+            t-on-click="showMenu"
+            t-ref="menuButton"
+            t-on-contextmenu.prevent.stop="showMenu">
+            <t t-call="o-spreadsheet-Icon.LIST"/>
+          </div>
+          <Menu
+            t-if="menuState.isOpen"
+            position="menuState.position"
+            menuItems="menuState.menuItems"
+            onClose="() => this.menuState.isOpen=false"
+          />
+        </div>
       </div>
       <div class="o-figure-border w-100 h-100 position-absolute pe-none" t-att-style="borderStyle"/>
       <t t-if="isSelected">
@@ -580,30 +592,11 @@
   </t>
 
   <t t-name="o-spreadsheet-ChartFigure" owl="1">
-    <div
-      class="o-chart-container w-100 h-100"
-      t-ref="chartContainer"
-      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and this.onContextMenu(ev)">
-      <div class="o-figure-menu" t-if="!env.isDashboard()">
-        <div
-          class="o-figure-menu-item"
-          t-on-click="showMenu"
-          t-ref="menuButton"
-          t-on-contextmenu.prevent.stop="showMenu">
-          <t t-call="o-spreadsheet-Icon.LIST"/>
-        </div>
-      </div>
+    <div class="o-chart-container w-100 h-100">
       <t
         t-component="chartComponent"
         figure="this.props.figure"
         t-key="this.props.figure.id + '-' + chartType"
-      />
-
-      <Menu
-        t-if="menuState.isOpen"
-        position="menuState.position"
-        menuItems="menuState.menuItems"
-        onClose="() => this.menuState.isOpen=false"
       />
     </div>
   </t>
@@ -634,27 +627,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ImageFigure" owl="1">
-    <div class="o-figure-menu" t-if="!env.isDashboard()">
-      <div
-        class="o-figure-menu-item"
-        t-on-click="showMenu"
-        t-ref="menuButton"
-        t-on-contextmenu.prevent.stop="showMenu">
-        <t t-call="o-spreadsheet-Icon.LIST"/>
-      </div>
-    </div>
-    <img
-      t-ref="o-image"
-      t-att-src="getImagePath"
-      class="w-100 h-100"
-      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and this.onContextMenu(ev)"
-    />
-    <Menu
-      t-if="menuState.isOpen"
-      position="menuState.position"
-      menuItems="menuItems"
-      onClose="() => this.menuState.isOpen=false"
-    />
+    <img t-att-src="getImagePath" class="w-100 h-100"/>
   </t>
 
   <t t-name="o-spreadsheet-FilterIcon" owl="1">
@@ -763,7 +736,7 @@
         type="number"
         min="1"
         max="400"
-        class="o-font-size bg-transparent border-0"
+        class="o-font-size bg-transparent border-0 ps-1"
         t-on-keydown="onInputKeydown"
         t-on-click.stop=""
         t-on-focus.stop="onInputFocused"
@@ -1100,7 +1073,7 @@
   <t t-name="o-spreadsheet-Icon.UNDO" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M11.5656391,4.43436088 L9,7 L16,7 L16,0 L13.0418424,2.95815758 C11.5936787,1.73635959 9.72260775,1 7.67955083,1 C4.22126258,1 1.25575599,3.10984908 0,6 L2,7 C2.93658775,4.60974406 5.12943697,3.08011229 7.67955083,3 C9.14881247,3.0528747 10.4994783,3.57862053 11.5656391,4.43436088 Z"
         transform="matrix(-1 0 0 1 17 5)"
       />
@@ -1109,7 +1082,7 @@
   <t t-name="o-spreadsheet-Icon.REDO" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M11.5656391,4.43436088 L9,7 L16,7 L16,0 L13.0418424,2.95815758 C11.5936787,1.73635959 9.72260775,1 7.67955083,1 C4.22126258,1 1.25575599,3.10984908 0,6 L2,7 C2.93658775,4.60974406 5.12943697,3.08011229 7.67955083,3 C9.14881247,3.0528747 10.4994783,3.57862053 11.5656391,4.43436088 Z"
         transform="translate(1 5)"
       />
@@ -1118,7 +1091,7 @@
   <t t-name="o-spreadsheet-Icon.PAINT_FORMAT" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M9,0 L1,0 C0.45,0 0,0.45 0,1 L0,4 C0,4.55 0.45,5 1,5 L9,5 C9.55,5 10,4.55 10,4 L10,3 L11,3 L11,6 L4,6 L4,14 L6,14 L6,8 L13,8 L13,2 L10,2 L10,1 C10,0.45 9.55,0 9,0 Z"
         transform="translate(3 2)"
       />
@@ -1127,7 +1100,7 @@
   <t t-name="o-spreadsheet-Icon.CLEAR_FORMAT" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M0.27,1.55 L5.43,6.7 L3,12 L5.5,12 L7.14,8.42 L11.73,13 L13,11.73 L1.55,0.27 L0.27,1.55 L0.27,1.55 Z M3.82,0 L5.82,2 L7.58,2 L7.03,3.21 L8.74,4.92 L10.08,2 L14,2 L14,0 L3.82,0 L3.82,0 Z"
         transform="translate(2 3)"
       />
@@ -1135,28 +1108,28 @@
   </t>
   <t t-name="o-spreadsheet-Icon.TRIANGLE_DOWN" owl="1">
     <svg class="o-icon">
-      <polygon fill="#000000" points="0 0 4 4 8 0" transform="translate(5 7)"/>
+      <polygon fill="currentColor" points="0 0 4 4 8 0" transform="translate(5 7)"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.TRIANGLE_UP" owl="1">
     <svg class="o-icon">
-      <polygon fill="#000000" points="4 0 0 4 8 4" transform="translate(5 7)"/>
+      <polygon fill="currentColor" points="4 0 0 4 8 4" transform="translate(5 7)"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.TRIANGLE_RIGHT" owl="1">
     <svg class="o-icon">
-      <polygon fill="#000000" points="0 0 4 4 0 8" transform="translate(5 5)"/>
+      <polygon fill="currentColor" points="0 0 4 4 0 8" transform="translate(5 5)"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.TRIANGLE_LEFT" owl="1">
     <svg class="o-icon">
-      <polygon fill="#000000" points="4 0 0 4 4 8" transform="translate(5 5)"/>
+      <polygon fill="currentColor" points="4 0 0 4 4 8" transform="translate(5 5)"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.BOLD" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         fill-rule="evenodd"
         d="M9,3.5 C9,1.57 7.43,0 5.5,0 L1.77635684e-15,0 L1.77635684e-15,12 L6.25,12 C8.04,12 9.5,10.54 9.5,8.75 C9.5,7.45 8.73,6.34 7.63,5.82 C8.46,5.24 9,4.38 9,3.5 Z M5,2 C5.82999992,2 6.5,2.67 6.5,3.5 C6.5,4.33 5.82999992,5 5,5 L3,5 L3,2 L5,2 Z M3,10 L3,7 L5.5,7 C6.32999992,7 7,7.67 7,8.5 C7,9.33 6.32999992,10 5.5,10 L3,10 Z"
         transform="translate(4 3)"
@@ -1166,7 +1139,7 @@
   <t t-name="o-spreadsheet-Icon.ITALIC" owl="1">
     <svg class="o-icon">
       <polygon
-        fill="#000000"
+        fill="currentColor"
         fill-rule="evenodd"
         points="4 0 4 2 6.58 2 2.92 10 0 10 0 12 8 12 8 10 5.42 10 9.08 2 12 2 12 0"
         transform="translate(3 3)"
@@ -1176,7 +1149,7 @@
   <t t-name="o-spreadsheet-Icon.UNDERLINE" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M6,12 C8.76,12 11,9.76 11,7 L11,0 L9,0 L9,7 C9,8.75029916 7.49912807,10 6,10 C4.50087193,10 3,8.75837486 3,7 L3,0 L1,0 L1,7 C1,9.76 3.24,12 6,12 Z M0,13 L0,15 L12,15 L12,13 L0,13 Z"
         transform="translate(3 3)"
       />
@@ -1185,7 +1158,7 @@
   <t t-name="o-spreadsheet-Icon.STRIKE" owl="1">
     <svg class="o-icon">
       <path
-        fill="#010101"
+        fill="currentColor"
         fill-rule="evenodd"
         d="M2.8875,3.06 C2.8875,2.6025 2.985,2.18625 3.18375,1.8075 C3.3825,1.42875 3.66,1.10625 4.02,0.84 C4.38,0.57375 4.80375,0.3675 5.29875,0.22125 C5.79375,0.075 6.33375,0 6.92625,0 C7.53375,0 8.085,0.0825 8.58,0.25125 C9.075,0.42 9.49875,0.6525 9.85125,0.95625 C10.20375,1.25625 10.47375,1.6125 10.665,2.02875 C10.85625,2.44125 10.95,2.895 10.95,3.38625 L8.6925,3.38625 C8.6925,3.1575 8.655,2.94375 8.58375,2.74875 C8.5125,2.55 8.4,2.38125 8.25,2.2425 C8.1,2.10375 7.9125,1.99125 7.6875,1.91625 C7.4625,1.8375 7.19625,1.8 6.88875,1.8 C6.5925,1.8 6.3375,1.83375 6.11625,1.8975 C5.89875,1.96125 5.71875,2.05125 5.57625,2.1675 C5.43375,2.28375 5.325,2.41875 5.25375,2.5725 C5.1825,2.72625 5.145,2.895 5.145,3.0675 C5.145,3.4275 5.32875,3.73125 5.69625,3.975 C5.71780203,3.98908066 5.73942012,4.00311728 5.76118357,4.01733315 C6.02342923,4.18863185 6.5,4.5 7,5 L4,5 C4,5 3.21375,4.37625 3.17625,4.30875 C2.985,3.9525 2.8875,3.53625 2.8875,3.06 Z M14,6 L0,6 L0,8 L7.21875,8 C7.35375,8.0525 7.51875,8.105 7.63125,8.15375 C7.90875,8.2775 8.12625,8.40875 8.28375,8.53625 C8.44125,8.6675 8.54625,8.81 8.6025,8.96 C8.65875,9.11375 8.685,9.28625 8.685,9.47375 C8.685,9.65 8.65125,9.815 8.58375,9.965 C8.51625,10.11875 8.41125,10.25 8.2725,10.35875 C8.13375,10.4675 7.95375,10.55375 7.74,10.6175 C7.5225,10.68125 7.27125,10.71125 6.97875,10.71125 C6.6525,10.71125 6.35625,10.6775 6.09,10.61375 C5.82375,10.55 5.59875,10.445 5.41125,10.3025 C5.22375,10.16 5.0775,9.9725 4.9725,9.74375 C4.8675,9.515 4.78125,9.17 4.78125,9 L2.55,9 C2.55,9.2525 2.61,9.6875 2.72625,10.025 C2.8425,10.3625 3.0075,10.66625 3.21375,10.9325 C3.42,11.19875 3.6675,11.4275 3.94875,11.6225 C4.23,11.8175 4.53375,11.9825 4.86375,12.11 C5.19375,12.24125 5.535,12.33875 5.89875,12.39875 C6.25875,12.4625 6.6225,12.4925 6.9825,12.4925 C7.5825,12.4925 8.13,12.425 8.6175,12.28625 C9.105,12.1475 9.525,11.94875 9.87,11.69375 C10.215,11.435 10.48125,11.12 10.6725,10.74125 C10.86375,10.3625 10.95375,9.935 10.95375,9.455 C10.95375,9.005 10.875,8.6 10.72125,8.24375 C10.68375,8.1575 10.6425,8.075 10.59375,7.9925 L14,8 L14,6 Z"
         transform="translate(2 3)"
@@ -1196,7 +1169,7 @@
   <t t-name="o-spreadsheet-Icon.TEXT_COLOR" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M7,0 L5,0 L0.5,12 L2.5,12 L3.62,9 L8.37,9 L9.49,12 L11.49,12 L7,0 L7,0 Z M4.38,7 L6,2.67 L7.62,7 L4.38,7 L4.38,7 Z"
         transform="translate(3 1)"
       />
@@ -1205,7 +1178,7 @@
   <t t-name="o-spreadsheet-Icon.FILL_COLOR" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M14.5,8.87 C14.5,8.87 13,10.49 13,11.49 C13,12.32 13.67,12.99 14.5,12.99 C15.33,12.99 16,12.32 16,11.49 C16,10.5 14.5,8.87 14.5,8.87 L14.5,8.87 Z M12.71,6.79 L5.91,0 L4.85,1.06 L6.44,2.65 L2.29,6.79 C1.9,7.18 1.9,7.81 2.29,8.2 L6.79,12.7 C6.99,12.9 7.24,13 7.5,13 C7.76,13 8.01,12.9 8.21,12.71 L12.71,8.21 C13.1,7.82 13.1,7.18 12.71,6.79 L12.71,6.79 Z M4.21,7 L7.5,3.71 L10.79,7 L4.21,7 L4.21,7 Z"
       />
     </svg>
@@ -1213,7 +1186,7 @@
   <t t-name="o-spreadsheet-Icon.MERGE_CELL" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M3,6 L1,6 L1,2 L8,2 L8,4 L3,4 L3,6 Z M10,4 L10,2 L17,2 L17,6 L15,6 L15,4 L10,4 Z M10,14 L15,14 L15,12 L17,12 L17,16 L10,16 L10,14 Z M1,12 L3,12 L3,14 L8,14 L8,16 L1,16 L1,12 Z M1,8 L5,8 L5,6 L8,9 L5,12 L5,10 L1,10 L1,8 Z M10,9 L13,6 L13,8 L17,8 L17,10 L13,10 L13,12 L10,9 Z"
       />
     </svg>
@@ -1221,7 +1194,7 @@
   <t t-name="o-spreadsheet-Icon.ALIGN_LEFT" owl="1">
     <svg class="o-icon align-left">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M0,14 L10,14 L10,12 L0,12 L0,14 Z M10,4 L0,4 L0,6 L10,6 L10,4 Z M0,0 L0,2 L14,2 L14,0 L0,0 Z M0,10 L14,10 L14,8 L0,8 L0,10 Z"
         transform="translate(2 2)"
       />
@@ -1230,7 +1203,7 @@
   <t t-name="o-spreadsheet-Icon.ALIGN_CENTER" owl="1">
     <svg class="o-icon align-center">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M2,12 L2,14 L12,14 L12,12 L2,12 Z M2,4 L2,6 L12,6 L12,4 L2,4 Z M0,10 L14,10 L14,8 L0,8 L0,10 Z M0,0 L0,2 L14,2 L14,0 L0,0 Z"
         transform="translate(2 2)"
       />
@@ -1239,7 +1212,7 @@
   <t t-name="o-spreadsheet-Icon.ALIGN_RIGHT" owl="1">
     <svg class="o-icon align-right">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M4,14 L14,14 L14,12 L4,12 L4,14 Z M0,10 L14,10 L14,8 L0,8 L0,10 Z M0,0 L0,2 L14,2 L14,0 L0,0 Z M4,6 L14,6 L14,4 L4,4 L4,6 Z"
         transform="translate(2 2)"
       />
@@ -1247,54 +1220,55 @@
   </t>
   <t t-name="o-spreadsheet-Icon.ALIGN_TOP" owl="1">
     <svg class="o-icon align-top" width="20" height="20">
-      <rect x="3" y="2" width="12" height="2"/>
-      <rect x="8" y="9" width="2" height="7"/>
-      <polygon points="5.5 9 12.5 9 9 5.5"/>
+      <rect x="3" y="2" width="12" height="2" fill="currentColor"/>
+      <rect x="8" y="9" width="2" height="7" fill="currentColor"/>
+      <polygon points="5.5 9 12.5 9 9 5.5" fill="currentColor"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.ALIGN_MIDDLE" owl="1">
     <svg class="o-icon align-middle" width="20" height="20">
-      <polygon points="12.5 3 10 3 10 0 8 0 8 3 5.5 3 9 6.5"/>
-      <polygon points="5.5 15 8 15 8 18 10 18 10 15 12.5 15 9 11.5"/>
-      <rect x="3" y="8" width="12" height="2"/>
+      <polygon points="12.5 3 10 3 10 0 8 0 8 3 5.5 3 9 6.5" fill="currentColor"/>
+      <polygon points="5.5 15 8 15 8 18 10 18 10 15 12.5 15 9 11.5" fill="currentColor"/>
+      <rect x="3" y="8" width="12" height="2" fill="currentColor"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.ALIGN_BOTTOM" owl="1">
     <svg class="o-icon align-bottom" width="20" height="20">
-      <rect x="3" y="14" width="12" height="2"/>
-      <rect x="8" y="2" width="2" height="7"/>
-      <polygon points="5.5 9 12.5 9 9 12.5"/>
+      <rect x="3" y="14" width="12" height="2" fill="currentColor"/>
+      <rect x="8" y="2" width="2" height="7" fill="currentColor"/>
+      <polygon points="5.5 9 12.5 9 9 12.5" fill="currentColor"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.WRAPPING_OVERFLOW" owl="1">
     <svg class="o-icon wrapping-overflow" width="20" height="20">
-      <rect x="2" y="2" width="2" height="14"/>
-      <rect x="9" y="2" width="2" height="4"/>
-      <rect x="9" y="12" width="2" height="4"/>
-      <polygon points="13 8 6 8 6 10 13 10 13 12 16 9 13 6"/>
+      <rect x="2" y="2" width="2" height="14" fill="currentColor"/>
+      <rect x="9" y="2" width="2" height="4" fill="currentColor"/>
+      <rect x="9" y="12" width="2" height="4" fill="currentColor"/>
+      <polygon points="13 8 6 8 6 10 13 10 13 12 16 9 13 6" fill="currentColor"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.WRAPPING_WRAP" owl="1">
-    <svg class="o-icon wrapping-wrap" width="20" height="20">
-      <rect x="2" y="2" width="2" height="14"/>
-      <rect x="14" y="2" width="2" height="14"/>
+    <svg class="o-icon wrapping-wrap" width="20" height="20" fill="currentColor">
+      <rect x="2" y="2" width="2" height="14" fill="currentColor"/>
+      <rect x="14" y="2" width="2" height="14" fill="currentColor"/>
       <path
+        fill="currentColor"
         d="M6,5 L6,7 L9.75,7 C10.5,7 11.25,7.67 11.25,8.5 C11.25,9.25 10.5,10 9.75,10 L8,10 L8,12 L9.5,12 C11.5,12 13,10.5 13,8.5 C13,6.5 11.5,5 9.5,5 L6,5 Z"
       />
-      <polygon points="8 10 8 8 5 11 8 14 8 12"/>
+      <polygon points="8 10 8 8 5 11 8 14 8 12" fill="currentColor"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.WRAPPING_CLIP" owl="1">
     <svg class="o-icon wrapping-clip" width="20" height="20">
-      <rect x="2" y="2" width="2" height="14"/>
-      <rect x="14" y="2" width="2" height="14"/>
-      <rect x="6" y="8" width="8" height="2"/>
+      <rect x="2" y="2" width="2" height="14" fill="currentColor"/>
+      <rect x="14" y="2" width="2" height="14" fill="currentColor"/>
+      <rect x="6" y="8" width="8" height="2" fill="currentColor"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.BORDERS" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M0,0 L0,14 L14,14 L14,0 L0,0 L0,0 Z M6,12 L2,12 L2,8 L6,8 L6,12 L6,12 Z M6,6 L2,6 L2,2 L6,2 L6,6 L6,6 Z M12,12 L8,12 L8,8 L12,8 L12,12 L12,12 Z M12,6 L8,6 L8,2 L12,2 L12,6 L12,6 Z"
         transform="translate(2 2)"
       />
@@ -1302,8 +1276,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_HV" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M2,3 L0,3 L0,5 L2,5 L2,3 L2,3 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M11,0 L9,0 L9,2 L11,2 L11,0 L11,0 Z M2,0 L0,0 L0,2 L2,2 L2,0 L2,0 Z M5,0 L3,0 L3,2 L5,2 L5,0 L5,0 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z"
           opacity=".54"
         />
@@ -1313,8 +1288,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_H" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z"
           opacity=".54"
         />
@@ -1324,8 +1300,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_V" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z"
           opacity=".54"
         />
@@ -1335,8 +1312,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_EXTERNAL" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M8,3 L6,3 L6,5 L8,5 L8,3 L8,3 Z M11,6 L9,6 L9,8 L11,8 L11,6 L11,6 Z M8,6 L6,6 L6,8 L8,8 L8,6 L8,6 Z M8,9 L6,9 L6,11 L8,11 L8,9 L8,9 Z M5,6 L3,6 L3,8 L5,8 L5,6 L5,6 Z"
           opacity=".54"
         />
@@ -1346,8 +1324,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_LEFT" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z"
           opacity=".54"
         />
@@ -1357,8 +1336,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_TOP" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z"
           opacity=".54"
         />
@@ -1368,8 +1348,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_RIGHT" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z"
           opacity=".54"
         />
@@ -1379,8 +1360,9 @@
   </t>
   <t t-name="o-spreadsheet-Icon.BORDER_BOTTOM" owl="1">
     <svg class="o-icon">
-      <g fill="#000000" transform="translate(2 2)">
+      <g fill="currentColor" transform="translate(2 2)">
         <path
+          fill="currentColor"
           d="M5,0 L3,0 L3,2 L5,2 L5,0 L5,0 Z M8,6 L6,6 L6,8 L8,8 L8,6 L8,6 Z M8,9 L6,9 L6,11 L8,11 L8,9 L8,9 Z M11,6 L9,6 L9,8 L11,8 L11,6 L11,6 Z M5,6 L3,6 L3,8 L5,8 L5,6 L5,6 Z M11,0 L9,0 L9,2 L11,2 L11,0 L11,0 Z M8,3 L6,3 L6,5 L8,5 L8,3 L8,3 Z M8,0 L6,0 L6,2 L8,2 L8,0 L8,0 Z M2,9 L0,9 L0,11 L2,11 L2,9 L2,9 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M2,0 L0,0 L0,2 L2,2 L2,0 L2,0 Z M2,3 L0,3 L0,5 L2,5 L2,3 L2,3 Z M2,6 L0,6 L0,8 L2,8 L2,6 L2,6 Z"
           opacity=".54"
         />
@@ -1391,7 +1373,7 @@
   <t t-name="o-spreadsheet-Icon.BORDER_CLEAR" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         fill-rule="evenodd"
         d="M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z"
         transform="translate(2 2)"
@@ -1403,16 +1385,16 @@
   <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
     <svg class="o-icon">
       <path
-        fill="#000000"
+        fill="currentColor"
         d="M8,0 L10,0 L10,8 L18,8 L18,10 L10,10 L10,18 L8,18 L8,10 L0,10 L0,8 L8,8"
       />
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.LIST" owl="1">
     <svg class="o-icon" viewBox="0 0 384 384">
-      <rect x="0" y="277.333" width="384" height="42.667"/>
-      <rect x="0" y="170.667" width="384" height="42.667"/>
-      <rect x="0" y="64" width="384" height="42.667"/>
+      <rect x="0" y="277.333" width="384" height="42.667" fill="currentColor"/>
+      <rect x="0" y="170.667" width="384" height="42.667" fill="currentColor"/>
+      <rect x="0" y="64" width="384" height="42.667" fill="currentColor"/>
     </svg>
   </t>
 
@@ -1583,7 +1565,7 @@
       focusable="false"
       viewBox="0 0 850 850">
       <path
-        fill="#000"
+        fill="currentColor"
         d="M 339.667 681 L 510.333 681 L 510.333 595.667 L 339.667 595.667 L 339.667 681 Z M 41 169 L 41 254.333 L 809 254.333 L 809 169 L 41 169 Z M 169 467.667 L 681 467.667 L 681 382.333 L 169 382.333 L 169 467.667 Z"
       />
     </svg>
@@ -1596,7 +1578,7 @@
       focusable="false"
       viewBox="0 0 512 512">
       <path
-        fill="#188038"
+        fill="currentColor"
         d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
       />
     </svg>
@@ -1609,7 +1591,7 @@
       focusable="false"
       viewBox="0 0 512 512">
       <path
-        fill="#606162"
+        fill="currentColor"
         d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"
       />
     </svg>
@@ -1617,7 +1599,7 @@
   <t t-name="o-spreadsheet-Icon.SEARCH" owl="1">
     <svg class="search-icon" width="10" height="10" focusable="false" viewBox="0 0 512 512">
       <path
-        fill="#949494"
+        fill="currentColor"
         d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"
       />
     </svg>
@@ -3149,15 +3131,17 @@
   </t>
 
   <t t-name="o-spreadsheet-TopBar" owl="1">
-    <div class="o-spreadsheet-topbar o-two-columns" t-on-click="props.onClick">
-      <div class="o-topbar-top">
+    <div
+      class="o-spreadsheet-topbar o-two-columns bg-white d-flex flex-column user-select-none"
+      t-on-click="props.onClick">
+      <div class="o-topbar-top d-flex justify-content-between">
         <!-- Menus -->
-        <div class="o-topbar-topleft">
+        <div class="o-topbar-topleft d-flex">
           <t t-foreach="menus" t-as="menu" t-key="menu_index">
             <div
               t-if="menu.children.length !== 0"
-              class="o-topbar-menu"
-              t-att-class="{'o-topbar-menu-active': state.menuState.parentMenu and state.menuState.parentMenu.id === menu.id}"
+              class="o-topbar-menu o-topbar-hoverable rounded"
+              t-att-class="{'active': state.menuState.parentMenu and state.menuState.parentMenu.id === menu.id}"
               t-on-click="(ev) => this.toggleContextMenu(menu, ev)"
               t-on-mouseover="(ev) => this.onMenuMouseOver(menu, ev)"
               t-att-data-id="menu.id">
@@ -3171,7 +3155,7 @@
             onClose="() => this.closeMenus()"
           />
         </div>
-        <div class="o-topbar-topright">
+        <div class="o-topbar-topright d-flex justify-content-end">
           <div t-foreach="topbarComponents" t-as="comp" t-key="comp.id">
             <t t-component="comp.component"/>
           </div>
@@ -3179,61 +3163,66 @@
       </div>
       <!-- Toolbar and Cell Content -->
       <div class="d-flex">
-        <div class="o-topbar-toolbar">
+        <div class="o-topbar-toolbar d-flex flex-shrink-0">
           <!-- Toolbar -->
-          <div t-if="env.model.getters.isReadonly()" class="o-readonly-toolbar text-muted">
+          <div
+            t-if="env.model.getters.isReadonly()"
+            class="o-readonly-toolbar d-flex align-items-center text-muted">
             <span>
               <i class="fa fa-eye"/>
               Readonly Access
             </span>
           </div>
-          <div t-else="" class="o-toolbar-tools">
+          <div t-else="" class="o-toolbar-tools d-flex flex-shrink-0 ms-4">
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Undo (Ctrl+Z)"
               t-att-class="{'o-disabled': !undoTool}"
               t-on-click="undo">
               <t t-call="o-spreadsheet-Icon.UNDO"/>
             </div>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               t-att-class="{'o-disabled': !redoTool}"
               title="Redo (Ctrl+Y)"
               t-on-click="redo">
               <t t-call="o-spreadsheet-Icon.REDO"/>
             </div>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Paint Format"
               t-att-class="{active:paintFormatTool}"
               t-on-click="paintFormat">
               <t t-call="o-spreadsheet-Icon.PAINT_FORMAT"/>
             </div>
-            <div class="o-tool" title="Clear Format" t-on-click="clearFormatting">
+            <div
+              class="o-tool o-topbar-hoverable"
+              title="Clear Format"
+              t-on-click="clearFormatting">
               <t t-call="o-spreadsheet-Icon.CLEAR_FORMAT"/>
             </div>
             <div class="o-divider"/>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Format as percent"
               t-on-click="(ev) => this.toggleFormat('percent', ev)">
               %
             </div>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Decrease decimal places"
               t-on-click="(ev) => this.setDecimal(-1, ev)">
               .0
             </div>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Increase decimal places"
               t-on-click="(ev) => this.setDecimal(+1, ev)">
               .00
             </div>
             <div class="o-dropdown">
               <div
-                class="o-tool o-dropdown-button o-text-icon"
+                class="o-tool o-topbar-hoverable o-dropdown-button"
                 title="More formats"
                 t-on-click="(ev) => this.toggleDropdownTool('formatTool', ev)">
                 123
@@ -3246,10 +3235,10 @@
                 t-on-click.stop="">
                 <t t-foreach="commonFormats" t-as="commonFormat" t-key="commonFormat.name">
                   <div
-                    class="o-dropdown-item"
+                    class="o-dropdown-item o-topbar-hoverable"
                     t-att-data-format="commonFormat.name"
                     t-on-click="() => this.setFormat(commonFormat.name)"
-                    t-att-class="{active: currentFormatName === commonFormat.name}">
+                    t-att-class="{'o-dropdown-active': currentFormatName === commonFormat.name}">
                     <t t-esc="commonFormat.text"/>
                     <span class="float-end text-muted" t-esc="commonFormat.description"/>
                   </div>
@@ -3257,7 +3246,7 @@
                 <t t-foreach="customFormats" t-as="customFormat" t-key="customFormat.name">
                   <div
                     t-att-data-custom="customFormat.name"
-                    class="o-dropdown-item"
+                    class="o-dropdown-item o-topbar-hoverable"
                     t-on-click="() => this.setFormat(customFormat.name, true)">
                     <t t-esc="customFormat.text"/>
                   </div>
@@ -3268,21 +3257,21 @@
             <FontSizeEditor onToggle="() => this.onClick()" dropdownStyle="this.dropdownStyle"/>
             <div class="o-divider"/>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Bold (Ctrl+B)"
               t-att-class="{active:style.bold}"
               t-on-click="(ev) => this.toggleStyle('bold', ev)">
               <t t-call="o-spreadsheet-Icon.BOLD"/>
             </div>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Italic (Ctrl+I)"
               t-att-class="{active:style.italic}"
               t-on-click="(ev) => this.toggleStyle('italic', ev)">
               <t t-call="o-spreadsheet-Icon.ITALIC"/>
             </div>
             <div
-              class="o-tool"
+              class="o-tool o-topbar-hoverable"
               title="Strikethrough"
               t-att-class="{active:style.strikethrough}"
               t-on-click="(ev) => this.toggleStyle('strikethrough', ev)">
@@ -3297,7 +3286,7 @@
                 title="env._t('Text Color')"
                 icon="'o-spreadsheet-Icon.TEXT_COLOR'"
                 dropdownMaxHeight="this.props.dropdownMaxHeight"
-                class="'o-tool o-dropdown-button'"
+                class="'o-tool o-dropdown-button o-topbar-hoverable'"
               />
             </div>
             <div class="o-divider"/>
@@ -3310,12 +3299,12 @@
                 title="env._t('Fill Color')"
                 icon="'o-spreadsheet-Icon.FILL_COLOR'"
                 dropdownMaxHeight="this.props.dropdownMaxHeight"
-                class="'o-tool o-dropdown-button'"
+                class="'o-tool o-dropdown-button o-topbar-hoverable'"
               />
             </div>
             <div class="o-dropdown">
               <div
-                class="o-tool o-dropdown-button"
+                class="o-tool o-topbar-hoverable o-dropdown-button"
                 title="Borders"
                 t-on-click="(ev) => this.toggleDropdownTool('borderTool', ev)">
                 <span>
@@ -3328,43 +3317,63 @@
                 t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div class="o-dropdown-line">
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('all')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('all')">
                     <t t-call="o-spreadsheet-Icon.BORDERS"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('hv')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('hv')">
                     <t t-call="o-spreadsheet-Icon.BORDER_HV"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('h')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('h')">
                     <t t-call="o-spreadsheet-Icon.BORDER_H"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('v')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('v')">
                     <t t-call="o-spreadsheet-Icon.BORDER_V"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('external')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('external')">
                     <t t-call="o-spreadsheet-Icon.BORDER_EXTERNAL"/>
                   </span>
                 </div>
                 <div class="o-dropdown-line">
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('left')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('left')">
                     <t t-call="o-spreadsheet-Icon.BORDER_LEFT"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('top')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('top')">
                     <t t-call="o-spreadsheet-Icon.BORDER_TOP"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('right')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('right')">
                     <t t-call="o-spreadsheet-Icon.BORDER_RIGHT"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('bottom')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('bottom')">
                     <t t-call="o-spreadsheet-Icon.BORDER_BOTTOM"/>
                   </span>
-                  <span class="o-line-item" t-on-click="(ev) => this.setBorder('clear')">
+                  <span
+                    class="o-line-item o-topbar-hoverable"
+                    t-on-click="(ev) => this.setBorder('clear')">
                     <t t-call="o-spreadsheet-Icon.BORDER_CLEAR"/>
                   </span>
                 </div>
               </div>
             </div>
             <div
-              class="o-tool o-merge-tool"
+              class="o-tool o-topbar-hoverable o-merge-tool"
               title="Merge Cells"
               t-att-class="{active:inMerge, 'o-disabled': cannotMerge}"
               t-on-click="toggleMerge">
@@ -3373,7 +3382,7 @@
             <div class="o-divider"/>
             <div class="o-dropdown">
               <div
-                class="o-tool o-dropdown-button"
+                class="o-tool o-topbar-hoverable o-dropdown-button"
                 title="Horizontal align"
                 t-on-click="(ev) => this.toggleDropdownTool('horizontalAlignTool', ev)">
                 <span>
@@ -3395,19 +3404,18 @@
                 t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
-                  title="Left"
+                  class="o-dropdown-item o-topbar-hoverable o-dropdown-align-item"
                   t-on-click="() => this.toggleHorizontalAlign('left')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_LEFT"/>
                 </div>
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Center"
                   t-on-click="() => this.toggleHorizontalAlign('center')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_CENTER"/>
                 </div>
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Right"
                   t-on-click="() => this.toggleHorizontalAlign('right')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_RIGHT"/>
@@ -3416,7 +3424,7 @@
             </div>
             <div class="o-dropdown">
               <div
-                class="o-tool o-dropdown-button"
+                class="o-tool o-topbar-hoverable o-dropdown-button"
                 title="Vertical align"
                 t-on-click="(ev) => this.toggleDropdownTool('verticalAlignTool', ev)">
                 <span>
@@ -3438,19 +3446,19 @@
                 t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Top"
                   t-on-click="() => this.toggleVerticalAlign('top')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_TOP"/>
                 </div>
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Middle"
                   t-on-click="() => this.toggleVerticalAlign('middle')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_MIDDLE"/>
                 </div>
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Bottom"
                   t-on-click="() => this.toggleVerticalAlign('bottom')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_BOTTOM"/>
@@ -3459,7 +3467,7 @@
             </div>
             <div class="o-dropdown">
               <div
-                class="o-tool o-dropdown-button"
+                class="o-tool o-topbar-hoverable o-dropdown-button"
                 title="Text wrapping"
                 t-on-click="(ev) => this.toggleDropdownTool('textWrappingTool', ev)">
                 <span>
@@ -3481,19 +3489,19 @@
                 t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Overflow"
                   t-on-click="() => this.toggleTextWrapping('overflow')">
                   <t t-call="o-spreadsheet-Icon.WRAPPING_OVERFLOW"/>
                 </div>
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Wrap"
                   t-on-click="() => this.toggleTextWrapping('wrap')">
                   <t t-call="o-spreadsheet-Icon.WRAPPING_WRAP"/>
                 </div>
                 <div
-                  class="o-dropdown-item o-dropdown-align-item"
+                  class="o-dropdown-item o-dropdown-align-item o-topbar-hoverable"
                   title="Clip"
                   t-on-click="() => this.toggleTextWrapping('clip')">
                   <t t-call="o-spreadsheet-Icon.WRAPPING_CLIP"/>
@@ -3503,14 +3511,14 @@
             <div class="o-divider"/>
             <div
               t-if="selectionContainsFilter"
-              class="o-tool o-filter-tool o-tool-outlined"
+              class="o-tool o-topbar-hoverable o-filter-tool active"
               title="Remove selected filters"
               t-on-click="removeFilter">
               <t t-call="o-spreadsheet-Icon.FILTER_ICON_ACTIVE"/>
             </div>
             <div
               t-else=""
-              class="o-tool o-filter-tool"
+              class="o-tool o-topbar-hoverable o-filter-tool"
               t-att-class="{'o-disabled': cannotCreateFilter}"
               title="Create a filter"
               t-on-click="createFilter">
@@ -3526,3 +3534,8 @@
     </div>
   </t>
 </odoo>
+<!--
+  __info__.version = '16.3.0-alpha.0';
+  __info__.date = '2023-03-15T16:35:15.644Z';
+  __info__.hash = '1633f09';
+-->
