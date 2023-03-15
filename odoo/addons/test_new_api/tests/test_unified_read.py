@@ -326,5 +326,5 @@ class TestUnifiedRead(TransactionCase):
         # should we ignore this ? in the python we will not use the limits, and in the RPC we won't delete and read in the same transaction with limits
         pass
 
-# def test_many2many_respects_order(self):
-#     pass
+    def test_many2many_respects_order(self):
+        pass

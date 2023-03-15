@@ -3097,8 +3097,13 @@ class BaseModel(metaclass=MetaModel):
 
         if isinstance(specification, collections.abc.Sequence):
             specification = { field_name : {} for field_name in specification }
+            for field_name, field_spec in specification.items():
+                field = self._fields.get(field_name)
+                if field and field.type in ['many2one']:
+                    specification[field_name] = {'fields': {'display_name': {}}}
 
-        # TODO VSC: only prefetch the fields for the records respecting the limit
+        # TODO VSC: should only prefetch the fields for the records respecting the limit
+        # TODO VSC: for x2many reentry in this function, the prefetch should have already fetched
         self.browse(self._prefetch_ids).fetch(specification.keys())
         records = []
 
