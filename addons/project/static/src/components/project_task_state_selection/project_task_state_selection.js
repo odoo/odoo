@@ -109,7 +109,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
      * Either the isToggleMode is active on the record OR the task is_private
      */
     get isToggleMode() {
-        return this.props.isToggleMode || this.props.record.data.is_private;
+        return this.props.isToggleMode || !this.props.record.data.project_id;
     }
 
     async toggleState() {
