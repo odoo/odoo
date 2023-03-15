@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <templates id="template" xml:space="preserve">
+	<t t-extend="web.UserMenu">
+        <t t-jquery=".dropdown-divider" t-operation="before">
+            <div role="separator" class="dropdown-divider"/>
+            <a role="menuitem" href="#" data-menu="debug" class="dropdown-item"><i class="fa fa-eye"></i>   Activate the developer mode</a>
+            <a role="menuitem" href="#" data-menu="quitdebug" class="dropdown-item"><i class="fa fa-eye-slash"></i>   Deactivate the developer mode</a>
+        </t>
+    </t>
+</templates> -->
+
+<templates xml:space="preserve">
+    <!--owl 处理继承继承-->
+    <t t-name="UserMenu" t-inherit="web.UserMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//td[hasclass('client-line-email')]" position="after">
+        <t t-jquery="a[data-menu='documentation']" t-operation="before">
+            <switch-lang/>
+            <a role="menuitem" href="#" data-menu="debug" class="dropdown-item"><i class="fa fa-eye"></i>Activate the developer mode</a>
+            <a role="menuitem" href="#" data-menu="quitdebug" class="dropdown-item"><i class="fa fa-eye-slash"></i>Deactivate the developer mode</a>
+            <div role="separator" class="dropdown-divider"/>
+            <a role="menuitem" href="#" data-menu="documentation_dev" class="dropdown-item">Developer Manual</a>
+        </t>
+    </xpath>
+    </t>
+</templates>

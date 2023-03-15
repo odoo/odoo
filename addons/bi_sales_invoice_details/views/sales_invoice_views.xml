@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+	<record id="view_order_form_inherit_sale_invoice" model="ir.ui.view">
+		<field name="name">sale.order.form.salesinvoice.module</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form"/>
+		<field name="arch" type="xml">
+
+		<xpath expr="//button[@name='action_view_invoice']" position="after">
+			<button name="action_amount_paid" type="object" class="oe_stat_button " icon="fa-pencil-square-o" attrs="{'invisible': [('invoice_count', '=', 0)]}" >
+				<field name="amount_paid_percent" widget="statinfo" string="Amount Paid Percent"/>
+			</button>
+		</xpath>
+
+
+
+			<xpath expr="//field[@name='note']" position="after" >
+			<group>
+					<group>
+						<field name="currency_id" invisible="1"/>
+						<field name="invoiced_amount" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="True"/>
+						<field name="amount_due" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="True"/>
+						<field name="paid_amount" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="True"/>
+					</group> 
+	   
+			 </group>   
+			</xpath>
+			
+		</field>
+
+	</record>
+</odoo>
