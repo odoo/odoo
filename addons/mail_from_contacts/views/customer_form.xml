@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_respartner_form" model="ir.ui.view">
+        <field name="name">res.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']//div[@class='oe_kanban_details']//field[@name='email']" position="after">
+			    <button name="%(mail.action_email_compose_message_wizard)d" type="action"
+                 class="btn btn-sm btn-link fa fa-envelope-o" context="{'default_partner_ids': [id]}" />
+			</xpath>
+        </field>
+    </record>
+</odoo>
