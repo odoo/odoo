@@ -96,7 +96,9 @@
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
             <pivot string="Work Entries" sample="1">
-                <field name="duration" widget="float_time" readonly="1"/>
+                <field name="duration" widget="float_time" type="measure"/>
+                <field name="employee_id" type="row"/>
+                <field name="work_entry_type_id" type="col"/>
             </pivot>
         </field>
     </record>
