@@ -48,8 +48,12 @@ const TableOfContent = publicWidget.Widget.extend({
         this.$target.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
         if (this.previousPosition !== position) {
             // The scrollSpy must be destroyed before calling it again.
-            // Otherwise the call has no effect.
-            this.$scrollingElement.scrollspy('dispose');
+            // Otherwise the call has no effect. We also need to be sure that
+            // a scrollSpy instance exists to avoid targeting elements outside
+            // the table of content navbar on scrollSpy methods.
+            if (this.$scrollingElement.data('bs.scrollspy')) {
+                this.$scrollingElement.scrollspy('dispose');
+            }
             this.$scrollingElement.scrollspy({
                 target: '.s_table_of_content_navbar',
                 method: 'offset',
