@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.X2ManyField" owl="1">
-        <div t-attf-class="o_field_x2many o_field_x2many_{{props.viewMode}}">
+        <div t-att-class="{ [archInfo.className]: archInfo.className }" t-attf-class="o_field_x2many o_field_x2many_{{props.viewMode}}">
             <div class="o_x2m_control_panel">
                 <t t-if="displayControlPanelButtons">
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
