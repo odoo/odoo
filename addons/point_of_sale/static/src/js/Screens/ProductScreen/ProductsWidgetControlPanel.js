@@ -35,47 +35,16 @@ export class ProductsWidgetControlPanel extends Component {
     }
     updateSearch(event) {
         this.props.updateSearch(this.env.pos.searchProductWord);
-        if (event.key === "Enter") {
-            this._onPressEnterKey();
-        }
     }
     async _onPressEnterKey() {
         if (!this.env.pos.searchProductWord) {
             return;
         }
-        const result = await this.loadProductFromDB();
-        this.notification.add(
-            _.str.sprintf(
-                this.env._t('%s product(s) found for "%s".'),
-                result.length,
-                this.env.pos.searchProductWord
-            ),
-            3000
-        );
+        this.props.loadProductFromServer();
     }
     searchProductFromInfo(productName) {
         this.env.pos.searchProductWord = productName;
         this.props.switchCategory(0);
         this.props.updateSearch(productName);
-    }
-    async loadProductFromDB() {
-        if (!this.env.pos.searchProductWord) {
-            return;
-        }
-
-        const ProductIds = await this.orm.search("product.product", [
-            "&",
-            ["available_in_pos", "=", true],
-            "|",
-            "|",
-            ["name", "ilike", this.env.pos.searchProductWord],
-            ["default_code", "ilike", this.env.pos.searchProductWord],
-            ["barcode", "ilike", this.env.pos.searchProductWord],
-        ]);
-        if (ProductIds.length) {
-            await this.env.pos._addProducts(ProductIds, false);
-        }
-        this.props.updateProductList();
-        return ProductIds;
     }
 }
