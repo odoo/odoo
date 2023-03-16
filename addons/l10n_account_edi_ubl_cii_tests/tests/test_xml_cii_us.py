@@ -53,8 +53,11 @@ class TestCIIUS(TestUBLCommon):
         )
 
         # Default XML acting as the default EDI
-        edi_attachment = invoice.cii_xml_id
-        self.assertTrue(edi_attachment)
+        edi_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', invoice.id)
+        ])
+        self.assertEqual(edi_attachment.name, "factur-x.xml")
 
     def test_import_facturx_us_company(self):
         """ Even for a US company, importing a PDF containing a Factur-X xml
