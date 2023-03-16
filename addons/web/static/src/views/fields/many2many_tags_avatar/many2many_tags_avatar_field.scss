@@ -81,20 +81,26 @@
     }
 }
 .o_m2m_tags_avatar_field_popover {
-    max-width: 280px;
+    z-index: $zindex-modal - 1;
+    width: 280px;
+    font-size: $dropdown-font-size;
+    .o_input.o_tags_input {
+        border: none;
+    }
     .dropdown-menu {
         width: 275px;
     }
-}
-.o_field_many2many_tags_avatar_kanban {
-    .o_field_tags .o_tag .o_delete {
-        margin-left: -12px;
-        margin-top: -4px;
-        width: 12px;
-        height: 12px;
-        visibility: hidden;
+    .o-autocomplete--dropdown-menu {
+        font-size: $dropdown-font-size;
+        .dropdown-item {
+            padding: $o-dropdown-vpadding $o-dropdown-hpadding/2;
+        }
     }
-    .o_allow_delete_hover:hover .o_delete {
-        visibility: visible;
+    .o-autocomplete .o-autocomplete--input.o_input {
+        border: 1px solid var(--o-input-border-color);
+        border-width: 0 0 1px 0;
+        margin-bottom: .5rem;
+        padding-bottom: 0.25rem;
+        background-color: var(--o-input-background-color, transparent);
     }
 }

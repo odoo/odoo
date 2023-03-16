@@ -347,14 +347,14 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
     assert.containsN(
         document.body,
         ".o_kanban_record:first .o_field_many2many_avatar_employee img.o_m2m_avatar",
-        3,
-        "should have 2 avatar images and the default empty avatar"
+        2,
+        "should have 2 avatar images"
     );
     assert.strictEqual(
         document
             .querySelector(".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar")
             .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+        `/web/image/hr.employee.public/${employeeId_2}/avatar_128`,
     );
     assert.strictEqual(
         document
@@ -362,11 +362,11 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
                 ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
             )[1]
             .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_2}/avatar_128`
+        `/web/image/hr.employee.public/${employeeId_1}/avatar_128`,
     );
 
-    await dom.click(document.querySelector(".o_kanban_record .o_m2m_avatar"));
-    await dom.click(document.querySelectorAll(".o_kanban_record .o_m2m_avatar")[1]);
+    await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[1]);
+    await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[0]);
     assert.verifySteps([
         `read hr.employee.public ${employeeId_1},${employeeId_2}`,
         `read hr.employee.public ${employeeId_1}`,
