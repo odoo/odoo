@@ -1126,7 +1126,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if self.pool.get(model) and issubclass(self.pool.get(model), self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
 
     def _get_search_domain_share(self):
