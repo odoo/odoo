@@ -73,6 +73,10 @@ odoo.define('website.s_website_form', function (require) {
             return res;
         },
         start: function () {
+            // Reset the form first, as it is still filled when coming back
+            // after a redirect.
+            this.$target[0].reset();
+
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
             for (const fieldEl of this.$target[0].querySelectorAll('[data-visibility-dependency]')) {
@@ -354,7 +358,7 @@ odoo.define('website.s_website_form', function (require) {
 
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
-                            return;
+                            break;
                         }
                         default: {
                             // Prevent double-clicking on the send button and
