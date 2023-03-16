@@ -118,8 +118,8 @@ class MassMailController(http.Controller):
     @http.route('/mail/track/<int:mail_id>/<string:token>/blank.gif', type='http', auth='public')
     def track_mail_open(self, mail_id, token, **post):
         """ Email tracking. """
-        mail = request.env['mail.mail'].sudo().browse(mail_id).exists()
-        if not mail or not consteq(token, mail._generate_mail_recipient_token()):
+        expected_token = request.env['mail.mail']._generate_mail_recipient_token(mail_id)
+        if not consteq(token, expected_token):
             raise BadRequest()
 
         request.env['mailing.trace'].sudo().set_opened(domain=[('mail_mail_id_int', 'in', [mail_id])])
