@@ -41,10 +41,14 @@ export class AutoComplete extends Component {
         });
 
         // position and size
-        usePosition(() => this.inputRef.el, {
-            popper: "sourcesList",
-            position: "bottom-start",
-        });
+        if (this.props.dropdown) {
+            usePosition(() => this.inputRef.el, {
+                popper: "sourcesList",
+                position: "bottom-start",
+            });
+        } else {
+            this.open(false);
+        }
     }
 
     get isOpened() {
@@ -98,6 +102,9 @@ export class AutoComplete extends Component {
         Promise.all(proms).then(() => {
             this.navigate(0);
         });
+    }
+    get displayOptions() {
+        return !this.props.dropdown || (this.isOpened && this.hasOptions);
     }
     loadOptions(options, request) {
         if (typeof options === "function") {
@@ -234,7 +241,16 @@ export class AutoComplete extends Component {
         this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
         this.props.onFocus(ev);
     }
-
+    get autoCompleteRootClass() {
+        let classList = "";
+        if (this.props.class) {
+            classList += this.props.class;
+        }
+        if (this.props.dropdown) {
+            classList += " dropdown";
+        }
+        return classList;
+    }
     onInputKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
@@ -324,12 +340,14 @@ Object.assign(AutoComplete, {
         onBlur: { type: Function, optional: true },
         onFocus: { type: Function, optional: true },
         input: { type: Function, optional: true },
+        dropdown: { type: Boolean, optional: true },
         autofocus: { type: Boolean, optional: true },
         class: { type: String, optional: true },
     },
     defaultProps: {
         placeholder: "",
         autoSelect: false,
+        dropdown: true,
         onInput: () => {},
         onChange: () => {},
         onBlur: () => {},

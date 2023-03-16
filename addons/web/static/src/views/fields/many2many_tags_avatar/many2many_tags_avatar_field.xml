@@ -26,20 +26,14 @@
     </t>
 
     <t t-name="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary" owl="1">
-        <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="after">
-            <img t-elif="!props.readonly" src="/web/static/img/user_menu_avatar.png" title="Quick assign" alt="Quick assign"
-                 t-on-click.stop.prevent="openPopover" class="o_m2m_avatar rounded-circle align-self-center"/>
+        <xpath expr="//t[@t-foreach='visibleTags']" position="before">
+            <t t-if="canDisplayQuickAssignAvatar">
+                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" title="Assign"
+                   aria-label="Assign" class="fa fa-user-plus o_quick_assign o_m2m_avatar d-flex align-items-center"/>
+            </t>
         </xpath>
         <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="attributes">
             <attribute name="t-on-click.stop.prevent">openPopover</attribute>
-        </xpath>
-        <xpath expr="//span[@t-att-title='tag.text']" position="attributes">
-            <attribute name="t-att-class">{'o_allow_delete_hover': canDisplayDelete}</attribute>
-        </xpath>
-        <xpath expr="//a[hasclass('o_delete')]" position="attributes">
-            <attribute name="class" remove="fa-times" add="fa-times-circle fs-6 text-danger bg-white align-self-start z-index-1 pt-0 rounded-circle" separator=" " />
-            <attribute name="title">Remove</attribute>
-            <attribute name="aria-label">Remove</attribute>
         </xpath>
     </t>
 
@@ -52,14 +46,16 @@
     </t>
     <t t-name="web.Many2ManyTagsAvatarFieldPopover" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary" owl="1">
         <xpath expr="//div[hasclass('o_field_tags')]" position="attributes">
-            <attribute name="class" add="p-1 o_m2m_tags_avatar_field_popover o_field_widget o_field_many2many_tags_avatar" remove="d-inline-flex mw-100" separator=" " />
+            <attribute name="class" add="p-2 o_m2m_tags_avatar_field_popover o_field_widget o_field_many2many_tags_avatar" remove="d-inline-flex mw-100" separator=" " />
         </xpath>
         <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="attributes">
             <attribute name="class" add="w-100" separator=" " />
         </xpath>
-        <xpath expr="//TagsList" position="attributes">
-            <attribute name="tags" remove="tags" add="state.tags" />
-        </xpath>
+        <Many2XAutocomplete position="attributes">
+            <attribute name="dropdown">false</attribute>
+            <attribute name="placeholder">props.placeholder</attribute>
+            <attribute name="autofocus">true</attribute>
+        </Many2XAutocomplete>
     </t>
 
 </templates>

@@ -59,10 +59,10 @@ QUnit.test("many2many_avatar_user in kanban view", async (assert) => {
     );
     const tags = document.querySelectorAll(".o_popover > .o_field_tags > .o_tag");
     assert.strictEqual(tags.length, 4);
-    assert.strictEqual(tags[0].innerText.trim(), "Mario");
-    assert.strictEqual(tags[1].innerText.trim(), "Yoshi");
-    assert.strictEqual(tags[2].innerText.trim(), "Luigi");
-    assert.strictEqual(tags[3].innerText.trim(), "Tapu");
+    assert.strictEqual(tags[0].innerText.trim(), "Tapu");
+    assert.strictEqual(tags[1].innerText.trim(), "Luigi");
+    assert.strictEqual(tags[2].innerText.trim(), "Yoshi");
+    assert.strictEqual(tags[3].innerText.trim(), "Mario");
 });
 
 QUnit.test(

@@ -11,7 +11,6 @@ import { PopoverController } from "./popover_controller";
  *   popoverClass?: string;
  *   position?: import("@web/core/position_hook").Direction;
  *   onPositioned?: import("@web/core/position_hook").PositionEventHandler;
- *   preventClose?: () => void;
  * }} PopoverServiceAddOptions
  */
 

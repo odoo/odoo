@@ -384,6 +384,8 @@ Many2XAutocomplete.props = {
     autoSelect: { type: Boolean, optional: true },
     isToMany: { type: Boolean, optional: true },
     autocomplete_container: { type: Function, optional: true },
+    dropdown: { type: Boolean, optional: true },
+    autofocus: { type: Boolean, optional: true },
 };
 Many2XAutocomplete.defaultProps = {
     searchLimit: 7,
@@ -393,6 +395,7 @@ Many2XAutocomplete.defaultProps = {
     setInputFloats: () => {},
     quickCreate: null,
     context: {},
+    dropdown: true,
 };
 
 export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
