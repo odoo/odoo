@@ -353,12 +353,12 @@
                                     <field name="barcode_nomenclature_id"/>
                                 </div>
                             </setting>
-                        </block>
-
-                        <block title="Technical" id="pos_technical_section" groups="base.group_no_one">
                             <setting id="update_quantities_stock_setting" groups="base.group_no_one" string="Inventory Management" company_dependent="1" help="Update quantities in stock">
                                 <field name="update_stock_quantities" colspan="4" widget="radio"/>
                             </setting>
+                        </block>
+
+                        <block title="Technical" id="pos_technical_section" groups="base.group_no_one">
                             <setting string="Limited Products Loading" help="Only load most common products at the opening of the PoS.">
                                 <field name="pos_limited_products_loading"/>
                                 <div class="content-group mt16" attrs="{'invisible' : [('pos_limited_products_loading', '=', False)]}">

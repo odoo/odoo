@@ -175,6 +175,7 @@ Tour.register('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui' }, get
 
 startSteps();
 
+ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 ProductScreen.exec.addOrderline('Product Test', '1');
 ProductScreen.do.clickPayButton();

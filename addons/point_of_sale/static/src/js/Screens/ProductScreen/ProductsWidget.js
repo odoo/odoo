@@ -4,6 +4,8 @@ import PosComponent from "@point_of_sale/js/PosComponent";
 import { useListener } from "@web/core/utils/hooks";
 import Registries from "@point_of_sale/js/Registries";
 import { usePos } from "@point_of_sale/app/pos_store";
+import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
+import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
 const { useState } = owl;
 
@@ -17,8 +19,8 @@ class ProductsWidget extends PosComponent {
         useListener("switch-category", this._switchCategory);
         useListener("update-search", this._updateSearch);
         useListener("clear-search", this._clearSearch);
-        useListener("update-product-list", this._updateProductList);
-        this.state = useState({ searchWord: "" });
+        useListener("load-products-from-server", this._onPressEnterKey);
+        this.state = useState({ searchWord: "", previousSearchWord: "", currentOffset: 0 });
         this.pos = usePos();
     }
     get selectedCategoryId() {
@@ -73,9 +75,78 @@ class ProductsWidget extends PosComponent {
     _clearSearch() {
         this.state.searchWord = "";
     }
-    _updateProductList(event) {
+    _updateProductList() {
         this.render(true);
         this.trigger("switch-category", 0);
+    }
+    async _onPressEnterKey() {
+        if (!this.state.searchWord) {
+            return;
+        }
+        if (this.state.previousSearchWord != this.state.searchWord) {
+            this.state.currentOffset = 0;
+        }
+        const result = await this.loadProductFromDB();
+        if (result.length > 0) {
+            this.showNotification(
+                _.str.sprintf(
+                    this.env._t('%s product(s) found for "%s".'),
+                    result.length,
+                    this.state.searchWord
+                ),
+                3000
+            );
+        } else {
+            this.showNotification(
+                _.str.sprintf(
+                    this.env._t('No more product found for "%s".'),
+                    this.state.searchWord
+                ),
+                3000
+            );
+        }
+        if (this.state.previousSearchWord == this.state.searchWord) {
+            this.state.currentOffset += result.length;
+        } else {
+            this.state.previousSearchWord = this.state.searchWord;
+            this.state.currentOffset = result.length;
+        }
+    }
+    async loadProductFromDB() {
+        if(!this.state.searchWord)
+            return;
+
+        try {
+            const limit = 30;
+            let ProductIds = await this.rpc({
+                model: "product.product",
+                method: "search",
+                args: [['&',['available_in_pos', '=', true], '|','|',
+                    ['name', 'ilike', this.state.searchWord],
+                    ['default_code', 'ilike', this.state.searchWord],
+                    ['barcode', 'ilike', this.state.searchWord]]],
+                context: this.env.session.user_context,
+                kwargs: {
+                    offset: this.state.currentOffset,
+                    limit: limit,
+                }
+            });
+            if(ProductIds.length) {
+                await this.env.pos._addProducts(ProductIds, false);
+            }
+            this._updateProductList();
+            return ProductIds;
+        } catch (error) {
+            const identifiedError = identifyError(error)
+            if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
+                return this.showPopup("OfflineErrorPopup", {
+                    title: this.env._t("Network Error"),
+                    body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
+                });
+            } else {
+                throw error;
+            }
+        }
     }
 }
 ProductsWidget.template = "ProductsWidget";
