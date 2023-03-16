@@ -13,8 +13,6 @@
     'data': [
         'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
-        'views/res_partner_views.xml',
-        'views/res_company_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -112,7 +112,7 @@ class TestUBLBE(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice.ubl_xml_id,
+            invoice.ubl_cii_xml_id,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
@@ -170,7 +170,7 @@ class TestUBLBE(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund.ubl_xml_id,
+            refund.ubl_cii_xml_id,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
@@ -204,7 +204,7 @@ class TestUBLBE(TestUBLCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_encoding_in_attachment(invoice.ubl_xml_id, 'ubl_bis3.xml')
+        self._test_encoding_in_attachment(invoice.ubl_cii_xml_id, 'ubl_bis3.xml')
 
     ####################################################
     # Test import
@@ -217,7 +217,7 @@ class TestUBLBE(TestUBLCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_import_partner(invoice.cii_xml_id, self.partner_1, self.partner_2)
+        self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
     def test_import_export_invoice_xml(self):
         """
@@ -247,7 +247,7 @@ class TestUBLBE(TestUBLCommon):
             }],
         )
 
-        attachment = invoice.ubl_xml_id
+        attachment = invoice.ubl_cii_xml_id
         self.assertTrue(attachment)
 
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)

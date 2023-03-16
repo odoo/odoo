@@ -166,6 +166,7 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         composer_form = Form(
             self.env['account.move.send'].with_context(default_ctx)
         )
+        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
@@ -195,7 +196,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
                             {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                             {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                             {'name': _exp_report_name, 'type': 'application/pdf'},
-                            {'name': 'factur-x.xml', 'type': 'text/plain'}, # 'test_enable'
                         ],
                         'body_content': _exp_body_tip,
                         'email_from': self.user_account_other.email_formatted,
@@ -242,6 +242,7 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         composer_form = Form(
             self.env['account.move.send'].with_context(default_ctx)
         )
+        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -261,7 +262,7 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         )
 
         # print: template-based message
-        self.assertEqual(len(print_msg.attachment_ids), 4) # + factur-x.xml in tests
+        self.assertEqual(len(print_msg.attachment_ids), 3) # + factur-x.xml in tests
         self.assertNotIn(self.attachments, print_msg.attachment_ids,
                          'Attachments should be duplicated, not just linked')
         self.assertEqual(print_msg.author_id, self.user_account_other.partner_id,
@@ -285,7 +286,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                     {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                     {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
-                    {'name': 'factur-x.xml', 'type': 'text/plain'},
                 ],
                 'body_content': f'TemplateBody for {test_move.name}',
                 'email_from': self.user_account_other.email_formatted,
@@ -334,6 +334,7 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         composer_form = Form(
             self.env['account.move.send'].with_context(default_ctx)
         )
+        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -353,7 +354,7 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         )
 
         # print: template-based message
-        self.assertEqual(len(print_msg.attachment_ids), 4) # + factur-x.xml in tests
+        self.assertEqual(len(print_msg.attachment_ids), 3) # + factur-x.xml in tests
         self.assertNotIn(self.attachments, print_msg.attachment_ids,
                          'Attachments should be duplicated, not just linked')
         self.assertEqual(print_msg.author_id, self.user_account_other.partner_id,
@@ -377,7 +378,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                     {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                     {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
-                    {'name': 'factur-x.xml', 'type': 'text/plain'},
                 ],
                 'body_content': f'SpanishBody for {test_move.name}',  # translated version
                 'email_from': self.user_account_other.email_formatted,

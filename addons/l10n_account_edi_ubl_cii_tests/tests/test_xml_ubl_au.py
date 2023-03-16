@@ -87,7 +87,7 @@ class TestUBLAU(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice.ubl_xml_id,
+            invoice.ubl_cii_xml_id,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
@@ -145,7 +145,7 @@ class TestUBLAU(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund.ubl_xml_id,
+            refund.ubl_cii_xml_id,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>

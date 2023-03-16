@@ -16,59 +16,43 @@ _logger = logging.getLogger(__name__)
 class AccountMoveSend(models.Model):
     _inherit = 'account.move.send'
 
-    enable_ubl_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    checkbox_ubl_xml = fields.Boolean(
-        string="BIS Billing",
-        compute='_compute_checkbox_ubl_xml',
-        store=True,
-        readonly=False,
-    )
-
-    enable_cii_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    checkbox_cii_xml = fields.Boolean(
-        string="CII Billing",
-        compute='_compute_checkbox_cii_xml',
-        store=True,
-        readonly=False,
-    )
+    enable_ubl_cii_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')  # label for the checkbox_ubl_cii_xml field
+    checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
 
     @api.model
-    def _get_default_enable_cii_xml(self, move):
-        return move.journal_id._get_cii_builder() and\
-                not move.invoice_pdf_report_id and\
-                move.journal_id.checkbox_cii_xml
-
-    @api.model
-    def _get_default_enable_ubl_xml(self, move):
-        return move.journal_id._get_ubl_builder() and\
-                not move.invoice_pdf_report_id and\
-                move.journal_id.checkbox_ubl_xml
+    def _get_default_enable_ubl_cii_xml(self, move):
+        return not move.invoice_pdf_report_id and move.is_sale_document() and move.partner_id.ubl_cii_format
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('move_ids')
+    def _compute_checkbox_ubl_cii_label(self):
+        for wizard in self:
+            code_to_label = dict(wizard.move_ids.partner_id._fields['ubl_cii_format'].selection)
+            codes = wizard.move_ids.partner_id.mapped('ubl_cii_format')
+            if any(codes):
+                wizard.checkbox_ubl_cii_label = ", ".join(code_to_label[c] for c in codes)
+            else:
+                wizard.checkbox_ubl_cii_label = False
+
     def _compute_send_mail_extra_fields(self):
         # EXTENDS 'account'
         super()._compute_send_mail_extra_fields()
         for wizard in self:
-            wizard.enable_ubl_xml = any([self._get_default_enable_ubl_xml(m) for m in wizard.move_ids])
-            wizard.enable_cii_xml = any([self._get_default_enable_cii_xml(m) for m in wizard.move_ids])
+            wizard.enable_ubl_cii_xml = any(self._get_default_enable_ubl_cii_xml(m) for m in wizard.move_ids)
 
-    @api.depends('checkbox_ubl_xml', 'checkbox_cii_xml')
+    @api.depends('checkbox_ubl_cii_xml')
     def _compute_mail_attachments_widget(self):
         # EXTENDS 'account' - add depends
         super()._compute_mail_attachments_widget()
 
-    @api.depends('enable_cii_xml')
-    def _compute_checkbox_cii_xml(self):
+    @api.depends('enable_ubl_cii_xml')
+    def _compute_checkbox_ubl_cii_xml(self):
         for wizard in self:
-            wizard.checkbox_cii_xml = True
-
-    @api.depends('enable_ubl_xml')
-    def _compute_checkbox_ubl_xml(self):
-        for wizard in self:
-            wizard.checkbox_ubl_xml = True
+            wizard.checkbox_ubl_cii_xml = True
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
@@ -77,14 +61,14 @@ class AccountMoveSend(models.Model):
     @api.model
     def _get_linked_attachments(self, move):
         # EXTENDS 'account'
-        return super()._get_linked_attachments(move) + move.cii_xml_id + move.ubl_xml_id
+        return super()._get_linked_attachments(move) + move.ubl_cii_xml_id
 
     def _get_placeholder_mail_attachments_data(self, move):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move)
 
-        if self.enable_ubl_xml and self.checkbox_ubl_xml:
-            builder, _options = move.journal_id._get_ubl_builder()
+        if self.enable_ubl_cii_xml and self.checkbox_ubl_cii_xml:
+            builder = move.partner_id._get_edi_builder()
             filename = builder._export_invoice_filename(move)
             results.append({
                 'id': f'placeholder_{filename}',
@@ -103,50 +87,34 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         results = super()._prepare_document(invoice)
 
-        xmls_to_prepare = []
+        if self.checkbox_ubl_cii_xml and self._get_default_enable_ubl_cii_xml(invoice):
+            builder = invoice.partner_id._get_edi_builder()
 
-        # CII
-        cii_xml = self.checkbox_cii_xml and self._get_default_enable_cii_xml(invoice)
-        if cii_xml:
-            builder, options = invoice.journal_id._get_cii_builder()
-        else:
-            # Default XML acting as the default EDI for ODOO hidden from the users (facturx).
-            builder, options = self.env['account.edi.xml.cii'], {'skip_errors': True}
-
-        xmls_to_prepare.append(('cii', builder, options))
-
-        # UBL
-        ubl_xml = self.checkbox_ubl_xml and self._get_default_enable_ubl_xml(invoice)
-        if ubl_xml:
-            builder, options = invoice.journal_id._get_ubl_builder()
-            xmls_to_prepare.append(('ubl', builder, options))
-
-        for edi_type, builder, options in xmls_to_prepare:
             xml_content, errors = builder._export_invoice(invoice)
             filename = builder._export_invoice_filename(invoice)
 
             # Failed.
-            if errors and not options.get('skip_errors'):
+            if errors:
                 return {
                     'error': "".join([
-                        _("Errors occur while creating the EDI document (format: %s):", builder._description),
+                        _("Errors occured while creating the EDI document (format: %s):", builder._description),
                         "\n",
                         "<p><li>" + "</li><li>".join(errors) + "</li></p>" if self.mode == 'invoice_multi' \
                             else "\n".join(errors)
                     ]),
                 }
 
-            results[f'{edi_type}_xml_attachment_values'] = {
+            results['ubl_cii_xml_attachment_values'] = {
                 'name': filename,
                 'raw': xml_content,
                 'mimetype': 'application/xml',
                 'res_model': invoice._name,
                 'res_id': invoice.id,
-                'res_field': f'{edi_type}_xml_file', # Binary field
+                'res_field': 'ubl_cii_xml_file',  # Binary field
             }
-            results[f'{edi_type}_xml_options'] = {
+            results['ubl_cii_xml_options'] = {
+                'ubl_cii_format': invoice.partner_id.ubl_cii_format,
                 'builder': builder,
-                'options': options,
             }
 
         return results
@@ -155,15 +123,24 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         super()._postprocess_document(invoice, prepared_data)
 
-        cii_xml = prepared_data.get('cii_xml_attachment_values')
-        ubl_xml = prepared_data.get('ubl_xml_attachment_values')
-
         # Add PDF to XML
-        if ubl_xml:
+        if 'ubl_cii_xml_options' in prepared_data and prepared_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
             self._postprocess_invoice_ubl_xml(invoice, prepared_data)
 
-        # Add XML to PDF (for all -> inter-portability)
-        if tools.config['test_enable']: # during tests, no wkhtmltopdf:
+        # Always silently generate a Factur-X and embed it inside the PDF (inter-portability)
+        if 'ubl_cii_xml_options' in prepared_data and prepared_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx':
+            xml_facturx = prepared_data['ubl_cii_xml_attachment_values']['raw']
+        else:
+            xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
+
+        # during tests, no wkhtmltopdf, create the attachment for test purposes
+        if tools.config['test_enable']:
+            self.env['ir.attachment'].create({
+                'name': 'factur-x.xml',
+                'raw': xml_facturx,
+                'res_id': invoice.id,
+                'res_model': 'account.move',
+            })
             return
 
         # Read pdf content.
@@ -174,11 +151,12 @@ class AccountMoveSend(models.Model):
         writer = OdooPdfFileWriter()
         writer.cloneReaderDocumentRoot(reader)
 
-        writer.addAttachment(cii_xml['name'], cii_xml['raw'], subtype='text/xml')
+        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        options = prepared_data['cii_xml_options']['options']
-        if options.get('facturx_pdfa') and not writer.is_pdfa:
+        if 'ubl_cii_xml_options' in prepared_data \
+                and prepared_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx' \
+                and not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
             except Exception as e:
@@ -203,7 +181,7 @@ class AccountMoveSend(models.Model):
 
     def _postprocess_invoice_ubl_xml(self, invoice, prepared_data):
         # Add PDF to XML
-        tree = etree.fromstring(prepared_data['ubl_xml_attachment_values']['raw'])
+        tree = etree.fromstring(prepared_data['ubl_cii_xml_attachment_values']['raw'])
         anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
         if not anchor_elements:
             return
@@ -228,20 +206,14 @@ class AccountMoveSend(models.Model):
 
         anchor_index = tree.index(anchor_elements[0])
         tree.insert(anchor_index, etree.fromstring(to_inject))
-        prepared_data['ubl_xml_attachment_values']['raw'] = b"<?xml version='1.0' encoding='UTF-8'?>\n" \
+        prepared_data['ubl_cii_xml_attachment_values']['raw'] = b"<?xml version='1.0' encoding='UTF-8'?>\n" \
             + etree.tostring(cleanup_xml_node(tree))
 
     def _link_document(self, invoice, prepared_data):
         # EXTENDS 'account'
         super()._link_document(invoice, prepared_data)
 
-        ubl_attachment_vals = prepared_data.get('ubl_xml_attachment_values')
-        if ubl_attachment_vals:
-            self.env['ir.attachment'].create(ubl_attachment_vals)
-            invoice.invalidate_model(fnames=['ubl_xml_id', 'ubl_xml_file'])
-
-        # during tests, no wkhtmltopdf, but we want to check CII xml
-        if tools.config['test_enable']:
-            cii_attachment_vals = prepared_data.get('cii_xml_attachment_values')
-            self.env['ir.attachment'].create(cii_attachment_vals)
-            invoice.invalidate_model(fnames=['cii_xml_id', 'cii_xml_file'])
+        attachment_vals = prepared_data.get('ubl_cii_xml_attachment_values')
+        if attachment_vals:
+            self.env['ir.attachment'].create(attachment_vals)
+            invoice.invalidate_model(fnames=['ubl_cii_xml_id', 'ubl_cii_xml_file'])
