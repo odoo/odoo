@@ -48,7 +48,7 @@
         </t>
         <t t-else="">
             <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center p-4 text-muted fst-italic h-100">
-                <t t-if="props.thread.status !== 'loading'">
+                <t t-if="props.thread.isLoaded">
                     <t t-if="props.thread.isEmpty and props.thread.type === 'mailbox'">
                     <t t-if="props.thread.id === 'inbox'">
                         <h4 class="mb-3 fw-bolder">

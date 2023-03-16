@@ -150,8 +150,8 @@
 <t t-name="mail.Chatter.attachFiles" owl="1">
     <button class="btn btn-light" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
         <i class="fa fa-paperclip fa-lg me-1"/>
-        <span t-if="attachments.length > 0 and !state.thread.isLoadingAttachments" t-esc="attachments.length"/>
-        <i t-if="state.thread.isLoadingAttachments" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
+        <span t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>
 

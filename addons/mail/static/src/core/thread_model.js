@@ -26,6 +26,8 @@ export class Thread {
     uuid;
     /** @type {string} */
     model;
+    /** @type {boolean} */
+    areAttachmentsLoaded = false;
     /** @type {import("@mail/attachments/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {integer} */
