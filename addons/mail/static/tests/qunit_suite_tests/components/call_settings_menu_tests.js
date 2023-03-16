@@ -166,5 +166,42 @@ QUnit.test('activate blur', async function (assert) {
     );
 });
 
+QUnit.test("Inbox should not have any call settings menu", async (assert) => {
+    await startServer();
+    const { openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: "mail.box_inbox",
+            },
+        },
+    });
+    await openDiscuss();
+    assert.containsNone($, "button[title='Show Call Settings']");
+});
+
+QUnit.test("Call settings menu should not be visible on selecting a mailbox (from being open)", async (assert) => {
+    patchWithCleanup(browser, {
+        navigator: {
+            ...browser.navigator,
+            mediaDevices: {
+                enumerateDevices: () => Promise.resolve([]),
+            },
+        }
+    });
+    const pyEnv = await startServer();
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    const { click, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId}`,
+            },
+        },
+    });
+    await openDiscuss();
+    await click("button[title='Show Call Settings']");
+    await click("button:contains(Inbox)");
+    assert.containsNone($, "button[title='Hide Call Settings']");
+});
+
 });
 });
