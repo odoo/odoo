@@ -699,6 +699,9 @@ export const htmlField = {
         if ('collaborative' in options) {
             wysiwygOptions.collaborative = options.collaborative;
         }
+	    if ('style-inline' in options) {
+	        wysiwygOptions.inlineStyle = Boolean(options.styleInline);
+	    }
         if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.
