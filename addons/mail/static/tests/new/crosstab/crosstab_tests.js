@@ -6,6 +6,7 @@ import {
     insertText,
     start,
     startServer,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -99,27 +100,24 @@ QUnit.test("Channel subscription is renewed when channel is manually added", asy
     assert.verifySteps(["update-channels"]);
 });
 
-QUnit.test(
-    "Channel subscription is renewed when channel is added from invite",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Sales", channel_member_ids: [] });
-        const { env, openDiscuss } = await start();
-        patchWithCleanup(env.services["bus_service"], {
-            forceUpdateChannels() {
-                assert.step("update-channels");
-            },
+QUnit.test("Channel subscription is renewed when channel is added from invite", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "Sales", channel_member_ids: [] });
+    const { env, openDiscuss } = await start();
+    patchWithCleanup(env.services["bus_service"], {
+        forceUpdateChannels() {
+            assert.step("update-channels");
+        },
+    });
+    await openDiscuss();
+    // simulate receiving invite
+    await afterNextRender(() => {
+        env.services.orm.call("mail.channel", "add_members", [[channelId]], {
+            partner_ids: [pyEnv.currentPartnerId],
         });
-        await openDiscuss();
-        // simulate receiving invite
-        await afterNextRender(() => {
-            env.services.orm.call("mail.channel", "add_members", [[channelId]], {
-                partner_ids: [pyEnv.currentPartnerId],
-            });
-        });
-        assert.verifySteps(["update-channels"]);
-    }
-);
+    });
+    assert.verifySteps(["update-channels"]);
+});
 
 QUnit.test("Channel subscription is renewed when channel is left", async (assert) => {
     const pyEnv = await startServer();
@@ -222,4 +220,32 @@ QUnit.test("Remove member from channel", async (assert) => {
     env.services.orm.call("mail.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });
+});
+
+QUnit.test("Message delete notification", async (assert) => {
+    const pyEnv = await startServer();
+    const messageId = pyEnv["mail.message"].create({
+        body: "Needaction message",
+        model: "mail.channel",
+        res_id: pyEnv.currentPartnerId,
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId], // not needed, for consistency
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        notification_status: "sent",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("i[aria-label='Mark as Todo']");
+    assert.containsOnce($, "button:contains(Inbox) .badge");
+    assert.containsOnce($, "button:contains(Starred) .badge");
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartnerId, "mail.message/delete", {
+        message_ids: [messageId],
+    });
+    await waitUntil(".o-mail-Message", 0);
+    assert.containsNone($, "button:contains(Inbox) .badge");
+    assert.containsNone($, "button:contains(Starred) .badge");
 });

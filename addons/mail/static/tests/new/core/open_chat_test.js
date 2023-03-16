@@ -5,7 +5,7 @@ import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services
 
 QUnit.module("Open Chat test", {});
 
-QUnit.test("openChat: display notification for partner without user", async function (assert) {
+QUnit.test("openChat: display notification for partner without user", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { env } = await start({
@@ -23,7 +23,7 @@ QUnit.test("openChat: display notification for partner without user", async func
     assert.verifySteps(["notification"]);
 });
 
-QUnit.test("openChat: display notification for wrong user", async function (assert) {
+QUnit.test("openChat: display notification for wrong user", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["res.users"].create({});
     const { env } = await start({
@@ -39,7 +39,7 @@ QUnit.test("openChat: display notification for wrong user", async function (asse
     assert.verifySteps(["notification"]);
 });
 
-QUnit.test("openChat: open new chat for user", async function (assert) {
+QUnit.test("openChat: open new chat for user", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -51,7 +51,7 @@ QUnit.test("openChat: open new chat for user", async function (assert) {
     assert.containsOnce($, ".o-mail-ChatWindow");
 });
 
-QUnit.test("openChat: open existing chat for user", async function (assert) {
+QUnit.test("openChat: open existing chat for user", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });

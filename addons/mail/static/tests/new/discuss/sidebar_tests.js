@@ -1141,36 +1141,33 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
     assert.verifySteps([]);
 });
 
-QUnit.test(
-    "Group unread counter up to date after mention is marked as seen",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
-        const channelId = pyEnv["mail.channel"].create({
-            channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
-            ],
-            channel_type: "group",
-        });
-        const messageId = pyEnv["mail.message"].create({
-            author_id: partnerId,
-            model: "mail.channel",
-            res_id: channelId,
-            body: `@Mitchell Admin`,
-            needaction: true,
-        });
-        pyEnv["mail.notification"].create([
-            {
-                mail_message_id: messageId,
-                notification_type: "inbox",
-                res_partner_id: pyEnv.currentPartnerId,
-            },
-        ]);
-        const { openDiscuss } = await start();
-        await openDiscuss();
-        assert.containsOnce($, ".o-mail-DiscussCategoryItem-counter");
-        await click(".o-mail-DiscussCategoryItem");
-        await waitUntil(".o-mail-DiscussCategoryItem-counter", 0);
-    }
-);
+QUnit.test("Group unread counter up to date after mention is marked as seen", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
+    const channelId = pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+        channel_type: "group",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        model: "mail.channel",
+        res_id: channelId,
+        body: `@Mitchell Admin`,
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId,
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem-counter");
+    await click(".o-mail-DiscussCategoryItem");
+    await waitUntil(".o-mail-DiscussCategoryItem-counter", 0);
+});

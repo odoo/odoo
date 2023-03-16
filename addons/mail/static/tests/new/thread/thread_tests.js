@@ -841,7 +841,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("Thread messages are only loaded once", async function (assert) {
+QUnit.test("Thread messages are only loaded once", async (assert) => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["mail.channel"].create([{ name: "General" }, { name: "Sales" }]);
     const { openDiscuss } = await start({
@@ -876,7 +876,7 @@ QUnit.test("Thread messages are only loaded once", async function (assert) {
 
 QUnit.test(
     "Opening thread with needaction messages should mark all messages of thread as read",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "General" });
         const { env, openDiscuss } = await start({
@@ -926,7 +926,7 @@ QUnit.test(
 
 QUnit.test(
     "[technical] Opening thread without needaction messages should not mark all messages of thread as read",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "General" });
         const { env, openDiscuss } = await start({

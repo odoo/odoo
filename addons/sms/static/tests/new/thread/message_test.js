@@ -5,7 +5,7 @@ import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("sms_message");
 
-QUnit.test("Notification Sent", async function (assert) {
+QUnit.test("Notification Sent", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Someone", partner_share: true });
     const messageId = pyEnv["mail.message"].create({
@@ -34,7 +34,7 @@ QUnit.test("Notification Sent", async function (assert) {
     assert.containsOnce($, ".o-mail-MessageNotificationPopover:contains(Someone)");
 });
 
-QUnit.test("Notification Error", async function (assert) {
+QUnit.test("Notification Error", async (assert) => {
     const openResendActionDef = makeDeferred();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Someone", partner_share: true });

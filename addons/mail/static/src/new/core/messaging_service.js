@@ -268,6 +268,36 @@ export class Messaging {
                     this.messageService.insert(data);
                     break;
                 }
+                case "mail.message/delete": {
+                    for (const messageId of notif.payload.message_ids) {
+                        const message = this.store.messages[messageId];
+                        if (!message) {
+                            continue;
+                        }
+                        if (message.isNeedaction) {
+                            removeFromArrayWithPredicate(
+                                this.store.discuss.inbox.messages,
+                                ({ id }) => id === message.id
+                            );
+                            this.store.discuss.inbox.counter--;
+                        }
+                        if (message.isStarred) {
+                            removeFromArrayWithPredicate(
+                                this.store.discuss.starred.messages,
+                                ({ id }) => id === message.id
+                            );
+                            this.store.discuss.starred.counter--;
+                        }
+                        delete this.store.messages[messageId];
+                        if (message.originThread) {
+                            removeFromArrayWithPredicate(
+                                message.originThread,
+                                ({ id }) => id === message.id
+                            );
+                        }
+                    }
+                    break;
+                }
                 case "mail.message/mark_as_read": {
                     const { message_ids: messageIds, needaction_inbox_counter } = notif.payload;
                     for (const messageId of messageIds) {

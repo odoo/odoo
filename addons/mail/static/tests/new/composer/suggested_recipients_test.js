@@ -21,7 +21,7 @@ const views = {
 
 QUnit.module("suggested_recipients");
 
-QUnit.test("with 3 or less suggested recipients: no 'show more' button", async function (assert) {
+QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -39,7 +39,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
 
 QUnit.test(
     "more than 3 suggested recipients: display only 3 and 'show more' button",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -59,7 +59,7 @@ QUnit.test(
 
 QUnit.test(
     "more than 3 suggested recipients: show all of them on click 'show more' button",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -80,7 +80,7 @@ QUnit.test(
 
 QUnit.test(
     "more than 3 suggested recipients -> click 'show more' -> 'show less' button",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -101,7 +101,7 @@ QUnit.test(
 
 QUnit.test(
     "suggested recipients list display 3 suggested recipient and 'show more' button when 'show less' button is clicked",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -122,7 +122,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("suggest recipient on 'Send message' composer", async function (assert) {
+QUnit.test("suggest recipient on 'Send message' composer", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -138,7 +138,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
     assert.containsOnce($, ".o-mail-SuggestedRecipient input:checked");
 });
 
-QUnit.test("display reason for suggested recipient on mouse over", async function (assert) {
+QUnit.test("display reason for suggested recipient on mouse over", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -154,7 +154,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
     assert.strictEqual(partnerTitle, "Add as recipient and follower (reason: Email partner)");
 });
 
-QUnit.test("suggested recipient without partner are unchecked by default", async function (assert) {
+QUnit.test("suggested recipient without partner are unchecked by default", async (assert) => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
     const { openFormView } = await start({ serverData: { views } });
@@ -166,7 +166,7 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
     assert.notOk(checkboxUnchecked.checked);
 });
 
-QUnit.test("suggested recipient with partner are checked by default", async function (assert) {
+QUnit.test("suggested recipient with partner are checked by default", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -184,7 +184,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
 
 QUnit.test(
     "suggested recipients should not be notified when posting an internal note",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({
             display_name: "John Jane",
@@ -208,7 +208,7 @@ QUnit.test(
 
 QUnit.test(
     "suggested recipient without partner are unchecked when closing the dialog without creating partner",
-    async function (assert) {
+    async (assert) => {
         const pyEnv = await startServer();
         const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
         const { openFormView } = await start();

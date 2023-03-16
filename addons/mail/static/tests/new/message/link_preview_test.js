@@ -4,7 +4,7 @@ import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("link preview");
 
-QUnit.test("auto layout with link preview list", async function (assert) {
+QUnit.test("auto layout with link preview list", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -27,7 +27,7 @@ QUnit.test("auto layout with link preview list", async function (assert) {
     assert.containsOnce($, ".o-mail-Message .o-mail-LinkPreviewList");
 });
 
-QUnit.test("auto layout with link preview as gif", async function (assert) {
+QUnit.test("auto layout with link preview as gif", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -50,7 +50,7 @@ QUnit.test("auto layout with link preview as gif", async function (assert) {
     assert.containsOnce($, ".o-mail-LinkPreviewImage");
 });
 
-QUnit.test("simplest card layout", async function (assert) {
+QUnit.test("simplest card layout", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -73,7 +73,7 @@ QUnit.test("simplest card layout", async function (assert) {
     assert.containsOnce($, ".o-mail-LinkPreviewCard:contains(Description)");
 });
 
-QUnit.test("simplest card layout with image", async function (assert) {
+QUnit.test("simplest card layout with image", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -98,7 +98,7 @@ QUnit.test("simplest card layout with image", async function (assert) {
     assert.containsOnce($, ".o-mail-LinkPreviewCard img");
 });
 
-QUnit.test("Link preview video layout", async function (assert) {
+QUnit.test("Link preview video layout", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -123,7 +123,7 @@ QUnit.test("Link preview video layout", async function (assert) {
     assert.containsOnce($, ".o-mail-LinkPreviewVideo-overlay");
 });
 
-QUnit.test("Link preview image layout", async function (assert) {
+QUnit.test("Link preview image layout", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -143,7 +143,7 @@ QUnit.test("Link preview image layout", async function (assert) {
     assert.containsOnce($, ".o-mail-LinkPreviewImage");
 });
 
-QUnit.test("Remove link preview Gif", async function (assert) {
+QUnit.test("Remove link preview Gif", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -167,7 +167,7 @@ QUnit.test("Remove link preview Gif", async function (assert) {
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });
 
-QUnit.test("Remove link preview card", async function (assert) {
+QUnit.test("Remove link preview card", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -189,7 +189,7 @@ QUnit.test("Remove link preview card", async function (assert) {
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });
 
-QUnit.test("Remove link preview video", async function (assert) {
+QUnit.test("Remove link preview video", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -212,7 +212,7 @@ QUnit.test("Remove link preview video", async function (assert) {
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
 });
 
-QUnit.test("Remove link preview image", async function (assert) {
+QUnit.test("Remove link preview image", async (assert) => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
