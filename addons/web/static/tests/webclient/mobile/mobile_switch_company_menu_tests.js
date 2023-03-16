@@ -59,10 +59,10 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.expect(13);
 
         await createSwitchCompanyMenu();
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         assert.strictEqual(scMenuEl.tagName.toUpperCase(), "DIV");
-        assert.hasClass(scMenuEl, "o_burger_menu_companies");
+        assert.hasClass(scMenuEl, "o_hamburger_menu_companies");
         assert.containsN(scMenuEl, ".toggle_company", 3);
         assert.containsN(scMenuEl, ".log_into", 3);
         assert.containsOnce(scMenuEl, ".fa-check-square");
@@ -97,7 +97,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [x] **Company 1**
@@ -131,7 +131,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [x] **Company 1**
@@ -169,7 +169,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             },
         });
         const scMenu = await createSwitchCompanyMenu();
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [x] **Company 1**
@@ -203,7 +203,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             assert.step(url.split("#")[1]);
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [x] **Company 1**
@@ -233,7 +233,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         }
         Object.assign(browser.location, { hash: "cids=3%2C1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [x] Company 1
@@ -263,7 +263,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         }
         Object.assign(browser.location, { hash: "cids=2%2C3" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [ ] Company 1
@@ -292,7 +292,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             assert.step(url.split("#")[1]);
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
-        const scMenuEl = target.querySelector(".o_burger_menu_companies");
+        const scMenuEl = target.querySelector(".o_hamburger_menu_companies");
 
         /**
          *   [x] **Company 1**

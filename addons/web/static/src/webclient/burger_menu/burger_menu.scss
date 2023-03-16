@@ -2,7 +2,7 @@
 // Mobile Burger Menu
 //------------------------------------------------------------------------------
 
-.o_burger_menu {
+.o_hamburger_menu {
     width: 90%;
     z-index: $zindex-tooltip + 10;
     transition: transform .2s ease;
@@ -15,20 +15,20 @@
     }
 
     // ====== Top-Bar
-    .o_burger_menu_topbar {
+    .o_hamburger_menu_topbar {
         min-height: $o-navbar-height-xs;
         background-color: $o-burger-topbar-bg;
         color: $o-burger-topbar-color;
         line-height: $o-navbar-height-xs;
 
-        .dropdown-toggle, .o_burger_menu_close {
+        .dropdown-toggle, .o_hamburger_menu_close {
             padding: 0 $o-horizontal-padding;
         }
     }
 
     // ====== Menu content container (both App's and User's entries)
-    .o_burger_menu_content {
-        &.o_burger_menu_dark {
+    .o_hamburger_menu_content {
+        &.o_hamburger_menu_dark {
             background-color: darken($o-burger-base-bg, 5%);
         }
 

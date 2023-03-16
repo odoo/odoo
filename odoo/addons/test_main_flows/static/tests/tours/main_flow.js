@@ -20,7 +20,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Quotations')"),
     content: _t("Let's create products."),
     position: "bottom",
 }, {
-    trigger: ".o_menu_sections .dropdown-item:contains('Products'), nav.o_burger_menu_content li[data-menu-xmlid='sale.menu_product_template_action']",
+    trigger: ".o_menu_sections .dropdown-item:contains('Products'), nav.o_hamburger_menu_content li[data-menu-xmlid='sale.menu_product_template_action']",
     content: _t("Let's create products."),
     position: "bottom"
 }, {
@@ -622,7 +622,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Inventory Overview
     content: _t("Go to Configuration"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='stock.menu_reordering_rules_config'], nav.o_burger_menu_content li[data-menu-xmlid='stock.menu_reordering_rules_config']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='stock.menu_reordering_rules_config'], nav.o_hamburger_menu_content li[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
     position: "bottom"
 }, {
@@ -735,7 +735,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Manufacturing Orde
     content: _t('Click on Operations menuitem'),
     position: 'bottom',
 }, {
-    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='mrp.menu_mrp_production_action'], nav.o_burger_menu_content li[data-menu-xmlid='mrp.menu_mrp_production_action']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='mrp.menu_mrp_production_action'], nav.o_hamburger_menu_content li[data-menu-xmlid='mrp.menu_mrp_production_action']",
     content: _t('Open manufacturing orders'),
     position: 'bottom',
 }, {
@@ -782,7 +782,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Quotations')"),
     content: _t("Go to Sales menu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='sale.menu_sale_order'], nav.o_burger_menu_content li[data-menu-xmlid='sale.menu_sale_order']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='sale.menu_sale_order'], nav.o_hamburger_menu_content li[data-menu-xmlid='sale.menu_sale_order']",
     content: _t("Go to the sales orders"),
     position: "bottom"
 }, {
