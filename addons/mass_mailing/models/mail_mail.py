@@ -25,15 +25,15 @@ class MailMail(models.Model):
         return mails
 
     def _get_tracking_url(self):
-        token = self._generate_mail_recipient_token()
+        token = self._generate_mail_recipient_token(self.id)
         return werkzeug.urls.url_join(
             self.get_base_url(),
             f'mail/track/{self.id}/{token}/blank.gif'
         )
 
-    def _generate_mail_recipient_token(self):
-        self.ensure_one()
-        return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
+    @api.model
+    def _generate_mail_recipient_token(self, mail_id):
+        return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', mail_id)
 
     def _prepare_outgoing_body(self):
         """ Override to add the tracking URL to the body and to add trace ID in
