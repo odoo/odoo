@@ -94,7 +94,30 @@ export class TourPointer extends Component {
                             const wouldOverflow =
                                 window.innerWidth - x - width / 2 < dimensions?.width;
                             el.classList.toggle("o_expand_left", wouldOverflow);
-                            reposition(anchor, el, { position: this.position, margin: 6 });
+                            reposition(anchor, el, {
+                                position: this.position,
+                                margin: 6,
+                                onPositioned: (popper, position) => {
+                                    const popperRect = popper.getBoundingClientRect();
+                                    const { top, left, direction } = position;
+                                    if (direction === "top") {
+                                        popper.style.bottom = `${
+                                            window.innerHeight - top - popperRect.height
+                                        }px`;
+                                        popper.style.removeProperty("top");
+                                    } else {
+                                        popper.style.top = `${top}px`;
+                                    }
+                                    if (direction === "left") {
+                                        popper.style.right = `${
+                                            window.innerWidth - left - popperRect.width
+                                        }px`;
+                                        popper.style.removeProperty("left");
+                                    } else {
+                                        popper.style.left = `${left}px`;
+                                    }
+                                },
+                            });
                         }
                     }
                 } else {
