@@ -12601,7 +12601,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `
+            arch: /* xml */ `
                 <form>
                     <field name="p">
                         <tree>
@@ -12609,7 +12609,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                         <form>
                             <field name="p">
-                                <kanban>
+                                <kanban class="o-custom-class">
                                     <field name="display_name"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -12625,6 +12625,52 @@ QUnit.module("Fields", (hooks) => {
         });
         await click(target, ".o_data_row td[name=display_name]");
         assert.containsOnce(target, ".modal .o_kanban_record:not(.o_kanban_ghost)");
+        assert.hasClass(target.querySelector(".modal .o_field_x2many_kanban"), "o-custom-class");
+
+        const record = target.querySelector(".modal .o_kanban_record:not(.o_kanban_ghost)");
+        record.focus(); // shortcut for a true click
+        assert.strictEqual(document.activeElement, record);
+
+        await triggerHotkey("ArrowUp");
+        await nextTick();
+
+        assert.containsOnce(target, ".modal .o_kanban_record:not('.o_kanban_ghost')");
+    });
+
+    QUnit.test("kanban one2many in opened view form (with _view_ref)", async (assert) => {
+        serverData.views = {
+            "partner,1234,kanban": /* xml */ `
+                <kanban class="o-custom-class">
+                    <field name="display_name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><t t-esc="record.display_name.value"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        };
+        serverData.models.partner.records[0].p = [1];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="p" mode="kanban" context="{ 'kanban_view_ref': 1234 }" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        await click(target, ".o_data_row td[name=display_name]");
+        assert.containsOnce(target, ".modal .o_kanban_record:not(.o_kanban_ghost)");
+        assert.hasClass(target.querySelector(".modal .o_field_x2many_kanban"), "o-custom-class");
 
         const record = target.querySelector(".modal .o_kanban_record:not(.o_kanban_ghost)");
         record.focus(); // shortcut for a true click
@@ -12642,7 +12688,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `
+            arch: /* xml */ `
                 <form>
                     <field name="p">
                         <tree>
@@ -12650,7 +12696,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                         <form>
                             <field name="p">
-                                <tree editable="1">
+                                <tree editable="1" class="o-custom-class">
                                     <field name="display_name"/>
                                 </tree>
                             </field>
@@ -12661,6 +12707,47 @@ QUnit.module("Fields", (hooks) => {
         });
         await click(target.querySelector(".o_data_row td[name=display_name]"));
         assert.containsOnce(target, ".modal .o_data_row td[name=display_name]");
+        assert.hasClass(target.querySelector(".modal .o_field_x2many_list"), "o-custom-class");
+
+        const header = target.querySelector(".modal thead th[data-name=display_name]");
+        header.focus(); // shortcut but possible via the mouse and keynav;
+        assert.strictEqual(document.activeElement, header);
+
+        await triggerHotkey("ArrowUp");
+        await nextTick();
+
+        assert.containsOnce(target, ".modal .o_data_row td[name=display_name]");
+    });
+
+    QUnit.test("list one2many in opened view form (with _view_ref)", async function (assert) {
+        serverData.views = {
+            "partner,1234,list": /* xml */ `
+                <tree editable="1" class="o-custom-class">
+                    <field name="display_name"/>
+                </tree>
+            `,
+        };
+        serverData.models.partner.records[0].p = [1];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="p" mode="list" context="{ 'list_view_ref': 1234 }" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        await click(target.querySelector(".o_data_row td[name=display_name]"));
+        assert.containsOnce(target, ".modal .o_data_row td[name=display_name]");
+        assert.hasClass(target.querySelector(".modal .o_field_x2many_list"), "o-custom-class");
 
         const header = target.querySelector(".modal thead th[data-name=display_name]");
         header.focus(); // shortcut but possible via the mouse and keynav;
