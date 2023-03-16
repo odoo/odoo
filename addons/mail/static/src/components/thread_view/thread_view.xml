@@ -39,7 +39,7 @@
                     />
                 </div>
                 <ChannelMemberListView t-if="channelMemberListView" className="'o_ThreadView_channelMemberList flex-shrink-0 border-start'" record="channelMemberListView"/>
-                <CallSettingsMenu t-if="isCallSettingsMenuOpen" className="'o_ThreadView_callSettingsMenu flex-shrink-0 border-start'" record="callSettingsMenu"/>
+                <CallSettingsMenu t-if="isCallSettingsMenuOpen and thread.hasCallFeature" className="'o_ThreadView_callSettingsMenu flex-shrink-0 border-start'" record="callSettingsMenu"/>
             </div>
         </div>
     </t>
