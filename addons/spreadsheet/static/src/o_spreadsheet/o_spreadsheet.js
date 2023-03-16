@@ -893,6 +893,9 @@
     function isDefined$1(argument) {
         return argument !== undefined;
     }
+    function isNonEmptyString(str) {
+        return str !== undefined && str !== "";
+    }
     /**
      * Check if all the values of an object, and all the values of the objects inside of it, are undefined.
      */
@@ -32915,7 +32918,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const valuesInFilterZone = filter.filteredZone
                             ? positions(filter.filteredZone)
                                 .map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
-                                .filter(isDefined$1)
+                                .filter(isNonEmptyString)
                             : [];
                         // In xlsx, filtered values = values that are displayed, not values that are hidden
                         const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
@@ -38187,6 +38190,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.state.menuState.parentMenu = menu;
             this.isSelectingMenu = true;
             this.openedEl = ev.target;
+            this.env.model.dispatch("STOP_EDITION");
         }
         closeMenus() {
             this.state.activeTool = "";
@@ -42466,9 +42470,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.3';
-    __info__.date = '2023-03-15T09:36:09.107Z';
-    __info__.hash = '4deeca9';
+    __info__.version = '16.0.4';
+    __info__.date = '2023-03-16T12:14:53.272Z';
+    __info__.hash = 'ebbb1f0';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
