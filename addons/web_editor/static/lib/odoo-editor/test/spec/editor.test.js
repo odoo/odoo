@@ -3658,7 +3658,7 @@ X[]
                     `),
                 });
             });
-            it('should guarantee the same content after doing historyRevert and historyApply of a step', async () => {
+            it('should guarantee the same content after doing historyRevert and historyApply of a step (1)', async () => {
                 // Hand crafted scenario to demonstrate problematic cases
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>start</h1>',
@@ -3690,7 +3690,43 @@ X[]
                     `),
                 });
             });
-            it('should guarantee the same content before a step, after doing historyRevert of that step', async () => {
+            it('should guarantee the same content after doing historyRevert and historyApply of a step (2)', async () => {
+                // Hand crafted scenario to demonstrate problematic cases
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>start</h1>',
+                    stepFunction: async editor => {
+                        const p = document.createElement('P');
+                        const br = document.createElement('BR');
+                        const h1 = document.createElement('H1');
+                        editor.editable.append(h1);
+                        editor.historyStep();
+                        h1.append(br);
+                        editor.editable.append(p);
+                        p.append(br);
+                        p.remove();
+                        editor.editable.append(p);
+                        editor.historyStep();
+                        const step = editor._historySteps.at(-1);
+                        // Validate target content
+                        editor.clean();
+                        chai.expect(editor.editable.innerHTML).to.equal(unformat(`
+                            <h1>start</h1>
+                            <h1></h1>
+                            <p><br></p>
+                        `));
+                        editor.observerUnactive('reversibility');
+                        editor.historyRevert(step, {sideEffect: false});
+                        editor.historyApply(step.mutations);
+                        editor.observerActive('reversibility');
+                    },
+                    contentAfter: unformat(`
+                        <h1>start</h1>
+                        <h1></h1>
+                        <p><br></p>
+                    `),
+                });
+            });
+            it('should guarantee the same content before a step, after doing historyRevert of that step (1)', async () => {
                 // Hand crafted scenario to demonstrate problematic cases
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>start</h1>',
@@ -3714,6 +3750,72 @@ X[]
                         h1.append(br);
                         br.remove();
                         h1.remove();
+                        editor.historyStep();
+                        const step = editor._historySteps.at(-1);
+                        editor.observerUnactive('reversibility');
+                        editor.historyRevert(step, {sideEffect: false});
+                        editor.observerActive('reversibility');
+                    },
+                    contentAfter: unformat(`
+                        <h1>start</h1>
+                        <p><br></p>
+                    `),
+                });
+            });
+            it('should guarantee the same content before a step, after doing historyRevert of that step (2)', async () => {
+                // Hand crafted scenario to demonstrate problematic cases
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>start</h1>',
+                    stepFunction: async editor => {
+                        const h1 = document.createElement('H1');
+                        const p = document.createElement('P');
+                        const br = document.createElement('BR');
+                        p.append(br);
+                        editor.editable.append(p);
+                        editor.editable.append(h1);
+                        editor.historyStep();
+                        // Validate target content
+                        editor.clean();
+                        chai.expect(editor.editable.innerHTML).to.equal(unformat(`
+                            <h1>start</h1>
+                            <p><br></p>
+                            <h1></h1>
+                        `));
+                        p.remove();
+                        h1.append(br);
+                        editor.historyStep();
+                        const step = editor._historySteps.at(-1);
+                        editor.observerUnactive('reversibility');
+                        editor.historyRevert(step, {sideEffect: false});
+                        editor.observerActive('reversibility');
+                    },
+                    contentAfter: unformat(`
+                        <h1>start</h1>
+                        <p><br></p>
+                        <h1></h1>
+                    `),
+                });
+            });
+            it('should guarantee the same content before a step, after doing historyRevert of that step (3)', async () => {
+                // Hand crafted scenario to demonstrate problematic cases
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>start</h1>',
+                    stepFunction: async editor => {
+                        const p = document.createElement('P');
+                        const br = document.createElement('BR');
+                        p.append(br);
+                        editor.editable.append(p);
+                        editor.historyStep();
+                        // Validate target content
+                        editor.clean();
+                        chai.expect(editor.editable.innerHTML).to.equal(unformat(`
+                            <h1>start</h1>
+                            <p><br></p>
+                        `));
+                        br.remove();
+                        p.remove();
+                        editor.editable.append(p);
+                        p.append(br);
                         editor.historyStep();
                         const step = editor._historySteps.at(-1);
                         editor.observerUnactive('reversibility');

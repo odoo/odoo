@@ -323,6 +323,19 @@ export class OdooEditor extends EventTarget {
             });
         });
 
+        // Serialized state of the editable at a specific point in time. It will
+        // be refreshed each time the observer on the editable is activated
+        // through observerActive, and each time ObserverApply will handle
+        // observed mutations. It is used as the reference point to serialize
+        // removed nodes during the handling of a batch of mutations by
+        // ObserverApply. Removed nodes should be serialized from that reference
+        // because the expected result when reverting a `remove` mutation is
+        // to converge to the value of the editable before that batch of
+        // mutations. The current value of the node can not be used because when
+        // a batch of mutations is handled, nodes being handled have their final
+        // state after each mutation in the batch was applied.
+        this._serializedEditable = null;
+
         // -----------
         // Bind events
         // -----------
@@ -480,8 +493,14 @@ export class OdooEditor extends EventTarget {
         return serializeNode(node, mutatedNodes);
     }
 
-    unserializeNode(node) {
-        return unserializeNode(node);
+    /**
+     * @param {Object} node Serialized node.
+     * @param {Map} idToNodeMap optional - Map to reference every unserialized
+     *              node from its oid.
+     * @returns {Node}
+     */
+    unserializeNode(node, idToNodeMap) {
+        return unserializeNode(node, idToNodeMap);
     }
 
     automaticStepActive(label) {
@@ -525,6 +544,8 @@ export class OdooEditor extends EventTarget {
             });
         }
         this.dispatchEvent(new Event('preObserverActive'));
+        this.idSet(this.editable);
+        this._serializedEditable = this.serializeNode(this.editable);
         this.observer.observe(this.editable, {
             childList: true,
             subtree: true,
@@ -537,24 +558,41 @@ export class OdooEditor extends EventTarget {
     }
 
     observerApply(records) {
-        // There is a case where node A is added and node B is a descendant of
-        // node A where node B was not in the observed tree) then node B is
-        // added into another node. In that case, we need to keep track of node
-        // B so when serializing node A, we strip node B from the node A tree to
-        // avoid the duplication of node A.
-        const mutatedNodes = new Set();
+        // Map to reference nodes existing in the previous registered state
+        // of the editable.
+        const idToNodeMap = new Map();
+        this.unserializeNode(this._serializedEditable, idToNodeMap);
+        this.idSet(this.editable);
+        // Map<parent.oid, Set<childNode>> used to register mutations that add
+        // a child node to a parent. If a parent is added, then a child is added
+        // to it, when serializing the parent, the child has to be ignored to
+        // avoid duplication of the child when a step is reverted then applied
+        // again.
+        const mutatedAddedNodes = new Map();
+        // Map<parent.oid, Set<childNode>> used to register mutations that
+        // remove a child node from a parent. If a child is removed, then the
+        // parent is removed too, when serializing the parent, the child has to
+        // be ignored to avoid duplication of the child when a step is reverted.
+        const mutatedRemovedNodes = new Map();
         for (const record of records) {
             if (record.type === 'childList') {
+                if (!mutatedAddedNodes.has(record.target.oid)) {
+                    mutatedAddedNodes.set(record.target.oid, new Set());
+                    mutatedRemovedNodes.set(record.target.oid, new Set());
+                }
                 for (const node of record.addedNodes) {
                     this.idSet(node, this._checkStepUnbreakable);
-                    mutatedNodes.add(node.oid);
                 }
                 for (const node of record.removedNodes) {
                     this.idSet(node, this._checkStepUnbreakable);
-                    mutatedNodes.delete(node.oid);
                 }
             }
         }
+        // Mutations should be registered in order in the _currentStep, but
+        // `add` mutations should be handled in reverse order (to properly fill
+        // mutatedAddedNodes). Therefore this array is used to register records
+        // with `add` mutations: Array<Array<addMutation>>.
+        const addRecords = [];
         for (const record of records) {
             switch (record.type) {
                 case 'characterData': {
@@ -577,7 +615,17 @@ export class OdooEditor extends EventTarget {
                     break;
                 }
                 case 'childList': {
+                    record.removedNodes.forEach(removed => {
+                        // Keep track of removed nodes from their parents.
+                        mutatedRemovedNodes.get(record.target.oid).add(removed.oid);
+                    });
+                    if (record.addedNodes.length) {
+                        addRecords.push([]);
+                    }
                     record.addedNodes.forEach(added => {
+                        // Stop keeping track of removed nodes that are added
+                        // back to their parent.
+                        mutatedRemovedNodes.get(record.target.oid).delete(added.oid);
                         this._toRollback =
                             this._toRollback ||
                             (containsUnremovable(added) && UNREMOVABLE_ROLLBACK_CODE);
@@ -596,18 +644,32 @@ export class OdooEditor extends EventTarget {
                             return false;
                         }
                         mutation.id = added.oid;
-                        mutation.node = this.serializeNode(added, mutatedNodes);
+                        // Temporary storing of the added node, it cannot be
+                        // serialized now since mutatedAddedNodes has to be
+                        // filled in reverse order.
+                        mutation.node = added;
+                        // Store the mutation to be handled in reverse order.
+                        addRecords.at(-1).push(mutation);
                         this._currentStep.mutations.push(mutation);
                     });
                     record.removedNodes.forEach(removed => {
                         if (!this._toRollback && containsUnremovable(removed)) {
                             this._toRollback = UNREMOVABLE_ROLLBACK_CODE;
                         }
+                        // If the removed node existed in the previous state
+                        // of the editable, recover the value it had then.
+                        const removedBefore = idToNodeMap.get(removed.oid);
+                        // Serialize from the previous state if the node existed
+                        // before, or from the final state if the node is new.
+                        // This is not technically correct, but it makes little
+                        // sense to add a new node, remove it, then add it again
+                        // in the same synchronous batch of mutations.
+                        const serializedNode = (removedBefore) ? this.serializeNode(removedBefore, mutatedRemovedNodes.get(removedBefore.oid)) : this.serializeNode(removed);
                         this._currentStep.mutations.push({
                             'type': 'remove',
                             'id': removed.oid,
                             'parentId': record.target.oid,
-                            'node': this.serializeNode(removed),
+                            'node': serializedNode,
                             'nextId': record.nextSibling ? record.nextSibling.oid : undefined,
                             'previousId': record.previousSibling
                                 ? record.previousSibling.oid
@@ -618,6 +680,28 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
+        // Go through `add` mutations in reverse order to keep track of
+        // mutatedAddednodes.
+        for (const record of records.slice().reverse()) {
+            if (record.type === 'childList') {
+                record.addedNodes.forEach(added => {
+                    // Keep track of added nodes to their parent.
+                    mutatedAddedNodes.get(record.target.oid).add(added.oid);
+                });
+                record.removedNodes.forEach(removed => {
+                    // Stop keeping track of added nodes that are removed
+                    // from their parent.
+                    mutatedAddedNodes.get(record.target.oid).delete(removed.oid);
+                });
+                const addMutations = (record.addedNodes.length) ? addRecords.pop() : [];
+                addMutations.forEach(mutation => {
+                    // Now the node can be serialized, with the proper state of
+                    // mutatedAddedNodes.
+                    mutation.node = this.serializeNode(mutation.node, mutatedAddedNodes.get(mutation.node.oid));
+                });
+            }
+        }
+        this._serializedEditable = this.serializeNode(this.editable);
         if (records.length) {
             this.dispatchEvent(new Event('observerApply'));
         }
