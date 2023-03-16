@@ -1,10 +1,13 @@
 /** @odoo-module */
 
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { useService } from "@web/core/utils/hooks";
+import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
+import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
 import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -16,7 +19,11 @@ export class ProductsWidget extends Component {
      */
     setup() {
         super.setup();
+        this.state = useState({ previousSearchWord: "", currentOffset: 0 });
         this.pos = usePos();
+        this.popup = useService("popup");
+        this.notification = useService("pos_notification");
+        this.orm = useService("orm");
     }
     get selectedCategoryId() {
         return this.env.pos.selectedCategoryId;
@@ -70,5 +77,73 @@ export class ProductsWidget extends Component {
     updateProductList(event) {
         this.render(true);
         this.switchCategory(0);
+    }
+    async onPressEnterKey() {
+        if (!this.env.pos.searchProductWord) {
+            return;
+        }
+        if (this.state.previousSearchWord != this.env.pos.searchProductWord) {
+            this.state.currentOffset = 0;
+        }
+        const result = await this.loadProductFromDB();
+        if (result.length > 0) {
+            this.notification.add(
+                _.str.sprintf(
+                    this.env._t('%s product(s) found for "%s".'),
+                    result.length,
+                    this.env.pos.searchProductWord
+                ),
+                3000
+            );
+        } else {
+            this.notification.add(
+                _.str.sprintf(
+                    this.env._t('No more product found for "%s".'),
+                    this.env.pos.searchProductWord
+                ),
+                3000
+            );
+        }
+        if (this.state.previousSearchWord == this.env.pos.searchProductWord) {
+            this.state.currentOffset += result.length;
+        } else {
+            this.state.previousSearchWord = this.env.pos.searchProductWord;
+            this.state.currentOffset = result.length;
+        }
+    }
+    async loadProductFromDB() {
+        if(!this.env.pos.searchProductWord)
+            return;
+
+        try {
+            const limit = 30;
+            let ProductIds = await this.orm.call(
+                "product.product",
+                "search",
+                [['&',['available_in_pos', '=', true], '|','|',
+                    ['name', 'ilike', this.env.pos.searchProductWord],
+                    ['default_code', 'ilike', this.env.pos.searchProductWord],
+                    ['barcode', 'ilike', this.env.pos.searchProductWord]]],
+                {
+                    offset: this.state.currentOffset,
+                    limit: limit,
+                }
+            );
+            if(ProductIds.length) {
+                await this.env.pos._addProducts(ProductIds, false);
+            }
+            this.updateProductList();
+            return ProductIds;
+        } catch (error) {
+            const identifiedError = identifyError(error)
+            if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
+                return this.popup.add("OfflineErrorPopup", {
+                    title: this.env._t("Network Error"),
+                    body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
+                });
+            } else {
+                throw error;
+            }
+        }
     }
 }
