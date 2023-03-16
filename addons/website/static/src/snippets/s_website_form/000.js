@@ -71,6 +71,10 @@ import { sprintf } from "@web/core/utils/strings";
             return res;
         },
         start: function () {
+            // Reset the form first, as it is still filled when coming back
+            // after a redirect.
+            this.el.reset();
+
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
             for (const fieldEl of this.el.querySelectorAll('[data-visibility-dependency]')) {
@@ -364,7 +368,7 @@ import { sprintf } from "@web/core/utils/strings";
 
                             self.el.classList.add('d-none');
                             self.el.parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
-                            return;
+                            break;
                         }
                         default: {
                             // Prevent double-clicking on the send button and
