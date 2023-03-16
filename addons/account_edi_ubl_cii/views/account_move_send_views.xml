@@ -7,17 +7,12 @@
         <field name="inherit_id" ref="account.account_move_send_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='advanced_options']" position="inside">
-                <field name="enable_ubl_xml" invisible="1"/>
-                <field name="enable_cii_xml" invisible="1"/>
-                <div name="option_ubl_xml"
-                     attrs="{'invisible': [('enable_ubl_xml', '=', False)]}">
-                    <field name="checkbox_ubl_xml"/>
-                    <b><label for="checkbox_ubl_xml"/></b>
-                </div>
-                <div name="option_cii_xml"
-                     attrs="{'invisible': [('enable_cii_xml', '=', False)]}">
-                    <field name="checkbox_cii_xml"/>
-                    <b><label for="checkbox_cii_xml"/></b>
+                <field name="enable_ubl_cii_xml" invisible="1"/>
+                <div name="option_xml"
+                     attrs="{'invisible': [('enable_ubl_cii_xml', '=', False)]}">
+                    <!-- Use one field as the label for another -->
+                    <field name="checkbox_ubl_cii_xml" nolabel="1" style="display: inline-block"/>
+                    <field name="checkbox_ubl_cii_label" style="position: absolute"/>
                 </div>
             </xpath>
         </field>

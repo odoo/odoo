@@ -1,0 +1,18 @@
+<odoo>
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='banks']" position="after">
+                <group string="Electronic Invoicing" name="electronic_invoicing">
+                    <field name="ubl_cii_format" widget="selection"/>
+                    <field name="peppol_eas" widget="selection"
+                           attrs="{'invisible': [('ubl_cii_format', 'in', ('facturx', False))]}"/>
+                    <field name="peppol_endpoint"
+                           attrs="{'invisible': [('ubl_cii_format', 'in', ('facturx', False))]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

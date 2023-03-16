@@ -189,9 +189,6 @@ class TestUBLCommon(AccountTestInvoicingCommon):
                 for i, invoice_line_kwargs in enumerate(invoice_kwargs.get('invoice_line_ids', []))
             ],
         })
-        # this is needed for formats not enabled by default on the journal
-        account_move.journal_id.checkbox_cii_xml = True
-        account_move.journal_id.checkbox_ubl_xml = True
 
         account_move.action_post()
         self.action_send_and_print(account_move)
