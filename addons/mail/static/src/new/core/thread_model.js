@@ -187,7 +187,10 @@ export class Thread {
         const correspondents = this.channelMembers
             .map((member) => member.persona)
             .filter((persona) => !!persona)
-            .filter(({ id }) => id !== this._store.user.id);
+            .filter(
+                ({ id, type }) =>
+                    id !== (type === "partner" ? this._store.user?.id : this._store.guest?.id)
+            );
         if (correspondents.length === 1) {
             // 2 members chat.
             return correspondents[0];
