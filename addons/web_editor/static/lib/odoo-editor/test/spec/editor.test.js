@@ -13,6 +13,7 @@ import {
     undo,
     unformat,
     triggerEvent,
+    nextTickFrame,
 } from '../utils.js';
 
 async function twoDeleteForward(editor) {
@@ -3628,6 +3629,101 @@ X[]
                     contentAfter: `<p class="y">a</p>`,
                 }, {
                     renderingClasses: ['x']
+                });
+            });
+        });
+        describe('reversibility', () => {
+            it('should guarantee the same content after the oEnter command step, doing a historyRevert and historyApply of that step', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>start[]</h1>',
+                    stepFunction: async editor => {
+                        editor._applyCommand('oEnter');
+                        const step = editor._historySteps.at(-1);
+                        // Validate actual result of the command before using
+                        // history manipulation
+                        editor.clean();
+                        chai.expect(editor.editable.innerHTML).to.equal(unformat(`
+                            <h1>start</h1>
+                            <p><br></p>
+                        `));
+                        editor.observerUnactive('reversibility');
+                        editor.historyRevert(step, {sideEffect: false});
+                        editor.historyApply(step.mutations);
+                        editor.editable.ownerDocument.getSelection().removeAllRanges();
+                        editor.observerActive('reversibility');
+                    },
+                    contentAfter: unformat(`
+                        <h1>start</h1>
+                        <p><br></p>
+                    `),
+                });
+            });
+            it('should guarantee the same content after doing historyRevert and historyApply of a step', async () => {
+                // Hand crafted scenario to demonstrate problematic cases
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>start</h1>',
+                    stepFunction: async editor => {
+                        const h1 = document.createElement('H1');
+                        const p = document.createElement('P');
+                        const br = document.createElement('BR');
+                        editor.editable.append(h1);
+                        h1.append(br);
+                        p.append(br);
+                        editor.editable.append(p);
+                        h1.remove();
+                        editor.historyStep();
+                        const step = editor._historySteps.at(-1);
+                        // Validate target content
+                        editor.clean();
+                        chai.expect(editor.editable.innerHTML).to.equal(unformat(`
+                            <h1>start</h1>
+                            <p><br></p>
+                        `));
+                        editor.observerUnactive('reversibility');
+                        editor.historyRevert(step, {sideEffect: false});
+                        editor.historyApply(step.mutations);
+                        editor.observerActive('reversibility');
+                    },
+                    contentAfter: unformat(`
+                        <h1>start</h1>
+                        <p><br></p>
+                    `),
+                });
+            });
+            it('should guarantee the same content before a step, after doing historyRevert of that step', async () => {
+                // Hand crafted scenario to demonstrate problematic cases
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>start</h1>',
+                    stepFunction: async editor => {
+                        const h1 = document.createElement('H1');
+                        const p = document.createElement('P');
+                        const br = document.createElement('BR');
+                        p.append(br);
+                        editor.editable.append(p);
+                        editor.historyStep();
+                        // Validate target content
+                        editor.clean();
+                        chai.expect(editor.editable.innerHTML).to.equal(unformat(`
+                            <h1>start</h1>
+                            <p><br></p>
+                        `));
+                        editor.editable.append(h1);
+                        p.remove();
+                        // Don't let the observer see what happens in the p
+                        await nextTickFrame();
+                        h1.append(br);
+                        br.remove();
+                        h1.remove();
+                        editor.historyStep();
+                        const step = editor._historySteps.at(-1);
+                        editor.observerUnactive('reversibility');
+                        editor.historyRevert(step, {sideEffect: false});
+                        editor.observerActive('reversibility');
+                    },
+                    contentAfter: unformat(`
+                        <h1>start</h1>
+                        <p><br></p>
+                    `),
                 });
             });
         });

@@ -477,11 +477,11 @@ export class OdooEditor extends EventTarget {
     }
 
     serializeNode(node, mutatedNodes) {
-        return this._collabClientId ? serializeNode(node, mutatedNodes) : node;
+        return serializeNode(node, mutatedNodes);
     }
 
     unserializeNode(node) {
-        return this._collabClientId ? unserializeNode(node) : node;
+        return unserializeNode(node);
     }
 
     automaticStepActive(label) {
@@ -822,7 +822,7 @@ export class OdooEditor extends EventTarget {
                     toremove.remove();
                 }
             } else if (record.type === 'add') {
-                let node = this.idFind(record.oid) || this.unserializeNode(record.node);
+                let node = this.unserializeNode(record.node);
                 if (this._collabClientId) {
                     const fakeNode = document.createElement('fake-el');
                     fakeNode.appendChild(node);
@@ -966,9 +966,8 @@ export class OdooEditor extends EventTarget {
                     break;
                 }
                 case 'remove': {
-                    let nodeToRemove = this.idFind(mutation.id);
-                    if (!nodeToRemove) {
-                        nodeToRemove = this.unserializeNode(mutation.node);
+                    let nodeToRemove = this.unserializeNode(mutation.node);
+                    if (this._collabClientId) {
                         const fakeNode = document.createElement('fake-el');
                         fakeNode.appendChild(nodeToRemove);
                         DOMPurify.sanitize(fakeNode, { IN_PLACE: true });
@@ -976,8 +975,8 @@ export class OdooEditor extends EventTarget {
                         if (!nodeToRemove) {
                             continue;
                         }
-                        this.idSet(nodeToRemove);
                     }
+                    this.idSet(nodeToRemove);
                     if (mutation.nextId && this.idFind(mutation.nextId)) {
                         const node = this.idFind(mutation.nextId);
                         node && node.before(nodeToRemove);
