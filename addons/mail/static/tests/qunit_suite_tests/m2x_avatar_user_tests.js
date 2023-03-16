@@ -148,22 +148,22 @@ QUnit.module("mail", {}, function () {
         );
         const tags = document.querySelectorAll(".o_popover > .o_field_tags > .o_tag");
         assert.strictEqual(tags.length, 4, "should have 4 tags");
-        assert.strictEqual(
-            tags[0].innerText.trim(),
-            "Mario",
-            "should have a right text in popover"
-        );
+        assert.strictEqual(tags[0].innerText.trim(), "Tapu", "should have a right text in popover");
         assert.strictEqual(
             tags[1].innerText.trim(),
-            "Yoshi",
+            "Luigi",
             "should have a right text in popover"
         );
         assert.strictEqual(
             tags[2].innerText.trim(),
-            "Luigi",
+            "Yoshi",
             "should have a right text in popover"
         );
-        assert.strictEqual(tags[3].innerText.trim(), "Tapu", "should have a right text in popover");
+        assert.strictEqual(
+            tags[3].innerText.trim(),
+            "Mario",
+            "should have a right text in popover"
+        );
     });
 
     QUnit.test(

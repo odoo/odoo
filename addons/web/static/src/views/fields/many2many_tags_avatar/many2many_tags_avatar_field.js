@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import {
@@ -8,7 +7,6 @@ import {
     Many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "../many2many_tags/tags_list";
-import { onMounted, useState } from "@odoo/owl";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
@@ -56,30 +54,32 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     static props = {
         ...Many2ManyTagsAvatarField.props,
         close: { type: Function },
-        deleteTag: { type: Function },
-        updateTag: { type: Function },
     };
 
     setup() {
         super.setup();
-        this.state = useState({ tags: this.tags });
+        const originalUpdate = this.update;
         this.update = async (recordList) => {
-            const updatedVal = await this.props.updateTag(recordList);
-            this.state.tags = updatedVal.map((tag) => ({
-                ...tag,
-                onDelete: () => this.deleteTag(tag.id),
-            }));
+            await originalUpdate(recordList);
+            await this._saveUpdate();
         };
-        onMounted(() => {
-            this.autoCompleteRef.el.querySelector("input").focus();
-        });
     }
-    async deleteTag(id) {
-        const updatedVal = await this.props.deleteTag(id);
-        this.state.tags = updatedVal.map((tag) => ({
-            ...tag,
-            onDelete: () => this.deleteTag(tag.id),
-        }));
+
+    deleteTag(id) {
+        super.deleteTag(id);
+        this._saveUpdate();
+    }
+
+    async _saveUpdate() {
+        await this.props.record.save({ noReload: true });
+        // manual render to dirty record
+        this.render();
+        // update dropdown
+        this.autoCompleteRef.el.querySelector("input").click();
+    }
+
+    get tags() {
+        return super.tags.reverse();
     }
 }
 
@@ -124,22 +124,24 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
                 canCreate: false,
                 canCreateEdit: false,
                 canQuickCreate: false,
+                placeholder: this.env._t("Search users..."),
             },
             {
                 position: "bottom",
+                popoverClass: "o_m2m_tags_avatar_field_popover",
+                preventClose: (ev) => !!ev.target.closest(".modal"),
             }
         );
     }
-
-    get canDisplayDelete() {
-        return !this.props.readonly && !isMobileOS();
+    get canDisplayQuickAssignAvatar() {
+        return !this.props.readonly && !(this.props.tags && this.otherTags.length);
     }
 }
 
 export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     static template = "web.KanbanMany2ManyTagsAvatarField";
     static components = {
-        ...Many2ManyTagsAvatarField.component,
+        ...Many2ManyTagsAvatarField.components,
         TagsList: KanbanMany2ManyTagsAvatarFieldTagsList,
     };
     itemsVisible = 2;
@@ -152,26 +154,10 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         return {
             ...this.props,
             readonly: this.isFieldReadonly,
-            deleteTag: this.deleteTag.bind(this),
-            updateTag: this.updateTag.bind(this),
         };
     }
-    async deleteTag(id) {
-        super.deleteTag(id);
-        await this.props.record.save({ noReload: true });
-        return this.tags;
-    }
-    async updateTag(recordList) {
-        await this.update(recordList);
-        await this.props.record.save({ noReload: true });
-        return this.tags;
-    }
-
-    getTagProps(record) {
-        return {
-            ...super.getTagProps(record),
-            onDelete: () => this.deleteTag(record.id),
-        };
+    get tags() {
+        return super.tags.reverse();
     }
 }
 

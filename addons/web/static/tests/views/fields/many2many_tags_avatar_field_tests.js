@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    click,
-    clickSave,
-    getFixture,
-    triggerEvent,
-    selectDropdownItem,
-} from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { triggerHotkey } from "../../helpers/utils";
 
@@ -279,16 +273,14 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("widget many2many_tags_avatar in kanban view", async function (assert) {
-        assert.expect(16);
+        assert.expect(19);
 
-        const records = [];
         for (let id = 5; id <= 15; id++) {
-            records.push({
+            serverData.models.partner.records.push({
                 id,
                 display_name: `record ${id}`,
             });
         }
-        serverData.models.partner.records = serverData.models.partner.records.concat(records);
 
         serverData.models.turtle.records.push({
             id: 4,
@@ -300,6 +292,8 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.records[2].partner_ids = [1, 2, 4, 5];
         serverData.views = {
             "turtle,false,form": '<form><field name="display_name"/></form>',
+            "partner,false,list": '<tree><field name="display_name"/></tree>',
+            "partner,false,search": "<search/>",
         };
 
         await makeView({
@@ -331,12 +325,10 @@ QUnit.module("Fields", (hooks) => {
                 );
             },
         });
-        assert.strictEqual(
-            target.querySelector(
-                ".o_kanban_record:first-child .o_field_many2many_tags_avatar img.o_m2m_avatar"
-            ).dataset.src,
-            "/web/image/partner/1/avatar_128",
-            "should have correct avatar image"
+        assert.containsOnce(
+            target,
+            ".o_kanban_record:first-child .o_field_many2many_tags_avatar .o_quick_assign",
+            "should have the assign icon"
         );
 
         assert.containsN(
@@ -355,14 +347,14 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(
                 ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar img.o_m2m_avatar"
             ).dataset.src,
-            "/web/image/partner/1/avatar_128",
+            "/web/image/partner/5/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
             target.querySelectorAll(
                 ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar img.o_m2m_avatar"
             )[1].dataset.src,
-            "/web/image/partner/2/avatar_128",
+            "/web/image/partner/4/avatar_128",
             "should have correct avatar image"
         );
         assert.containsOnce(
@@ -401,40 +393,45 @@ QUnit.module("Fields", (hooks) => {
             "should have 9+ in o_m2m_avatar_empty"
         );
 
-        // check delete
-        const firstTag = target.querySelector(
-            ".o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_tag"
-        );
-        await triggerEvent(firstTag, null, "mouseover");
-        await click(firstTag, ".o_delete");
-        assert.containsN(
-            target,
-            ".o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_tag",
-            2,
-            "should have 2 record"
-        );
-
         const o_kanban_record = target.querySelector(".o_kanban_record:nth-child(2)");
-        await click(o_kanban_record, ".o_field_tags > img.o_m2m_avatar", true);
+        await click(o_kanban_record, ".o_field_tags > .o_m2m_avatar_empty", true);
         const popover = document.querySelector(".o_popover_container");
-        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 2, "Should have 2 tags");
+        assert.strictEqual(
+            document.activeElement,
+            popover.querySelector("input"),
+            "the input inside the popover should have the focus"
+        );
+        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 3, "Should have 3 tags");
         // delete inside the popover
         await click(popover.querySelector(".o_tag .o_delete"));
-        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 1, "Should have 1 tag");
-        assert.strictEqual(
-            o_kanban_record.querySelectorAll(".o_tag").length,
-            1,
-            "Should have 1 tags"
-        );
-        // select input
-        await click(popover.querySelector(".o_field_many2many_selection input"));
-        // select first input
-        await click(popover.querySelector(".o-autocomplete--dropdown-item"));
-        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 2, "Should have 2 tags");
+        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 2, "Should have 2 tag");
         assert.strictEqual(
             o_kanban_record.querySelectorAll(".o_tag").length,
             2,
             "Should have 2 tags"
+        );
+        // select first input
+        await click(popover.querySelector(".o-autocomplete--dropdown-item"));
+        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 3, "Should have 3 tags");
+        assert.strictEqual(
+            o_kanban_record.querySelectorAll(".o_tag").length,
+            2,
+            "Should have 2 tags"
+        );
+        // load more
+        await click(popover.querySelector(".o_m2o_dropdown_option_search_more"));
+        // first item
+        await click(document.querySelector(".o_dialog .o_list_table .o_data_row .o_data_cell"));
+        assert.strictEqual(popover.querySelectorAll(".o_tag").length, 4, "Should have 4 tags");
+        assert.strictEqual(
+            o_kanban_record.querySelectorAll(".o_tag").length,
+            2,
+            "Should have 2 tags"
+        );
+        assert.strictEqual(
+            o_kanban_record.querySelector("img.o_m2m_avatar").dataset.src,
+            "/web/image/partner/4/avatar_128",
+            "should have correct avatar image"
         );
         await click(target);
     });
