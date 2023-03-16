@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { useService } from "@web/core/utils/hooks";
 
-patch(spreadsheet.components.ChartFigure.prototype, "spreadsheet.ChartFigure", {
+patch(spreadsheet.components.FigureComponent.prototype, "spreadsheet.FigureComponent", {
     setup() {
         this._super();
         this.menuService = useService("menu");
