@@ -194,15 +194,6 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 }
 
 /**
- * @param {Options | (() => Options)} options
- * @returns {Options}
- */
-function getOptions(options) {
-    const optionsValue = typeof options === "function" ? options() : options;
-    return { ...DEFAULTS, container: document.documentElement, ...optionsValue };
-}
-
-/**
  * This method will try to position the popper as requested (according to options).
  * If the requested position does not fit the container, other positions will be
  * tried in different direction and variant flip orders (depending on the requested position).
@@ -213,10 +204,10 @@ function getOptions(options) {
  *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
- * @param {Options | (() => Options)} getOptions
+ * @param {Options} options
  */
 export function reposition(reference, popper, options) {
-    options = getOptions(options);
+    options = { ...DEFAULTS, container: document.documentElement, ...options };
 
     let [directionKey, variantKey = "middle"] = options.position.split("-");
     if (localization.direction === "rtl") {
@@ -237,20 +228,9 @@ export function reposition(reference, popper, options) {
 
     // Get best positioning solution and apply it
     const position = getBestPosition(reference, popper, options);
-    const popperRect = popper.getBoundingClientRect();
-    const { top, left, direction, variant } = position;
-    if (direction === "top") {
-        popper.style.bottom = `${window.innerHeight - top - popperRect.height}px`;
-        popper.style.removeProperty("top");
-    } else {
-        popper.style.top = `${top}px`;
-    }
-    if (direction === "left") {
-        popper.style.right = `${window.innerWidth - left - popperRect.width}px`;
-        popper.style.removeProperty("left");
-    } else {
-        popper.style.left = `${left}px`;
-    }
+    const { top, left, variant } = position;
+    popper.style.top = `${top}px`;
+    popper.style.left = `${left}px`;
 
     if (variant === "fit") {
         const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";
@@ -274,10 +254,10 @@ export function reposition(reference, popper, options) {
  *       This could be customized with the `popper` option.
  *
  * @param {HTMLElement | (() => HTMLElement)} reference
- * @param {Options | (() => Options)} options
+ * @param {Options} options
  */
 export function usePosition(reference, options) {
-    const { popper } = getOptions(options);
+    const popper = options.popper || DEFAULTS.popper;
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {
