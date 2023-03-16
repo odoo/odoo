@@ -2019,6 +2019,15 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @override
      */
     setValue() {
+        // We don't rebuild the list because if the user blurs an input and
+        // clicks on Add new Item "at the same time", we have to be sure that
+        // the Add new Item button is present in order not to lose the listener
+        // that will onAddCustomClick. Moreover, notifyCurrentState already
+        // updates this._value so we can do nothing here.
+        if (this.skipRebuildWeList) {
+            this.skipRebuildWeList = false;
+            return;
+        }
         this._super(...arguments);
         const currentValues = this._value ? JSON.parse(this._value) : [];
         this.listTable.innerHTML = '';
@@ -2174,6 +2183,15 @@ const ListUserValueWidget = UserValueWidget.extend({
             stop: (event, ui) => {
                 this._notifyCurrentState();
             },
+            start: (event, ui) => {
+                // We make sure that the input doesn't stay focused until the
+                // drop because otherwise, after the drop it could trigger a
+                // setValue that skipRebuildWeList.
+                const activeElement = document.activeElement;
+                if (this.listTable.contains(activeElement) && activeElement.tagName === 'INPUT') {
+                    activeElement.blur();
+                }
+            },
         });
     },
     /**
@@ -2294,6 +2312,10 @@ const ListUserValueWidget = UserValueWidget.extend({
     _onListItemBlurInput(ev) {
         const preview = ev.type === 'input';
         if (preview || !this.el.contains(ev.relatedTarget) || this.el.dataset.renderOnInputBlur) {
+            // We don't need to rebuild the we-list if it's just a text change,
+            // by skipping the rebuild we avoid to lose a direct add new item
+            // event.
+            this.skipRebuildWeList = true;
             // We call the function below only if the element that recovers the
             // focus after this blur is not an element of the we-list or if it
             // is an input event (preview). This allows to use the TAB key to go
