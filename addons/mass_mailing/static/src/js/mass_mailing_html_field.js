@@ -406,6 +406,8 @@ export class MassMailingHtmlField extends HtmlField {
             $target.parents('.o_mail_template_preview').remove();
         });
 
+        // Clear any previous theme class before adding new one.
+        this.wysiwyg.$iframeBody.closest('body').removeClass(this._themeClassNames);
         let selectedTheme = this._getSelectedTheme(themesParams);
         if (selectedTheme) {
             this.wysiwyg.$iframeBody.closest('body').addClass(selectedTheme.className);
