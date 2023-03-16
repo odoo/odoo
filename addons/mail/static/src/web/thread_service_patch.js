@@ -65,9 +65,10 @@ patch(ThreadService.prototype, "mail/web", {
         }
         if ("attachments" in result) {
             this.update(thread, {
+                areAttachmentsLoaded: true,
                 attachments: result.attachments,
+                isLoadingAttachments: false,
             });
-            thread.isLoadingAttachments = false;
         }
         if ("mainAttachment" in result) {
             thread.mainAttachment = result.mainAttachment.id
