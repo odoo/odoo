@@ -306,6 +306,12 @@ class StockMove(models.Model):
         defaults['workorder_id'] = False
         return defaults
 
+    def _prepare_procurement_origin(self):
+        self.ensure_one()
+        if self.raw_material_production_id and self.raw_material_production_id.orderpoint_id:
+            return self.origin
+        return super()._prepare_procurement_origin()
+
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,

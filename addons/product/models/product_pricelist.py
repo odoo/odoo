@@ -412,7 +412,7 @@ class PricelistItem(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True, default=_default_pricelist_id)
     price_surcharge = fields.Float(
         'Price Surcharge', digits='Product Price',
-        help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
+        help='Specify the fixed amount to add or subtract(if negative) to the amount calculated with the discount.')
     price_discount = fields.Float('Price Discount', default=0, digits=(16, 2))
     price_round = fields.Float(
         'Price Rounding', digits='Product Price',
