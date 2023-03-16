@@ -80,3 +80,32 @@ QUnit.test("activate blur", async (assert) => {
     assert.containsOnce($, "label[aria-label='Background blur intensity']");
     assert.containsOnce($, "label[aria-label='Edge blur intensity']");
 });
+
+QUnit.test("Inbox should not have any call settings menu", async (assert) => {
+    await startServer();
+    const { openDiscuss } = await start();
+    await openDiscuss("mail.box_inbox");
+    assert.containsNone($, "button[title='Show Call Settings']");
+});
+
+QUnit.test(
+    "Call settings menu should not be visible on selecting a mailbox (from being open)",
+    async (assert) => {
+        patchWithCleanup(browser, {
+            navigator: {
+                ...browser.navigator,
+                mediaDevices: {
+                    enumerateDevices: () => Promise.resolve([]),
+                },
+            },
+        });
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        await click("button[title='Show Call Settings']");
+        await click("button:contains(Inbox)");
+        assert.containsNone($, "button[title='Hide Call Settings']");
+        assert.containsNone($, ".o-mail-CallSettings");
+    }
+);
