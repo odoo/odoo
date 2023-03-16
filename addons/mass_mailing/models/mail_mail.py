@@ -31,9 +31,11 @@ class MailMail(models.Model):
             f'mail/track/{self.id}/{token}/blank.gif'
         )
 
-    def _generate_mail_recipient_token(self):
-        self.ensure_one()
-        return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
+    def _generate_mail_recipient_token(self, mail_id=None):
+        if not mail_id:
+            self.ensure_one()
+            mail_id = self.id
+        return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', mail_id)
 
     def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
