@@ -687,6 +687,9 @@ HtmlField.extractProps = ({ attrs, field }) => {
     if ('collaborative' in attrs.options) {
         wysiwygOptions.collaborative = attrs.options.collaborative;
     }
+    if ('style-inline' in attrs.options) {
+        wysiwygOptions.inlineStyle = Boolean(attrs.options['style-inline']);
+    }
     if ('allowCommandImage' in attrs.options) {
         // Set the option only if it is explicitly set in the view so a default
         // can be set elsewhere otherwise.
