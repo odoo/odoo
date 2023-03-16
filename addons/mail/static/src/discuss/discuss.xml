@@ -37,7 +37,7 @@
                     <button t-if="thread.hasMemberList" class="btn" t-att-title="state.activeMode === MODES.MEMBER_LIST ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
                         <i class="fa fa-lg fa-users text-700"/>
                     </button>
-                    <button t-if="thread.type !== 'mailbox'" class="btn" t-ref="settings" title="Show Call Settings" t-on-click="toggleSettings">
+                    <button t-if="thread.allowCalls" class="btn" t-ref="settings" t-att-title="state.activeMode === MODES.SETTINGS ? 'Hide Call Settings' : 'Show Call Settings'" t-on-click="toggleSettings">
                         <i class="fa fa-lg fa-gear text-700"/>
                     </button>
                     <div t-if="props.public and !store.isSmall" class="d-flex align-items-center">
@@ -61,7 +61,7 @@
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" highlightReplyTo="messageHighlight.highlightMessage" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
                 </div>
                 <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start'"/>
-                <CallSettings t-if="state.activeMode === MODES.SETTINGS and thread" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
+                <CallSettings t-if="thread.allowCalls and state.activeMode === MODES.SETTINGS" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
             </div>
         </div>
         <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
