@@ -13,6 +13,18 @@
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty text-break"/></t>
                         <t t-if="review" t-call="survey.survey_button_retake"/>
                     </div>
+                    <div t-if="graph_data" class="o_survey_result p-4 col-12 row">
+                        <div t-if="survey.page_ids" class="survey_graph col-lg-6 d-none d-md-block"
+                                data-graph-type="by_section"
+                                t-att-data-graph-data="graph_data">
+                            <canvas id="by_section_chart"></canvas>
+                        </div>
+                        <div t-attf-class="survey_graph col-lg-6 #{'offset-lg-3' if not survey.page_ids else ''}"
+                                data-graph-type="doughnut"
+                                t-att-data-graph-data="graph_data">
+                            <canvas id="doughnut_chart"></canvas>
+                        </div>
+                    </div>
                     <div role="form">
                         <fieldset disabled="disabled">
                             <t t-set="question" t-value="False" />

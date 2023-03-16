@@ -204,8 +204,6 @@ class Survey(http.Controller):
         values = {'survey': survey, 'answer': answer}
         if token:
             values['token'] = token
-        if survey.scoring_type != 'no_scoring':
-            values['graph_data'] = json.dumps(answer._prepare_statistics()[answer])
         return values
 
     # ------------------------------------------------------------
@@ -616,6 +614,8 @@ class Survey(http.Controller):
             'scoring_display_correction': survey_sudo.scoring_type == 'scoring_with_answers' and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date),
+            'graph_data': json.dumps(answer_sudo._prepare_statistics()[answer_sudo])
+                              if answer_sudo and survey_sudo.scoring_type == 'scoring_with_answers' else False,
         })
 
     @http.route('/survey/<model("survey.survey"):survey>/certification_preview', type="http", auth="user", website=True)
