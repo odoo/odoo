@@ -2,6 +2,7 @@
 
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { currencies } from "@web/core/currency";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
 import {
@@ -246,7 +247,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("formatMonetary", function (assert) {
-        patchWithCleanup(session.currencies, {
+        patchWithCleanup(currencies, {
             10: {
                 digits: [69, 2],
                 position: "after",

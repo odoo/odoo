@@ -2427,6 +2427,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
         };
+        serverData.models["ir.actions.act_window"] = { fields: {}, records: [] };
         const webClient = await createWebClient({ serverData, mockRPC });
         assert.verifySteps(["/web/webclient/load_menus"]);
 
@@ -2438,6 +2439,12 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view");
 
         assert.verifySteps(["web_search_read"]);
+
+        await webClient.env.services.orm.unlink("ir.actions.act_window", [333]);
+        assert.verifySteps(["unlink"]);
+        await doAction(webClient, 1);
+        // cache was cleared => reload the action
+        assert.verifySteps(["/web/action/load", "web_search_read"]);
     });
 
     QUnit.test("pushState also changes the title of the tab", async (assert) => {

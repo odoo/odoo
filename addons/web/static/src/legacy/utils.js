@@ -15,22 +15,6 @@ import { useComponent } from "@odoo/owl";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 
-export function makeLegacyRpcService(legacyEnv) {
-    return {
-        start(env) {
-            legacyEnv.bus.on("rpc_request", null, (rpcId) => {
-                env.bus.trigger("RPC:REQUEST", rpcId);
-            });
-            legacyEnv.bus.on("rpc_response", null, (rpcId) => {
-                env.bus.trigger("RPC:RESPONSE", rpcId);
-            });
-            legacyEnv.bus.on("rpc_response_failed", null, (rpcId) => {
-                env.bus.trigger("RPC:RESPONSE", rpcId);
-            });
-        },
-    };
-}
-
 /**
  * Returns a service that maps legacy dialogs
  * to new environment services behavior.

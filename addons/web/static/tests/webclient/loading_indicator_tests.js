@@ -31,12 +31,14 @@ QUnit.module("LoadingIndicator", {
     },
 });
 
+const payload = (id) => ({ data: { id }, settings: {} });
+
 QUnit.test("displays the loading indicator in non debug mode", async (assert) => {
     const env = await makeTestEnv();
     await mount(LoadingIndicator, target, { env });
     let loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
-    env.bus.trigger("RPC:REQUEST", 1);
+    env.bus.trigger("RPC:REQUEST", payload(1));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.notStrictEqual(loadingIndicator, null, "the loading indicator should be displayed");
@@ -45,7 +47,7 @@ QUnit.test("displays the loading indicator in non debug mode", async (assert) =>
         "Loading",
         "the loading indicator should display 'Loading'"
     );
-    env.bus.trigger("RPC:RESPONSE", 1);
+    env.bus.trigger("RPC:RESPONSE", payload(1));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
@@ -57,7 +59,7 @@ QUnit.test("displays the loading indicator for one rpc in debug mode", async (as
     await mount(LoadingIndicator, target, { env });
     let loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
-    env.bus.trigger("RPC:REQUEST", 1);
+    env.bus.trigger("RPC:REQUEST", payload(1));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.notStrictEqual(loadingIndicator, null, "the loading indicator should be displayed");
@@ -66,7 +68,7 @@ QUnit.test("displays the loading indicator for one rpc in debug mode", async (as
         "Loading (1)",
         "the loading indicator should indicate 1 request in progress"
     );
-    env.bus.trigger("RPC:RESPONSE", 1);
+    env.bus.trigger("RPC:RESPONSE", payload(1));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
@@ -78,8 +80,8 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     await mount(LoadingIndicator, target, { env });
     let loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
-    env.bus.trigger("RPC:REQUEST", 1);
-    env.bus.trigger("RPC:REQUEST", 2);
+    env.bus.trigger("RPC:REQUEST", payload(1));
+    env.bus.trigger("RPC:REQUEST", payload(2));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.notStrictEqual(loadingIndicator, null, "the loading indicator should be displayed");
@@ -88,7 +90,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
         "Loading (2)",
         "the loading indicator should indicate 2 requests in progress."
     );
-    env.bus.trigger("RPC:REQUEST", 3);
+    env.bus.trigger("RPC:REQUEST", payload(3));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
@@ -96,7 +98,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
         "Loading (3)",
         "the loading indicator should indicate 3 requests in progress."
     );
-    env.bus.trigger("RPC:RESPONSE", 1);
+    env.bus.trigger("RPC:RESPONSE", payload(1));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
@@ -104,7 +106,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
         "Loading (2)",
         "the loading indicator should indicate 2 requests in progress."
     );
-    env.bus.trigger("RPC:REQUEST", 4);
+    env.bus.trigger("RPC:REQUEST", payload(4));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
@@ -112,8 +114,8 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
         "Loading (3)",
         "the loading indicator should indicate 3 requests in progress."
     );
-    env.bus.trigger("RPC:RESPONSE", 2);
-    env.bus.trigger("RPC:RESPONSE", 3);
+    env.bus.trigger("RPC:RESPONSE", payload(2));
+    env.bus.trigger("RPC:RESPONSE", payload(3));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
@@ -121,7 +123,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
         "Loading (1)",
         "the loading indicator should indicate 1 request in progress."
     );
-    env.bus.trigger("RPC:RESPONSE", 4);
+    env.bus.trigger("RPC:RESPONSE", payload(4));
     await nextTick();
     loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
@@ -144,9 +146,9 @@ QUnit.test("loading indicator blocks UI", async (assert) => {
         assert.step("unblock");
     });
     await mount(LoadingIndicator, target, { env });
-    env.bus.trigger("RPC:REQUEST", 1);
+    env.bus.trigger("RPC:REQUEST", payload(1));
     await nextTick();
-    env.bus.trigger("RPC:RESPONSE", 1);
+    env.bus.trigger("RPC:RESPONSE", payload(1));
     await nextTick();
     assert.verifySteps(["set timeout 250", "set timeout 3000", "block", "unblock"]);
     unpatch(originalBrowser, "mock.settimeout");
@@ -163,12 +165,12 @@ QUnit.test("loading indicator doesn't unblock ui if it didn't block it", async (
         assert.step("unblock");
     });
     await mount(LoadingIndicator, target, { env });
-    env.bus.trigger("RPC:REQUEST", 1);
+    env.bus.trigger("RPC:REQUEST", payload(1));
     execRegisteredTimeouts();
-    env.bus.trigger("RPC:RESPONSE", 1);
+    env.bus.trigger("RPC:RESPONSE", payload(1));
     assert.verifySteps(["block", "unblock"]);
-    env.bus.trigger("RPC:REQUEST", 2);
-    env.bus.trigger("RPC:RESPONSE", 2);
+    env.bus.trigger("RPC:REQUEST", payload(2));
+    env.bus.trigger("RPC:RESPONSE", payload(2));
     execRegisteredTimeouts();
     assert.verifySteps([]);
 });
@@ -185,14 +187,14 @@ QUnit.test("loading indicator is not displayed immediately", async (assert) => {
         assert.step("unblock");
     });
     await mount(LoadingIndicator, target, { env });
-    env.bus.trigger("RPC:REQUEST", 1);
+    env.bus.trigger("RPC:REQUEST", payload(1));
     await nextTick();
     assert.containsNone(target, ".o_loading_indicator");
     await advanceTime(400);
     await nextTick();
     assert.containsOnce(target, ".o_loading_indicator");
 
-    env.bus.trigger("RPC:RESPONSE", 1);
+    env.bus.trigger("RPC:RESPONSE", payload(1));
     await nextTick();
     assert.containsNone(target, ".o_loading_indicator");
 });

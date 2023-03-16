@@ -2,13 +2,13 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { formatFloat } from '@web/views/fields/formatters';
-import { session } from '@web/session';
 import { ViewButton } from '@web/views/view_button/view_button';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
 import { ProjectRightSidePanelSection } from './components/project_right_side_panel_section';
 import { ProjectMilestone } from './components/project_milestone';
 import { ProjectProfitability } from './components/project_profitability';
+import { getCurrency } from '@web/core/currency';
 
 const { Component, onWillStart, useState } = owl;
 
@@ -75,7 +75,7 @@ export class ProjectRightSidePanel extends Component {
             'digits': [false, 0],
             'noSymbol': true,
         });
-        const currency = session.currencies[this.currencyId];
+        const currency = getCurrency(this.currencyId);
         if (!currency) {
             return valueFormatted;
         }

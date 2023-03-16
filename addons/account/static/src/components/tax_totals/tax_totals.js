@@ -4,7 +4,7 @@ import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { getCurrency } from "@web/core/currency";
 
 const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
@@ -123,7 +123,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     get currency() {
-        return session.currencies[this.currencyId];
+        return getCurrency(this.currencyId);
     }
 
     invalidate() {

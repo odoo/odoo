@@ -19,6 +19,7 @@ transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
 import { App, whenReady } from "@odoo/owl";
+import { currencies } from "@web/core/currency";
 
 const { prepareRegistriesWithCleanup } = utils;
 
@@ -247,10 +248,6 @@ function patchSessionInfo() {
             load_menus: "161803",
             translations: "314159",
         },
-        currencies: {
-            1: { name: "USD", digits: [69, 2], position: "before", symbol: "$" },
-            2: { name: "EUR", digits: [69, 2], position: "after", symbol: "€" },
-        },
         user_context: {
             lang: "en",
             uid: 7,
@@ -271,7 +268,11 @@ function patchSessionInfo() {
         },
         db: "test",
         server_version: "1.0",
-        server_version_info: [1, 0, 0, "final", 0, ''],
+        server_version_info: [1, 0, 0, "final", 0, ""],
+    });
+    patchWithCleanup(currencies, {
+        1: { name: "USD", digits: [69, 2], position: "before", symbol: "$" },
+        2: { name: "EUR", digits: [69, 2], position: "after", symbol: "€" },
     });
 }
 

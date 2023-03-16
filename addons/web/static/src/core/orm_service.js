@@ -84,6 +84,8 @@ function validateArray(name, array) {
     }
 }
 
+export const UPDATE_METHODS = ["unlink", "create", "write", "action_archive", "action_unarchive"];
+
 export class ORM {
     constructor(rpc, user) {
         /** @protected */
