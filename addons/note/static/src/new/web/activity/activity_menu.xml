@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.ActivityMenu" t-inherit-mode="extension">
-        <xpath expr="//*[@name='activityGroups']" position="after">
+        <xpath expr="//*[@name='activityGroupLoop']" position="after">
             <div t-if="!state.addingNote" class="d-grid" t-on-click="() => this.state.addingNote = true">
                 <button type="button" class="btn text-center" t-on-click="() => this.state.addingNote = true">Add new note</button>
             </div>
