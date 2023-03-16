@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
-import { Component, onMounted } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class Many2OneAvatarField extends Component {
@@ -41,11 +40,13 @@ export class Many2OneFieldPopover extends Many2OneField {
     static components = {
         Many2XAutocomplete: AvatarMany2XAutocomplete,
     };
-    setup() {
-        super.setup();
-        onMounted(() => this.focusInput());
+    get Many2XAutocompleteProps() {
+        return {
+            ...super.Many2XAutocompleteProps,
+            dropdown: false,
+            autofocus: true,
+        };
     }
-
     async updateRecord(value) {
         const updatedValue = await super.updateRecord(...arguments);
         await this.props.record.save();
@@ -94,22 +95,14 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
                 canCreate: false,
                 canCreateEdit: false,
                 canQuickCreate: false,
+                placeholder: this.env._t("Search user..."),
             },
             {
                 position: "bottom",
+                popoverClass: "o_m2o_tags_avatar_field_popover",
+                preventClose: (ev) => !!ev.target.closest(".modal"),
             }
         );
-    }
-
-    get canDisplayDelete() {
-        return !this.isFieldReadonly && this.props.record.data[this.props.name] && !isMobileOS();
-    }
-    async remove(ev) {
-        if (this.isFieldReadonly) {
-            return;
-        }
-        await this.props.record.update({ [this.props.name]: false });
-        await this.props.record.save();
     }
 }
 

@@ -6,6 +6,7 @@ import {
     KanbanMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
     kanbanMany2ManyTagsAvatarUserField,
+    listMany2ManyTagsAvatarUserField,
 } from "@mail/views/fields/many2many_avatar_user_field/many2many_avatar_user_field";
 
 export class Many2ManyTagsAvatarEmployeeField extends Many2ManyTagsAvatarUserField {
@@ -43,6 +44,13 @@ export const kanbanMany2ManyTagsAvatarEmployeeField = {
 registry
     .category("fields")
     .add("kanban.many2many_avatar_employee", kanbanMany2ManyTagsAvatarEmployeeField);
+export const listMany2ManyTagsAvatarEmployeeField = {
+    ...listMany2ManyTagsAvatarUserField,
+    additionalClasses: [
+        ...listMany2ManyTagsAvatarUserField.additionalClasses,
+        "o_field_many2many_avatar_user",
+    ],
+};
 registry
     .category("fields")
-    .add("list.many2many_avatar_employee", kanbanMany2ManyTagsAvatarEmployeeField);
+    .add("list.many2many_avatar_employee", listMany2ManyTagsAvatarEmployeeField);

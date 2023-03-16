@@ -33,7 +33,7 @@
 
 <t t-name="web.Many2XAutocomplete" owl="1" >
     <div class="o_input_dropdown" t-ref="autocomplete_container">
-        <input t-if="env.isSmall"
+        <input t-if="env.isSmall and props.dropdown"
             type="text"
             t-att-id="props.id"
             class="o_input"
@@ -52,6 +52,8 @@
             onSelect.bind="onSelect"
             onInput.bind="onInput"
             onChange.bind="onChange"
+            dropdown="props.dropdown"
+            autofocus="props.autofocus"
         />
         <a role="button" class="o_dropdown_button" draggable="false" />
     </div>
