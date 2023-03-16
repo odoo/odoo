@@ -4,7 +4,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
-import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -20,7 +19,7 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-import { Component, onRendered, onWillStart, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onRendered, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -184,8 +183,6 @@ export class FormController extends Component {
         });
 
         const state = this.props.state || {};
-        const { fieldsToTranslate } = state;
-        this.fieldsToTranslate = useState(fieldsToTranslate || {});
         const activeNotebookPages = { ...state.activeNotebookPages };
         this.onNotebookPageChange = (notebookId, page) => {
             if (page) {
@@ -202,7 +199,6 @@ export class FormController extends Component {
                 return {
                     activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
                     resId: this.model.root.resId,
-                    fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };
             },
         });
@@ -441,18 +437,6 @@ export class FormController extends Component {
         const record = this.model.root;
         let saved = false;
 
-        // Before we save, we gather dirty translate fields data. It needs to be done before the
-        // save as nothing will be dirty after. It is why there is a compute part and a show part.
-        const dirtyTranslatableFields = localization.multiLang
-            ? Object.values(record.fields).filter((f) => f.translate && record.isFieldDirty(f.name))
-            : [];
-        if (dirtyTranslatableFields.length) {
-            const { resId } = record;
-            this.fieldsToTranslate[resId] = new Set([
-                ...toRaw(this.fieldsToTranslate[resId] || []),
-                ...dirtyTranslatableFields,
-            ]);
-        }
         if (this.props.saveRecord) {
             saved = await this.props.saveRecord(record, params);
         } else {
@@ -463,13 +447,6 @@ export class FormController extends Component {
             this.props.onSave(record, params);
         }
 
-        // After we saved, we show the previously computed data in the alert (if there is any).
-        // It needs to be done after the save because if we were in record creation, the resId
-        // changed from false to a number. So it first needs to update the computed data to the new id.
-        if (this.fieldsToTranslate.false) {
-            this.fieldsToTranslate[record.resId] = this.fieldsToTranslate.false;
-            delete this.fieldsToTranslate.false;
-        }
         return saved;
     }
 
@@ -485,20 +462,6 @@ export class FormController extends Component {
         if (this.model.root.isNew || this.env.inDialog) {
             this.env.config.historyBack();
         }
-    }
-
-    get translateAlert() {
-        const { resId } = this.model.root;
-        if (!this.fieldsToTranslate[resId]) {
-            return null;
-        }
-
-        return {
-            fields: this.fieldsToTranslate[resId],
-            close: () => {
-                delete this.fieldsToTranslate[resId];
-            },
-        };
     }
 
     get className() {
