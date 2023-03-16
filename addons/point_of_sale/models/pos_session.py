@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _, Command, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 from odoo.osv.expression import AND, OR
@@ -1790,9 +1790,11 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_res_users(self, params):
-        user = self.env['res.users'].search_read(**params['search_params'])[0]
-        user['role'] = 'manager' if any(id == self.config_id.group_pos_manager_id.id for id in user['groups_id']) else 'cashier'
-        del user['groups_id']
+        user = self.env['res.users'].search_read(**params['search_params'])
+        if user and user[0].get('id') != SUPERUSER_ID:
+            user = user[0]
+            user['role'] = 'manager' if any(id == self.config_id.group_pos_manager_id.id for id in user['groups_id']) else 'cashier'
+            del user['groups_id']
         return user
 
     def _loader_params_product_pricelist(self):
