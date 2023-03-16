@@ -7,7 +7,7 @@ import {
     createTextNode,
     getTag,
 } from "@web/core/utils/xml";
-import { toStringExpression } from "./utils";
+import { toStringExpression, BUTTON_CLICK_PARAMS } from "./utils";
 
 /**
  * @typedef Compiler
@@ -18,24 +18,6 @@ import { toStringExpression } from "./utils";
 
 import { xml } from "@odoo/owl";
 
-const BUTTON_CLICK_PARAMS = [
-    "name",
-    "type",
-    "args",
-    "context",
-    "close",
-    "confirm",
-    "special",
-    "effect",
-    "help",
-    "modifiers",
-    // WOWL SAD: is adding the support for debounce attribute here justified or should we
-    // just override compileButton in kanban compiler to add the debounce?
-    "debounce",
-    // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
-    // This should be refactor someday
-    "noSaveDialog",
-];
 const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "id"];
 const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;
 
