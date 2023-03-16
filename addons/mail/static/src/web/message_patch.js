@@ -6,8 +6,8 @@ import { useService } from "@web/core/utils/hooks";
 import { format } from "web.field_utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
+import { getCurrency } from "@web/core/currency";
 
 const formatters = registry.category("formatters");
 
@@ -93,7 +93,7 @@ patch(Message.prototype, "mail/web", {
             case "monetary":
                 return format.monetary(trackingValue.value, undefined, {
                     currency: trackingValue.currencyId
-                        ? session.currencies[trackingValue.currencyId]
+                        ? getCurrency(trackingValue.currencyId)
                         : undefined,
                     forceString: true,
                 });

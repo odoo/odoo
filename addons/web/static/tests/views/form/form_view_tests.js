@@ -29,9 +29,7 @@ import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { CharField } from "@web/views/fields/char/char_field";
 import { FormController } from "@web/views/form/form_controller";
 import { session } from "@web/session";
-import legacySession from "web.session";
 import { scrollerService } from "@web/core/scroller_service";
-import BasicModel from "web.BasicModel";
 import { localization } from "@web/core/l10n/localization";
 import { SIZES } from "@web/core/ui/ui_service";
 import { errorService } from "@web/core/errors/error_service";
@@ -43,6 +41,7 @@ const serviceRegistry = registry.category("services");
 const widgetRegistry = registry.category("view_widgets");
 
 import { Component, xml, EventBus } from "@odoo/owl";
+import { companyService } from "@web/webclient/company_service";
 
 let target;
 let serverData;
@@ -10385,116 +10384,6 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.test('edition in form view on a "noCache" model', async function (assert) {
-        patchWithCleanup(BasicModel.prototype, {
-            noCacheModels: BasicModel.prototype.noCacheModels.concat(["partner"]),
-        });
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><sheet><field name="display_name"/></sheet></form>`,
-            resId: 1,
-            mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step("write");
-                }
-            },
-        });
-
-        form.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
-
-        await editInput(target, "[name=display_name] input", "new value");
-        await clickSave(target);
-
-        assert.verifySteps(["write", "clear_cache"]);
-    });
-
-    QUnit.test('creation in form view on a "noCache" model', async function (assert) {
-        patchWithCleanup(BasicModel.prototype, {
-            noCacheModels: BasicModel.prototype.noCacheModels.concat(["partner"]),
-        });
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><sheet><field name="display_name"/></sheet></form>`,
-            resId: 1,
-            mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step("write");
-                }
-            },
-        });
-
-        form.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
-
-        await editInput(target, "[name=display_name] input", "new value");
-        await clickSave(target);
-
-        assert.verifySteps(["write", "clear_cache"]);
-    });
-
-    QUnit.test('deletion in form view on a "noCache" model', async function (assert) {
-        patchWithCleanup(BasicModel.prototype, {
-            noCacheModels: BasicModel.prototype.noCacheModels.concat(["partner"]),
-        });
-
-        const form = await makeView({
-            type: "form",
-            serverData,
-            resModel: "partner",
-            arch: `<form><sheet><field name="display_name"/></sheet></form>`,
-            mockRPC(route, args) {
-                if (args.method === "unlink") {
-                    assert.step("unlink");
-                }
-            },
-            resId: 1,
-            actionMenus: {},
-        });
-        form.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
-
-        await toggleActionMenu(target);
-        await toggleMenuItem(target, "Delete");
-        await click(target.querySelector(".modal-footer .btn-primary"));
-
-        assert.verifySteps(["unlink", "clear_cache"]);
-    });
-
-    QUnit.test(
-        "reload currencies when writing on records of model res.currency",
-        async function (assert) {
-            serverData.models["res.currency"] = {
-                fields: {},
-                records: [{ id: 1, display_name: "some currency" }],
-            };
-
-            patchWithCleanup(legacySession, {
-                reloadCurrencies: function () {
-                    assert.step("reload currencies");
-                },
-            });
-
-            await makeView({
-                type: "form",
-                resModel: "res.currency",
-                serverData,
-                arch: '<form><field name="display_name"/></form>',
-                resId: 1,
-                mockRPC(route, args) {
-                    assert.step(args.method);
-                },
-            });
-
-            await editInput(target.querySelector("[name=display_name]"), "input", "new value");
-            await clickSave(target);
-            assert.verifySteps(["get_views", "read", "write", "reload currencies", "read"]);
-        }
-    );
-
     QUnit.test("keep editing after call_button fail", async function (assert) {
         assert.expect(4);
 
@@ -11233,6 +11122,7 @@ QUnit.module("Views", (hooks) => {
                     });
                 },
             };
+            serviceRegistry.add("company", companyService, { force: true });
             serviceRegistry.add("action", fakeActionService, { force: true });
 
             await makeView({
@@ -11270,6 +11160,7 @@ QUnit.module("Views", (hooks) => {
                     });
                 },
             };
+            serviceRegistry.add("company", companyService, { force: true });
             serviceRegistry.add("action", fakeActionService, { force: true });
 
             serverData.models["res.company"].records = [

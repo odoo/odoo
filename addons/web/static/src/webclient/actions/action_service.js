@@ -14,6 +14,7 @@ import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
+import { UPDATE_METHODS } from "@web/core/orm_service";
 
 import {
     Component,
@@ -110,6 +111,12 @@ function makeActionManager(env) {
 
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
+    });
+    env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+        const { model, method } = ev.detail.data.params;
+        if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
+            actionCache = {};
+        }
     });
 
     // ---------------------------------------------------------------------------
@@ -836,7 +843,10 @@ function makeActionManager(env) {
                 });
             }
             if (action.close) {
-                return doAction({ type: "ir.actions.act_window_close" }, { onClose: options.onClose });
+                return doAction(
+                    { type: "ir.actions.act_window_close" },
+                    { onClose: options.onClose }
+                );
             } else if (options.onClose) {
                 options.onClose();
             }

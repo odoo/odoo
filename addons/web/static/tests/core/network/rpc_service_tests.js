@@ -190,20 +190,22 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async 
     });
     const rpcIdsRequest = [];
     const rpcIdsResponse = [];
-    env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
-        rpcIdsRequest.push(rpcId);
-        assert.step("RPC:REQUEST");
+    env.bus.addEventListener("RPC:REQUEST", (ev) => {
+        rpcIdsRequest.push(ev.detail.data.id);
+        const silent = ev.detail.settings.silent;
+        assert.step("RPC:REQUEST" + (silent ? "(silent)" : ""));
     });
-    env.bus.addEventListener("RPC:RESPONSE", (rpcId) => {
-        rpcIdsResponse.push(rpcId);
-        assert.step("RPC:RESPONSE");
+    env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+        rpcIdsResponse.push(ev.detail.data.id);
+        const silent = ev.detail.settings.silent;
+        assert.step("RPC:RESPONSE" + (silent ? "(silent)" : ""));
     });
     await env.services.rpc("/test/");
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
     assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 
     await env.services.rpc("/test/", {}, { silent: true });
-    assert.verifySteps([]);
+    assert.verifySteps(["RPC:REQUEST(silent)", "RPC:RESPONSE(silent)"]);
 
     unpatch(browser, "mock.xhr");
 });

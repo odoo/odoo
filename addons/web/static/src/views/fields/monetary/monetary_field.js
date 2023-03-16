@@ -7,9 +7,9 @@ import { parseMonetary } from "../parsers";
 import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { session } from "@web/session";
 
 import { Component } from "@odoo/owl";
+import { getCurrency } from "@web/core/currency";
 
 export class MonetaryField extends Component {
     static template = "web.MonetaryField";
@@ -44,8 +44,8 @@ export class MonetaryField extends Component {
         return currency && currency[0];
     }
     get currency() {
-        if (!isNaN(this.currencyId) && this.currencyId in session.currencies) {
-            return session.currencies[this.currencyId];
+        if (!isNaN(this.currencyId)) {
+            return getCurrency(this.currencyId) || null;
         }
         return null;
     }
@@ -61,7 +61,7 @@ export class MonetaryField extends Component {
         if (!this.currency) {
             return null;
         }
-        return session.currencies[this.currencyId].digits;
+        return getCurrency(this.currencyId).digits;
     }
 
     get formattedValue() {
