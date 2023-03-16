@@ -329,6 +329,6 @@ QUnit.test(
             },
         });
         await start();
-        assert.containsOnce($, ".o-mail-MessagingMenu-counter:contains(0)");
+        assert.containsNone($, ".o-mail-MessagingMenu-counter-badge");
     }
 );

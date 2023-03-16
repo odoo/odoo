@@ -80,7 +80,7 @@ QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
 QUnit.test("rendering without OdooBot has a request (denied)", async (assert) => {
     patchBrowserNotification("denied");
     await start();
-    assert.strictEqual($(".o-mail-MessagingMenu-counter").text(), "0");
+    assert.containsNone($, ".o-mail-MessagingMenu-counter-badge");
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsNone($, ".o-mail-NotificationItem");
 });
@@ -88,7 +88,7 @@ QUnit.test("rendering without OdooBot has a request (denied)", async (assert) =>
 QUnit.test("rendering without OdooBot has a request (accepted)", async (assert) => {
     patchBrowserNotification("granted");
     await start();
-    assert.strictEqual($(".o-mail-MessagingMenu-counter").text(), "0");
+    assert.containsNone($, ".o-mail-MessagingMenu-counter-badge");
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsNone($, ".o-mail-NotificationItem");
 });
@@ -105,7 +105,7 @@ QUnit.test("respond to notification prompt (denied)", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["confirmation_denied_toast"]);
-    assert.strictEqual($(".o-mail-MessagingMenu-counter").text(), "0");
+    assert.containsNone($, ".o-mail-MessagingMenu-counter-badge");
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsNone($, ".o-mail-NotificationItem");
 });
