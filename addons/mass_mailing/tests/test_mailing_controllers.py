@@ -73,22 +73,25 @@ class TestMailingControllers(MassMailCommon, HttpCase):
             mailing.action_send_mail()
 
         mail = self._find_mail_mail_wrecord(self.test_contact)
+        mail_id_int = mail.id
+        mail_tracking_url = mail._get_tracking_url()
         mailing_trace = mail.mailing_trace_ids
         self.assertEqual(mail.state, 'sent')
         self.assertEqual(len(mailing_trace), 1)
         self.assertFalse(mailing_trace.open_datetime)
         self.assertEqual(mailing_trace.trace_status, 'sent')
+        mail.unlink()  # the mail might be removed during the email sending
+        self.env.flush_all()
 
         with freeze_time(self._reference_now):
-            response = self.url_open(mail._get_tracking_url())
+            response = self.url_open(mail_tracking_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(mail.state, 'sent')
         self.assertEqual(mailing_trace.open_datetime, self._reference_now)
         self.assertEqual(mailing_trace.trace_status, 'open')
 
         track_url = werkzeug.urls.url_join(
-            mail.get_base_url(),
-            'mail/track/%s/fake_token/blank.gif' % mail.id
+            mailing.get_base_url(),
+            f'mail/track/{mail_id_int}/fake_token/blank.gif'
         )
         response = self.url_open(track_url)
         self.assertEqual(response.status_code, 400)
