@@ -756,6 +756,9 @@ export const htmlField = {
             // 'focus': Join when the editable has focus
             wysiwygOptions.collaborativeTrigger = options.collaborative_trigger || 'focus';
         }
+	    if ('style-inline' in options) {
+	        wysiwygOptions.inlineStyle = Boolean(options.styleInline);
+	    }
         if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.
