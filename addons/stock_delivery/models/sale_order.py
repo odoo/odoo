@@ -30,3 +30,11 @@ class SaleOrder(models.Model):
         else:
             post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
+
+    def set_delivery_line(self, carrier, amount):
+        for order in self:
+            if order.state in ('sale', 'done'):
+                pending_deliverys = order.picking_ids.filtered(
+                    lambda p: p.state not in ('done', 'cancel') and p.location_id == p.picking_type_id.warehouse_id.lot_stock_id)
+                pending_deliverys.carrier_id = carrier.id
+        return super().set_delivery_line(carrier, amount)
