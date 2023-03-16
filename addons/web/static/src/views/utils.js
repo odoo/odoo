@@ -18,6 +18,27 @@ const NUMERIC_TYPES = ["integer", "float", "monetary"];
  * @property {boolean} duplicate
  */
 
+export const BUTTON_CLICK_PARAMS = [
+    "name",
+    "type",
+    "args",
+    "context",
+    "close",
+    "confirm",
+    "confirm-title",
+    "confirm-label",
+    "special",
+    "effect",
+    "help",
+    "modifiers",
+    // WOWL SAD: is adding the support for debounce attribute here justified or should we
+    // just override compileButton in kanban compiler to add the debounce?
+    "debounce",
+    // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
+    // This should be refactor someday
+    "noSaveDialog",
+];
+
 /**
  * Add dependencies to activeFields
  *
@@ -204,6 +225,16 @@ export function isNull(value) {
 }
 
 export function processButton(node) {
+    const withDefault = {
+        close: (val) => archParseBoolean(val, false),
+        context: (val) => val || "{}",
+    };
+    const clickParams = {};
+    for (const { name, value } of node.attributes) {
+        if (BUTTON_CLICK_PARAMS.includes(name)) {
+            clickParams[name] = withDefault[name] ? withDefault[name](value) : value;
+        }
+    }
     return {
         className: node.getAttribute("class") || "",
         disabled: !!node.getAttribute("disabled") || false,
@@ -213,12 +244,7 @@ export function processButton(node) {
         options: JSON.parse(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         display: node.getAttribute("display") || "selection",
-        clickParams: {
-            close: archParseBoolean(node.getAttribute("close"), false),
-            context: node.getAttribute("context") || "{}",
-            name: node.getAttribute("name"),
-            type: node.getAttribute("type"),
-        },
+        clickParams,
     };
 }
 
