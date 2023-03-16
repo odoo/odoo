@@ -15,6 +15,7 @@
         'security/ir.model.access.csv',
         'security/todo_security.xml',
         'data/mail_activity_type_data.xml',
+        'data/todo_template.xml',
         'views/project_task_views.xml',
         'views/todo_menus.xml',
     ],

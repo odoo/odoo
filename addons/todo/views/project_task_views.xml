@@ -276,6 +276,16 @@
         <field name="act_window_id" ref="project_task_action_todo"/>
     </record>
 
+    <!-- Todo pre-loading action -->
+    <record id="project_task_preload_action_todo" model="ir.actions.server">
+        <field name="name">menu load To-dos</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            model._ensure_onboarding_todo(); action = env["ir.actions.actions"]._for_xml_id("todo.project_task_action_todo")
+        </field>
+    </record>
+
     <!-- Conversion actions-->
     <record id="project_task_action_convert_todo_to_task" model="ir.actions.act_window">
         <field name="name">Convert to Task</field>

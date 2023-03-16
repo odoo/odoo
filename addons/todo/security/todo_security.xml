@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="group_onboarding_todo" model="res.groups">
+        <field name="name">Onboarding todo already generated for those users</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 <data noupdate="1">
+
     <record model="ir.rule" id="project.task_visibility_rule">
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
