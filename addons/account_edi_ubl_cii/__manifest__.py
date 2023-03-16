@@ -30,6 +30,7 @@ Pro rules and show the errors.
 
         'views/account_move_send_views.xml',
         'views/account_journal_views.xml',
+        'views/res_partner_views.xml',
     ],
     'installable': True,
     'auto_install': True,

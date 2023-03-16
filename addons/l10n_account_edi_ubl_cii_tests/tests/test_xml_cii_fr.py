@@ -135,7 +135,7 @@ class TestCIIFR(TestUBLCommon):
             }],
         )
 
-        pdf_attachment = invoice.cii_xml_id
+        pdf_attachment = invoice.ubl_cii_xml_id
         self.assertEqual(pdf_attachment['name'], 'factur-x.xml')
 
     def test_export_import_invoice(self):
@@ -169,7 +169,7 @@ class TestCIIFR(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice.cii_xml_id,
+            invoice.ubl_cii_xml_id,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
                         <ID>___ignore___</ID>
@@ -217,7 +217,7 @@ class TestCIIFR(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund.cii_xml_id,
+            refund.ubl_cii_xml_id,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
                         <ID>___ignore___</ID>
@@ -270,7 +270,7 @@ class TestCIIFR(TestUBLCommon):
             ],
         )
         self._assert_invoice_attachment(
-            invoice.cii_xml_id,
+            invoice.ubl_cii_xml_id,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
                         <ID>___ignore___</ID>
@@ -289,7 +289,7 @@ class TestCIIFR(TestUBLCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_encoding_in_attachment(invoice.cii_xml_id, 'factur-x.xml')
+        self._test_encoding_in_attachment(invoice.ubl_cii_xml_id, 'factur-x.xml')
 
     ####################################################
     # Test import
@@ -302,7 +302,7 @@ class TestCIIFR(TestUBLCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_import_partner(invoice.cii_xml_id, self.partner_1, self.partner_2)
+        self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
     def test_import_tax_included(self):
         """
