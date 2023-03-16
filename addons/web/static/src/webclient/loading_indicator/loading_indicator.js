@@ -36,7 +36,10 @@ export class LoadingIndicator extends Component {
         });
     }
 
-    requestCall({ detail: rpcId }) {
+    requestCall({ detail }) {
+        if (detail.settings.silent) {
+            return;
+        }
         if (this.state.count === 0) {
             browser.clearTimeout(this.startShowTimer);
             this.startShowTimer = browser.setTimeout(() => {
@@ -49,12 +52,15 @@ export class LoadingIndicator extends Component {
                 }
             }, 250);
         }
-        this.rpcIds.add(rpcId);
+        this.rpcIds.add(detail.data.id);
         this.state.count++;
     }
 
-    responseCall({ detail: rpcId }) {
-        this.rpcIds.delete(rpcId);
+    responseCall({ detail }) {
+        if (detail.settings.silent) {
+            return;
+        }
+        this.rpcIds.delete(detail.data.id);
         this.state.count = this.rpcIds.size;
         if (this.state.count === 0) {
             browser.clearTimeout(this.startShowTimer);

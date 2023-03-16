@@ -3,6 +3,7 @@
 import { deepCopy } from "@web/core/utils/objects";
 import { registry } from "@web/core/registry";
 import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
+import { UPDATE_METHODS } from "@web/core/orm_service";
 
 /**
  * @typedef {Object} IrFilter
@@ -51,11 +52,21 @@ export const viewService = {
     start(env, { orm }) {
         let cache = {};
 
-        env.bus.addEventListener("CLEAR-CACHES", () => {
+        function clearCache() {
             cache = {};
             const processedArchs = registry.category("__processed_archs__");
             processedArchs.content = {};
             processedArchs.trigger("UPDATE");
+        }
+
+        env.bus.addEventListener("CLEAR-CACHES", clearCache);
+        env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+            const { model, method } = ev.detail.data.params;
+            if (["ir.ui.view", "ir.filters"].includes(model)) {
+                if (UPDATE_METHODS.includes(method)) {
+                    clearCache();
+                }
+            }
         });
 
         /**

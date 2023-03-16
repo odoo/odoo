@@ -14,6 +14,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
 
 import { Component, status } from "@odoo/owl";
+import { ormService } from "@web/core/orm_service";
 
 // -----------------------------------------------------------------------------
 // Mock Services
@@ -59,14 +60,25 @@ function buildMockRPC(mockRPC) {
 export function makeFakeRPCService(mockRPC) {
     return {
         name: "rpc",
-        start() {
+        start(env) {
             const rpcService = buildMockRPC(mockRPC);
-            return function () {
+            let nextId = 1;
+            return function (route, params = {}, settings = {}) {
                 let rejectFn;
+                const data = {
+                    id: nextId++,
+                    jsonrpc: "2.0",
+                    method: "call",
+                    params: params,
+                };
+                env.bus.trigger("RPC:REQUEST", { data, settings });
                 const rpcProm = new Promise((resolve, reject) => {
                     rejectFn = reject;
                     rpcService(...arguments)
-                        .then(resolve)
+                        .then((result) => {
+                            env.bus.trigger("RPC:RESPONSE", { data, settings });
+                            resolve(result);
+                        })
                         .catch(reject);
                 });
                 rpcProm.abort = (rejectError = true) => {
@@ -307,6 +319,16 @@ export function makeFakeHTTPService(getResponse, postResponse) {
     };
 }
 
+function makeFakeActionService() {
+    return {
+        start() {
+            return {
+                doAction() {},
+            };
+        },
+    };
+}
+
 export const mocks = {
     color_scheme: () => fakeColorSchemeService,
     company: () => fakeCompanyService,
@@ -321,4 +343,6 @@ export const mocks = {
     ui: () => uiService,
     user: () => userService,
     dialog: makeFakeDialogService,
+    orm: () => ormService,
+    action: makeFakeActionService,
 };

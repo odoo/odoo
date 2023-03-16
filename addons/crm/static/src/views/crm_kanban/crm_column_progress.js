@@ -4,6 +4,7 @@ import { onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { session } from "@web/session";
+import { getCurrency } from "@web/core/currency";
 
 export class CrmColumnProgress extends ColumnProgress {
     static props = {
@@ -29,7 +30,7 @@ export class CrmColumnProgress extends ColumnProgress {
         const title = rrField.string || this.env._t("Count");
         let currency = false;
         if (value && rrField.currency_field) {
-            currency = session.currencies[session.company_currency_id];
+            currency = getCurrency(session.company_currency_id);
         }
         return { value, currency, title };
     }

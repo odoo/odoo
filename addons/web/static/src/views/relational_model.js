@@ -299,32 +299,6 @@ class DataPoint {
     setup() {}
 
     /**
-     * TODO WOWL: adapt this comment to new system
-     * Also, is datapoint the best place ? Could be in record.
-     *
-     * Invalidates the DataManager's cache if the main model (i.e. the model of
-     * its root parent) of the given dataPoint is a model in 'noCacheModels'.
-     *
-     * Reloads the currencies if the main model is 'res.currency'.
-     * Reloads the webclient if we modify a res.company, to (un)activate the
-     * multi-company environment if we are not in a tour test.
-     *
-     */
-    invalidateCache() {
-        if (this.resModel === "res.currency") {
-            // TODO WOWL: this needs to be ported from basic model for the list view to have it.
-            // session.reloadCurrencies();
-            // There is a test in form view but it uses the basic model for now.
-        }
-        if (this.resModel === "res.company") {
-            this.model.action.doAction("reload_context");
-        }
-        if (this.model.noCacheModels.includes(this.resModel)) {
-            this.model.env.bus.trigger("CLEAR-CACHES");
-        }
-    }
-
-    /**
      * @param {Object} [activeFields={}]
      */
     setActiveFields(activeFields) {
@@ -566,7 +540,6 @@ export class Record extends DataPoint {
         await toggleArchive(this.model, this.resModel, [this.resId], true, this.context);
         await this.load();
         this.model.notify();
-        this.invalidateCache();
     }
 
     async askChanges() {
@@ -641,7 +614,6 @@ export class Record extends DataPoint {
             this._changes = {};
             this.preloadedData = {};
         }
-        this.invalidateCache();
     }
 
     discard() {
@@ -982,7 +954,6 @@ export class Record extends DataPoint {
         await toggleArchive(this.model, this.resModel, [this.resId], false, this.context);
         await this.load();
         this.model.notify();
-        this.invalidateCache();
     }
 
     async update(changes, options) {
@@ -1492,7 +1463,6 @@ export class Record extends DataPoint {
             this.data.id = this.resId;
             this.resIds.push(this.resId);
             this._changes = {};
-            this.invalidateCache();
         } else if (keys.length > 0) {
             try {
                 await this.model.orm.write(this.resModel, [this.resId], changes, { context });
@@ -1503,7 +1473,6 @@ export class Record extends DataPoint {
                 throw e;
             }
             this._changes = {};
-            this.invalidateCache();
         }
 
         this.isInQuickCreation = false;
@@ -1655,7 +1624,6 @@ class DynamicList extends DataPoint {
         const resIds = await this.getResIds(isSelected);
         await toggleArchive(this.model, this.resModel, resIds, true, this.context);
         await this.model.load();
-        this.invalidateCache();
         return resIds;
     }
 
@@ -1724,7 +1692,6 @@ class DynamicList extends DataPoint {
         const resIds = await this.getResIds(isSelected);
         await toggleArchive(this.model, this.resModel, resIds, false, this.context);
         await this.model.load();
-        this.invalidateCache();
         return resIds;
     }
 
@@ -1770,7 +1737,6 @@ class DynamicList extends DataPoint {
                     try {
                         const context = this.context;
                         await this.model.orm.write(this.resModel, resIds, changes, { context });
-                        this.invalidateCache();
                         validSelection.forEach((record) => {
                             record.selected = false;
                         });
@@ -3579,9 +3545,6 @@ export class RelationalModel extends Model {
         this.root = null;
 
         this.nextId = 1;
-
-        // list of models for which the DataManager's cache should be cleared on create, update and delete operations
-        this.noCacheModels = ["ir.actions.act_window", "ir.filters", "ir.ui.view", "res.currency"];
     }
 
     /**

@@ -18,6 +18,9 @@ QUnit.module("View service", (hooks) => {
                 fields: {},
                 records: [],
             },
+            "ir.ui.view": {
+                fields: {}, records: []
+            },
         };
 
         const fakeUiService = {
@@ -107,6 +110,37 @@ QUnit.module("View service", (hooks) => {
         }
 
         assert.verifySteps(["get_views", "get_views"]);
+    });
+
+    QUnit.test("clear cache when updating ir.ui.view", async (assert) => {
+        const mockRPC = (route, args) => {
+            if (route.includes("get_views")) {
+                assert.step("get_views");
+            }
+        };
+        const loadView = () =>
+            env.services.views.loadViews(
+                {
+                    resModel: "take.five",
+                    views: [[99, "list"]],
+                    context: { default_field_value: 1 },
+                },
+                {}
+            );
+
+        await makeMockServer(serverData, mockRPC);
+        const env = await makeTestEnv();
+
+        await loadView();
+        assert.verifySteps(["get_views"]);
+        await loadView();
+        assert.verifySteps([]); // cache works => no actual rpc
+        await env.services.orm.unlink("ir.ui.view", [3]);
+        await loadView();
+        assert.verifySteps(["get_views"]); // cache was invalidated
+        await env.services.orm.unlink("take.five", [3]);
+        await loadView();
+        assert.verifySteps([]); // cache was not invalidated
     });
 
     QUnit.test("loadViews stores fields in cache", async (assert) => {

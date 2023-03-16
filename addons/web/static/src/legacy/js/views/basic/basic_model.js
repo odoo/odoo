@@ -91,7 +91,6 @@ var Domain = require('web.Domain');
 var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
-var localStorage = require('web.local_storage');
 
 var _t = core._t;
 
@@ -143,15 +142,6 @@ var x2ManyCommands = {
 var BasicModel = AbstractModel.extend({
     // constants
     OPEN_GROUP_LIMIT: 10, // after this limit, groups are automatically folded
-
-    // list of models for which the DataManager's cache should be cleared on
-    // create, update and delete operations
-    noCacheModels: [
-        'ir.actions.act_window',
-        'ir.filters',
-        'ir.ui.view',
-        'res.currency',
-    ],
 
     /**
      * @override
@@ -398,8 +388,6 @@ var BasicModel = AbstractModel.extend({
                         record.count--;
                     }
                 });
-                // optionally clear the DataManager's cache
-                self._invalidateCache(records[0]);
             });
     },
     /**
@@ -1192,9 +1180,6 @@ var BasicModel = AbstractModel.extend({
                             // Erase changes as they have been applied
                             record._changes = {};
 
-                            // Optionally clear the DataManager's cache
-                            self._invalidateCache(record);
-
                             self.unfreezeOrder(record.id);
 
                             // Update the data directly or reload them
@@ -1299,39 +1284,6 @@ var BasicModel = AbstractModel.extend({
         return has_x_active?'x_active':undefined
     },
     /**
-     * Toggle the active value of given records (to archive/unarchive them)
-     *
-     * @param {Array} recordIDs local ids of the records to (un)archive
-     * @param {boolean} value false to archive, true to unarchive (value of the active field)
-     * @param {string} parentID id of the parent resource to reload
-     * @returns {Promise<string>} resolves to the parent id
-     */
-    toggleActive: function (recordIDs, parentID) {
-        var self = this;
-        var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function (recordID) {
-            return self.localData[recordID].res_id;
-        });
-        return this._rpc({
-                model: parent.model,
-                method: 'toggle_active',
-                args: [resIDs],
-            })
-            .then(function (action) {
-                // optionally clear the DataManager's cache
-                self._invalidateCache(parent);
-                if (!_.isEmpty(action)) {
-                    return self.do_action(action, {
-                        on_close: function () {
-                            return self.trigger_up('reload');
-                        }
-                    });
-                } else {
-                    return self.reload(parentID);
-                }
-            });
-    },
-    /**
      * Archive the given records
      *
      * @param {integer[]} resIDs ids of the records to archive
@@ -1347,8 +1299,6 @@ var BasicModel = AbstractModel.extend({
                 args: [resIDs],
             })
             .then(function (action) {
-                // optionally clear the DataManager's cache
-                self._invalidateCache(parent);
                 if (!_.isEmpty(action)) {
                     return new Promise(function (resolve, reject) {
                         self.do_action(action, {
@@ -1390,7 +1340,6 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function (action) {
                 // optionally clear the DataManager's cache
-                self._invalidateCache(parent);
                 if (!_.isEmpty(action)) {
                     return new Promise(function (resolve, reject) {
                         self.do_action(action, {
@@ -4043,31 +3992,6 @@ var BasicModel = AbstractModel.extend({
      */
     _getUngroupedListDomain(list) {
         return list.domain || [];
-    },
-    /**
-     * Invalidates the DataManager's cache if the main model (i.e. the model of
-     * its root parent) of the given dataPoint is a model in 'noCacheModels'.
-     *
-     * Reloads the currencies if the main model is 'res.currency'.
-     * Reloads the webclient if we modify a res.company, to (un)activate the
-     * multi-company environment if we are not in a tour test.
-     *
-     * @private
-     * @param {Object} dataPoint
-     */
-    _invalidateCache: function (dataPoint) {
-        while (dataPoint.parentID) {
-            dataPoint = this.localData[dataPoint.parentID];
-        }
-        if (dataPoint.model === 'res.currency') {
-            session.reloadCurrencies();
-        }
-        if (dataPoint.model === 'res.company' && !localStorage.getItem('running_tour')) {
-            this.do_action('reload_context');
-        }
-        if (_.contains(this.noCacheModels, dataPoint.model)) {
-            core.bus.trigger('clear_cache');
-        }
     },
     /**
      * Returns true if the field is protected against changes, looking for a

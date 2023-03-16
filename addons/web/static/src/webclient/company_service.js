@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { symmetricalDifference } from "../core/utils/arrays";
 import { session } from "@web/session";
+import { UPDATE_METHODS } from "@web/core/orm_service";
 
 function parseCompanyIds(cidsFromHash) {
     const cids = [];
@@ -30,8 +31,8 @@ function computeAllowedCompanyIds(cids) {
 }
 
 export const companyService = {
-    dependencies: ["user", "router", "cookie"],
-    start(env, { user, router, cookie }) {
+    dependencies: ["user", "router", "cookie", "action"],
+    start(env, { user, router, cookie, action }) {
         let cids;
         if ("cids" in router.current.hash) {
             cids = parseCompanyIds(router.current.hash.cids);
@@ -47,6 +48,14 @@ export const companyService = {
         user.updateContext({ allowed_company_ids: allowedCompanyIds });
         const availableCompanies = session.user_companies.allowed_companies;
 
+        env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+            const { model, method } = ev.detail.data.params;
+            if (model === "res.company" && UPDATE_METHODS.includes(method)) {
+                if (!browser.localStorage.getItem("running_tour")) {
+                    action.doAction("reload_context");
+                }
+            }
+        });
         return {
             availableCompanies,
             get allowedCompanyIds() {

@@ -9,7 +9,6 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
-import { session } from "@web/session";
 import { archParseBoolean, isNull, isRelational } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -350,11 +349,7 @@ export class KanbanRenderer extends Component {
         const { sumField } = this.props.list.model.progressAttributes;
         const value = group.getAggregates(sumField && sumField.name);
         const title = sumField ? sumField.string : this.env._t("Count");
-        let currency = false;
-        if (sumField && value && sumField.currency_field) {
-            currency = session.currencies[session.company_currency_id];
-        }
-        return { value, currency, title };
+        return { value, title };
     }
 
     generateGhostColumns() {

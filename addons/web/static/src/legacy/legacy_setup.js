@@ -3,7 +3,6 @@
 import { registry } from "../core/registry";
 import {
     makeLegacyNotificationService,
-    makeLegacyRpcService,
     makeLegacySessionService,
     makeLegacyDialogMappingService,
     makeLegacyCrashManagerService,
@@ -34,8 +33,6 @@ export const legacySetupProm = new Promise((resolve) => {
     serviceRegistry.add("legacy_action_manager", legacyActionManagerService);
     // add a service to redirect rpc events triggered on the bus in the
     // legacy env on the bus in the wowl env
-    const legacyRpcService = makeLegacyRpcService(legacyEnv);
-    serviceRegistry.add("legacy_rpc", legacyRpcService);
     const legacySessionService = makeLegacySessionService(legacyEnv, session);
     serviceRegistry.add("legacy_session", legacySessionService);
     const legacyWebClientService = makeLegacyWebClientService(legacyEnv);

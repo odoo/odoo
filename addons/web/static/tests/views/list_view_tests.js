@@ -12253,49 +12253,6 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test('list view on a "noCache" model', async function (assert) {
-        const list = await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `<tree editable="top"><field name="display_name"/></tree>`,
-            mockRPC(route, args) {
-                if (["name_create", "unlink", "write"].includes(args.method)) {
-                    assert.step(args.method);
-                }
-            },
-            actionMenus: {},
-        });
-
-        list.model.noCacheModels = list.model.noCacheModels.concat(["foo"]);
-        list.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
-
-        // create a new record
-        await click(target.querySelector(".o_list_button_add"));
-        await editInput(target, ".o_selected_row .o_field_widget input", "some value");
-        await clickSave(target);
-
-        // edit an existing record
-        await click(target.querySelector(".o_data_cell"));
-        await editInput(target, ".o_selected_row .o_field_widget input", "new value");
-        await click(target.querySelector(".o_list_button_save"));
-
-        // delete a record
-        await click(target.querySelector(".o_data_row .o_list_record_selector input"));
-        await toggleActionMenu(target);
-        await toggleMenuItem(target, "Delete");
-        await click(target.querySelector(".modal-footer .btn-primary"));
-
-        assert.verifySteps([
-            "name_create",
-            "clear_cache",
-            "write",
-            "clear_cache",
-            "unlink",
-            "clear_cache",
-        ]);
-    });
-
     QUnit.test(
         "list view move to previous page when all records from last page deleted",
         async function (assert) {

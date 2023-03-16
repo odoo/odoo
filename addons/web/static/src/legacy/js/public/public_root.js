@@ -12,7 +12,6 @@ import lazyloader from "web.public.lazyloader";
 
 import {
     makeLegacyNotificationService,
-    makeLegacyRpcService,
     makeLegacySessionService,
     makeLegacyDialogMappingService,
     mapLegacyEnvToWowlEnv,
@@ -369,7 +368,6 @@ export async function createPublicRoot(RootWidget) {
     AbstractService.prototype.deployServices(legacyEnv);
     // add a bunch of mapping services that will redirect service calls from the legacy env
     // to the wowl env
-    serviceRegistry.add("legacy_rpc", makeLegacyRpcService(legacyEnv));
     serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
