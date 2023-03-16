@@ -496,6 +496,7 @@ var PivotModel = AbstractModel.extend({
         temp = this.data.expandedColGroupBys;
         this.data.expandedColGroupBys = this.data.expandedRowGroupBys;
         this.data.expandedRowGroupBys = temp;
+        this.flipped = !this.flipped;
 
         function twistKey(key) {
             return JSON.stringify(JSON.parse(key).reverse());
@@ -575,6 +576,7 @@ var PivotModel = AbstractModel.extend({
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
         this.defaultGroupedBy = params.groupedBy;
+        this.flipped = false;
 
         this.fields = params.fields;
         this.modelName = params.modelName;
@@ -638,7 +640,7 @@ var PivotModel = AbstractModel.extend({
             this.data.domain = this.initialDomain;
         }
         if ('groupBy' in params) {
-            this.data.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
+            this.data.groupedBy = params.groupBy.length ? params.groupBy : this.flipped ? this.defaultGroupedBy : this.initialRowGroupBys;
         }
         if ('timeRanges' in params) {
             this.data.timeRanges = params.timeRanges;
