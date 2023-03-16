@@ -10,7 +10,8 @@
                 switchCategory.bind="switchCategory"
                 breadcrumbs="breadcrumbs"
                 subcategories="subcategories"
-                hasNoCategories="hasNoCategories" />
+                hasNoCategories="hasNoCategories"
+                loadProductFromServer.bind="onPressEnterKey" />
             <div class="product-list-container">
                 <div t-if="productsToDisplay.length != 0" class="product-list">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
@@ -25,6 +26,9 @@
                     <p t-else="">
                         There are no products in this category.
                     </p>
+                </div>
+                <div t-if="searchWord" class="search-more-button">
+                    <div class="button" t-on-click="onPressEnterKey">Search more</div>
                 </div>
                 <div class="portal search-database-button no-results-message" t-att-class="{ oe_hidden:  !shouldShowButton }"></div>
             </div>

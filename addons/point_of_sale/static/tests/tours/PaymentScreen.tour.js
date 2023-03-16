@@ -175,6 +175,7 @@ registry.category("web_tour.tours").add('PaymentScreenRoundingHalfUp', { test: t
 
 startSteps();
 
+ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 ProductScreen.exec.addOrderline('Product Test', '1');
 ProductScreen.do.clickPayButton();
