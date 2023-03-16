@@ -34,21 +34,47 @@ export function serializeNode(node, nodesToStripFromChildren = new Set()) {
  *              node from its oid.
  * @returns {Node}
  */
-export function unserializeNode(obj, idToNodeMap) {
-    let result = undefined;
+export function unserializeNode(obj, idToNodeMap, store=false) {
+    let result = idToNodeMap && idToNodeMap.get(obj.oid);
     if (obj.nodeType === Node.TEXT_NODE) {
-        result = document.createTextNode(obj.textValue);
-    } else if (obj.nodeType === Node.ELEMENT_NODE) {
-        result = document.createElement(obj.tagName);
-        for (const key in obj.attributes) {
-            result.setAttribute(key, obj.attributes[key]);
+        if (result) {
+            if (result.textContent !== obj.textValue) {
+                result.textContent = obj.textValue;
+            }
+        } else {
+            result = document.createTextNode(obj.textValue);
         }
-        obj.children.forEach(child => result.append(unserializeNode(child, idToNodeMap)));
+    } else if (obj.nodeType === Node.ELEMENT_NODE) {
+        result = result || document.createElement(obj.tagName);
+        for (const key in obj.attributes) {
+            if (result.getAttribute(key) !== obj.attributes[key]) {
+                result.setAttribute(key, obj.attributes[key]);
+            }
+        }
+        const children = obj.children.map(child => unserializeNode(child, idToNodeMap, store));
+        const childrenSet = new Set(children);
+        for (const currentChild of Array.from(result.childNodes)) {
+            if (!childrenSet.has(currentChild)) {
+                currentChild.remove();
+            }
+        }
+        let index = 0;
+        for (const child of children) {
+            if (child !== result.childNodes.item(index)) {
+                const currentChild = result.childNodes.item(index);
+                if (!currentChild) {
+                    result.append(child);
+                } else {
+                    currentChild.before(child);
+                }
+            }
+            index++;
+        }
     } else {
         console.warn('unknown node type');
     }
     result.oid = obj.oid;
-    if (idToNodeMap) {
+    if (store && idToNodeMap) {
         idToNodeMap.set(result.oid, result);
     }
     return result;

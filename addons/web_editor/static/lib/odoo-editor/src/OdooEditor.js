@@ -499,8 +499,8 @@ export class OdooEditor extends EventTarget {
      *              node from its oid.
      * @returns {Node}
      */
-    unserializeNode(node, idToNodeMap) {
-        return unserializeNode(node, idToNodeMap);
+    unserializeNode(node, idToNodeMap, store) {
+        return unserializeNode(node, idToNodeMap, store);
     }
 
     automaticStepActive(label) {
@@ -561,7 +561,7 @@ export class OdooEditor extends EventTarget {
         // Map to reference nodes existing in the previous registered state
         // of the editable.
         const idToNodeMap = new Map();
-        this.unserializeNode(this._serializedEditable, idToNodeMap);
+        this.unserializeNode(this._serializedEditable, idToNodeMap, true);
         this.idSet(this.editable);
         // Map<parent.oid, Set<childNode>> used to register mutations that add
         // a child node to a parent. If a parent is added, then a child is added
@@ -906,7 +906,7 @@ export class OdooEditor extends EventTarget {
                     toremove.remove();
                 }
             } else if (record.type === 'add') {
-                let node = this.unserializeNode(record.node);
+                let node = this.unserializeNode(record.node, this._idToNodeMap);
                 if (this._collabClientId) {
                     const fakeNode = document.createElement('fake-el');
                     fakeNode.appendChild(node);
@@ -1050,7 +1050,7 @@ export class OdooEditor extends EventTarget {
                     break;
                 }
                 case 'remove': {
-                    let nodeToRemove = this.unserializeNode(mutation.node);
+                    let nodeToRemove = this.unserializeNode(mutation.node, this._idToNodeMap);
                     if (this._collabClientId) {
                         const fakeNode = document.createElement('fake-el');
                         fakeNode.appendChild(nodeToRemove);
