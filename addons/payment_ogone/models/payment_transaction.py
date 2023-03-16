@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
         }
         if self.tokenize:
             rendering_values.update({
-                'ALIAS': f'ODOO-ALIAS-{str(uuid.uuid4())}',
+                'ALIAS': f'ODOO-ALIAS-{uuid.uuid4().hex}',
                 'ALIASUSAGE': _("Storing your payment details is necessary for future use."),
             })
         rendering_values.update({
