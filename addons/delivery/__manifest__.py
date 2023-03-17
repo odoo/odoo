@@ -19,8 +19,11 @@ The system is able to add and compute the shipping line.
 
         'report/ir_actions_report_templates.xml',
 
-        'views/delivery_view.xml',
+        'views/delivery_carrier_views.xml',
+        'views/delivery_price_rule_views.xml',
+        'views/delivery_zip_prefix_views.xml',
         'views/res_partner_views.xml',
+        'views/sale_order_views.xml',
 
         'wizard/res_config_settings_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
