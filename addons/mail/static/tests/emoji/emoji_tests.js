@@ -70,3 +70,74 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.strictEqual($(".o-mail-Composer-input").val(), codepoints);
 });
+
+QUnit.test("recent category (basic)", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    assert.containsNone($, ".o-mail-EmojiPicker-header [title='Frequently used']");
+    await click(".o-mail-EmojiPicker-content .o-mail-Emoji:contains(😀)");
+    await click("button[aria-label='Emojis']");
+    assert.containsOnce($, ".o-mail-EmojiPicker-header [title='Frequently used']");
+    assert.containsOnce(
+        $,
+        "span:contains(Frequently used) ~ .o-mail-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
+    );
+});
+
+QUnit.test("emoji usage amount orders frequent emojis", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await click(".o-mail-EmojiPicker-content .o-mail-Emoji:contains(😀)");
+    await click("button[aria-label='Emojis']");
+    await click(".o-mail-EmojiPicker-content .o-mail-Emoji:contains(👽)");
+    await click("button[aria-label='Emojis']");
+    await click(".o-mail-EmojiPicker-content .o-mail-Emoji:contains(👽)");
+    await click("button[aria-label='Emojis']");
+    assert.containsOnce(
+        $,
+        "span:contains(Frequently used) ~ .o-mail-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
+    );
+    assert.containsOnce(
+        $,
+        "span:contains(Frequently used) ~ .o-mail-Emoji:contains(👽) ~ span:contains(Smileys & Emotion)"
+    );
+    assert.containsOnce(
+        $,
+        "span:contains(Frequently used) ~ .o-mail-Emoji:contains(👽) ~ .o-mail-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
+    );
+});
+
+QUnit.test("posting :wink: in message should impact recent", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", ":wink:");
+    await click(".o-mail-Composer button[aria-label='Send']");
+    await click("button[aria-label='Emojis']");
+    assert.containsOnce(
+        $,
+        "span:contains(Frequently used) ~ .o-mail-Emoji:contains(😉) ~ span:contains(Smileys & Emotion)"
+    );
+});
+
+QUnit.test("posting :snowman: in message should impact recent", async (assert) => {
+    // the snowman emoji is composed of two codepoints, making it a corner case
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", ":snowman:");
+    await click(".o-mail-Composer button[aria-label='Send']");
+    await click("button[aria-label='Emojis']");
+    assert.containsOnce(
+        $,
+        "span:contains(Frequently used) ~ .o-mail-Emoji:contains(☃️) ~ span:contains(Smileys & Emotion)"
+    );
+});

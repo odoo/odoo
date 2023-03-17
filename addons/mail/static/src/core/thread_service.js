@@ -14,6 +14,8 @@ import { prettifyMessageContent } from "../utils/format";
 import { registry } from "@web/core/registry";
 import { url } from "@web/core/utils/urls";
 import { DEFAULT_AVATAR } from "@mail/core/persona_service";
+import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
+import { browser } from "@web/core/browser/browser";
 
 const FETCH_MSG_LIMIT = 30;
 
@@ -705,9 +707,23 @@ export class ThreadService {
             if (parentId) {
                 tmpData.parentMessage = this.store.messages[parentId];
             }
+            const prettyContent = await prettifyMessageContent(body, validMentions);
+            const { emojis } = await loadEmoji();
+            const recentEmojis = JSON.parse(
+                browser.localStorage.getItem("mail.emoji.frequent") || "{}"
+            );
+            const emojisInContent =
+                prettyContent.match(/\p{Emoji_Presentation}|\p{Emoji}\uFE0F/gu) ?? [];
+            for (const codepoints of emojisInContent) {
+                if (emojis.some((emoji) => emoji.codepoints === codepoints)) {
+                    recentEmojis[codepoints] ??= 0;
+                    recentEmojis[codepoints]++;
+                }
+            }
+            browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(recentEmojis));
             tmpMsg = this.messageService.insert({
                 ...tmpData,
-                body: markup(await prettifyMessageContent(body, validMentions)),
+                body: markup(prettyContent),
                 res_id: thread.id,
                 model: thread.model,
             });
