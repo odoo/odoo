@@ -19,6 +19,7 @@
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
+    <!-- TODO: [XBO] Remove me in master -->
     <record id="group_subtask_project" model="res.groups">
         <field name="name">Use Subtasks</field>
         <field name="category_id" ref="base.module_category_hidden"/>

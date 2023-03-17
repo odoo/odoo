@@ -22,8 +22,8 @@
                 <label for="planned_hours" string="Allocated Days" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('encode_uom_in_days', '=', False)]}"/>
                 <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                     <field name="planned_hours" class="oe_inline" widget="float_time"/>
-                    <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
-                        (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
+                    <span attrs="{'invisible': [('subtask_count', '=', 0)]}">
+                        (incl. <field name="subtask_planned_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                         <span class="fw-bold text-dark"> Sub-tasks</span>)
                     </span>
                     <span>(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
@@ -80,20 +80,20 @@
                                 <label class="fw-bold" for="effective_hours" string="Days Spent" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
-                            <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
+                            <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}">
                                 <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Hours Spent on Sub-tasks:</span>
                                 <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Days Spent on Sub-tasks:</span>
                             </button>
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
-                                  attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
-                            <span id="total_hours_spent_label" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" class="o_td_label float-start">
+                                  attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
+                            <span id="total_hours_spent_label" attrs="{'invisible': [('subtask_effective_hours', '=', 0.0)]}" class="o_td_label float-start">
                                 <label class="fw-bold" for="total_hours_spent" string="Total Hours"
                                       attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                 <label class="fw-bold" for="total_hours_spent" string="Total Days"
                                       attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
-                                  attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
+                                  attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
                             <span class="o_td_label float-start">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
                                        attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
