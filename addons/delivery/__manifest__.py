@@ -13,14 +13,17 @@ The system is able to add and compute the shipping line.
 """,
     'depends': ['sale'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/delivery_carrier_security.xml',
-        'views/delivery_view.xml',
-        'views/partner_view.xml',
         'data/delivery_data.xml',
-        'views/res_config_settings_views.xml',
-        'wizard/choose_delivery_carrier_views.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rules.xml',
+
         'report/ir_actions_report_templates.xml',
+
+        'views/delivery_view.xml',
+        'views/res_partner_views.xml',
+
+        'wizard/res_config_settings_views.xml',
+        'wizard/choose_delivery_carrier_views.xml',
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,
