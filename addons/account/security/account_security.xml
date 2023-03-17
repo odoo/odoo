@@ -82,9 +82,16 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <!-- Add a new setting that can be enabled to allow the user to "trust" a partner bank account -->
+    <record model="ir.module.category" id="account.module_category_accounting_bank">
+        <field name="name">Bank</field>
+        <field name="parent_id" ref="base.module_category_accounting"/>
+        <field name="sequence">50</field>
+    </record>
+
     <record id="group_validate_bank_account" model="res.groups">
         <field name="name">Validate bank account</field>
-        <field name="category_id" ref="base.module_category_usability"/>
+        <field name="category_id" ref="account.module_category_accounting_bank"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 

@@ -17,15 +17,16 @@
                 </xpath>
 
                 <xpath expr="//field[@name='acc_number']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('allow_out_payment', '=', True)]}</attribute>
+                    <attribute name="attrs">{'readonly': [('lock_trust_fields', '=', True)]}</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('allow_out_payment', '=', True)]}</attribute>
+                    <attribute name="attrs">{'readonly': [('lock_trust_fields', '=', True)]}</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='allow_out_payment']" position="replace">
                     <field name="user_has_group_validate_bank_account" invisible="1"/>
+                    <field name="lock_trust_fields" invisible="1"/>
                     <label for="allow_out_payment"/>
                     <div class="d-flex gap-2">
                         <field name="allow_out_payment" widget="boolean_toggle" attrs="{'readonly': [('user_has_group_validate_bank_account', '=', False)]}"/>
@@ -39,13 +40,13 @@
                         <div attrs="{'invisible': [('has_money_transfer_warning', '=', False)]}" class="mb-1">
                             <span class="text-danger">High risk</span>: <field name="money_transfer_service" nolabel="1" class="oe_inline"/> is a money transfer service and not a bank.
                             Double check if the account can be trusted by calling the vendor.<br/>
-                            <a href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why.</a>
+                            <a target="_blank" href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why.</a>
                         </div>
                         <field name="has_iban_warning" invisible="1"/>
                         <div attrs="{'invisible': [('has_iban_warning', '=', False)]}">
                             <span class="text-warning">Medium risk</span>: Iban <field name="sanitized_acc_number" nolabel="1" class="oe_inline fw-bold"/>
                             is not from the same country as the partner (<field name="partner_country_name" nolabel="1" class="oe_inline"/>).<br/>
-                            <a href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why it's risky.</a>
+                            <a target="_blank" href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why it's risky.</a>
                         </div>
                     </div>
                 </xpath>
