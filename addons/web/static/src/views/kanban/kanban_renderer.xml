@@ -11,7 +11,7 @@
                     <t t-set="group" t-value="groupOrRecord.group" />
                     <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0"
                         t-att-class="getGroupClasses(group)"
-                        t-att-data-id="(canResequenceRecords or canResequenceGroups) and group.id"
+                        t-att-data-id="group.id"
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <div class="o_kanban_header top-0" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-3' : 'py-3' }}">
