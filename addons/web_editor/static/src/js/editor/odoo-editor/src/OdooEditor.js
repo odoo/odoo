@@ -3871,16 +3871,16 @@ export class OdooEditor extends EventTarget {
         }
 
         const selectors = {
-            BLOCKQUOTE: 'Empty quote',
-            H1: 'Heading 1',
-            H2: 'Heading 2',
-            H3: 'Heading 3',
-            H4: 'Heading 4',
-            H5: 'Heading 5',
-            H6: 'Heading 6',
-            'UL LI': 'List',
-            'OL LI': 'List',
-            'CL LI': 'To-do',
+            BLOCKQUOTE: this.options._t('Empty quote'),
+            H1: this.options._t('Heading 1'),
+            H2: this.options._t('Heading 2'),
+            H3: this.options._t('Heading 3'),
+            H4: this.options._t('Heading 4'),
+            H5: this.options._t('Heading 5'),
+            H6: this.options._t('Heading 6'),
+            'UL LI': this.options._t('List'),
+            'OL LI': this.options._t('List'),
+            'CL LI': this.options._t('To-do'),
         };
 
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
