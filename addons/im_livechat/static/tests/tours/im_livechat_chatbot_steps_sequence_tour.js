@@ -136,7 +136,14 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
                         clientY: fromPosition.y,
                     })
                 );
-                from.dispatchEvent(new Event("mousemove", { bubbles: true }));
+                from.dispatchEvent(new MouseEvent("mousemove", {
+                    bubbles: true,
+                    which: 1,
+                    button: 0,
+                    // dragging is only enabled when the mouse have moved from at least 10 pixels from the original position
+                    clientX: fromPosition.x + 20,
+                    clientY: fromPosition.y + 20,
+                }));
                 to.dispatchEvent(new Event("mouseenter", { bubbles: true }));
                 from.dispatchEvent(new Event("mouseup", { bubbles: true }));
             },
