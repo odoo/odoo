@@ -27,10 +27,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     'display_project_id',
     'color',
     'commercial_partner_id',
-    'allow_subtasks',
     'subtask_count',
     'is_private',
-    'child_text',
     'email_from',
     'create_date',
     'write_date',
@@ -373,6 +371,7 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
+    #ABGH: don't use allow_subtasks, it will be deleted in saas-16.3
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
     allow_recurring_tasks = fields.Boolean('Recurring Tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
@@ -1128,9 +1127,8 @@ class Task(models.Model):
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
-        domain="[('project_ids', '=', project_id)]", copy=False, task_dependency_tracking=True)
-    tag_ids = fields.Many2many('project.tags', string='Tags',
-        help="You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates.")
+        domain="[('project_ids', '=', project_id)]", task_dependency_tracking=True)
+    tag_ids = fields.Many2many('project.tags', string='Tags')
 
     state = fields.Selection([
         ('01_in_progress', 'In Progress'),
@@ -1209,9 +1207,11 @@ class Task(models.Model):
     is_closed = fields.Boolean(compute='_compute_is_closed', string="Closed State", store=True, index=True)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
+    # ABGH: don't use child_text and allow_subtasks fields, they will be deleted in saas-16.3
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
-    subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
+    subtask_count = fields.Integer("Sub-task Count", compute='_compute_open_subtask_count')
+    open_subtask_count = fields.Integer("Open Sub-tasks Count", compute='_compute_open_subtask_count')
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, group_operator="avg")
@@ -1550,20 +1550,20 @@ class Task(models.Model):
         for task in self:
             task.subtask_planned_hours = sum(child_task.planned_hours + child_task.subtask_planned_hours for child_task in task.child_ids)
 
-    @api.depends('child_ids')
-    def _compute_child_text(self):
+    def _compute_open_subtask_count(self):
+        task_read_group = self.env['project.task']._read_group(
+            [('parent_id', 'in', self.ids)],
+            ['state:array_agg', 'parent_id'],
+            ['parent_id'],
+        )
+        open_subtask_count_per_parent_id = defaultdict(int)
+        subtask_count_per_parent_id = defaultdict(int)
+        for res in task_read_group:
+            open_subtask_count_per_parent_id[res['parent_id'][0]] = sum(1 for s in res['state'] if s not in CLOSED_STATES)
+            subtask_count_per_parent_id[res['parent_id'][0]] = res['parent_id_count']
         for task in self:
-            if not task.subtask_count:
-                task.child_text = False
-            elif task.subtask_count == 1:
-                task.child_text = _("(+ 1 task)")
-            else:
-                task.child_text = _("(+ %(child_count)s tasks)", child_count=task.subtask_count)
-
-    @api.depends('child_ids')
-    def _compute_subtask_count(self):
-        for task in self:
-            task.subtask_count = len(task._get_all_subtasks())
+            task.open_subtask_count = open_subtask_count_per_parent_id[task.id]
+            task.subtask_count = subtask_count_per_parent_id[task.id]
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
@@ -1695,12 +1695,15 @@ class Task(models.Model):
         if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
             self = self.with_context(task_mapping=dict())
         has_default_name = bool(default.get('name', ''))
+        if self.personal_stage_id:
+            default['personal_stage_id'] = self.personal_stage_id.id
+        if self.personal_stage_type_id:
+            default['personal_stage_type_id'] = self.personal_stage_type_id.id
         if not has_default_name:
             default['name'] = _("%s (copy)", self.name)
         if self.recurrence_id:
             default['recurrence_id'] = self.recurrence_id.copy().id
-        if self.allow_subtasks:
-            default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
+        default['child_ids'] = [child.copy({'name': child.name}).id for child in self.child_ids]
         self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
         task_copy = super(Task, self_with_mail_context).copy(default)
         if self.allow_task_dependencies:

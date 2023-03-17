@@ -9,6 +9,7 @@ class ResConfigSettings(models.TransientModel):
 
     module_project_forecast = fields.Boolean(string="Planning")
     module_hr_timesheet = fields.Boolean(string="Task Logs")
+    #ABGH: don't use group_subtask_project field, it will be deleted in saas-16.3
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
     group_project_rating = fields.Boolean("Customer Ratings", implied_group='project.group_project_rating')
     group_project_stages = fields.Boolean("Project Stages", implied_group="project.group_project_stages")
@@ -37,7 +38,6 @@ class ResConfigSettings(models.TransientModel):
             # key: (config_flag, is_global), value: project_flag
             ("group_project_rating", True): "rating_active",
             ("group_project_recurring_tasks", True): "allow_recurring_tasks",
-            ("group_subtask_project", False): "allow_subtasks",
             ("group_project_task_dependencies", False): "allow_task_dependencies",
             ("group_project_milestone", False): "allow_milestones",
         }

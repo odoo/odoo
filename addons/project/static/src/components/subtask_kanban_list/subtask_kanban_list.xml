@@ -3,27 +3,27 @@
 <templates>
 
     <t t-name="project.SubtaskKanbanList" owl="1">
-        <Record resModel="'project.task'" resId="props.record.resId" fields="fieldsInfo" activeFields="fieldsInfo" t-slot-scope="data">
+        <Record resModel="'project.task'" resId="props.record.resId" fields="fieldsInfo" activeFields="fieldsInfo" values="values" t-slot-scope="data">
             <div class="subtask_list">
                 <t t-foreach="data.record.data.child_ids.records" t-as="subTask" t-key="subTask.resId">
                     <div class="subtask_list_row">
-                        <Field name="'state'"
-                               class="`subtask_state_widget_col d-flex justify-content-center align-items-center`"
-                               record="subTask"
-                               fieldInfo="subTask.fields.state"
-                               type="'project_task_state_selection'"/>
-                        <a class="subtask_name_col"
+                        <a t-attf-class="subtask_name_col {{['1_done', '1_canceled'].includes(subTask.data.state) ? 'text-muted opacity-50' : ''}}"
                            t-att-title="subTask.data.display_name"
                            style="color: inherit;"
                            t-esc="subTask.data.display_name"
                            t-on-click.prevent="() => this.goToSubtask(subTask.resId)"/>
                         <Field
-                               class="`subtask_user_widget_col justify-content-end align-items-center`"
+                               class="`subtask_user_widget_col justify-content-end align-items-center ${['1_done', '1_canceled'].includes(subTask.data.state) ? 'opacity-50' : ''}`"
                                name="'user_ids'"
                                record="subTask"
                                fieldInfo="subTask.fields.user_ids"
                                readonly="true"
                                type="'many2many_avatar_user'"/>
+                        <Field name="'state'"
+                               class="`subtask_state_widget_col d-flex justify-content-center align-items-center`"
+                               record="subTask"
+                               fieldInfo="subTask.fields.state"
+                               type="'project_task_state_selection'"/>
                     </div>
                 </t>
             </div>

@@ -82,18 +82,14 @@
         </field>
     </record>
 
+        <!-- TODO: [XBO] remove me in master -->
         <record id="view_sale_service_inherit_form2" model="ir.ui.view">
             <field name="name">sale.service.form.view.inherit</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                <xpath expr="//field[@name='child_ids']/tree" position="inside">
                 </xpath>
-                <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
-                </xpath>
-
             </field>
         </record>
 
