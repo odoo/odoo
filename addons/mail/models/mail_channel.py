@@ -1214,15 +1214,15 @@ class Channel(models.Model):
             self.channel_pin(False)
 
     def execute_command_who(self, **kwargs):
-        partner = self.env.user.partner_id
+        channel_members = self.env['mail.channel.member'].with_context(active_test=False).search([('partner_id', '!=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         members = [
-            p._get_html_link(title=f"@{p.name}")
-            for p in self.channel_partner_ids[:30] if p != partner
+            m.partner_id._get_html_link(title=f"@{m.partner_id.name}") if m.partner_id else f'<strong>@{html_escape(m.guest_id.name)}</strong>'
+            for m in channel_members[:30]
         ]
         if len(members) == 0:
             msg = _("You are alone in this channel.")
         else:
-            dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
+            dots = "..." if len(members) != len(channel_members) else ""
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
-        self._send_transient_message(partner, msg)
+        self._send_transient_message(self.env.user.partner_id, msg)
