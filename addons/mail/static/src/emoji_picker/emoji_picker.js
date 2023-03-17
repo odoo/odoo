@@ -14,6 +14,8 @@ import {
     onWillUnmount,
 } from "@odoo/owl";
 import { getBundle, loadBundle } from "@web/core/assets";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -131,12 +133,14 @@ export class EmojiPicker extends Component {
     static defaultProps = { onClose: () => {} };
     static template = "mail.EmojiPicker";
 
+    recent = [];
+    categories = null;
+    emojis = null;
+    shouldScrollElem = null;
+
     setup() {
-        this.categories = null;
-        this.emojis = null;
         this.inputRef = useRef("input");
         this.gridRef = useRef("emoji-grid");
-        this.shouldScrollElem = null;
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
@@ -146,7 +150,17 @@ export class EmojiPicker extends Component {
             const { categories, emojis } = await loadEmoji();
             this.categories = categories;
             this.emojis = emojis;
+            this.emojiByCodepoints = Object.fromEntries(
+                this.emojis.map((emoji) => [emoji.codepoints, emoji])
+            );
             this.state.categoryId = this.categories[0].sortId;
+            this.recent = JSON.parse(browser.localStorage.getItem("mail.emoji.frequent") || "{}");
+            this.recentCategory = {
+                name: "Frequently used",
+                displayName: _t("Frequently used"),
+                title: "🕓",
+                sortId: 0,
+            };
         });
         onMounted(() => {
             this.inputRef.el.focus();
@@ -187,6 +201,17 @@ export class EmojiPicker extends Component {
         });
     }
 
+    get itemsNumber() {
+        return this.recentEmojis.length + this.getEmojis().length;
+    }
+
+    get recentEmojis() {
+        return Object.entries(this.recent)
+            .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
+            .slice(0, 42)
+            .map(([codepoints]) => this.emojiByCodepoints[codepoints]);
+    }
+
     onClick(ev) {
         markEventHandled(ev, "emoji.selectEmoji");
     }
@@ -202,20 +227,17 @@ export class EmojiPicker extends Component {
             }
             case "ArrowDown": {
                 const newIndex = this.state.activeEmojiIndex + EMOJI_PER_ROW;
-                if (newIndex <= this.getEmojis().length - 1) {
+                if (newIndex < this.itemsNumber) {
                     this.state.activeEmojiIndex = newIndex;
                 }
                 break;
             }
             case "ArrowRight": {
-                const newIndex = Math.min(
-                    this.state.activeEmojiIndex + 1,
-                    this.getEmojis().length - 1
-                );
-                if (newIndex !== this.state.activeEmojiIndex) {
-                    this.state.activeEmojiIndex = newIndex;
-                    ev.preventDefault();
+                if (this.state.activeEmojiIndex + 1 === this.itemsNumber) {
+                    break;
                 }
+                this.state.activeEmojiIndex++;
+                ev.preventDefault();
                 break;
             }
             case "ArrowLeft": {
@@ -260,7 +282,7 @@ export class EmojiPicker extends Component {
 
     selectCategory(ev) {
         const id = Number(ev.target.dataset.id);
-        if (id) {
+        if (!isNaN(id)) {
             this.state.searchStr = "";
             this.state.categoryId = id;
             this.shouldScrollElem = true;
@@ -271,6 +293,9 @@ export class EmojiPicker extends Component {
         const codepoints = ev.target.dataset.codepoints;
         if (codepoints) {
             this.props.onSelect(codepoints);
+            this.recent[codepoints] ??= 0;
+            this.recent[codepoints]++;
+            browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
             this.gridRef.el.scrollTop = 0;
             this.props.close();
             this.props.onClose();
