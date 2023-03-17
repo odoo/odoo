@@ -4086,9 +4086,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
-        serverData.models.partner.records[0].display_name =
-            "Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery Loooooooooooooooooooooooooooooooooooooooooooong Naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame";
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -4106,8 +4103,9 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_many2one .dropdown-menu");
 
         const dropdown = document.querySelector(".o_field_many2one .dropdown-menu");
-        await triggerScroll(dropdown, { left: 50 }, false);
-        assert.strictEqual(dropdown.scrollLeft, 50, "a scroll happened");
+        dropdown.style = "max-height: 40px;";
+        await triggerScroll(dropdown, { top: 50 }, false);
+        assert.strictEqual(dropdown.scrollTop, 50, "a scroll happened");
         assert.containsOnce(target, ".o_field_many2one .dropdown-menu");
 
         await triggerScroll(target, { top: 50 });
