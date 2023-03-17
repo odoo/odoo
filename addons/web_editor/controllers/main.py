@@ -542,6 +542,13 @@ class Web_Editor(http.Controller):
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
         """
+        if attachment.res_field:
+            # An original attachment has to be created first. We are in a
+            # situation where the image that we want to modify comes from the
+            # backend.
+            attachment = attachment.copy()
+            attachment.res_field = ""
+            original_id = attachment.id
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -571,11 +578,17 @@ class Web_Editor(http.Controller):
                 attachment_copied.url = '/'.join(url_fragments)
         # Update the description of the basic attachment.
         record = request.env[res_model].browse(res_id)
-        record.set_attachment(attachment_copied, attachment, res_field)
+        # record.set_attachment(attachment_copied, attachment, res_field)
         if attachment_copied.public:
-            return attachment_copied.image_src
+            return {
+                'original_id': original_id,
+                'new_attachment_src': attachment_copied.image_src
+            }
         attachment_copied.generate_access_token()
-        return '%s?access_token=%s' % (attachment_copied.image_src, attachment_copied.access_token)
+        return {
+            'original_id': original_id,
+            'new_attachment_src': '%s?access_token=%s' % (attachment_copied.image_src, attachment_copied.access_token)
+        }
 
     def _get_shape_svg(self, module, *segments):
         shape_path = get_resource_path(module, 'static', *segments)

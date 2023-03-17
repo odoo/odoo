@@ -69,7 +69,7 @@ class ProductImage(models.Model):
                 normal_vals.append(vals)
 
         return super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
-
+"""
     # Override
     def set_attachment(self, attachment_copied, attachment, res_field=None):
         checksum = attachment.checksum
@@ -88,3 +88,4 @@ class ProductImage(models.Model):
             attachment.description = attachment_copied.description
         else:
             super().set_attachment(attachment_copied, attachment, res_field)
+"""

@@ -748,7 +748,7 @@ class ProductProduct(models.Model):
                         ('res_field', '=', res_field)
                         ],
                 limit=1)
-
+"""
     # Override
     def set_attachment(self, attachment_copied, attachment, res_field=None):
         res_field_variant = 'image_variant_' + re.search(r'\d+', res_field)[0]
@@ -773,3 +773,4 @@ class ProductProduct(models.Model):
             attachment_with_field.res_field = res_field_variant
         attachment_with_field.description = attachment_copied.description
         attachment_with_field.original_id = attachment_copied.original_id
+"""

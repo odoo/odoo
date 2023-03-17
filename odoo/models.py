@@ -3584,17 +3584,10 @@ class BaseModel(metaclass=MetaModel):
             limit=1)
 
     # Modify the basic attachment bind to a field of a record.
-    def set_attachment(self, attachment_copied, attachment, res_field=None):
-        attachment_with_field = self.get_attachment(res_field)
-        if attachment_with_field:
-            attachment_with_field.description = attachment_copied.description
-            attachment_with_field.original_id = attachment_copied.original_id
-        else:
-            # For example; creation of a product and add a 'product.template'
-            # image for the first time.
-            attachment_with_field = attachment_copied.copy()
-            attachment_with_field.res_field = res_field
-            attachment_with_field.name = res_field
+    def set_attachment(self, description, original_id, res_field=None):
+        attachment = self.get_attachment(res_field)
+        attachment.description = description
+        attachment.original_id = original_id
 
     def unlink(self):
         """ unlink()

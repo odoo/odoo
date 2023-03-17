@@ -974,10 +974,11 @@ const Wysiwyg = Widget.extend({
                     description += (el.dataset.glFilter ? " glFilter:" + el.dataset.glFilter : "");
                     description += (el.dataset.resizeWidth ? " resizeWidth:" + el.dataset.resizeWidth : "");
                     description += (el.dataset.quality ? " quality:" + el.dataset.quality : "");
+                    el.setAttribute('data-description', description);
                     // Modifying an image always creates a copy of the original, even if
                     // it was modified previously, as the other modified image may be used
                     // elsewhere if the snippet was duplicated or was saved as a custom one.
-                    const newAttachmentSrc = await this._rpc({
+                    const {'original_id': originalId, 'new_attachment_src': newAttachmentSrc} = await this._rpc({
                         route: `/web_editor/modify_image/${el.dataset.originalId}`,
                         params: {
                             res_model: resModel,
@@ -989,6 +990,11 @@ const Wysiwyg = Widget.extend({
                             res_field: resField,
                         },
                     });
+                    if (originalId && originalId !== el.dataset.originalId) {
+                        // A new original attachment has been created by
+                        // /web_editor/modify_image/
+                        el.dataset.originalId = originalId;
+                    }
                     if (isBackground) {
                         const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
                         parts.url = `url('${newAttachmentSrc}')`;

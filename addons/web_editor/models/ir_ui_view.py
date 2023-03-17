@@ -46,13 +46,14 @@ class IrUiView(models.Model):
             value = converter.from_html(Model, Model._fields[field], el)
         except ValueError:
             raise ValidationError(_("Invalid field value for %s: %s", Model._fields[field].string, el.text_content().strip()))
-
         if value is not None:
             # TODO: batch writes?
             if not self.env.context.get('lang') and self.get_default_lang_code():
                 Model.browse(int(el.get('data-oe-id'))).with_context(lang=self.get_default_lang_code()).write({field: value})
             else:
                 Model.browse(int(el.get('data-oe-id'))).write({field: value})
+            if el.getchildren()[0].get('data-description'):
+                Model.browse(int(el.get('data-oe-id'))).set_attachment(el.getchildren()[0].get('data-description'), int(el.getchildren()[0].get('data-original-id')), field)
 
     def save_oe_structure(self, el):
         self.ensure_one()
