@@ -248,7 +248,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(self.sale_order.tasks_count, 1, "The SO should still have only one task")
         self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
 
-        self.sale_order.action_done()
+        self.sale_order.action_lock()
         with self.assertRaises(UserError):
             so_line1.write({'product_uom_qty': 20})
 
@@ -512,7 +512,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         sale_order_line.write({'product_uom_qty': 30})
         self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
 
-        self.sale_order.action_done()
+        self.sale_order.action_lock()
         with self.assertRaises(UserError):
             sale_order_line.write({'product_uom_qty': 20})
 

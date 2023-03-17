@@ -39,7 +39,7 @@
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
                 </xpath>
                 <field name="effective_date" position="after">
-                    <field name="delivery_status" attrs="{'invisible': [('state', 'not in', ['sale', 'done'])]}"/>
+                    <field name="delivery_status" attrs="{'invisible': [('state', '!=', 'sale')]}"/>
                 </field>
                 <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
                     <field name="show_json_popover" invisible="1"/>

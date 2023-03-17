@@ -93,7 +93,7 @@
                                 <div class="oe_kanban_bottom_right">
                                     <field name="state"
                                         widget="label_selection"
-                                        options="{'classes': {'draft': 'info', 'cancel': 'default', 'done': 'success', 'sale': 'success'}}"/>
+                                        options="{'classes': {'draft': 'info', 'cancel': 'default', 'sale': 'success'}}"/>
                                 </div>
                             </div>
                         </div>
@@ -113,9 +113,9 @@
                   sample="1"
                   decoration-muted="state == 'cancel'">
                 <header>
-                    <button name="%(sale.action_view_sale_advance_payment_inv)d" 
-                            type="action" 
-                            string="Create Invoices" 
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d"
+                            type="action"
+                            string="Create Invoices"
                             class="btn-secondary"/>
                 </header>
                 <field name="message_needaction" invisible="1"/>
@@ -153,7 +153,7 @@
                       options="{'color_field': 'color'}"
                       optional="hide"/>
                 <field name="state"
-                    decoration-success="state == 'sale' or state == 'done'"
+                    decoration-success="state == 'sale'"
                     decoration-info="state == 'draft'"
                     decoration-primary="state == 'sent'"
                     widget="badge"
@@ -226,6 +226,7 @@
         <field name="arch" type="xml">
             <form string="Sales Order" class="o_sale_order">
             <header>
+                <field name="locked" invisible="1"/>
                 <field name="authorized_transaction_ids" invisible="1"/>
                 <button name="payment_action_capture" type="object" data-hotkey="shift+g"
                         string="Capture Transaction" class="oe_highlight"
@@ -252,9 +253,19 @@
                     attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
                 <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
                 <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g" context="{'validate_analytic': True}"/>
+
+                <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
+                <button name="action_unlock" type="object" string="Unlock"
+                        attrs="{'invisible': [('locked', '=', False)]}" groups="sales_team.group_sale_manager"/>
                 <button name="action_preview_sale_order" string="Preview" type="object" class="btn-secondary"/>
                 <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}" data-hotkey="z"/>
                 <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
+                <t groups="sale.group_auto_done_setting">
+                    <button name="action_lock" type="object" string="Lock"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."
+                        attrs="{'invisible': ['|', ('locked', '=', True), ('state', '!=', 'sale')]}"
+                        groups="sales_team.group_sale_manager"/>
+                </t>
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
             <div
@@ -272,6 +283,11 @@
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
                 </div>
+                <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
+                    attrs="{'invisible': [('locked', '=', False)]}">
+                    <i class="fa fa-lock"/>
+                    Locked
+                </div>
                 <div class="oe_title">
                     <h1>
                         <field name="name" readonly="1"/>
@@ -279,20 +295,28 @@
                 </div>
                 <group name="sale_header">
                     <group name="partner_details">
-                        <field name="partner_id" 
-                               widget="res_partner_many2one" 
-                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" 
-                               options="{'always_reload': True}" 
+                        <field name="partner_id"
+                               widget="res_partner_many2one"
+                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                               options="{'always_reload': True}"
                                placeholder="Type to find a customer..."/>
-                        <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
-                        <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+                        <field name="partner_invoice_id"
+                              groups="account.group_delivery_invoice_address"
+                              context="{'default_type':'invoice'}"
+                              options="{'always_reload': True}"
+                              attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"/>
+                        <field name="partner_shipping_id"
+                              groups="account.group_delivery_invoice_address"
+                              context="{'default_type':'delivery'}"
+                              options="{'always_reload': True}"
+                              attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"/>
                     </group>
                     <group name="order_details">
-                        <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                        <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                        <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale'])]}"/>
+                        <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'cancel'])]}">
                             <label for="date_order" string="Quotation Date"/>
                         </div>
-                        <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                        <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'cancel'])]}"/>
                         <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
                             <label for="date_order" string="Order Date"/>
                         </div>
@@ -311,7 +335,7 @@
                                 help="Recompute all prices based on this pricelist"
                                 class="btn-link mb-1 px-0" icon="fa-refresh"
                                 confirm="This will update all unit prices based on the currently set pricelist."
-                                attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                                attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'cancel'])]}"/>
                         </div>
                         <field name="country_code" invisible="1"/>
                         <field name="company_id" invisible="1"/>
@@ -328,7 +352,7 @@
                             name="order_line"
                             widget="section_and_note_one2many"
                             mode="tree,kanban"
-                            attrs="{'readonly': [('state', 'in', ('done','cancel'))]}"
+                            attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"
                         >
                             <form>
                                 <field name="display_type" invisible="1"/>
@@ -376,22 +400,24 @@
                                                 }"
                                             />
                                         </div>
-                                        <label for="qty_delivered" string="Delivered" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
-                                        <div name="delivered_qty" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                        <label for="qty_delivered" string="Delivered" attrs="{'invisible': [('parent.state', '!=', 'sale')]}"/>
+                                        <div name="delivered_qty" attrs="{'invisible': [('parent.state', '!=', 'sale')]}">
                                             <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                                         </div>
-                                        <label for="qty_invoiced" string="Invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
-                                        <div name="invoiced_qty" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
-                                            <field name="qty_invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                        <label for="qty_invoiced" string="Invoiced" attrs="{'invisible': [('parent.state', '!=', 'sale')]}"/>
+                                        <div name="invoiced_qty" attrs="{'invisible': [('parent.state', '!=', 'sale')]}">
+                                            <field name="qty_invoiced"/>
                                         </div>
                                         <field name="product_packaging_id" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                         <field name="price_unit"/>
                                         <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'), ('company_id','=',parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                             attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                        <label for="discount" groups="product.group_discount_per_so_line"/>
-                                        <div name="discount" groups="product.group_discount_per_so_line">
-                                            <field name="discount" class="oe_inline"/> %
-                                        </div>
+                                        <t groups="product.group_discount_per_so_line">
+                                            <label for="discount"/>
+                                            <div name="discount">
+                                                <field name="discount" class="oe_inline"/> %
+                                            </div>
+                                        </t>
                                         <!--
                                             We need the sequence field to be here
                                             because we want to be able to overwrite the default sequence value in the JS
@@ -506,7 +532,7 @@
                                     decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                     string="Delivered"
                                     attrs="{
-                                        'column_invisible': [('parent.state', 'not in', ['sale', 'done'])],
+                                        'column_invisible': [('parent.state', '!=', 'sale')],
                                         'readonly': ['|', ('qty_delivered_method', '!=', 'manual'), ('is_downpayment', '=', True)]
                                     }"
                                     optional="show"
@@ -516,7 +542,7 @@
                                     name="qty_invoiced"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                     string="Invoiced"
-                                    attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"
+                                    attrs="{'column_invisible': [('parent.state', '!=', 'sale')]}"
                                     optional="show"
                                 />
                                 <field name="qty_to_invoice" invisible="1"/>
@@ -645,6 +671,11 @@
                                 </templates>
                             </kanban>
                         </field>
+                        <div class="oe_right d-flex gap-1 mb-2 ms-1"
+                             attrs="{'invisible': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"
+                             invisible="1"
+                             name="so_button_below_order_lines">
+                        </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4">
                                 <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
@@ -682,18 +713,18 @@
                                         help="Recompute all taxes based on this fiscal position"
                                         class="btn-link mb-1 px-0" icon="fa-refresh"
                                         confirm="This will update all taxes based on the currently selected fiscal position."
-                                        attrs="{'invisible': ['|', ('show_update_fpos', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
+                                        attrs="{'invisible': ['|', ('show_update_fpos', '=', False), ('state', 'in', ['sale', 'cancel'])]}"/>
                                 </div>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>
                                 <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
-                                <field name="invoice_status" states="sale,done" groups="base.group_no_one"/>
+                                <field name="invoice_status" states="sale" groups="base.group_no_one"/>
                                 <!-- test_event_configurator -->
                                 <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
                             </group>
                             <group name="sale_shipping" string="Shipping">
                                 <label for="commitment_date" string="Delivery Date"/>
                                 <div name="commitment_date_div" class="o_row">
-                                    <field name="commitment_date"/>
+                                    <field name="commitment_date" attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('locked', '=', True)]}"/>
                                     <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
                                 </div>
                             </group>
@@ -720,28 +751,6 @@
                 <field name="message_ids"/>
             </div>
             </form>
-        </field>
-    </record>
-
-    <record id="view_sales_order_auto_done_setting" model="ir.ui.view">
-        <field name="name">sale.order.form</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <button name="action_draft" position="after">
-                <t groups="sale.group_auto_done_setting">
-                    <button name="action_done" type="object" string="Lock"
-                        states="sale"
-                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver." groups="sales_team.group_sale_manager"/>
-                </t>
-            </button>
-            <button name="action_preview_sale_order" position="before">
-                <t groups="sale.group_auto_done_setting">
-                    <button name="action_unlock" type="object" string="Unlock"
-                        states="done"
-                        groups="sales_team.group_sale_manager"/>
-                </t>
-            </button>
         </field>
     </record>
 
@@ -790,8 +799,8 @@
                 <separator/>
                 <filter string="My Quotations" name="my_quotation" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Quotations" name="draft" domain="[('state','in',('draft', 'sent'))]"/>
-                <filter string="Sales Orders" name="sales" domain="[('state','in',('sale','done'))]"/>
+                <filter string="Quotations" name="draft" domain="[('state', 'in', ('draft', 'sent'))]"/>
+                <filter string="Sales Orders" name="sales" domain="[('state', '=', 'sale')]"/>
                 <separator/>
                 <filter string="Create Date" name="filter_create_date" date="create_date"/>
             </filter>

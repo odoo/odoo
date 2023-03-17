@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
     def _get_order_with_valid_service_product(self):
         return self.env['sale.order.line']._read_group([
             ('order_id', 'in', self.ids),
-            ('state', 'in', ['sale', 'done']),
+            ('state', '=', 'sale'),
             ('is_service', '=', True),
             '|',
                 ('product_id.service_type', 'not in', ['milestones', 'manual']),

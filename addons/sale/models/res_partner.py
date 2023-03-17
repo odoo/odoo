@@ -44,7 +44,7 @@ class ResPartner(models.Model):
         SaleOrder = self.env['sale.order']
         has_so = SaleOrder.search([
             ('partner_id', 'child_of', self.commercial_partner_id.id),
-            ('state', 'in', ['sent', 'sale', 'done'])
+            ('state', 'in', ['sent', 'sale'])
         ], limit=1)
         return can_edit_vat and not bool(has_so)
 
@@ -56,7 +56,7 @@ class ResPartner(models.Model):
 
     def _credit_debit_get(self):
         super()._credit_debit_get()
-        domain = [('partner_id', 'in', self.ids), ('state', 'in', ['sale', 'done'])]
+        domain = [('partner_id', 'in', self.ids), ('state', '=', 'sale')]
         group = self.env['sale.order']._read_group(domain, ['partner_id'], ['amount_to_invoice:sum'])
         for partner, amount_to_invoice_sum in group:
             partner.credit += amount_to_invoice_sum
