@@ -260,12 +260,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.task_2.write({'project_id': False})
                 # For `parent_id` to  be visible in the view, you need
                 # 1. The debug mode
-                # 2. `allow_subtasks` to be true
-                # <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
-                # `allow_subtasks` is a related to `allow_subtasks` on the project
-                # as the point of the test is to test the behavior of the task `_compute_project_id` when there is no project,
-                # `allow_subtasks` is by default invisible, and you shouldn't therefore be able to change it.
-                # So, to make it visible, temporary modify the view to make it visible even when `allow_subtasks` is `False`.
+                # <field name="parent_id" groups="base.group_no_one"/>
                 view = self.env.ref('project.view_task_form2').sudo()
                 tree = etree.fromstring(view.arch)
                 for node in tree.xpath('//field[@name="parent_id"][@attrs]'):
@@ -281,17 +276,10 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.assertEqual(task.company_id, self.task_1.company_id, "The company of the subtask should be the one from its parent when no project is set.")
 
     def test_cross_subtask_project(self):
-        # set up default subtask project
-        self.project_company_a.write({'allow_subtasks': True})
 
         # For `parent_id` to  be visible in the view, you need
         # 1. The debug mode
-        # 2. `allow_subtasks` to be true
-        # <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
-        # `allow_subtasks` is a related to `allow_subtasks` on the project
-        # as the point of the test is to test the behavior of the task `_compute_project_id` when there is no project,
-        # `allow_subtasks` is by default invisible, and you shouldn't therefore be able to change it.
-        # So, to make it visible, temporary modify the view to make it visible even when `allow_subtasks` is `False`.
+        # <field name="parent_id" groups="base.group_no_one"/>
         view = self.env.ref('project.view_task_form2').sudo()
         tree = etree.fromstring(view.arch)
         for node in tree.xpath('//field[@name="parent_id"][@attrs]'):

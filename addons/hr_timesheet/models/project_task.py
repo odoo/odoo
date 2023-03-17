@@ -7,7 +7,6 @@ from odoo.exceptions import UserError, RedirectWarning
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
 PROJECT_TASK_READABLE_FIELDS = {
-    'allow_subtasks',
     'allow_timesheets',
     'analytic_account_active',
     'effective_hours',
