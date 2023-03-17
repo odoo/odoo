@@ -11565,8 +11565,10 @@ QUnit.module("Fields", (hooks) => {
 
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(target.querySelector("[name=qux] input"), document.activeElement);
-
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_field_x2many_list_row_add a"),
@@ -11611,7 +11613,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(document.activeElement, target.querySelector("[name=qux] input"));
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
 
             assert.strictEqual(
@@ -11673,7 +11678,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(document.activeElement, target.querySelector("[name=qux] input"));
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
 
             assert.strictEqual(
@@ -11753,7 +11761,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(target.querySelector("[name=qux] input"), document.activeElement);
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_field_x2many_list_row_add a"),
