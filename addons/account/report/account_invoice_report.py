@@ -26,6 +26,8 @@ class AccountInvoiceReport(models.Model):
         ('in_invoice', 'Vendor Bill'),
         ('out_refund', 'Customer Credit Note'),
         ('in_refund', 'Vendor Credit Note'),
+        ('out_receipt', 'Sales Receipt'),
+        ('in_receipt', 'Purchase Receipt'),
         ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
