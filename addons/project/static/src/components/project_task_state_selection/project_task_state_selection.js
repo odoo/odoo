@@ -112,20 +112,24 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         return this.props.isToggleMode || !this.props.record.data.project_id;
     }
 
+    isView(viewNames) {
+        return viewNames.includes(this.props.viewType);
+    }
+
     async toggleState() {
         const toggleVal = this.currentValue == "1_done" ? "01_in_progress" : "1_done";
         await this.updateRecord(toggleVal);
     }
 
     getDropdownPosition() {
-        if (['kanban', 'list'].includes(this.props.viewType) || this.env.isSmall) {
+        if (this.isView(['kanban', 'list']) || this.env.isSmall) {
             return '';
         }
         return 'bottom-end';
     }
 
     getTogglerClass(currentValue) {
-        if (['kanban', 'list'].includes(this.props.viewType) || this.env.isSmall) {
+        if (this.isView(['kanban', 'list']) || this.env.isSmall) {
             return 'btn btn-link d-flex p-0';
         }
         return 'o_state_button btn rounded-pill ' + this.colorButton[currentValue];

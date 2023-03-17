@@ -1,25 +1,56 @@
 .o_field_project_task_state_selection{
     .o_status {
-        width: 14.65px;
-        height: 14.65px;
+        width: 19.5px;
+        height: 19.5px;
         text-align: center;
+        margin-top: -0.5px;
+    }
+
+    .fa-lg {
+        font-size: 1.75em;
+        margin-top: -2.5px;
+        max-width: 20px;
+        max-height: 20px;
     }
 
     .o_color_bubble_22 {
         background-color: #ffac00;
     }
 
-    .dropdown-item .fa {
-        transform: translateX(-50%);
+    .fa-hourglass-o {
+        font-size: 1.4em !important;
+        margin-top: 0.5px !important;
     }
 
-    .fa-hourglass-o{
-        font-size: 1.15em;
-        padding-left: 1px;
+    .o_task_state_list_view {
+        .fa-lg {
+            font-size: 1.315em;
+            vertical-align: -6%;
+        }
+        .o_status {
+            width: 14.65px;
+            height: 14.65px;
+            text-align: center;
+        }
+        .fa-hourglass-o {
+            font-size: 1.15em !important;
+            padding-left: 1px !important;
+        }
     }
-}
 
-// This negative margin is only useful in list_view
-.o_data_cell .o_field_project_task_state_selection .dropdown-toggle .fa{
-    margin-top: -1.22px;
+    .dropdown-menu {
+        .fa {
+            margin-top: -1.5px;
+            font-size: 1.315em;
+            vertical-align: -6%;
+            transform: translateX(-50%);
+        }
+
+        .o_status {
+            margin-top: 1px;
+            width: 14.65px;
+            height: 14.65px;
+            text-align: center;
+        }
+    }   
 }

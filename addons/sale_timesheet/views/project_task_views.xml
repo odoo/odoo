@@ -65,7 +65,7 @@
                    <a name="action_view_all_rating" type="object">
                     Customer Ratings
                     </a>
-                </div> 
+                </div>
             </xpath>
         </field>
     </record>
@@ -86,27 +86,6 @@
             </xpath>
         </field>
     </record>
-
-        <record id="view_sale_service_inherit_form2" model="ir.ui.view">
-            <field name="name">sale.service.form.view.inherit</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="sale_line_id" invisible="1"/>
-                    <field name="remaining_hours_available" invisible="1"/>
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"
-                        attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="sale_line_id" invisible="1"/>
-                    <field name="remaining_hours_available" invisible="1"/>
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"
-                        attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
-                </xpath>
-
-            </field>
-        </record>
 
         <record id="view_task_tree2_inherited" model="ir.ui.view">
             <field name="name">project.task.tree.inherited</field>

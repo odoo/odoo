@@ -112,11 +112,8 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_subtask_project,project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
+                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
                                     <div>
-                                        <setting id="subtask_settings" help="Split your tasks to organize your work into sub-milestones" groups="project.group_subtask_project">
-                                            <field name="allow_subtasks"/>
-                                        </setting>
                                         <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities" groups="project.group_project_recurring_tasks">
                                             <field name="allow_recurring_tasks"/>
                                         </setting>
@@ -463,16 +460,16 @@
                                                 type="object"
                                                 t-attf-title="#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
                                             >
-                                                <span class="fa fa-check-square-o me-1"/>
+                                                <span class="fa fa-flag me-1"/>
                                                 <t t-out="record.milestone_count_reached.value"/>/<t t-out="record.milestone_count.value"/>
                                             </a>
                                         </div>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
+                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" style="padding-right: 4px;"/>
                                         <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
                                         <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
-                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                     </div>
                                 </div>
                             </div>
