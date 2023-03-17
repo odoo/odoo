@@ -291,7 +291,7 @@ export class Messaging {
                         delete this.store.messages[messageId];
                         if (message.originThread) {
                             removeFromArrayWithPredicate(
-                                message.originThread,
+                                message.originThread.messages,
                                 ({ id }) => id === message.id
                             );
                         }
