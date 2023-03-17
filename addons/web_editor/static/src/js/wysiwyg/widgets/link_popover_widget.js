@@ -48,6 +48,7 @@ const LinkPopoverWidget = Widget.extend({
                 type: 'success',
                 message: _t("Link copied to clipboard."),
             });
+            this.popover.hide();
         });
 
         // init tooltips & popovers
@@ -118,9 +119,11 @@ const LinkPopoverWidget = Widget.extend({
                     !(
                         hierarchy.includes(this.$target[0]) ||
                         (hierarchy.includes(this.$el[0]) &&
-                            !hierarchy.some(x => x.tagName && x.tagName === 'A'))
+                            !hierarchy.some(x => x.tagName && x.tagName === 'A' && (x === this.$urlLink[0] || x === this.$fullUrl[0])))
                     )
                 ) {
+                    // Note: For buttons of the popover, their listeners should
+                    // handle the hide themselves to avoid race conditions.
                     this.popover.hide();
                 }
             }
@@ -256,6 +259,7 @@ const LinkPopoverWidget = Widget.extend({
             link: this.$target[0],
         });
         ev.stopImmediatePropagation();
+        this.popover.hide();
     },
     /**
      * Removes the link/anchor.
@@ -267,6 +271,7 @@ const LinkPopoverWidget = Widget.extend({
         ev.preventDefault();
         this.options.wysiwyg.removeLink();
         ev.stopImmediatePropagation();
+        this.popover.hide();
     },
 });
 
