@@ -35,7 +35,7 @@ class Project(models.Model):
             [
                 ('order_id', 'in', list(expenses_per_so_id.keys())),
                 ('is_expense', '=', True),
-                ('state', 'in', ['sale', 'done']),
+                ('state', '=', 'sale'),
             ],
             ['order_id', 'product_id'],
             ['untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'])

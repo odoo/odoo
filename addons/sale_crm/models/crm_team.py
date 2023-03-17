@@ -17,7 +17,7 @@ class CrmTeam(models.Model):
         if self._context.get('in_sales_app') and self.use_opportunities:
             return self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_so_salesteam")
         return super(CrmTeam,self).action_primary_channel_button()
-    
+
     def _graph_get_model(self):
         if self.use_opportunities and self._context.get('in_sales_app') :
             return 'sale.report'
@@ -37,8 +37,8 @@ class CrmTeam(models.Model):
         if self.use_opportunities and self._context.get('in_sales_app'):
             return ['', _('Sales: Untaxed Total')]
         return super(CrmTeam,self)._graph_title_and_key()
-    
+
     def _extra_sql_conditions(self):
         if self.use_opportunities and self._context.get('in_sales_app'):
-            return "AND state in ('sale', 'done')"
+            return "AND state = 'sale'"
         return super(CrmTeam,self)._extra_sql_conditions()

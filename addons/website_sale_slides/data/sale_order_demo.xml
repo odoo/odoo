@@ -14,7 +14,6 @@
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
         <field name="website_id" eval="1"/>
         <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2')), (4, ref('sales_team.categ_oppor5'))]"/>
-        <field name="state">sale</field>
     </record>
     <record id="sale_order_course_1_line_1" model="sale.order.line">
         <field name="order_id" ref="sale_order_course_1"/>
@@ -34,7 +33,6 @@
         <field name="date_order" eval="DateTime.now() - relativedelta(days=100)"/>
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
         <field name="website_id" eval="1"/>
-        <field name="state">sale</field>
     </record>
     <record id="sale_order_course_2_line_1" model="sale.order.line">
         <field name="order_id" ref="sale_order_course_2"/>
@@ -65,7 +63,6 @@
         <field name="date_order" eval="DateTime.now() - relativedelta(days=30)"/>
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
         <field name="website_id" eval="1"/>
-        <field name="state">sale</field>
     </record>
     <record id="sale_order_course_3_line_1" model="sale.order.line">
         <field name="order_id" ref="sale_order_course_3"/>
@@ -96,7 +93,10 @@
     </record>
 
     <!-- Confirm sales -->
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_course_1')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_course_2')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_course_3')]]"/>
+    <function model="sale.order" name="action_confirm" eval="[[
+        ref('sale_order_course_1'),
+        ref('sale_order_course_2'),
+        ref('sale_order_course_3'),
+    ]]"/>
+
 </data></odoo>

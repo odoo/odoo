@@ -17,7 +17,7 @@ class ProjectProductEmployeeMap(models.Model):
         domain="""[
             ('is_service', '=', True),
             ('is_expense', '=', False),
-            ('state', 'in', ['sale', 'done']),
+            ('state', '=', 'sale'),
             ('order_partner_id', '=?', partner_id),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
     sale_order_id = fields.Many2one(related="project_id.sale_order_id")

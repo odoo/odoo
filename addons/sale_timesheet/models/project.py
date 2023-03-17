@@ -186,7 +186,7 @@ class Project(models.Model):
                 ('is_service', '=', True),
                 ('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id),
                 ('is_expense', '=', False),
-                ('state', 'in', ['sale', 'done']),
+                ('state', '=', 'sale'),
                 ('remaining_hours', '>', 0)
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
@@ -590,7 +590,14 @@ class ProjectTask(models.Model):
         self.ensure_one()
         if not self.partner_id.commercial_partner_id or not self.allow_billable:
             return False
-        domain = [('company_id', '=', self.company_id.id), ('is_service', '=', True), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
+        domain = [
+            ('company_id', '=', self.company_id.id),
+            ('is_service', '=', True),
+            ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
+            ('is_expense', '=', False),
+            ('state', '=', 'sale'),
+            ('remaining_hours', '>', 0),
+        ]
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)

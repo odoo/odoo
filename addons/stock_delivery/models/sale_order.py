@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     def set_delivery_line(self, carrier, amount):
         res = super().set_delivery_line(carrier, amount)
         for order in self:
-            if order.state not in ('sale', 'done'):
+            if order.state != 'sale':
                 continue
             pending_deliveries = order.picking_ids.filtered(
                 lambda p: p.state not in ('done', 'cancel')

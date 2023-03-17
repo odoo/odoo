@@ -47,7 +47,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Product-based computation
         sale_report_domain = [
             ('website_id', '=', current_website.id),
-            ('state', 'in', ['sale', 'done']),
+            ('state', '=', 'sale'),
             ('date', '>=', datetime_from),
             ('date', '<=', fields.Datetime.now())
         ]
@@ -72,21 +72,21 @@ class WebsiteSaleBackend(WebsiteBackend):
         for state, count in so_group_data:
             if state == 'sent':
                 sales_values['summary']['order_unpaid_count'] += count
-            elif state in ['sale', 'done']:
+            elif state == 'sale':
                 sales_values['summary']['order_count'] += count
             sales_values['summary']['order_carts_count'] += count
 
         [price_subtotal] = request.env['sale.report']._read_group(
             domain=[
                 ('website_id', '=', current_website.id),
-                ('state', 'in', ['sale', 'done']),
+                ('state', '=', 'sale'),
                 ('date', '>=', datetime_from),
                 ('date', '<=', datetime_to)],
             aggregates=['price_subtotal:sum'],
         )[0]
         sales_values['summary'].update(
             order_to_invoice_count=request.env['sale.order'].search_count(sale_order_domain + [
-                ('state', 'in', ['sale', 'done']),
+                ('state', '=', 'sale'),
                 ('order_line', '!=', False),
                 ('partner_id', '!=', request.env.ref('base.public_partner').id),
                 ('invoice_status', '=', 'to invoice'),
@@ -129,7 +129,7 @@ class WebsiteSaleBackend(WebsiteBackend):
     def fetch_utm_data(self, date_from, date_to):
         sale_utm_domain = [
             ('website_id', '!=', False),
-            ('state', 'in', ['sale', 'done']),
+            ('state', '=', 'sale'),
             ('date_order', '>=', date_from),
             ('date_order', '<=', date_to)
         ]

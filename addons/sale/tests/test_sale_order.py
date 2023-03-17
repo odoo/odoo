@@ -160,14 +160,15 @@ class TestSaleOrder(SaleCommon):
             so_copy.with_user(self.sale_user).unlink()
         self.assertTrue(so_copy.unlink(), 'Sale: deleting a cancelled SO should be possible')
 
-        # SO in state 'sale' or 'done' cannot be deleted
+        # SO in state 'sale' cannot be deleted
         self.sale_order.action_confirm()
         self.assertTrue(self.sale_order.state == 'sale', 'Sale: SO should be in state "sale"')
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
-        self.sale_order.action_done()
-        self.assertTrue(self.sale_order.state == 'done', 'Sale: SO should be in state "done"')
+        self.sale_order.action_lock()
+        self.assertTrue(self.sale_order.state == 'sale')
+        self.assertTrue(self.sale_order.locked)
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
@@ -312,7 +313,8 @@ class TestSaleOrder(SaleCommon):
 
         self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
         self.sale_order.action_confirm()
-        self.assertEqual(self.sale_order.state, 'done', "The order wasn't automatically locked at confirmation.")
+        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertTrue(self.sale_order.locked)
         with self.assertRaises(UserError):
             self.sale_order.action_confirm()
 

@@ -80,10 +80,12 @@ class SaleOrder(models.Model):
         return res
 
     def _action_cancel(self):
-        previously_confirmed = self.filtered(lambda s: s.state in ('sale', 'done'))
+        previously_confirmed = self.filtered(lambda s: s.state == 'sale')
         res = super()._action_cancel()
         # Add/remove the points to our coupons
-        for coupon, changes in previously_confirmed.filtered(lambda s: s.state not in ('sale', 'done'))._get_point_changes().items():
+        for coupon, changes in previously_confirmed.filtered(
+            lambda s: s.state != 'sale'
+        )._get_point_changes().items():
             coupon.points -= changes
         # Remove any rewards
         self.order_line.filtered(lambda l: l.is_reward_line).unlink()
@@ -513,7 +515,7 @@ class SaleOrder(models.Model):
         Updates (or creates) an entry in coupon_point_ids for the given coupons.
         """
         self.ensure_one()
-        if self.state in ('sale', 'done'):
+        if self.state == 'sale':
             for coupon, points in coupon_points.items():
                 coupon.sudo().points += points
         for pe in self.coupon_point_ids.sudo():

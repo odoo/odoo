@@ -3,7 +3,7 @@
 
     <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
         <xpath expr="//li[.//a[@id='print_invoice_report']]" position="after">
-            <li t-if="sale_order.timesheet_count > 0 and sale_order.state in ('sale', 'done')" class="list-group-item flex-grow-1">
+            <li t-if="sale_order.timesheet_count > 0 and sale_order.state == 'sale'" class="list-group-item flex-grow-1">
                 <div class="btn-toolbar flex-sm-nowrap justify-content-center">
                     <a class="btn btn-primary w-100" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
                 </div>

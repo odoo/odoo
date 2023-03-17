@@ -75,7 +75,7 @@ class SaleOrderLine(models.Model):
         res = super().create(vals_list)
         # Update our coupon points if the order is in a confirmed state
         for line in res:
-            if line.coupon_id and line.points_cost and line.order_id.state in ('sale', 'done'):
+            if line.coupon_id and line.points_cost and line.state == 'sale':
                 line.coupon_id.points -= line.points_cost
         return res
 
@@ -87,7 +87,7 @@ class SaleOrderLine(models.Model):
         if cost_in_vals:
             # Update our coupon points if the order is in a confirmed state
             for line in self:
-                if previous_cost[line] != line.points_cost and line.order_id.state in ('sale', 'done'):
+                if previous_cost[line] != line.points_cost and line.state == 'sale':
                     line.coupon_id.points += (previous_cost[line] - line.points_cost)
         return res
 
@@ -112,7 +112,7 @@ class SaleOrderLine(models.Model):
                     line.order_id.code_enabled_rule_ids = line.order_id.code_enabled_rule_ids.filtered(lambda r: r.program_id != line.coupon_id.program_id)
         # Give back the points if the order is confirmed, points are given back if the order is cancelled but in this case we need to do it directly
         for line in related_lines:
-            if line.order_id.state in ('sale', 'done'):
+            if line.state == 'sale':
                 line.coupon_id.points += line.points_cost
         res = super(SaleOrderLine, self | related_lines).unlink()
         coupons_to_unlink.sudo().unlink()

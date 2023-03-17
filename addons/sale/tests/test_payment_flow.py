@@ -238,7 +238,8 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx._reconcile_after_done()
 
-        self.assertEqual(self.sale_order.state, 'done')
+        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertTrue(self.sale_order.locked)
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
         self.assertTrue(tx.invoice_ids.is_move_sent)

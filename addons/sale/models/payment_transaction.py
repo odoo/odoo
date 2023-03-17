@@ -151,7 +151,7 @@ class PaymentTransaction(models.Model):
                 ('is_move_sent', '=', False),
                 ('state', '=', 'posted'),
             ])),
-            ('sale_order_ids.state', 'in', ('sale', 'done')),
+            ('sale_order_ids.state', '=', 'sale'),
             ('last_state_change', '>=', retry_limit_date),
         ])._send_invoice()
 
@@ -159,7 +159,7 @@ class PaymentTransaction(models.Model):
         for tx in self.filtered(lambda tx: tx.sale_order_ids):
             # Create invoices
             tx = tx.with_company(tx.company_id).with_context(company_id=tx.company_id.id)
-            confirmed_orders = tx.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))
+            confirmed_orders = tx.sale_order_ids.filtered(lambda so: so.state == 'sale')
             if confirmed_orders:
                 confirmed_orders._force_lines_to_invoice_policy_order()
                 invoices = confirmed_orders.with_context(

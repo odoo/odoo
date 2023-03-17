@@ -11,7 +11,7 @@
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <filter string="Confirmed Orders" name="confirmed" domain="[('state', 'in', ['sale', 'done'])]"/>
+                <filter string="Confirmed Orders" name="confirmed" domain="[('state', '=', 'sale')]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="this_month"/>
                 <group expand="0" string="Group By">
