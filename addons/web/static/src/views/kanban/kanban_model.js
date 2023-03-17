@@ -483,7 +483,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         }
 
         // Move from one group to another
-        const fullyLoadGroup = targetGroup.isFolded;
         if (dataGroupId !== targetGroupId) {
             const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
             // Quick update: moves the record at the right position and notifies components
@@ -510,24 +509,21 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                 throw err;
             }
 
-            const promises = [this.updateGroupProgressData([sourceGroup, targetGroup], true)];
-            if (fullyLoadGroup) {
-                // The group is folded: we need to load it
-                // In this case since we load after saving the record there is no
-                // need to reload the record nor to resequence the list.
-                promises.push(targetGroup.toggle());
-            } else {
-                // Record can be loaded along with the group metadata
+            const promises = [];
+            const groupsToReload = [sourceGroup];
+            if (!targetGroup.isFolded) {
+                groupsToReload.push(targetGroup);
                 promises.push(record.load());
             }
-
+            promises.push(this.updateGroupProgressData(groupsToReload, true));
             await Promise.all(promises);
         }
 
-        if (!fullyLoadGroup) {
-            // Only trigger resequence if the group hasn't been fully loaded
+        if (!targetGroup.isFolded) {
+            // Only trigger resequence if the group isn't folded
             await targetGroup.list.resequence(dataRecordId, refId);
         }
+        this.model.notify();
 
         this.model.transaction.commit(dataRecordId);
 

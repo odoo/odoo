@@ -12239,8 +12239,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("fold a column and drag record on it should unfold it", async (assert) => {
-        let searchReadProm;
+    QUnit.test("fold a column and drag record on it should not unfold it", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -12254,11 +12253,6 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
             groupBy: ["product_id"],
-            async mockRPC(_route, { method }) {
-                if (method === "web_search_read") {
-                    await searchReadProm;
-                }
-            },
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
@@ -12272,24 +12266,14 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(getColumn(1), "o_column_folded");
         assert.strictEqual(getColumn(1).innerText, "xmo (2)");
 
-        searchReadProm = makeDeferred();
-
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
 
         assert.containsN(getColumn(0), ".o_kanban_record", 1);
         assert.hasClass(getColumn(1), "o_column_folded");
         assert.strictEqual(getColumn(1).innerText, "xmo (3)");
-
-        searchReadProm.resolve();
-        await nextTick();
-
-        assert.containsN(getColumn(0), ".o_kanban_record", 1);
-        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
-        assert.containsN(getColumn(1), ".o_kanban_record", 3);
     });
 
-    QUnit.test("drag record on initially folded column should load it", async (assert) => {
-        let searchReadProm;
+    QUnit.test("drag record on initially folded column should not unfold it", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -12308,8 +12292,6 @@ QUnit.module("Views", (hooks) => {
                     const result = await performRPC(route, args);
                     result.groups[1].__fold = true;
                     return result;
-                } else if (args.method === "web_search_read") {
-                    await searchReadProm;
                 }
             },
         });
@@ -12318,20 +12300,64 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(getColumn(1), "o_column_folded");
         assert.strictEqual(getColumn(1).innerText, "xmo (2)");
 
-        searchReadProm = makeDeferred();
-
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
 
         assert.containsN(getColumn(0), ".o_kanban_record", 1);
         assert.hasClass(getColumn(1), "o_column_folded");
         assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+    });
 
-        searchReadProm.resolve();
-        await nextTick();
+    QUnit.test("drag record to folded column, with progressbars", async (assert) => {
+        serverData.models.partner.records[0].bar = false;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field" />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+        });
 
-        assert.containsN(getColumn(0), ".o_kanban_record", 1);
-        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
-        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["50%", "50%"]
+        );
+        assert.deepEqual(
+            getProgressBars(1).map((pb) => pb.style.width),
+            ["50%", "50%"]
+        );
+        assert.deepEqual(getCounters(), ["6", "26"]);
+
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Fold");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "Yes (2)");
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.containsOnce(getColumn(0), ".o_kanban_record");
+        assert.strictEqual(getColumn(1).innerText, "Yes (3)");
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["100%"]
+        );
+        assert.deepEqual(getCounters(), ["-4"]);
     });
 
     QUnit.test("quick create record in grouped kanban in a form view dialog", async (assert) => {
