@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, time
+from dateutil.relativedelta import relativedelta
 from pytz import timezone, utc
 
 from odoo import api, fields, models, _
@@ -38,7 +39,7 @@ class ResourceCalendarLeaves(models.Model):
         default=lambda self: self.env.company, compute='_compute_company_id')
     calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', 'in', [company_id, False])]", check_company=True, index=True)
     date_from = fields.Datetime('Start Date', required=True)
-    date_to = fields.Datetime('End Date', required=True)
+    date_to = fields.Datetime('End Date', compute="_compute_date_to", readonly=False, required=True, store=True)
     resource_id = fields.Many2one(
         "resource.resource", 'Resource', index=True,
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
@@ -49,6 +50,13 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_company_id(self):
         for leave in self:
             leave.company_id = leave.calendar_id.company_id or self.env.company
+
+    @api.depends('date_from')
+    def _compute_date_to(self):
+        user_tz = timezone(self.env.user.tz or self._context.get('tz') or self.company_id.resource_calendar_id.tz or 'UTC')
+        for leave in self:
+            date_to_tz = user_tz.localize(leave.date_from) + relativedelta(hour=23, minute=59, second=59)
+            leave.date_to = date_to_tz.astimezone(utc).replace(tzinfo=None)
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
