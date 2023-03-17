@@ -52,6 +52,7 @@ import { debounce, setRecurringAnimationFrame } from "@web/core/utils/timing";
  * @property {Position} [mouse={ x: 0, y: 0 }]
  * @property {Position} [offset={ x: 0, y: 0 }]
  * @property {EdgeScrollingOptions} [edgeScrolling]
+ * @property {Number} [pixelsTolerance=10]
  */
 
 /**
@@ -226,6 +227,19 @@ export function makeDraggableHook(hookParams = {}) {
             };
 
             /**
+             * Returns whether the user has moved from at least the number of pixels
+             * that are tolerated from the initial mouse position.
+             * @param {MouseEvent} ev
+             */
+            const canDrag = (ev) => {
+                return (
+                    ctx.origin &&
+                    Math.hypot(ev.clientX - ctx.origin.x, ev.clientY - ctx.origin.y) >=
+                        ctx.pixelsTolerance
+                );
+            };
+
+            /**
              * Main entry function to start a drag sequence.
              */
             const dragStart = () => {
@@ -304,6 +318,7 @@ export function makeDraggableHook(hookParams = {}) {
                 ctx.currentContainer = null;
                 ctx.currentElement = null;
                 ctx.currentElementRect = null;
+                ctx.origin = null;
                 ctx.scrollParent = null;
 
                 state.dragging = false;
@@ -423,6 +438,10 @@ export function makeDraggableHook(hookParams = {}) {
 
                 ctx.currentContainer = ctx.ref.el;
                 ctx.currentElement = ev.target.closest(ctx.elementSelector);
+                ctx.origin = {
+                    x: ev.clientX,
+                    y: ev.clientY,
+                };
 
                 Object.assign(ctx.offset, ctx.mouse);
 
@@ -434,14 +453,18 @@ export function makeDraggableHook(hookParams = {}) {
              * @param {MouseEvent} ev
              */
             const onMousemove = (ev) => {
-                updateMousePosition(ev);
-
                 if (!ctx.enabled || !ctx.currentElement) {
                     return;
                 }
                 if (!state.dragging) {
-                    dragStart();
+                    // Prevent the drag and drop to start if the user has only moved its mouse from a few pixels
+                    if (canDrag(ev)) {
+                        dragStart();
+                    }
                 }
+
+                updateMousePosition(ev);
+
                 if (state.dragging) {
                     const [eRect, cRect] = updateRects();
 
@@ -533,6 +556,7 @@ export function makeDraggableHook(hookParams = {}) {
                 mouse: { x: 0, y: 0 },
                 offset: { x: 0, y: 0 },
                 edgeScrolling: { enabled: true },
+                pixelsTolerance: 10,
             };
 
             // Effect depending on the params to update them.
