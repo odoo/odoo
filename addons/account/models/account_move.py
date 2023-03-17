@@ -2434,6 +2434,10 @@ class AccountMove(models.Model):
     # SEQUENCE MIXIN
     # -------------------------------------------------------------------------
 
+    def _must_check_constrains_date_sequence(self):
+        # OVERRIDES sequence.mixin
+        return not self.quick_edit_mode
+
     def _get_last_sequence_domain(self, relaxed=False):
         #pylint: disable=sql-injection
         # EXTENDS account sequence.mixin
