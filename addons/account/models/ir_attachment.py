@@ -100,7 +100,7 @@ class IrAttachment(models.Model):
             # XML attachments received by mail have a 'text/plain' mimetype.
             # Therefore, if content start with '<?xml', it is considered as XML.
             is_text_plain_xml = 'text/plain' in attachment.mimetype and attachment.raw.startswith(b'<?xml')
-            return 'xml' in attachment.mimetype or is_text_plain_xml
+            return attachment.mimetype.endswith('/xml') or is_text_plain_xml
 
         return [
             {
