@@ -57,6 +57,7 @@ import {
     cleanZWS,
     isZWS,
     getDeepestPosition,
+    leftPos,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3214,10 +3215,22 @@ export class OdooEditor extends EventTarget {
         const files = getImageFiles(ev.clipboardData);
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
         const clipboardHtml = ev.clipboardData.getData('text/html');
+        // Replace entire link if its label is fully selected.
+        const link = closestElement(sel.anchorNode, 'a', true);
+        if (link && sel.toString().replace(/\u200B/g, '') === link.innerText.replace(/\u200B/g, '')) {
+            const start = leftPos(link);
+            // Exit link isolation since we're removing the link and editing outside of it.
+            if (this._fixLinkMutatedElements && this._fixLinkMutatedElements.link === link) {
+                this.resetContenteditableLink();
+                this._activateContenteditable();
+            }
+            link.remove();
+            setSelection(...start, ...start, false);
+        }
         if (files.length && targetSupportsHtmlContent) {
-            this.addImagesFiles(files).then(html => this.execCommand('insertHTML', this._prepareClipboardData(html)));
+            this.addImagesFiles(files).then(html => this._applyCommand('insertHTML', this._prepareClipboardData(html)));
         } else if (clipboardHtml && targetSupportsHtmlContent) {
-            this.execCommand('insertHTML', this._prepareClipboardData(clipboardHtml));
+            this._applyCommand('insertHTML', this._prepareClipboardData(clipboardHtml));
         } else {
             const text = ev.clipboardData.getData('text/plain');
             const splitAroundUrl = text.split(URL_REGEX);
