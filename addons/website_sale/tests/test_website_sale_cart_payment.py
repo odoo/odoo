@@ -2,13 +2,14 @@
 
 from odoo.models import Command
 from odoo.tests.common import tagged
+from odoo.tools import mute_logger
 
-from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install')
-class WebsiteSaleCartPayment(PaymentCommon):
+class WebsiteSaleCartPayment(PaymentHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -52,3 +53,13 @@ class WebsiteSaleCartPayment(PaymentCommon):
                     msg=f"The transaction state '{paid_order_tx_state}' should prevent retrieving "
                         f"the linked order.",
                 )
+
+    @mute_logger('odoo.http')
+    def test_protected_kwargs_in_portal_view(self):
+        url = self._build_url('/shop/payment/transaction/' + str(self.order.id))
+        route_kwargs = {
+            'access_token': self.order._portal_ensure_token(),
+            'sale_order_id': self.order.id,
+        }
+        response = self._make_json_rpc_request(url, route_kwargs)
+        self.assertIn("odoo.exceptions.ValidationError: Invalid argument", response.text)

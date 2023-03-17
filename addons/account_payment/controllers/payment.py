@@ -30,11 +30,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
-        kwargs['reference_prefix'] = None  # Allow the reference to be computed based on the invoice
+        self._check_kwargs_validity(kwargs)
         logged_in = not request.env.user._is_public()
         partner = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
-        kwargs['partner_id'] = partner.id
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        kwargs.update({
+            'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': partner.id,
+            'currency_id': invoice_sudo.currency_id.id,
+            'amount': invoice_sudo.amount_residual,
+        })
         tx_sudo = self._create_transaction(
             custom_create_values={'invoice_ids': [Command.set([invoice_id])]}, **kwargs,
         )

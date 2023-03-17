@@ -311,15 +311,9 @@
          * @return {object} The transaction route params
          */
         _prepareTransactionRouteParams: function (code, paymentOptionId, flow) {
-            return {
+            let tx_params = {
                 'payment_option_id': paymentOptionId,
-                'reference_prefix': this.txContext.referencePrefix !== undefined
-                    ? this.txContext.referencePrefix.toString() : null,
-                'amount': this.txContext.amount !== undefined
-                    ? parseFloat(this.txContext.amount) : null,
-                'currency_id': this.txContext.currencyId
-                    ? parseInt(this.txContext.currencyId) : null,
-                'partner_id': parseInt(this.txContext.partnerId),
+                'reference_prefix':this.txContext.referencePrefix?.toString(),
                 'flow': flow,
                 'tokenization_requested': this.txContext.tokenizationRequested,
                 'landing_route': this.txContext.landingRoute,
@@ -328,6 +322,13 @@
                     ? this.txContext.accessToken : undefined,
                 'csrf_token': core.csrf_token,
             };
+            if(this.txContext.transactionRoute == '/payment/transaction'){
+                tx_params['partner_id']=parseInt(this.txContext.partnerId)
+                tx_params['currency_id']= this.txContext.currencyId ? parseInt(this.txContext.currencyId) : null
+                tx_params['amount']= this.txContext.amount !== undefined ? parseFloat(this.txContext.amount) : null
+            };
+
+            return  tx_params;
         },
 
         /**

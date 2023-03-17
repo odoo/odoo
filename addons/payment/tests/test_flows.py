@@ -293,6 +293,13 @@ class TestFlows(PaymentHttpCommon):
             "odoo.exceptions.UserError: The payment should either be direct, with redirection, or made by a token.",
             response.text)
 
+    def test_protected_kwarg(self):
+        route_values = self._prepare_pay_values()
+        route_values['custom_create_values'] = "whatever"
+        with mute_logger('odoo.http'):
+            response = self._portal_transaction(**route_values)
+        self.assertIn("odoo.exceptions.ValidationError: Invalid argument", response.text)
+
     def test_transaction_wrong_token(self):
         route_values = self._prepare_pay_values()
         route_values['access_token'] = "abcde"

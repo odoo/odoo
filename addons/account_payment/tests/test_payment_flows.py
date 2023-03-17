@@ -45,3 +45,15 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         # doesn't work, and cache invalidation doesn't work either.
         self.invoice.invalidate_recordset(['transaction_ids'])
         self.assertEqual(self.invoice.transaction_ids, tx_sudo)
+
+    @mute_logger('odoo.http')
+    def test_invoice_payment_portal_flow_with_protected_kwargs(self):
+        url = self._build_url('/invoice/transaction/'+str(self.invoice.id))
+        route_kwargs = {
+            'amount': self.amount,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'access_token': self.invoice._portal_ensure_token(),
+        }
+        response = self._make_json_rpc_request(url, route_kwargs)
+        self.assertIn("odoo.exceptions.ValidationError: Invalid argument", response.text)

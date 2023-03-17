@@ -288,3 +288,13 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             tx._reconcile_after_done()
 
         self.assertTrue(_create_invoices_mock.call_args.kwargs['final'])
+
+    @mute_logger('odoo.http')
+    def test_sale_payment_portal_flow(self):
+        url = self._build_url('/my/orders/'+str(self.sale_order.id)+'/transaction')
+        route_kwargs = {
+            'access_token': self.sale_order._portal_ensure_token(),
+            'sale_order_id': self.sale_order.id
+        }
+        response = self._make_json_rpc_request(url, route_kwargs)
+        self.assertIn("odoo.exceptions.ValidationError: Invalid argument", response.text)

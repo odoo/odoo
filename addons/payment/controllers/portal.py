@@ -233,8 +233,9 @@ class PaymentPortal(portal.CustomerPortal):
         amount = amount and float(amount)  # Cast as float in case the JS stripped the '.0'
         if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
             raise ValidationError(_("The access token is invalid."))
+        allowed_kwargs = ('access_token', 'parter_id', 'currency_id', 'amount', 'reference_prefix',)
+        self._check_kwargs_validity(kwargs, allowed_kwargs=allowed_kwargs)
 
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
@@ -437,3 +438,21 @@ class PaymentPortal(portal.CustomerPortal):
         :rtype: str
         """
         return not partner.company_id or partner.company_id == document_company
+
+    @staticmethod
+    def _check_kwargs_validity(params, allowed_kwargs=(), extra_protected_kwargs=()):
+        """Raise ValidationError if protected kwargs were find in transaction kwargs
+
+        :param _type_ params: Kwargs from transaction.
+        :param tuple allowed_kwargs: In some flows, kwargs that should protected can be passed as they
+                                     are safe to process, defaults to ()
+        :param tuple extra_protected_kwargs: Additional protected kwargs that can't be trusted from
+                                             transaction in some flows _description_, defaults to ()
+        :raises ValidationError: if protected kwargs are found in params
+        """
+        protected_kwargs = (
+            'partner_id', 'currency_id', 'amount', 'custom_create_values', 'reference_prefix'
+        )
+        for i in params:
+            if i not in allowed_kwargs and i in protected_kwargs + extra_protected_kwargs:
+                raise ValidationError(_("Invalid argument"))

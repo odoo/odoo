@@ -66,11 +66,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         # Don't allow passing arbitrary create values and avoid tokenization for
         # the public user.
+        self._check_kwargs_validity(
+            kwargs,
+            allowed_kwargs=('currency_id', 'amount', 'reference_prefix', 'partner_id')
+        )
         if use_public_partner:
             kwargs['custom_create_values'] = {'tokenize': False}
-        else:
-            kwargs.pop('custom_create_values', None)
-
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )

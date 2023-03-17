@@ -2,7 +2,7 @@
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
 from odoo.addons.website.tools import MockRequest
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, tagged
 
 @tagged('post_install', '-at_install')
@@ -76,7 +76,7 @@ class WebsiteSaleCart(TransactionCase):
             old_amount = sale_order.amount_total
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
             # Try processing payment with the old amount
-            with self.assertRaises(UserError):
+            with self.assertRaises(ValidationError):
                 PaymentPortal().shop_payment_transaction(sale_order.id, sale_order.access_token, amount=old_amount)
 
     def test_update_cart_zero_qty(self):

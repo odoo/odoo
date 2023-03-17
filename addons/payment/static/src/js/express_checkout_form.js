@@ -64,11 +64,6 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     _prepareTransactionRouteParams(providerId) {
         return {
             'payment_option_id': parseInt(providerId),
-            'reference_prefix': this.txContext.referencePrefix &&
-                                this.txContent.referencePrefix.toString(),
-            'currency_id': this.txContext.currencyId &&
-                           parseInt(this.txContext.currencyId),
-            'partner_id': parseInt(this.txContext.partnerId),
             'flow': 'direct',
             'tokenization_requested': false,
             'landing_route': this.txContext.landingRoute,
