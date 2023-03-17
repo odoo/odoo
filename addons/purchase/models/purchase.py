@@ -475,7 +475,8 @@ class PurchaseOrder(models.Model):
         for line in self.order_line:
             # Do not add a contact as a supplier
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
-            if line.product_id and partner not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
+            already_seller = (partner | self.partner_id) & line.product_id.seller_ids.mapped('name')
+            if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 # Convert the price in the right currency.
                 currency = partner.property_purchase_currency_id or self.env.company.currency_id
                 price = self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today(), round=False)
