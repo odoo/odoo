@@ -31,7 +31,7 @@
             <img
                 class="img img-fluid w-100"
                 alt="Binary file"
-                t-att-src="getUrl(props.previewImage or props.name)"
+                t-att-src="this.getUrl(props.previewImage or props.name)"
                 t-att-name="props.name"
                 t-att-height="props.height"
                 t-att-width="props.width"

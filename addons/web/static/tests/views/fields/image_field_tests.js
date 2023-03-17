@@ -277,6 +277,10 @@ QUnit.module("Fields", (hooks) => {
             rec.document = "3 kb";
             rec.write_date = "2022-08-05 08:37:00"; // 1659688620000
 
+            // 1659692220000, 1659695820000
+            const lastUpdates = ["2022-08-05 09:37:00", "2022-08-05 10:37:00"];
+            let index = 0;
+
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -289,8 +293,9 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 mockRPC(_route, { method, args }) {
                     if (method === "write") {
-                        args[1].write_date = "2022-08-05 09:37:00"; // 1659692220000
+                        args[1].write_date = lastUpdates[index];
                         args[1].document = "4 kb";
+                        index++;
                     }
                 },
             });
@@ -323,6 +328,27 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 getUnique(target.querySelector(".o_field_image img")),
                 "1659692220000"
+            );
+
+            // Change the image again. After clicking save, it should have the correct new url.
+            await editInput(
+                target,
+                "input[type=file]",
+                new File(
+                    [Uint8Array.from([...atob(PRODUCT_IMAGE)].map((c) => c.charCodeAt(0)))],
+                    "fake_file2.gif",
+                    { type: "png" }
+                )
+            );
+            assert.strictEqual(
+                target.querySelector("div[name=document] img").dataset.src,
+                `data:image/gif;base64,${PRODUCT_IMAGE}`
+            );
+
+            await clickSave(target);
+            assert.strictEqual(
+                getUnique(target.querySelector(".o_field_image img")),
+                "1659695820000"
             );
         }
     );
