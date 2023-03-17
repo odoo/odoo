@@ -47,6 +47,7 @@ class ResPartnerBank(models.Model):
              'usually happens when their emails are compromised. Once verified, you can activate the ability to send money.'
     )
     currency_id = fields.Many2one(tracking=True)
+    lock_trust_fields = fields.Boolean(compute='_compute_lock_trust_fields')
 
     @api.constrains('journal_id')
     def _check_journal_id(self):
@@ -96,6 +97,14 @@ class ResPartnerBank(models.Model):
         user_has_group_validate_bank_account = self.user_has_groups('account.group_validate_bank_account')
         for bank in self:
             bank.user_has_group_validate_bank_account = user_has_group_validate_bank_account
+
+    @api.depends('allow_out_payment')
+    def _compute_lock_trust_fields(self):
+        for bank in self:
+            if not bank._origin or not bank.allow_out_payment:
+                bank.lock_trust_fields = False
+            elif bank._origin and bank.allow_out_payment:
+                bank.lock_trust_fields = True
 
     def _build_qr_code_vals(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
         """ Returns the QR-code vals needed to generate the QR-code report link to pay this account with the given parameters,
@@ -263,6 +272,15 @@ class ResPartnerBank(models.Model):
             for field in tracking_fields:
                 # Group initial values by partner_id
                 account_initial_values[account][field] = account[field]
+
+        # Some fields should not be editable based on conditions. It is enforced in the view, but not in python which
+        # leaves them vulnerable to edits via the shell/... So we need to ensure that the user has the rights to edit
+        # these fields when writing too.
+        if ('acc_number' in vals or 'partner_id' in vals) and any(account.lock_trust_fields for account in self):
+            raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
+
+        if 'allow_out_payment' in vals and not self.user_has_groups('account.group_validate_bank_account'):
+            raise UserError(_("You do not have the rights to trust or un-trust accounts."))
 
         res = super().write(vals)
 
