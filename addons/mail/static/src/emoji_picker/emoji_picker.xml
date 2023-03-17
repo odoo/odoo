@@ -4,10 +4,13 @@
 <t t-name="mail.EmojiPicker" owl="1">
     <div class="o-mail-EmojiPicker bg-white" t-on-click="onClick" t-on-keydown="onKeydown">
         <div class="o-mail-EmojiPicker-header d-flex align-items-center border-bottom overflow-auto bg-100" t-on-click="selectCategory">
+            <t t-if="recentEmojis.length > 0" t-call="mail.EmojiPicker.tab">
+                <t t-set="category" t-value="recentCategory"/>
+            </t>
             <t t-foreach="categories" t-as="category" t-key="category.sortId">
-                <span class="o-mail-Emoji text-center p-1 cursor-pointer" t-att-class="{'o-isActive bg-300': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId">
-                    <t t-esc="category.title"/>
-                </span>
+                <t t-call="mail.EmojiPicker.tab">
+                    <t t-set="category" t-value="category"/>
+                </t>
             </t>
         </div>
         <div class="p-1 d-flex flex-column">
@@ -17,22 +20,53 @@
             </div>
             <hr class="mx-2 my-0 text-muted"/>
         </div>
+        <t t-set="itemIndex" t-value="0"/>
         <div class="o-mail-EmojiPicker-content overflow-auto d-flex flex-wrap align-content-start align-items-center" t-ref="emoji-grid" t-on-click="selectEmoji" t-on-scroll="highlightActiveCategory">
+            <t t-if="recentEmojis.length > 0 and !state.searchStr">
+                <t t-call="mail.EmojiPicker.section">
+                    <t t-set="category" t-value="recentCategory"/>
+                </t>
+                <t t-foreach="recentEmojis" t-as="emoji" t-key="'recent_' + emoji_index">
+                    <t t-call="mail.EmojiPicker.emoji">
+                        <t t-set="emoji" t-value="emoji"/>
+                    </t>
+                    <t t-set="itemIndex" t-value="itemIndex + 1"/>
+                </t>
+            </t>
             <t t-set="current" t-value=""/>
             <t t-foreach="getEmojis()" t-as="emoji" t-key="emoji_index">
                 <t t-if="!state.searchStr and current !== emoji.category">
                     <t t-set="current" t-value="emoji.category"/>
-                    <t t-set="categorySortId" t-value="categories.find(c => c.name === current).sortId"/>
-                    <span class="w-100 fs-5 p-2 position-sticky top-0 bg-white" t-esc="current" t-att-data-category="categorySortId"/>
-                    <span class="o-mail-EmojiPicker-category opacity-100" t-att-data-category="categorySortId"/>
+                    <t t-set="category" t-value="categories.find(c => c.name === current)"/>
+                    <t t-call="mail.EmojiPicker.section">
+                        <t t-set="category" t-value="category"/>
+                    </t>
                 </t>
                 <t t-elif="state.searchStr" t-set="categorySortId" t-value="null"/>
-                <span class="o-mail-Emoji p-1 cursor-pointer" t-att-class="{ 'bg-300': state.activeEmojiIndex === emoji_index }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="emoji_index" t-att-data-category="categorySortId">
-                    <t t-esc="emoji.codepoints"/>
-                </span>
+                <t t-call="mail.EmojiPicker.emoji">
+                    <t t-set="emoji" t-value="emoji"/>
+                </t>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
         </div>
     </div>
+</t>
+
+<t t-name="mail.EmojiPicker.tab" owl="1">
+    <span class="o-mail-Emoji text-center p-1 cursor-pointer" t-att-class="{'o-isActive bg-300': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId">
+        <t t-esc="category.title"/>
+    </span>
+</t>
+
+<t t-name="mail.EmojiPicker.section" owl="1">
+    <span class="w-100 fs-5 p-2 position-sticky top-0 bg-white" t-esc="category.displayName" t-att-data-category="category.sortId"/>
+    <span class="o-mail-EmojiPicker-category opacity-100" t-att-data-category="category.sortId"/>
+</t>
+
+<t t-name="mail.EmojiPicker.emoji" owl="1">
+    <span class="o-mail-Emoji p-1 cursor-pointer" t-att-class="{ 'bg-300': state.activeEmojiIndex === itemIndex }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="itemIndex" t-att-data-category="recentCategory.sortId">
+        <t t-esc="emoji.codepoints"/>
+    </span>
 </t>
 
 </templates>
