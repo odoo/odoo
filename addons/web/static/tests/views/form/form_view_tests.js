@@ -4041,7 +4041,7 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(
             [...target.querySelectorAll(".o_menu_item")].map((el) => el.textContent),
             ["Duplicate", "Delete"],
-            "Should not contain an Archive action",
+            "Should not contain an Archive action"
         );
     });
 
@@ -12596,27 +12596,30 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange", "create", "read"]);
     });
 
-    QUnit.test("save a form view with a duplicated invisible required field", async function (assert) {
-        serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
+    QUnit.test(
+        "save a form view with a duplicated invisible required field",
+        async function (assert) {
+            serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <group>
                         <field name="text"/>
                         <field name="text" invisible="1"/>
                     </group>
                 </form>`,
-        });
+            });
 
-        await clickSave(target);
+            await clickSave(target);
 
-        assert.containsOnce(target, ".o_form_label.o_field_invalid");
-        assert.containsOnce(target, ".o_field_char.o_field_invalid");
-    });
+            assert.containsOnce(target, ".o_form_label.o_field_invalid");
+            assert.containsOnce(target, ".o_field_char.o_field_invalid");
+        }
+    );
 
     QUnit.test(
         "save a form view with an invisible required field in a x2many",
@@ -12964,4 +12967,50 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(['danger:Please click on the "save" button first']);
         }
     );
+
+    QUnit.test("prevent recreating a deleted record", async (assert) => {
+        serverData.models.partner.records.length = 1;
+
+        serverData.actions[1] = {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        };
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="name"/>
+                </tree>`,
+            "partner,false,form": `
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>`,
+            "partner,false,search": "<search></search>",
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "name");
+        await click(target, ".o_data_row .o_data_cell");
+
+        await editInput(target, ".o_field_char .o_input", "now dirty");
+        assert.isVisible(target.querySelector(".o_form_status_indicator_buttons"));
+
+        await click(target, ".o_cp_action_menus .dropdown-toggle");
+        await click(target.querySelectorAll(".o_cp_action_menus .dropdown-item")[1]);
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal-footer button.btn-primary");
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsNone(target, ".o_data_row");
+    });
 });
