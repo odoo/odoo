@@ -444,7 +444,7 @@ class AccountEdiFormat(models.Model):
         is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
         if 'pdf' in attachment.mimetype:
             to_process.extend(self._decode_pdf(attachment.name, content))
-        elif 'xml' in attachment.mimetype or is_text_plain_xml:
+        elif attachment.mimetype.endswith('/xml') or is_text_plain_xml:
             to_process.extend(self._decode_xml(attachment.name, content))
         else:
             to_process.extend(self._decode_binary(attachment.name, content))
