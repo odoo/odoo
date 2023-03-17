@@ -1545,7 +1545,6 @@ class SaleOrder(models.Model):
             amount = amount_max
 
         return {
-            'description': self.name,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_invoice_id.id,
             'amount': amount,

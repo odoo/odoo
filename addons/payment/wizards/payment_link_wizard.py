@@ -30,7 +30,6 @@ class PaymentLinkWizard(models.TransientModel):
     currency_id = fields.Many2one('res.currency')
     partner_id = fields.Many2one('res.partner')
     partner_email = fields.Char(related='partner_id.email')
-    description = fields.Char("Payment Ref")
     link = fields.Char(string="Payment Link", compute='_compute_link')
     company_id = fields.Many2one('res.company', compute='_compute_company_id')
     warning_message = fields.Char(compute='_compute_warning_message')
@@ -58,13 +57,12 @@ class PaymentLinkWizard(models.TransientModel):
             self.partner_id.id, self.amount, self.currency_id.id
         )
 
-    @api.depends('description', 'amount', 'currency_id', 'partner_id', 'company_id')
+    @api.depends('amount', 'currency_id', 'partner_id', 'company_id')
     def _compute_link(self):
         for payment_link in self:
             related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
             base_url = related_document.get_base_url()  # Don't generate links for the wrong website
             url_params = {
-                'reference': urls.url_quote(payment_link.description),
                 'amount': self.amount,
                 'access_token': self._get_access_token(),
                 **self._get_additional_link_values(),

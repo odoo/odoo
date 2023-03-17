@@ -2,7 +2,7 @@
 from unittest.mock import ANY, patch
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, JsonRpcException
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
@@ -37,23 +37,22 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.sale_order.amount_total)
-        self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
-        route_values.update({
+        # /my/orders/<id>/transaction/
+        tx_route_values = {
             'provider_id': self.provider.id,
             'payment_method_id': self.payment_method_id,
             'token_id': None,
+            'amount': tx_context['amount'],
             'flow': 'direct',
             'tokenization_requested': False,
-            'validation_route': False,
-            'reference_prefix': None, # Force empty prefix to fallback on SO reference
             'landing_route': tx_context['landing_route'],
-            'amount': tx_context['amount'],
-            'currency_id': tx_context['currency_id'],
-        })
-
+            'access_token': tx_context['access_token'],
+        }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self._get_processing_values(**route_values)
+            processing_values = self._get_processing_values(
+                tx_route=tx_context['transaction_route'], **tx_route_values
+            )
         tx_sudo = self._get_tx(processing_values['reference'])
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
@@ -87,29 +86,29 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         # test customized /payment/pay route with sale_order_id param
         # partial amount specified
         self.amount = self.sale_order.amount_total / 2.0
-        route_values = self._prepare_pay_values()
-        route_values['sale_order_id'] = self.sale_order.id
+        pay_route_values = self._prepare_pay_values()
+        pay_route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_portal_pay_context(**route_values)
+        tx_context = self._get_portal_pay_context(**pay_route_values)
 
-        self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
-        self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
-        route_values.update({
+        tx_route_values = {
             'provider_id': self.provider.id,
             'payment_method_id': self.payment_method_id,
             'token_id': None,
+            'amount': tx_context['amount'],
             'flow': 'direct',
             'tokenization_requested': False,
-            'validation_route': False,
-            'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
-        })
+            'access_token': tx_context['access_token'],
+        }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self._get_processing_values(**route_values)
+            processing_values = self._get_processing_values(
+                tx_route=tx_context['transaction_route'], **tx_route_values
+            )
         tx_sudo = self._get_tx(processing_values['reference'])
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
@@ -117,7 +116,6 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.sale_order.currency_id)
-        self.assertEqual(tx_sudo.reference, self.reference)
         self.assertEqual(tx_sudo.sale_order_ids.transaction_ids, tx_sudo)
 
         tx_sudo._set_done()
@@ -126,29 +124,29 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(self.sale_order.state, 'draft') # Only a partial amount was paid
 
         # Pay the remaining amount
-        route_values = self._prepare_pay_values()
-        route_values['sale_order_id'] = self.sale_order.id
+        pay_route_values = self._prepare_pay_values()
+        pay_route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_portal_pay_context(**route_values)
+        tx_context = self._get_portal_pay_context(**pay_route_values)
 
-        self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
-        self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
-        route_values.update({
+        tx_route_values = {
             'provider_id': self.provider.id,
             'payment_method_id': self.payment_method_id,
             'token_id': None,
+            'amount': tx_context['amount'],
             'flow': 'direct',
             'tokenization_requested': False,
-            'validation_route': False,
-            'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
-        })
+            'access_token': tx_context['access_token'],
+        }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self._get_processing_values(**route_values)
+            processing_values = self._get_processing_values(
+                tx_route=tx_context['transaction_route'], **tx_route_values
+            )
         tx2_sudo = self._get_tx(processing_values['reference'])
 
         self.assertEqual(tx2_sudo.sale_order_ids, self.sale_order)
@@ -157,10 +155,6 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx2_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx2_sudo.currency_id, self.sale_order.currency_id)
 
-        # We are paying a second time with the same reference (prefix)
-        # a suffix is added to respect unique reference constraint
-        reference = self.reference + "-1"
-        self.assertEqual(tx2_sudo.reference, reference)
         self.assertEqual(self.sale_order.state, 'draft')
         self.assertEqual(self.sale_order.transaction_ids, tx_sudo + tx2_sudo)
 
@@ -173,23 +167,25 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.product.invoice_policy = 'delivery'
 
         self.amount = self.sale_order.amount_total / 2.0
-        route_values = self._prepare_pay_values()
-        route_values['sale_order_id'] = self.sale_order.id
+        pay_route_values = self._prepare_pay_values()
+        pay_route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_portal_pay_context(**route_values)
+        tx_context = self._get_portal_pay_context(**pay_route_values)
 
-        route_values.update({
+        tx_route_values = {
             'provider_id': self.provider.id,
             'payment_method_id': self.payment_method_id,
             'token_id': None,
+            'amount': tx_context['amount'],
             'flow': 'direct',
             'tokenization_requested': False,
-            'validation_route': False,
-            'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
-        })
+            'access_token': tx_context['access_token'],
+        }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self._get_processing_values(**route_values)
+            processing_values = self._get_processing_values(
+                tx_route=tx_context['transaction_route'], **tx_route_values
+            )
         tx_sudo = self._get_tx(processing_values['reference'])
 
         tx_sudo._set_done()
@@ -388,3 +384,13 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         invoice = self.sale_order.invoice_ids
         self.assertTrue(len(invoice) == 1)
         self.assertTrue(invoice.line_ids[0].is_downpayment)
+
+    @mute_logger('odoo.http')
+    def test_transaction_route_rejects_unexpected_kwarg(self):
+        url = self._build_url(f'/my/orders/{self.sale_order.id}/transaction')
+        route_kwargs = {
+            'access_token': self.sale_order._portal_ensure_token(),
+            'partner_id': self.partner.id,  # This should be rejected.
+        }
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
+            self.make_jsonrpc_request(url, route_kwargs)

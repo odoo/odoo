@@ -64,10 +64,10 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             for k in [
                 'amount',
                 'currency_id',
-                'reference_prefix',
                 'partner_id',
-                'access_token',
                 'landing_route',
+                'reference_prefix',
+                'access_token',
             ]
         }
         validation_values.update({

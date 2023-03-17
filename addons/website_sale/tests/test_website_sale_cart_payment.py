@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.models import Command
-from odoo.tests.common import tagged
+from odoo.tests.common import tagged, JsonRpcException
+from odoo.tools import mute_logger
 
-from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install')
-class WebsiteSaleCartPayment(PaymentCommon):
+class WebsiteSaleCartPayment(PaymentHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -53,3 +54,13 @@ class WebsiteSaleCartPayment(PaymentCommon):
                     msg=f"The transaction state '{paid_order_tx_state}' should prevent retrieving "
                         f"the linked order.",
                 )
+
+    @mute_logger('odoo.http')
+    def test_transaction_route_rejects_unexpected_kwarg(self):
+        url = self._build_url(f'/shop/payment/transaction/{self.order.id}')
+        route_kwargs = {
+            'access_token': self.order._portal_ensure_token(),
+            'partner_id': self.partner.id,  # This should be rejected.
+        }
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
+            self.make_jsonrpc_request(url, route_kwargs)

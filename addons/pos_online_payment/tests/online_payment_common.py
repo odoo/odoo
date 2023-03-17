@@ -37,9 +37,6 @@ class OnlinePaymentCommon(PaymentHttpCommon):
             k: payment_context[k]
             for k in [
                 'amount',
-                'currency_id',
-                'reference_prefix',
-                'partner_id',
                 'access_token',
                 'landing_route',
             ]
