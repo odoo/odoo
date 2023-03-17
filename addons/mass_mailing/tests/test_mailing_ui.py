@@ -54,3 +54,6 @@ class TestMailingUi(MassMailCommon, HttpCase):
 
     def test_snippets_mailing_menu_toolbar_mobile_tour(self):
         self.start_tour("/web", 'snippets_mailing_menu_toolbar_mobile', login="demo")
+
+    def test_mass_mailing_code_view_tour(self):
+        self.start_tour("/web?debug=tests", 'mass_mailing_code_view_tour', login="demo")
