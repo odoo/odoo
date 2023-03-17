@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -13,6 +12,7 @@
         'data/account.account.template.csv',
         'data/l10n_hk_chart_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'views/res_bank_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
