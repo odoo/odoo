@@ -589,13 +589,15 @@ export const editorCommands = {
             return font;
         });
         // Color the selected <font>s and remove uncolored fonts.
-        for (const font of new Set(fonts)) {
+        const fontsSet = new Set(fonts);
+        for (const font of fontsSet) {
             colorElement(font, color, mode);
             if (!hasColor(font, mode) && !font.hasAttribute('style')) {
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
                 }
                 font.parentNode.removeChild(font);
+                fontsSet.delete(font);
             }
         }
         restoreCursor();
@@ -607,7 +609,7 @@ export const editorCommands = {
             newSelection.removeAllRanges();
             newSelection.addRange(range);
         }
-        return [...fonts, ...coloredTds];
+        return [...fontsSet, ...coloredTds];
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
