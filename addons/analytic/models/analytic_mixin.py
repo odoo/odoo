@@ -30,6 +30,7 @@ class AnalyticMixin(models.AbstractModel):
                                         ON {self._table} USING gin(analytic_distribution);
             """
             self.env.cr.execute(query)
+        super().init()
 
     def _compute_analytic_distribution(self):
         pass
