@@ -3,6 +3,9 @@ import {
     testEditor,
     triggerEvent,
     undo,
+    setTestSelection,
+    Direction,
+    nextTick,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
@@ -1424,6 +1427,61 @@ describe('Paste', () => {
                     contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
                 });
             });
+            it('should paste and transform URL among text', async () => {
+                const url = 'https://www.odoo.com';
+                const imgUrl = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                const videoUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `abc ${url} def`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p>abc <a href="${url}">${url}</a> def[]</p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `abc ${imgUrl} def`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]</p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `abc ${videoUrl} def`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]</p>`,
+                });
+            });
+            it('should paste and transform multiple URLs', async () => {
+                const url = 'https://www.odoo.com';
+                const imgUrl = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                const videoUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `${url} ${videoUrl} ${imgUrl}`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]</p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `${url} abc ${videoUrl} def ${imgUrl}`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p><a href="${url}">${url}</a> abc <a href="${videoUrl}">${videoUrl}</a> def <a href="${imgUrl}">${imgUrl}</a>[]</p>`,
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste and transform an URL in a p', async () => {
@@ -1451,6 +1509,84 @@ describe('Paste', () => {
                         await pasteText(editor, 'http://www.xyz.com');
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttp://www.xyz.com[]c</a>d</p>',
+                });
+            });
+            it('should restore selection when pasting plain text followed by UNDO', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'def');
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'www.odoo.com');
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'def www.odoo.com xyz');
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
+                });
+ 
+            });
+            it('should restore selection after pasting HTML followed by UNDO', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
+                });
+            });
+            it('should paste and transform URLs among text or multiple URLs', async () => {
+                const url = 'https://www.odoo.com';
+                const imgUrl = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                const videoUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[xyz]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `abc ${url} def`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p>abc <a href="${url}">${url}</a> def[]<br></p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[xyz]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `abc ${imgUrl} def`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]<br></p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[xyz]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `abc ${videoUrl} def`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]<br></p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[xyz]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, `${url} ${videoUrl} ${imgUrl}`);
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                    },
+                    contentAfter: `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]<br></p>`,
                 });
             });
         });
@@ -1488,15 +1624,45 @@ describe('Paste', () => {
                     contentBefore: '<p>a<a href="http://existing.com">b[]c</a>d</p>',
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
-                        // Ensure the powerbox is active
-                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
-                        // Force powerbox validation on the default first choice
-                        await editor.powerbox._pickCommand();
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
                     contentAfter: '<p>a<a href="http://existing.com">b<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]c</a>d</p>',
                 });
             });
-        });
+            it('should paste an image URL as a link in a p', async () => {
+                const url = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p><a href="${url}">${url}</a>[]</p>`,
+                });
+            });
+            it('should not revert a history step when pasting an image URL as a link', async () => {
+                const url = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        // paste text to have a history step recorded
+                        await pasteText(editor, "*should not disappear*");
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`,
+                });
+            });
+       });
         describe('range not collapsed', async () => {
             it('should paste and transform an image URL in a p', async () => {
                 await testEditor(BasicEditor, {
@@ -1529,12 +1695,86 @@ describe('Paste', () => {
                     contentBefore: '<p>a<a href="http://existing.com">b[qsdqsd]c</a>d</p>',
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
-                        // Ensure the powerbox is active
-                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
-                        // Force powerbox validation on the default first choice
-                        await editor.powerbox._pickCommand();
+                        // Powerbox should not open
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
                     contentAfter: '<p>a<a href="http://existing.com">b<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]c</a>d</p>',
+                });
+            });
+            it('should paste an image URL as a link in a p', async () => {
+                const url = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[xxx]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
+                });
+            });
+            it('should not revert a history step when pasting an image URL as a link', async () => {
+                const url = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        // paste text (to have a history step recorded)
+                        await pasteText(editor, "abxxxcd");
+                        // select xxx in "<p>ab[xxx]cd</p>""
+                        const p = editor.editable.querySelector('p')
+                        let selection = {
+                            direction: Direction.FORWARD,
+                            anchorNode: p.childNodes[1],
+                            anchorOffset: 2,
+                            focusNode: p.childNodes[1],
+                            focusOffset: 5,
+                        }
+                        setTestSelection(selection, editor.document);
+                        editor._computeHistorySelection();
+                        // paste url
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
+                });
+            });
+            it('should restore selection after pasting image URL followed by UNDO', async () => {
+                const url = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick first command (Embed image)
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        // Undo
+                        await nextTick();
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        // Undo
+                        await nextTick();
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
                 });
             });
         });
@@ -1567,7 +1807,7 @@ describe('Paste', () => {
                     contentAfter: '<p>a<span>b<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]c</span>d</p>',
                 });
             });
-            it('should paste and not transform a youtube  URL in a existing link', async () => {
+            it('should paste and not transform a youtube URL in a existing link', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="http://existing.com">b[]c</a>d</p>',
                     stepFunction: async editor => {
@@ -1576,6 +1816,38 @@ describe('Paste', () => {
                         window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttps://youtu.be/dQw4w9WgXcQ[]c</a>d</p>',
+                });
+            });
+            it('should paste a youtube URL as a link in a p', async () => {
+                const url = 'https://youtu.be/dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p><a href="${url}">${url}</a>[]</p>`,
+                });
+            });
+            it('should not revert a history step when pasting a youtube URL as a link', async () => {
+                const url = 'https://youtu.be/dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        // paste text to have a history step recorded
+                        await pasteText(editor, "*should not disappear*");
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`,
                 });
             });
         });
@@ -1615,6 +1887,83 @@ describe('Paste', () => {
                         window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttps://www.youtube.com/watch?v=dQw4w9WgXcQ[]c</a>d</p>',
+                });
+            });
+            it('should paste a youtube URL as a link in a p', async () => {
+                const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[xxx]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
+                });
+            });
+            it('should not revert a history step when pasting a youtube URL as a link', async () => {
+                const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        // paste text (to have a history step recorded)
+                        await pasteText(editor, "abxxxcd");
+                        // select xxx in "<p>ab[xxx]cd</p>"
+                        const p = editor.editable.querySelector('p')
+                        let selection = {
+                            direction: Direction.FORWARD,
+                            anchorNode: p.childNodes[1],
+                            anchorOffset: 2,
+                            focusNode: p.childNodes[1],
+                            focusOffset: 5,
+                        }
+                        setTestSelection(selection, editor.document);
+                        editor._computeHistorySelection();
+
+                        // paste url
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick the second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
+                });
+            });
+            it('should restore selection after pasting video URL followed by UNDO', async () => {
+                const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick first command (Embed video)
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        // Undo
+                        await nextTick();
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[abc]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, url);
+                        // Ensure the powerbox is active
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Pick second command (Paste as URL)
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        // Undo
+                        await nextTick();
+                        editor.historyUndo();
+                    },
+                    contentAfter: '<p>[abc]</p>',
                 });
             });
         });
