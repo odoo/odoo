@@ -47,8 +47,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
             vals = self._get_shipment_rate()
             if vals.get('error_message'):
                 warning = {
-                    'title': '%s Error' % self.carrier_id.name,
-                    'message': vals.get('error_message'),
+                    'title': _("%(carrier)s Error", carrier=self.carrier_id.name),
+                    'message': vals['error_message'],
                     'type': 'notification',
                 }
                 return {'warning': warning}
