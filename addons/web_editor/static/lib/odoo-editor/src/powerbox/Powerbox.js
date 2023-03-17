@@ -139,6 +139,10 @@ export class Powerbox {
                 );
             }
         }
+        // Hide group name if there is only a single group.
+        if (Object.entries(groups).length === 1) {
+            this._mainWrapperElement.querySelector('.oe-commandbar-groupName').style.display = 'none';
+        }
         this._resetPosition();
     }
 
