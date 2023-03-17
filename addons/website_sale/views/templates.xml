@@ -1160,9 +1160,9 @@
                     itemprop="listPrice"
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
-                <del t-if="product.compare_list_price">
-                    <span t-field="product.compare_list_price"
-                        groups="website_sale.group_product_price_comparison"
+                <t t-set="template_price_vals" t-value="product._get_sales_prices(website.pricelist_id)"/>
+                <del t-if="product.id in template_price_vals and 'base_price' in template_price_vals[product.id]">
+                    <span t-esc="template_price_vals[product.id]['base_price']"
                         t-options='{
                            "widget": "monetary",
                            "display_currency": product.currency_id,
@@ -1176,9 +1176,9 @@
                        "display_currency": product.currency_id,
                 }'/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
-                <del t-if="product.compare_list_price">
-                    <span t-field="product.compare_list_price"
-                        groups="website_sale.group_product_price_comparison"
+                <t t-set="template_price_vals" t-value="product._get_sales_prices(website.pricelist_id)"/>
+                <del t-if="product.id in template_price_vals and 'base_price' in template_price_vals[product.id]">
+                    <span t-esc="template_price_vals[product.id]['base_price']"
                         t-options='{
                             "widget": "monetary",
                             "display_currency": product.currency_id,
