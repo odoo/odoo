@@ -219,13 +219,12 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
             'flow': flow,
         }
 
-    def _portal_transaction(self, **route_kwargs):
+    def _portal_transaction(self, tx_route='/payment/transaction', **route_kwargs):
         """/payment/transaction feedback
 
         :return: The response to the json request
         """
-        uri = '/payment/transaction'
-        url = self._build_url(uri)
+        url = self._build_url(tx_route)
         response = self._make_json_rpc_request(url, route_kwargs)
         self.assertEqual(response.status_code, 200)  # Check the request went through.
 

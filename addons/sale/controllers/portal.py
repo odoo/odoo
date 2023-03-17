@@ -307,12 +307,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys=('reference_prefix',))
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
+            'currency_id': order_sudo.currency_id.id,
         })
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )
@@ -373,24 +374,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
             order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
             if order_sudo.state == 'cancel':
                 rendering_context_values['amount'] = 0.0
+
+            rendering_context_values.update({
+                'transaction_route': f'/my/orders/{sale_order_id}/transaction',  # TODO ANKO in override for wsale and s_sub, change this again
+                'landing_route': f'{order_sudo.access_url}'
+                                 f'?access_token={order_sudo._portal_ensure_token()}',
+                'access_token': order_sudo.access_token,
+            })
         return rendering_context_values
-
-    def _create_transaction(self, *args, sale_order_id=None, custom_create_values=None, **kwargs):
-        """ Override of payment to add the sale order id in the custom create values.
-
-        :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
-        :param dict custom_create_values: Additional create values overwriting the default ones
-        :return: The result of the parent method
-        :rtype: recordset of `payment.transaction`
-        """
-        if sale_order_id:
-            if custom_create_values is None:
-                custom_create_values = {}
-            # As this override is also called if the flow is initiated from sale or website_sale, we
-            # need not to override whatever value these modules could have already set
-            if 'sale_order_ids' not in custom_create_values:  # We are in the payment module's flow
-                custom_create_values['sale_order_ids'] = [Command.set([int(sale_order_id)])]
-
-        return super()._create_transaction(
-            *args, sale_order_id=sale_order_id, custom_create_values=custom_create_values, **kwargs
-        )

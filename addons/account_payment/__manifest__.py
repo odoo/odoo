@@ -28,11 +28,6 @@
         'wizards/payment_refund_wizard_views.xml',
         'wizards/res_config_settings_views.xml',
     ],
-    'assets': {
-        'web.assets_frontend': [
-            'account_payment/static/src/js/payment_form.js',
-        ],
-    },
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',

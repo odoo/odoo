@@ -53,10 +53,6 @@
                                 <div t-if="partner_is_different" class="alert alert-warning">
                                     <strong>Warning</strong> Make sure your are logged in as the right partner before making this payment.
                                 </div>
-                                <t t-if="reference_prefix">
-                                    <b>Reference:</b>
-                                    <t t-esc="reference_prefix"/><br/>
-                                </t>
                                 <b>Amount:</b>
                                 <t t-esc="amount"
                                    t-options="{'widget': 'monetary', 'display_currency': currency}"/>

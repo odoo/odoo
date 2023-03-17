@@ -1783,12 +1783,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
 
+        self._validate_transaction_kwargs(kwargs)
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
+            'currency_id': order_sudo.currency_id.id,
         })
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         if not kwargs.get('amount'):
             kwargs['amount'] = order_sudo.amount_total
 

@@ -234,7 +234,7 @@ class PaymentPortal(portal.CustomerPortal):
         if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
             raise ValidationError(_("The access token is invalid."))
 
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys=('reference_prefix',))
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
@@ -243,8 +243,8 @@ class PaymentPortal(portal.CustomerPortal):
 
     def _create_transaction(
         self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-        tokenization_requested, landing_route, is_validation=False,
-        custom_create_values=None, **kwargs
+        tokenization_requested, landing_route, is_validation=False, custom_create_values=None,
+        **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
 
@@ -437,3 +437,34 @@ class PaymentPortal(portal.CustomerPortal):
         :rtype: str
         """
         return not partner.company_id or partner.company_id == document_company
+
+    @staticmethod
+    def _validate_transaction_kwargs(kwargs, additional_allowed_keys=()):
+        """ Verify that the keys of a transaction route's kwargs are all whitelisted.
+
+        The whitelist consists of all the keys that are expected to be passed to a transaction
+        route, plus optional contextually allowed keys.
+
+        This method must be called in all transaction routes to ensure that no undesired kwarg can
+        be passed as param and then injected in the create values of the transaction.
+
+        :param dict kwargs: The transaction route's kwargs to verify.
+        :param tuple additional_allowed_keys: The keys of kwargs that are contextually allowed.
+        :return: None
+        :raises ValidationError: If some kwargs keys are rejected.
+        """
+        whitelist = {
+            'payment_option_id',
+            'flow',
+            'tokenization_requested',
+            'landing_route',
+            'is_validation',
+            'csrf_token',
+            'amount'
+        }
+        whitelist.update(additional_allowed_keys)
+        rejected_keys = set(kwargs.keys()) - whitelist
+        if rejected_keys:
+            raise ValidationError(
+                _("The following kwargs are not whitelisted: %s", ', '.join(rejected_keys))
+            )

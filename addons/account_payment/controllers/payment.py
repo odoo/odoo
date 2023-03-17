@@ -30,11 +30,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
-        kwargs['reference_prefix'] = None  # Allow the reference to be computed based on the invoice
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys=('reference_prefix',))
         logged_in = not request.env.user._is_public()
         partner = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
-        kwargs['partner_id'] = partner.id
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        kwargs.update({
+            'reference_prefix': None,  # Allow the reference to be computed based on the invoice.
+            'currency_id': invoice_sudo.currency_id.id,
+            'partner_id': partner.id,
+        })  # Inject the create values taken from the invoice into the kwargs.
         tx_sudo = self._create_transaction(
             custom_create_values={'invoice_ids': [Command.set([invoice_id])]}, **kwargs,
         )
@@ -97,22 +100,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
             if invoice_sudo.state == 'cancel':
                 rendering_context_values['amount'] = 0.0
 
+            #   In order to go through portal transaction flow it is nessesary to override the default
+            # transaction and landing routes.
+            rendering_context_values.update({
+                'transaction_route': f'/invoice/transaction/{invoice_id}',
+                'landing_route': f'{invoice_sudo.access_url}'
+                                 f'?access_token={invoice_sudo._portal_ensure_token()}',  # TODO ANKO
+                'access_token': invoice_sudo.access_token,
+            })
+
         return rendering_context_values
-
-    def _create_transaction(self, *args, invoice_id=None, custom_create_values=None, **kwargs):
-        """ Override of `payment` to add the invoice id in the custom create values.
-
-        :param int invoice_id: The invoice for which a payment id made, as an `account.move` id.
-        :param dict custom_create_values: Additional create values overwriting the default ones.
-        :param dict kwargs: Optional data. This parameter is not used here.
-        :return: The result of the parent method.
-        :rtype: recordset of `payment.transaction`
-        """
-        if invoice_id:
-            if custom_create_values is None:
-                custom_create_values = {}
-            custom_create_values['invoice_ids'] = [Command.set([int(invoice_id)])]
-
-        return super()._create_transaction(
-            *args, invoice_id=invoice_id, custom_create_values=custom_create_values, **kwargs
-        )
