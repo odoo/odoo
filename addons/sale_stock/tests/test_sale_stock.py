@@ -244,59 +244,6 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertAlmostEqual(self.inv_2.invoice_line_ids.sorted()[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids.sorted()[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
 
-    def test_03_sale_stock_delivery_partial(self):
-        """
-        Test a SO with a product invoiced on delivery. Deliver partially and invoice the SO, when
-        the SO is set on 'done', the SO should be fully invoiced.
-        """
-        # intial so
-        self.product = self.company_data['product_delivery_no']
-        so_vals = {
-            'partner_id': self.partner_a.id,
-            'partner_invoice_id': self.partner_a.id,
-            'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
-                'name': self.product.name,
-                'product_id': self.product.id,
-                'product_uom_qty': 5.0,
-                'product_uom': self.product.uom_id.id,
-                'price_unit': self.product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
-        }
-        self.so = self.env['sale.order'].create(so_vals)
-
-        # confirm our standard so, check the picking
-        self.so.action_confirm()
-        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" storable products')
-
-        # invoice in on delivery, nothing should be invoiced
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice"')
-
-        # deliver partially
-        pick = self.so.picking_ids
-        pick.move_ids.write({'quantity_done': 4})
-        res_dict = pick.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        wizard.process_cancel_backorder()
-
-        #Check Exception error is logged on SO
-        activity = self.env['mail.activity'].search([('res_id', '=', self.so.id), ('res_model', '=', 'sale.order')])
-        self.assertEqual(len(activity), 1, 'When no backorder is created for a partial delivery, a warning error should be logged in its origin SO')
-
-        # Check quantity delivered
-        del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
-        self.assertEqual(del_qty, 4.0, 'Sale Stock: delivered quantity should be 4.0 after partial delivery')
-
-        # Check invoice
-        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" before invoicing')
-        self.inv_1 = self.so._create_invoices()
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" after invoicing')
-        self.assertEqual(len(self.inv_1), 1, 'Sale Stock: only one invoice should be created')
-        self.assertEqual(self.inv_1.amount_untaxed, self.inv_1.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
-
-        self.so.action_done()
-        self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" when set to done')
-
     def test_04_create_picking_update_saleorderline(self):
         """
         Test that updating multiple sale order lines after a successful delivery creates a single picking containing
@@ -1122,7 +1069,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             })],
         })
         so.action_confirm()
-        self.assertEqual(so.state, 'done')
+        self.assertEqual(so.state, 'sale')
+        self.assertTrue(so.locked)
         so.picking_ids.action_cancel()
 
         self.assertEqual(so.invoice_status, 'no')

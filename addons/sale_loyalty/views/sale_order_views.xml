@@ -7,15 +7,20 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <group name="note_group" position="before">
-                <div class="oe_right d-flex gap-1 mb-2 ms-1">
-                    <button name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d" class="btn btn-secondary"
-                        string="Coupon Code" type="action" states="draft,sent,sale"/>
-                    <button name="action_open_reward_wizard" class="btn btn-secondary"
-                        string="Promotions" type="object" states="draft,sent,sale"
-                        help="Update current promotional lines and select new rewards if applicable."/>
-                </div>
-            </group>
+            <div name="so_button_below_order_lines" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+            <div name="so_button_below_order_lines" position="inside">
+                <button name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
+                        type="action"
+                        string="Coupon Code"
+                        class="btn btn-secondary"/>
+                <button name="action_open_reward_wizard"
+                        type="object"
+                        string="Promotions"
+                        help="Update current promotional lines and select new rewards if applicable."
+                        class="btn btn-secondary"/>
+            </div>
         </field>
     </record>
 

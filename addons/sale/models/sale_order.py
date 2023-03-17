@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -8,7 +7,6 @@ from markupsafe import escape
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 from odoo.tools.sql import create_index
 
@@ -16,12 +14,7 @@ from odoo.addons.payment import utils as payment_utils
 
 READONLY_FIELD_STATES = {
     state: [('readonly', True)]
-    for state in {'sale', 'done', 'cancel'}
-}
-
-LOCKED_FIELD_STATES = {
-    state: [('readonly', True)]
-    for state in {'done', 'cancel'}
+    for state in {'sale', 'cancel'}
 }
 
 INVOICE_STATUS = [
@@ -29,6 +22,13 @@ INVOICE_STATUS = [
     ('invoiced', 'Fully Invoiced'),
     ('to invoice', 'To Invoice'),
     ('no', 'Nothing to Invoice')
+]
+
+SALE_ORDER_STATE = [
+    ('draft', "Quotation"),
+    ('sent', "Quotation Sent"),
+    ('sale', "Sales Order"),
+    ('cancel', "Cancelled"),
 ]
 
 
@@ -41,7 +41,7 @@ class SaleOrder(models.Model):
 
     _sql_constraints = [
         ('date_order_conditional_required',
-         "CHECK((state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done'))",
+         "CHECK((state = 'sale' AND date_order IS NOT NULL) OR state != 'sale')",
          "A confirmed sales order requires a confirmation date."),
     ]
 
@@ -72,24 +72,18 @@ class SaleOrder(models.Model):
         states=READONLY_FIELD_STATES,
         domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]")
     state = fields.Selection(
-        selection=[
-            ('draft', "Quotation"),
-            ('sent', "Quotation Sent"),
-            ('sale', "Sales Order"),
-            ('done', "Locked"),
-            ('cancel', "Cancelled"),
-        ],
+        selection=SALE_ORDER_STATE,
         string="Status",
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
+    locked = fields.Boolean(default=False, copy=False, help="Locked orders cannot be modified.")
 
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
     create_date = fields.Datetime(  # Override of default create_date field from ORM
         string="Creation Date", index=True, readonly=True)
     commitment_date = fields.Datetime(
         string="Delivery Date", copy=False,
-        states=LOCKED_FIELD_STATES,
         help="This is the delivery date promised to the customer. "
              "If set, the delivery order will be scheduled based on "
              "this date rather than product lead times.")
@@ -144,14 +138,12 @@ class SaleOrder(models.Model):
         string="Invoice Address",
         compute='_compute_partner_invoice_id',
         store=True, readonly=False, required=True, precompute=True,
-        states=LOCKED_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
         string="Delivery Address",
         compute='_compute_partner_shipping_id',
         store=True, readonly=False, required=True, precompute=True,
-        states=LOCKED_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     fiscal_position_id = fields.Many2one(
@@ -212,7 +204,6 @@ class SaleOrder(models.Model):
         comodel_name='sale.order.line',
         inverse_name='order_id',
         string="Order Lines",
-        states=LOCKED_FIELD_STATES,
         copy=True, auto_join=True)
 
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
@@ -525,9 +516,8 @@ class SaleOrder(models.Model):
         - invoiced: if all SO lines are invoiced, the SO is invoiced.
         - upselling: if all SO lines are invoiced or upselling, the status is upselling.
         """
-        unconfirmed_orders = self.filtered(lambda so: so.state not in ['sale', 'done'])
-        unconfirmed_orders.invoice_status = 'no'
-        confirmed_orders = self - unconfirmed_orders
+        confirmed_orders = self.filtered(lambda so: so.state == 'sale')
+        (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
         line_invoice_status_all = [
@@ -540,7 +530,7 @@ class SaleOrder(models.Model):
                 ['order_id', 'invoice_status'])]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-            if order.state not in ('sale', 'done'):
+            if order.state != 'sale':
                 order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
                 order.invoice_status = 'to invoice'
@@ -819,7 +809,7 @@ class SaleOrder(models.Model):
         :rtype: record of `mail.template` or `None` if not found
         """
         self.ensure_one()
-        if self.env.context.get('proforma') or self.state not in ('sale', 'done'):
+        if self.env.context.get('proforma') or self.state != 'sale':
             return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
         else:
             return self._get_confirmation_template()
@@ -845,7 +835,7 @@ class SaleOrder(models.Model):
 
         :raise: UserError if any given SO is not in draft state.
         """
-        if self.filtered(lambda so: so.state != 'draft'):
+        if any(order.state != 'draft' for order in self):
             raise UserError(_("Only draft orders can be marked as sent directly."))
 
         for order in self:
@@ -860,12 +850,12 @@ class SaleOrder(models.Model):
 
         :return: True
         :rtype: bool
-        :raise: UserError if trying to confirm locked or cancelled SO's
+        :raise: UserError if trying to confirm cancelled SO's
         """
-        if self._get_forbidden_state_confirm() & set(self.mapped('state')):
+        if not all(order._can_be_confirmed() for order in self):
             raise UserError(_(
-                "It is not allowed to confirm an order in the following states: %s",
-                ", ".join(self._get_forbidden_state_confirm()),
+                "The following orders are not in a state requiring confirmation: %s",
+                ", ".join(self.mapped('display_name')),
             ))
 
         self.order_line._validate_analytic_distribution()
@@ -885,12 +875,13 @@ class SaleOrder(models.Model):
 
         self.with_context(context)._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
-            self.action_done()
+            self.action_lock()
 
         return True
 
-    def _get_forbidden_state_confirm(self):
-        return {'done', 'cancel'}
+    def _can_be_confirmed(self):
+        self.ensure_one()
+        return self.state in {'draft', 'sent'}
 
     def _prepare_confirmation_values(self):
         """ Prepare the sales order confirmation values.
@@ -959,16 +950,16 @@ class SaleOrder(models.Model):
             subtype_xmlid='mail.mt_comment',
         )
 
-    def action_done(self):
+    def action_lock(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
             if tx and tx.state == 'pending' and tx.provider_id.code == 'custom':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
-        self.write({'state': 'done'})
+        self.locked = True
 
     def action_unlock(self):
-        self.write({'state': 'sale'})
+        self.locked = False
 
     def action_cancel(self):
         """ Cancel SO after showing the cancel wizard when needed. (cfr :meth:`_show_cancel_wizard`)
@@ -977,6 +968,8 @@ class SaleOrder(models.Model):
 
         note: self.ensure_one() if the wizard is shown.
         """
+        if any(order.locked for order in self):
+            raise UserError(_("You cannot cancel a locked order. Please unlock it first."))
         cancel_warning = self._show_cancel_wizard()
         if cancel_warning:
             self.ensure_one()
@@ -1424,11 +1417,16 @@ class SaleOrder(models.Model):
     # PAYMENT #
 
     def _force_lines_to_invoice_policy_order(self):
+        """Force the qty_to_invoice to be computed as if the invoice_policy
+        was set to "Ordered quantities", independently of the product configuration.
+
+        This is needed for the automatic invoice logic, as we want to automatically
+        invoice the full SO when it's paid.
+        """
         for line in self.order_line:
-            if self.state in ['sale', 'done']:
+            if line.state == 'sale':
+                # No need to set 0 as it is already the standard logic in the compute method.
                 line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
-            else:
-                line.qty_to_invoice = 0
 
     def payment_action_capture(self):
         """ Capture all transactions linked to this sale order. """
@@ -1534,7 +1532,7 @@ class SaleOrder(models.Model):
 
     def _get_report_base_filename(self):
         self.ensure_one()
-        return '%s %s' % (self.type_name, self.name)
+        return f'{self.type_name} {self.name}'
 
     #=== CORE METHODS OVERRIDES ===#
 
@@ -1564,7 +1562,7 @@ class SaleOrder(models.Model):
             for order in self:
                 name = order.name
                 if order.partner_id.name:
-                    name = '%s - %s' % (name, order.partner_id.name)
+                    name = f'{name} - {order.partner_id.name}'
                 res.append((order.id, name))
             return res
         return super().name_get()

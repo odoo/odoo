@@ -63,17 +63,16 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).action_post()
         down_payment_lines = self.line_ids.filtered('is_downpayment')
         for line in down_payment_lines:
+            if any(order.locked for order in line.sale_line_ids.order_id):
+                # We cannot change lines content on locked SO, changes on invoices are not
+                # forwarded to the SO if the SO is locked.
+                continue
 
             if not line.sale_line_ids.display_type:
                 line.sale_line_ids._compute_name()
 
-            try:
-                line.sale_line_ids.tax_id = line.tax_ids
-                line.sale_line_ids.price_unit = line.price_unit
-            except UserError:
-                # a UserError here means the SO was locked, which prevents changing the taxes
-                # just ignore the error - this is a nice to have feature and should not be blocking
-                pass
+            line.sale_line_ids.tax_id = line.tax_ids
+            line.sale_line_ids.price_unit = line.price_unit
         return res
 
     def button_draft(self):

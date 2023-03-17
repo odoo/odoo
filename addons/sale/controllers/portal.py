@@ -40,7 +40,7 @@ class CustomerPortal(portal.CustomerPortal):
     def _prepare_orders_domain(self, partner):
         return [
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
+            ('state', '=', 'sale'),
         ]
 
     def _get_sale_searchbar_sortings(self):

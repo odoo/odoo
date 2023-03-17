@@ -98,7 +98,7 @@
                             <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
                         <td class="text-center">
-                            <span t-if="order.state == 'done'"  class="badge rounded-pill text-bg-success">
+                            <span t-if="order.locked"  class="badge rounded-pill text-bg-success">
                                 <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"/>Done
                             </span>
                         </td>
@@ -302,7 +302,7 @@
                     <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissible d-print-none" role="status">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         <strong>Thank You!</strong><br/>
-                        <t t-if="message == 'sign_ok' and sale_order.state in ['sale', 'done']">
+                        <t t-if="message == 'sign_ok' and sale_order.state == 'sale'">
                             Your order has been confirmed.
                         </t>
                         <t t-elif="message == 'sign_ok' and sale_order._has_to_be_paid()">
@@ -394,7 +394,7 @@
                 </div>
                 <div class="row" id="so_date">
                     <div class="mb-3 col-6">
-                      <t t-if="sale_order.state in ['sale', 'done', 'cancel']">
+                      <t t-if="sale_order.state in ['sale', 'cancel']">
                         <strong>Order Date:</strong>
                       </t>
                       <t t-else="">
