@@ -433,9 +433,10 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
-        res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
-        if res is not True:
-            return res
+        if self.production_id:
+            res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+            if res is not True:
+                return res
 
     def write(self, values):
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
