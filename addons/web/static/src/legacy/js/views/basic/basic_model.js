@@ -379,6 +379,8 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function () {
                 _.each(records, function (record) {
+                    // discard any changes to prevent creating a new record with auto-save
+                    self.discardChanges(record.id);
                     var parent = record.parentID && self.localData[record.parentID];
                     if (parent && parent.type === 'list') {
                         parent.data = _.without(parent.data, record.id);
