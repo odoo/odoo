@@ -3358,7 +3358,7 @@ export class OdooEditor extends EventTarget {
                         };
                         commands = [embedVideoCommand, pasteAsURLCommand];
                     }
-                    this.commandBar.open({ commands });
+                    this.commandBar.open({ commands, forceShow: true });
                 } else {
                     this._applyCommand('insertHTML', this._createLink(text, url));
                 }
