@@ -4,7 +4,6 @@ from odoo.http import request
 
 from odoo.addons.account.controllers import portal
 from odoo.addons.payment.controllers.portal import PaymentPortal
-from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 
 class PortalAccount(portal.PortalAccount, PaymentPortal):
