@@ -1464,8 +1464,6 @@ export const rtcService = {
                 }
             }
         });
-        // debugging. remove this
-        window.rtc = rtc;
         return rtc;
     },
 };

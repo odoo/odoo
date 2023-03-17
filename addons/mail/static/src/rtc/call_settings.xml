@@ -98,7 +98,7 @@
                     </label>
                 </div>
                 <div t-if="userSettings.logRtc" class="mb-3 d-flex align-items-center flex-wrap">
-                    <button class="btn btn-primary" t-on-click="onClickDownloadLogs">Download logs</button>
+                    <button class="btn btn-primary" t-att-disabled="rtc.state.logs.size === 0" t-on-click="onClickDownloadLogs">Download logs</button>
                 </div>
             </div>
         </div>
