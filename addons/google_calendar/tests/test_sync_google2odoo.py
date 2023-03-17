@@ -1369,3 +1369,45 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(event.partner_ids[0], event.attendee_ids[0].partner_id)
         self.assertEqual('accepted', event.attendee_ids[0].state)
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_partner_order(self):
+        self.private_partner.email = "internal_user@odoo.com"
+        self.private_partner.type = "contact"
+        user = self.env['res.users'].create({
+            'name': 'Test user Calendar',
+            'login': self.private_partner.email,
+            'partner_id': self.private_partner.id,
+            'type': 'contact'
+        })
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'internal_user@odoo.com'},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': self.public_partner.email,
+                'responseStatus': 'needsAction'
+            }, {
+                'displayName': 'Attendee',
+                'email': self.private_partner.email,
+                'responseStatus': 'needsAction',
+                'self': True,
+            }, ],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+
+        self.env['calendar.event'].with_user(user)._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(2, len(event.partner_ids), "Two attendees and two partners should be associated to the event")
+        self.assertGoogleAPINotCalled()
