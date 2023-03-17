@@ -40,3 +40,6 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_06_mass_mailing_campaign_new_mailing(self):
         self.start_tour("/web", 'mass_mailing_campaing_new_mailing', login="demo")
+
+    def test_07_mass_mailing_code_view_tour(self):
+        self.start_tour("/web?debug=tests", 'mass_mailing_code_view_tour', login="demo")
