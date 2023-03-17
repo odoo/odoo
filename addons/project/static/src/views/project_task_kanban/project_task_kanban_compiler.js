@@ -23,8 +23,6 @@ export class ProjectTaskKanbanCompiler extends KanbanCompiler {
     compileSubtaskListButton(el) {
         this.subtaskListComponentCompiled.button = true;
         el.setAttribute("t-on-click", `() => __comp__.state.folded = !__comp__.state.folded`);
-        el.removeAttribute("class");
-        el.setAttribute("t-attf-class", "subtask_list_button btn fa {{ state.folded ? 'fa-solid fa-angle-right' : 'fa-solid fa-angle-down' }}");
         const compiled = createElement(el.nodeName);
         for (const { name, value } of el.attributes) {
             compiled.setAttribute(name, value);
