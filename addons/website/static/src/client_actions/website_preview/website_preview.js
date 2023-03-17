@@ -340,6 +340,14 @@ export class WebsitePreview extends Component {
                 // Forward clicks to close backend client action's navbar
                 // dropdowns.
                 this.iframe.el.dispatchEvent(new MouseEvent('click', ev));
+            } else {
+                // When in edit mode, prevent the default behaviours of clicks
+                // as to avoid DOM changes not handled by the editor.
+                // (Such as clicking on a link that triggers navigating to
+                // another page.)
+                if (!ev.target.closest('#oe_manipulators')) {
+                    ev.preventDefault();
+                }
             }
 
             const linkEl = ev.target.closest('[href]');
@@ -375,11 +383,14 @@ export class WebsitePreview extends Component {
                     },
                     reloadIframe: false,
                 });
-            } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
-                ev.preventDefault();
-                this.router.redirect(href);
-            } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
-                this.websiteService.websiteRootInstance = undefined;
+            } else if (href && target !== '_blank' && !isEditing) {
+                if (this._isTopWindowURL(linkEl)) {
+                    ev.preventDefault();
+                    this.router.redirect(href);
+                } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
+                    // This scenario triggers a navigation inside the iframe.
+                    this.websiteService.websiteRootInstance = undefined;
+                }
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {

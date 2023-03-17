@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo import fields, Command
 
 
@@ -446,5 +446,55 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': -3135.0},
             {'amount_currency': 200.0},
             {'amount_currency': 2935.0},
-
         ])
+
+    def test_mixed_epd_with_draft_invoice(self):
+        def assert_tax_totals(document, expected_values):
+            main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed', 'display_tax_base', 'subtotals_order'}
+            group_keys_to_ignore = {'group_key', 'tax_group_id', 'tax_group_name', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+            subtotals_keys_to_ignore = {'formatted_amount'}
+            to_compare = document
+            for key in main_keys_to_ignore:
+                del to_compare[key]
+            for key in group_keys_to_ignore:
+                for groups in to_compare['groups_by_subtotal'].values():
+                    for group in groups:
+                        del group[key]
+            for key in subtotals_keys_to_ignore:
+                for subtotal in to_compare['subtotals']:
+                    del subtotal[key]
+            self.assertEqual(to_compare, expected_values)
+
+        self.env.company.early_pay_discount_computation = 'mixed'
+        tax = self.env['account.tax'].create({
+            'name': 'WonderTax',
+            'amount': 10,
+        })
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice:
+            invoice.partner_id = self.partner_a
+            invoice.invoice_date = fields.Date.from_string('2022-02-21')
+            invoice.invoice_payment_term_id = self.early_pay_10_percents_10_days
+            with invoice.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_a
+                line_form.price_unit = 1000
+                line_form.quantity = 1
+                line_form.tax_ids.clear()
+                line_form.tax_ids.add(tax)
+            assert_tax_totals(invoice._values['tax_totals'], {
+                'amount_untaxed': 1000,
+                'amount_total': 1090,
+                'groups_by_subtotal': {
+                    'Untaxed Amount': [
+                        {
+                            'tax_group_amount': 90,
+                            'tax_group_base_amount': 900,
+                        },
+                    ],
+                },
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'amount': 1000,
+                    }
+                ],
+            })

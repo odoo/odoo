@@ -280,11 +280,16 @@ registerModel({
                     },
                 });
                 this.createNewRecordDeferred.resolve();
-                this.update({
-                    createNewRecordComposerData: clear(),
-                    createNewRecordDeferred: clear(),
-                });
             }
+            if (this.createNewRecordFiles) {
+                const files = this.createNewRecordFiles;
+                this.fileUploader.uploadFiles(files);
+            }
+            this.update({
+                createNewRecordComposerData: clear(),
+                createNewRecordDeferred: clear(),
+                createNewRecordFiles: clear(),
+            });
         },
         /**
          * @private
@@ -324,6 +329,12 @@ registerModel({
         }),
         attachmentsLoaderTimer: one('Timer', {
             inverse: 'chatterOwnerAsAttachmentsLoader',
+        }),
+        canPostMessage: attr({
+            compute() {
+                return Boolean(this.isTemporary || this.hasWriteAccess ||
+                    (this.hasReadAccess && this.thread && this.thread.canPostOnReadonly));
+            },
         }),
         /**
          * States the OWL Chatter component of this chatter.
@@ -526,6 +537,7 @@ registerModel({
         webRecord: attr(),
         createNewRecordComposerData: attr(),
         createNewRecordDeferred: attr(),
+        createNewRecordFiles: attr(),
     },
     onChanges: [
         {

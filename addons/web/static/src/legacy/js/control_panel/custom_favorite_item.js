@@ -54,7 +54,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
          * @private
          */
         saveFavorite() {
-            if (!this.state.description.length) {
+            if (!this.state.description) {
                 this.env.services.notification.notify({
                     message: this.env._t("A name for your favorite filter is required."),
                     type: 'danger',

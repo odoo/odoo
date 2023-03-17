@@ -205,8 +205,10 @@ class ProductProduct(models.Model):
         fifo_vals = self._run_fifo(abs(quantity), company)
         vals['remaining_qty'] = fifo_vals.get('remaining_qty')
         # In case of AVCO, fix rounding issue of standard price when needed.
-        if self.product_tmpl_id.cost_method == 'average':
-            rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
+        if self.product_tmpl_id.cost_method == 'average' and not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
+            rounding_error = currency.round(
+                (self.standard_price * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
+            )
             if rounding_error:
                 # If it is bigger than the (smallest number of the currency * quantity) / 2,
                 # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
@@ -234,16 +236,16 @@ class ProductProduct(models.Model):
 
         svl_vals_list = []
         company_id = self.env.company
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        rounded_new_price = float_round(new_price, precision_digits=price_unit_prec)
         for product in self:
             if product.cost_method not in ('standard', 'average'):
                 continue
             quantity_svl = product.sudo().quantity_svl
             if float_compare(quantity_svl, 0.0, precision_rounding=product.uom_id.rounding) <= 0:
                 continue
-            digits = self.env['decimal.precision'].precision_get('Product Price')
-            rounded_new_price = float_round(new_price, precision_digits=digits)
-            diff = rounded_new_price - product.standard_price
-            value = company_id.currency_id.round(quantity_svl * diff)
+            value_svl = product.sudo().value_svl
+            value = company_id.currency_id.round((rounded_new_price * quantity_svl) - value_svl)
             if company_id.currency_id.is_zero(value):
                 continue
 

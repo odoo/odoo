@@ -25,7 +25,7 @@ export class StateSelectionField extends Component {
                                     this.options.map((value) => ({
                                         name: value[1],
                                         action: () => {
-                                            this.props.update(value[0]);
+                                            this.props.update(value[0], { save: true });
                                         },
                                     })),
                             },

@@ -66,7 +66,7 @@ class MergePartnerAutomatic(models.TransientModel):
     number_group = fields.Integer('Group of Contacts', readonly=True)
     current_line_id = fields.Many2one('base.partner.merge.line', string='Current Line')
     line_ids = fields.One2many('base.partner.merge.line', 'wizard_id', string='Lines')
-    partner_ids = fields.Many2many('res.partner', string='Contacts')
+    partner_ids = fields.Many2many('res.partner', string='Contacts', context={'active_test': False})
     dst_partner_id = fields.Many2one('res.partner', string='Destination Contact')
 
     exclude_contact = fields.Boolean('A user associated to the contact')
@@ -429,7 +429,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or datetime.datetime(1970, 1, 1))),
+            key=lambda p: (not p.active, (p.create_date or datetime.datetime(1970, 1, 1))),
             reverse=True,
         )
 

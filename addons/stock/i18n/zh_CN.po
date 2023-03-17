@@ -11,6 +11,7 @@
 # 徐 文郁, 2022
 # digitalliuzg8888, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2023
+# Emily Jia <eji@odoo.com>, 2023
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
 # 
 msgid ""
@@ -3176,7 +3177,7 @@ msgstr "给出显示仓库时这一行的顺序。"
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
+msgstr "全局可见天数"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3706,7 +3707,7 @@ msgstr "非法的域右操作符 %s"
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
-msgstr ""
+msgstr "无效规则配置，以下规则导致无限循环：%s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -8376,7 +8377,7 @@ msgstr "该产品已至少在库存调拨中使用过一次。 不建议更改�
 msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
-msgstr ""
+msgstr "如果此产品有部分数量属于另一家公司，则不能更改产品的所属公司。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8677,7 +8678,7 @@ msgstr "组的调拨"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
-msgstr "计划时间或某分拣中的调拨将延迟。"
+msgstr "计划时间或某拣货中的调拨将延迟。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -9544,7 +9545,7 @@ msgstr "您无法取消已设置为“完成”的库存调拨。 创建退货�
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
+msgstr "不能更改已取消的库存移动，应创建新行。"
 
 #. module: stock
 #. odoo-python
@@ -9739,6 +9740,13 @@ msgstr "您只能退回已完成的拣货。"
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "您每次只能退回一次拣货。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/model/stock_picking.py:0
+#, python-format
+msgid " You might want to update the locations of this transfer's operations "
+msgstr ""
 
 #. module: stock
 #. odoo-python

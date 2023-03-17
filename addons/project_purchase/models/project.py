@@ -19,7 +19,7 @@ class Project(models.Model):
             self.purchase_orders_count = 0
             return
         query = self.env['purchase.order.line']._search([])
-        query.add_where('purchase_order_line.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
+        query.add_where('purchase_order_line.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
 
         query.order = None
         query_string, query_param = query.select(
@@ -30,8 +30,8 @@ class Project(models.Model):
 
         self._cr.execute(query_string, query_param)
         data = {int(record.get('account_id')): record.get('purchase_order_count') for record in self._cr.dictfetchall()}
-        for account in self:
-            account.purchase_orders_count = data.get(self.analytic_account_id.id, 0)
+        for project in self:
+            project.purchase_orders_count = data.get(project.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
@@ -135,7 +135,7 @@ class Project(models.Model):
                 **pol,
                 'invoice_lines': self.env['purchase.order.line'].browse(pol['id']).invoice_lines,  # One2Many cannot be queried, they are not columns
             } for pol in self._cr.dictfetchall()]
-            purchase_order_line_invoice_line_ids = []
+            purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             if purchase_order_line_read:
 
                 # Get conversion rate from currencies to currency of analytic account

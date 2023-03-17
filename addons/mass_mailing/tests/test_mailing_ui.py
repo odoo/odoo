@@ -27,3 +27,9 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_02_mass_mailing_snippets_menu_tabs(self):
         self.start_tour("/web", 'mass_mailing_snippets_menu_tabs', login="demo")
+
+    def test_03_mass_mailing_snippets_toolbar_mobile_hide(self):
+        self.start_tour("/web", 'mass_mailing_snippets_menu_toolbar_new_mailing_mobile', login="demo")
+
+    def test_04_mass_mailing_snippets_menu_hide(self):
+        self.start_tour("/web", 'mass_mailing_snippets_menu_toolbar', login="demo")

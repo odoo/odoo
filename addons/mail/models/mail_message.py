@@ -603,20 +603,43 @@ class Message(models.Model):
 
         messages = super(Message, self).create(values_list)
 
-        check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        # link back attachments to records, to filter out attachments linked to
+        # the same records as the message (considered as ok if message is ok)
+        # and check rights on other documents
+        attachments_tocheck = self.env['ir.attachment']
+        doc_to_attachment_ids = defaultdict(set)
+        if all(isinstance(command, int) or command[0] in (4, 6)
+               for values in values_list
+               for command in values.get('attachment_ids') or []):
             for values in values_list:
-                for command in values.get('attachment_ids'):
+                message_attachment_ids = set()
+                for command in values.get('attachment_ids') or []:
                     if isinstance(command, int):
-                        check_attachment_access += [command]
+                        message_attachment_ids.add(command)
                     elif command[0] == 6:
-                        check_attachment_access += command[2]
+                        message_attachment_ids |= set(command[2])
                     else:  # command[0] == 4:
-                        check_attachment_access += [command[1]]
+                        message_attachment_ids.add(command[1])
+                if message_attachment_ids:
+                    key = (values.get('model'), values.get('res_id'))
+                    doc_to_attachment_ids[key] |= message_attachment_ids
+
+            attachment_ids_all = {
+                attachment_id
+                for doc_attachment_ids in doc_to_attachment_ids
+                for attachment_id in doc_attachment_ids
+            }
+            AttachmentSudo = self.env['ir.attachment'].sudo().with_prefetch(list(attachment_ids_all))
+            for (model, res_id), doc_attachment_ids in doc_to_attachment_ids.items():
+                # check only attachments belonging to another model, access already
+                # checked on message for other attachments
+                attachments_tocheck += AttachmentSudo.browse(doc_attachment_ids).filtered(
+                    lambda att: att.res_model != model or att.res_id != res_id
+                ).sudo(False)
         else:
-            check_attachment_access = messages.mapped('attachment_ids').ids  # fallback on read if any unknow command
-        if check_attachment_access:
-            self.env['ir.attachment'].browse(check_attachment_access).check(mode='read')
+            attachments_tocheck = messages.attachment_ids  # fallback on read if any unknown command
+        if attachments_tocheck:
+            attachments_tocheck.check('read')
 
         for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
             if tracking_values_cmd:

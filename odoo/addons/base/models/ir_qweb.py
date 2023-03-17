@@ -439,6 +439,7 @@ ALLOWED_KEYWORD = frozenset(['False', 'None', 'True', 'and', 'as', 'elif', 'else
 # regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
 FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
+LSTRIP_REGEXP = re.compile(r'^[ \t]*\n')
 FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
 VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
@@ -1693,12 +1694,14 @@ class IrQWeb(models.AbstractModel):
 
         assert not expr.isspace(), 't-if or t-elif expression should not be empty.'
 
-        strip = self._rstrip_text(compile_context)
+        strip = self._rstrip_text(compile_context)  # the withspaces is visible only when display a content
+        if el.tag.lower() == 't' and el.text and LSTRIP_REGEXP.search(el.text):
+            strip = ''  # remove technical spaces
         code = self._flush_text(compile_context, level)
 
         code.append(indent_code(f"if {self._compile_expr(expr)}:", level))
         body = []
-        if strip and el.tag.lower() != 't':
+        if strip:
             self._append_text(strip, compile_context)
         body.extend(
             self._compile_directives(el, compile_context, level + 1) +
@@ -1738,7 +1741,7 @@ class IrQWeb(models.AbstractModel):
 
             code.append(indent_code("else:", level))
             body = []
-            if strip and next_el.tag.lower() != 't':
+            if strip:
                 self._append_text(strip, compile_context)
             body.extend(
                 self._compile_node(next_el, compile_context, level + 1)+

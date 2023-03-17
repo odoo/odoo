@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # 
 msgid ""
@@ -49,7 +50,7 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* \"ドラフト\"ステータスは、ユーザが未確認の新しい修理注文ーをエンコードするときに使用されます。\n"
+"* \"ドラフト\"ステータスは、ユーザが未確認の新しい修理オーダをエンコードするときに使用されます。\n"
 "* \"確認済\"ステータスは、ユーザーが修理依頼を確認するときに使用されます。\n"
 "* \"修理準備完了\"ステータスは、修理を開始するために使用され、ユーザは修理注文が確認された後に修理を開始することができます。\n"
 "* \"修理中\"ステータスは、修理が進行中の場合に使用されます。\n"
@@ -244,7 +245,7 @@ msgstr "カテゴリ"
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
-msgstr "注文の請求先および納品先となるパートナーを選択します。パートナーは、名前、TIN、Eメール、内部参照で見つけることができます。"
+msgstr "オーダの請求先および納品先となるパートナーを選択します。パートナーは、名前、TIN、Eメール、内部参照で見つけることができます。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -418,7 +419,7 @@ msgstr "ドラフト"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
-msgstr "この注文のドラフト請求書がキャンセルされます。このアクションを実行しますか。"
+msgstr "このオーダのドラフト請求書がキャンセルされます。このアクションを実行しますか。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -526,7 +527,7 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
-"修理注文ーでは、取り外したり交換した部品やそれぞれの作業で\n"
+"修理オーダでは、取り外したり交換した部品やそれぞれの作業で\n"
 "かかった時間の詳細を記録します\n"
 "  "
 
@@ -677,12 +678,12 @@ msgstr "メッセージ"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "活動の締切"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "次の活動カレンダーイベント"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
@@ -825,17 +826,17 @@ msgstr "優先度"
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
-msgstr "商品"
+msgstr "プロダクト"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Product Moves"
-msgstr "商品移動"
+msgstr "プロダクト移動"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
-msgstr "商品数量"
+msgstr "プロダクト数量"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__tracking
@@ -848,17 +849,17 @@ msgstr "製品の追跡"
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
 msgid "Product Unit of Measure"
-msgstr "商品単位"
+msgstr "プロダクト単位"
 
 #. module: repair
 #: model:ir.model,name:repair.model_product_product
 msgid "Product Variant"
-msgstr "商品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr "修理商品"
+msgstr "修理プロダクト"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
@@ -888,7 +889,7 @@ msgstr "見積"
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
 msgid "Quotation / Order"
-msgstr "見積 / 注文"
+msgstr "見積 / オーダ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
@@ -962,18 +963,18 @@ msgstr "修理注記"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
-msgstr "修理注文"
+msgstr "修理オーダ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
-msgstr "修理注文番号:"
+msgstr "修理オーダ番号:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__repair_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__repair_id
 msgid "Repair Order Reference"
-msgstr "修理注文参照"
+msgstr "修理オーダ参照"
 
 #. module: repair
 #: code:addons/repair/models/stock_picking.py:0
@@ -986,12 +987,12 @@ msgstr "修理注文参照"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 #, python-format
 msgid "Repair Orders"
-msgstr "修理注文"
+msgstr "修理オーダ"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr "修理注文タグ"
+msgstr "修理オーダタグ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1072,7 +1073,7 @@ msgstr "修理"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr "修理注文"
+msgstr "修理オーダ"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_reporting
@@ -1118,7 +1119,7 @@ msgstr "SMS配信エラー"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_id
 msgid "Sale Order"
-msgstr "販売注文"
+msgstr "販売オーダ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
@@ -1133,7 +1134,7 @@ msgstr "計画日"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr "修理注文の検索"
+msgstr "修理オーダの検索"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -1142,7 +1143,8 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
-"「修理前」 もしくは「修理後」を選ぶことで請求書を生成するタイミングを設定します。 「請求書なし」は、この修理注文で請求書を作成しないことを意味します。"
+"「修理前」 もしくは「修理後」を選ぶことで請求書を生成するタイミングを設定します。 "
+"「請求書なし」は、この修理オーダで請求書を作成しないことを意味します。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1245,7 +1247,7 @@ msgstr "税"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
-msgstr "修理注文の名前はユニークでなければいけません。"
+msgstr "修理オーダの名前はユニークでなければいけません。"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1260,7 +1262,7 @@ msgstr ""
 msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
-msgstr "修理ラインの状態は、リンクされた修理注文のいずれかに自動的に設定されます。"
+msgstr "修理ラインの状態は、リンクされた修理オーダのいずれかに自動的に設定されます。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id

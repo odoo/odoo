@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models
+from odoo.tools.sql import create_index
 
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
+
+    def init(self):
+        super().init()
+        create_index(self._cr, 'account_move_line_analytic_distribution', self._table, ['analytic_distribution'], 'gin')
 
     def _compute_analytic_distribution(self):
         # when a project creates an aml, it adds an analytic account to it. the following filter is to save this

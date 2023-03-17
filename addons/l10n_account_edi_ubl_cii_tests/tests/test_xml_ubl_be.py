@@ -22,6 +22,7 @@ class TestUBLBE(TestUBLCommon):
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'ref': 'ref_partner_1',
         })
 
         # buyer
@@ -33,6 +34,7 @@ class TestUBLBE(TestUBLCommon):
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_25 = cls.env['account.tax'].create({

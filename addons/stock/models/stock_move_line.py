@@ -34,7 +34,7 @@ class StockMoveLine(models.Model):
     product_category_name = fields.Char(related="product_id.categ_id.complete_name", store=True, string="Product Category")
     reserved_qty = fields.Float(
         'Real Reserved Quantity', digits=0, copy=False,
-        compute='_compute_reserved_qty', inverse='_set_product_qty', store=True)
+        compute='_compute_reserved_qty', inverse='_set_reserved_qty', store=True)
     reserved_uom_qty = fields.Float(
         'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
@@ -251,9 +251,11 @@ class StockMoveLine(models.Model):
             else:
                 for sml in smls:
                     qty = max(sml.reserved_uom_qty, sml.qty_done)
-                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
                         sml.product_id, quantity=qty, packaging=sml.move_id.product_packaging_id,
                     )
+                    if putaway_loc_id != sml.location_dest_id:
+                        sml.location_dest_id = putaway_loc_id
                     excluded_smls -= sml
 
     def _get_default_dest_location(self):

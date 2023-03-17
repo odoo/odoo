@@ -68,7 +68,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
 
         useEffect(() => {
             const initWysiwyg = async () => {
-                this.$editable.on('click.odoo-website-editor', '*', this, this._preventDefault);
                 // Disable OdooEditor observer's while setting up classes
                 this.widget.odooEditor.observerUnactive();
                 this._addEditorMessages();
@@ -98,10 +97,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             };
 
             initWysiwyg();
-
-            return () => {
-                this.$editable.off('click.odoo-website-editor', '*');
-            };
         }, () => []);
 
         useEffect(() => {
@@ -372,22 +367,25 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         // this badly relies on the contenteditable="true" attribute being on
         // those images but it is rightfully lost after the first save.
         // grep: COMPANY_TEAM_CONTENTEDITABLE
-        const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
 
-        return $editableSavableZones.add($extraEditableZones).toArray().concat(
-            // To make sure the selection remains bounded to the active tab,
-            // each tab is made non editable while keeping its nested
-            // oe_structure editable. This avoids having a selection range span
-            // over all further inactive tabs when using Chrome.
-            ...this.websiteService.pageDocument.querySelectorAll('#wrapwrap .s_tabs > div > .s_tabs_main > .s_tabs_content > .tab-pane > .oe_structure')
-        );
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        // grep: .s_tabs
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'));
+
+        return $editableSavableZones.add($extraEditableZones).toArray();
     }
     _getReadOnlyAreas() {
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested
         // oe_structure editable. This avoids having a selection range span
         // over all further inactive tabs when using Chrome.
-        return this.websiteService.pageDocument.querySelectorAll('#wrapwrap .s_tabs > div > .s_tabs_main > .s_tabs_content > .tab-pane');
+        // grep: .s_tabs
+        const doc = this.websiteService.pageDocument;
+        return [...doc.querySelectorAll('.tab-pane > .oe_structure')].map(el => el.parentNode);
     }
     _getUnremovableElements () {
         // TODO adapt in master: this was added as a fix to target some elements
@@ -433,6 +431,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
+                    rootID: params[0],
                     save: () => {
                         const snippetsMenu = this.widget.snippetsMenu;
                         snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});
@@ -476,6 +475,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return websiteRootInstance.trigger_up(type, {...eventData});
     }
     _preventDefault(e) {
+        // TODO: Remove this method in master.
         e.preventDefault();
     }
     /**

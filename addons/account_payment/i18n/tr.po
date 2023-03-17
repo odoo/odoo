@@ -6,15 +6,15 @@
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
 # Buket Şeker <buket_skr@hotmail.com>, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
 # Saban Yildiz <sabany@projetgrup.com>, 2022
 # Martin Trigaux, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # omerfarukcakmak <omerfarukckmk@protonmail.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2023\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +74,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
 "remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger\"><i j=\"1/\"><span "
+"class=\"d-none d-md-inline\"> İptal Edildi</span></i></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -82,6 +84,8 @@ msgid ""
 "clock-o\"/><span class=\"d-none d-md-inline\"> Waiting for "
 "Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i j=\"1/\"><span "
+"class=\"d-none d-md-inline\"> Ödeme Bekleniyor</span></i></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -89,6 +93,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-primary\"><i j=\"1/\"><span "
+"class=\"d-none d-md-inline\"> Yetkili</span></i></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -96,6 +102,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i j=\"1/\"><span "
+"class=\"d-none d-md-inline\"> Ödenen</span></i></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -103,6 +111,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i j=\"1/\"><span "
+"class=\"d-none d-md-inline\"> Tersi Oluşturuldu</span></i></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -110,6 +120,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
 "d-md-inline\"> Pending</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
+"d-md-inline\"> Beklemede</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -127,6 +139,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Uyarı!</strong> Bu ödeme için bekleyen bir iade vardır.\n"
+"                        İşlenmesi için bir dakika bekleyin. İade hala beklemedeyse\n"
+"                        Birkaç dakika sonra lütfen ödeme sağlayıcınızın yapılandırmasını kontrol edin."
 
 #. module: account_payment
 #. odoo-python
@@ -140,7 +155,7 @@ msgstr "Referans %s olan bir ödeme işlemi zaten mevcut."
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr "Yeni bir ödeme işlemi oluşturmak için bir jeton gereklidir."
+msgstr "Yeni bir ödeme işlemi oluşturmak için bir belirteç gereklidir."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
@@ -160,7 +175,7 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Onaylanmış işlemi geçersiz kılmak istediğinize emin misinizBu işlem geri "
+"Onaylanmış işlemi geçersiz kılmak istediğinize emin misiniz? Bu işlem geri "
 "alınamaz."
 
 #. module: account_payment
@@ -241,6 +256,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Test modunda, sahte bir ödeme bir test ödeme arayüzü aracılığıyla işlenir.\n"
+"Bu mod, sağlayıcıyı ayarlarken önerilir."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -296,6 +313,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Yalnızca tutarı yakalamaya izin veren sağlayıcılardan gelen belirteçlerin "
+"mevcut olduğunu unutmayın."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -303,6 +322,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Yalnızca işlemleri yetkilendirecek şekilde ayarlanmış sağlayıcılardan gelen "
+"belirteçlerin (tutarı yakalamak yerine) kullanılamadığını unutmayın."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -355,7 +376,7 @@ msgstr "Ödeme Sağlayıcı"
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr "Ödeme Sağlayıcılar"
+msgstr "Ödeme Sağlayıcıları"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -420,7 +441,7 @@ msgstr "İadeler"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr "Geri Ödeme Sayısı"
+msgstr "İade Sayısı"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -440,7 +461,7 @@ msgstr "Ödeme Token'ı kaydet"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr "Ödeme fişlerimi kaydet"
+msgstr "Ödeme tokenımı kaydet"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
@@ -450,7 +471,7 @@ msgstr "Kaynak Ödeme"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "İl/Eyalet"
+msgstr "Durum"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
@@ -463,7 +484,7 @@ msgstr "Uygun Ödeme Token'ı"
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr "Erişim belirteci geçersiz."
+msgstr "Erişim tokenı geçersiz."
 
 #. module: account_payment
 #. odoo-python
@@ -476,7 +497,7 @@ msgstr "İade edilecek tutar pozitif olmalı ve %s değerinden fazla olamaz."
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Başarılı işlemlerin onaylandığı yevmiye."
 
 #. module: account_payment
 #. odoo-python
@@ -485,7 +506,7 @@ msgstr ""
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr ""
+msgstr "Referansı %(ref)s olan işlemle ilgili ödeme onaylandı: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -498,7 +519,7 @@ msgstr "Sağlanan parametreler geçersizdir."
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr "İlgili geri ödeme ödemelerinin kaynak ödemesi"
+msgstr "İlgili iade ödemelerinin kaynak ödemesi"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -534,7 +555,7 @@ msgstr "İşlemler"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr "Desteklenen Geri Ödeme Türü"
+msgstr "Desteklenen İade Türü"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -555,6 +576,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"Etkin veya test durumundaki bir sağlayıcıya bağlı bir ödeme yöntemini silemezsiniz.\n"
+"Bağlı sağlayıcı(s): %s"
 
 #. module: account_payment
 #. odoo-python
@@ -564,3 +587,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Bir ödeme sağlayıcısının günlüğünü silmeden önce sağlayıcıyı devre dışı bırakmanız gerekir.\n"
+"Bağlı sağlayıcılar: %s"

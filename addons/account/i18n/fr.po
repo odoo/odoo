@@ -2944,7 +2944,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Auteur du message. S'il n'est pas indiqué, email_from peut contenir une "
-"adresse électronique ne correspondant à aucun partenaire."
+"adresse email ne correspondant à aucun partenaire."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -7643,7 +7643,7 @@ msgstr "Inclus dans le prix"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Income"
-msgstr "Revenus"
+msgstr "Produits"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_income_categ_id
@@ -10450,7 +10450,7 @@ msgstr "Autre"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income_other
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__income_other
 msgid "Other Income"
-msgstr "Autres revenus"
+msgstr "Autres produits"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14233,8 +14233,8 @@ msgid ""
 msgstr ""
 "La dépense est comptabilisée lorsqu'une facture fournisseur est validée, "
 "sauf dans le cadre du système comptable anglo-saxon avec la valorisation "
-"perpétuelle de l'inventaire, auquel cas la dépense (compte du coût des biens"
-" vendus) est comptabilisée lors de la validation de la facture client."
+"permanente de l'inventaire, auquel cas la dépense (compte du coût des biens "
+"vendus) est comptabilisée lors de la validation de la facture client."
 
 #. module: account
 #. odoo-python
@@ -16812,11 +16812,13 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Vous ne pouvez pas modifier les champs suivants car le mode restreint est "
-"activé sur le journal : %s."
+"Vous ne pouvez pas éditer les champs suivants : %s.\n"
+"Les écritures suivantes sont déjà hashées :\n"
+"%s"
 
 #. module: account
 #. odoo-python

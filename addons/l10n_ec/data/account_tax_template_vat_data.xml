@@ -366,12 +366,12 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_104_412_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_other_downpayments'),
-                    'plus_report_expression_ids': [ref('tax_report_line_104_422_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
@@ -381,7 +381,103 @@
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_other_downpayments'),
-                    'minus_report_expression_ids': [ref('tax_report_line_104_421_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
+                })]"/>
+        </record>
+        <record id="tax_vat_444_zero_vat" model="account.tax.template">
+            <field name="name">IVA 0% (444, Reembolsos)</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">130</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA 0%</field>
+            <field name="l10n_ec_code_base">444</field>
+            <field name="l10n_ec_code_applied">454</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'plus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
+                })]"/>
+        </record>
+        <record id="tax_vat_444_not_charged_vat" model="account.tax.template">
+            <field name="name">No Objeto IVA 0% (444, Reembolsos)</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">140</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA 0%</field>
+            <field name="l10n_ec_code_base">444</field>
+            <field name="l10n_ec_code_applied">454</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_not_charged"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'plus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
+                })]"/>
+        </record>
+        <record id="tax_vat_444_not_exempt_vat" model="account.tax.template">
+            <field name="name">Exento IVA 0% (444, Reembolsos)</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">150</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA EXENTO</field>
+            <field name="l10n_ec_code_base">444</field>
+            <field name="l10n_ec_code_applied">454</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_exempt"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'plus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_104_444_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_expression_ids': [ref('tax_report_line_104_454_tag')],
                 })]"/>
         </record>
         <!--        impuestos de compras   -->
@@ -985,6 +1081,7 @@
         <record id="tax_vat_541_sup_02" model="account.tax.template">
             <!-- Adquisiciones no objeto de IVA -->
             <field name="name">No Objeto IVA 0% (541, 02 Costo IR)</field>
+            <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">30</field>
             <field name="amount">0.0</field>
@@ -1092,6 +1189,105 @@
             <field name="l10n_ec_code_applied">555</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat_12"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_104_545_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'plus_report_expression_ids': [ref('tax_report_line_104_555_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_104_545_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_expression_ids': [ref('tax_report_line_104_555_tag')],
+                })]"/>
+        </record>
+        <record id="tax_vat_545_sup_08_vat0" model="account.tax.template">
+            <!-- IVA en compras por reembolso como intermediario para iva cero -->
+            <field name="name">IVA 0% (545, 08 Reembolso)</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">20</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA 0%</field>
+            <field name="l10n_ec_code_base">545</field>
+            <field name="l10n_ec_code_applied">555</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_104_545_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'plus_report_expression_ids': [ref('tax_report_line_104_555_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_104_545_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_expression_ids': [ref('tax_report_line_104_555_tag')],
+                })]"/>
+        </record>
+        <record id="tax_vat_545_sup_08_vat_exempt" model="account.tax.template">
+            <!-- IVA en compras por reembolso como intermediario exento en iva -->
+            <field name="name">Exento IVA 0% (545, 08 Reembolso)</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">30</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA EXENTO</field>
+            <field name="l10n_ec_code_base">545</field>
+            <field name="l10n_ec_code_applied">555</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_exempt"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_104_545_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'plus_report_expression_ids': [ref('tax_report_line_104_555_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_104_545_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_expression_ids': [ref('tax_report_line_104_555_tag')],
+                })]"/>
+        </record>
+        <record id="tax_vat_545_sup_08_vat_not_charged" model="account.tax.template">
+            <!-- IVA en compras por reembolso como intermediario no objeto iva -->
+            <field name="name">No Objeto IVA 0% (545, 08 Reembolso)</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">40</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA 0%</field>
+            <field name="l10n_ec_code_base">545</field>
+            <field name="l10n_ec_code_applied">555</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_not_charged"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',

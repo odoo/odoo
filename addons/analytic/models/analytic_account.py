@@ -123,6 +123,11 @@ class AccountAnalyticAccount(models.Model):
             res.append((analytic.id, name))
         return res
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        default.setdefault('name', _("%s (copy)", self.name))
+        return super().copy_data(default)
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """

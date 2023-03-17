@@ -83,6 +83,11 @@ export class ViewButton extends Component {
         if (this.props.tag === "a") {
             ev.preventDefault();
         }
+
+        if (this.props.onClick) {
+            return this.props.onClick();
+        }
+
         this.env.onClickViewButton({
             clickParams: this.clickParams,
             getResParams: () =>
@@ -144,6 +149,7 @@ ViewButton.props = [
     "style?",
     "string?",
     "slots?",
+    "onClick?",
 ];
 ViewButton.defaultProps = {
     tag: "button",

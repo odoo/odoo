@@ -3021,9 +3021,8 @@ class Many2one(_Relational):
         return value.display_name
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records
@@ -4367,14 +4366,14 @@ class One2many(_RelationalMulti):
         model = records_commands_list[0][0].browse()
         comodel = model.env[self.comodel_name].with_context(**self.context)
 
-        ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
+        ids = OrderedSet(rid for recs, cs in records_commands_list for rid in recs.ids)
         records = records_commands_list[0][0].browse(ids)
 
         if self.store:
             inverse = self.inverse_name
-            to_create = []                  # line vals to create
-            to_delete = []                  # line ids to delete
-            to_link = defaultdict(set)      # {record: line_ids}
+            to_create = []                      # line vals to create
+            to_delete = []                      # line ids to delete
+            to_link = defaultdict(OrderedSet)   # {record: line_ids}
             allow_full_delete = not create
 
             def unlink(lines):
@@ -4418,9 +4417,15 @@ class One2many(_RelationalMulti):
                         to_link[recs[-1]].add(command[1])
                         allow_full_delete = False
                     elif command[0] in (Command.CLEAR, Command.SET):
-                        # do not try to delete anything in creation mode if nothing has been created before
                         line_ids = command[2] if command[0] == Command.SET else []
-                        if not allow_full_delete and not line_ids:
+                        if not allow_full_delete:
+                            # do not try to delete anything in creation mode if nothing has been created before
+                            if line_ids:
+                                # equivalent to Command.LINK
+                                if line_ids.__class__ is int:
+                                    line_ids = [line_ids]
+                                to_link[recs[-1]].update(line_ids)
+                                allow_full_delete = False
                             continue
                         flush()
                         # assign the given lines to the last record only

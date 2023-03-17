@@ -154,6 +154,48 @@ class TestSaleToInvoice(TestSaleCommon):
         # Validate invoice
         self.sale_order.invoice_ids.action_post()
 
+    def test_downpayment_line_remains_on_SO(self):
+        """ Test downpayment's SO line is created and remains unchanged even if everything is invoiced
+        """
+        # Create the SO with one line
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 5,
+                'tax_id': False,
+            }),]
+        })
+        # Confirm the SO
+        sale_order.action_confirm()
+        # Update delivered quantity of SO line
+        sale_order.order_line.write({'qty_delivered': 5.0})
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        # Let's do an invoice for a down payment of 50
+        downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        downpayment.create_invoices()
+        # Let's do the invoice
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        payment.create_invoices()
+        # Confirm all invoices
+        for invoice in sale_order.invoice_ids:
+            invoice.action_post()
+        downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.assertEqual(downpayment_line[0].price_unit, 50, 'The down payment unit price should not change on SO')
 
     def test_downpayment_percentage_tax_icl(self):
         """ Test invoice with a percentage downpayment and an included tax

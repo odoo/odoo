@@ -17,7 +17,7 @@ class GoogleAuth(http.Controller):
         url_return = state.get('f')
 
         if kw.get('code'):
-            base_url = request.env.user.get_base_url()
+            base_url = request.httprequest.url_root.strip('/') or request.env.user.get_base_url()
             access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(
                 kw['code'],
                 service,

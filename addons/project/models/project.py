@@ -594,7 +594,7 @@ class Project(models.Model):
             new_task_ids.append(new_task.id)
             all_subtasks = new_task._get_all_subtasks()
             if all_subtasks:
-                new_subtasks += new_task.child_ids.filtered(lambda child: child.display_project_id == self)
+                new_subtasks += all_subtasks.filtered(lambda child: child.display_project_id == self)
         project.write({'tasks': [Command.set(new_task_ids)]})
         new_subtasks.write({'display_project_id': project.id})
         return True
@@ -870,6 +870,11 @@ class Project(models.Model):
 
     def _get_profitability_sequence_per_invoice_type(self):
         return {}
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        # To be extended to avoid account.move.line overlap between
+        # profitability reports.
+        return []
 
     def _get_user_values(self):
         return {
@@ -1212,6 +1217,7 @@ class Task(models.Model):
         readonly=False,
         store=True,
         tracking=True,
+        index='btree_not_null',
         help="Deliver your services automatically when a milestone is reached by linking it to a sales order item."
     )
     has_late_and_unreached_milestone = fields.Boolean(

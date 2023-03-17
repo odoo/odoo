@@ -29,7 +29,7 @@ class ReportController(http.Controller):
         context = dict(request.env.context)
 
         if docids:
-            docids = [int(i) for i in docids.split(',')]
+            docids = [int(i) for i in docids.split(',') if i.isdigit()]
         if data.get('options'):
             data.update(json.loads(data.pop('options')))
         if data.get('context'):
@@ -123,7 +123,7 @@ class ReportController(http.Controller):
                 filename = "%s.%s" % (report.name, extension)
 
                 if docids:
-                    ids = [int(x) for x in docids.split(",")]
+                    ids = [int(x) for x in docids.split(",") if x.isdigit()]
                     obj = request.env[report.model].browse(ids)
                     if report.print_report_name and not len(obj) > 1:
                         report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})

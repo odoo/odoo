@@ -13,6 +13,7 @@ const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag
 const {getCSSVariableValue} = require('web_editor.utils');
 const gridUtils = require('@web_editor/js/common/grid_layout_utils');
 const QWeb = core.qweb;
+const {closestElement} = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
 
 var _t = core._t;
 
@@ -1828,9 +1829,12 @@ var SnippetsMenu = Widget.extend({
         this.$el = this.window.$(this.$el);
         this.$el.data('snippetMenu', this);
 
+        this.folded = !!this.options.foldSnippets;
+
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
-        this._addToolbar();
+        // adds toolbar if not folded
+        this.setFolded(this.folded);
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
         $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
 
@@ -2115,6 +2119,17 @@ var SnippetsMenu = Widget.extend({
         return this._defLoadSnippets;
     },
     /**
+     * Visually hide or display this snippet menu
+     * @param {boolean} foldState
+     */
+    setFolded: function (foldState = true) {
+        this.el.classList.toggle('d-none', foldState);
+        this.el.ownerDocument.body.classList.toggle('editor_has_snippets', !foldState);
+        this.folded = !!foldState;
+        // "add" toolbar to set it inside the snippet menu/in the body
+        this._addToolbar();
+    },
+    /**
      * Get the editable area.
      *
      * @returns {JQuery}
@@ -2323,7 +2338,7 @@ var SnippetsMenu = Widget.extend({
             $selectorSiblings = $(_.uniq(($selectorSiblings || $()).add($selectorChildren.children()).get()));
         }
 
-        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible)';
+        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible), :not(:o_editable)';
         if ($selectorSiblings) {
             $selectorSiblings.not(`.oe_drop_zone, .oe_drop_clone, ${noDropZonesSelector}`).each(function () {
                 var data;
@@ -2904,7 +2919,7 @@ var SnippetsMenu = Widget.extend({
         this._disableUndroppableSnippets();
 
         this.$el.addClass('o_loaded');
-        $(this.el.ownerDocument.body).addClass('editor_has_snippets');
+        $(this.el.ownerDocument.body).toggleClass('editor_has_snippets', !this.folded);
     },
     /**
      * Eases patching the XML definition for snippets and options in stable
@@ -3366,7 +3381,10 @@ var SnippetsMenu = Widget.extend({
 
         this._currentTab = tab || this.tabs.BLOCKS;
 
-        this._$toolbarContainer[0].remove();
+        if (this._$toolbarContainer) {
+            this._$toolbarContainer[0].remove();
+        }
+        this._$toolbarContainer = null;
         if (content) {
             while (this.customizePanel.firstChild) {
                 this.customizePanel.removeChild(this.customizePanel.firstChild);
@@ -3621,11 +3639,14 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetDragAndDropStop: async function (ev) {
         this.snippetEditorDragging = false;
-        const $modal = ev.data.$snippet.closest('.modal');
+        const modalEl = ev.data.$snippet[0].closest('.modal');
+        const carouselItemEl = ev.data.$snippet[0].closest('.carousel-item');
         // If the snippet is in a modal, destroy editors only in that modal.
         // This to prevent the modal from closing because of the cleanForSave
-        // on each editors.
-        await this._destroyEditors($modal.length ? $modal : null);
+        // on each editors. Same thing for 'carousel-item', otherwise all the
+        // editors of the 'carousel' are destroyed and the 'carousel' jumps to
+        // first slide.
+        await this._destroyEditors(carouselItemEl ? $(carouselItemEl) : modalEl ? $(modalEl) : null);
         await this._activateSnippet(ev.data.$snippet);
     },
     /**
@@ -4084,6 +4105,10 @@ var SnippetsMenu = Widget.extend({
         this._filterSnippets('');
     },
     _addToolbar(toolbarMode = "text") {
+        if (this.folded) {
+            this._addToolbarToOriginalPosition();
+            return;
+        }
         let titleText = _t("Inline Text");
         switch (toolbarMode) {
             case "image":
@@ -4098,26 +4123,37 @@ var SnippetsMenu = Widget.extend({
         }
 
         this.options.wysiwyg.toolbar.el.classList.remove('oe-floating');
+        if (!this._$toolbarContainer) {
+            // Create toolbar custom container.
+            this._$toolbarContainer = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
+            const $title = $("<we-title><span>" + titleText + "</span></we-title>");
+            this._$toolbarContainer.append($title);
+            this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
+            $(this.customizePanel).append(this._$toolbarContainer);
 
-        // Create toolbar custom container.
-        this._$toolbarContainer = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
-        const $title = $("<we-title><span>" + titleText + "</span></we-title>");
+            // Create table-options custom container.
 
-        this._$toolbarContainer.append($title);
-        this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
-        $(this.customizePanel).append(this._$toolbarContainer);
-
-        // Create table-options custom container.
-        const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
-        this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
-
-        $(this.customizePanel).append($customizeTableBlock);
-
-        this._$removeFormatButton = this._$removeFormatButton || this.options.wysiwyg.toolbar.$el.find('#removeFormat');
-        $title.append(this._$removeFormatButton);
-        this.options.wysiwyg.toolbar.$el.find('#table').remove();
+            const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
+            this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
+            $(this.customizePanel).append($customizeTableBlock);
+            this._$removeFormatButton = this.options.wysiwyg.toolbar.$el.find('#removeFormat');
+            $title.append(this._$removeFormatButton);
+            this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
+        }
+        this.options.wysiwyg.toolbar.$el.find('#table')[0].classList.add('d-none');
 
         this._checkEditorToolbarVisibility();
+    },
+    _addToolbarToOriginalPosition: function () {
+        const toolbar = this.options.wysiwyg.toolbar.el;
+        toolbar.classList.add('oe-floating');
+        toolbar.querySelector('#table').classList.remove('d-none');
+        if (this.options.wysiwyg.odooEditor.isMobile) {
+            const editorEditable = this.options.wysiwyg.odooEditor.editable;
+            editorEditable.before(toolbar);
+        } else if (this.options.autohideToolbar) {
+            document.body.appendChild(toolbar);
+        }
     },
     /**
      * Update editor UI visibility based on the current range.
@@ -4137,8 +4173,8 @@ var SnippetsMenu = Widget.extend({
         }
         if (!range ||
             !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
-            $(selection.anchorNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])').length ||
-            $(selection.focusNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])').length ||
+            closestElement(selection.anchorNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])') ||
+            closestElement(selection.focusNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])') ||
             (e && $(e.target).closest('.fa, img').length ||
             this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img')) ||
             (this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable)

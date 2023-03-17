@@ -294,7 +294,8 @@ class PosSession(models.Model):
                 self._create_picking_at_end_of_session()
                 self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
             try:
-                data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
+                with self.env.cr.savepoint():
+                    data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
             except AccessError as e:
                 if sudo:
                     data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
@@ -760,7 +761,7 @@ class PosSession(models.Model):
                         signed_product_qty = move.product_qty
                         if move._is_in():
                             signed_product_qty *= -1
-                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.product_qty, move)
+                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity_done, move)
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         if move._is_in():
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -789,7 +790,7 @@ class PosSession(models.Model):
                     signed_product_qty = move.product_qty
                     if move._is_in():
                         signed_product_qty *= -1
-                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.product_qty, move)
+                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity_done, move)
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     if move._is_in():
                         stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)

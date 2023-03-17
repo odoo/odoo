@@ -80,6 +80,12 @@ class EventMailScheduler(models.Model):
     def _selection_template_model(self):
         return [('mail.template', 'Mail')]
 
+    @api.onchange('notification_type')
+    def set_template_ref_model(self):
+        mail_model = self.env['mail.template']
+        if self.notification_type == 'mail':
+            self.template_ref = "{},{}".format('mail.template', mail_model.search([('model', '=', 'event.registration')], limit=1).id)
+
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)

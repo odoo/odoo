@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import Form, tagged
-from odoo import fields
+from odoo import Command, fields
 
 
 
@@ -391,3 +391,54 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             {'debit': 0.0,     'credit': 50.0,      'amount_currency': -100.0,   'account_id': cash_basis_transfer_account.id},
             {'debit': 50.0,      'credit': 0.0,     'amount_currency': 100.0,  'account_id': tax_account_1.id},
         ])
+
+    def test_reconciliation_differed_billing(self):
+        """
+        Test whether products received billed at different time will be correctly reconciled
+        valuation: automated
+        - create a rfq
+        - receive products
+        - create bill - set quantity of product A = 0 - save
+        - create bill - confirm
+        -> the reconciliation should not take into account the lines of the first bill
+        """
+        date_po_and_delivery = '2022-03-02'
+        self.product_a.write({
+            'categ_id': self.stock_account_product_categ,
+            'detailed_type': 'product',
+        })
+        self.product_b.write({
+            'categ_id': self.stock_account_product_categ,
+            'detailed_type': 'product',
+        })
+        purchase_order = self.env['purchase.order'].create({
+                'currency_id': self.currency_data['currency'].id,
+                'order_line': [
+                    Command.create({
+                        'name': self.product_a.name,
+                        'product_id': self.product_a.id,
+                        'product_qty': 1,
+                    }),
+                    Command.create({
+                        'name': self.product_b.name,
+                        'product_id': self.product_b.id,
+                        'product_qty': 1,
+                    }),
+                ],
+                'partner_id': self.partner_a.id,
+            })
+        purchase_order.button_confirm()
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+
+        bill_1 = self._create_invoice_for_po(purchase_order, date_po_and_delivery)
+        move_form = Form(bill_1)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 0
+        move_form.save()
+
+        bill_2 = self._create_invoice_for_po(purchase_order, date=date_po_and_delivery)
+        bill_2.action_post()
+        aml = bill_2.line_ids.filtered(lambda line: line.display_type == "product")
+        pol = purchase_order.order_line
+        self.assertRecordValues(pol, [{'qty_invoiced': line.qty_received} for line in pol])
+        self.assertRecordValues(aml, [{'reconciled': True} for line in aml])
