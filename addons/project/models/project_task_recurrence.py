@@ -103,8 +103,7 @@ class ProjectTaskRecurrence(models.Model):
         })
 
         create_values['stage_id'] = occurrence_from.project_id.type_ids[0].id if occurrence_from.project_id.type_ids else occurrence_from.stage_id.id
-        if occurrence_from.allow_subtasks:
-            create_values['child_ids'] = [
-                Command.create(self._create_next_occurrence_values(child)) for child in occurrence_from.with_context(active_test=False).child_ids
-            ]
+        create_values['child_ids'] = [
+            Command.create(self._create_next_occurrence_values(child)) for child in occurrence_from.with_context(active_test=False).child_ids
+        ]
         return create_values

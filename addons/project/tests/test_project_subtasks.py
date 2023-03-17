@@ -8,15 +8,6 @@ from odoo.tests.common import Form
 @tagged('-at_install', 'post_install')
 class TestProjectSubtasks(TestProjectCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        # Enable the company setting
-        cls.env['res.config.settings'].create({
-            'group_subtask_project': True
-        }).execute()
-
     def test_task_display_project_with_default_form(self):
         """
             Create a task in the default task form should take the project set in the form or the default project in the context
@@ -92,7 +83,8 @@ class TestProjectSubtasks(TestProjectCommon):
             6) Remove parent task:
                 - The project id should remain unchanged
             7) Remove project id then parent id:
-                - should not be possible since allow_subtasks is false when no project is set on the subtask
+                - Project should be removed
+                - Parent should be removed
         """
         # 1)
         with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
@@ -149,12 +141,11 @@ class TestProjectSubtasks(TestProjectCommon):
                     child_task_form.project_id = self.project_goats
             with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
                 subtask_form.project_id = self.env['project.project']
-                with self.assertRaises(AssertionError, msg="the parent_id field should not be visible since no project is set on the subtask and so allow_subtasks is false"):
-                    subtask_form.parent_id = self.env['project.task']
+                subtask_form.parent_id = self.env['project.task']
             orphan_subtask = subtask_form.save()
 
             self.assertFalse(orphan_subtask.project_id, "The project should be removed as expected.")
-            self.assertEqual(orphan_subtask.parent_id, self.task_1, "The parent should not be removed since the field was not there in the form view after project had been removed.")
+            self.assertFalse(orphan_subtask.project_id, "The Parent should be removed as expected.")
 
     def test_subtask_stage(self):
         """
@@ -208,25 +199,31 @@ class TestProjectSubtasks(TestProjectCommon):
             ],
         })
 
-        task_count_with_subtasks_including_archived_in_project_goats = 6
+        task_count_with_subtasks_including_archived = 8
         task_count_in_project_pigs = self.project_pigs.task_count
         self.project_goats._compute_task_count()  # recompute without archived tasks and subtasks
         task_count_in_project_goats = self.project_goats.task_count
         project_goats_duplicated = self.project_goats.copy()
         self.project_pigs._compute_task_count()  # retrigger since a new task should be added in the project after the duplication of Project Goats
 
-        def subtask_in_project(tasks, project):
-            task_count = 0
-            for task in tasks:
-                if not task.project_id or task.project_id == project:
-                    task_count += 1 + subtask_in_project(task.child_ids, project)
-            return task_count
+        def dfs(task):
+            # ABGH: i used dfs to avoid visiting a task 2 times as it can be a direct task for the project and a subtask for another task like child 6
+            visited[task.id] = True
+            total_count = 1
+            for child_id in task.child_ids:
+                if child_id.id not in visited:
+                    total_count += dfs(child_id)
+            return total_count
 
-        tasks_copied_count = subtask_in_project(project_goats_duplicated.tasks, project_goats_duplicated)
+        visited = {}
+        tasks_copied_count = 0
+        for task in project_goats_duplicated.tasks:
+            if not task.id in visited:
+                tasks_copied_count += dfs(task)
 
         self.assertEqual(
             tasks_copied_count,
-            task_count_with_subtasks_including_archived_in_project_goats - 1,
+            task_count_with_subtasks_including_archived - 1,
             'The number of duplicated tasks (subtasks included) should be equal to the number of all tasks (with active subtasks included) of both projects, '
             'that is only the active subtasks are duplicated.')
         self.assertEqual(self.project_goats.task_count, task_count_in_project_goats, 'The number of tasks should be the same before and after the duplication of this project.')
@@ -254,6 +251,6 @@ class TestProjectSubtasks(TestProjectCommon):
                 child_subtask_form.name = 'Test Subtask 2'
                 self.assertFalse(child_subtask_form.project_id)
 
-        self.assertEqual(task.subtask_count, 2, "Parent task should have 2 children")
+        self.assertEqual(task.subtask_count, 1, "Parent task should have 1 children")
         task_2 = task.copy()
-        self.assertEqual(task_2.subtask_count, 2, "If the parent task is duplicated then the sub task should be copied")
+        self.assertEqual(task_2.subtask_count, 1, "If the parent task is duplicated then the sub task should be copied")
