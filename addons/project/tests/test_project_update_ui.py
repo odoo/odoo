@@ -15,3 +15,4 @@ class TestProjectUpdateUi(HttpCase):
 
     def test_01_project_tour(self):
         self.start_tour("/web", 'project_update_tour', login="admin")
+        self.start_tour("/web", 'project_tour', login="admin")
