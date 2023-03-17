@@ -15,6 +15,8 @@ class SuggestionService {
         this.threadService = services["mail.thread"];
         /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
+        /** @type {import("@mail/new/core/channel_member_service").ChannelMemberService} */
+        this.channelMemberService = services["mail.channel.member"];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread, onFetched } = {}) {
@@ -52,6 +54,9 @@ class SuggestionService {
         );
         suggestedPartners.map((data) => {
             this.personaService.insert({ ...data, type: "partner" });
+            if (data.persona?.channelMembers) {
+                this.channelMemberService.insert(...data.persona.channelMembers);
+            }
         });
     }
 
@@ -405,7 +410,7 @@ class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store", "mail.thread", "mail.persona"],
+    dependencies: ["orm", "mail.store", "mail.thread", "mail.persona", "mail.channel.member"],
     start(env, services) {
         return new SuggestionService(env, services);
     },
