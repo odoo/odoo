@@ -189,7 +189,6 @@ class TestTaskDependencies(TestProjectCommon):
 
     def test_duplicate_project_with_subtask_dependencies(self):
         self.project_goats.allow_task_dependencies = True
-        self.project_goats.allow_subtasks = True
         parent_task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Parent Task',
             'project_id': self.project_goats.id,
