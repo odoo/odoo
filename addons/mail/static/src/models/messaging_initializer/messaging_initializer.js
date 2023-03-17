@@ -185,7 +185,7 @@ function factory(dependencies) {
                         name: "leave",
                     },
                     {
-                        channel_types: ['channel', 'chat'],
+                        channel_types: ['channel', 'chat', 'group'],
                         help: this.env._t("List users in the current channel"),
                         methodName: 'execute_command_who',
                         name: "who",
