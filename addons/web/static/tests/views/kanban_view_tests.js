@@ -13107,4 +13107,33 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["execute_action"]);
         }
     );
+
+    QUnit.test("Keep scrollTop when loading records with load more", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div style="height:1000px;"><field name="id"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+            groupBy: ["bar"],
+            limit: 1,
+        });
+        target.querySelector(".o_kanban_renderer").style.overflow = "scroll";
+        target.querySelector(".o_kanban_renderer").style.height = "500px";
+        const loadMoreButton = target.querySelector(".o_kanban_load_more button");
+        loadMoreButton.scrollIntoView();
+        const previousScrollTop = target.querySelector(".o_kanban_renderer").scrollTop;
+        await click(loadMoreButton);
+        assert.strictEqual(
+            previousScrollTop,
+            target.querySelector(".o_kanban_renderer").scrollTop,
+            "Should have the same scrollTop value"
+        );
+        assert.notEqual(previousScrollTop, 0, "Should not have the scrollTop value at 0");
+    });
 });
