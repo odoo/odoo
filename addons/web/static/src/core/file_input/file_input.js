@@ -51,7 +51,12 @@ export class FileInput extends Component {
 
     async uploadFiles(params) {
         const fileData = await this.http.post(this.props.route, params, "text");
-        const parsedFileData = JSON.parse(fileData);
+        let parsedFileData;
+        try {
+            parsedFileData = JSON.parse(fileData);
+        } catch {
+            throw new Error(fileData);
+        }
         if (parsedFileData.error) {
             throw new Error(parsedFileData.error);
         }
