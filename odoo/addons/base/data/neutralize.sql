@@ -1,6 +1,7 @@
 -- deactivate mail servers
 UPDATE ir_mail_server
-   SET active = false;
+   SET active = false,
+       smtp_user = COALESCE(smtp_user || '_neutralised', 'remove_this_to_enable_this_mail_server');
 
 -- deactivate crons
 UPDATE ir_cron
