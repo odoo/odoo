@@ -388,6 +388,5 @@ class ResPartnerBank(models.Model):
     @api.model
     def _get_available_qr_methods(self):
         rslt = super()._get_available_qr_methods()
-        if self.env.company.country_id.code == 'CH':
-            rslt.append(('ch_qr', _("Swiss QR bill"), 10))
+        rslt.append(('ch_qr', _("Swiss QR bill"), 10))
         return rslt
