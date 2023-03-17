@@ -925,7 +925,7 @@ class Channel(models.Model):
             if vals:
                 session_state.write(vals)
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.channel/insert', {
-                'id': session_state.channel_id.channel_info()[0]['id'],
+                'id': session_state.channel_id.id,
                 'serverFoldState': state,
             })
 
