@@ -65,7 +65,9 @@ function insert(editor, data, isText = true) {
     const fakeEl = document.createElement('fake-element');
     const fakeElFirstChild = document.createElement('fake-element-fc');
     const fakeElLastChild = document.createElement('fake-element-lc');
-    if (isText) {
+    if (data instanceof Node) {
+        fakeEl.replaceChildren(data);
+    } else if (isText) {
         fakeEl.innerText = data;
     } else {
         fakeEl.innerHTML = data;
