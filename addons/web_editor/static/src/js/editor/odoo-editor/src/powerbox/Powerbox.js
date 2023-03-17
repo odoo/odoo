@@ -209,6 +209,10 @@ export class Powerbox {
                 );
             }
         }
+        // Hide category name if there is only a single one.
+        if (this._mainWrapperElement.childElementCount === 1) {
+            this._mainWrapperElement.querySelector('.oe-powerbox-category').style.display = 'none';
+        }
         this._resetPosition();
     }
     /**
