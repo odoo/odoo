@@ -74,6 +74,7 @@ import {
     cleanZWS,
     isZWS,
     getDeepestPosition,
+    leftPos,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -4318,15 +4319,27 @@ export class OdooEditor extends EventTarget {
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
+        // Replace entire link if its label is fully selected.
+        const link = closestElement(sel.anchorNode, 'a');
+        if (link && sel.toString().replace(/\u200B/g, '') === link.innerText.replace(/\u200B/g, '')) {
+            const start = leftPos(link);
+            // Exit link isolation since we're removing the link and editing outside of it.
+            if (this._fixLinkMutatedElements && this._fixLinkMutatedElements.link === link) {
+                this.resetContenteditableLink();
+                this._activateContenteditable();
+            }
+            link.remove();
+            setSelection(...start, ...start, false);
+        }
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
-                this.execCommand('insert', fragment);
+                this._applyCommand('insert', fragment);
             }
         } else if (files.length && targetSupportsHtmlContent) {
             this.addImagesFiles(files).then(html => {
-                const imageNodes = this.execCommand('insert', this._prepareClipboardData(html));
+                const imageNodes = this._applyCommand('insert', this._prepareClipboardData(html));
                 if (imageNodes && this.options.dropImageAsAttachment) {
                     // Mark images as having to be saved as attachments.
                     for (const imageNode of imageNodes) {
@@ -4335,7 +4348,7 @@ export class OdooEditor extends EventTarget {
                 }
             });
         } else if (clipboardHtml && targetSupportsHtmlContent) {
-            this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
+            this._applyCommand('insert', this._prepareClipboardData(clipboardHtml));
         } else {
             const text = ev.clipboardData.getData('text/plain');
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
@@ -4362,13 +4375,19 @@ export class OdooEditor extends EventTarget {
                     }
                 } else if (isImageUrl || youtubeUrl) {
                     // Open powerbox with commands to embed media or paste as link.
-                    // Insert URL as text, store history step index to revert it later.
+                    // Store history step index to revert it later.
                     const stepIndexBeforeInsert = this._historySteps.length - 1;
+                    // Store mutations before text insertion, to reapply them after history revert.
+                    this.observerFlush();
+                    const currentStepMutations = [...this._currentStep.mutations];
+                    // Insert URL as text, revert it later.
                     this._applyCommand('insert', text);
                     const revertTextInsertion = () => {
                         this.historyRevertUntil(stepIndexBeforeInsert);
                         this.historyStep(true);
                         this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
+                        // Reapply mutations that were done before the text insertion.
+                        this.historyApply(currentStepMutations);
                     };
                     let commands;
                     const pasteAsURLCommand = {
