@@ -2,11 +2,13 @@
 
 import logging
 import warnings
+import psycopg2
 
-from odoo import http
+from odoo import http, _
 from odoo.api import call_kw
 from odoo.http import request
 from odoo.models import check_method_name
+from odoo.exceptions import ValidationError
 from .utils import clean_action
 
 
@@ -39,7 +41,10 @@ class DataSet(http.Controller):
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user")
     def call_kw(self, model, method, args, kwargs, path=None):
-        return self._call_kw(model, method, args, kwargs)
+        try:
+            return self._call_kw(model, method, args, kwargs)
+        except psycopg2.errors.NumericValueOutOfRange:
+            raise ValidationError(_("A numeric value has been given a value outside of the range supported by the database"))
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
     def call_button(self, model, method, args, kwargs):
