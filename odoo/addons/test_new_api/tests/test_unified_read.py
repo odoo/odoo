@@ -327,4 +327,24 @@ class TestUnifiedRead(TransactionCase):
         pass
 
     def test_many2many_respects_order(self):
-        pass
+        read = self.course.web_read_unity(
+            {
+                'name': {},
+                'lesson_ids':
+                    {
+                        'fields': {'name': {}},
+                        'order': 'name desc'
+                    }
+            })
+
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'name': 'introduction to OWL',
+                'lesson_ids':
+                    [
+                        {'id': self.lesson_day2.id, 'name': 'second day'},
+                        {'id': self.lesson_day1.id, 'name': 'first day'}
+                    ]
+                ,
+            }])

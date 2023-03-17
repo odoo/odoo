@@ -1073,7 +1073,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # protocol instead
     #
 
-    def read(self, records):
+    def read(self, records, order=None):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
         if not self.column_type:
             raise NotImplementedError("Method read() undefined on %s" % self)
@@ -2337,7 +2337,7 @@ class Binary(Field):
         else:
             super().compute_value(records)
 
-    def read(self, records):
+    def read(self, records, order=None):
         # values are stored in attachments, retrieve them
         assert self.attachment
         domain = [
@@ -4281,7 +4281,7 @@ class One2many(_RelationalMulti):
                 records.env[self.comodel_name]._recompute_model([self.inverse_name])
         return super().__get__(records, owner)
 
-    def read(self, records):
+    def read(self, records, order=None):
         # retrieve the lines in the comodel
         context = {'active_test': False}
         context.update(self.context)
@@ -4294,7 +4294,7 @@ class One2many(_RelationalMulti):
         field_names = [inverse]
         if comodel._active_name:
             field_names.append(comodel._active_name)
-        lines = comodel.search_fetch(domain, field_names)
+        lines = comodel.search_fetch(domain, field_names, order=order)
 
         # group lines by inverse field (without prefetching other fields)
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -4653,7 +4653,7 @@ class Many2many(_RelationalMulti):
     def groupable(self):
         return self.store
 
-    def read(self, records):
+    def read(self, records, order=None):
         context = {'active_test': False}
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
@@ -4661,7 +4661,7 @@ class Many2many(_RelationalMulti):
         comodel._flush_search(domain, order=comodel._order)
         wquery = comodel._where_calc(domain)
         comodel._apply_ir_rules(wquery, 'read')
-        order_by = comodel._generate_order_by(None, wquery)
+        order_by = comodel._generate_order_by(order, wquery)
         from_c, where_c, where_params = wquery.get_sql()
         query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
                     WHERE {where_c} AND {rel}.{id1} IN %s AND {rel}.{id2} = {tbl}.id
