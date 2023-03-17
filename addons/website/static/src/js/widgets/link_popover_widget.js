@@ -91,6 +91,7 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
                 });
             },
         });
+        this.popover.hide();
     },
     /**
      * Opens the menu tree editor. On menu editor save, current page changes
