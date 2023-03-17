@@ -360,12 +360,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id
+        self._validate_transaction_kwargs(kwargs)
         kwargs.update({
-            'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': partner_sudo.id,
+            'currency_id': order_sudo.currency_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )
@@ -376,10 +376,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @http.route()
     def payment_pay(self, *args, amount=None, sale_order_id=None, access_token=None, **kwargs):
-        """ Override of payment to replace the missing transaction values by that of the sale order.
-
-        This is necessary for the reconciliation as all transaction values, excepted the amount,
-        need to match exactly that of the sale order.
+        """ Override of `payment` to replace the missing transaction values by that of the sales
+        order.
 
         :param str amount: The (possibly partial) amount to pay used to check the access token
         :param str sale_order_id: The sale order for which a payment id made, as a `sale.order` id
@@ -404,7 +402,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 raise ValidationError(_("The provided parameters are invalid."))
 
             kwargs.update({
+                # To display on the payment form; will be later overwritten when creating the tx.
+                'reference': order_sudo.name,
+                # To fix the currency if incorrect and avoid mismatches when creating the tx.
                 'currency_id': order_sudo.currency_id.id,
+                # To fix the partner if incorrect and avoid mismatches when creating the tx.
                 'partner_id': order_sudo.partner_invoice_id.id,
                 'company_id': order_sudo.company_id.id,
                 'sale_order_id': sale_order_id,
@@ -412,38 +414,25 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
     def _get_extra_payment_form_values(self, sale_order_id=None, **kwargs):
-        """ Override of `payment` to add the sale order id to the payment form values.
+        """ Override of `payment` to reroute the payment flow to the portal view of the sales order.
 
-        :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
-        :return: The extended rendering context values
+        :param str sale_order_id: The sale order for which a payment is made, as a `sale.order` id.
+        :return: The extended rendering context values.
         :rtype: dict
         """
         form_values = super()._get_extra_payment_form_values(sale_order_id=sale_order_id, **kwargs)
         if sale_order_id:
-            form_values['sale_order_id'] = sale_order_id
+            sale_order_id = self._cast_as_int(sale_order_id)
+            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
 
             # Interrupt the payment flow if the sales order has been canceled.
-            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
             if order_sudo.state == 'cancel':
                 form_values['amount'] = 0.0
+
+            # Reroute the next steps of the payment flow to the portal view of the sales order.
+            form_values.update({
+                'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
+                'landing_route': order_sudo.get_portal_url(),
+                'access_token': order_sudo.access_token,
+            })
         return form_values
-
-    def _create_transaction(self, *args, sale_order_id=None, custom_create_values=None, **kwargs):
-        """ Override of payment to add the sale order id in the custom create values.
-
-        :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
-        :param dict custom_create_values: Additional create values overwriting the default ones
-        :return: The result of the parent method
-        :rtype: recordset of `payment.transaction`
-        """
-        if sale_order_id:
-            if custom_create_values is None:
-                custom_create_values = {}
-            # As this override is also called if the flow is initiated from sale or website_sale, we
-            # must avoid overriding whatever value these modules could have already set.
-            if 'sale_order_ids' not in custom_create_values:  # We are in the payment module's flow
-                custom_create_values['sale_order_ids'] = [Command.set([int(sale_order_id)])]
-
-        return super()._create_transaction(
-            *args, sale_order_id=sale_order_id, custom_create_values=custom_create_values, **kwargs
-        )

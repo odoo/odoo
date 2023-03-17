@@ -30,11 +30,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
-        kwargs['reference_prefix'] = None  # Allow the reference to be computed based on the invoice
         logged_in = not request.env.user._is_public()
-        partner = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
-        kwargs['partner_id'] = partner.id
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        partner_sudo = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
+        self._validate_transaction_kwargs(kwargs)
+        kwargs.update({
+            'currency_id': invoice_sudo.currency_id.id,
+            'partner_id': partner_sudo.id,
+        })  # Inject the create values taken from the invoice into the kwargs.
         tx_sudo = self._create_transaction(
             custom_create_values={'invoice_ids': [Command.set([invoice_id])]}, **kwargs,
         )
@@ -46,9 +48,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
     @route()
     def payment_pay(self, *args, amount=None, invoice_id=None, access_token=None, **kwargs):
         """ Override of `payment` to replace the missing transaction values by that of the invoice.
-
-        This is necessary for the reconciliation as all transaction values, excepted the amount,
-        need to match exactly that of the invoice.
 
         :param str amount: The (possibly partial) amount to pay used to check the access token.
         :param str invoice_id: The invoice for which a payment id made, as an `account.move` id.
@@ -73,7 +72,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 raise ValidationError(_("The provided parameters are invalid."))
 
             kwargs.update({
+                # To display on the payment form; will be later overwritten when creating the tx.
+                'reference': invoice_sudo.name,
+                # To fix the currency if incorrect and avoid mismatches when creating the tx.
                 'currency_id': invoice_sudo.currency_id.id,
+                # To fix the partner if incorrect and avoid mismatches when creating the tx.
                 'partner_id': invoice_sudo.partner_id.id,
                 'company_id': invoice_sudo.company_id.id,
                 'invoice_id': invoice_id,
@@ -81,38 +84,27 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
     def _get_extra_payment_form_values(self, invoice_id=None, **kwargs):
-        """ Override of `payment` to add the invoice id to the payment form values.
+        """ Override of `payment` to reroute the payment flow to the portal view of the invoice.
 
-        :param int invoice_id: The invoice for which a payment id made, as an `account.move` id.
+        :param str invoice_id: The invoice for which a payment id made, as an `account.move` id.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return: The extended rendering context values.
         :rtype: dict
         """
         form_values = super()._get_extra_payment_form_values(invoice_id=invoice_id, **kwargs)
         if invoice_id:
-            form_values['invoice_id'] = invoice_id
+            invoice_id = self._cast_as_int(invoice_id)
+            invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
 
             # Interrupt the payment flow if the invoice has been canceled.
-            invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
             if invoice_sudo.state == 'cancel':
                 form_values['amount'] = 0.0
 
+            # Reroute the next steps of the payment flow to the portal view of the invoice.
+            form_values.update({
+                'transaction_route': f'/invoice/transaction/{invoice_id}',
+                'landing_route': f'{invoice_sudo.access_url}'
+                                 f'?access_token={invoice_sudo._portal_ensure_token()}',
+                'access_token': invoice_sudo.access_token,
+            })
         return form_values
-
-    def _create_transaction(self, *args, invoice_id=None, custom_create_values=None, **kwargs):
-        """ Override of `payment` to add the invoice id in the custom create values.
-
-        :param int invoice_id: The invoice for which a payment id made, as an `account.move` id.
-        :param dict custom_create_values: Additional create values overwriting the default ones.
-        :param dict kwargs: Optional data. This parameter is not used here.
-        :return: The result of the parent method.
-        :rtype: recordset of `payment.transaction`
-        """
-        if invoice_id:
-            if custom_create_values is None:
-                custom_create_values = {}
-            custom_create_values['invoice_ids'] = [Command.set([int(invoice_id)])]
-
-        return super()._create_transaction(
-            *args, invoice_id=invoice_id, custom_create_values=custom_create_values, **kwargs
-        )

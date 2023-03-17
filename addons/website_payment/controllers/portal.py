@@ -51,13 +51,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         else:
             partner_id = request.env.user.partner_id.id
 
-        # Don't allow passing arbitrary create values and avoid tokenization for
-        # the public user.
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys=(
+            'donation_comment', 'donation_recipient_email', 'partner_details', 'reference_prefix'
+        ))
         if use_public_partner:
             kwargs['custom_create_values'] = {'tokenize': False}
-        else:
-            kwargs.pop('custom_create_values', None)
-
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )

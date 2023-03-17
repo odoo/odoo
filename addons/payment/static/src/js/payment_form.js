@@ -407,16 +407,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {object} The transaction route params.
      */
     _prepareTransactionRouteParams() {
-        return {
+        let transactionRouteParams = {
             'provider_id': this.paymentContext.providerId,
             'payment_method_id': this.paymentContext.paymentMethodId ?? null,
             'token_id': this.paymentContext.tokenId ?? null,
-            'reference_prefix': this.paymentContext['referencePrefix']?.toString() ?? null,
             'amount': this.paymentContext['amount'] !== undefined
                 ? parseFloat(this.paymentContext['amount']) : null,
-            'currency_id': this.paymentContext['currencyId']
-                ? parseInt(this.paymentContext['currencyId']) : null,
-            'partner_id': parseInt(this.paymentContext['partnerId']),
             'flow': this.paymentContext['flow'],
             'tokenization_requested': this.paymentContext['tokenizationRequested'],
             'landing_route': this.paymentContext['landingRoute'],
@@ -424,6 +420,16 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             'access_token': this.paymentContext['accessToken'],
             'csrf_token': odoo.csrf_token,
         };
+        // Generic payment flows (i.e., that are not attached to a document) require extra params.
+        if (this.paymentContext['transactionRoute'] === '/payment/transaction') {
+            Object.assign(transactionRouteParams, {
+                'currency_id': this.paymentContext['currencyId']
+                    ? parseInt(this.paymentContext['currencyId']) : null,
+                'partner_id': parseInt(this.paymentContext['partnerId']),
+                'reference_prefix': this.paymentContext['referencePrefix']?.toString(),
+            });
+        }
+        return transactionRouteParams;
     },
 
     /**

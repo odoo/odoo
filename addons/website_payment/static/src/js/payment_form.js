@@ -105,6 +105,10 @@ PaymentForm.include({
         const transactionRouteParams = this._super(...arguments);
         return $('.o_donation_payment_form').length ? {
             ...transactionRouteParams,
+            'partner_id': parseInt(this.paymentContext['partnerId']),
+            'currency_id': this.paymentContext['currencyId']
+                    ? parseInt(this.paymentContext['currencyId']) : null,
+            'reference_prefix':this.paymentContext['referencePrefix']?.toString(),
             'partner_details': {
                 'name': this.$('input[name="name"]').val(),
                 'email': this.$('input[name="email"]').val(),

@@ -260,7 +260,7 @@ class PaymentPortal(portal.CustomerPortal):
         if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
             raise ValidationError(_("The access token is invalid."))
 
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys=('reference_prefix',))
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
@@ -268,8 +268,8 @@ class PaymentPortal(portal.CustomerPortal):
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
-        self, provider_id, payment_method_id, token_id, reference_prefix, amount, currency_id,
-        partner_id, flow, tokenization_requested, landing_route, is_validation=False,
+        self, provider_id, payment_method_id, token_id, amount, currency_id, partner_id, flow,
+        tokenization_requested, landing_route, reference_prefix=None, is_validation=False,
         custom_create_values=None, **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
@@ -278,7 +278,6 @@ class PaymentPortal(portal.CustomerPortal):
                                 `payment.provider` id.
         :param int|None payment_method_id: The payment method, if any, as a `payment.method` id.
         :param int|None token_id: The token, if any, as a `payment.token` id.
-        :param str reference_prefix: The custom prefix to compute the full reference.
         :param float|None amount: The amount to pay, or `None` if in a validation operation.
         :param int|None currency_id: The currency of the amount, as a `res.currency` id, or `None`
                                      if in a validation operation.
@@ -286,6 +285,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'.
         :param bool tokenization_requested: Whether the user requested that a token is created.
         :param str landing_route: The route the user is redirected to after the transaction.
+        :param str reference_prefix: The custom prefix to compute the full reference.
         :param bool is_validation: Whether the operation is a validation.
         :param dict custom_create_values: Additional create values overwriting the default ones.
         :param dict kwargs: Locally unused data passed to `_is_tokenization_required` and
@@ -462,3 +462,36 @@ class PaymentPortal(portal.CustomerPortal):
         :rtype: str
         """
         return not partner.company_id or partner.company_id == document_company
+
+    @staticmethod
+    def _validate_transaction_kwargs(kwargs, additional_allowed_keys=()):
+        """ Verify that the keys of a transaction route's kwargs are all whitelisted.
+
+        The whitelist consists of all the keys that are expected to be passed to a transaction
+        route, plus optional contextually allowed keys.
+
+        This method must be called in all transaction routes to ensure that no undesired kwarg can
+        be passed as param and then injected in the create values of the transaction.
+
+        :param dict kwargs: The transaction route's kwargs to verify.
+        :param tuple additional_allowed_keys: The keys of kwargs that are contextually allowed.
+        :return: None
+        :raise ValidationError: If some kwargs keys are rejected.
+        """
+        whitelist = {
+            'provider_id',
+            'payment_method_id',
+            'token_id',
+            'amount',
+            'flow',
+            'tokenization_requested',
+            'landing_route',
+            'is_validation',
+            'csrf_token',
+        }
+        whitelist.update(additional_allowed_keys)
+        rejected_keys = set(kwargs.keys()) - whitelist
+        if rejected_keys:
+            raise ValidationError(
+                _("The following kwargs are not whitelisted: %s", ', '.join(rejected_keys))
+            )

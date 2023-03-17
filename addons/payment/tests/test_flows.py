@@ -37,10 +37,10 @@ class TestFlows(PaymentHttpCommon):
             for k in [
                 'amount',
                 'currency_id',
-                'reference_prefix',
                 'partner_id',
-                'access_token',
                 'landing_route',
+                'reference_prefix',
+                'access_token',
             ]
         }
         route_values.update({
@@ -180,8 +180,8 @@ class TestFlows(PaymentHttpCommon):
             'access_token': payment_context['access_token'],
             'flow': flow,
             'tokenization_requested': True,
-            'reference_prefix': payment_context['reference_prefix'],
             'landing_route': payment_context['landing_route'],
+            'reference_prefix': payment_context['reference_prefix'],
             'is_validation': True,
         }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
@@ -277,12 +277,13 @@ class TestFlows(PaymentHttpCommon):
 
     def test_transaction_wrong_flow(self):
         transaction_values = self._prepare_pay_values()
+        transaction_values.pop('reference')
         transaction_values.update({
             'flow': 'this flow does not exist',
             'payment_option_id': self.provider.id,
             'tokenization_requested': False,
-            'reference_prefix': 'whatever',
             'landing_route': 'whatever',
+            'reference_prefix': 'whatever',
         })
         # Transaction step with a wrong flow --> UserError
         with mute_logger("odoo.http"), self.assertRaises(
@@ -290,6 +291,15 @@ class TestFlows(PaymentHttpCommon):
             msg='odoo.exceptions.UserError: The payment should either be direct, with redirection, or made by a token.',
         ):
             self._portal_transaction(**transaction_values)
+
+    @mute_logger('odoo.http')
+    def test_transaction_route_rejects_unexpected_kwarg(self):
+        route_kwargs = {
+            **self._prepare_pay_values(),
+            'custom_create_values': 'whatever',  # This should be rejected.
+        }
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
+            self._portal_transaction(**route_kwargs)
 
     def test_transaction_wrong_token(self):
         route_values = self._prepare_pay_values()
