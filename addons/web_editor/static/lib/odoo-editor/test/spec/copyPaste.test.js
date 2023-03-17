@@ -1287,13 +1287,45 @@ describe('Copy and paste', () => {
                     contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
                 });
             });
-            it('should paste and transform URL over the existing url', async () => {
+            it('should replace link for new content when pasting in an empty link', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>ab[<a href="http://www.xyz.com">http://www.xyz.com</a>]cd</p>',
+                    contentBefore: '<p><a href="#" oe-zws-empty-inline="">[]\u200B</a></p>',
                     stepFunction: async editor => {
-                        await pasteText(editor, 'https://www.xyz.xdc ');
+                        await pasteText(editor, 'abc');
                     },
-                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
+                    contentAfter: '<p>abc[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>xy<a href="#" oe-zws-empty-inline="">\u200B[]</a>z</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'abc');
+                    },
+                    contentAfter: '<p>xyabc[]z</p>',
+                });
+            });
+            it('should paste and transform plain text content over an empty link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'abc www.odoo.com xyz');
+                    },
+                    contentAfter: '<p>abc <a href="https://www.odoo.com">www.odoo.com</a> xyz[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'odoo.com\ngoogle.com');
+                    },
+                    contentAfter: '<p><a href="https://odoo.com">odoo.com</a><br><a href="https://google.com">google.com</a>[]<br></p>',
+                });
+            });
+            it('should paste html content over an empty link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
+                    },
+                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>[]</p>',
                 });
             });
             it('should paste and transform URL among text', async () => {
@@ -1405,7 +1437,6 @@ describe('Copy and paste', () => {
                     },
                     contentAfter: '<p>[abc]</p>',
                 });
- 
             });
             it('should restore selection after pasting HTML followed by UNDO', async () => {
                 await testEditor(BasicEditor, {
@@ -1456,6 +1487,49 @@ describe('Copy and paste', () => {
                         window.chai.expect(editor.commandBar._active).to.be.false;
                     },
                     contentAfter: `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]<br></p>`,
+                });
+            });
+            it('should paste and transform URL over the existing url', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[<a href="http://www.xyz.com">http://www.xyz.com</a>]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.xyz.xdc ');
+                    },
+                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
+                });
+            });
+            it('should paste plain text content over a link if all of its contents is selected', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#">[xyz]</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'bc');
+                    },
+                    contentAfter: '<p>abc[]d</p>',
+                });
+            });
+            it('should paste and transform plain text content over a link if all of its contents is selected', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">[xyz]</a></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'www.odoo.com');
+                    },
+                    contentAfter: '<p><a href="https://www.odoo.com">www.odoo.com</a>[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">[xyz]</a></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'abc www.odoo.com xyz');
+                    },
+                    contentAfter: '<p>abc <a href="https://www.odoo.com">www.odoo.com</a> xyz[]</p>',
+                });
+            });
+            it('should paste html content over a link if all of its contents is selected', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">[xyz]</a></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
+                    },
+                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>[]</p>',
                 });
             });
         });
