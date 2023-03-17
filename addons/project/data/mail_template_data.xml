@@ -107,5 +107,16 @@
     <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
     <br/>
         </template>
+
+        <template id="project_tasks_message_user_assigned_batch">
+            <span>Dear <t t-out="assignee_name"/>,</span>
+            <br/><br/>
+            <span style="margin-top: 8px;">You have been assigned to the following tasks:
+                <ul t-foreach="object" t-as="task">
+                    <li><a t-attf-href="{{task._notify_get_action_link('view')}}" t-out="task.display_name"/></li>
+                </ul>
+            </span>
+            <br/>
+        </template>
     </data>
 </odoo>
