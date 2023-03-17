@@ -42,8 +42,11 @@ class ReportMoOverview(models.AbstractModel):
     def _get_replenishment_receipt(self, doc_in, components):
         res = super()._get_replenishment_receipt(doc_in, components)
         if doc_in._name == 'purchase.order':
-            receipt_state = 'expected' if doc_in.state == 'purchase' else 'estimated'
-            return self._format_receipt_date(receipt_state, doc_in.date_planned)
+            if doc_in.state != 'purchase':
+                return self._format_receipt_date('estimated', doc_in.date_planned)
+            in_pickings = doc_in.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+            planned_date = max(in_pickings.mapped('scheduled_date')) if in_pickings else doc_in.date_planned
+            return self._format_receipt_date('expected', planned_date)
         return res
 
     def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, warehouse):
