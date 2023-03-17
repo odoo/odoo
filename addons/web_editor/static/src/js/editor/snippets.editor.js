@@ -931,7 +931,7 @@ var SnippetEditor = Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
         this.trigger_up('request_history_undo_record', {$target: this.$target});
-        this.removeSnippet();
+        this.trigger_up('snippet_edition_request', {exec: this.removeSnippet.bind(this)});
     },
     /**
      * @private
