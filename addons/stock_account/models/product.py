@@ -212,7 +212,7 @@ class ProductProduct(models.Model):
             if rounding_error:
                 # If it is bigger than the (smallest number of the currency * quantity) / 2,
                 # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
-                if abs(rounding_error) <= (abs(quantity) * currency.rounding) / 2:
+                if abs(rounding_error) <= max((abs(quantity) * currency.rounding) / 2, currency.rounding):
                     vals['value'] += rounding_error
                     vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
                         '+' if rounding_error > 0 else '',
@@ -467,7 +467,7 @@ class ProductProduct(models.Model):
                 'remaining_qty': 0,
                 'stock_move_id': move.id,
                 'company_id': move.company_id.id,
-                'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
+                'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
                 'stock_valuation_layer_id': svl_to_vacuum.id,
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
