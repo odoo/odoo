@@ -87,6 +87,7 @@ QUnit.module("Fields", (hooks) => {
             target,
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
+        assert.containsOnce(target, '.o_field_many2one_avatar > div[data-tooltip="Aline"]');
 
         assert.containsOnce(target, ".o_input_dropdown");
         assert.strictEqual(target.querySelector(".o_input_dropdown input").value, "Aline");
