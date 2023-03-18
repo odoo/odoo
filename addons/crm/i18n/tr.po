@@ -19,10 +19,10 @@
 # Umur Akın <umura@projetgrup.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
-# Halil, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2023
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2023\n"
+"Last-Translator: Halil, 2023\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +99,7 @@ msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
 "%(member_count)s satış personelleri arasından%(members_assigned)s atanmış "
-"adaylar"
+"adaylar."
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -640,6 +640,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Hiçbir Satış Ekibinin üyesi olmadığınız için, <b>varsayılan olarak ilk takımın</b> Fırsat Havuzu gösterilir.\n"
+"                                        CRM ile çalışmak için <a name=\"%d\" type=\"action\" tabindex=\"-1\">bir ekibe katılmalısınız.</a>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -648,6 +650,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"Hiçbir Satış Ekibinin üyesi olmadığınız için, <b>varsayılan olarak ilk takımın</b> Fırsat Havuzu gösterilir.\n"
+"                                        CRM ile çalışmak için bir ekibe katılmalısınız."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -886,6 +890,8 @@ msgid ""
 "Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
 "modifications as you navigate."
 msgstr ""
+"Fırsat Havuzuna geri dönmek için içerik haritasına tıklayın. Siz gezinirken "
+"Odoo tüm değişiklikleri kaydedecektir."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -1429,7 +1435,7 @@ msgstr "E-posta cc"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
-msgstr ""
+msgstr "E-posta cc:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1469,6 +1475,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
+"Potansiyel müşterilerinizi e-posta adreslerine dayalı şirket verileriyle "
+"zenginleştirin"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1860,7 +1868,7 @@ msgstr "Takipçi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
 msgid "Is Partner Visible"
-msgstr ""
+msgstr "İş Ortağı Görünür mü"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
@@ -1900,7 +1908,7 @@ msgstr "Crm de kazanılan fırsatlar değeri KPI"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr ""
+msgstr "Lang Aktif Sayısı"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_lang_id
@@ -3464,8 +3472,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
-"Aşamalar, satış personelinin satış döngüsünde belirli bir fırsatın nasıl "
-"konumlandığını kolayca takip etmelerini sağlar."
+"Aşamalar, satış personelinin satış döngüsünde belirli bir fırsatın\n"
+"            nasıl konumlandığını kolayca takip etmelerini sağlar."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
@@ -3562,6 +3570,8 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
+"Aşağıdaki kişiler bu müşteri adayının takipçileri olarak eklenmiştir\n"
+"                        çünkü 30 günden daha kısa bir süre önce kendileriyle iletişime geçildi."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -4017,7 +4027,7 @@ msgstr "Kontağın Web sitesi"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Website:"
-msgstr ""
+msgstr "Website:"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__weeks
@@ -4077,7 +4087,7 @@ msgstr "Evet"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "You can make your opportunity advance through your pipeline from here."
-msgstr ""
+msgstr "Fırsatınızı buradan fırsat havuzunuz üzerinden yürütebilirsiniz."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -4147,7 +4157,7 @@ msgstr "itibariyle oluşturulan adaylar için"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "generate opportunities in your pipeline?<br>"
-msgstr "<br> fırsat havuzunuzda fırsatlar mı yaratıyorsunuz?"
+msgstr "fırsat havuzunuzda fırsatlar mı yaratıyorsunuz?<br>"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
