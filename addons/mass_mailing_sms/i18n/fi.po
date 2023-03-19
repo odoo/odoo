@@ -15,9 +15,10 @@
 # Timo Koukkari <ti.ko@netikka.fi>, 2020
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2020
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2020
-# Johanna Valkonen <johanna@vividi.fi>, 2020
+# Johanna Valkonen <miujohanna@gmail.com>, 2020
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2020
 # Pekka Ikonen, 2021
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Pekka Ikonen, 2021\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,7 +138,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Markkinointikiellossa oleva puhelin on matkapuhelin"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
@@ -147,7 +148,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Markkinointikiellossa oleva puhelin on muu puhelin"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__utm_campaign_id
@@ -271,6 +272,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Kenttä, jota käytetään puhdistetun puhelinnumeron tallentamiseen. Auttaa "
+"nopeuttamaan hakuja ja vertailuja."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
@@ -348,6 +351,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
+"saa massatekstiviestejä miltään listalta"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_allow_unsubscribe
@@ -362,6 +367,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Ilmaisee, onko mustalle listalle joutunut puhdistettu puhelinnumero "
+"matkapuhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun"
+" mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -370,6 +378,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Ilmaisee, onko mustalle listalle merkitty puhdistettu puhelinnumero "
+"puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun "
+"mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
@@ -541,7 +552,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Puhelin on markkinointikiellossa"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -644,7 +655,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Puhdistettu numero"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -735,6 +746,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"Tämä puhelinnumero on markkinointikieltolistalla tekstiviestimarkkinointia "
+"varten. Klikkaa poistaaksesi markkinointikiellon."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms

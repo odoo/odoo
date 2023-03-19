@@ -3113,12 +3113,12 @@ msgstr "Conto cassa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr "Criterio di cassa"
+msgstr "Per cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr "Registro criterio di cassa"
+msgstr "Registro per cassa"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3130,7 +3130,7 @@ msgstr "Imposte per cassa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "Conto di transizione criterio di cassa"
+msgstr "Conto di transizione per cassa"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -4244,7 +4244,7 @@ msgstr "Differenza tasso di cambio valuta"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Currency exchange rate difference (cash basis)"
-msgstr "Differenza tasso di cambio valuta (criterio di cassa)"
+msgstr "Differenza tasso di cambio valuta (per cassa)"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -5955,7 +5955,7 @@ msgstr "Nascondere il metodo di pagamento"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr "Nascondere l'opzione per cassa"
+msgstr "Nascondere opzione per cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -10690,9 +10690,8 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Selezionare se le imposte usano il criterio di cassa. Durante la "
-"riconciliazione, per queste imposte verrà creata una registrazione su un "
-"apposito conto."
+"Selezionare se le imposte sono per cassa. Durante la riconciliazione, per "
+"queste imposte verrà creata una registrazione su un apposito conto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__invoice_warn
@@ -12063,7 +12062,7 @@ msgstr ""
 "Campo tecnico usato per indicare una riga imposta come esigibile nel "
 "rendiconto IVA (vengono visualizzati solo i movimenti esigibili). I nuovi "
 "movimenti sono tutti direttamente esigibili in modo predefinito. Con la "
-"funzionalità cash_basis sulle imposte alcuni diventano esigibili solo alla "
+"funzionalità per cassa sulle imposte alcuni diventano esigibili solo alla "
 "registrazione del pagamento."
 
 #. module: account
@@ -14003,7 +14002,7 @@ msgstr "Usare contabilità anglosassone"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr "Usare criterio di cassa"
+msgstr "Utilizzare per cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -14439,7 +14438,7 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"Selezionare questo campo per contrassegnare questo movimento contabile come "
+"Selezionare questo campo per contrassegnare questo movimento come un "
 "contenzioso con il partner associato"
 
 #. module: account
