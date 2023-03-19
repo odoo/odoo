@@ -18,9 +18,10 @@
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
-# Johanna Valkonen <johanna@vividi.fi>, 2021
+# Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +61,7 @@ msgstr "' sivun otsikko."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Näytetään tulokset  '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
@@ -842,12 +843,12 @@ msgstr "Luotu"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Date (new to old)"
-msgstr ""
+msgstr "Päiväys (uudesta vanhaan)"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Date (old to new)"
-msgstr ""
+msgstr "Päivämäärä (vanhasta uuteen)"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
@@ -1257,6 +1258,7 @@ msgstr "Viimeisimmät"
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
 msgstr ""
 
@@ -1427,6 +1429,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
 msgstr ""
 
@@ -1461,7 +1464,7 @@ msgstr "Ei tuloksia haulle \"%s\"."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "No results found for '"
-msgstr ""
+msgstr "Ei tuloksia. Kokeile jotain muuta hakusanaa. '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
@@ -1628,7 +1631,7 @@ msgstr "Julkaisuja"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Publication Date"
-msgstr ""
+msgstr "Julkaisupäivämäärä"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1701,7 +1704,7 @@ msgstr "Tekstiviestin toimitusvirhe"
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_horizontal
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_list
 msgid "Sample"
-msgstr ""
+msgstr "Esimerkki"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_snippet_filter.py:0
@@ -2400,7 +2403,7 @@ msgstr "Verkkosivun ilmoitukset"
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Verkkosivuston pätkäsuodatin"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url

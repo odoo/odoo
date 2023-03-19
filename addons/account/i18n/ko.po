@@ -4017,7 +4017,7 @@ msgstr "수익 원가"
 msgid ""
 "Could not compute any code for the copy automatically. Please create it "
 "manually."
-msgstr ""
+msgstr "복사한 항목에서 코드를 자동으로 계산할 수 없습니다. 직접 생성해주시기 바랍니다."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -4664,7 +4664,7 @@ msgstr "고객 참조"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Customer Reimbursement"
-msgstr ""
+msgstr "고객 환급"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -14088,6 +14088,8 @@ msgid ""
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
+"이 항목에는 설정되어 있는 국가와 일치하지 않는 세금이 하나 이상 포함되어 있습니다. 설정 메뉴의 회사 재정 국가 및 세금 구성 메뉴의 "
+"세금 국가 항목을 확인하십시오."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14902,6 +14904,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"상각 항목의 금액 관련 참고값\n"
+"    * 백분율: 잔액의 백분율 표시값, 0부터 100 사이로 표시.\n"
+"    * 고정값: 상각 관련 고정값. 금액이 음수인 경우에는 차변 항목으로, 양수인 경우에는 대변 항목으로 계산.\n"
+"    * 라벨링: 정규식 구분을 위한 기호는 필요하지 않으며, 정규식만 필요함. 예를 들어 다음에서 금액을 추출하려는 경우,\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"다음 내용만 입력하면 가능함.\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -14932,7 +14941,7 @@ msgstr "공급업체 청구서"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "공급업체 청구서 수"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14981,7 +14990,7 @@ msgstr "공급업체 지불"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "공급업체 환급"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -14992,7 +15001,7 @@ msgstr "공급업체 세금"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Vendor:"
-msgstr ""
+msgstr "공급업체:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -15592,7 +15601,7 @@ msgstr "분개 항목이 포함된 계정에서는 이 작업을 수행할 수 �
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr ""
+msgstr "보관 처리된 전표 (%(journal)s)는 발행할 수 없습니다."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -15740,7 +15749,7 @@ msgid ""
 "You should configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외화평가차손익 분개장'을 구성해야 합니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15749,7 +15758,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외환차익 계정'을 구성해야 합니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15758,7 +15767,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외환차손 계정'을 구성해야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -15791,12 +15800,12 @@ msgstr "우편번호 범위 종료"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "[FURN_8220] Four Person Desk"
-msgstr ""
+msgstr "[FURN_8220] 4인용 책상"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "[FURN_8999] Three-Seat Sofa"
-msgstr ""
+msgstr "[FURN_8999] 3인용 소파"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15804,7 +15813,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[미설정]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15821,7 +15830,7 @@ msgstr "청구서 상의 통화를 활성화합니다"
 #: code:addons/account/static/src/xml/grouped_view_widget.xml:0
 #, python-format
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "미리보기에서 표시되지 않습니다"
 
 #. module: account
 #. openerp-web
@@ -15954,7 +15963,7 @@ msgstr ""
 msgid ""
 "in its entirety and does not include any costs relating to the legislation "
 "of the country in which the client is located."
-msgstr ""
+msgstr "전체이며 고객이 위치하고 있는 국가의 법률을 준수하기 위해 소요되는 관련 비용은 포함되어 있지 않습니다."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
@@ -15984,6 +15993,7 @@ msgid ""
 " to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
+"상품 배송 또는 서비스가 제공된 후 8일 이내에 등록된 사무소로 등기 우편을 통해 클레임하고자 하는 전체 내용을 통보하여야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree

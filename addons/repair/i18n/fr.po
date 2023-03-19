@@ -136,7 +136,7 @@ msgstr "<span class=\"o_stat_text\">Réparations</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong/>"
+msgstr "<strong>Lot/Numéro de série :</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1413,6 +1413,12 @@ msgstr "Vous ne pouvez pas entrer des quantités négatives."
 #, python-format
 msgid "You cannot cancel a completed repair order."
 msgstr "Vous ne pouvez pas annuler un ordre de réparation complété."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot delete a completed repair order."
+msgstr "Vous ne pouvez pas supprimer un ordre de réparation complété."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0

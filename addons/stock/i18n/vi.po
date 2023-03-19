@@ -16,7 +16,7 @@
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
-# Thi Huong Nguyen, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2022\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1329,6 +1329,13 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
+"Một số quốc gia áp dụng khấu lưu tại nguồn đối với số tiền hóa đơn, theo "
+"luật nội bộ của họ. Mọi khoản khấu trừ tại nguồn sẽ được khách hàng thanh "
+"toán cho cơ quan thuế. Trong mọi trường hợp, Công ty của tôi (Chicago) không"
+" được tạo ra các chi phí liên quan đến luật pháp của một quốc gia. Do đó, "
+"toàn bộ số tiền của hóa đơn sẽ do Công ty của tôi (Chicago) thanh toán hết "
+"và không bao gồm bất kỳ chi phí nào liên quan đến luật pháp của quốc gia nơi"
+" khách hàng cư trú."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3131,6 +3138,9 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
+"Nếu khoản thanh toán vẫn chưa được thanh toán quá sáu mươi (60) ngày sau "
+"ngày đến hạn, Công ty của Tôi (Chicago) có quyền sử dụng dịch vụ của một "
+"công ty thu hồi nợ. Mọi chi phí pháp lý sẽ được thanh toán bởi khách hàng."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -3326,6 +3336,10 @@ msgid ""
 "office within 8 days of the delivery of the goods or the provision of the "
 "services."
 msgstr ""
+"Để được chấp nhận, Công ty của Tôi (Chicago) phải được thông báo về mọi "
+"khiếu nại nào bằng thư, được gửi theo phương thức chuyển phát cụ thể đến văn"
+" phòng đã đăng ký của công ty trong vòng 8 ngày kể từ ngày giao hàng hoặc "
+"cung cấp dịch vụ."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -4438,6 +4452,13 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
+"Công ty của tôi (Chicago) cam kết sẽ cố gắng hết sức để cung cấp các dịch vụ"
+" hiệu quả trong thời gian thích hợp theo khung thời gian đã thỏa thuận. Tuy "
+"nhiên, không có nghĩa vụ nào của nó có thể được coi là nghĩa vụ phải đạt "
+"được kết quả. Trong bất kỳ trường hợp nào, Công ty của tôi (Chicago) không "
+"được khách hàng yêu cầu xuất hiện với tư cách là bên thứ ba trong bối cảnh "
+"người tiêu dùng cuối cùng có khiếu nại về những thiệt hại mà khách hàng đã "
+"nộp cho khách hàng."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -4968,6 +4989,13 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
+"Hóa đơn của chúng tôi được thanh toán trong vòng 21 ngày làm việc, trừ khi "
+"khung thời gian thanh toán khác được ghi trên hóa đơn hoặc đơn đặt hàng. "
+"Trong trường hợp không thanh toán trước hạn, Công ty của Tôi (Chicago) có "
+"quyền yêu cầu thanh toán lãi suất cố định lên tới 10% số tiền còn lại chưa "
+"thanh toán. Công ty của Tôi (Chicago) sẽ được ủy quyền để đình chỉ bất kỳ "
+"hoạt động cung cấp dịch vụ nào mà không cần cảnh báo trước trong trường hợp "
+"thanh toán chậm."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -5832,6 +5860,14 @@ msgstr "Bảng việc chất lượng"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
 msgstr "Một số"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7304,7 +7340,7 @@ msgstr "Báo cáo quy tác kho"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr ""
+msgstr "Thông tin nhà cung cấp bổ sung tồn kho"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__detailed_type__product

@@ -1194,7 +1194,7 @@ msgstr ""
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
+msgstr "아래의 내용은 참고용으로만 제시되는 내용이며 Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -3118,6 +3118,8 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
+"지급기일로부터 미결제 상태로 육십(60)일이 경과한 경우 당사 (시카고)는 해당 건에 대해 추심전문업체에 요청할 수 있는 권리를 "
+"가집니다. 관련된 모든 법적인 비용은 고객이 부담합니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -3192,7 +3194,7 @@ msgstr "이 확인란을 선택하면 Odoo는 해당 품목, 공간 및 일련�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid "If this checkbox is ticked, label will be print in this operation."
-msgstr ""
+msgstr "이 체크박스를 선택하면, 해당 작업에 대한 라벨을 인쇄합니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -5787,6 +5789,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
 msgstr "Quant"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9072,7 +9082,7 @@ msgstr "품목 %s의 Lot/Serial 번호를 지정해야 합니다."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "귀사의 이용약관을 반영하여 이 문서를 업데이트해야 합니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -9184,7 +9194,7 @@ msgstr "예. PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Physical Locations"
-msgstr ""
+msgstr "예: 실제 위치하고 있는 장소"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

@@ -3808,7 +3808,7 @@ msgstr "会社銀行口座"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "会社所在国"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__currency_id
@@ -5597,7 +5597,7 @@ msgstr "エントリーは、同じアカウントからではありません:%s
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Entries can only be created for a single company at a time."
-msgstr ""
+msgstr "一度に一つの会社のみに仕訳を作成できます。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5920,7 +5920,7 @@ msgstr "会計年度"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_carryover_line__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr ""
+msgstr "財政状態"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -7593,7 +7593,7 @@ msgstr "ジャーナルサスペンスアカウント"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
 msgid "Journal codes must be unique per company."
-msgstr ""
+msgstr "会社毎に、仕訳コードは一意であることが必要です。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -9331,7 +9331,7 @@ msgid ""
 "Our invoices are payable within 21 working days, unless another payment "
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date,"
-msgstr ""
+msgstr "請求書または注文に支払期間が指定された場合以外、当社の請求書の支払期間は21営業日となります。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -10537,7 +10537,7 @@ msgstr "消込済請求書"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
 msgid "Reconciled Invoices Type"
-msgstr ""
+msgstr "消込済請求書タイプ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_ids
@@ -12637,7 +12637,7 @@ msgstr "開始残高が前の終了残高と異なる場合に警告メッセー
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr ""
+msgstr "税法上の居住地国及び財政状態によって使用可能な税を絞り込む用の技術フィールド。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -13176,7 +13176,7 @@ msgstr "このディストリビューションが属する会社。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
-msgstr ""
+msgstr "税金グループが適用される国。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
@@ -14079,7 +14079,7 @@ msgid ""
 "This entry contains one or more taxes that are incompatible with your fiscal"
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
-msgstr ""
+msgstr "この仕訳には、設定された税法上の居住地国と合わない税が含まれています。設定で税法上の居住地国をご確認ください。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14103,7 +14103,7 @@ msgstr ""
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
-msgstr ""
+msgstr "この仕訳には、お使いの財政状態と合わない税が含まれています。"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15443,7 +15443,7 @@ msgstr "既に仕訳帳項目に含めれるアカウントの所有会社を変
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
-msgstr ""
+msgstr "居住地国には、状態を割り当ててないまま、外国納税者番号を使用する財政状態を作成することはできません。"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -15451,7 +15451,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
-msgstr ""
+msgstr "居住地国には、外国納税者番号を使用する財政状態を作成することはできません。"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -15459,7 +15459,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
-msgstr ""
+msgstr "所在の財政上の国に、会社の主要セットと同じ納税者番号を持つ財政状態を作成できません。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16126,14 +16126,14 @@ msgstr ""
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} 請求書 (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
-msgstr ""
+msgstr "{{ object.company_id.name }} 支払受領書 (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
