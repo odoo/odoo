@@ -1337,6 +1337,11 @@ msgid ""
 "        So this module is to get the warehouse address if the bill is created from Purchase Order\n"
 "    "
 msgstr ""
+"\n"
+"        구매발주서에서 공급업체 청구서 생성 후 창고 주소 확인\n"
+"\n"
+"        따라서 이 모듈은 발주서에서 청구서가 생성되면 창고 주소를 확인할 수 있는 모듈입니다\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -1348,6 +1353,12 @@ msgid ""
 "        So this module is to get the warehouse address if the invoice is created from Sale Order\n"
 "    "
 msgstr ""
+"\n"
+"        판매발주서에 공급업체 청구서 생성 후 창고 주소 확인\n"
+"        인도 EDI에서는 가능한 경우 배송 주소 세부 정보를 전송합니다\n"
+"\n"
+"        따라서 이 모듈은 판매발주서에서 청구서가 생성되면 창고 주소를 확인할 수 있는 모듈입니다\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
@@ -1355,6 +1366,8 @@ msgid ""
 "\n"
 "        Get warehouse address if the bill is created from Purchase Order"
 msgstr ""
+"\n"
+"        구매발주서에서 공급업체 청구서가 생성된 경우 창고 주소 가져오기"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -1362,6 +1375,8 @@ msgid ""
 "\n"
 "        Get warehouse address if the invoice is created from Sale Order"
 msgstr ""
+"\n"
+"        구매발주서에서 청구서가 생성된 경우 창고 주소 가져오기"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1550,6 +1565,11 @@ msgid ""
 "        Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 "    "
 msgstr ""
+"\n"
+"        세르비아 현지화의 기본 모듈입니다. 계정과목표 및 세금을 관리합니다. \n"
+"        이 모듈은 다음의 공식 문서를 기반으로 합니다 \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
+"        근거자료: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph
@@ -1873,7 +1893,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        필수 감사를 위해 멕시코 세무 당국의 분개 항목을 XML 파일로 내보내기\n"
+"        필수 감사를 위해 멕시코 세무 신고 전표입력 항목을 XML 파일로 내보내기\n"
 "    "
 
 #. module: base
@@ -2059,6 +2079,14 @@ msgid ""
 "    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 "    "
 msgstr ""
+"\n"
+"    크로아티아 계정과목표 업데이트 (RRIF ver.2021)\n"
+"\n"
+"    근거 자료:\n"
+"    https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -7824,10 +7852,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"급여 명세서의 비용 배상\n"
+"급여 명세서에서의 비용 환급\n"
 "=====================================\n"
 "\n"
-"이 응용 프로그램은 급여 명세서에 비용 배상을 포함합니다.\n"
+"이 응용 프로그램을 통해 급여 명세서에 비용 환급을 포함시킬 수 있습니다.\n"
 "    "
 
 #. module: base
@@ -9917,7 +9945,7 @@ msgstr ""
 "\n"
 "이 모듈은 수표를 인쇄하여 결제할 수 있는 기본적인 기능을 제공합니다.\n"
 "특정 국가에 대한 점검 서식을 제공하는 모듈에 대해 종속적으로 사용해야 합니다.\n"
-"검사 설정은 회계 분개항목 구성 페이지에 있습니다.\n"
+"검사 설정은 회계 전표 구성 페이지에 있습니다.\n"
 "    "
 
 #. module: base
@@ -22257,7 +22285,7 @@ msgstr "요르단"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "연락처와 관련된 분개장 항목"
+msgstr "연락처와 연결된 전표 항목"
 
 #. module: base
 #. odoo-python
@@ -25502,7 +25530,7 @@ msgstr ""
 "인사 담당자에게만 공개되어 있으며, 그 외 정보는 직원들이 열람할 수 있도록 \n"
 "공개합니다.\n"
 "\n"
-"직원 계약 내용을 기록하고 계약 갱신 시기에 알림을 전송합니다.\n"
+"직원 계약 내용을 기록하고 계약 갱신 시기에 맞추어 알림을 전송합니다.\n"
 "\n"
 "채용 프로세스 간소화\n"
 "-----------------------------------\n"
@@ -25543,7 +25571,7 @@ msgstr ""
 "-------------------------------\n"
 "\n"
 "불필요한 서류 작업을 없애고 Odoo에서 직원 경비 내역을 직접 확인하십시오.\n"
-"비용 확인이나 직원에게 환급해 줄 금액, 회계 정보 연계 및 고객 청구서 \n"
+"비용 확인이나 직원에게 환급해 줄 금액, 회계 정보 연계 및 고객용 청구서 \n"
 "재발행과 같은 전체적인 업무 흐름을 컨트롤하여 시간과 비용 낭비를 막을 수\n"
 "있습니다.\n"
 "\n"
@@ -25552,7 +25580,7 @@ msgstr ""
 "\n"
 "직원 평가 계획 및/또는 설문 조사를 기획하고 발전 현황을 검토합니다.\n"
 "인터뷰 단계를 설정해놓기만 하면 Odoo에서 인사평가 준비를 위해서 관리자\n"
-"또는 부하 직원에게 자동으로 알림을 발송합니다. 주기적으로 직원 발전 상황을\n"
+"또는 부하 직원에게 자동으로 알림을 발송합니다. 주기적으로 직원들이 발전해나가는 상황을\n"
 "확인하십시오.\n"
 "\n"
 "게임화를 통한 참여 독려\n"
@@ -25560,7 +25588,7 @@ msgstr ""
 "\n"
 "### 명확하게 목표를 정의하고 실시간으로 피드백 제공\n"
 "\n"
-"도전과 목표, 보상을 통해 성취감을 독려하십시오. 명확하게 목표를 정의하고\n"
+"도전과 목표, 보상을 통해 성취감을 가질 수 있도록 독려하십시오. 명확하게 목표를 정의하고\n"
 "실시간 피드백을 제시하며 실제 결과를 확인할 수 있게 합니다. 상위에 오른\n"
 "성과자들을 우수 성과 내역과 함께 회사 전체에 공지합니다 .\n"
 "\n"
@@ -26800,7 +26828,8 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"대상 연락처만 분개장 항목에 연결할 수 있습니다. 기존 분개장 항목에 연결된 여러 연락처를 병합하려면 관리자에게 문의하시기 바랍니다."
+"대상으로 하는 연락처만 기존 전표 항목에 연결시킬 수 있습니다. 기존 전표 항목에 연결되어 있는 복수의 연락처를 병합시키려면 관리자에게 "
+"문의하시기 바랍니다."
 
 #. module: base
 #. odoo-python

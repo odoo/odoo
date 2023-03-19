@@ -390,18 +390,18 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
 msgid "Journal"
-msgstr "분개장"
+msgstr "전표"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "분개"
+msgstr "전표입력"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "분개 항목"
+msgstr "전표 항목"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -459,8 +459,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"수동 : 재고를 평가하기위한 회계 항목이 자동으로 전기되지 않습니다. \n"
-"        자동 : 회계 항목은 제품이 회사에 들어 오거나 나갈 때 재고를 평가하기 위해 자동으로 작성됩니다."
+"수동: 재고 가치 평가에 관한 회계 전표가 자동으로 발행되지 않습니다. \n"
+"        자동: 제품이 회사에 들어 오거나 나갈 때 재고 가치 평가에 관한 전표가 자동으로 작성됩니다."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -630,7 +630,7 @@ msgstr "재고 입고 계정"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
-msgstr "재고 분개 항목"
+msgstr "재고 전표"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -922,16 +922,16 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"자동 재고 평가를 수행하면 모든 출고 재고 이동에 대한 해당 분개 항목이 이 계정에 전기됩니다. \n"
-"                  대상 위치에 특정 평가 계정이 설정되어 있지 않으면 이 범주의 모든 제품에 대한 기본값입니다. \n"
-"                  각 제품에 직접 설정할 수도 있습니다."
+"자동 재고 평가를 수행하면 모든 출고 재고 이동에 대한 전표가 이 계정에 발행됩니다. \n"
+"                  대상 위치에 특정 평가 계정이 설정되어 있지 않으면 이 카테고리 내의 모든 품목에 대한 기본값입니다. \n"
+"                  각 품목에 직접 설정할 수도 있습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "자동화 된 재고 평가를 수행 할 때 이는 재고 이동이 처리될 때 항목이 자동으로 전기되는 회계 분개입니다."
+msgstr "자동화된 재고가치 평가 시, 이 항목은 재고 이동을 진행할 때 자동으로 발행되는 회계 전표입니다."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -987,7 +987,7 @@ msgstr ""
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
-msgstr "제품 범주에 재고 분개가 정의되어 있지 않으면 계정과목표를 설치했는지 확인하십시오."
+msgstr "제품 카테고리에에 재고 전표가 정의되어 있지 않습니다. 계정과목표가 설치되어 있는지 확인하십시오."
 
 #. module: stock_account
 #. odoo-python

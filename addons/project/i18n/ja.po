@@ -6,9 +6,9 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Noma Yuki, 2023
 # 江口和志 <sandwhale1010@gmail.com>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    マイルストーンが見つかりませんでした。新しいマイルストーンを作成しましょう！\n"
+"                </p><p>\n"
+"                    成功するために到達すべき重要な進捗ポイントを管理する\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #. odoo-javascript
@@ -48,7 +55,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# 協力者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -158,7 +165,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(期限"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -606,7 +613,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "A new task will be created on the following dates:"
-msgstr ""
+msgstr "以下の日程で、新しいタスクが作成されます："
 
 #. module: project
 #. odoo-python
@@ -814,12 +821,12 @@ msgstr "全てのタスク"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "全ての内部ユーザ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
-msgstr ""
+msgstr "全てのタスク"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__planned_hours
@@ -1263,7 +1270,7 @@ msgstr "協力者"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_ids
 msgid "Collaborators"
-msgstr ""
+msgstr "協力者"
 
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
@@ -1420,7 +1427,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Create project"
-msgstr ""
+msgstr "プロジェクト作成"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1434,7 +1441,7 @@ msgstr ""
 msgid ""
 "Create projects to organize your tasks. Define a different workflow for each"
 " project."
-msgstr ""
+msgstr "プロジェクトを作成し、タスクを整理します。プロジェクトごとに異なるワークフローを定義します。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1554,7 +1561,7 @@ msgstr "顧客Eメール"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "顧客フィードバック"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -1857,7 +1864,7 @@ msgstr "ダイジェスト"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "デジタルマーケティング"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
@@ -1958,7 +1965,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Edit recurring task"
-msgstr ""
+msgstr "定期タスクを編集"
 
 #. module: project
 #. odoo-javascript
@@ -2206,7 +2213,7 @@ msgstr ""
 msgid ""
 "Grant portal users access to your project or tasks by adding them as "
 "followers."
-msgstr ""
+msgstr "ポータルユーザをフォロワーとして追加することで、プロジェクトやタスクへのアクセスを許可します。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
@@ -2506,7 +2513,7 @@ msgstr "招待対象"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "招待された内部ユーザ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -2748,7 +2755,7 @@ msgstr "遅れた活動"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "遅延マイルストーン"
 
 #. module: project
 #. odoo-python
@@ -3183,7 +3190,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found"
-msgstr ""
+msgstr "協力者が見つかりませんでした"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3203,7 +3210,7 @@ msgstr "まだデータはありません！"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid "No projects found. Let's create one!"
-msgstr ""
+msgstr "プロジェクトは見つかりませんでした。作成しましょう！"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
@@ -3353,7 +3360,7 @@ msgstr "保留"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr ""
+msgstr "予定通り"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3531,7 +3538,7 @@ msgstr "電話"
 msgid ""
 "Plan resource allocation across projects and estimate deadlines more "
 "accurately"
-msgstr ""
+msgstr "プロジェクト全体のリソース配分を計画し、納期をより正確に見積もる。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3804,7 +3811,7 @@ msgstr "プロジェクト参照可"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "プロジェクトの説明..."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -3896,7 +3903,7 @@ msgstr " %sに公開済"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr ""
+msgstr "出版"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
@@ -4183,7 +4190,7 @@ msgstr "研究"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "調査プロジェクト"
 
 #. module: project
 #. odoo-javascript
@@ -4238,7 +4245,7 @@ msgstr "土曜日"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "満足度"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__top
@@ -4396,7 +4403,7 @@ msgstr "カバーイメージを設定"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "ステータスをセット"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4484,7 +4491,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "ソフトウェア開発"
 
 #. module: project
 #. odoo-python
@@ -4690,7 +4697,7 @@ msgstr "日曜"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Tシャツプリント"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -4829,7 +4836,7 @@ msgstr "タスクブロック"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task description..."
-msgstr ""
+msgstr "タスクの説明..."
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
@@ -4965,7 +4972,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "以下のマイルストーンが追加されました："
 
 #. module: project
 #. odoo-python
@@ -5104,7 +5111,7 @@ msgstr "今週"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__subsequent
 msgid "This and following tasks"
-msgstr ""
+msgstr "このタスクとこれ以降のタスク"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -5114,7 +5121,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__this
 msgid "This task"
-msgstr ""
+msgstr "このタスク"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5235,7 +5242,7 @@ msgstr "タスクの顧客満足度を追跡"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
-msgstr ""
+msgstr "成功するために到達すべき重要な進捗ポイントを管理する"
 
 #. module: project
 #. odoo-javascript
@@ -5503,7 +5510,7 @@ msgstr "ウェブサイトメッセージ"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "ウェブサイトリニューアル"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__website_message_ids
@@ -5775,7 +5782,7 @@ msgstr "コメント"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr ""
+msgstr "例. 月次進捗会議"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5793,7 +5800,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "例. 招待を送る"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
