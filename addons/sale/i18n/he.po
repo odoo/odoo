@@ -3,7 +3,6 @@
 # 	* sale
 # 
 # Translators:
-# hed shefer <hed@laylinetech.com>, 2022
 # Lilach Gilliam <lilach@apprcase.com>, 2022
 # Ofir Blum <ofir.blum@gmail.com>, 2022
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
@@ -22,6 +21,7 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
 # NoaFarkash, 2022
+# hed shefer <hed@laylinetech.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2023\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,13 +56,6 @@ msgstr "מס' שורות"
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
 msgstr "מס' הזמנות לקוח"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "%(amount)s due %(date)s"
-msgstr "%(amount)sלתשלום  עד %(date)s"
 
 #. module: sale
 #. odoo-python
@@ -442,7 +435,7 @@ msgstr "<small><b class=\"text-muted\">תוקף ההצעה הזה יפוג בת�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr "<small><b class=\"text-muted\">היתרון שלך</b></small>"
+msgstr "<small><b class=\"text-muted\">המחיר שלך</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1690,6 +1683,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
 msgstr "תוקף הצעת מחיר"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "Expires on %(date)s"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4641,8 +4641,8 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'ממתין') ו-'הזמנה בהמתנה' או 'הזמנה' }} (ע\"פ {{ object.name or 'n/a' } "
-"})"
+"== 'pending') and 'הזמנה ממתינה' or 'הזמנה' }} (מספר {{ object.name or 'לא "
+"קיים' } })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4651,9 +4651,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.state in ('טיוטה, 'שלח') "
-"ו-(ctx.get('proforma') and 'Proforma' או 'Quotation') or 'Order' }} ( Ref {{"
-" object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'פרו-פורמה' or 'הצעת מחיר') or 'הזמנה' }} ( מספר {{"
+" object.name or 'לא קיים' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

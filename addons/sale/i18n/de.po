@@ -46,13 +46,6 @@ msgstr "Verkaufsaufträge"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s gültig bis %(date)s"
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
@@ -1019,6 +1012,11 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Steigern Sie Ihren Umsatz mit einer Vielzahl von Programmen: Gutscheine, "
+"Werbeaktionen, Geschenkkarten, Treueprogramme. Es können spezifische "
+"Bedingungen festgelegt werden (Produkte, Kunden, Mindesteinkaufsbetrag, "
+"Zeitraum). Belohnungen können Rabatte (% oder Betrag) oder kostenlose "
+"Produkte sein."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1744,6 +1742,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
 msgstr "Ablauf"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "Expires on %(date)s"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search

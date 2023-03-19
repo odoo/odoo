@@ -49,6 +49,8 @@ const dynamicSnippetOptions = options.Class.extend({
      * @override
      */
     async onBuilt() {
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_dynamic_snippet';
         // Default values depend on the templates and filters available.
         // Therefore, they cannot be computed prior the start of the option.
         await this._setOptionsDefaultValues();

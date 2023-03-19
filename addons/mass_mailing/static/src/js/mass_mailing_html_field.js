@@ -244,6 +244,7 @@ export class MassMailingHtmlField extends HtmlField {
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
+            this.wysiwyg.snippetsMenu.activateSnippet(false);
             this.onIframeUpdated();
         });
         const $previewBtn = $snippetsSideBar.find('.o_mobile_preview_btn');

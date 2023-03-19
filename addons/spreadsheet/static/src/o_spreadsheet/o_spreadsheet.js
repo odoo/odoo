@@ -893,6 +893,9 @@
     function isDefined$1(argument) {
         return argument !== undefined;
     }
+    function isNonEmptyString(str) {
+        return str !== undefined && str !== "";
+    }
     /**
      * Check if all the values of an object, and all the values of the objects inside of it, are undefined.
      */
@@ -8383,7 +8386,7 @@
         }
         onColorClick(color) {
             if (color) {
-                this.props.onColorPicked(color);
+                this.props.onColorPicked(toHex(color));
             }
         }
         getCheckMarkColor() {
@@ -8398,8 +8401,10 @@
                 this.state.isCurrentColorInvalid = true;
                 return;
             }
+            const color = toHex(this.state.currentColor);
             this.state.isCurrentColorInvalid = false;
-            this.props.onColorPicked(this.state.currentColor);
+            this.props.onColorPicked(color);
+            this.state.currentColor = color;
         }
         toggleColorPicker() {
             this.state.showGradient = !this.state.showGradient;
@@ -10036,7 +10041,7 @@
             return this.runtime.fontColor;
         }
         get secondaryFontColor() {
-            return relativeLuminance(this.primaryFontColor) <= 0.3 ? "#757575" : "#bbbbbb";
+            return relativeLuminance(this.backgroundColor) > 0.3 ? "#525252" : "#C8C8C8";
         }
         get figure() {
             return this.props.figure;
@@ -32767,6 +32772,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "CREATE_SHEET":
                     this.filterValues[cmd.sheetId] = {};
                     break;
+                case "HIDE_COLUMNS_ROWS":
+                    this.updateHiddenRows();
+                    break;
                 case "UPDATE_FILTER":
                     this.updateFilter(cmd);
                     this.updateHiddenRows();
@@ -32868,9 +32876,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         updateHiddenRows() {
             var _a, _b;
             const sheetId = this.getters.getActiveSheetId();
-            const filters = this.getters.getFilters(sheetId);
+            const filters = this.getters
+                .getFilters(sheetId)
+                .sort((filter1, filter2) => filter1.zoneWithHeaders.top - filter2.zoneWithHeaders.top);
             const hiddenRows = new Set();
             for (let filter of filters) {
+                // Disable filters whose header are hidden
+                if (this.getters.isRowHiddenByUser(sheetId, filter.zoneWithHeaders.top))
+                    continue;
+                if (hiddenRows.has(filter.zoneWithHeaders.top))
+                    continue;
                 const filteredValues = (_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[filter.id]) === null || _b === void 0 ? void 0 : _b.map(toLowerCase);
                 if (!filteredValues || !filter.filteredZone)
                     continue;
@@ -32903,7 +32918,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const valuesInFilterZone = filter.filteredZone
                             ? positions(filter.filteredZone)
                                 .map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
-                                .filter(isDefined$1)
+                                .filter(isNonEmptyString)
                             : [];
                         // In xlsx, filtered values = values that are displayed, not values that are hidden
                         const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
@@ -38175,6 +38190,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.state.menuState.parentMenu = menu;
             this.isSelectingMenu = true;
             this.openedEl = ev.target;
+            this.env.model.dispatch("STOP_EDITION");
         }
         closeMenus() {
             this.state.activeTool = "";
@@ -42454,9 +42470,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.2';
-    __info__.date = '2023-03-06T07:33:47.060Z';
-    __info__.hash = '6b4d816';
+    __info__.version = '16.0.4';
+    __info__.date = '2023-03-16T12:14:53.272Z';
+    __info__.hash = 'ebbb1f0';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
