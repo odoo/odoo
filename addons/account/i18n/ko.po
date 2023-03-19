@@ -4155,7 +4155,7 @@ msgstr "고객 참조"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Customer Reimbursement"
-msgstr ""
+msgstr "고객 환급"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -13463,6 +13463,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"상각 항목의 금액 관련 참고값\n"
+"    * 백분율: 잔액의 백분율 표시값, 0부터 100 사이로 표시.\n"
+"    * 고정값: 상각 관련 고정값. 금액이 음수인 경우에는 차변 항목으로, 양수인 경우에는 대변 항목으로 계산.\n"
+"    * 라벨링: 정규식 구분을 위한 기호는 필요하지 않으며, 정규식만 필요함. 예를 들어 다음에서 금액을 추출하려는 경우,\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"다음 내용만 입력하면 가능함.\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -13528,7 +13535,7 @@ msgstr "공급업체 지불"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "공급업체 환급"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -14208,7 +14215,7 @@ msgid ""
 "You should configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외화평가차손익 분개장'을 구성해야 합니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14217,7 +14224,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외환차익 계정'을 구성해야 합니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14226,7 +14233,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외환차손 계정'을 구성해야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -14251,14 +14258,14 @@ msgstr "우편번호 범위 종료"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[미설정]"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/grouped_view_widget.xml:0
 #, python-format
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "미리보기에서 표시되지 않습니다"
 
 #. module: account
 #. openerp-web
