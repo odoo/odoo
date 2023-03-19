@@ -48,7 +48,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                 // That is, the use case of products with more than one tax is supported.
                 let tax_ids_array = tax_ids.split(',').filter(id => id !== '').map(id => Number(id));
 
-                let baseToDiscount = order.calculate_base_amount(tax_ids_array, lines);
+                let baseToDiscount = order.calculate_base_amount(tax_ids_array, lines.filter(ll => !ll.is_program_reward && !ll.gift_card_id));
 
                 // We add the price as manually set to avoid recomputation when changing customer.
                 let discount = - pc / 100.0 * baseToDiscount;
