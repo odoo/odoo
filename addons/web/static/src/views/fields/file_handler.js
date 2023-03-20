@@ -13,7 +13,6 @@ const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 export class FileUploader extends Component {
     setup() {
         this.notification = useService("notification");
-        this.id = `o_fileupload_${++FileUploader.nextId}`;
         this.fileInputRef = useRef("fileInput");
         this.state = useState({
             isUploading: false,
@@ -63,7 +62,6 @@ export class FileUploader extends Component {
             });
             this.state.isUploading = false;
         }
-        this.fileInputRef.el.value = null;
         if (this.props.multiUpload && this.props.onUploadComplete) {
             this.props.onUploadComplete({});
         }
@@ -81,7 +79,6 @@ export class FileUploader extends Component {
 }
 
 FileUploader.template = "web.FileUploader";
-FileUploader.nextId = 0;
 FileUploader.props = {
     onClick: { type: Function, optional: true },
     onUploaded: Function,
