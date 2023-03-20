@@ -100,7 +100,7 @@ export default class ListCorePlugin extends CorePlugin {
                 const anchor = [col, row];
                 this._addList(id, definition, dataSourceId, linesNumber);
                 this._insertList(sheetId, anchor, id, linesNumber, columns);
-                this.history.update("nextId", parseInt(id, 10) + 1)
+                this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {
@@ -387,6 +387,7 @@ export default class ListCorePlugin extends CorePlugin {
                     right: anchor[0] + columns.length - 1,
                 },
             ],
+            border: "external",
         });
     }
 
@@ -406,6 +407,18 @@ export default class ListCorePlugin extends CorePlugin {
             }
             row++;
         }
+        this.dispatch("SET_FORMATTING", {
+            sheetId,
+            target: [
+                {
+                    top: anchor[1],
+                    bottom: anchor[1] + linesNumber,
+                    left: anchor[0],
+                    right: anchor[0] + columns.length - 1,
+                },
+            ],
+            border: "external",
+        });
     }
 
     /**
