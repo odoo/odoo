@@ -144,8 +144,7 @@ function getAnchorEl(el, consumeEvent) {
 function canContinue(el, step) {
     const isInDoc = el.ownerDocument.contains(el);
     const isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
-    // TODO: Take into account ".o_blockUI".
-    const isBlocked = document.body.classList.contains("o_ui_blocked");
+    const isBlocked = document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
     return (
         isInDoc &&
         isElement &&
@@ -274,7 +273,7 @@ export function compileStepAuto(stepIndex, step, options) {
             action: async () => {
                 // This delay is important for making the current set of tour tests pass.
                 // IMPROVEMENT: Find a way to remove this delay.
-                await new Promise((resolve) => browser.setTimeout(resolve));
+                await new Promise(resolve => requestAnimationFrame(resolve))
             },
         },
         {
