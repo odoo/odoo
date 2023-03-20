@@ -590,6 +590,43 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("ImageField is reset when changing record", async function (assert) {
+        const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form>
+                <field name="document" widget="image" options="{'size': [90, 90]}"/>
+            </form>`,
+        });
+
+        const list = new DataTransfer();
+        list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
+
+        async function setFiles() {
+            const fileInput = target.querySelector("input[type=file]");
+            fileInput.files = list.files;
+            fileInput.dispatchEvent(new Event("change"));
+            // It can take some time to encode the data as a base64 url
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            // Wait for a render
+            await nextTick();
+        }
+
+        assert.strictEqual(target.querySelector("input[type=file]").files.length, 0, "there shouldn't be any file");
+
+        await setFiles();
+        assert.strictEqual(target.querySelector("input[type=file]").files.length, 1, "there should be a single file");
+
+        await clickSave(target);
+        await click(target, ".o_form_button_create");
+        assert.strictEqual(target.querySelector("input[type=file]").files.length, 0, "there shouldn't be any file");
+
+        await setFiles();
+        assert.strictEqual(target.querySelector("input[type=file]").files.length, 1, "there should be a single file");
+    });
+
     QUnit.test("unique in url doesn't change on onchange", async (assert) => {
         serverData.models.partner.onchanges = {
             foo: () => {},
