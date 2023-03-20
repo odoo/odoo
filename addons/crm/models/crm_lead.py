@@ -586,19 +586,61 @@ class Lead(models.Model):
             # check the "company" email domain duplicates
             if lead.email_domain_criterion:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+<<<<<<< HEAD
                     ('email_domain_criterion', '=', lead.email_domain_criterion)
+||||||| parent of 420c0db0ab5 (temp)
+                    '|', ('email_normalized', 'ilike', email_search), ('email_from', 'ilike', email_search)
+                ])
+            if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('partner_name', 'ilike', lead.partner_name)
+                ])
+            if lead.contact_name and len(lead.contact_name) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('contact_name', 'ilike', lead.contact_name)
+=======
+                    '|', ('email_normalized', 'ilike', email_search), ('email_from', 'ilike', email_search)
+                ])
+            if lead.partner_name and len(lead.partner_name.strip()) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('partner_name', 'ilike', lead.partner_name)
+                ])
+            if lead.contact_name and len(lead.contact_name.strip()) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('contact_name', 'ilike', lead.contact_name)
+>>>>>>> 420c0db0ab5 (temp)
                 ])
             # check for "same commercial entity" duplicates
             if lead.partner_id and lead.partner_id.commercial_partner_id:
                 duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
                     ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
                 ])
+<<<<<<< HEAD
             # check the phone number duplicates, based on phone_sanitized. Only
             # exact matches are found, and the single one stored in phone_sanitized
             # in case phone and mobile are both set.
             if lead.phone_sanitized:
+||||||| parent of 420c0db0ab5 (temp)
+            if lead.phone and len(lead.phone) >= MIN_PHONE_LENGTH:
+=======
+            if lead.phone and len(lead.phone.strip()) >= MIN_PHONE_LENGTH:
+>>>>>>> 420c0db0ab5 (temp)
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+<<<<<<< HEAD
                     ('phone_sanitized', '=', lead.phone_sanitized)
+||||||| parent of 420c0db0ab5 (temp)
+                    ('phone_mobile_search', 'ilike', lead.phone)
+                ])
+            if lead.mobile and len(lead.mobile) >= MIN_PHONE_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('phone_mobile_search', 'ilike', lead.mobile)
+=======
+                    ('phone_mobile_search', 'ilike', lead.phone)
+                ])
+            if lead.mobile and len(lead.mobile.strip()) >= MIN_PHONE_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('phone_mobile_search', 'ilike', lead.mobile)
+>>>>>>> 420c0db0ab5 (temp)
                 ])
 
             lead.duplicate_lead_ids = duplicate_lead_ids + lead

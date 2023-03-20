@@ -71,12 +71,75 @@ class TestCRMLead(TestCrmCommon):
             'phone': '+1 202 555 0123',
             'type': 'lead',
         })
+<<<<<<< HEAD
         cls.lead_company = cls.env['crm.lead'].create({
             'country_id': country_us_id,
             'email_from': 'floppy@MYCOMPANY.com',
             'mobile': '+1 202 666 4567',
             'partner_id': False,
             'name': 'CompanyMail 1',
+||||||| parent of 420c0db0ab5 (temp)
+
+        self.assertEqual(base_lead.contact_name, customer.name)
+        self.assertEqual(base_lead.mobile, customer.mobile)
+        self.assertFalse(base_lead.partner_name)
+        self.assertEqual(base_lead.phone, customer.phone)
+
+        dup1_1 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup1',
+            'type': 'lead',
+            'phone': '456-6126',  # shorter version of base_lead
+            'partner_name': 'Partner Name 1',
+        })
+        dup1_2 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup2',
+            'mobile': '8034566126',
+            'partner_name': 'Partner Name 2',
+            'type': 'lead',
+        })
+        dup1_3 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup3',
+            'partner_name': 'Partner Name 3',
+            'phone': '(803)-456-6126',
+            'type': 'lead',
+        })
+        dup1_4 = self.env['crm.lead'].create({
+            'mobile': '0032485001122',
+            # 'mobile': '0485001122',  # note: does not work
+            'name': 'Base Lead Dup4',
+            'partner_name': 'Partner Name 4',
+=======
+
+        self.assertEqual(base_lead.contact_name, customer.name)
+        self.assertEqual(base_lead.mobile, customer.mobile)
+        self.assertFalse(base_lead.partner_name)
+        self.assertEqual(base_lead.phone, customer.phone)
+
+        dup1_1 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup1',
+            'type': 'lead',
+            'phone': '456-6126',  # shorter version of base_lead
+            'mobile': '             ', # empty string shouldn't crash Odoo
+            'partner_name': 'Partner Name 1',
+        })
+        dup1_2 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup2',
+            'mobile': '8034566126',
+            'partner_name': 'Partner Name 2',
+            'type': 'lead',
+        })
+        dup1_3 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup3',
+            'partner_name': 'Partner Name 3',
+            'phone': '(803)-456-6126',
+            'type': 'lead',
+        })
+        dup1_4 = self.env['crm.lead'].create({
+            'mobile': '0032485001122',
+            # 'mobile': '0485001122',  # note: does not work
+            'name': 'Base Lead Dup4',
+            'partner_name': 'Partner Name 4',
+>>>>>>> 420c0db0ab5 (temp)
             'phone': False,
             'type': 'lead',
         })
