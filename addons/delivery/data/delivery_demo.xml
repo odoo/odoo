@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <!-- Carrier -->
 
@@ -71,5 +70,5 @@
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
             <field name="value" eval="'delivery.carrier,'+str(ref('delivery_local_delivery'))"/>
         </record>
-    </data>
+
 </odoo>
