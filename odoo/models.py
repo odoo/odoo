@@ -1832,8 +1832,7 @@ class BaseModel(metaclass=MetaModel):
                 )]
             return []
 
-        query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
+        query = self._search(domain)
 
         fnames_to_flush = OrderedSet()
         groupby_terms = []  # [<SQL expression>,]
@@ -1877,7 +1876,7 @@ class BaseModel(metaclass=MetaModel):
 
         self._flush_search(domain, fnames_to_flush)
         if fnames_to_flush:
-            self.check_field_access_rights('read', fnames_to_flush)
+            self._read_group_check_field_access_rights(fnames_to_flush)
 
         self.env.cr.execute('\n'.join(query_parts), query_params)
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
@@ -2057,6 +2056,11 @@ class BaseModel(metaclass=MetaModel):
                 orderby_terms.append(f'{sql_expression} {order_direction} {order_nulls}')
 
         return orderby_terms, extra_groupby_terms, fnames_used
+
+    @api.model
+    def _read_group_check_field_access_rights(self, field_names):
+        """ Check whether the given field names can be grouped or aggregated. """
+        self.check_field_access_rights('read', field_names)
 
     @api.model
     def _read_group_empty_value(self, spec):
