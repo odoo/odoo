@@ -26,6 +26,7 @@ from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
+from struct import error as StructError
 
 # Ignore a deprecation warning `load_module` usage in importlib from python 3.10 (Jammy)
 # Catched here in order to not miss the same warning from elsewhere
@@ -785,10 +786,15 @@ class IrActionsReport(models.Model):
             result_stream = io.BytesIO()
             try:
                 reader = PdfFileReader(stream)
+                if reader.isEncrypted:
+                    # If the PDF is owner-encrypted, try to unwrap it by giving it an empty user password.
+                    reader.decrypt('')
                 writer.appendPagesFromReader(reader)
                 writer.write(result_stream)
             except utils.PdfReadError:
                 unreadable_streams.append(stream)
+            except (NotImplementedError, StructError) as e:
+                _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", self, e)
 
         return unreadable_streams
 
