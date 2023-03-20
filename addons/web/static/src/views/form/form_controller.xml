@@ -25,7 +25,7 @@
 
                     <t t-set-slot="control-panel-additional-actions">
                         <t t-if="props.info.actionMenus">
-                            <ActionMenus
+                            <CombinedActionMenus
                                 getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
                                 context="props.context"
                                 items="actionMenuItems"
