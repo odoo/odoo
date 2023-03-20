@@ -451,7 +451,7 @@ export class HtmlField extends Component {
                     cwindow.document.head.append(link);
                 }
                 for (const cssContent of asset.cssContents) {
-                    const style = cwindow.document.createElement('link');
+                    const style = cwindow.document.createElement('style');
                     style.setAttribute('type', 'text/css');
                     const textNode = cwindow.document.createTextNode(cssContent);
                     style.append(textNode);
