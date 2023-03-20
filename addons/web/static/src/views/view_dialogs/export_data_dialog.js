@@ -64,14 +64,20 @@ export class ExportDataDialog extends Component {
         this.knownFields = {};
         this.expandedFields = {};
         this.availableFormats = [];
+        this.translationFormats = [
+            { tag: "po", label: "PO" },
+            { tag: "csv", label: "CSV" },
+        ];
         this.templates = [];
 
         this.state = useState({
             exportList: [],
             isCompatible: false,
+            isTranslatable: false,
             isEditingTemplate: false,
             search: [],
             selectedFormat: 0,
+            selectedTranslationFormat: 0,
             templateId: null,
             isSmall: this.env.isSmall,
         });
@@ -308,6 +314,12 @@ export class ExportDataDialog extends Component {
             this.state.isCompatible,
             this.availableFormats[this.state.selectedFormat].tag
         );
+        if (this.state.isCompatible && this.state.isTranslatable) {
+            await this.props.downloadTranslation(
+                this.state.exportList,
+                this.translationFormats[this.state.selectedTranslationFormat].tag
+            );
+        }
     }
 
     async onDeleteExportTemplate() {
@@ -339,6 +351,10 @@ export class ExportDataDialog extends Component {
         await this.fetchFields();
     }
 
+    async onToggleTranslatableExport(value) {
+        this.state.isTranslatable = value;
+    }
+
     async onToggleExpandField(ev) {
         const id = ev.target.closest(".o_export_tree_item").dataset.field_id;
         const fields = await this.loadFields(id);
@@ -358,6 +374,14 @@ export class ExportDataDialog extends Component {
     setFormat(ev) {
         if (ev.target.checked) {
             this.state.selectedFormat = this.availableFormats.findIndex(
+                ({ tag }) => tag === ev.target.value
+            );
+        }
+    }
+
+    setTranslationFormat(ev) {
+        if (ev.target.checked) {
+            this.state.selectedTranslationFormat = this.translationFormats.findIndex(
                 ({ tag }) => tag === ev.target.value
             );
         }

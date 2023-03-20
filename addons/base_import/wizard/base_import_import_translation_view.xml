@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_import_import_translation" model="ir.ui.view">
+            <field name="name">Import Translation</field>
+            <field name="model">base_import.import.translation</field>
+            <field name="arch" type="xml">
+                <form string="Import Translation">
+                    <group>
+                        <field name="lang_id"/>
+                        <field name="data" filename="filename"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="import_lang" string="Import" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

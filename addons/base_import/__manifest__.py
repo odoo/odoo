@@ -28,6 +28,7 @@ Re-implement Odoo's file import system:
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
+        'wizard/base_import_import_translation_view.xml',
     ],
     'assets': {
         'web.assets_backend': [
