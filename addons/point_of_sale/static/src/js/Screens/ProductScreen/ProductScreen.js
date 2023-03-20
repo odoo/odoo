@@ -3,12 +3,11 @@
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
+import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
 import { parse } from "web.field_utils";
 
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
 import { ControlButtonPopup } from "@point_of_sale/js/Popups/ControlButtonPopup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
@@ -49,7 +48,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             price: this._barcodeProductAction,
             client: this._barcodePartnerAction,
             discount: this._barcodeDiscountAction,
-            error: this._barcodeErrorAction,
         });
         this.state = useState({
             mobile_pane: this.props.mobile_pane || "right",
@@ -184,19 +182,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         var last_orderline = this.currentOrder.get_last_orderline();
         if (last_orderline) {
             last_orderline.set_discount(code.value);
-        }
-    }
-    // IMPROVEMENT: The following two methods should be in PosScreenComponent?
-    // Why? Because once we start declaring barcode actions in different
-    // screens, these methods will also be declared over and over.
-    _barcodeErrorAction(code) {
-        this.popup.add(ErrorBarcodePopup, { code: this._codeRepr(code) });
-    }
-    _codeRepr(code) {
-        if (code.code.length > 32) {
-            return code.code.substring(0, 29) + "...";
-        } else {
-            return code.code;
         }
     }
     async _displayAllControlPopup() {
