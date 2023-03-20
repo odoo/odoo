@@ -33,9 +33,9 @@ QUnit.test("reply: discard on reply button toggle", async (assert) => {
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
 
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.containsOnce($, ".o-mail-Composer");
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.containsNone($, ".o-mail-Composer");
 });
 
@@ -59,7 +59,7 @@ QUnit.test("reply: discard on click away", async (assert) => {
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
 
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.containsOnce($, ".o-mail-Composer");
 
     $(".o-mail-Composer-input")[0].click();
@@ -100,7 +100,7 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
 
-    await click(".o-mail-Message-actions i[aria-label='Reply']");
+    await click(".o-mail-Message [title='Reply']");
     assert.containsOnce($, ".o-mail-Composer");
 
     // Escape on emoji picker does not stop replying
@@ -153,7 +153,7 @@ QUnit.test(
         await openDiscuss();
         assert.containsOnce($, ".o-mail-Message");
 
-        await click("i[aria-label='Reply']");
+        await click("[title='Reply']");
         await insertText(".o-mail-Composer-input", "Test");
         await click(".o-mail-Composer-send");
         assert.verifySteps(["/mail/message/post"]);
@@ -191,7 +191,7 @@ QUnit.test(
         await openDiscuss();
         assert.containsOnce($, ".o-mail-Message");
 
-        await click("i[aria-label='Reply']");
+        await click("[title='Reply']");
         assert.strictEqual($(".o-mail-Composer-send").text().trim(), "Send");
 
         await insertText(".o-mail-Composer-input", "Test");
@@ -563,7 +563,7 @@ QUnit.test("reply: stop replying button click", async (assert) => {
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
 
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.containsOnce($, ".o-mail-Composer");
     assert.containsOnce($, "i[title='Stop replying']");
 

@@ -239,7 +239,8 @@ QUnit.test("Message delete notification", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    await click("i[aria-label='Mark as Todo']");
+    await click("[title='Expand']");
+    await click("[title='Mark as Todo']");
     assert.containsOnce($, "button:contains(Inbox) .badge");
     assert.containsOnce($, "button:contains(Starred) .badge");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartnerId, "mail.message/delete", {
