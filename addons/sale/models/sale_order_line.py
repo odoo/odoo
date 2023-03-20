@@ -674,7 +674,7 @@ class SaleOrderLine(models.Model):
         """
         # compute for analytic lines
         lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
-        mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
+        mapping = lines_by_analytic._get_delivered_quantity_by_analytic([])
         for so_line in lines_by_analytic:
             so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
 
@@ -705,20 +705,20 @@ class SaleOrderLine(models.Model):
 
         # group analytic lines by product uom and so line
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
-        data = self.env['account.analytic.line']._read_group(
-            domain,
-            ['product_uom_id', 'so_line'], ['unit_amount:sum'],
-        )
-
-        for uom, so_line, unit_amount_sum in data:
-            if not uom:
+        analytic_lines = self.env['account.analytic.line'].search(domain)
+        for line in analytic_lines:
+            if not line.product_uom_id:
                 continue
-            result.setdefault(so_line.id, 0.0)
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(unit_amount_sum, so_line.product_uom, rounding_method='HALF-UP')
+            result.setdefault(line.so_line.id, 0.0)
+            if line.so_line.product_uom.category_id == line.product_uom_id.category_id:
+                qty = line.product_uom_id._compute_quantity(line.unit_amount, line.so_line.product_uom, rounding_method='HALF-UP')
             else:
-                qty = unit_amount_sum
-            result[so_line.id] += qty
+                qty = line.unit_amount
+
+            # if greater than 0 -> refund
+            sign = line.amount and -line.amount / abs(line.amount) or 1
+
+            result[line.so_line.id] += sign * qty
 
         return result
 
