@@ -10,7 +10,9 @@ import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@odoo/owl";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 
-export function useCashierSelector({ onCashierChanged } = { onCashierChanged: () => {} }) {
+export function useCashierSelector(
+    { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }
+) {
     const popup = useService("popup");
     const env = useEnv();
     useBarcodeReader(
@@ -32,7 +34,7 @@ export function useCashierSelector({ onCashierChanged } = { onCashierChanged: ()
                 return employee;
             },
         },
-        true
+        exclusive
     );
 
     async function checkPin(employee) {

@@ -11,6 +11,7 @@ export class LoginScreen extends Component {
         super.setup(...arguments);
         this.selectCashier = useCashierSelector({
             onCashierChanged: () => this.back(),
+            exclusive: true, // takes exclusive control on the barcode reader
         });
         this.pos = usePos();
     }
