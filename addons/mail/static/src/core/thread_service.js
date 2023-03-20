@@ -481,17 +481,13 @@ export class ThreadService {
                 "name",
                 "state",
                 "group_based_subscription",
+                "last_interest_dt",
             ]);
             if (thread.model === "mail.channel" && serverData.channel) {
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
             }
 
             thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
-            if (serverData.last_interest_dt) {
-                thread.lastInterestDateTime = luxon.DateTime.fromISO(
-                    new Date(serverData.last_interest_dt).toISOString()
-                );
-            }
             if (serverData.channel && "serverMessageUnreadCounter" in serverData.channel) {
                 thread.serverMessageUnreadCounter = serverData.channel.serverMessageUnreadCounter;
             }
