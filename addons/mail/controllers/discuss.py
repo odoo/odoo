@@ -415,9 +415,9 @@ class DiscussController(http.Controller):
         return messages.message_format()
 
     @http.route('/mail/channel/set_last_seen_message', methods=['POST'], type='json', auth='public')
-    def mail_channel_mark_as_seen(self, channel_id, last_message_id, **kwargs):
+    def mail_channel_mark_as_seen(self, channel_id, last_message_id, allow_older=False, **kwargs):
         channel_member_sudo = request.env['mail.channel.member']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        return channel_member_sudo.channel_id._channel_seen(int(last_message_id))
+        return channel_member_sudo.channel_id._channel_seen(last_message_id, allow_older=allow_older)
 
     @http.route('/mail/channel/notify_typing', methods=['POST'], type='json', auth='public')
     def mail_channel_notify_typing(self, channel_id, is_typing, **kwargs):

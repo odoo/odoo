@@ -65,7 +65,7 @@ export class Thread {
     messages = [];
     /** @type {string} */
     name;
-    /** @type {number} */
+    /** @type {number|false} */
     serverLastSeenMsgBySelf;
     /** @type {'opened' | 'folded' | 'closed'} */
     state;
@@ -402,5 +402,13 @@ export class Thread {
      */
     getMemberName(persona) {
         return persona.name;
+    }
+
+    getPreviousMessage(message) {
+        const previousMessages = this.nonEmptyMessages.filter(({ id }) => id < message.id);
+        if (previousMessages.length === 0) {
+            return false;
+        }
+        return this._store.messages[Math.max(...previousMessages.map((m) => m.id))];
     }
 }

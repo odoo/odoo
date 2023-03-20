@@ -805,7 +805,7 @@ export class ThreadService {
             if (message.id <= thread.serverLastSeenMsgBySelf) {
                 continue;
             }
-            if (message.isSelfAuthored || message.isTransient) {
+            if (message.isTransient) {
                 lastSeenMessageId = message.id;
                 continue;
             }

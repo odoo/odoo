@@ -88,6 +88,7 @@ export class Message extends Component {
         this.messageBody = useRef("body");
         this.messaging = useMessaging();
         this.store = useStore();
+        this.rpc = useService("rpc");
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         /** @type {import("@mail/core/message_service").MessageService} */
@@ -314,6 +315,19 @@ export class Message extends Component {
         if (this.message.author && this.hasAuthorClickable && this.hasOpenChatFeature) {
             this.openChatAvatar(ev);
         }
+    }
+
+    onClickMarkAsUnread() {
+        const previousMessageId =
+            this.message.originThread.getPreviousMessage(this.message)?.id ?? false;
+        if (this.threadService.lastSeenBySelfMessageId(this.props.thread) === previousMessageId) {
+            return;
+        }
+        return this.rpc("/mail/channel/set_last_seen_message", {
+            channel_id: this.message.originThread.id,
+            last_message_id: previousMessageId,
+            allow_older: true,
+        });
     }
 
     get authorText() {

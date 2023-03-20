@@ -596,7 +596,7 @@ QUnit.test(
 );
 
 QUnit.test(
-    "new message separator is not shown in a chat window of a chat on receiving new message if there is no history of conversation",
+    "new message separator is shown in chat window of chat on receiving new message when there was no history",
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -621,7 +621,7 @@ QUnit.test(
                 uuid: "channel-10-uuid",
             })
         );
-        assert.containsNone($, "hr + span:contains(New messages)");
+        assert.containsOnce($, "hr + span:contains(New messages)");
     }
 );
 

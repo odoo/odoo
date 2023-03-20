@@ -146,6 +146,8 @@
                                     <i t-if="env.inChatWindow" class="cursor-pointer px-1 py-2 fa fa-lg fa-ellipsis-h order-1"
                                         t-on-click="() => state.isActionListSquashed = !state.isActionListSquashed" role="button" tabindex="1" title="Compact" aria-label="Compact"/>
                                     <t t-if="!env.inChatWindow or !state.isActionListSquashed">
+                                        <i t-if="props.thread.model === 'mail.channel'" class="cursor-pointer px-1 py-2 fa fa-lg fa-eye-slash" t-on-click="onClickMarkAsUnread"
+                                            role="button" tabindex="0" title="Mark as Unread" aria-label="Mark as Unread"/>
                                         <i t-if="canToggleStar" class="cursor-pointer px-1 py-2 fa fa-lg"
                                             t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"
                                             t-on-click="() => messageService.toggleStar(props.message)"

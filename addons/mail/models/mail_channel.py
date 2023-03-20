@@ -962,21 +962,26 @@ class Channel(models.Model):
         else:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.channel/legacy_insert', self.channel_info()[0])
 
-    def _channel_seen(self, last_message_id=None):
+    def _channel_seen(self, last_message_id=None, allow_older=False):
         """
         Mark channel as seen by updating seen message id of the current logged partner
         :param last_message_id: the id of the message to be marked as seen, last message of the
         thread by default. This param SHOULD be required, the default behaviour is DEPRECATED and
         kept only for compatibility reasons.
+        :param allow_order: whether to allow setting and older message
+        as the last seen message.
         """
         self.ensure_one()
         domain = ["&", ("model", "=", "mail.channel"), ("res_id", "in", self.ids)]
         if last_message_id:
-            domain = expression.AND([domain, [('id', '<=', last_message_id)]])
-        last_message = self.env['mail.message'].search(domain, order="id DESC", limit=1)
-        if not last_message:
+            domain = expression.AND([domain, [('id', '<=', int(last_message_id))]])
+        last_message = (
+            self.env["mail.message"] if last_message_id is False
+            else self.env['mail.message'].search(domain, order="id DESC", limit=1)
+        )
+        if last_message_id is not False and not last_message:
             return
-        self._set_last_seen_message(last_message)
+        self._set_last_seen_message(last_message, allow_older=allow_older)
         data = {
             'channel_id': self.id,
             'last_message_id': last_message.id,
@@ -986,22 +991,24 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(target, 'mail.channel.member/seen', data)
         return last_message.id
 
-    def _set_last_seen_message(self, last_message):
+    def _set_last_seen_message(self, last_message, allow_older=False):
         """
         Set last seen message of `self` channels for the current user.
         :param last_message: the message to set as last seen message
+        :param allow_order: whether to allow setting and older message
+        as the last seen message.
         """
         channel_member_domain = expression.AND([
             [('channel_id', 'in', self.ids)],
             [('partner_id', '=', self.env.user.partner_id.id)],
-            expression.OR([
+            [] if allow_older else expression.OR([
                 [('seen_message_id', '=', False)],
                 [('seen_message_id', '<', last_message.id)]
             ])
         ])
         member = self.env['mail.channel.member'].search(channel_member_domain)
         member.write({
-            'fetched_message_id': last_message.id,
+            'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
             'seen_message_id': last_message.id,
             'last_seen_dt': fields.Datetime.now(),
         })
