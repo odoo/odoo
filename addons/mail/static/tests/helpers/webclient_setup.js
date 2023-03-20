@@ -156,7 +156,7 @@ export const setupManager = {
  * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
  * to the webClient as a legacy parameter.
  */
-async function setupMessagingServiceRegistries({
+export async function setupMessagingServiceRegistries({
     loadingBaseDelayDuration = 0,
     messagingBus,
     services,
