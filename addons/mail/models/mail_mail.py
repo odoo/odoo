@@ -262,7 +262,7 @@ class MailMail(models.Model):
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
         if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
-            self.filtered(lambda mail: mail.auto_delete).unlink()
+            self.sudo().filtered(lambda mail: mail.auto_delete).unlink()
 
         return True
 
