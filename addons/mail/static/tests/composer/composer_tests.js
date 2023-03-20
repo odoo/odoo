@@ -248,11 +248,11 @@ QUnit.test(
         await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
         $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
-        await click("i[title='Add a Reaction']");
+        await click("[title='Add a Reaction']");
         $(".o-mail-EmojiPicker-content")[0].scrollTop = 200;
         await click("button[aria-label='Emojis']");
         assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 150);
-        await click("i[title='Add a Reaction']");
+        await click("[title='Add a Reaction']");
         assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 200);
     }
 );
@@ -752,7 +752,7 @@ QUnit.test("composer: add an attachment in reply to message in history", async (
     });
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     const file = await createFile({
         content: "hello, world",
         contentType: "text/plain",
@@ -849,7 +849,7 @@ QUnit.test("Replying on a channel should focus composer initially", async (asser
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 });
 

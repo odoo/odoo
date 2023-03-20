@@ -134,33 +134,28 @@
                                     'mt-n3': env.inChatWindow,
                                     'ms-2': env.inDiscussApp,
                                     'invisible': !isActive,
+                                    'o-expanded': state.expandOptions
                                 }"
                             >
-                                <div class="d-flex rounded-1 shadow-sm overflow-hidden alignedRight px-2" t-att-class="{
+                                <div class="d-flex rounded-1 shadow-sm overflow-hidden alignedRight" t-att-class="{
                                         'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification),
                                         'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                     }"
                                 >
-                                    <i t-if="canAddReaction" class="cursor-pointer px-1 py-2 fa fa-lg fa-smile-o"
-                                        role="button" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"/>
-                                    <i t-if="env.inChatWindow" class="cursor-pointer px-1 py-2 fa fa-lg fa-ellipsis-h order-1"
-                                        t-on-click="() => state.isActionListSquashed = !state.isActionListSquashed" role="button" tabindex="1" title="Compact" aria-label="Compact"/>
-                                    <t t-if="!env.inChatWindow or !state.isActionListSquashed">
-                                        <i t-if="props.thread.model === 'mail.channel'" class="cursor-pointer px-1 py-2 fa fa-lg fa-eye-slash" t-on-click="onClickMarkAsUnread"
-                                            role="button" tabindex="0" title="Mark as Unread" aria-label="Mark as Unread"/>
-                                        <i t-if="canToggleStar" class="cursor-pointer px-1 py-2 fa fa-lg"
-                                            t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"
-                                            t-on-click="() => messageService.toggleStar(props.message)"
-                                            role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"/>
-                                        <i t-if="deletable" class="cursor-pointer px-1 py-2 fa fa-lg fa-trash" t-on-click="onClickDelete"
-                                            role="button" tabindex="0" title="Delete" aria-label="Delete"/>
-                                        <i t-if="editable" class="cursor-pointer px-1 py-2 fa fa-lg fa-pencil" t-on-click="onClickEdit"
-                                            role="button" tabindex="1" title="Edit" aria-label="Edit"/>
-                                        <i t-if="canReplyTo" class="cursor-pointer px-1 py-2 fa fa-lg fa-reply" t-on-click.stop="onClickReplyTo"
-                                            role="button" tabindex="1" title="Reply" aria-label="Reply"/>
-                                        <i t-if="isInInbox" class="cursor-pointer px-1 py-2 fa fa-lg fa-check" t-on-click="() => messageService.setDone(props.message)"
-                                            role="button" tabindex="0" title="Mark as Read" aria-label="Mark as Read"/>
-                                    </t>
+                                    <button t-if="canAddReaction" class="btn px-1 py-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
+                                    <button t-if="canReplyTo" class="btn px-1 py-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
+                                    <button t-if="canToggleStar" class="btn px-1 py-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
+                                    <Dropdown t-if="editable or deletable or isInInbox or props.thread.model === 'mail.channel'" onStateChanged="state => this.state.expandOptions = state.open" position="props.thread?.mostRecentMsg === props.message ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex'" title="expandText">
+                                        <t t-set-slot="toggler">
+                                            <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                                        </t>
+                                        <t t-set-slot="default">
+                                            <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center'" title="'Mark as Read'" onSelected="() => messageService.setDone(props.message)"><i class="fa fa-lg fa-check pe-2"/>Mark as Read</DropdownItem>
+                                            <DropdownItem t-if="props.thread.model === 'mail.channel'" class="'px-2 d-flex align-items-center'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
+                                            <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-pencil pe-2"/>Edit</DropdownItem>
+                                            <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-trash pe-2"/>Delete</DropdownItem>                                            
+                                        </t>
+                                    </Dropdown>
                                 </div>
                             </div>
                         </div>

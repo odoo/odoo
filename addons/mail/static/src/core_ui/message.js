@@ -29,6 +29,8 @@ import { MessageNotificationPopover } from "./message_notification_popover";
 import { MessageSeenIndicator } from "./message_seen_indicator";
 import { _t } from "@web/core/l10n/translation";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { url } from "@web/core/utils/urls";
 
@@ -48,6 +50,8 @@ export class Message extends Component {
         ActionSwiper,
         AttachmentList,
         Composer,
+        Dropdown,
+        DropdownItem,
         LinkPreviewList,
         MessageInReply,
         MessageReactions,
@@ -79,7 +83,7 @@ export class Message extends Component {
             isEditing: false,
             isHovered: false,
             isClicked: false,
-            isActionListSquashed: this.env.inChatWindow,
+            expandOptions: false,
             lastReadMoreIndex: 0,
             isReadMoreByIndex: new Map(),
         });
@@ -161,6 +165,10 @@ export class Message extends Component {
             return url("/mail/static/src/img/email_icon.png");
         }
         return this.threadService.avatarUrl(this.message.author, this.props.message.originThread);
+    }
+
+    get expandText() {
+        return _t("Expand");
     }
 
     get message() {
@@ -247,7 +255,12 @@ export class Message extends Component {
     }
 
     get isActive() {
-        return this.state.isHovered || this.state.isClicked || this.emojiPicker?.isOpen;
+        return (
+            this.state.isHovered ||
+            this.state.isClicked ||
+            this.emojiPicker?.isOpen ||
+            this.state.expandOptions
+        );
     }
 
     get isAlignedRight() {

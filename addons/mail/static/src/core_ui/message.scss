@@ -47,11 +47,19 @@
 }
 
 .o-mail-Message-actions {
-    z-index: $o-mail-NavigableList-zIndex - 1;
+    z-index: $o-mail-NavigableList-zIndex - 2;
 
-    i:hover {
-        background-color: $o-gray-300;
+    &.o-expanded {
+        z-index: $o-mail-NavigableList-zIndex - 1;
     }
+
+    button:hover, .focus {
+        background-color: $o-gray-300 !important;
+    }
+}
+
+.o-mail-Message-moreMenu {
+    z-index: $o-mail-NavigableList-zIndex;
 }
 
 .o-mail-Message-starred {
