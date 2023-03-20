@@ -143,9 +143,15 @@
                                 >
                                     <i t-if="canAddReaction" class="cursor-pointer px-1 py-2 fa fa-lg fa-smile-o"
                                         role="button" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"/>
-                                    <i t-if="env.inChatWindow" class="cursor-pointer px-1 py-2 fa fa-lg fa-ellipsis-h order-1"
-                                        t-on-click="() => state.isActionListSquashed = !state.isActionListSquashed" role="button" tabindex="1" title="Compact" aria-label="Compact"/>
-                                    <t t-if="!env.inChatWindow or !state.isActionListSquashed">
+                                    <i t-if="canReplyTo" class="cursor-pointer px-1 py-2 fa fa-lg fa-reply" t-on-click.stop="onClickReplyTo"
+                                        role="button" tabindex="1" title="Reply" aria-label="Reply"/>
+                                    <t t-set="compactText">
+                                        <t t-if="state.isActionListSquashed">Compact</t>
+                                        <t t-else="">Expand</t>
+                                    </t>
+                                    <i class="cursor-pointer px-1 py-2 fa fa-lg fa-ellipsis-h order-1"
+                                        t-on-click="() => state.isActionListSquashed = !state.isActionListSquashed" role="button" tabindex="1" t-att-title="compactText" t-att-aria-label="compactText"/>
+                                    <t t-if="!state.isActionListSquashed">
                                         <i t-if="canToggleStar" class="cursor-pointer px-1 py-2 fa fa-lg"
                                             t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"
                                             t-on-click="() => messageService.toggleStar(props.message)"
@@ -154,8 +160,6 @@
                                             role="button" tabindex="0" title="Delete" aria-label="Delete"/>
                                         <i t-if="editable" class="cursor-pointer px-1 py-2 fa fa-lg fa-pencil" t-on-click="onClickEdit"
                                             role="button" tabindex="1" title="Edit" aria-label="Edit"/>
-                                        <i t-if="canReplyTo" class="cursor-pointer px-1 py-2 fa fa-lg fa-reply" t-on-click.stop="onClickReplyTo"
-                                            role="button" tabindex="1" title="Reply" aria-label="Reply"/>
                                         <i t-if="isInInbox" class="cursor-pointer px-1 py-2 fa fa-lg fa-check" t-on-click="() => messageService.setDone(props.message)"
                                             role="button" tabindex="0" title="Mark as Read" aria-label="Mark as Read"/>
                                     </t>
