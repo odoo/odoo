@@ -515,7 +515,7 @@ QUnit.test("basic rendering of message", async (assert) => {
         deserializeDateTime("2019-04-20 10:00:00").toLocaleString(DateTime.DATETIME_SHORT)
     );
     assert.containsOnce($message, ".o-mail-Message-actions");
-    assert.containsN($message, ".o-mail-Message-actions i", 3);
+    assert.containsN($message, ".o-mail-Message-actions i", 4);
     assert.containsOnce($message, "i[aria-label='Add a Reaction']");
     assert.containsOnce($message, "i[aria-label='Mark as Todo']");
     assert.containsOnce($message, "i[aria-label='Reply']");
@@ -1384,4 +1384,19 @@ QUnit.test("Can reply to chatter messages from history", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
     assert.containsOnce($, ".o-mail-Message-actions [title='Reply']");
+});
+
+QUnit.test("Mark as unread", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ channel_type: "chat", name: "General" });
+    pyEnv["mail.message"].create({
+        model: "mail.channel",
+        res_id: channelId,
+        body: "Hello World!",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("[title='Mark as Unread']");
+    assert.containsOnce($, ".o-mail-Thread-newMessage");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem .badge:contains(1)");
 });

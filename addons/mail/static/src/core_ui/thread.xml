@@ -20,6 +20,11 @@
                         </div>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
+                    <Transition visible="threadService.lastSeenBySelfMessageId(props.thread) === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
+                        <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
+                            <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
+                        </div>
+                    </Transition>
                     <t t-if="msg.isNotification">
                         <t t-call="mail.NotificationMessage"/>
                     </t>
@@ -33,11 +38,6 @@
                         thread="props.thread"
                         messageEdition="props.messageEdition"
                     />
-                    <Transition visible="threadService.lastSeenBySelfMessageId(props.thread) === msg.id and !msg_last" name="'o-fade'" t-slot-scope="transition">
-                        <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
-                            <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
-                        </div>
-                    </Transition>
                     <t t-set="prevMsg" t-value="msg"/>
                 </t>
                 <t t-if="props.order !== 'asc'">
