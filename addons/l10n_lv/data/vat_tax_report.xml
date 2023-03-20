@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo noupdate="1">
+
+    <!--Tags-->
+
+    <record id="l10n_lv_vat_main_tax_report" model="account.report">
+        <field name="name">VAT Tax report Simple</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.lv"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="line_ids">
+            <record id="l10n_lv_vat_main_tax_report_balance" model="account.report.column">
+                <field name="name">balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+
+            <record id="l10n_lv_main_tax_report_sum" model="account.report.line">
+                <field name="name">[40] TOTAL VALUE OF ACTIVITIES, of which</field>
+                <field name="code">LV_40</field>
+                <field name="aggregation_formula">
+                    LV_41.balance+LV_411.balance+LV_42.balance+LV_421.balance+LV_43.balance+LV_482.balance
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_41" model="account.report.line">
+                <field name="name">[41] Transactions subject to the standard rate of VAT</field>
+                <field name="code">LV_41</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_41_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">41</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_411" model="account.report.line">
+                <field name="name">[411] Domestic transactions on which the recipient of the goods or services pays the
+                    tax
+                </field>
+                <field name="code">LV_411</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_411_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">411</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_42" model="account.report.line">
+                <field name="name">[42] Transactions subject to VAT at 12%</field>
+                <field name="code">LV_42</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_42_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">42</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_421" model="account.report.line">
+                <field name="name">[421] Transactions subject to VAT at 5%</field>
+                <field name="code">LV_421</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_421_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">421</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_43" model="account.report.line">
+                <field name="name">[43] Transactions subject to VAT at 0%, including</field>
+                <field name="code">LV_43</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_43_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">43</field>
+                    </record>
+                    <record id="l10n_lv_tax_report_48_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">48</field>
+                    </record>
+                    <record id="l10n_lv_tax_report_481_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">481</field>
+                    </record>
+                    <record id="l10n_lv_tax_report_45_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">45</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_44" model="account.report.line">
+                <field name="name">[44] transactions carried out in free ports and SEZ</field>
+                <field name="code">LV_44</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_44_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">44</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_45" model="account.report.line">
+                <field name="name">[45] Goods supplied to EU Member States, other than those referred to in Article
+                    42(16) of the Law
+                </field>
+                <field name="code">LV_45</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_45_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">45</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_451" model="account.report.line">
+                <field name="name">[451] Goods supplied to EU Member States as referred to in Article 42(16) of the Law
+                </field>
+                <field name="code">LV_451</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_45_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">451</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_46" model="account.report.line">
+                <field name="name">[46] supplies of non-Community goods in customs warehouses and free zones</field>
+                <field name="code">LV_46</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_46_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">46</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_47" model="account.report.line">
+                <field name="name">[47] new vehicles delivered to EU Member States</field>
+                <field name="code">LV_47</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_47_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">47</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_48" model="account.report.line">
+                <field name="name">[48] for services provided</field>
+                <field name="code">LV_48</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_48_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">48</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_481" model="account.report.line">
+                <field name="name">[481] exported goods</field>
+                <field name="code">LV_481</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_481_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">481</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_482" model="account.report.line">
+                <field name="name">[482] Transactions in other countries</field>
+                <field name="code">LV_482</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_482_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">482</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_49" model="account.report.line">
+                <field name="name">[49] VAT exempt transactions</field>
+                <field name="code">LV_49</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_49_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">49</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_50" model="account.report.line">
+                <field name="name">[50] Goods and services received from EU countries (standard rate)</field>
+                <field name="code">LV_50</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_50_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">50</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_51" model="account.report.line">
+                <field name="name">[51] Goods received from EU Member States (VAT at 12%)</field>
+                <field name="code">LV_51</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_51_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">51</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_511" model="account.report.line">
+                <field name="name">[511] Goods received from EU Member States (VAT at 5%)</field>
+                <field name="code">LV_511</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_511_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">511</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_52" model="account.report.line">
+                <field name="name">[52] Standard rate of VAT for taxable transactions</field>
+                <field name="code">LV_52</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_52_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">52</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_53" model="account.report.line">
+                <field name="name">[53] VAT at 12% for taxable transactions</field>
+                <field name="code">LV_53</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_53_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">53</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_531" model="account.report.line">
+                <field name="name">[531] Transactions subject to VAT at 5%</field>
+                <field name="code">LV_531</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_531_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">531</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_54" model="account.report.line">
+                <field name="name">[54] For services received</field>
+                <field name="code">LV_54</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_54_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">54</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_55" model="account.report.line">
+                <field name="name">[55] Standard rate of VAT on goods and services received from EU countries</field>
+                <field name="code">LV_55</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_55_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">55</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_56" model="account.report.line">
+                <field name="name">[56] VAT at 12% on goods received from EU countries</field>
+                <field name="code">LV_56</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_56_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">56</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_561" model="account.report.line">
+                <field name="name">[561] VAT at 5% on goods received from EU countries</field>
+                <field name="code">LV_561</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_561_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">561</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_main_tax_report_60" model="account.report.line">
+                <field name="name">[60] Amount of VAT on goods and services provided, of which</field>
+                <field name="code">LV_60</field>
+                <field name="aggregation_formula">
+                    LV_61.balance+LV_62.balance+LV_63.balance+LV_64.balance+LV_65.balance
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_61" model="account.report.line">
+                <field name="name">[61] For imported goods</field>
+                <field name="code">LV_61</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_61_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">61</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_62" model="account.report.line">
+                <field name="name">[62] For domestic goods and services</field>
+                <field name="code">LV_62</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_62_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">62</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_63" model="account.report.line">
+                <field name="name">[63] Amount of VAT charged in accordance with Article 92(1)(4) of the Law (excluding
+                    line 64)
+                </field>
+                <field name="code">LV_63</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_63_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">63</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_64" model="account.report.line">
+                <field name="name">[64] Amount of VAT charged on goods and services received from EU countries</field>
+                <field name="code">LV_64</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_64_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">64</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_65" model="account.report.line">
+                <field name="name">[65] Compensation paid to farmers</field>
+                <field name="code">LV_65</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_65_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">65</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_66" model="account.report.line">
+                <field name="name">[66] Amount of VAT not deductible as input tax</field>
+                <field name="code">LV_66</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_66_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">66</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_67" model="account.report.line">
+                <field name="name">[67] Adjustments - reduction of tax calculated in previous tax periods for payment to
+                    the state budget
+                </field>
+                <field name="code">LV_67</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_67_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">67</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_tax_report_57" model="account.report.line">
+                <field name="name">[57] Adjustments - reduction of input tax deducted in previous tax periods</field>
+                <field name="code">LV_57</field>
+                <field name="expression_ids">
+                    <record id="l10n_lv_tax_report_57_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">57</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_lv_main_tax_report_P" model="account.report.line">
+                <field name="name">[P] Total - input tax</field>
+                <field name="code">LV_P</field>
+                <field name="aggregation_formula">
+                    LV_61.balance+LV_62.balance+LV_63.balance+LV_64.balance+LV_65.balance+LV_66.balanceLV_67.balance
+                </field>
+            </record>
+
+            <record id="l10n_lv_main_tax_report_S" model="account.report.line">
+                <field name="name">[S] Total - tax calculated</field>
+                <field name="code">LV_S</field>
+                <field name="aggregation_formula">
+                    LV_52.balance+LV_53.balance+LV_531.balance+LV_54.balance+LV_55.balance+LV_56.balance+LV_561.balance+
+                    LV_57.balance
+                </field>
+            </record>
+
+            <record id="l10n_lv_main_tax_report_70" model="account.report.line">
+                <field name="name">[70] Amount of tax to be refunded from the state budget or amount of tax attributable
+                    to the next tax period, if P more S
+                </field>
+                <field name="code">LV_70</field>
+                <field name="aggregation_formula">LV_P.balance-LV_S.balance</field>
+            </record>
+
+            <record id="l10n_lv_main_tax_report_80" model="account.report.line">
+                <field name="name">[80] Amount of tax payable to the national budget if P less S</field>
+                <field name="code">LV_80</field>
+                <field name="aggregation_formula">LV_S.balance-LV_P.balance</field>
+            </record>
+
+        </field>
+    </record>
+
+</odoo>
