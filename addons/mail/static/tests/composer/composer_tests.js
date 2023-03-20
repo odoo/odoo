@@ -886,7 +886,7 @@ QUnit.test(
         const { openFormView } = await start();
         await openFormView("res.partner", partnerId);
         await click("button:contains(Send message)");
-        assert.containsOnce($, ".o-mail-Chatter:contains(To followers of:  this document)");
+        assert.containsOnce($, ".o-mail-Chatter:contains(To: Followers of this document)");
     }
 );
 
@@ -896,7 +896,7 @@ QUnit.test("Show a thread name in the recipient status text.", async (assert) =>
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
-    assert.containsOnce($, '.o-mail-Chatter:contains(To followers of:  "test name")');
+    assert.containsOnce($, '.o-mail-Chatter:contains(To: Followers of "test name")');
 });
 
 QUnit.test(
