@@ -644,25 +644,14 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             throw new Error("Should only be one channel in channel_seen mock params");
         }
         const channel = this.getRecords("mail.channel", [["id", "=", channel_id]])[0];
-        const messagesBeforeGivenLastMessage = this.getRecords("mail.message", [
-            ["id", "<=", last_message_id],
+        const messages = this.getRecords("mail.message", [
             ["model", "=", "mail.channel"],
             ["res_id", "=", channel.id],
         ]);
-        if (!messagesBeforeGivenLastMessage || messagesBeforeGivenLastMessage.length === 0) {
+        if (!messages || messages.length === 0) {
             return;
         }
         if (!channel) {
-            return;
-        }
-        const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
-            ["channel_id", "=", channel_id],
-            ["partner_id", "=", this.currentPartnerId],
-        ]);
-        if (
-            memberOfCurrentUser.seen_message_id &&
-            memberOfCurrentUser.seen_message_id >= last_message_id
-        ) {
             return;
         }
         this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
@@ -940,9 +929,11 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             ["channel_id", "in", ids],
             ["partner_id", "=", this.currentPartnerId],
         ]);
-        this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], {
-            fetched_message_id: message_id,
-            seen_message_id: message_id,
-        });
+        if (memberOfCurrentUser) {
+            this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], {
+                fetched_message_id: message_id,
+                seen_message_id: message_id,
+            });
+        }
     },
 });
