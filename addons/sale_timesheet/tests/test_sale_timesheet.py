@@ -726,6 +726,35 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         move.with_context(check_move_validity=False).line_ids[0].unlink()
         self.assertFalse(analytic_line.timesheet_invoice_id, "The timesheet should have been unlinked from move")
 
+    def test_update_sol_price(self):
+        """ This test ensure that when the price of a sol is updated, the project_profitability panel from the project linked to the SO of that sol is correctly updated too.
+        1) create new SO
+        2) add a sol with a service product with 'invoice on prepaid' and 'create project & task' setting.
+        3) confirm SO and check the project_profitability panel
+        4) update the price of the sol and check the project_profitability panel
+        """
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+        })
+        product_price = self.product_order_timesheet3.list_price
+        so_line = self.env['sale.order.line'].create({
+            'name': self.product_order_timesheet3.name,
+            'product_id': self.product_order_timesheet3.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_order_timesheet3.uom_id.id,
+            'price_unit': product_price,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        project = sale_order.project_ids[0]
+
+        items = project._get_profitability_items(with_action=False)
+        self.assertEqual(items['revenues']['data'][0]['to_invoice'], product_price, "The quantity to_invoice should be equal to the price of the product")
+
+        so_line.price_unit = 2*product_price
+        items = project._get_profitability_items(with_action=False)
+        self.assertEqual(items['revenues']['data'][0]['to_invoice'], 2*product_price, "The quantity to_invoice should be equal to twice the price of the product")
+
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
