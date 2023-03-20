@@ -226,6 +226,15 @@ export class Many2XAutocomplete extends Component {
         this.props.update([record], params);
     }
 
+    search(name) {
+        return this.orm.call(this.props.resModel, "name_search", [], {
+            name: name,
+            operator: "ilike",
+            args: this.props.getDomain(),
+            limit: this.props.searchLimit + 1,
+            context: this.props.context,
+        });
+    }
     mapRecordToOption(result) {
         return {
             value: result[0],
@@ -236,13 +245,7 @@ export class Many2XAutocomplete extends Component {
         if (this.lastProm) {
             this.lastProm.abort(false);
         }
-        this.lastProm = this.orm.call(this.props.resModel, "name_search", [], {
-            name: request,
-            operator: "ilike",
-            args: this.props.getDomain(),
-            limit: this.props.searchLimit + 1,
-            context: this.props.context,
-        });
+        this.lastProm = this.search(request);
         const records = await this.lastProm;
 
         const options = records.map((result) => this.mapRecordToOption(result));
