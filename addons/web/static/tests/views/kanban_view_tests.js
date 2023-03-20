@@ -8434,6 +8434,30 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
     });
 
+    QUnit.test(
+        "column config dropdown should not crash when records_draggable and groups_draggable are set to false",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban groups_draggable='0' records_draggable='0'>
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="id"/></div>
+                    </t></templates>
+                </kanban>`,
+                groupBy: ["product_id"],
+            });
+            assert.containsN(target, ".o_kanban_group .o_kanban_config", 2);
+
+            assert.containsNone(target, ".o_kanban_config .o-dropdown--menu");
+            await click(target.querySelectorAll(".o_kanban_config .dropdown-toggle")[0]);
+            assert.containsOnce(target, ".o_kanban_config .o-dropdown--menu");
+        }
+    );
+
     QUnit.test("properly evaluate more complex domains", async (assert) => {
         await makeView({
             type: "kanban",
