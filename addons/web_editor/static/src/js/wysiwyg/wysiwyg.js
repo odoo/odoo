@@ -1156,6 +1156,7 @@ const Wysiwyg = Widget.extend({
             const linkDialog = new weWidgets.LinkDialog(this, {
                 forceNewWindow: this.options.linkForceNewWindow,
                 wysiwyg: this,
+                focusField: link.innerHTML ? 'url' : '',
             }, this.$editable[0], {
                 needLabel: true
             }, undefined, link);
