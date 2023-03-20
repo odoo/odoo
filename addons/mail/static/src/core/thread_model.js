@@ -85,6 +85,8 @@ export class Thread {
     suggestedRecipients = [];
     hasLoadingFailed = false;
     canPostOnReadonly;
+    /** @type {String} */
+    last_interest_dt;
 
     constructor(store, data) {
         Object.assign(this, {
@@ -385,6 +387,13 @@ export class Thread {
 
     get videoCount() {
         return Object.values(this.rtcSessions).filter((session) => session.videoStream).length;
+    }
+
+    get lastInterestDateTime() {
+        if (!this.last_interest_dt) {
+            return undefined;
+        }
+        return luxon.DateTime.fromISO(new Date(this.last_interest_dt).toISOString());
     }
 
     /**
