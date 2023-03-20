@@ -421,6 +421,27 @@ $line-height-truncate: 1.25em;
         @include media-breakpoint-only(xs) {
             margin: 0 ($grid-gutter-width * -0.5);
         }
+
+        .o_wslides_lesson_nav {
+            .navbar {
+                @if ( not has-enough-contrast($body-bg, $dark) ) {
+                    .nav-link, .navbar-brand{
+                        color: $navbar-dark-color;
+                    }
+                    .navbar-toggler-icon {
+                        background-image: $navbar-dark-toggler-icon-bg;
+                    }
+                }
+                @else {
+                    .nav-link, .navbar-brand{
+                        color: $navbar-light-color;
+                    }
+                    .navbar-toggler-icon {
+                        background-image: $navbar-light-toggler-icon-bg;
+                    }
+                }
+            }
+        }
     }
 
     // Slides list reordering widget

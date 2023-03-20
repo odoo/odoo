@@ -109,15 +109,18 @@ export class ListRenderer extends Component {
         onPatched(() => {
             const editedRecord = this.props.list.editedRecord;
             if (editedRecord && this.activeRowId !== editedRecord.id) {
-                let column = this.state.columns[0];
-                let forward;
                 if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
-                    column = this.cellToFocus.column;
-                    forward = this.cellToFocus.forward;
+                    const column = this.cellToFocus.column;
+                    const forward = this.cellToFocus.forward;
+                    this.focusCell(column, forward);
+                } else if (this.lastEditedCell) {
+                    this.focusCell(this.lastEditedCell.column, true);
+                } else {
+                    this.focusCell(this.state.columns[0]);
                 }
-                this.focusCell(column, forward);
             }
             this.cellToFocus = null;
+            this.lastEditedCell = null;
         });
         let dataRowId;
         this.rootRef = useRef("root");
@@ -153,16 +156,16 @@ export class ListRenderer extends Component {
         }
 
         // not very beautiful but works: refactor at some point
-        this.lastCellFocused;
+        let lastCellBeforeDialogOpening;
         useBus(this.props.list.model, "list-confirmation-dialog-will-open", () => {
             if (this.tableRef.el.contains(document.activeElement)) {
-                this.lastCellFocused = document.activeElement.closest("td");
+                lastCellBeforeDialogOpening = document.activeElement.closest("td");
             }
         });
 
         useBus(this.props.list.model, "list-confirmation-dialog-closed", () => {
-            if (this.lastCellFocused) {
-                this.focus(this.lastCellFocused);
+            if (lastCellBeforeDialogOpening) {
+                this.focus(lastCellBeforeDialogOpening);
             }
         });
 
@@ -398,6 +401,7 @@ export class ListRenderer extends Component {
                     const toFocus = getElementToFocus(cell);
                     if (cell !== toFocus) {
                         this.focus(toFocus);
+                        this.lastEditedCell = { column, record: editedRecord };
                         break;
                     }
                 }
