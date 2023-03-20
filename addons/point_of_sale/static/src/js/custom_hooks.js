@@ -3,7 +3,7 @@ import { OfflineErrorPopup } from "./Popups/OfflineErrorPopup";
 import { ConfirmPopup } from "./Popups/ConfirmPopup";
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 import { ErrorPopup } from "./Popups/ErrorPopup";
-import { useEnv, onMounted, onPatched, onWillUnmount, useComponent } from "@odoo/owl";
+import { useEnv, onMounted, onPatched, useComponent } from "@odoo/owl";
 
 /**
  * Introduce error handlers in the component.
@@ -89,34 +89,4 @@ export function useAutoFocusToLast() {
     }
     onMounted(autofocus);
     onPatched(autofocus);
-}
-
-export function useBarcodeReader(callbackMap, exclusive = false) {
-    const current = useComponent();
-    const barcodeReader = current.env.barcode_reader;
-    for (const [key, callback] of Object.entries(callbackMap)) {
-        callbackMap[key] = callback.bind(current);
-    }
-    onMounted(() => {
-        if (barcodeReader) {
-            for (const key in callbackMap) {
-                if (exclusive) {
-                    barcodeReader.set_exclusive_callback(key, callbackMap[key]);
-                } else {
-                    barcodeReader.set_action_callback(key, callbackMap[key]);
-                }
-            }
-        }
-    });
-    onWillUnmount(() => {
-        if (barcodeReader) {
-            for (const key in callbackMap) {
-                if (exclusive) {
-                    barcodeReader.remove_exclusive_callback(key, callbackMap[key]);
-                } else {
-                    barcodeReader.remove_action_callback(key, callbackMap[key]);
-                }
-            }
-        }
-    });
 }

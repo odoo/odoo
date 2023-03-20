@@ -17,6 +17,7 @@ export class DebugWidget extends Component {
         super.setup();
         this.debug = useService("debug");
         this.popup = useService("popup");
+        this.barcodeReader = useService("barcode_reader");
         const numberBuffer = useService("number_buffer");
         useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
@@ -87,14 +88,18 @@ export class DebugWidget extends Component {
         this.env.proxy.debug_reset_weight();
     }
     async barcodeScan() {
-        await this.env.barcode_reader.scan(this.state.barcodeInput);
+        if (!this.barcodeReader) {
+            return;
+        }
+        await this.barcodeReader.scan(this.state.barcodeInput);
     }
     async barcodeScanEAN() {
-        const ean = this.env.barcode_reader.barcode_parser.sanitize_ean(
-            this.state.barcodeInput || "0"
-        );
+        if (!this.barcodeReader) {
+            return;
+        }
+        const ean = this.barcodeReader.parser.sanitize_ean(this.state.barcodeInput || "0");
         this.state.barcodeInput = ean;
-        await this.env.barcode_reader.scan(ean);
+        await this.barcodeReader.scan(ean);
     }
     async deleteOrders() {
         const { confirmed } = await this.popup.add(ConfirmPopup, {

@@ -21,12 +21,13 @@ export class PosStore extends Reactive {
     legacyEnv = legacyEnv;
     globalState = new PosGlobalState({ env: markRaw(legacyEnv) });
 
-    static serviceDependencies = ["popup", "orm", "number_buffer"];
-    constructor({ popup, orm, number_buffer }) {
+    static serviceDependencies = ["popup", "orm", "number_buffer", "barcode_reader"];
+    constructor({ popup, orm, number_buffer, barcode_reader }) {
         super();
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
+        this.barcodeReader = barcode_reader;
         this.setup();
     }
     // use setup instead of constructor because setup can be patched.
@@ -46,9 +47,9 @@ export class PosStore extends Reactive {
         this.showScreen(screenName);
     }
 
-    connect_to_proxy() {
+    connectToProxy() {
         return new Promise((resolve, reject) => {
-            this.globalState.env.barcode_reader.disconnect_from_proxy();
+            this.barcodeReader?.disconnectFromProxy();
             this.globalState.loadingSkipButtonIsShown = true;
             this.globalState.env.proxy
                 .autoconnect({
@@ -58,7 +59,7 @@ export class PosStore extends Reactive {
                 .then(
                     () => {
                         if (this.globalState.config.iface_scan_via_proxy) {
-                            this.globalState.env.barcode_reader.connect_to_proxy();
+                            this.barcodeReader?.connectToProxy(this.globalState.env.proxy);
                         }
                         resolve();
                     },

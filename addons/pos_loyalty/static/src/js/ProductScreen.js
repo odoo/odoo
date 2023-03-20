@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
+import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { useService } from "@web/core/utils/hooks";
