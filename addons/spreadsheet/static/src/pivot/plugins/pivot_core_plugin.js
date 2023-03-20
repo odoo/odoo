@@ -320,6 +320,7 @@ export default class PivotCorePlugin extends CorePlugin {
         this._insertColumns(sheetId, anchor, id, table);
         this._insertRows(sheetId, anchor, id, table);
         this._insertBody(sheetId, anchor, id, table);
+        this._addBorders(sheetId, anchor, table);
     }
 
     /**
@@ -478,6 +479,39 @@ export default class PivotCorePlugin extends CorePlugin {
             }
             x++;
         }
+    }
+
+    _addBorders(sheetId, anchor, table) {
+        const colHeight = table.getColHeight();
+        const colWidth = table.getColWidth();
+        const anchorLeft = anchor[0];
+        const anchorTop = anchor[1];
+        const totalRow = anchorTop + colHeight + table.getRowHeaders().length - 1;
+        const headerAndMeasureZone = {
+            top: anchorTop,
+            bottom: anchorTop + colHeight - 1,
+            left: anchorLeft,
+            right: anchorLeft + colWidth,
+        };
+        this.dispatch("SET_FORMATTING", {
+            sheetId,
+            target: [
+                headerAndMeasureZone,
+                {
+                    left: anchorLeft,
+                    right: anchorLeft + colWidth,
+                    top: totalRow,
+                    bottom: totalRow,
+                },
+                {
+                    left: anchorLeft,
+                    right: anchorLeft + colWidth,
+                    top: anchorTop,
+                    bottom: totalRow,
+                },
+            ],
+            border: "external",
+        });
     }
 
     /**

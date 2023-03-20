@@ -55,3 +55,16 @@ export function getCellContent(model, xc, sheetId = model.getters.getActiveSheet
 export function getMerges(model, sheetId = model.getters.getActiveSheetId()) {
     return model.exportData().sheets.find((sheet) => sheet.id === sheetId).merges;
 }
+
+/**
+ * Get the borders at the given XC
+ */
+export function getBorders(model, xc, sheetId = model.getters.getActiveSheetId()) {
+    const { col, row } = toCartesian(xc);
+    const borders = model.getters.getCellBorder({ sheetId, col, row });
+    if (!borders) {
+        return null;
+    }
+    Object.keys(borders).forEach((key) => borders[key] === undefined && delete borders[key]);
+    return borders;
+}

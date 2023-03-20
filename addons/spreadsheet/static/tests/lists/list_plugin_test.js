@@ -13,6 +13,7 @@ import {
     getCells,
     getCellValue,
     getEvaluatedCell,
+    getBorders,
 } from "../utils/getters";
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
@@ -578,4 +579,23 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             assert.equal(cell.error.message, "ya done!");
         }
     );
+
+    QUnit.test("Cells in the list header zone have borders", async function (assert) {
+        const { model } = await createSpreadsheetWithList({
+            linesNumber: 4,
+        });
+        const leftBorder = { left: ["thin", "#000"] };
+        const rightBorder = { right: ["thin", "#000"] };
+        const topBorder = { top: ["thin", "#000"] };
+        const bottomBorder = { bottom: ["thin", "#000"] };
+        assert.deepEqual(getBorders(model, "A1"), { ...topBorder, ...bottomBorder, ...leftBorder });
+        assert.deepEqual(getBorders(model, "B1"), { ...topBorder, ...bottomBorder });
+        assert.deepEqual(getBorders(model, "D1"), {
+            ...topBorder,
+            ...bottomBorder,
+            ...rightBorder,
+        });
+        assert.deepEqual(getBorders(model, "A5"), { ...leftBorder, ...bottomBorder });
+        assert.deepEqual(getBorders(model, "D5"), { ...rightBorder, ...bottomBorder });
+    });
 });
