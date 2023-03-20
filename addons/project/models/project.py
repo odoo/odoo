@@ -2635,7 +2635,7 @@ class ProjectTags(models.Model):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
-        if 'project_id' in self.env.context and operator == 'ilike':
+        if self.env.context.get('project_id') and operator == 'ilike':
             # `domain` has the form of the default filter ['!', ['id', 'in', <ids>]]
             # passed to exclude already selected tags -> exclude them in our query too
             excluded_ids = list(domain[1][2]) \
