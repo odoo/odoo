@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { selectCell, setCellContent } from "@spreadsheet/../tests/utils/commands";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getAccountingData } from "../accounting_test_data";
 import {
     createModelWithDataSource,

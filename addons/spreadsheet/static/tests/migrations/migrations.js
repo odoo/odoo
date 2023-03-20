@@ -1,9 +1,7 @@
 /** @odoo-module */
 
 import { migrate, ODOO_VERSION } from "@spreadsheet/o_spreadsheet/migration";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-
-const { Model } = spreadsheet;
+import { Model } from "@odoo/o-spreadsheet";
 
 QUnit.module("spreadsheet > migrations");
 

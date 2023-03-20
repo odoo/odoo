@@ -1,14 +1,12 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { Model } from "@odoo/o-spreadsheet";
 import { getBasicData } from "@spreadsheet/../tests/utils/data";
 import { createBasicChart } from "@spreadsheet/../tests/utils/commands";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { actionService } from "@web/webclient/actions/action_service";
-
-const { Model } = spreadsheet;
 
 const chartId = "uuid1";
 

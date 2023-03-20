@@ -16,7 +16,7 @@
  */
 
 /** TODO: Introduce a position parameter to the plugin registry in order to load them in a specific order */
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 const { corePluginRegistry, coreViewsPluginRegistry } = spreadsheet.registries;
 
 import { GlobalFiltersCorePlugin, GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/index";

@@ -1,5 +1,5 @@
 /** @odoo-module */
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 const { CorePlugin } = spreadsheet;
 
 export default class IrMenuPlugin extends CorePlugin {

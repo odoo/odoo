@@ -5,11 +5,9 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { Model } from "@odoo/o-spreadsheet";
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { getBasicServerData } from "./data";
-
-const { Model } = spreadsheet;
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData

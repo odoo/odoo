@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { _lt } from "@web/core/l10n/translation";
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import PivotCorePlugin from "./plugins/pivot_core_plugin";
 import PivotUIPlugin from "./plugins/pivot_ui_plugin";

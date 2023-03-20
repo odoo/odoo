@@ -1,10 +1,9 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-const { coreTypes } = spreadsheet;
+import { coreTypes, CorePlugin } from "@odoo/o-spreadsheet";
 
 /** Plugin that link charts with Odoo menus. It can contain either the Id of the odoo menu, or its xml id. */
-export default class ChartOdooMenuPlugin extends spreadsheet.CorePlugin {
+export default class ChartOdooMenuPlugin extends CorePlugin {
     constructor(config) {
         super(config);
         this.odooMenuReference = {};

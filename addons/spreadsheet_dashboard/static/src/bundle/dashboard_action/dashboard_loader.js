@@ -2,9 +2,7 @@
 
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-
-const { Model } = spreadsheet;
+import { Model } from "@odoo/o-spreadsheet";
 
 /**
  * @type {{

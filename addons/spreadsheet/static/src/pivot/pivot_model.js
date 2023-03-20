@@ -9,7 +9,7 @@ import { session } from "@web/session";
 
 import { FORMATS } from "../helpers/constants";
 
-import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import { formatDate } from "./pivot_helpers";
 import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";

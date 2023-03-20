@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { nextTick } from "@web/../tests/helpers/utils";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "./model";
 const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
 
-/** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
+/** @typedef {import("@odoo/o-spreadsheet").Model} Model */
 
 /**
  *

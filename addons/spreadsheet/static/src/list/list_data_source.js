@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { orderByToString } from "@web/views/utils";
 
-import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 
 const { toNumber } = spreadsheet.helpers;
 
