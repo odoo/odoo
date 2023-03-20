@@ -718,16 +718,6 @@ class Message(models.Model):
 
         return super(Message, self).unlink()
 
-    @api.model
-    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
-        if not self.env.is_admin():
-            raise AccessError(_("Only administrators are allowed to use grouped read on message model"))
-
-        return super()._read_group(
-            domain=domain, groupby=groupby, aggregates=aggregates,
-            having=having, offset=offset, limit=limit, order=order,
-        )
-
     def export_data(self, fields_to_export):
         if not self.env.is_admin():
             raise AccessError(_("Only administrators are allowed to export mail message"))
