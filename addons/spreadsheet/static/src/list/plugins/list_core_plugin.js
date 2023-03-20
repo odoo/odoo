@@ -379,6 +379,7 @@ export default class ListCorePlugin extends CorePlugin {
                     right: anchor[0] + columns.length - 1,
                 },
             ],
+            border: "external",
         });
     }
 
@@ -398,6 +399,18 @@ export default class ListCorePlugin extends CorePlugin {
             }
             row++;
         }
+        this.dispatch("SET_FORMATTING", {
+            sheetId,
+            target: [
+                {
+                    top: anchor[1],
+                    bottom: anchor[1] + linesNumber,
+                    left: anchor[0],
+                    right: anchor[0] + columns.length - 1,
+                },
+            ],
+            border: "external",
+        });
     }
 
     /**

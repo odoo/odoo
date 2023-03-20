@@ -6,8 +6,10 @@ import {
     getCellFormula,
     getCellValue,
     getEvaluatedCell,
+    getBorders,
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
+import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
@@ -638,6 +640,39 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         }
     );
 
+    QUnit.test(
+        "Pivot header zone and total row will have correct borders",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: getBasicPivotArch(),
+            });
+            const leftBorder = { left: ["thin", "#000"] };
+            const rightBorder = { right: ["thin", "#000"] };
+            const topBorder = { top: ["thin", "#000"] };
+            const bottomBorder = { bottom: ["thin", "#000"] };
+            assert.deepEqual(getBorders(model, "A1"), { ...leftBorder, ...topBorder });
+            assert.deepEqual(getBorders(model, "A2"), { ...leftBorder, ...bottomBorder });
+            assert.deepEqual(getBorders(model, "A3"), { ...leftBorder, ...topBorder });
+            assert.deepEqual(getBorders(model, "B1"), topBorder);
+            assert.deepEqual(getBorders(model, "B2"), bottomBorder);
+            assert.deepEqual(getBorders(model, "C3"), topBorder);
+            assert.deepEqual(getBorders(model, "F1"), { ...rightBorder, ...topBorder });
+            assert.deepEqual(getBorders(model, "F2"), { ...rightBorder, ...bottomBorder });
+            assert.deepEqual(getBorders(model, "F3"), { ...rightBorder, ...topBorder });
+            assert.deepEqual(getBorders(model, "A5"), {
+                ...leftBorder,
+                ...bottomBorder,
+                ...topBorder,
+            });
+            assert.deepEqual(getBorders(model, "B5"), { ...topBorder, ...bottomBorder });
+            assert.deepEqual(getBorders(model, "F5"), {
+                ...rightBorder,
+                ...bottomBorder,
+                ...topBorder,
+            });
+        }
+    );
+
     QUnit.test("can edit pivot domain", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
         const [pivotId] = model.getters.getPivotIds();
@@ -736,7 +771,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             });
             let headerCell;
             let cell;
-            
+
             await waitForDataSourcesLoaded(model);
             headerCell = getEvaluatedCell(model, "A3");
             cell = getEvaluatedCell(model, "C3");
