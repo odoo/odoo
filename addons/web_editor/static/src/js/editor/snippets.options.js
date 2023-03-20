@@ -2315,6 +2315,12 @@ const ListUserValueWidget = UserValueWidget.extend({
             // We don't need to rebuild the we-list if it's just a text change,
             // by skipping the rebuild we avoid to lose a direct add new item
             // event.
+            if (!this.el.dataset.idMode || this.el.dataset.idMode !== 'name') {
+                // If the name of the input represents its value, we update the
+                // name to match the new value in order to compute this.selected
+                // correctly with the up to date value.
+                ev.target.name = ev.target.value;
+            }
             this.skipRebuildWeList = true;
             // We call the function below only if the element that recovers the
             // focus after this blur is not an element of the we-list or if it
