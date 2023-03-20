@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { markup, whenReady, reactive } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { MacroEngine } from "@web/core/macro";
@@ -186,7 +187,7 @@ export const tourService = {
                     }
                     pointer.stop();
                     // Used to signal the python test runner that the tour finished without error.
-                    console.log("test successful");
+                    browser.console.log("test successful");
                 },
             });
         }
