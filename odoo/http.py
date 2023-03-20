@@ -440,6 +440,13 @@ class Stream:
         self.__dict__.update(kwargs)
 
     @classmethod
+    def from_link(cls, record):
+        return cls(
+            type='url',
+            url=record.url,
+        )
+
+    @classmethod
     def from_path(cls, path, filter_ext=('',)):
         """ Create a :class:`~Stream`: from an addon resource. """
         path = file_path(path, filter_ext)
