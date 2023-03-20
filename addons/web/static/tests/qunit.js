@@ -305,7 +305,8 @@ export function setupQUnit() {
             errorMessages.push(`${result.failed} / ${result.total} tests failed.`);
         }
         if (!result.failed && allModulesLoaded) {
-            console.log("test successful");
+            console.log("QUnit test suite done.");
+            console.log("test successful"); // for ChromeBowser to know it's over and ok
         } else {
             logErrors();
         }

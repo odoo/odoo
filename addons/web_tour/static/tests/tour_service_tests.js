@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { tourService } from "@web_tour/tour_service/tour_service";
 import { rpcService } from "@web/core/network/rpc_service";
@@ -15,6 +16,7 @@ import {
     click,
     triggerEvent,
     nextTick,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { Component, useState, xml } from "@odoo/owl";
@@ -59,6 +61,10 @@ QUnit.module("Tour service", (hooks) => {
             .add("notification", notificationService)
             .add("effect", effectService)
             .add("tour_service", tourService);
+        patchWithCleanup(browser.console, {
+            // prevent form logging "tour successful" which would end the qunit suite test
+            log: () => {}
+        });
     });
 
     hooks.afterEach(() => {
