@@ -5,6 +5,11 @@
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.id"/>
     </record>
+    <record id="pph23_tag" model="account.account.tag">
+        <field name="name">PPH23</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
     <record id="tax_ST1" model="account.tax.template">
         <field name="description">ST1</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
@@ -146,6 +151,242 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_id_21221010'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_group_withholding" model="account.tax.group">
+        <field name="name">Withholding Taxes</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_PPH2_sale" model="account.tax.template">
+        <field name="description">SWHT2</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">sale</field>
+        <field name="name">PPH23 (2%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-2</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_PPH15_sale" model="account.tax.template">
+        <field name="description">SWHT15</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">sale</field>
+        <field name="name">PPH23 (15%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-15</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_PPH2_purchase" model="account.tax.template">
+        <field name="description">PWHT2</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">purchase</field>
+        <field name="name">PPH23 (2%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-2</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_PPH15_purchase" model="account.tax.template">
+        <field name="description">PWHT15</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">purchase</field>
+        <field name="name">PPH23 (15%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-15</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+    </record>
+     <record id="tax_PPH4_sale" model="account.tax.template">
+        <field name="description">SWHT4</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">sale</field>
+        <field name="name">PPH23 (4%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-4</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_PPH30_sale" model="account.tax.template">
+        <field name="description">SWHT30</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">sale</field>
+        <field name="name">PPH23 (30%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_11120009'),
+            }),
+        ]"/>
+    </record>
+     <record id="tax_PPH4_purchase" model="account.tax.template">
+        <field name="description">PWHT4</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">purchase</field>
+        <field name="name">PPH23 (4%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-4</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_PPH30_purchase" model="account.tax.template">
+        <field name="description">PWHT30</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="tax_group_withholding" />
+        <field name="type_tax_use">purchase</field>
+        <field name="name">PPH23 (30%)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('pph23_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221030'),
             }),
         ]"/>
     </record>
