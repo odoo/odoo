@@ -6,7 +6,7 @@ import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
 import { nextTick } from "@web/../tests/helpers/utils";
 import { createSpreadsheetWithChart, insertChartInSpreadsheet } from "../../utils/chart";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../../utils/model";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import { RPCError } from "@web/core/network/rpc_service";
 
 const { toZone } = spreadsheet.helpers;

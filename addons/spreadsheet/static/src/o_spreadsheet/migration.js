@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import spreadsheet from "./o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 const { load, CorePlugin, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { _lt } from "@web/core/l10n/translation";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import AccountingPlugin from "./plugins/accounting_plugin";
 import { getFirstAccountFunction, getNumberOfAccountFormulas } from "./utils";
 import { parseAccountingDate } from "./accounting_functions";

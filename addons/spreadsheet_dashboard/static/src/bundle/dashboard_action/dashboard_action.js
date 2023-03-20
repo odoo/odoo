@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { DashboardLoader, Status } from "./dashboard_loader";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
@@ -11,7 +11,6 @@ import { FilterValue } from "@spreadsheet/global_filters/components/filter_value
 import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 
-const { Spreadsheet } = spreadsheet;
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
 export class SpreadsheetDashboardAction extends Component {

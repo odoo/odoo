@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { actionService } from "@web/webclient/actions/action_service";
 import { menuService } from "@web/webclient/menus/menu_service";
@@ -8,8 +8,6 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { getCell, getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import { getMenuServerData } from "../menu_data_utils";
-
-const { Model } = spreadsheet;
 
 function beforeEach() {
     registry

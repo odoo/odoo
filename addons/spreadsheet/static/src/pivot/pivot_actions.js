@@ -1,8 +1,6 @@
 /** @odoo-module */
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { astToFormula } from "@odoo/o-spreadsheet";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
-
-const { astToFormula } = spreadsheet;
 
 export const SEE_RECORDS_PIVOT = async (position, env) => {
     const cell = env.model.getters.getCell(position);

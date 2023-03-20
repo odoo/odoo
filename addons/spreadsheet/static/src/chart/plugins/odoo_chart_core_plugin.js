@@ -1,5 +1,5 @@
 /** @odoo-module */
-import spreadsheet from "../../o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import ChartDataSource from "../data_source/chart_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";

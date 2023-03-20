@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import GlobalFiltersUIPlugin from "./plugins/global_filters_ui_plugin";
 import { GlobalFiltersCorePlugin } from "./plugins/global_filters_core_plugin";

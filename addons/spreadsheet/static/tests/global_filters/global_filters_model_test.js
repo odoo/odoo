@@ -2,7 +2,7 @@
 
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { Model, DispatchResult } from "@odoo/o-spreadsheet";
 import {
     createModelWithDataSource,
     setupDataSourceEvaluation,
@@ -33,8 +33,6 @@ import {
 } from "@spreadsheet/../tests/utils/date_domain";
 import GlobalFiltersUIPlugin from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
-
-const { Model, DispatchResult } = spreadsheet;
 
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
@@ -93,14 +91,17 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(computedDomain[0], "&");
     });
 
-    QUnit.test("Can add a global filter with an empty field matching (no field chain)", async function (assert) {
-        const { model } = await createSpreadsheetWithPivotAndList();
-        assert.equal(model.getters.getGlobalFilters().length, 0);
-        await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: {1: {}} });
-        assert.equal(model.getters.getGlobalFilters().length, 1);
-        const computedDomain = model.getters.getPivotComputedDomain("1");
-        assert.deepEqual(computedDomain, []);
-    });
+    QUnit.test(
+        "Can add a global filter with an empty field matching (no field chain)",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivotAndList();
+            assert.equal(model.getters.getGlobalFilters().length, 0);
+            await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: { 1: {} } });
+            assert.equal(model.getters.getGlobalFilters().length, 1);
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assert.deepEqual(computedDomain, []);
+        }
+    );
 
     QUnit.test("Can delete a global filter", async function (assert) {
         assert.expect(4);

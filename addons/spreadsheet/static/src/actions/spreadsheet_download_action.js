@@ -4,10 +4,8 @@ import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
+import { Model } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
-
-const { Model } = spreadsheet;
 
 async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;

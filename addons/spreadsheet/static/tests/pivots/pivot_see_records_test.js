@@ -5,7 +5,7 @@ import { selectCell } from "@spreadsheet/../tests/utils/commands";
 import { doMenuAction } from "@spreadsheet/../tests/utils/ui";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 
 const { cellMenuRegistry } = spreadsheet.registries;

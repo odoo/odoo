@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import spreadsheet from "../../o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
 import { getMaxObjectId } from "../../helpers/helpers";
 import ListDataSource from "../list_data_source";

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 
 const { parse } = spreadsheet;
 

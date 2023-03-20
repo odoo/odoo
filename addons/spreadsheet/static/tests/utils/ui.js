@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture } from "@web/../tests/helpers/utils";
 import { loadJS, templates } from "@web/core/assets";
 
 import { App } from "@odoo/owl";
-const { Spreadsheet } = spreadsheet;
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
