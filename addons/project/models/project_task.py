@@ -815,16 +815,9 @@ class Task(models.Model):
         return super(Task, self).read(fields=fields, load=load)
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        fields_list = ([f.split(':')[0] for f in fields] or [])
-        if groupby:
-            fields_groupby = [groupby] if isinstance(groupby, str) else groupby
-            # only take field name when having ':' e.g 'date_deadline:week' => 'date_deadline'
-            fields_list += [f.split(':')[0] for f in fields_groupby]
-        if domain:
-            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]]
-        self._ensure_fields_are_accessible(fields_list)
-        return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+    def _read_group_check_field_access_rights(self, field_names):
+        super()._read_group_check_field_access_rights(field_names)
+        self._ensure_fields_are_accessible(field_names)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
