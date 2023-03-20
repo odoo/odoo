@@ -394,4 +394,12 @@ export class Thread {
     getMemberName(persona) {
         return persona.name;
     }
+
+    getPreviousMessage(message) {
+        const previousNonEmptyMessages = this.nonEmptyMessages.filter(({ id }) => id < message.id);
+        if (previousNonEmptyMessages.length === 0) {
+            return false;
+        }
+        return this._store.messages[Math.max(...previousNonEmptyMessages.map((m) => m.id))];
+    }
 }

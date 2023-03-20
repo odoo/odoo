@@ -124,4 +124,12 @@ export class Thread extends Component {
         }
         return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
     }
+
+    shouldDisplayNewMessageSeparator(previousMessage) {
+        const lastSeenMessageId = this.threadService.lastSeenBySelfMessageId(this.props.thread);
+        return Boolean(
+            (previousMessage && lastSeenMessageId === previousMessage.id) ||
+                (!previousMessage && lastSeenMessageId === false)
+        );
+    }
 }
