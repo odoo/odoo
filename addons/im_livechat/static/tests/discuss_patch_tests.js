@@ -43,7 +43,7 @@ QUnit.test("No reaction button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message");
-    assert.containsNone($, "i[aria-label='Add a Reaction']");
+    assert.containsNone($, "[title='Add a Reaction']");
 });
 
 QUnit.test("No reply button", async (assert) => {
@@ -62,7 +62,7 @@ QUnit.test("No reply button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message");
-    assert.containsNone($, "i[aria-label='Reply']");
+    assert.containsNone($, "[title='Reply']");
 });
 
 QUnit.test("add livechat in the sidebar on visitor sending first message", async (assert) => {
@@ -116,7 +116,7 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send");
     await click(".o-mail-Message");
-    assert.containsNone($, ".i[title='Add a Reaction']");
+    assert.containsNone($, "[title='Add a Reaction']");
 });
 
 QUnit.test("invite button should be present on livechat", async (assert) => {

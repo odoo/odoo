@@ -477,7 +477,7 @@ QUnit.test("reply to message from inbox (message linked to document)", async (as
     assert.containsOnce($, ".o-mail-Message");
     assert.containsOnce($, ".o-mail-Message-header:contains(on Refactoring)");
 
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.hasClass($(".o-mail-Message"), "o-selected");
     assert.containsOnce($, ".o-mail-Composer");
     assert.containsOnce($, ".o-mail-Composer-coreHeader:contains(on: Refactoring)");
@@ -507,7 +507,7 @@ QUnit.test("Can reply to starred message", async (assert) => {
         },
     });
     await openDiscuss("mail.box_starred");
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.containsOnce($, ".o-mail-Composer-coreHeader:contains('RandomName')");
     await insertText(".o-mail-Composer-input", "abc");
     await click(".o-mail-Composer-send");
@@ -536,7 +536,7 @@ QUnit.test("Can reply to history message", async (assert) => {
         },
     });
     await openDiscuss("mail.box_history");
-    await click("i[aria-label='Reply']");
+    await click("[title='Reply']");
     assert.containsOnce($, ".o-mail-Composer-coreHeader:contains('RandomName')");
     await insertText(".o-mail-Composer-input", "abc");
     await click(".o-mail-Composer-send");
@@ -786,10 +786,17 @@ QUnit.test("rendering of inbox message", async (assert) => {
     const $message = $(".o-mail-Message");
     assert.containsOnce($message, ".o-mail-Message-header:contains(on Refactoring)");
     assert.containsN($message, ".o-mail-Message-actions i", 4);
-    assert.containsOnce($message, "i[aria-label='Add a Reaction']");
-    assert.containsOnce($message, "i[aria-label='Mark as Todo']");
-    assert.containsOnce($message, "i[aria-label='Reply']");
-    assert.containsOnce($message, "i[aria-label='Mark as Read']");
+    assert.containsOnce($message, "[title='Add a Reaction']");
+    assert.containsOnce($message, "[title='Reply']");
+    assert.containsOnce($message, "[title='Mark as Todo']");
+    assert.containsOnce($message, "[title='Expand']");
+    await click("[title='Expand']");
+    assert.containsN($message, ".o-mail-Message-actions i", 5);
+    assert.containsOnce($message, "[title='Add a Reaction']");
+    assert.containsOnce($message, "[title='Reply']");
+    assert.containsOnce($message, "[title='Mark as Todo']");
+    assert.containsOnce($message, "[title='Expand']");
+    assert.containsOnce($message, "[title='Mark as Read']");
 });
 
 QUnit.test('messages marked as read move to "History" mailbox', async (assert) => {
@@ -878,7 +885,8 @@ QUnit.test(
         assert.hasClass($("button:contains(Inbox)"), "o-active");
         assert.containsN($, ".o-mail-Message", 2);
 
-        await click(".o-mail-Message:contains(not empty 1) i[aria-label='Mark as Read']");
+        await click(".o-mail-Message:contains(not empty 1) [title='Expand']");
+        await click(".o-mail-Message:contains(not empty 1) [title='Mark as Read']");
         assert.containsOnce($, ".o-mail-Message");
         assert.containsOnce($, ".o-mail-Message:contains(not empty 2)");
 

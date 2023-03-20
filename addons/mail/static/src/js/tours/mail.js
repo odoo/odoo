@@ -61,7 +61,12 @@ registry.category("web_tour.tours").add("mail_tour", {
             position: "top",
         },
         {
-            trigger: ".o-mail-Message i[aria-label='Mark as Todo']",
+            trigger: ".o-mail-Message [title='Expand']",
+            content: _t("Expand options"),
+            position: "top",
+        },
+        {
+            trigger: ".o-mail-Message [title='Mark as Todo']",
             content: Markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
