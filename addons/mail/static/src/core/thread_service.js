@@ -482,6 +482,7 @@ export class ThreadService {
                 "state",
                 "group_based_subscription",
                 "last_interest_dt",
+                "defaultDisplayMode",
             ]);
             if (thread.model === "mail.channel" && serverData.channel) {
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
@@ -493,9 +494,6 @@ export class ThreadService {
             }
             if ("seen_message_id" in serverData) {
                 thread.serverLastSeenMsgBySelf = serverData.seen_message_id;
-            }
-            if ("defaultDisplayMode" in serverData) {
-                thread.defaultDisplayMode = serverData.defaultDisplayMode;
             }
             if ("rtc_inviting_session" in serverData) {
                 this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
