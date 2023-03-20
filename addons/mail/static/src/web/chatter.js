@@ -8,6 +8,7 @@ import { Composer } from "../composer/composer";
 import { Activity } from "@mail/web/activity/activity";
 import {
     Component,
+    markup,
     onMounted,
     onPatched,
     onWillStart,
@@ -24,6 +25,7 @@ import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hoo
 import { useHover, useScrollPosition } from "@mail/utils/hooks";
 import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { escape, sprintf } from "@web/core/utils/strings";
 import { SuggestedRecipientsList } from "./suggested_recipient_list";
 
 /**
@@ -175,6 +177,24 @@ export class Chatter extends Component {
 
     get attachments() {
         return this.state.thread?.attachments ?? [];
+    }
+
+    /**
+     * @returns {string}
+     */
+    get toFollowersText() {
+        const threadName = this.state.thread.displayName || this.state.thread.name;
+        const toFollowersText = threadName
+            ? sprintf(
+                  _t(
+                      '<span class="fw-bold">To:</span> <span class="fst-italic">Followers of</span> <span class="fw-bold">"%(thread name)s"</span>.'
+                  ),
+                  { "thread name": escape(threadName) }
+              )
+            : _t(
+                  '<span class="fw-bold">To:</span> <span class="fst-italic">Followers of</span> this document.'
+              );
+        return markup(toFollowersText);
     }
 
     /**
