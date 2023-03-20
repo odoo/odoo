@@ -22,7 +22,7 @@
                     <p class="category">Barcode Scanner</p>
                     <ul>
                         <li>
-                            <input t-model="state.barcodeInput" type="text" class="ean"></input>
+                            <input t-model="state.barcodeInput" type="text" class="ean" t-att-disabled="!barcodeReader" t-attf-placeholder="{{ !barcodeReader ? 'No nomenclature' : '' }}"/>
                         </li>
                         <li class="button barcode" t-on-click="barcodeScan">Scan</li>
                         <li class="button custom_ean" t-on-click="barcodeScanEAN">Scan EAN-13</li>

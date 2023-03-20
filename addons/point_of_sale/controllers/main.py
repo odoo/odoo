@@ -55,6 +55,7 @@ class PosController(PortalAccount):
         session_info = request.env['ir.http'].session_info()
         session_info['user_context']['allowed_company_ids'] = company.ids
         session_info['user_companies'] = {'current_company': company.id, 'allowed_companies': {company.id: session_info['user_companies']['allowed_companies'][company.id]}}
+        session_info['nomenclature_id'] = pos_session.company_id.nomenclature_id.id
         context = {
             'session_info': session_info,
             'login_number': pos_session.login(),

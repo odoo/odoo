@@ -8,7 +8,7 @@ import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@odoo/owl";
-import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
+import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
 
 export function useCashierSelector(
     { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }

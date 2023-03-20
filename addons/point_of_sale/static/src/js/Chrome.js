@@ -2,7 +2,6 @@
 
 import { loadCSS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
-import BarcodeParser from "barcodes.BarcodeParser";
 import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
@@ -139,9 +138,8 @@ export class Chrome extends Component {
 
         try {
             await this.env.pos.load_server_data();
-            await this.setupBarcodeParser();
             if (this.env.pos.config.use_proxy) {
-                await this.pos.connect_to_proxy();
+                await this.pos.connectToProxy();
             }
             // Load the saved `env.pos.toRefundLines` from localStorage when
             // the PosGlobalState is ready.
@@ -217,23 +215,6 @@ export class Chrome extends Component {
                     this.render(true);
                 });
         }
-    }
-
-    setupBarcodeParser() {
-        if (!this.env.pos.company.nomenclature_id) {
-            const errorMessage = this.env._t(
-                "The barcode nomenclature setting is not configured. " +
-                    "Make sure to configure it on your Point of Sale configuration settings"
-            );
-            throw new Error(this.env._t("Missing barcode nomenclature"), {
-                cause: { message: errorMessage },
-            });
-        }
-        const barcode_parser = new BarcodeParser({
-            nomenclature_id: this.env.pos.company.nomenclature_id,
-        });
-        this.env.barcode_reader.set_barcode_parser(barcode_parser);
-        return barcode_parser.is_loaded();
     }
 
     /**

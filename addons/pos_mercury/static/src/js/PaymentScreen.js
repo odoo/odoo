@@ -3,7 +3,7 @@
 import { _t } from "web.core";
 import { patch } from "@web/core/utils/patch";
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
-import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
+import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { PaymentTransactionPopup } from "./PaymentTransactionPopup";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
