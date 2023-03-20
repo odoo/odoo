@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { MacroEngine } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { tourService } from "@web_tour/tour_service/tour_service";
 import { rpcService } from "@web/core/network/rpc_service";
@@ -8,6 +9,7 @@ import { userService } from "@web/core/user_service";
 import { ormService } from "@web/core/orm_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { effectService } from "@web/core/effects/effect_service";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     getFixture,
     mount,
@@ -53,6 +55,17 @@ QUnit.module("Tour service", (hooks) => {
         mock = mockTimeout();
         tourRegistry = registry.category("web_tour.tours");
         delete registry.subRegistries["web_tour.tours"];
+        let macroEngines = [];
+        patchWithCleanup(MacroEngine.prototype, {
+            start() {
+                this._super(...arguments);
+                macroEngines.push(this);
+            }
+        });
+        registerCleanup(() => {
+            macroEngines.forEach((e) => e.stop());
+            macroEngines = [];
+        });
         registry
             .category("services")
             .add("rpc", rpcService)
