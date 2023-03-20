@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<odoo>
+<odoo><data noupdate="1">
 
 <record id="view_forum_post_form" model="ir.ui.view">
     <field name="name">forum.post.form</field>
@@ -182,10 +182,18 @@
     </field>
 </record>
 
-<menuitem id="menu_forum_post_pages"
-    parent="website.menu_content"
-    sequence="80"
-    name="Forum Posts"
-    action="action_forum_post"/>
+<record id="action_forum_favorites" model="ir.actions.act_window">
+    <field name="name">Users favorite posts</field>
+    <field name="res_model">forum.post</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('forum_id', '=', active_id), ('favourite_count', '>', 0), ('state', 'in', ('active', 'close'))]</field>
+</record>
 
-</odoo>
+<record id="action_forum_posts" model="ir.actions.act_window">
+    <field name="name">Posts</field>
+    <field name="res_model">forum.post</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('forum_id', '=', active_id), ('parent_id', '=', False), ('state', 'in', ('active', 'close'))]</field>
+</record>
+
+</data></odoo>
