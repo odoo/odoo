@@ -1,9 +1,7 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { astToFormula } from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
-
-const { astToFormula } = spreadsheet;
 
 export const SEE_RECORD_LIST = async (position, env) => {
     const cell = env.model.getters.getCell(position);

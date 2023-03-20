@@ -22,7 +22,7 @@
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { CorePlugin } from "@odoo/o-spreadsheet";
 import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpers/constants";
@@ -33,8 +33,6 @@ import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
-
-const { CorePlugin } = spreadsheet;
 
 export default class PivotCorePlugin extends CorePlugin {
     constructor(config) {

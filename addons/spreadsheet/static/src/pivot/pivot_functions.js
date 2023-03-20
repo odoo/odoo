@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 const { arg, toString } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
 

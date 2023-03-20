@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import spreadsheet from "./o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 
 const { EvaluationError, CellErrorLevel } = spreadsheet.helpers;
 
