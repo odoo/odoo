@@ -202,5 +202,7 @@ export const useSortable = makeDraggableHook({
         current.placeHolder = current.element.cloneNode(false);
 
         addCleanup(() => current.placeHolder.remove());
+
+        return pick(current, "element", "group");
     },
 });

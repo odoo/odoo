@@ -3,6 +3,7 @@
 import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation, setRecurringAnimationFrame } from "@web/core/utils/timing";
+import { browser } from "../browser/browser";
 
 /**
  * @typedef CleanupManager
@@ -42,6 +43,8 @@ import { useThrottleForAnimation, setRecurringAnimationFrame } from "@web/core/u
  * @property {() => boolean} [enable=() => false]
  * @property {Position} [mouse={ x: 0, y: 0 }]
  * @property {EdgeScrollingOptions} [edgeScrolling]
+ * @property {number} [delay]
+ * @property {number} [tolerance]
  * @property {DraggableHookCurrentContext} current
  *
  * @typedef DraggableHookCurrentContext
@@ -50,6 +53,8 @@ import { useThrottleForAnimation, setRecurringAnimationFrame } from "@web/core/u
  * @property {HTMLElement} [current.element]
  * @property {DOMRect} [current.elementRect]
  * @property {HTMLElement} [scrollParent]
+ * @property {number} [timeout]
+ * @property {Position} [initialPosition]
  * @property {Position} [offset={ x: 0, y: 0 }]
  *
  * @typedef EdgeScrollingOptions
@@ -79,6 +84,8 @@ const DEFAULT_ACCEPTED_PARAMS = {
     ignore: [String, Function],
     cursor: [String],
     edgeScrolling: [Object, Function],
+    delay: [Number, Function],
+    tolerance: [Number, Function],
 };
 const DEFAULT_DEFAULT_PARAMS = {
     enable: true,
@@ -86,6 +93,8 @@ const DEFAULT_DEFAULT_PARAMS = {
         speed: 10,
         threshold: 30,
     },
+    delay: 0,
+    tolerance: 10,
 };
 const DRAGGED_CLASS = "o_dragged";
 const LEFT_CLICK = 0;
@@ -573,13 +582,20 @@ export function makeDraggableHook(hookParams) {
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
                 ev.preventDefault();
 
-                ctx.current.element = ev.target.closest(ctx.elementSelector);
-                ctx.current.container = ctx.ref.el;
-                ctx.current.offset = { ...ctx.mouse };
+                ctx.current.initialPosition = { ...ctx.mouse };
 
-                cleanup.add(() => (ctx.current = {}));
-
-                callBuildHandler("onWillStartDrag");
+                if (ctx.delay) {
+                    ctx.current.timeout = browser.setTimeout(() => {
+                        const { x, y } = ctx.current.initialPosition || {};
+                        if (Math.hypot(ctx.mouse.x - x, ctx.mouse.y - y) <= ctx.tolerance) {
+                            delete ctx.current.initialPosition;
+                            willStartDrag(ev.target);
+                        }
+                    }, ctx.delay);
+                    cleanup.add(() => browser.clearTimeout(ctx.current.timeout));
+                } else {
+                    willStartDrag(ev.target);
+                }
             };
 
             /**
@@ -596,6 +612,13 @@ export function makeDraggableHook(hookParams) {
                 ev.preventDefault();
 
                 if (!state.dragging) {
+                    if (ctx.current.initialPosition) {
+                        const { x, y } = ctx.current.initialPosition;
+                        if (Math.hypot(ctx.mouse.x - x, ctx.mouse.y - y) <= ctx.tolerance) {
+                            return;
+                        }
+                        delete ctx.current.initialPosition;
+                    }
                     dragStart();
                 }
 
@@ -662,6 +685,19 @@ export function makeDraggableHook(hookParams) {
 
                 // Element rect
                 ctx.current.elementRect = dom.getRect(element);
+            };
+
+            /**
+             * @param {Element} target
+             */
+            const willStartDrag = (target) => {
+                ctx.current.element = target.closest(ctx.elementSelector);
+                ctx.current.container = ctx.ref.el;
+                ctx.current.offset = { ...ctx.mouse };
+
+                cleanup.add(() => (ctx.current = {}));
+
+                callBuildHandler("onWillStartDrag");
             };
 
             // Initialize helpers
@@ -743,6 +779,10 @@ export function makeDraggableHook(hookParams) {
 
                     // Edge scrolling
                     Object.assign(ctx.edgeScrolling, actualParams.edgeScrolling);
+
+                    // Delay & tolerance
+                    ctx.delay = actualParams.delay;
+                    ctx.tolerance = actualParams.tolerance;
 
                     callBuildHandler("onComputeParams", { params: actualParams });
 
