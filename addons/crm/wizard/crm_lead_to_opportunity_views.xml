@@ -24,7 +24,7 @@
                             <field name="email_from"/>
                             <field name="stage_id"/>
                             <field name="user_id"/>
-                            <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                            <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                         </tree>
                     </field>
                 </group>
