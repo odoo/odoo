@@ -19,6 +19,7 @@ export class RtcSession {
     /** @type {RTCDataChannel} */
     dataChannel;
     isAudioInError;
+    isRaisingHand;
     isTalking;
     localVolume;
     /** @type {RTCPeerConnection} */

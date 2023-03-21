@@ -53,11 +53,19 @@ export class Call extends Component {
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
     }
 
+    get callNotifications() {
+        return [...this.rtc.notifications.values()];
+    }
+
+    get isActiveCall() {
+        return Boolean(this.props.thread.id === this.rtc.state?.channel?.id);
+    }
+
     get minimized() {
         if (this.state.isFullscreen || this.props.compact || this.props.thread.activeRtcSession) {
             return false;
         }
-        if (this.rtc.state.channel !== this.props.thread || this.props.thread.videoCount === 0) {
+        if (!this.isActiveCall || this.props.thread.videoCount === 0) {
             return true;
         }
         return false;
@@ -95,6 +103,14 @@ export class Call extends Component {
             ];
         }
         return this.visibleCards;
+    }
+
+    get hasCallNotifications() {
+        return Boolean(
+            (!this.props.compact || this.state.isFullscreen) &&
+                this.isActiveCall &&
+                this.rtc.notifications.size
+        );
     }
 
     get hasSidebarButton() {

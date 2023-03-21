@@ -87,6 +87,9 @@ function hasTurn(iceServers) {
 }
 
 export class Rtc {
+    notifications = reactive(new Map());
+    timeouts = new Map();
+
     constructor(env, services) {
         this.env = env;
         /** @type {import("@mail/core/store_service").Store} */
@@ -258,6 +261,35 @@ export class Rtc {
     }
 
     /**
+     * @param {Object} param0
+     * @param {any} param0.id
+     * @param {string} param0.text
+     * @param {number} [param0.delay]
+     */
+    addCallNotification({ id, text, delay = 3000 }) {
+        if (this.notifications.has(id)) {
+            return;
+        }
+        this.notifications.set(id, { id, text });
+        this.timeouts.set(
+            id,
+            browser.setTimeout(() => {
+                this.notifications.delete(id);
+                this.timeouts.delete(id);
+            }, delay)
+        );
+    }
+
+    /**
+     * @param {any} id
+     */
+    removeCallNotification(id) {
+        browser.clearTimeout(this.timeouts.get(id));
+        this.notifications.delete(id);
+        this.timeouts.delete(id);
+    }
+
+    /**
      * Notifies the server and does the cleanup of the current call.
      */
     async leaveCall(channel = this.state.channel) {
@@ -402,6 +434,19 @@ export class Rtc {
                     step: " peer cleanly disconnected ",
                 });
                 this.disconnect(session);
+                break;
+            case "raise_hand":
+                Object.assign(session, { isRaisingHand: payload.active });
+                // eslint-disable-next-line no-case-declarations
+                const notificationId = "raise_hand_" + session.id;
+                if (session.isRaisingHand) {
+                    this.addCallNotification({
+                        id: notificationId,
+                        text: sprintf(_t("%s raised a hand"), session.name),
+                    });
+                } else {
+                    this.removeCallNotification(notificationId);
+                }
                 break;
             case "trackChange": {
                 const { isSelfMuted, isTalking, isSendingVideo, isDeaf } = payload.state;
@@ -641,6 +686,9 @@ export class Rtc {
                         isSelfMuted: this.state.selfSession.isSelfMuted,
                     },
                 });
+                await this.notify([session], "raise_hand", {
+                    active: this.state.selfSession.isRaisingHand,
+                });
             } catch (e) {
                 if (!(e instanceof DOMException) || e.name !== "OperationError") {
                     throw e;
@@ -858,6 +906,7 @@ export class Rtc {
     }
 
     disconnect(session) {
+        this.removeCallNotification("raise_hand_" + session.id);
         closeStream(session.audioStream);
         if (session.audioElement) {
             session.audioElement.pause();
@@ -878,6 +927,7 @@ export class Rtc {
         delete session.iceState;
         delete session.logStep;
         session.isAudioInError = false;
+        session.isRaisingHand = false;
         session.isTalking = false;
         this.removeVideoFromSession(session);
         session.dataChannel?.close();
@@ -999,6 +1049,19 @@ export class Rtc {
     async setMute(isSelfMuted) {
         this.updateAndBroadcast({ isSelfMuted });
         await this.refreshAudioStatus();
+    }
+
+    /**
+     * @param {Boolean} isRaisingHand
+     */
+    async raiseHand(isRaisingHand) {
+        if (!this.state.selfSession || !this.state.channel) {
+            return;
+        }
+        this.state.selfSession.isRaisingHand = isRaisingHand;
+        await this.notify(Object.values(this.state.channel.rtcSessions), "raise_hand", {
+            active: this.state.selfSession.isRaisingHand,
+        });
     }
 
     /**
@@ -1316,6 +1379,7 @@ export class Rtc {
         }
         if (channelMember) {
             const channelMemberRecord = this.channelMemberService.insert(channelMember);
+            channelMemberRecord.rtcSessionId = session.id;
             session.channelMemberId = channelMemberRecord.id;
             if (channelMemberRecord.thread) {
                 channelMemberRecord.thread.rtcSessions[session.id] = session;
