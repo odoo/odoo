@@ -45,7 +45,7 @@ class FlutterwaveController(http.Controller):
         data = request.get_json_data()
         _logger.info("Notification received from Flutterwave with data:\n%s", pprint.pformat(data))
 
-        if data['event'] == 'charge.completed':
+        if data.get('event') == 'charge.completed':
             try:
                 # Check the origin of the notification.
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
