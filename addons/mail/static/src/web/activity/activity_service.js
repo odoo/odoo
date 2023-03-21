@@ -7,6 +7,9 @@ import { registry } from "@web/core/registry";
 
 export class ActivityService {
     constructor(env, services) {
+        // useful for synchronizing activity data between multiple tabs
+        this.broadcastChannel = new BroadcastChannel("mail.activity.channel");
+        this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
         this.env = env;
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
@@ -22,6 +25,24 @@ export class ActivityService {
             attachment_ids: attachmentIds,
             feedback: activity.feedback,
         });
+        this.broadcastChannel.postMessage({
+            type: "reload chatter",
+            payload: { resId: activity.res_id, resModel: activity.res_model },
+        });
+    }
+
+    async markAsDoneAndScheduleNext(activity) {
+        const action = await this.env.services.orm.call(
+            "mail.activity",
+            "action_feedback_schedule_next",
+            [[activity.id]],
+            { feedback: activity.feedback }
+        );
+        this.broadcastChannel.postMessage({
+            type: "reload chatter",
+            payload: { resId: activity.res_id, resModel: activity.res_model },
+        });
+        return action;
     }
 
     async schedule(resModel, resId, activityId = false, defaultActivityTypeId = undefined) {
@@ -51,19 +72,55 @@ export class ActivityService {
 
     /**
      * @param {import("./activity_model").Data} data
+     * @param {Object} [param1]
+     * @param {boolean} param1.broadcast
      * @returns {import("./activity_model").Activity}
      */
-    insert(data) {
+    insert(data, { broadcast = true } = {}) {
         const activity = this.store.activities[data.id] ?? new Activity(this.store, data.id);
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];
         }
         assignDefined(activity, data);
+        if (broadcast) {
+            this.broadcastChannel.postMessage({
+                type: "insert",
+                payload: this._serialize(activity),
+            });
+        }
         return activity;
     }
 
-    delete(activity) {
+    delete(activity, { broadcast = true } = {}) {
         delete this.store.activities[activity.id];
+        if (broadcast) {
+            this.broadcastChannel.postMessage({ type: "delete", payload: { id: activity.id } });
+        }
+    }
+
+    _onBroadcastChannelMessage({ data }) {
+        switch (data.type) {
+            case "insert":
+                this.insert(data.payload, { broadcast: false });
+                break;
+            case "delete":
+                this.delete(data.payload, { broadcast: false });
+                break;
+            case "reload chatter": {
+                const thread = this.env.services["mail.thread"].getThread(
+                    data.payload.resModel,
+                    data.payload.resId
+                );
+                this.env.services["mail.thread"].fetchNewMessages(thread);
+                break;
+            }
+        }
+    }
+
+    _serialize(activity) {
+        const data = { ...activity };
+        delete data._store;
+        return JSON.parse(JSON.stringify(data));
     }
 }
 

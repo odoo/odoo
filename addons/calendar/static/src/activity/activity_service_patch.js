@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ActivityService.prototype, "calendar/activity_service", {
     insert(data) {
-        const activity = this._super(data);
+        const activity = this._super(...arguments);
         const { calendar_event_id: calendarEventId } = data;
         if (calendarEventId) {
             activity["calendar_event_id"] = calendarEventId;

@@ -50,13 +50,8 @@ export class ActivityMarkAsDone extends Component {
         if (this.props.close) {
             this.props.close();
         }
-        const action = await this.env.services.orm.call(
-            "mail.activity",
-            "action_feedback_schedule_next",
-            [[this.props.activity.id]],
-            {
-                feedback: this.props.activity.feedback,
-            }
+        const action = await this.env.services["mail.activity"].markAsDoneAndScheduleNext(
+            this.props.activity
         );
         this.threadService.fetchNewMessages(thread);
         if (this.props.reload) {
