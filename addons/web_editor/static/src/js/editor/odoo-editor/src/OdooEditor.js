@@ -4343,10 +4343,17 @@ export class OdooEditor extends EventTarget {
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
-        } else if (files.length && targetSupportsHtmlContent) {
-            this.addImagesFiles(files).then(html => this._applyCommand('insert', this._prepareClipboardData(html)));
-        } else if (clipboardHtml && targetSupportsHtmlContent) {
-            this._applyCommand('insert', this._prepareClipboardData(clipboardHtml));
+        } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
+            const clipboardElem = this._prepareClipboardData(clipboardHtml);
+            // When copy pasting a table from the outside, a picture of the
+            // table can be included in the clipboard as an image file. In that
+            // particular case the html table is given a higher priority than
+            // the clipboard picture.
+            if (files.length && !clipboardElem.querySelector('table')) {
+                this.addImagesFiles(files).then(html => this._applyCommand('insert', this._prepareClipboardData(html)));
+            } else {
+                this._applyCommand('insert', clipboardElem);
+            }
         } else {
             const text = ev.clipboardData.getData('text/plain');
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
