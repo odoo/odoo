@@ -2,7 +2,7 @@
 <odoo><data>
     <!-- TAG VIEWS -->
     <record id="forum_tag_view_list" model="ir.ui.view">
-        <field name="name">forum.tag.list</field>
+        <field name="name">forum.tag.view.list</field>
         <field name="model">forum.tag</field>
         <field name="arch" type="xml">
             <tree string="Tags" editable="bottom">
@@ -13,7 +13,7 @@
     </record>
 
     <record id="forum_tag_view_form" model="ir.ui.view">
-        <field name="name">forum.tag.form</field>
+        <field name="name">forum.tag.view.form</field>
         <field name="model">forum.tag</field>
         <field name="arch" type="xml">
             <form string="Tag">

@@ -3,7 +3,7 @@
     <record id="forum_forum_view_form" model="ir.ui.view">
         <field name="name">forum.forum.view.form.inherit.slides</field>
         <field name="model">forum.forum</field>
-        <field name="inherit_id" ref="website_forum.view_forum_forum_form"/>
+        <field name="inherit_id" ref="website_forum.forum_forum_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_order']" position="after">
                 <group string="eLearning" name="group_slides" attrs="{'invisible': [('slide_channel_id', '=', False)]}">
@@ -27,7 +27,7 @@
         <field name="model">forum.forum</field>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
-        <field name="inherit_id" ref="website_forum.view_forum_forum_list"/>
+        <field name="inherit_id" ref="website_forum.forum_forum_view_tree"/>
         <field name="arch" type="xml">
             <field name="website_id" position="after">
                 <field name="slide_channel_id"/>
