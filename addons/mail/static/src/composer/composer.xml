@@ -35,14 +35,14 @@
                 >
                     <div class="position-relative flex-grow-1">
                         <textarea class="o-mail-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
-                            t-ref="textarea"
+                            t-ref="input"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
                             t-on-input="onInput"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
                             t-on-paste="onPaste"
-                            t-model="props.composer.textInputContent"
+                            t-model="props.composer.inputContent"
                             t-att-placeholder="placeholder"
                             t-att-readOnly="!state.active"
                         />
@@ -52,9 +52,9 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake position-absolute"
-                            t-model="props.composer.textInputContent"
-                            t-ref="fakeTextarea"
+                            class="o-mail-Composer-fakeInput position-absolute"
+                            t-model="props.composer.inputContent"
+                            t-ref="fakeInput"
                             disabled="1"
                         />
                     </div>

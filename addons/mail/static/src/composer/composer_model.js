@@ -6,7 +6,7 @@ export class Composer {
     /** @type {import("@mail/core/message_model").Message} */
     message;
     /** @type {string} */
-    textInputContent;
+    inputContent;
     /** @type {import("@mail/core/thread_model").Thread */
     thread;
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
@@ -33,7 +33,7 @@ export class Composer {
             message.composer = this;
         }
         Object.assign(this, {
-            textInputContent: "",
+            inputContent: "",
             type: thread?.type === "chatter" ? false : "message",
             _store: store,
         });

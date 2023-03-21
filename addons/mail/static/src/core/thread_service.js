@@ -637,8 +637,8 @@ export class ThreadService {
         if (!composer) {
             composer = new Composer(this.store, data);
         }
-        if ("textInputContent" in data) {
-            composer.textInputContent = data.textInputContent;
+        if ("inputContent" in data) {
+            composer.inputContent = data.inputContent;
         }
         if ("selection" in data) {
             Object.assign(composer.selection, data.selection);
@@ -841,7 +841,7 @@ export class ThreadService {
      */
     clearComposer(composer) {
         composer.attachments.length = 0;
-        composer.textInputContent = "";
+        composer.inputContent = "";
         Object.assign(composer.selection, {
             start: 0,
             end: 0,

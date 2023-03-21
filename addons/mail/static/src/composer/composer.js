@@ -70,8 +70,8 @@ export class Composer extends Component {
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
-        this.ref = useRef("textarea");
-        this.fakeTextarea = useRef("fakeTextarea");
+        this.input = useRef("input");
+        this.fakeInput = useRef("fakeInput");
         this.typingNotified = false;
         this.state = useState({
             autofocus: 0,
@@ -82,7 +82,7 @@ export class Composer extends Component {
             this.typingNotified = false;
         }, SHORT_TYPING);
         this.selection = useSelection({
-            refName: "textarea",
+            refName: "input",
             model: this.props.composer.selection,
             preserveOnClickAwayPredicate: async (ev) => {
                 // Let event be handled by bubbling handlers first.
@@ -123,9 +123,9 @@ export class Composer extends Component {
         });
         useEffect(
             (focus) => {
-                if (focus && this.ref.el) {
+                if (focus && this.input.el) {
                     this.selection.restore();
-                    this.ref.el.focus();
+                    this.input.el.focus();
                 }
             },
             () => [this.props.autofocus + this.state.autofocus, this.props.placeholder]
@@ -140,9 +140,9 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                this.input.el.style.height = this.fakeInput.el.scrollHeight + "px";
             },
-            () => [this.props.composer.textInputContent, this.ref.el]
+            () => [this.props.composer.inputContent, this.input.el]
         );
         useEffect(
             () => {
@@ -155,7 +155,7 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         onMounted(() => {
-            this.ref.el.scrollTo({ top: 0, behavior: "instant" });
+            this.input.el.scrollTo({ top: 0, behavior: "instant" });
         });
         onExternalClick("composer", async (ev) => {
             // Let event be handled by bubbling handlers first.
@@ -211,7 +211,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.textInputContent && attachments.length === 0) ||
+            (!this.props.composer.inputContent && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -222,7 +222,7 @@ export class Composer extends Component {
 
     get navigableListProps() {
         return {
-            anchorRef: this.ref.el,
+            anchorRef: this.input.el,
             position: "top",
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
@@ -360,7 +360,7 @@ export class Composer extends Component {
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const context = {
             default_attachment_ids: attachmentIds,
-            default_body: escapeAndCompactTextContent(this.props.composer.textInputContent),
+            default_body: escapeAndCompactTextContent(this.props.composer.inputContent),
             default_model: this.props.composer.thread.model,
             default_partner_ids: this.props.composer.thread.suggestedRecipients.map(
                 (partner) => partner.id
@@ -405,7 +405,7 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const el = this.ref.el;
+        const el = this.input.el;
         const attachments = this.props.composer.attachments;
         if (
             el.value.trim() ||
@@ -478,7 +478,7 @@ export class Composer extends Component {
     }
 
     async editMessage() {
-        if (this.ref.el.value || this.props.composer.message.attachments.length > 0) {
+        if (this.input.el.value || this.props.composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
                 this.messageService.update(
                     this.props.composer.message,
@@ -497,10 +497,10 @@ export class Composer extends Component {
     }
 
     addEmoji(str) {
-        const textContent = this.ref.el.value;
+        const textContent = this.input.el.value;
         const firstPart = textContent.slice(0, this.props.composer.selection.start);
         const secondPart = textContent.slice(this.props.composer.selection.end, textContent.length);
-        this.props.composer.textInputContent = firstPart + str + secondPart;
+        this.props.composer.inputContent = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
         this.state.autofocus++;
     }

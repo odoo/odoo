@@ -22,7 +22,7 @@ export function useSuggestion() {
         detect() {
             const selectionEnd = comp.props.composer.selection.end;
             const selectionStart = comp.props.composer.selection.start;
-            const content = comp.props.composer.textInputContent;
+            const content = comp.props.composer.inputContent;
             if (selectionStart !== selectionEnd) {
                 // avoid interfering with multi-char selection
                 self.clearSearch();
@@ -69,7 +69,7 @@ export function useSuggestion() {
         },
         insert(option) {
             const cursorPosition = comp.props.composer.selection.start;
-            const content = comp.props.composer.textInputContent;
+            const content = comp.props.composer.inputContent;
             let textLeft = content.substring(0, self.search.position + 1);
             let textRight = content.substring(cursorPosition, content.length);
             if (self.search.delimiter === ":") {
@@ -84,7 +84,7 @@ export function useSuggestion() {
                 self.rawMentions.threadIds.add(option.thread.id);
             }
             self.clearSearch();
-            comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;
+            comp.props.composer.inputContent = textLeft + recordReplacement + " " + textRight;
             comp.props.composer.selection.start = textLeft.length + recordReplacement.length + 1;
             comp.props.composer.selection.end = textLeft.length + recordReplacement.length + 1;
             comp.props.composer.forceCursorMove = true;
@@ -172,7 +172,7 @@ export function useSuggestion() {
         () => [
             comp.props.composer.selection.start,
             comp.props.composer.selection.end,
-            comp.props.composer.textInputContent,
+            comp.props.composer.inputContent,
         ]
     );
     return self;

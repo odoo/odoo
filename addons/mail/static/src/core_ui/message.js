@@ -387,7 +387,7 @@ export class Message extends Component {
         const messageContent = convertBrToLineBreak(this.props.message.body);
         this.threadService.insertComposer({
             message: this.props.message,
-            textInputContent: messageContent,
+            inputContent: messageContent,
             selection: {
                 start: messageContent.length,
                 end: messageContent.length,
