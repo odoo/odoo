@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_loyalty" name="Loyalty"
-        parent="website_sale.menu_ecommerce" sequence="4"
-        groups="sales_team.group_sale_manager"/>
-
-    <menuitem
-        id="menu_discount_loyalty_type_config"
-        action="loyalty.loyalty_program_discount_loyalty_action"
-        name="Discount &amp; Loyalty"
-        parent="website_sale_loyalty.menu_loyalty"
-        groups="sales_team.group_sale_manager"
-        sequence="50"
-    />
-
-    <menuitem
-        id="menu_gift_ewallet_type_config"
-        action="loyalty.loyalty_program_gift_ewallet_action"
-        name="Gift cards &amp; eWallet"
-        parent="website_sale_loyalty.menu_loyalty"
-        groups="sales_team.group_sale_manager"
-        sequence="51"
-    />
 
     <record id="loyalty_program_view_form_inherit_website_sale_loyalty" model="ir.ui.view">
         <field name="name">loyalty.program.view.form.inherit.website.sale.loyalty</field>
