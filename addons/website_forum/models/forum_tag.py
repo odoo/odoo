@@ -15,14 +15,14 @@ class Tags(models.Model):
     post_ids = fields.Many2many(
         'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id',
         string='Posts', domain=[('state', '=', 'active')])
-    posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
+    posts_count = fields.Integer('Number of Posts', compute='_compute_posts_count', store=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name, forum_id)', "Tag name already exists!"),
     ]
 
     @api.depends("post_ids.tag_ids", "post_ids.state")
-    def _get_posts_count(self):
+    def _compute_posts_count(self):
         for tag in self:
             tag.posts_count = len(tag.post_ids)
 
