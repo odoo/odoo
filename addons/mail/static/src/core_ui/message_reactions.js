@@ -1,14 +1,13 @@
 /** @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
-
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { useStore } from "../core/messaging_hook";
 
 export class MessageReactions extends Component {
-    static props = ["message"];
+    static props = ["message", "openReactionMenu"];
     static template = "mail.MessageReactions";
 
     setup() {
@@ -69,6 +68,13 @@ export class MessageReactions extends Component {
             this.messageService.removeReaction(reaction);
         } else {
             this.messageService.react(this.props.message, reaction.content);
+        }
+    }
+
+    onContextMenu(ev) {
+        if (this.store.isSmall) {
+            ev.preventDefault();
+            this.props.openReactionMenu();
         }
     }
 }
