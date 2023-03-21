@@ -33,8 +33,14 @@ Ask questions, get answers, no distractions
         'views/res_users_views.xml',
         'views/gamification_karma_tracking_views.xml',
         'views/forum_menus.xml',
+
         'views/base_contact_templates.xml',
         'views/forum_forum_templates.xml',
+        'views/forum_forum_templates_forum_all.xml',
+        'views/forum_forum_templates_layout.xml',
+        'views/forum_forum_templates_moderation.xml',
+        'views/forum_forum_templates_post.xml',
+        'views/forum_forum_templates_tools.xml',
         'views/website_profile_templates.xml',
         'views/snippets/snippets.xml',
 
