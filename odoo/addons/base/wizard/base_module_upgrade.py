@@ -66,8 +66,6 @@ class BaseModuleUpgrade(models.TransientModel):
             if unmet_packages:
                 raise UserError(_('The following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
-            mods.download()
-
         # terminate transaction before re-creating cursor below
         self._cr.commit()
         odoo.modules.registry.Registry.new(self._cr.dbname, update_module=True)
