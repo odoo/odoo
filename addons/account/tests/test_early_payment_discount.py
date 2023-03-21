@@ -570,3 +570,67 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': 4.0,    'tax_ids': [],                  'tax_tag_ids': tax_tags[5].ids, 'tax_tag_invert': True},
             {'amount_currency': 1000.0, 'tax_ids': [],                  'tax_tag_ids': [],              'tax_tag_invert': False},
         ])
+
+    def test_mixed_early_discount_with_tag_on_tax_base_line(self):
+        """
+        Ensure that early payment discount line grouping works properly when
+        using a tax that adds tax tags to its base line.
+        """
+        self.env.company.early_pay_discount_computation = 'mixed'
+
+        tax_tag = self.env['account.account.tag'].create({
+            'name': 'tax_tag',
+            'applicability': 'taxes',
+            'country_id': self.env.company.account_fiscal_country_id.id,
+        })
+
+        tax_21 = self.env['account.tax'].create({
+            'name': "tax_21",
+            'amount': 21,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [Command.set(tax_tag.ids)],
+                }),
+                Command.create({
+                    'factor_percent': 100, 'repartition_type': 'tax',
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100, 'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100, 'repartition_type': 'tax',
+                }),
+            ],
+        })
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        bill.write({
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        bill.write({
+            'invoice_line_ids': [Command.create({
+                'name': 'line2',
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(tax_21.ids)],
+            })],
+        })
+        epd_lines = bill.line_ids.filtered(lambda line: line.display_type == 'epd')
+        self.assertRecordValues(epd_lines.sorted('balance'), [
+            {'balance': -200.0},
+            {'balance': 200.0},
+        ])
