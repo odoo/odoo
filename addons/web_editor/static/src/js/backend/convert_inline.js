@@ -522,7 +522,7 @@ function enforceTablesResponsivity(editable) {
                 // Hack that makes vertical-align possible within an inline-block.
                 const wrapper = document.createElement('div');
                 wrapper.style.setProperty('display', 'inline-block');
-                for (const child of [...td.childNodes]) {
+                for (const child of [...td.childNodes].filter(child => child.nodeType !== Node.COMMENT_NODE)) {
                     wrapper.append(child);
                 }
                 td.append(wrapper);
@@ -1069,10 +1069,11 @@ function normalizeRem($editable, rootFontSize=16) {
         } else {
             outlookTd.setAttribute('style', msoStyles);
         }
+        // The opening tag of `outlookTd` is for Outlook.
         td.before(document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`));
+        // The opening tag of `td` is for the others.
         td.before(document.createComment('[if !mso]><!'));
         td.prepend(document.createComment('<![endif]'));
-        td.after(document.createComment(`[if mso]></td><![endif]`));
     }
 }
 /**
