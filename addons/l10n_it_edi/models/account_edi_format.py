@@ -292,10 +292,10 @@ class AccountEdiFormat(models.Model):
     def _cron_receive_fattura_pa(self):
         ''' Check the proxy for incoming invoices for all companies.
         '''
-        if self.env['account_edi_proxy_client.user']._get_demo_state() == 'demo':
-            return
-
-        for proxy_user in self.env['account_edi_proxy_client.user'].search([('edi_format_code', '=', 'fattura_pa')]):
+        for proxy_user in self.env['account_edi_proxy_client.user'].search([
+            ('proxy_type', '=', 'l10n_it_edi'),
+            ('edi_mode', '!=', 'demo'),
+        ]):
             self._receive_fattura_pa(proxy_user)
 
     def _receive_fattura_pa(self, proxy_user):
@@ -831,7 +831,7 @@ class AccountEdiFormat(models.Model):
 
         res.extend(self._l10n_it_edi_check_invoice_configuration(move))
 
-        if not self._get_proxy_user(move.company_id):
+        if not self.env['account_edi_proxy_client.user']._get_proxy_users(move.company_id, 'l10n_it_edi'):
             res.append(_("You must accept the terms and conditions in the settings to use FatturaPA."))
 
         return res
@@ -870,14 +870,14 @@ class AccountEdiFormat(models.Model):
                     'data': {'filename': filename, 'xml': base64.b64encode(xml.encode()).decode()}}
 
         company = invoices.company_id
-        proxy_user = self._get_proxy_user(company)
+        proxy_user = self.env['account_edi_proxy_client.user']._get_proxy_users(company, 'l10n_it_edi')
         if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
             return {invoice: {
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
         responses = {}
-        if proxy_user._get_demo_state() == 'demo':
+        if proxy_user.edi_mode == 'demo':
             responses = {i['data']['filename']: {'id_transaction': 'demo'} for i in to_send.values()}
         else:
             try:
@@ -902,13 +902,13 @@ class AccountEdiFormat(models.Model):
         to_return = {}
         company = invoices.company_id
 
-        proxy_user = self._get_proxy_user(company)
+        proxy_user = self.env['account_edi_proxy_client.user']._get_proxy_users(company, 'l10n_it_edi')
         if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
             return {invoice: {
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
-        if proxy_user._get_demo_state() == 'demo':
+        if proxy_user.edi_mode == 'demo':
             # simulate success and bypass ack
             return {invoice: {'attachment': invoice.l10n_it_edi_attachment_id} for invoice in invoices}
         else:
@@ -1049,11 +1049,7 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
     # Proxy methods
     # -------------------------------------------------------------------------
-
     def _get_proxy_identification(self, company):
-        if self.code != 'fattura_pa':
-            return super()._get_proxy_identification()
-
         if not company.l10n_it_codice_fiscale:
             raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
 

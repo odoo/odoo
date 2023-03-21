@@ -3,7 +3,7 @@
     'name': 'Proxy features for account_edi',
     'description': """
 This module adds generic features to register an Odoo DB on the proxy responsible for receiving data (via requests from web-services).
-- An edi_proxy_user has a unique identification on a specific format (for example, the vat for Peppol) which
+- An edi_proxy_user has a unique identification on a specific proxy type (e.g. l10n_it_edi, peppol) which
 allows to identify him when receiving a document addressed to him. It is linked to a specific company on a specific
 Odoo database.
 - Encryption features allows to decrypt all the user's data when receiving it from the proxy.
@@ -11,7 +11,7 @@ Odoo database.
     """,
     'version': '1.0',
     'category': 'Accounting/Accounting',
-    'depends': ['account_edi'],
+    'depends': ['account'],
     'external_dependencies': {
         'python': ['cryptography']
     },
