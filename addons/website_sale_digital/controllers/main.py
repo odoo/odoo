@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -16,7 +15,7 @@ class WebsiteSaleDigital(CustomerPortal):
 
     @http.route()
     def portal_order_page(self, order_id=None, **post):
-        response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
+        response = super().portal_order_page(order_id=order_id, **post)
         if not 'sale_order' in response.qcontext:
             return response
         order = response.qcontext['sale_order']
@@ -68,7 +67,7 @@ class WebsiteSaleDigital(CustomerPortal):
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = request.env['account.move.line'].get_digital_purchases()
+        purchased_products = request.env['account.move.line']._get_digital_purchases()
 
         if res_model == 'product.product':
             if res_id not in purchased_products:
