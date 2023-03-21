@@ -7,7 +7,27 @@ const snippets = [
         id: 's_text_image',
         name: 'Text - Image',
     },
+    {
+        id: "s_banner",
+        name: "Banner",
+    },
+    {
+        id: "s_popup",
+        name: "Popup",
+    },
 ];
+function checkEyeIcon(snippetName, visible) {
+    const eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
+    const openOrClose = visible ? "open" : "close";
+    const endExplanation = `should be ${openOrClose} in the "Invisible Elements" panel`;
+    const invisibleElPanel = "o_we_invisible_el_panel";
+    return {
+            content: `The eye icon of ${snippetName} ${endExplanation}`,
+            trigger:
+            `.${invisibleElPanel} .o_we_invisible_entry:contains("${snippetName}") i.${eyeIcon}`,
+            run: () => {}, // it is a check
+        };
+}
 wTourUtils.registerWebsitePreviewTour('conditional_visibility_1', {
     edition: true,
     url: '/',
@@ -54,4 +74,57 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
         }
     },
 },
+]);
+
+wTourUtils.registerWebsitePreviewTour("conditional_visibility_3", {
+    edition: true,
+    test: true,
+    url: "/",
+},
+[
+checkEyeIcon("Text - Image", true),
+// Drag a "Banner" snippet on the website.
+wTourUtils.dragNDrop(snippets[1]),
+// Click on the "Banner" snippet.
+wTourUtils.clickOnSnippet(snippets[1]),
+wTourUtils.changeOption("ConditionalVisibility", "we-toggler"),
+wTourUtils.changeOption("ConditionalVisibility", '[data-name="visibility_conditional"]'),
+checkEyeIcon("Banner", true),
+{
+    content: "click on 'Blocks'",
+    trigger: "#snippets_menu button:contains('Blocks')",
+},
+// Drag a "Popup" snippet on the website.
+wTourUtils.dragNDrop(snippets[2]),
+{
+    content: "Toggle the visibility of the popup",
+    in_modal: false,
+    trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
+},
+checkEyeIcon("Popup", false),
+{
+    content: "Click on footer",
+    trigger: "iframe #wrapwrap footer",
+},
+wTourUtils.changeOption("HideFooter", "we-checkbox"),
+checkEyeIcon("Footer", false),
+{
+    content: "Click on Header",
+    trigger: "iframe #wrapwrap header",
+},
+wTourUtils.changeOption("TopMenuVisibility", "we-toggler"),
+wTourUtils.changeOption("TopMenuVisibility", '[data-visibility="hidden"]'),
+checkEyeIcon("Header", false),
+{
+    content: "Toggle the visibility of the Banner snippet",
+    trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Banner')",
+},
+checkEyeIcon("Banner", false),
+...wTourUtils.clickOnSave(),
+...wTourUtils.clickOnEditAndWaitEditMode(),
+checkEyeIcon("Header", false),
+checkEyeIcon("Text - Image", true),
+checkEyeIcon("Popup", false),
+checkEyeIcon("Banner", true),
+checkEyeIcon("Footer", false),
 ]);
