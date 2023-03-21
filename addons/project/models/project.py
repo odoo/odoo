@@ -111,6 +111,7 @@ class ProjectTaskType(models.Model):
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
+        print("cuicui")
         # retrieves all the projects with a least 1 task in that stage
         # a task can be in a stage even if the project is not assigned to the stage
         readgroup = self.with_context(active_test=False).env['project.task']._read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
