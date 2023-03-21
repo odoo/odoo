@@ -228,12 +228,12 @@ body.editor_enable {
 // target all inputs and/or target specific snippets in their own app.
 .editor_enable {
     .s_website_form, .s_wsale_products_searchbar_input, .js_subscribe, .js_follow_alias {
-        input {
+        input:not(.o_translatable_attribute) {
             pointer-events: none;
         }
     }
     .s_website_form {
-        [data-toggle="datetimepicker"], textarea {
+        [data-toggle="datetimepicker"], textarea:not(.o_translatable_attribute) {
             pointer-events: none;
         }
     }

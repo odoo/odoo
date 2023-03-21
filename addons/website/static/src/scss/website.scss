@@ -1517,3 +1517,17 @@ $ribbon-padding: 100px;
     // hide them if a modal is open.
     display: none !important;
 }
+// On translation editor, inputs & textareas with translatable "placeholder"
+// will get HTML content as translation value for the attribute. The goal here
+// is to hide these values until the editor's code sets the right ones on the
+// elements.
+[placeholder*="data-oe-translation-id"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
