@@ -60,6 +60,8 @@ export class Message {
     trackingValues = [];
     /** @type {string} */
     type;
+    /** @type {string} */
+    temporary_id = null;
     /**
      * We exclude the milliseconds because datetime string from the server don't
      * have them. Message without date like transient message can be missordered
