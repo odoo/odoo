@@ -1109,12 +1109,12 @@ export class Record extends DataPoint {
                 relation: definition.comodel,
             };
             const field = getFieldFromRegistry(definition.type, widget);
-            let { fieldsToFetch } = field;
-            if (fieldsToFetch) {
-                if (fieldsToFetch instanceof Function) {
-                    fieldsToFetch = fieldsToFetch({ options: {}, attrs: {} });
+            let { relatedFields } = field;
+            if (relatedFields) {
+                if (relatedFields instanceof Function) {
+                    relatedFields = relatedFields({ options: {}, attrs: {} });
                 }
-                fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+                relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
             }
             this.activeFields[propertyFieldName] = {
                 ...pick(
@@ -1132,7 +1132,7 @@ export class Record extends DataPoint {
                 attrs: {},
                 options: {},
                 widget,
-                fieldsToFetch,
+                relatedFields,
                 field,
             };
         }
