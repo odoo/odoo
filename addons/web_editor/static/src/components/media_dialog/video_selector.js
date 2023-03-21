@@ -155,10 +155,12 @@ export class VideoSelector extends Component {
         if (!src) {
             this.state.errorMessage = this.env._t("The provided url is not valid");
         } else if (!platform) {
-            this.env._t("The provided url does not reference any supported video");
+            this.state.errorMessage =
+                this.env._t("The provided url does not reference any supported video");
         } else {
             this.state.errorMessage = '';
         }
+        this.props.errorMessages(this.state.errorMessage);
 
         const newOptions = [];
         if (platform && platform !== this.state.platform) {
