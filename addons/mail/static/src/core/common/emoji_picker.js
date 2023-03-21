@@ -20,6 +20,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  *
@@ -124,8 +125,7 @@ export async function loadEmoji() {
 export const EMOJI_PER_ROW = 9;
 
 export class EmojiPicker extends Component {
-    static props = ["onSelect", "close", "onClose?", "storeScroll?"];
-    static defaultProps = { onClose: () => {} };
+    static props = ["onSelect", "className?", "close?", "onClose?", "storeScroll?"];
     static template = "mail.EmojiPicker";
 
     recent = [];
@@ -136,6 +136,7 @@ export class EmojiPicker extends Component {
     setup() {
         this.inputRef = useRef("input");
         this.gridRef = useRef("emoji-grid");
+        this.ui = useState(useService("ui"));
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
@@ -217,6 +218,7 @@ export class EmojiPicker extends Component {
     }
 
     onClick(ev) {
+        markEventHandled(ev, "EmojiPicker.onClick");
         markEventHandled(ev, "emoji.selectEmoji");
     }
 
@@ -260,8 +262,8 @@ export class EmojiPicker extends Component {
                     .click();
                 break;
             case "Escape":
-                this.props.close();
-                this.props.onClose();
+                this.props.close?.();
+                this.props.onClose?.();
                 ev.stopPropagation();
         }
     }
@@ -291,8 +293,8 @@ export class EmojiPicker extends Component {
         browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
         this.gridRef.el.scrollTop = 0;
         if (!ev.shiftKey) {
-            this.props.close();
-            this.props.onClose();
+            this.props.close?.();
+            this.props.onClose?.();
         }
     }
 

@@ -81,6 +81,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/discuss_channel_member_views.xml',
         'views/discuss_channel_rtc_session_views.xml',
         'views/mail_link_preview_views.xml',
+        'views/discuss/discuss_gif_favorite_views.xml',
         'views/discuss_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',

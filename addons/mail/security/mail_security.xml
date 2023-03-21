@@ -27,6 +27,20 @@
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
+        <record id="discuss_gif_favorite_user_rule" model="ir.rule">
+            <field name="name">Discuss.gif.favorite: User access</field>
+            <field name="model_id" ref="model_discuss_gif_favorite"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="discuss_gif_favorite_admin_rule" model="ir.rule">
+            <field name="name">Discuss.gif.favorite: admin full access</field>
+            <field name="model_id" ref="model_discuss_gif_favorite"/>
+            <field name="groups" eval="[Command.link(ref('base.group_erp_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
         <record id="ir_rule_discuss_channel_member_group_user" model="ir.rule">
             <field name="name">discuss.channel.member: write its own entries</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
