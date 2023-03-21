@@ -675,6 +675,7 @@ class Applicant(models.Model):
         }
         dict_act_window = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         dict_act_window['context'] = employee_data
+        self.stage_id.hired_stage = True
         return dict_act_window
 
     def _update_employee_from_applicant(self):
