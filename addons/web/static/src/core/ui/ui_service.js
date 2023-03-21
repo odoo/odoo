@@ -119,10 +119,16 @@ export function getMediaQueryLists() {
 // window size handling.
 const MEDIAS = getMediaQueryLists();
 
-export const uiService = {
+export const utils = {
     getSize() {
         return MEDIAS.findIndex((media) => media.matches);
     },
+    isSmall(ui = {}) {
+        return (ui.size || utils.getSize()) <= SIZES.SM;
+    },
+};
+
+export const uiService = {
     start(env) {
         // block/unblock code
         const bus = new EventBus();
@@ -169,7 +175,7 @@ export const uiService = {
 
         const ui = {
             bus,
-            size: this.getSize(),
+            size: utils.getSize(),
             get activeElement() {
                 return activeElems[activeElems.length - 1];
             },
@@ -177,7 +183,7 @@ export const uiService = {
                 return blockCount > 0;
             },
             get isSmall() {
-                return ui.size <= SIZES.SM;
+                return utils.isSmall(ui);
             },
             block,
             unblock,
@@ -189,7 +195,7 @@ export const uiService = {
         // listen to media query status changes
         const updateSize = () => {
             const prevSize = ui.size;
-            ui.size = this.getSize();
+            ui.size = utils.getSize();
             if (ui.size !== prevSize) {
                 bus.trigger("resize");
             }
