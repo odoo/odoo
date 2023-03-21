@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.urls import url_encode
@@ -7,7 +6,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class SaleCouponShare(models.TransientModel):
+class CouponShare(models.TransientModel):
     _name = 'coupon.share'
     _description = 'Create links that apply a coupon and redirect to a specific page'
 
