@@ -45,7 +45,7 @@ Ask questions, get answers, no distractions
         'views/snippets/snippets.xml',
 
         'security/ir.model.access.csv',
-        'security/website_forum_security.xml',
+        'security/ir_rule_data.xml',
 
         'data/gamification_badge_data_question.xml',
         'data/gamification_badge_data_answer.xml',
