@@ -1,19 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import io
-import os
-import mimetypes
-
-from odoo import http
-from odoo.http import request
+from odoo.http import request, route
 from odoo.addons.sale.controllers.portal import CustomerPortal
 
 
 class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
-    @http.route()
+    @route()
     def portal_order_page(self, order_id=None, **post):
         response = super().portal_order_page(order_id=order_id, **post)
         if not 'sale_order' in response.qcontext:
@@ -49,9 +43,7 @@ class WebsiteSaleDigital(CustomerPortal):
         })
         return response
 
-    @http.route([
-        '/my/download',
-    ], type='http', auth='public')
+    @route(['/my/download'], type='http', auth='public')
     def download_attachment(self, attachment_id):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
