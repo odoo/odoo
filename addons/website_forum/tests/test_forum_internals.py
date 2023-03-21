@@ -2,7 +2,61 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, users
+
+
+@tagged('forum_internals')
+class TestForumInternals(TestForumCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestForumInternals, cls).setUpClass()
+        cls._activate_multi_website()
+
+    @users('admin')
+    def test_assert_initial_values(self):
+        """ To ease test setup we support tests only with base data, to avoid
+        having to deal with custom / existing data in various asserts. """
+        forums = self.env['forum.forum'].search([])
+        self.assertEqual(forums, self.base_forum + self.forum)
+        self.assertFalse(forums.website_id)
+
+    @users('admin')
+    def test_website_forums_count(self):
+        """ Test synchronization of website / forum counters. """
+        base_website = self.base_website.with_env(self.env)
+        website_2 = self.website_2.with_env(self.env)
+
+        self.assertEqual(base_website.forums_count, 2,
+                         'Should count default global forums')
+        self.assertEqual(website_2.forums_count, 2,
+                         'Should count default global forums')
+
+        new_forums = self.env['forum.forum'].create([
+            {
+                'name': 'New Global',
+                'website_id': False,
+            }, {
+                'name': 'Base Website',
+                'website_id': base_website.id,
+            }, {
+                'name': 'Website 2',
+                'website_id': website_2.id,
+            }, {
+                'name': 'Website 2.2',
+                'website_id': website_2.id,
+            }
+        ])
+        self.assertEqual(base_website.forums_count, 4,
+                         '3 globals, 1 specific')
+        self.assertEqual(website_2.forums_count, 5,
+                         '3 globals, 2 specific')
+
+        new_forums.write({'website_id': False})
+        self.assertEqual(base_website.forums_count, 6,
+                         '6 global forums')
+        self.assertEqual(website_2.forums_count, 6,
+                         '6 global forums')
 
 
 @tagged('forum_internals')
