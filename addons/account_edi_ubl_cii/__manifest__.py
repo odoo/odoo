@@ -29,7 +29,6 @@ Pro rules and show the errors.
         'data/ubl_21_templates.xml',
 
         'views/account_move_send_views.xml',
-        'views/account_journal_views.xml',
         'views/res_partner_views.xml',
     ],
     'installable': True,
