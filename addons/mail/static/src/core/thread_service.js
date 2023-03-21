@@ -670,6 +670,7 @@ export class ThreadService {
                 .map((recipient) => recipient.persona.id);
             partner_ids?.push(...recipientIds);
         }
+        const tmpId = `${thread.localId}_${new Date().valueOf()}`;
         const params = {
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
@@ -677,6 +678,7 @@ export class ThreadService {
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
+                temporary_id: tmpId,
             },
             thread_id: thread.id,
             thread_model: thread.model,
@@ -688,8 +690,6 @@ export class ThreadService {
             params.thread_id = thread.id;
             params.thread_model = thread.model;
         } else {
-            const lastMessageId = this.messageService.getLastMessageId();
-            const tmpId = lastMessageId + 0.01;
             const tmpData = {
                 id: tmpId,
                 attachments: attachments,
@@ -710,6 +710,7 @@ export class ThreadService {
                 body: markup(await prettifyMessageContent(body, validMentions)),
                 res_id: thread.id,
                 model: thread.model,
+                temporary_id: tmpId,
             });
         }
         const data = await this.rpc("/mail/message/post", params);
@@ -717,6 +718,9 @@ export class ThreadService {
             data.parentMessage.body = data.parentMessage.body
                 ? markup(data.parentMessage.body)
                 : data.parentMessage.body;
+        }
+        if (data.id in this.store.messages) {
+            data.temporary_id = null;
         }
         const message = this.messageService.insert(
             Object.assign(data, { body: markup(data.body) })
@@ -782,7 +786,7 @@ export class ThreadService {
             countFromId = lastSeenMessageId;
         }
         return thread.messages.reduce((total, message) => {
-            if (message.id <= countFromId) {
+            if (message.id <= countFromId || message.temporary_id) {
                 return total;
             }
             return total + 1;
@@ -805,7 +809,7 @@ export class ThreadService {
             if (message.id <= thread.serverLastSeenMsgBySelf) {
                 continue;
             }
-            if (message.isTransient) {
+            if (message.temporary_id || message.isTransient) {
                 lastSeenMessageId = message.id;
                 continue;
             }

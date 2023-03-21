@@ -109,6 +109,7 @@ class TestChannelInternals(MailCommon):
         with self.assertBus(
             [
                 (self.cr.dbname, 'mail.channel', channel.id),  # update new session
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # mark below message as read (not asserted below)
                 (self.cr.dbname, 'mail.channel', channel.id),  # message_post "started a live conference" (not asserted below)
                 (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
@@ -194,6 +195,7 @@ class TestChannelInternals(MailCommon):
         with self.assertBus(
             [
                 (self.cr.dbname, 'mail.channel', channel.id),  # update new session
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # mark below message as read (not asserted below)
                 (self.cr.dbname, 'mail.channel', channel.id),  # message_post "started a live conference" (not asserted below)
                 (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
@@ -664,10 +666,12 @@ class TestChannelInternals(MailCommon):
         found_bus_notifs = self.assertBusNotifications(
             [
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined (not asserted below)
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # mark below message as read (not asserted below)
                 (self.cr.dbname, 'mail.channel', channel.id),  # message_post "invited" (not asserted below)
                 (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'mail.channel', channel.id),  # new members (not asserted below)
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # mark below message as read (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'mail.channel', channel.id),  # update list of invitations
