@@ -17,6 +17,7 @@ FORMAT_CODES = [
     'efff_1',
     'ubl_2_1',
     'ehf_3',
+    'ubl_sg',
 ]
 
 
@@ -64,6 +65,8 @@ class AccountEdiFormat(models.Model):
         # the EDI option will only appear on the journal of belgian companies
         if self.code == 'efff_1' and company.country_id.code == 'BE':
             return self.env['account.edi.xml.ubl_efff']
+        if self.code == 'ubl_sg' and company.country_id.code == 'SG':
+            return self.env['account.edi.xml.ubl_sg']
 
     def _is_ubl_cii_available(self, company):
         """
