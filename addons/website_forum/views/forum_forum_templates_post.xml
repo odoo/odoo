@@ -101,20 +101,6 @@
     <t t-call="website_forum.display_post"/>
 </template>
 
-<!-- Edition: post a reply -->
-<template id="post_reply">
-    <div class="css_editable_mode_hidden">
-        <form class="collapse js_website_submit_form js_wforum_submit_form"
-            t-attf-action="/forum/#{slug(forum)}/#{slug(object)}/reply" method="post" role="form">
-            <h3 class="mt8">Your Reply</h3>
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <textarea name="content" class="form-control o_wysiwyg_loader" required="required" minlength="50" t-att-data-karma="forum.karma_editor"/>
-            <button type="submit" class="btn btn-primary mb16 o_wforum_submit_post">Post Answer</button>
-        </form>
-    </div>
-</template>
-
 <!-- Edition: post an answer -->
 <template id="post_answer">
     <div class="d-flex align-items-center mt-5 mb-2">
