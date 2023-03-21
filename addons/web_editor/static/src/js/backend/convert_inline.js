@@ -1,7 +1,7 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
+import { descendants, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
 
 /* global html2canvas */
 
@@ -687,7 +687,7 @@ async function flattenBackgroundImages(editable) {
             image.style.setProperty('margin', 0);
             image.style.setProperty('display', 'block'); // Ensure no added vertical space.
             // Clean up the original element.
-            backgroundImage.replaceChildren();
+            backgroundImage.replaceChildren(...descendants(backgroundImage).filter(node => node.nodeType === Node.COMMENT_NODE));
             backgroundImage.style.setProperty('padding', 0);
             backgroundImage.style.removeProperty('background-image');
             backgroundImage.prepend(image); // Add the image to the original element.
@@ -1070,7 +1070,7 @@ function normalizeRem($editable, rootFontSize=16) {
             outlookTd.setAttribute('style', msoStyles);
         }
         td.before(document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`));
-        td.before(document.createComment('[if !mso]><!--'));
+        td.before(document.createComment('[if !mso]><!'));
         td.prepend(document.createComment('<![endif]'));
         td.after(document.createComment(`[if mso]></td><![endif]`));
     }
