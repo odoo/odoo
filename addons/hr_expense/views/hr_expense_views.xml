@@ -743,9 +743,20 @@
                                     nolabel="1"
                                     widget="many2many"
                                     mode="tree,kanban"
-                                    domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]"
+                                    domain="[
+                                        ('state', '=', 'draft'),
+                                        ('employee_id', '=', employee_id),
+                                        ('company_id', '=', company_id),
+                                        ('payment_mode', '=?', payment_mode),
+                                    ]"
                                     options="{'reload_on_button': True}"
-                                    context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}"
+                                    context="{
+                                        'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header',
+                                        'default_company_id': company_id,
+                                        'default_employee_id': employee_id,
+                                        'default_sheet_id': active_id,
+                                        'default_payment_mode': payment_mode,
+                                    }"
                                     attrs="{'readonly': [('is_editable', '=', False)]}"
                                     force_save="1">
                                 <tree decoration-danger="is_refused" editable="bottom" class="o_expense_line_list">
@@ -940,7 +951,6 @@
                     <searchpanel>
                         <field name="state" expand="1" select="multi" icon="fa-check-square-o" enable_counters="1"/>
                         <field name="employee_id"  limit="20" hierarchize="0" select="one" icon="fa-users"/>
-                        <field name="product_ids" limit="20" select="multi" icon="fa-tags"/>
                         <field name="company_id" expand="1" icon="fa-building" groups="base.group_multi_company"/>
                     </searchpanel>
                 </xpath>
