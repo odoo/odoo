@@ -2,7 +2,6 @@
 
 import { markup, whenReady, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { MacroEngine } from "@web/core/macro";
 import { registry } from "@web/core/registry";
@@ -73,27 +72,9 @@ function extractRegisteredTours() {
     return tours;
 }
 
-/**
- * @param {TourStep} step
- * @param {TourMode} mode
- */
-function shouldOmit(step, mode) {
-    const isDefined = (key, obj) => key in obj && obj[key] !== undefined;
-    const getEdition = () =>
-        session.server_version_info.slice(-1)[0] === "e" ? "enterprise" : "community";
-    const correctEdition = isDefined("edition", step) ? step.edition === getEdition() : true;
-    const correctDevice = isDefined("mobile", step) ? step.mobile === isMobileOS() : true;
-    return (
-        !correctEdition ||
-        !correctDevice ||
-        // `step.auto = true` means omitting a step in a manual tour.
-        (mode === "manual" && step.auto)
-    );
-}
-
 export const tourService = {
-    dependencies: ["orm", "effect"],
-    start: async (_env, { orm, effect }) => {
+    dependencies: ["orm", "effect", "ui"],
+    start: async (_env, { orm, effect, ui }) => {
         await whenReady();
 
         const tours = extractRegisteredTours();
@@ -132,6 +113,24 @@ export const tourService = {
                     }
                 },
             };
+        }
+
+        /**
+         * @param {TourStep} step
+         * @param {TourMode} mode
+         */
+        function shouldOmit(step, mode) {
+            const isDefined = (key, obj) => key in obj && obj[key] !== undefined;
+            const getEdition = () =>
+                session.server_version_info.slice(-1)[0] === "e" ? "enterprise" : "community";
+            const correctEdition = isDefined("edition", step) ? step.edition === getEdition() : true;
+            const correctDevice = isDefined("mobile", step) ? step.mobile === ui.isSmall : true;
+            return (
+                !correctEdition ||
+                !correctDevice ||
+                // `step.auto = true` means omitting a step in a manual tour.
+                (mode === "manual" && step.auto)
+            );
         }
 
         /**

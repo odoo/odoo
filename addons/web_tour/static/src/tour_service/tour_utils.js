@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { markup } from "@odoo/owl";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { _legacyIsVisible } from "@web/core/utils/ui";
+import { utils } from "@web/core/ui/ui_service";
 
 /**
  * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
@@ -93,7 +93,7 @@ export function getConsumeEventType(element, runCommand) {
             return "apply.daterangepicker input";
         }
         if (
-            isMobileOS() &&
+            utils.isSmall() &&
             element.closest(".o_field_widget")?.matches(".o_field_many2one, .o_field_many2many")
         ) {
             return "click";
