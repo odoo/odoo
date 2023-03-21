@@ -2121,6 +2121,10 @@ var SnippetsMenu = Widget.extend({
             .removeProp('contentEditable');
         this.getEditableArea().find('.o_we_selected_image')
             .removeClass('o_we_selected_image');
+        [...this.getEditableArea()].forEach(editableAreaEl => {
+            editableAreaEl.querySelectorAll("[data-visibility='conditional']")
+                            .forEach(invisibleEl => delete invisibleEl.dataset.invisible);
+        });
     },
     /**
      * Load snippets.
