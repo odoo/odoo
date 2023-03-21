@@ -109,6 +109,7 @@ class TestDiscussFullPerformance(TransactionCase):
         """
         return {
             'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
+            'hasGifPickerFeature': False,
             'hasLinkPreviewFeature': True,
             'needaction_inbox_counter': 1,
             'starred_counter': 1,

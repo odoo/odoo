@@ -87,10 +87,10 @@ QUnit.test("recent category (basic)", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsNone($, ".o-mail-EmojiPicker-header [title='Frequently used']");
+    assert.containsNone($, ".o-mail-EmojiPicker-navbar [title='Frequently used']");
     await click(".o-mail-EmojiPicker-content .o-mail-Emoji:contains(😀)");
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker-header [title='Frequently used']");
+    assert.containsOnce($, ".o-mail-EmojiPicker-navbar [title='Frequently used']");
     assert.containsOnce(
         $,
         "span:contains(Frequently used) ~ .o-mail-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
@@ -158,7 +158,7 @@ QUnit.test("first category should be highlight by default", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker-header .o-mail-Emoji:eq(0).bg-200");
+    assert.containsOnce($, ".o-mail-EmojiPicker-navbar .o-mail-Emoji:eq(0).bg-300");
 });
 
 QUnit.test(

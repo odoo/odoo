@@ -22,6 +22,7 @@ addModelNamesToFetch([
     "discuss.channel",
     "discuss.channel.member",
     "discuss.channel.rtc.session",
+    "discuss.gif.favorite",
     "mail.followers",
     "mail.guest",
     "mail.link.preview",
