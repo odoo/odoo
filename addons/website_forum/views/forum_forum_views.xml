@@ -2,8 +2,8 @@
 <odoo>
     <data>
         <!-- FORUM VIEWS -->
-        <record id="view_forum_forum_list" model="ir.ui.view">
-            <field name="name">forum.forum.list</field>
+        <record id="forum_forum_view_tree" model="ir.ui.view">
+            <field name="name">forum.forum.view.tree</field>
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <tree string="Forums">
@@ -19,14 +19,14 @@
             </field>
         </record>
 
-        <record id="view_forum_forum_form" model="ir.ui.view">
-            <field name="name">forum.forum.form</field>
+        <record id="forum_forum_view_form" model="ir.ui.view">
+            <field name="name">forum.forum.view.form</field>
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="%(action_forum_posts)d" type="action" class="oe_stat_button" icon="fa-comments">
+                            <button name="%(forum_post_action_forum_main)d" type="action" class="oe_stat_button" icon="fa-comments">
                                 <div class="o_form_field o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="total_posts" />
@@ -34,7 +34,7 @@
                                     <span class="o_stat_text">Posts</span>
                                 </div>
                             </button>
-                            <button name="%(action_forum_favorites)d" class="oe_stat_button" icon="fa-star" type="action">
+                            <button name="%(forum_post_action_favorites)d" class="oe_stat_button" icon="fa-star" type="action">
                                 <div class="o_form_field o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="total_favorites" />
@@ -151,8 +151,8 @@
             </field>
         </record>
 
-        <record id="forum_view_search" model="ir.ui.view">
-            <field name="name">forum.forum.search</field>
+        <record id="forum_forum_view_search" model="ir.ui.view">
+            <field name="name">forum.forum.view.search</field>
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <search string="Forum">
@@ -162,7 +162,7 @@
             </field>
         </record>
 
-        <record id="action_forum_forum" model="ir.actions.act_window">
+        <record id="forum_forum_action" model="ir.actions.act_window">
             <field name="name">Forums</field>
             <field name="res_model">forum.forum</field>
             <field name="view_mode">tree,form</field>
