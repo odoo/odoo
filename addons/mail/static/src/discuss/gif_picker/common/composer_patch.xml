@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='emoji-button']" position="after">
+            <button t-if="gifPickerService.hasGifPickerFeature and !env.inChatter and !props.composer.message" class="btn border-0 oi oi-gif-picker rounded-pill" aria-label="GIFs" t-on-click="onClickAddGif" t-ref="gif-button"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Composer-footer')]" position="inside">
+            <GifPicker t-if="ui.isSmall and state.keyboard === KEYBOARD.GIF" className="'o-mail-Composer-bottomPicker w-100'" onSelected.bind="sendGifMessage" close="() => this.state.keyboard = KEYBOARD.NONE"/>
+        </xpath>
+    </t>
+</templates>
