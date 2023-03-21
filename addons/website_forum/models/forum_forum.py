@@ -79,7 +79,7 @@ class Forum(models.Model):
                                       'of the forum content.')
     # posts statistics
     post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
-    last_post_id = fields.Many2one('forum.post', compute='_compute_last_post')
+    last_post_id = fields.Many2one('forum.post', compute='_compute_last_post_id')
     total_posts = fields.Integer('# Posts', compute='_compute_forum_statistics')
     total_views = fields.Integer('# Views', compute='_compute_forum_statistics')
     total_answers = fields.Integer('# Answers', compute='_compute_forum_statistics')
@@ -124,11 +124,6 @@ class Forum(models.Model):
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
-    @api.depends('post_ids')
-    def _compute_last_post(self):
-        for forum in self:
-            forum.last_post_id = forum.post_ids.search([('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')], order='create_date desc', limit=1)
-
     @api.depends('description')
     def _compute_teaser(self):
         for forum in self:
@@ -140,6 +135,11 @@ class Forum(models.Model):
                     forum.teaser = forum.description
             else:
                 forum.teaser = ""
+
+    @api.depends('post_ids')
+    def _compute_last_post_id(self):
+        for forum in self:
+            forum.last_post_id = forum.post_ids.search([('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')], order='create_date desc', limit=1)
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
@@ -175,9 +175,14 @@ class Forum(models.Model):
             domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
-    def _set_default_faq(self):
-        for forum in self:
-            forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+    # EXTENDS WEBSITE.MULTI.MIXIN
+
+    def _compute_website_url(self):
+        return '/forum/%s' % (slug(self))
+
+    # ----------------------------------------------------------------------
+    # CRUD
+    # ----------------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -187,6 +192,10 @@ class Forum(models.Model):
         ).create(vals_list)
         forums._set_default_faq()  # will trigger a write and call update_website_count
         return forums
+
+    def unlink(self):
+        self._update_website_count()
+        return super(Forum, self).unlink()
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -208,9 +217,13 @@ class Forum(models.Model):
             self._update_website_count()
         return res
 
-    def unlink(self):
-        self._update_website_count()
-        return super(Forum, self).unlink()
+    def _set_default_faq(self):
+        for forum in self:
+            forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+
+    # ----------------------------------------------------------------------
+    # TOOLS
+    # ----------------------------------------------------------------------
 
     def _tag_to_write_vals(self, tags=''):
         Tag = self.env['forum.tag']
@@ -232,13 +245,14 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
-    def _compute_website_url(self):
-        return '/forum/%s' % (slug(self))
-
     def get_tags_first_char(self):
         """ get set of first letter of forum tags """
         tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
         return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
+
+    # ----------------------------------------------------------------------
+    # WEBSITE
+    # ----------------------------------------------------------------------
 
     def go_to_website(self):
         self.ensure_one()
