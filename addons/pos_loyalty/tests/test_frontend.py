@@ -791,3 +791,61 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyFreeProductTour2",
             login="accountman",
         )
+
+    def test_promotion_program_with_global_discount(self):
+        """
+        - Create a promotion with a discount of 10%
+        - Create a product with no taxes
+        - Enable the global discount feature, and make sure the Discount product
+            has a tax set on it.
+        """
+
+        if not self.env["ir.module.module"].search([("name", "=", "pos_discount"), ("state", "=", "installed")]):
+            self.skipTest("pos_discount module is required for this test")
+
+        self.promo_program = self.env["coupon.program"].create(
+            {
+                "name": "Promo Program",
+                "program_type": "promotion_program",
+                "reward_type": "discount",
+                "discount_type": "percentage",
+                "discount_percentage": 10,
+                "discount_apply_on": "on_order",
+                "promo_code_usage": "no_code_needed",
+            }
+        )
+
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+            }
+        )
+
+        self.discount_product = self.env["product.product"].create(
+            {
+                "name": "Discount Product",
+                "type": "service",
+                "list_price": 0,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, self.env.ref("l10n_generic_coa.1_sale_tax_template").ids)],
+            }
+        )
+
+        #transform the previous block using write
+        self.main_pos_config.write({
+            'use_coupon_programs': True,
+            'promo_program_ids': [(6, 0, self.promo_program.ids)],
+            'module_pos_discount': True,
+            'discount_product_id': self.discount_product.id,
+        })
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosCouponTour5",
+            login="accountman",
+        )
