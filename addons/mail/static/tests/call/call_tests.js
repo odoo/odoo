@@ -1,12 +1,19 @@
 /** @odoo-module **/
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    click,
+    start,
+    startServer,
+    mockGetMedia,
+} from "@mail/../tests/helpers/test_utils";
 import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 
 QUnit.module("call");
 
 QUnit.test("basic rendering", async (assert) => {
+    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         name: "General",
@@ -54,9 +61,10 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
 });
 
 QUnit.test("show call UI in chat window when in call", async (assert) => {
+    mockGetMedia();
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({ name: "General" });
-    const { env } = await start();
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(General)");
     assert.containsOnce($, ".o-mail-ChatWindow");
@@ -72,17 +80,13 @@ QUnit.test("show call UI in chat window when in call", async (assert) => {
         $,
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
     );
-    /**
-     * during the tests, the browser is not really closed,
-     * so we need to end the call manually to avoid memory leaks.
-     */
-    env.services["mail.rtc"]?.endCall();
 });
 
 QUnit.test("should disconnect when closing page while in call", async (assert) => {
+    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
-    const { openDiscuss, env } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     patchWithCleanup(browser, {
         navigator: {
@@ -104,11 +108,6 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
     await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
     await nextTick();
     assert.verifySteps(["sendBeacon_leave_call"]);
-    /**
-     * during the tests, the browser is not really closed,
-     * so we need to end the call manually to avoid memory leaks.
-     */
-    env.services["mail.rtc"]?.endCall();
 });
 
 QUnit.test("no default rtc after joining a chat conversation", async (assert) => {
@@ -204,4 +203,34 @@ QUnit.test("should display invitations", async (assert) => {
     });
     assert.containsNone($, ".o-mail-CallInvitation");
     assert.verifySteps(["pause_sound_effect"]);
+});
+
+QUnit.test("can share screen", async (assert) => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        name: "General",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    await click(".o-mail-CallActionList button[title='Share screen']");
+    assert.containsOnce($, ".o-mail-CallParticipantCard video");
+    await click(".o-mail-CallActionList button[title='Stop screen sharing']");
+    assert.containsNone($, ".o-mail-CallParticipantCard video");
+});
+
+QUnit.test("can share user camera", async (assert) => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        name: "General",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    await click(".o-mail-CallActionList button[title='Turn camera on']");
+    assert.containsOnce($, ".o-mail-CallParticipantCard video");
+    await click(".o-mail-CallActionList button[title='Stop camera']");
+    assert.containsNone($, ".o-mail-CallParticipantCard video");
 });

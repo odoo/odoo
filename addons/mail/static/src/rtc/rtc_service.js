@@ -136,7 +136,7 @@ export class Rtc {
             pttReleaseTimeout: undefined,
             sourceCameraStream: null,
         });
-        this.blur = undefined;
+        this.blurManager = undefined;
         this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
         void this.ringingThreads.length;
         this.store.ringingThreads = this.ringingThreads;
@@ -1110,7 +1110,7 @@ export class Rtc {
         let sourceStream;
         try {
             if (type === "camera") {
-                if (this.state.sourceCameraStream) {
+                if (this.state.sourceCameraStream && this.state.sendCamera) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getUserMedia({
@@ -1190,22 +1190,13 @@ export class Rtc {
         } else {
             transceiver = getTransceiver(session.peerConnection, trackKind);
         }
-        if (track) {
-            try {
-                await transceiver.sender.replaceTrack(track);
-                transceiver.direction = transceiverDirection;
-            } catch {
-                // ignored, the track is probably already on the peerConnection.
-            }
-            return;
-        }
         try {
-            await transceiver.sender.replaceTrack(null);
+            await transceiver.sender.replaceTrack(track || null);
             transceiver.direction = transceiverDirection;
         } catch {
-            // ignored, the transceiver is probably already removed
+            this.log(session, `failed to update ${trackKind} transceiver`);
         }
-        if (trackKind === "video") {
+        if (!track && trackKind === "video") {
             this.notify([session], "trackChange", {
                 type: "video",
                 state: { isSendingVideo: false },
@@ -1218,7 +1209,7 @@ export class Rtc {
             this.state.audioTrack.stop();
             this.state.audioTrack = undefined;
         }
-        if (!this.state.channel.id) {
+        if (!this.state.channel) {
             return;
         }
         if (force) {
