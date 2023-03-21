@@ -22,14 +22,14 @@ class TestForumInternals(TestForumCommon):
         self.assertFalse(forums.website_id)
 
     @users('admin')
-    def test_website_forums_count(self):
+    def test_website_forum_count(self):
         """ Test synchronization of website / forum counters. """
         base_website = self.base_website.with_env(self.env)
         website_2 = self.website_2.with_env(self.env)
 
-        self.assertEqual(base_website.forums_count, 2,
+        self.assertEqual(base_website.forum_count, 2,
                          'Should count default global forums')
-        self.assertEqual(website_2.forums_count, 2,
+        self.assertEqual(website_2.forum_count, 2,
                          'Should count default global forums')
 
         new_forums = self.env['forum.forum'].create([
@@ -47,15 +47,15 @@ class TestForumInternals(TestForumCommon):
                 'website_id': website_2.id,
             }
         ])
-        self.assertEqual(base_website.forums_count, 4,
+        self.assertEqual(base_website.forum_count, 4,
                          '3 globals, 1 specific')
-        self.assertEqual(website_2.forums_count, 5,
+        self.assertEqual(website_2.forum_count, 5,
                          '3 globals, 2 specific')
 
         new_forums.write({'website_id': False})
-        self.assertEqual(base_website.forums_count, 6,
+        self.assertEqual(base_website.forum_count, 6,
                          '6 global forums')
-        self.assertEqual(website_2.forums_count, 6,
+        self.assertEqual(website_2.forum_count, 6,
                          '6 global forums')
 
 

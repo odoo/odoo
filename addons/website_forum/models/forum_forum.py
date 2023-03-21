@@ -198,12 +198,13 @@ class Forum(models.Model):
             Forum,
             self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)
         ).create(vals_list)
-        forums._set_default_faq()  # will trigger a write and call update_website_count
+        self.env['website'].sudo()._update_forum_count()
+        forums._set_default_faq()
         return forums
 
     def unlink(self):
-        self._update_website_count()
-        return super(Forum, self).unlink()
+        self.env['website'].sudo()._update_forum_count()
+        return super().unlink()
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -216,13 +217,13 @@ class Forum(models.Model):
             elif vals['privacy'] == 'connected':
                 vals['authorized_group_id'] = False
 
-        res = super(Forum, self).write(vals)
+        res = super().write(vals)
         if 'active' in vals:
             # archiving/unarchiving a forum does it on its posts, too
             self.env['forum.post'].with_context(active_test=False).search([('forum_id', 'in', self.ids)]).write({'active': vals['active']})
 
         if 'active' in vals or 'website_id' in vals:
-            self._update_website_count()
+            self.env['website'].sudo()._update_forum_count()
         return res
 
     def _set_default_faq(self):
@@ -266,11 +267,6 @@ class Forum(models.Model):
     def go_to_website(self):
         self.ensure_one()
         return self.env['website'].get_client_action(self._compute_website_url())
-
-    @api.model
-    def _update_website_count(self):
-        for website in self.env['website'].sudo().search([]):
-            website.forums_count = self.env['forum.forum'].sudo().search_count(website.website_domain())
 
     @api.model
     def _search_get_detail(self, website, order, options):
