@@ -535,6 +535,7 @@ QUnit.test("Counter is updated when receiving new message", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Albert" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const { env, openDiscuss } = await start();
     await openDiscuss();
     await afterNextRender(() =>
@@ -545,7 +546,10 @@ QUnit.test("Counter is updated when receiving new message", async (assert) => {
                 body: "Hello world",
                 message_type: "comment",
             },
-            context: { partnerId },
+            context: {
+                mockedUserId: userId,
+                partnerId,
+            },
         })
     );
     assert.containsOnce($, ".o-mail-MessagingMenu-counter.badge:contains(1)");

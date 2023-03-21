@@ -127,7 +127,6 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
         "/web/dataset/call_kw/mail.channel/search_read",
         "/web/dataset/call_kw/mail.channel/channel_create",
         "/mail/channel/messages",
-        "/mail/channel/set_last_seen_message",
     ]);
 });
 

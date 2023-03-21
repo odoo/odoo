@@ -475,6 +475,9 @@ export class Messaging {
             this.threadService.pin(channel);
         }
 
+        removeFromArrayWithPredicate(channel.messages, ({ id }) => id === messageData.temporary_id);
+        delete this.store.messages[messageData.temporary_id];
+        messageData.temporary_id = null;
         if ("parentMessage" in messageData && messageData.parentMessage.body) {
             messageData.parentMessage.body = markup(messageData.parentMessage.body);
         }
@@ -498,6 +501,7 @@ export class Messaging {
             }
         }
         if (
+            !message.isSelfAuthored &&
             channel.composer.isFocused &&
             channel.mostRecentNonTransientMessage &&
             !this.store.guest &&

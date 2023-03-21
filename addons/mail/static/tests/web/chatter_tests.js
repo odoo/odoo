@@ -63,6 +63,8 @@ QUnit.test("can post a message on a record thread", async (assert) => {
                         message_type: "comment",
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_comment",
+                        // cannot predict which temporary id will be passed.
+                        temporary_id: args.post_data.temporary_id,
                     },
                     thread_id: partnerId,
                     thread_model: "res.partner",
@@ -99,6 +101,8 @@ QUnit.test("can post a note on a record thread", async (assert) => {
                         message_type: "comment",
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_note",
+                        // cannot predict which temporary id will be passed.
+                        temporary_id: args.post_data.temporary_id,
                     },
                     thread_id: partnerId,
                     thread_model: "res.partner",

@@ -229,7 +229,7 @@ class DiscussController(http.Controller):
     # --------------------------------------------------------------------------
 
     def _get_allowed_message_post_params(self):
-        return {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'parent_id'}
+        return {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'temporary_id', 'parent_id'}
 
     @http.route('/mail/message/post', methods=['POST'], type='json', auth='public')
     def mail_message_post(self, thread_model, thread_id, post_data, **kwargs):
@@ -238,7 +238,10 @@ class DiscussController(http.Controller):
             thread = channel_member_sudo.channel_id
         else:
             thread = request.env[thread_model].browse(int(thread_id)).exists()
-        return thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
+        message_data = thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
+        if 'temporary_id' in post_data:
+            message_data['temporary_id'] = post_data['temporary_id']
+        return message_data
 
     @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
     def mail_message_update_content(self, message_id, body, attachment_ids):

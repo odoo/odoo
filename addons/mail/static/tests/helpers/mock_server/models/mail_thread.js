@@ -175,7 +175,8 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
             kwargs.email_from,
             context
         );
-        const values = Object.assign({}, kwargs, {
+        const { temporary_id, ...postData } = kwargs;
+        const values = Object.assign({}, postData, {
             author_id,
             email_from,
             is_discussion: subtype_xmlid === "mail.mt_comment",
@@ -185,8 +186,8 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
         });
         delete values.subtype_xmlid;
         const messageId = this.pyEnv["mail.message"].create(values);
-        this._mockMailThread_NotifyThread(model, ids, messageId);
-        return this._mockMailMessageMessageFormat([messageId])[0];
+        this._mockMailThread_NotifyThread(model, ids, messageId, temporary_id);
+        return Object.assign(this._mockMailMessageMessageFormat([messageId])[0], { temporary_id });
     },
     /**
      * Simulates `message_subscribe` on `mail.thread`.
@@ -229,7 +230,7 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
      * @param {integer} messageId
      * @returns {boolean}
      */
-    _mockMailThread_NotifyThread(model, ids, messageId) {
+    _mockMailThread_NotifyThread(model, ids, messageId, temporary_id) {
         const message = this.getRecords("mail.message", [["id", "=", messageId]])[0];
         const messageFormat = this._mockMailMessageMessageFormat([messageId])[0];
         const notifications = [];
@@ -263,9 +264,12 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                     "mail.channel/new_message",
                     {
                         id: channel.id,
-                        message: messageFormat,
+                        message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
+                if (message.author_id === this.currentPartnerId) {
+                    this._mockMailChannel_ChannelSeen(ids, message.id);
+                }
             }
         }
         const channelMemberOfCurrentUser = this.pyEnv["mail.channel.member"].search([
