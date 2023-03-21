@@ -62,9 +62,6 @@ export class PriorityField extends Component {
             ? this.state.index
             : this.options.findIndex((o) => o[0] === this.props.record.data[this.props.name]);
     }
-    get isReadonly() {
-        return this.props.record.isReadonly(this.props.name);
-    }
 
     getTooltip(value) {
         return this.tooltipLabel && this.tooltipLabel !== value
@@ -93,9 +90,12 @@ export const priorityField = {
     component: PriorityField,
     displayName: _lt("Priority"),
     supportedTypes: ["selection"],
-    extractProps: ({ viewType }) => ({
-        withCommand: viewType === "form",
-    }),
+    extractProps({ viewType }, dynamicInfo) {
+        return {
+            withCommand: viewType === "form",
+            readonly: dynamicInfo.readonly,
+        };
+    },
 };
 
 registry.category("fields").add("priority", priorityField);

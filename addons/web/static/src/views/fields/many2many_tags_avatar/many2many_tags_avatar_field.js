@@ -32,10 +32,12 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
 export const many2ManyTagsAvatarField = {
     ...many2ManyTagsField,
     component: Many2ManyTagsAvatarField,
-    extractProps: (fieldInfo) => ({
-        ...many2ManyTagsField.extractProps(fieldInfo),
-        withCommand: fieldInfo.viewType === "form",
-    }),
+    extractProps({ viewType }, dynamicInfo) {
+        const props = many2ManyTagsField.extractProps(...arguments);
+        props.withCommand = viewType === "form";
+        props.domain = dynamicInfo.domain;
+        return props;
+    },
 };
 
 registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
@@ -139,19 +141,15 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
 export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     static template = "web.KanbanMany2ManyTagsAvatarField";
     static components = {
-        ...Many2ManyTagsAvatarField.component,
+        ...Many2ManyTagsAvatarField.components,
         TagsList: KanbanMany2ManyTagsAvatarFieldTagsList,
     };
     itemsVisible = 2;
 
-    get isFieldReadonly() {
-        return this.props.record.isReadonly(this.props.name);
-    }
-
     get popoverProps() {
         return {
             ...this.props,
-            readonly: this.isFieldReadonly,
+            readonly: this.props.readonly,
             deleteTag: this.deleteTag.bind(this),
             updateTag: this.updateTag.bind(this),
         };
@@ -178,6 +176,11 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
 export const kanbanMany2ManyTagsAvatarField = {
     ...many2ManyTagsAvatarField,
     component: KanbanMany2ManyTagsAvatarField,
+    extractProps(fieldInfo, dynamicInfo) {
+        const props = many2ManyTagsAvatarField.extractProps(...arguments);
+        props.readonly = dynamicInfo.readonly;
+        return props;
+    },
 };
 
 registry.category("fields").add("kanban.many2many_tags_avatar", kanbanMany2ManyTagsAvatarField);

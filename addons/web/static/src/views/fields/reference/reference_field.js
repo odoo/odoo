@@ -131,7 +131,7 @@ export const referenceField = {
     displayName: _lt("Reference"),
     supportedTypes: ["reference", "char"],
     legacySpecialData: "_fetchSpecialReference",
-    extractProps: (fieldInfo) => ({
+    extractProps({ options }) {
         /*
         1 - <field name="ref" options="{'model_field': 'model_id'}" />
         2 - <field name="ref" options="{'hide_model': True}" />
@@ -140,9 +140,10 @@ export const referenceField = {
 
         We want to display the model selector only in the 4th case.
         */
-        ...many2OneField.extractProps(fieldInfo),
-        hideModelSelector: !!fieldInfo.options.hide_model || !!fieldInfo.options.model_field,
-    }),
+        const props = many2OneField.extractProps(...arguments);
+        props.hideModelSelector = !!options.hide_model || !!options.model_field;
+        return props;
+    },
 };
 
 registry.category("fields").add("reference", referenceField);

@@ -14,14 +14,6 @@ export class BooleanField extends Component {
         ...standardFieldProps,
     };
 
-    get isReadonly() {
-        return (
-            !this.props.record.isInEdition ||
-            this.props.record.isReadonly(this.props.name) ||
-            this.props.readonly
-        );
-    }
-
     /**
      * @param {boolean} newValue
      */

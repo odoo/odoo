@@ -88,7 +88,6 @@ var concurrency = require('web.concurrency');
 var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
-const pyUtils = require('web.py_utils');
 var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
@@ -1211,6 +1210,7 @@ var BasicModel = AbstractModel.extend({
                                 resolve(changedFields);
                             }
                         }).guardedCatch(reject);
+                        
                 } else {
                     resolve(changedFields);
                 }
@@ -3761,7 +3761,6 @@ var BasicModel = AbstractModel.extend({
                 current_company_id,
                 id: evalContext.id || false,
             },
-            pyUtils.context(),
             session.user_context,
             element.context,
             evalContext,
@@ -3798,7 +3797,6 @@ var BasicModel = AbstractModel.extend({
                 current_company_id,
                 id: evalContext.id || false,
             },
-            pyUtils.context(),
             session.user_context,
             element.context,
         );

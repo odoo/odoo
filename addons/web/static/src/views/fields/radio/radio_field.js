@@ -81,10 +81,8 @@ export const radioField = {
 
 registry.category("fields").add("radio", radioField);
 
-export async function preloadRadio(orm, record, fieldName) {
+export async function preloadRadio(orm, record, fieldName, { domain }) {
     const field = record.fields[fieldName];
-    const context = record.evalContext;
-    const domain = record.getFieldDomain(fieldName).toList(context);
     const records = await orm.searchRead(field.relation, domain, ["id"]);
     return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
 }

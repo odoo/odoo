@@ -36,11 +36,12 @@ FilterableSelectionField.props = {
 export const filterableSelectionField = {
     ...selectionField,
     component: FilterableSelectionField,
-    extractProps: (fieldInfo) => ({
-        ...selectionField.extractProps(fieldInfo),
-        whitelisted_values: fieldInfo.options.whitelisted_values,
-        blacklisted_values: fieldInfo.options.blacklisted_values,
-    }),
+    extractProps({ options }) {
+        const props = selectionField.extractProps(...arguments);
+        props.whitelisted_values = options.whitelisted_values;
+        props.blacklisted_values = options.blacklisted_values;
+        return props;
+    },
 };
 
 registry.category("fields").add("filterable_selection", filterableSelectionField);

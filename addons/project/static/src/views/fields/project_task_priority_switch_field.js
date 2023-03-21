@@ -21,10 +21,11 @@ export class PrioritySwitchField extends PriorityField {
 export const prioritySwitchField = {
     ...priorityField,
     component: PrioritySwitchField,
-    extractProps: (fieldInfo) => ({
-        ...priorityField.extractProps(fieldInfo),
-        withCommand: fieldInfo.viewType === "form",
-    }),
+    extractProps({ viewType }) {
+        const props = priorityField.extractProps(...arguments);
+        props.withCommand = viewType === "form";
+        return props;
+    },
 };
 
 registry.category("fields").add("priority_switch", prioritySwitchField);
