@@ -153,11 +153,12 @@ FieldMany2OneMailingFilter.defaultProps = {
 export const fieldMany2OneMailingFilter = {
     ...many2OneField,
     component: FieldMany2OneMailingFilter,
-    extractProps: (fieldInfo) => ({
-        ...many2OneField.extractProps(fieldInfo),
-        domain_field: fieldInfo.options.domain_field,
-        model_field: fieldInfo.options.model_field,
-    }),
+    extractProps({ options }) {
+        const props = many2OneField.extractProps(...arguments);
+        props.domain_field = options.domain_field;
+        props.model_field = options.model_field;
+        return props;
+    },
 };
 
 registry.category("fields").add("mailing_filter", fieldMany2OneMailingFilter);

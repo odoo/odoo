@@ -17,6 +17,11 @@ export class FieldMany2ManyTagsEmailTagsList extends TagsList {}
 FieldMany2ManyTagsEmailTagsList.template = "FieldMany2ManyTagsEmailTagsList";
 
 export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
+    static props = {
+        ...Many2ManyTagsField.props,
+        context: { type: Object, optional: true },
+    };
+
     setup() {
         super.setup();
 
@@ -54,7 +59,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             dialogDefs.push(
                 this.openMany2xRecord({
                     resId: record.resId,
-                    context: props.record.getFieldContext(this.props.name),
+                    context: props.context,
                     title: sprintf(_t("Edit: %s"), record.data.display_name),
                 })
             );
@@ -101,6 +106,11 @@ FieldMany2ManyTagsEmail.components = {
 export const fieldMany2ManyTagsEmail = {
     ...many2ManyTagsField,
     component: FieldMany2ManyTagsEmail,
+    extractProps(fieldInfo, dynamicInfo) {
+        const props = many2ManyTagsField.extractProps(...arguments);
+        props.context = dynamicInfo.context;
+        return props;
+    },
     relatedFields: (fieldInfo) => {
         return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "email", type: "char" }];
     },

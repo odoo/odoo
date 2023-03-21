@@ -15,10 +15,11 @@ export const many2OneBarcodeField = {
     ...many2OneField,
     component: Many2OneBarcodeField,
     displayName: _lt("Many2OneBarcode"),
-    extractProps: (fieldInfo) => ({
-        ...many2OneField.extractProps(fieldInfo),
-        canScanBarcode: true,
-    }),
+    extractProps() {
+        const props = many2OneField.extractProps(...arguments);
+        props.canScanBarcode = true;
+        return props;
+    },
 };
 
 registry.category("fields").add("many2one_barcode", many2OneBarcodeField);

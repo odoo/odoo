@@ -18,6 +18,7 @@ export class DomainField extends Component {
     };
     static props = {
         ...standardFieldProps,
+        context: { type: Object, optional: true },
         editInDialog: { type: Boolean, optional: true },
         resModel: { type: String, optional: true },
     };
@@ -61,7 +62,7 @@ export class DomainField extends Component {
     }
 
     getContext(p) {
-        return p.record.getFieldContext(p.name);
+        return p.context;
     }
     getResModel(p) {
         let resModel = p.resModel;
@@ -149,10 +150,13 @@ export const domainField = {
     displayName: _lt("Domain"),
     supportedTypes: ["char"],
     isEmpty: () => false,
-    extractProps: ({ options }) => ({
-        editInDialog: options.in_dialog,
-        resModel: options.model,
-    }),
+    extractProps({ options }, dynamicInfo) {
+        return {
+            editInDialog: options.in_dialog,
+            resModel: options.model,
+            context: dynamicInfo.context,
+        };
+    },
 };
 
 registry.category("fields").add("domain", domainField);

@@ -70,17 +70,8 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
             readonly: false,
         };
     }
-    get isFieldReadonly() {
-        return this.props.record.isReadonly(this.props.name);
-    }
-    get many2OneProps() {
-        return {
-            ...super.many2OneProps,
-            readonly: this.isFieldReadonly,
-        };
-    }
     openPopover(ev) {
-        if (this.isFieldReadonly) {
+        if (this.props.readonly) {
             return;
         }
         if (this.closePopoverFn) {
@@ -102,10 +93,10 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
     }
 
     get canDisplayDelete() {
-        return !this.isFieldReadonly && this.props.record.data[this.props.name] && !isMobileOS();
+        return !this.props.readonly && this.props.record.data[this.props.name] && !isMobileOS();
     }
     async remove(ev) {
-        if (this.isFieldReadonly) {
+        if (this.props.readonly) {
             return;
         }
         await this.props.record.update({ [this.props.name]: false });
@@ -117,6 +108,11 @@ export const kanbanMany2OneAvatarField = {
     ...many2OneField,
     component: KanbanMany2OneAvatarField,
     additionalClasses: ["o_field_many2one_avatar_kanban"],
+    extractProps(fieldInfo, dynamicInfo) {
+        const props = many2OneField.extractProps(...arguments);
+        props.readonly = dynamicInfo.readonly;
+        return props;
+    },
 };
 registry.category("fields").add("many2one_avatar", many2OneAvatarField);
 registry.category("fields").add("kanban.many2one_avatar", kanbanMany2OneAvatarField);

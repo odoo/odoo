@@ -82,10 +82,8 @@ export const badgeSelectionField = {
 
 registry.category("fields").add("selection_badge", badgeSelectionField);
 
-export function preloadSelection(orm, record, fieldName) {
+export function preloadSelection(orm, record, fieldName, { domain }) {
     const field = record.fields[fieldName];
-    const context = record.evalContext;
-    const domain = record.getFieldDomain(fieldName).toList(context);
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 

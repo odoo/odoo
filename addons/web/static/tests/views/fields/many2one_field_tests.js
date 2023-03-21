@@ -3760,60 +3760,6 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget[name='trululu'] input");
     });
 
-    QUnit.test("many2one in one2many: domain updated by an onchange", async function (assert) {
-        assert.expect(3);
-
-        serverData.models.partner.onchanges = {
-            trululu() {},
-        };
-
-        let domain = [];
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                <form>
-                    <field name="p">
-                        <tree editable="bottom">
-                            <field name="foo" />
-                            <field name="trululu" />
-                        </tree>
-                    </field>
-                </form>`,
-            mockRPC(route, { kwargs, method }) {
-                if (method === "onchange") {
-                    return Promise.resolve({
-                        domain: {
-                            trululu: domain,
-                        },
-                    });
-                }
-                if (method === "name_search") {
-                    assert.deepEqual(kwargs.args, domain, "sent domain should be correct");
-                }
-            },
-        });
-
-        // add a first row with a specific domain for the m2o
-        domain = [["id", "in", [10]]]; // domain for subrecord 1
-        await click(target, ".o_field_x2many_list_row_add a");
-        await click(target, ".o_field_widget[name=trululu] input");
-        // add some value to foo field to make record dirty
-        await editInput(target, "tr.o_selected_row .o_field_widget[name='foo'] input", "new value");
-
-        // add a second row with another domain for the m2o
-        domain = [["id", "in", [5]]]; // domain for subrecord 2
-        await click(target, ".o_field_x2many_list_row_add a");
-        await click(target, ".o_field_widget[name=trululu] input");
-
-        // check again the first row to ensure that the domain hasn't change
-        domain = [["id", "in", [10]]]; // domain for subrecord 1 should have been kept
-        await click(target.querySelectorAll(".o_data_row .o_data_cell")[1]);
-        await click(target, ".o_field_widget[name=trululu] input");
-    });
-
     QUnit.test("search more in many2one: no text in input", async function (assert) {
         // when the user clicks on 'Search More...' in a many2one dropdown, and there is no text
         // in the input (i.e. no value to search on), we bypass the name_search that is meant to

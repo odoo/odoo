@@ -236,17 +236,17 @@ export const statusBarField = {
 
 registry.category("fields").add("statusbar", statusBarField);
 
-export async function preloadStatusBar(orm, record, fieldName) {
+export async function preloadStatusBar(orm, record, fieldName, { domain }) {
     const fieldNames = ["id", "display_name"];
     const foldField = record.activeFields[fieldName].options.fold_field;
     if (foldField) {
         fieldNames.push(foldField);
     }
 
-    const context = record.evalContext;
-    let domain = record.getFieldDomain(fieldName).toList(context);
     if (domain.length && record.data[fieldName]) {
-        domain = Domain.or([[["id", "=", record.data[fieldName][0]]], domain]).toList(context);
+        domain = Domain.or([[["id", "=", record.data[fieldName][0]]], domain]).toList(
+            record.evalContext
+        );
     }
 
     const relation = record.fields[fieldName].relation;

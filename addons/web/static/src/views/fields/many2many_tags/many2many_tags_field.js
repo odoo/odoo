@@ -39,6 +39,8 @@ export class Many2ManyTagsField extends Component {
         canCreateEdit: { type: Boolean, optional: true },
         colorField: { type: String, optional: true },
         createDomain: { type: [Array, Boolean], optional: true },
+        domain: { type: Array, optional: true },
+        context: { type: Object, optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
         string: { type: String, optional: true },
@@ -48,6 +50,7 @@ export class Many2ManyTagsField extends Component {
         canQuickCreate: true,
         canCreateEdit: true,
         nameCreateField: "name",
+        context: {},
     };
 
     static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -96,7 +99,7 @@ export class Many2ManyTagsField extends Component {
         if (this.props.canQuickCreate) {
             this.quickCreate = async (name) => {
                 const created = await this.orm.call(this.relation, "name_create", [name], {
-                    context: this.context,
+                    context: this.props.context,
                 });
                 return saveRecord([created[0]]);
             };
@@ -105,12 +108,6 @@ export class Many2ManyTagsField extends Component {
 
     get relation() {
         return this.props.record.fields[this.props.name].relation;
-    }
-    get domain() {
-        return this.props.record.getFieldDomain(this.props.name);
-    }
-    get context() {
-        return this.props.record.getFieldContext(this.props.name);
     }
     get evalContext() {
         return this.props.record.evalContext;
@@ -152,9 +149,9 @@ export class Many2ManyTagsField extends Component {
 
     getDomain() {
         return Domain.and([
-            this.domain,
+            this.props.domain || this.props.record.getFieldDomain(this.props.name),
             Domain.not([["id", "in", this.props.record.data[this.props.name].currentIds]]),
-        ]).toList(this.context);
+        ]).toList(this.props.context);
     }
 
     focusTag(index) {
@@ -267,7 +264,7 @@ export const many2ManyTagsField = {
         }
         return relatedFields;
     },
-    extractProps: ({ attrs, options, string }) => {
+    extractProps({ attrs, options, string }, dynamicInfo) {
         const noCreate = Boolean(options.no_create);
         const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
         const noQuickCreate = Boolean(options.no_quick_create);
@@ -279,6 +276,8 @@ export const many2ManyTagsField = {
             canQuickCreate: canCreate && !noQuickCreate,
             canCreateEdit: canCreate && !noCreateEdit,
             createDomain: options.create,
+            context: dynamicInfo.context,
+            domain: dynamicInfo.domain,
             placeholder: attrs.placeholder,
             string,
         };
@@ -374,10 +373,11 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
 export const many2ManyTagsFieldColorEditable = {
     ...many2ManyTagsField,
     component: Many2ManyTagsFieldColorEditable,
-    extractProps: (fieldInfo) => ({
-        ...many2ManyTagsField.extractProps(fieldInfo),
-        canEditColor: !fieldInfo.options.no_edit_color && !!fieldInfo.options.color_field,
-    }),
+    extractProps({ options }) {
+        const props = many2ManyTagsField.extractProps(...arguments);
+        props.canEditColor = !options.no_edit_color && !!options.color_field;
+        return props;
+    },
 };
 
 registry.category("fields").add("form.many2many_tags", many2ManyTagsFieldColorEditable);

@@ -74,11 +74,12 @@ export const timezoneMismatchField = {
     ...selectionField,
     component: TimezoneMismatchField,
     additionalClasses: ["d-flex"],
-    extractProps: (fieldInfo) => ({
-        ...selectionField.extractProps(fieldInfo),
-        tzOffsetField: fieldInfo.options.tz_offset_field,
-        mismatchTitle: fieldInfo.options.mismatch_title,
-    }),
+    extractProps({ options }) {
+        const props = selectionField.extractProps(...arguments);
+        props.tzOffsetField = options.tz_offset_field;
+        props.mismatchTitle = options.mismatch_title;
+        return props;
+    },
 };
 
 registry.category("fields").add("timezone_mismatch", timezoneMismatchField);

@@ -14,7 +14,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
-import { getClassNameFromDecoration } from "@web/views/utils";
+import { evalDomain, getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -25,10 +25,10 @@ import {
     onPatched,
     onWillPatch,
     onWillUpdateProps,
+    useEffect,
     useExternalListener,
     useRef,
     useState,
-    useEffect,
 } from "@odoo/owl";
 
 const formatters = registry.category("formatters");
@@ -258,7 +258,7 @@ export class ListRenderer extends Component {
     }
 
     getFieldProps(record, column) {
-        if (this.getCellReadonly(column, record)) {
+        if (this.isCellReadonly(column, record)) {
             return {
                 readonly: true,
             };
@@ -445,7 +445,7 @@ export class ListRenderer extends Component {
             }
             // in findNextFocusableOnRow test is done by using classList
             // refactor
-            if (!this.getCellReadonly(column, editedRecord)) {
+            if (!this.isCellReadonly(column, editedRecord)) {
                 const cell = this.tableRef.el.querySelector(
                     `.o_selected_row td[name='${column.name}']`
                 );
@@ -695,9 +695,8 @@ export class ListRenderer extends Component {
     }
 
     isSortable(column) {
-        const { hasLabel, name } = column;
+        const { hasLabel, name, options } = column;
         const { sortable } = this.fields[name];
-        const { options } = this.props.list.activeFields[name];
         return (sortable || options.allow_order) && hasLabel;
     }
 
@@ -765,20 +764,21 @@ export class ListRenderer extends Component {
         }
         const classNames = [...this.cellClassByColumn[column.id]];
         if (column.type === "field") {
-            if (record.isRequired(column.name)) {
+            const { required } = column.modifiers;
+            if (required && evalDomain(required, record.evalContext)) {
                 classNames.push("o_required_modifier");
             }
             if (record.isInvalid(column.name)) {
                 classNames.push("o_invalid_cell");
             }
-            if (this.getCellReadonly(column, record)) {
+            if (this.isCellReadonly(column, record)) {
                 classNames.push("o_readonly_modifier");
             }
             if (this.canUseFormatter(column, record)) {
                 // generate field decorations classNames (only if field-specific decorations
                 // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
                 // only handle the text-decoration.
-                const { decorations } = record.activeFields[column.name];
+                const { decorations } = column;
                 for (const decoName in decorations) {
                     if (evaluateExpr(decorations[decoName], record.evalContext)) {
                         classNames.push(getClassNameFromDecoration(decoName));
@@ -788,7 +788,7 @@ export class ListRenderer extends Component {
             if (
                 record.isInEdition &&
                 this.props.list.editedRecord &&
-                this.props.list.editedRecord.isReadonly(column.name)
+                this.isCellReadonly(column, this.props.list.editedRecord)
             ) {
                 classNames.push("text-muted");
             } else {
@@ -798,10 +798,10 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
-    getCellReadonly(column, record) {
+    isCellReadonly(column, record) {
         return (
-            record.isReadonly(column.name) ||
-            (column.relatedPropertyField && record.selected && record.model.multiEdit)
+            (column.relatedPropertyField && record.selected && record.model.multiEdit) ||
+            evalDomain(column.modifiers.readonly, record.evalContext)
         );
     }
 
@@ -1780,7 +1780,7 @@ export class ListRenderer extends Component {
             viewMode: "list",
             resModel: this.props.list.resModel,
             field: this.fields[column.name],
-            fieldInfo: this.props.list.activeFields[column.name],
+            fieldInfo: column,
         });
     }
 

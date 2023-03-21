@@ -7,13 +7,13 @@ import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { escape } from "@web/core/utils/strings";
 import { mapDoActionOptionAPI } from "@web/legacy/backend_utils";
+import {
+    mapActiveFieldsToFieldsInfo,
+    mapViews,
+    mapWowlValueToLegacy,
+} from "@web/views/legacy_utils";
 import { Model } from "@web/views/model";
 import { evalDomain } from "@web/views/utils";
-import {
-    mapWowlValueToLegacy,
-    mapViews,
-    mapActiveFieldsToFieldsInfo,
-} from "@web/views/legacy_utils";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 
@@ -68,6 +68,11 @@ class DataPoint {
     get evalContext() {
         const datapoint = this.model.__bm__.localData[this.__bm_handle__];
         return this.model.__bm__._getLazyEvalContext(datapoint);
+    }
+
+    getEvalContext(forDomain) {
+        const datapoint = this.model.__bm__.localData[this.__bm_handle__];
+        return this.model.__bm__._getEvalContext(datapoint, forDomain, false, true);
     }
 
     get fieldNames() {
@@ -207,7 +212,7 @@ export class Record extends DataPoint {
 
             const isSet = activeField && activeField.field && activeField.field.isSet;
 
-            if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
+            if (this._isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
                 this.setInvalidField(fieldName);
                 continue;
             }
@@ -230,7 +235,7 @@ export class Record extends DataPoint {
                     }
                     break;
                 default:
-                    if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
+                    if (!isSet && this._isRequired(fieldName) && !this.data[fieldName]) {
                         this._setInvalidField(fieldName);
                     }
             }
@@ -278,7 +283,7 @@ export class Record extends DataPoint {
      * @param {string} fieldName
      * @returns {boolean}
      */
-    isReadonly(fieldName) {
+    _isReadonly(fieldName) {
         const { readonly } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(readonly, this.evalContext);
     }
@@ -288,7 +293,7 @@ export class Record extends DataPoint {
      * @param {string} fieldName
      * @returns {boolean}
      */
-    isRequired(fieldName) {
+    _isRequired(fieldName) {
         const { required } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(required, this.evalContext);
     }
@@ -446,19 +451,16 @@ export class Record extends DataPoint {
         this.data = data;
     }
 
-    getFieldContext(fieldName) {
+    getFieldDomain(fieldName) {
+        const { domain } = this.fields[fieldName];
+        return domain ? new Domain(domain).toList(this.getEvalContext(true)) : [];
+    }
+
+    _getFieldContext(fieldName) {
         return this.model.__bm__.localData[this.__bm_handle__].getContext({
             fieldName,
             viewType: this.__viewType,
         });
-    }
-
-    getFieldDomain(fieldName) {
-        const domain = this.model.__bm__.localData[this.__bm_handle__].getDomain({
-            fieldName,
-            viewType: this.__viewType,
-        });
-        return new Domain(JSON.parse(JSON.stringify(domain))); // legacy pyjs inserts weird structures
     }
 
     async update(changes) {

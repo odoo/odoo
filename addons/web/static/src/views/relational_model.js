@@ -596,7 +596,7 @@ export class Record extends DataPoint {
 
             const isSet = activeField && activeField.field && activeField.field.isSet;
 
-            if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
+            if (this._isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
                 this.setInvalidField(fieldName);
                 continue;
             }
@@ -614,7 +614,7 @@ export class Record extends DataPoint {
                     }
                     break;
                 default:
-                    if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
+                    if (!isSet && this._isRequired(fieldName) && !this.data[fieldName]) {
                         this.setInvalidField(fieldName);
                     }
             }
@@ -715,7 +715,7 @@ export class Record extends DataPoint {
                 !allFields &&
                 fieldName in this.activeFields &&
                 !this.activeFields[fieldName].forceSave &&
-                this.isReadonly(fieldName)
+                this._isReadonly(fieldName)
             ) {
                 delete changes[fieldName];
                 continue;
@@ -744,22 +744,15 @@ export class Record extends DataPoint {
         };
     }
 
-    getFieldContext(fieldName) {
+    getFieldDomain(fieldName) {
+        const { domain } = this.fields[fieldName];
+        return domain ? new Domain(domain).toList(this.evalContext) : [];
+    }
+
+    _getFieldContext(fieldName) {
         return Object.assign(
             this.context,
             makeContext([this.activeFields[fieldName].context], this.evalContext)
-        );
-    }
-
-    getFieldDomain(fieldName) {
-        const rawDomains = [
-            this._domains[fieldName] || [],
-            this.activeFields[fieldName].domain || this.fields[fieldName].domain || [],
-        ];
-
-        const evalContext = this.evalContext;
-        return Domain.and(
-            rawDomains.map((d) => (typeof d === "string" ? evaluateExpr(d, evalContext) : d))
         );
     }
 
@@ -787,7 +780,7 @@ export class Record extends DataPoint {
      * @param {string} fieldName
      * @returns {boolean}
      */
-    isReadonly(fieldName) {
+    _isReadonly(fieldName) {
         const { readonly } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(readonly, this.evalContext);
     }
@@ -797,7 +790,7 @@ export class Record extends DataPoint {
      * @param {string} fieldName
      * @returns {boolean}
      */
-    isRequired(fieldName) {
+    _isRequired(fieldName) {
         const required = this._requiredFields[fieldName];
         return required ? evalDomain(required, this.evalContext) : false;
     }
@@ -845,12 +838,25 @@ export class Record extends DataPoint {
             if (!info.loadOnTypes.includes(this.fields[fieldName].type)) {
                 return;
             }
-            const domain = this.getFieldDomain(fieldName).toList(this.evalContext).toString();
+
+            const evalContext = this.evalContext;
+            const domain = this.activeFields[fieldName].domain
+                ? new Domain(
+                      evaluateExpr(this.activeFields[fieldName].domain, evalContext)
+                  ).toList()
+                : this.getFieldDomain(fieldName);
+
             const getExtraKey = info.extraMemoizationKey || (() => null);
-            const key = JSON.stringify([domain, getExtraKey(this, fieldName)]);
+            const key = JSON.stringify([domain.toString(), getExtraKey(this, fieldName)]);
             if (this.preloadedDataCaches[fieldName] !== key) {
+                const context = this._getFieldContext(fieldName);
                 this.preloadedDataCaches[fieldName] = key;
-                this.preloadedData[fieldName] = await info.preload(this.model.orm, this, fieldName);
+                this.preloadedData[fieldName] = await info.preload(
+                    this.model.orm,
+                    this,
+                    fieldName,
+                    { context, domain }
+                );
             }
         };
 
@@ -1331,7 +1337,7 @@ export class Record extends DataPoint {
             value &&
             (!value[1] || activeField.options.always_reload)
         ) {
-            const context = this.getFieldContext(fieldName);
+            const context = this._getFieldContext(fieldName);
             const result = await this.model.orm.nameGet(relation, [value[0]], { context });
             return result[0];
         }
@@ -1348,7 +1354,7 @@ export class Record extends DataPoint {
                 value = { resModel, resId: parseInt(resId, 10) };
             }
             const { resModel, resId } = value;
-            const context = this.getFieldContext(fieldName);
+            const context = this._getFieldContext(fieldName);
             const nameGet = await this.model.orm.nameGet(resModel, [resId], { context });
             return {
                 resModel,
@@ -1739,8 +1745,8 @@ class DynamicList extends DataPoint {
             if (
                 !Object.keys(changes).filter(
                     (fieldName) =>
-                        record.isReadonly(fieldName) ||
-                        (record.isRequired(fieldName) && !changes[fieldName])
+                        record._isReadonly(fieldName) ||
+                        (record._isRequired(fieldName) && !changes[fieldName])
                 ).length
             ) {
                 result.push(record);

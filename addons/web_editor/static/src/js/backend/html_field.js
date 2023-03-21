@@ -145,7 +145,7 @@ export class HtmlField extends Component {
                         // Ensure all external links are opened in a new tab.
                         retargetLinks(this.readonlyElementRef.el);
 
-                        const hasReadonlyModifiers = Boolean(this.props.record.isReadonly(this.props.name));
+                        const hasReadonlyModifiers = this.props.hasReadonlyModifiers;
                         if (!hasReadonlyModifiers) {
                             const $el = $(this.readonlyElementRef.el);
                             $el.off('.checklistBinding');
@@ -631,13 +631,14 @@ HtmlField.props = {
     isInlineStyle: { type: Boolean, optional: true },
     wrapper: { type: String, optional: true },
     wysiwygOptions: { type: Object },
+    hasReadonlyModifiers: { type: Boolean, optional: true },
 };
 
 export const htmlField = {
     component: HtmlField,
     displayName: _lt("Html"),
     supportedTypes: ["html"],
-    extractProps: ({ attrs, options }) => {
+    extractProps({ attrs, options }, dynamicInfo) {
         const wysiwygOptions = {
             placeholder: attrs.placeholder,
             noAttachment: options['no-attachment'],
@@ -683,6 +684,7 @@ export const htmlField = {
             wrapper: options.wrapper,
 
             wysiwygOptions,
+            hasReadonlyModifiers: dynamicInfo.readonly,
         };
     },
 };

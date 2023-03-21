@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { makeContext } from "@web/core/context";
+import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import {
@@ -122,13 +124,53 @@ export class Field extends Component {
             const modifiers = fieldInfo.modifiers || {};
             readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
 
-            if (this.props.attrs) {
-                fieldInfo = {
-                    ...fieldInfo,
-                    attrs: { ...fieldInfo.attrs, ...this.props.attrs },
+            if (this.field.extractProps) {
+                if (this.props.attrs) {
+                    fieldInfo = {
+                        ...fieldInfo,
+                        attrs: { ...fieldInfo.attrs, ...this.props.attrs },
+                    };
+                }
+
+                const dynamicInfo = {
+                    get context() {
+                        const evalContext = record.getEvalContext
+                            ? record.getEvalContext(false)
+                            : record.evalContext;
+
+                        const context = {};
+                        for (const key in record.context) {
+                            if (!key.startsWith("default_")) {
+                                context[key] = record.context[key];
+                            }
+                        }
+
+                        return {
+                            ...context,
+                            ...makeContext([fieldInfo.context], evalContext),
+                        };
+                    },
+                    get domain() {
+                        const evalContext = record.getEvalContext
+                            ? record.getEvalContext(true)
+                            : record.evalContext;
+
+                        return fieldInfo.domain
+                            ? new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList()
+                            : undefined;
+                    },
+                    readonly: readonlyFromModifiers,
+                    get required() {
+                        return (
+                            fieldInfo.modifiers &&
+                            fieldInfo.modifiers.required &&
+                            evalDomain(fieldInfo.modifiers.required, record.evalContext)
+                        );
+                    },
                 };
+
+                propsFromNode = this.field.extractProps(fieldInfo, dynamicInfo);
             }
-            propsFromNode = this.field.extractProps ? this.field.extractProps(fieldInfo) : {};
         }
 
         const props = { ...this.props };

@@ -354,7 +354,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "turtle,false,form": `
                 <form>
-                    <field name="parent_id" domain="[('id', 'in', parent.turtles)]"/>
+                    <field name="parent_id"/>
                 </form>`,
         };
         await makeView({
@@ -367,6 +367,9 @@ QUnit.module("Fields", (hooks) => {
                         <tree>
                             <field name="parent_id"/>
                         </tree>
+                        <form>
+                            <field name="parent_id" domain="[('id', 'in', parent.turtles)]"/>
+                        </form>
                     </field>
                 </form>`,
             mockRPC(route, { kwargs }) {

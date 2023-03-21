@@ -27,6 +27,7 @@ export class PropertiesField extends Component {
     };
     static props = {
         ...standardFieldProps,
+        context: { type: Object, optional: true },
         columns: { type: Number, optional: true },
         hideKanbanOption: { type: Boolean, optional: true },
     };
@@ -72,15 +73,6 @@ export class PropertiesField extends Component {
     /* --------------------------------------------------------
      * Public methods / Getters
      * -------------------------------------------------------- */
-
-    /**
-     * Return the current context
-     *
-     * @returns {object}
-     */
-    get context() {
-        return this.props.record.getFieldContext(this.props.name);
-    }
 
     /**
      * Return the current properties value.
@@ -476,7 +468,7 @@ export class PropertiesField extends Component {
                 propertyDefinition: this.propertiesList.find(
                     (property) => property.name === currentName(propertyName)
                 ),
-                context: this.context,
+                context: this.props.context,
                 onChange: this.onPropertyDefinitionChange.bind(this),
                 onDelete: () => this.onPropertyDelete(currentName(propertyName)),
                 onPropertyMove: (direction) =>
@@ -522,10 +514,13 @@ export const propertiesField = {
     component: PropertiesField,
     displayName: _lt("Properties"),
     supportedTypes: ["properties"],
-    extractProps: ({ attrs }) => ({
-        columns: parseInt(attrs.columns || "1"),
-        hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
-    }),
+    extractProps({ attrs }, dynamicInfo) {
+        return {
+            context: dynamicInfo.context,
+            columns: parseInt(attrs.columns || "1"),
+            hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
+        };
+    },
 };
 
 registry.category("fields").add("properties", propertiesField);

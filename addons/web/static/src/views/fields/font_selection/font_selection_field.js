@@ -12,15 +12,13 @@ export class FontSelectionField extends Component {
     static props = {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
+        required: { type: Boolean, optional: true },
     };
 
     get options() {
         return this.props.record.fields[this.props.name].selection.filter(
             (option) => option[0] !== false && option[1] !== ""
         );
-    }
-    get isRequired() {
-        return this.props.record.isRequired(this.props.name);
     }
     get string() {
         return formatSelection(this.props.record.data[this.props.name], {
@@ -45,9 +43,12 @@ export const fontSelectionField = {
     component: FontSelectionField,
     displayName: _lt("Font Selection"),
     supportedTypes: ["selection"],
-    extractProps: ({ attrs }) => ({
-        placeholder: attrs.placeholder,
-    }),
+    extractProps({ attrs }, dynamicInfo) {
+        return {
+            placeholder: attrs.placeholder,
+            required: dynamicInfo.required,
+        };
+    },
     legacySpecialData: "_fetchSpecialRelation",
 };
 

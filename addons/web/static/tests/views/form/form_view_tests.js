@@ -8304,26 +8304,6 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("fields and record contexts are not mixed", async function (assert) {
-        assert.expect(2);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="trululu" context="{'test': 1}"/></form>`,
-            mockRPC(route, args) {
-                if (args.method === "name_search") {
-                    assert.strictEqual(args.kwargs.context.test, 1);
-                    assert.notOk("mainContext" in args.kwargs.context);
-                }
-            },
-            resId: 2,
-            context: { mainContext: 3 },
-        });
-        await click(target.querySelector(".o_field_widget[name=trululu] input"));
-    });
-
     QUnit.test(
         "do not activate an hidden tab when switching between records",
         async function (assert) {
@@ -10878,69 +10858,6 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(writeCalls, 1, "should save once");
         }
     );
-
-    QUnit.test("domain returned by onchange is cleared on discard", async function (assert) {
-        serverData.models.partner.onchanges = {
-            foo: function () {},
-        };
-
-        const domain = [["id", "=", 1]];
-        let expectedDomain = domain;
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <field name="foo"/>
-                    <field name="trululu"/>
-                </form>`,
-            mockRPC(route, args) {
-                if (args.method === "onchange" && args.args[0][0] === 1) {
-                    // onchange returns a domain only on record 1
-                    return Promise.resolve({
-                        domain: {
-                            trululu: domain,
-                        },
-                    });
-                }
-                if (args.method === "name_search") {
-                    assert.deepEqual(args.kwargs.args, expectedDomain);
-                }
-            },
-            resId: 1,
-            resIds: [1, 2],
-        });
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo] input").value,
-            "yop",
-            "should be on record 1"
-        );
-
-        // change foo to trigger the onchange
-        await editInput(target, ".o_field_widget[name=foo] input", "new value");
-
-        // open many2one dropdown to check if the domain is applied
-        target.querySelector(".o-autocomplete.dropdown input").focus(); // autocomplete closes with the blur, so it must have the focus
-        await click(target.querySelector(".o-autocomplete.dropdown input"));
-
-        // switch to another record (should ask to discard changes, and reset the domain)
-        target.querySelector(".o_pager_next").focus(); // change the focus before click, this will close the autocomplete
-        await click(target.querySelector(".o_pager_next"));
-
-        assert.containsNone(document.body, ".modal", "should not open modal");
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo] input").value,
-            "blip",
-            "should be on record 2"
-        );
-
-        // open many2one dropdown to check if the domain is applied
-        expectedDomain = [];
-        await click(target.querySelector(".o-autocomplete.dropdown input"));
-    });
 
     QUnit.test("discard after a failed save (and close notifications)", async function (assert) {
         patchWithCleanup(browser, { setTimeout: () => 1 });
