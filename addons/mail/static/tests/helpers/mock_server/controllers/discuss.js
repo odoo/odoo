@@ -164,6 +164,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                 limit
             );
         }
+        if (route === "/discuss/gif/favorites") {
+            return [[]];
+        }
         return this._super(route, args);
     },
     /**

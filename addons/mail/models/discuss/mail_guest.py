@@ -112,6 +112,7 @@ class MailGuest(models.Model):
             'current_partner': False,
             'current_user_id': False,
             'current_user_settings': False,
+            'hasGifPickerFeature': bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
             'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
             'menu_id': False,

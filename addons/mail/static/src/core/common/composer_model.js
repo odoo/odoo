@@ -1,10 +1,15 @@
 /* @odoo-module */
 
+/**
+ * @typedef {{partnerIds: Set<number>, threadIds: Set<number>}} RawMentions
+ */
+
 export class Composer {
     /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {import("@mail/core/common/message_model").Message} */
     message;
+    /** @type {RawMentions} */
     rawMentions = {
         partnerIds: new Set(),
         threadIds: new Set(),

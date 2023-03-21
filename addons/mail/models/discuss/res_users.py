@@ -52,5 +52,6 @@ class ResUsers(models.Model):
         self.ensure_one()
         return {
             'channels': self.partner_id._get_channels_as_member().channel_info(),
+            'hasGifPickerFeature': bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             **super()._init_messaging(),
         }
