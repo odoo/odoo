@@ -6,6 +6,7 @@ import { MessageInReply } from "./message_in_reply";
 import { isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/format";
 import { onExternalClick } from "@mail/utils/hooks";
+import { MessageReactionMenu } from "@mail/core_ui/message_reaction_menu";
 import {
     Component,
     onMounted,
@@ -100,6 +101,8 @@ export class Message extends Component {
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentService = useService("mail.attachment");
         this.user = useService("user");
+        this.dialog = useService("dialog");
+        this.openReactionMenu = this.openReactionMenu.bind(this);
         useChildSubEnv({
             alignedRight: this.isAlignedRight,
         });
@@ -540,5 +543,11 @@ export class Message extends Component {
             });
             updateFromState();
         }
+    }
+
+    openReactionMenu() {
+        this.dialog.add(MessageReactionMenu, {
+            message: this.props.message,
+        });
     }
 }
