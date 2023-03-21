@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -11,7 +10,7 @@ class ProductTemplate(models.Model):
 
     def _compute_attachment_count(self):
         attachment_data = self.env['ir.attachment']._read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('product_downloadable', '=', True)], ['res_id'], ['res_id'])
-        mapped_data = dict([(data['res_id'], data['res_id_count']) for data in attachment_data])
+        mapped_data = {data['res_id']: data['res_id_count'] for data in attachment_data}
         for product_template in self:
             product_template.attachment_count = mapped_data.get(product_template.id, 0)
 
@@ -25,9 +24,9 @@ class ProductTemplate(models.Model):
             'view_mode': 'kanban,form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
-                <p class="o_view_nocontent_smiling_face">%s</p>
-                <p>%s</p>
-                """ % (_("Add attachments for this digital product"),
+                <p class="o_view_nocontent_smiling_face">{}</p>
+                <p>{}</p>
+                """.format(_("Add attachments for this digital product"),
                        _("The attached files are the ones that will be purchased and sent to the customer.")),
         }
 
@@ -56,8 +55,8 @@ class Product(models.Model):
             'view_mode': 'kanban,form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
-                <p class="o_view_nocontent_smiling_face">%s</p>
-                <p>%s</p>
-                """ % (_("Add attachments for this digital product"),
+                <p class="o_view_nocontent_smiling_face">{}</p>
+                <p>{}</p>
+                """.format(_("Add attachments for this digital product"),
                        _("The attached files are the ones that will be purchased and sent to the customer.")),
         }
