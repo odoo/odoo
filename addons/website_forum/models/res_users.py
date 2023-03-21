@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class Users(models.Model):
@@ -32,9 +32,9 @@ class Users(models.Model):
         return self.mapped('partner_id').open_website_url()
 
     def get_gamification_redirection_data(self):
-        res = super(Users, self).get_gamification_redirection_data()
+        res = super().get_gamification_redirection_data()
         res.append({
+            'label': _('See our Forum'),
             'url': '/forum',
-            'label': 'See our Forum'
         })
         return res
