@@ -608,6 +608,8 @@ async function toInline($editable, cssRules, $iframe) {
         }
     }
 
+    await flattenBackgroundImages(editable);
+
     // Fix outlook image rendering bug (this change will be kept in both
     // fields).
     for (const attributeName of ['width', 'height']) {
@@ -622,7 +624,6 @@ async function toInline($editable, cssRules, $iframe) {
         };
     };
 
-    await flattenBackgroundImages(editable);
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -639,7 +640,6 @@ async function toInline($editable, cssRules, $iframe) {
     enforceTablesResponsivity(editable);
     formatTables($editable);
     enforceImagesResponsivity(editable);
-    await flattenBackgroundImages(editable);
 
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
@@ -676,11 +676,13 @@ async function flattenBackgroundImages(editable) {
             clonedBackground.style.width = style['width'];
             iframe.style.height = style['height'];
             iframe.style.width = style['width'];
+            iframe.srcdoc = editable.ownerDocument.head.outerHTML + clonedBackground.outerHTML;
+            const iframePromise = new Promise(resolve => iframe.addEventListener('load', resolve));
             backgroundImage.after(iframe);
-            iframe.contentDocument.body.append(clonedBackground);
+            await iframePromise;
             iframe.contentDocument.body.style.margin = 0;
 
-            const canvas = await html2canvas(clonedBackground, { scale: 1 });
+            const canvas = await html2canvas(iframe.contentDocument.body.firstElementChild, { scale: 1 });
             const image = document.createElement('img');
             image.setAttribute('src', canvas.toDataURL('png'));
             image.setAttribute('width', canvas.getAttribute('width'));
