@@ -1,11 +1,11 @@
 <templates>
     <t t-name="project.ProjectTaskStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary" owl="1">
         <!-- Readonly button -->
-        <xpath expr="//t[@t-if='isReadonly']/button/span[1]" position="attributes">
+        <xpath expr="//t[@t-if='props.readonly']/button/span[1]" position="attributes">
             <attribute name="t-attf-class">{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}</attribute>
         </xpath>
         <!-- Waiting state button -->
-        <xpath expr="//t[@t-if='isReadonly']" position="after">
+        <xpath expr="//t[@t-if='props.readonly']" position="after">
             <t t-elif="currentValue == '04_waiting_normal' and ['kanban', 'list'].includes(this.props.viewType)">
                 <button class="d-flex align-items-center btn fw-normal p-0 justify-content-center " title="This task is blocked by another unfinished task">
                     <i class="fa fa-lg fa-hourglass-o"></i>
@@ -13,7 +13,7 @@
             </t>
         </xpath>
         <!-- The toggle mark as done button -->
-        <xpath expr="//t[@t-if='isReadonly']" position="after">
+        <xpath expr="//t[@t-if='props.readonly']" position="after">
             <t t-elif="isToggleMode and currentValue == '01_in_progress'">
                 <button t-if="['kanban', 'list'].includes(this.props.viewType) or this.env.isSmall" class="d-flex align-items-center btn fw-normal p-0" t-on-click.stop="toggleState">
                     <i t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}"></i>

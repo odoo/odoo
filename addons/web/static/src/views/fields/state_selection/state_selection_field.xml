@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StateSelectionField" owl="1">
-        <t t-if="isReadonly">
+        <t t-if="props.readonly">
             <button class="d-flex align-items-center btn fw-normal p-0">
                 <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
                 <span t-if="props.showLabel" class="o_status_label ms-1" t-esc="label"/>

@@ -29,6 +29,8 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
     static template = "mail.Many2OneAvatarUserField";
     static props = {
         ...Many2OneAvatarField.props,
+        context: { type: Object, optional: true },
+        domain: { type: Array, optional: true },
         withCommand: { type: Boolean, optional: true },
     };
 }
@@ -38,10 +40,13 @@ export const many2OneAvatarUserField = {
     ...many2OneAvatarField,
     component: Many2OneAvatarUserField,
     additionalClasses: ["o_field_many2one_avatar"],
-    extractProps: (fieldInfo) => ({
-        ...many2OneAvatarField.extractProps(fieldInfo),
-        withCommand: fieldInfo.viewType === "form",
-    }),
+    extractProps(fieldInfo, dynamicInfo) {
+        const props = many2OneAvatarField.extractProps(...arguments);
+        props.context = dynamicInfo.context;
+        props.domain = dynamicInfo.domain;
+        props.withCommand = fieldInfo.viewType === "form";
+        return props;
+    },
 };
 
 registry.category("fields").add("many2one_avatar_user", many2OneAvatarUserField);
@@ -77,10 +82,11 @@ export const kanbanMany2OneAvatarUserField = {
     ...kanbanMany2OneAvatarField,
     component: KanbanMany2OneAvatarUserField,
     additionalClasses: [...kanbanMany2OneAvatarField.additionalClasses, "o_field_many2one_avatar"],
-    extractProps: (fieldInfo) => ({
-        ...kanbanMany2OneAvatarField.extractProps(fieldInfo),
-        displayAvatarName: fieldInfo.options.display_avatar_name || false,
-    }),
+    extractProps({ options }) {
+        const props = kanbanMany2OneAvatarField.extractProps(...arguments);
+        props.displayAvatarName = options.display_avatar_name || false;
+        return props;
+    },
 };
 
 registry.category("fields").add("kanban.many2one_avatar_user", kanbanMany2OneAvatarUserField);

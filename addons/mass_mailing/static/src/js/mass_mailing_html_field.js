@@ -609,12 +609,13 @@ export const massMailingHtmlField = {
     ...htmlField,
     component: MassMailingHtmlField,
     displayName: _lt("Email"),
-    extractProps: (fieldInfo) => ({
-        ...htmlField.extractProps(fieldInfo),
-        filterTemplates: fieldInfo.options.filterTemplates,
-        inlineField: fieldInfo.options['inline-field'],
-        iframeHtmlClass: fieldInfo.attrs.iframeHtmlClass,
-    }),
+    extractProps({ attrs, options }) {
+        const props = htmlField.extractProps(...arguments);
+        props.filterTemplates = options.filterTemplates;
+        props.inlineField = options['inline-field'];
+        props.iframeHtmlClass = attrs.iframeHtmlClass;
+        return props;
+    },
 };
 
 registry.category("fields").add("mass_mailing_html", massMailingHtmlField);

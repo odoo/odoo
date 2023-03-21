@@ -11,6 +11,7 @@ export class SelectionField extends Component {
     static props = {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
+        required: { type: Boolean, optional: true },
     };
 
     get options() {
@@ -45,9 +46,6 @@ export class SelectionField extends Component {
             ? rawValue[0]
             : rawValue;
     }
-    get isRequired() {
-        return this.props.record.isRequired(this.props.name);
-    }
 
     stringify(value) {
         return JSON.stringify(value);
@@ -81,17 +79,18 @@ export const selectionField = {
     supportedTypes: ["many2one", "selection"],
     legacySpecialData: "_fetchSpecialRelation",
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps: ({ attrs }) => ({
-        placeholder: attrs.placeholder,
-    }),
+    extractProps({ attrs }, dynamicInfo) {
+        return {
+            placeholder: attrs.placeholder,
+            required: dynamicInfo.required,
+        };
+    },
 };
 
 registry.category("fields").add("selection", selectionField);
 
-export function preloadSelection(orm, record, fieldName) {
+export function preloadSelection(orm, record, fieldName, { domain }) {
     const field = record.fields[fieldName];
-    const context = record.evalContext;
-    const domain = record.getFieldDomain(fieldName).toList(context);
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 

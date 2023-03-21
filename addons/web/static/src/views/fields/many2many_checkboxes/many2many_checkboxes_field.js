@@ -49,10 +49,8 @@ export const many2ManyCheckboxesField = {
 
 registry.category("fields").add("many2many_checkboxes", many2ManyCheckboxesField);
 
-export function preloadMany2ManyCheckboxes(orm, record, fieldName) {
+export function preloadMany2ManyCheckboxes(orm, record, fieldName, { domain }) {
     const field = record.fields[fieldName];
-    const context = record.evalContext;
-    const domain = record.getFieldDomain(fieldName).toList(context);
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 

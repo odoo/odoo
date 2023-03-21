@@ -32,9 +32,8 @@ export class X2ManyField extends Component {
         crudOptions: { type: Object, optional: true },
         string: { type: String, optional: true },
         views: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        archInfo: {},
+        domain: { type: Array, optional: true },
+        context: { type: Object },
     };
 
     setup() {
@@ -239,9 +238,8 @@ export class X2ManyField extends Component {
     }
 
     async onAdd({ context, editable } = {}) {
-        const record = this.props.record;
-        const domain = record.getFieldDomain(this.props.name).toList();
-        context = makeContext([record.getFieldContext(this.props.name), context]);
+        const domain = this.props.domain || this.props.record.getFieldDomain(this.props.name);
+        context = makeContext([this.props.context, context]);
         if (this.isMany2Many) {
             const { string } = this.props;
             const title = sprintf(this.env._t("Add: %s"), string);
@@ -274,9 +272,11 @@ export const x2ManyField = {
     displayName: _lt("Relational table"),
     supportedTypes: ["one2many", "many2many"],
     useSubView: true,
-    extractProps: ({ attrs, viewMode, views, widget, options, string }) => {
+    extractProps: ({ attrs, viewMode, views, widget, options, string }, dynamicInfo) => {
         const props = {
             addLabel: attrs["add-label"],
+            context: dynamicInfo.context,
+            domain: dynamicInfo.domain,
             viewMode,
             views,
             crudOptions: options,

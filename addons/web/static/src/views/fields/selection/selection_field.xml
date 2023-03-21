@@ -11,7 +11,7 @@
                     t-att-selected="false === value"
                     t-att-value="stringify(false)"
                     t-esc="this.props.placeholder || ''"
-                    t-attf-style="{{ isRequired ? 'display:none' : '' }}"
+                    t-attf-style="{{ props.required ? 'display:none' : '' }}"
                 />
                 <t t-foreach="options" t-as="option" t-key="option[0]">
                     <option

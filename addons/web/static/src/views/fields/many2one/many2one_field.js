@@ -52,6 +52,8 @@ export class Many2OneField extends Component {
         canWrite: { type: Boolean, optional: true },
         canQuickCreate: { type: Boolean, optional: true },
         canCreateEdit: { type: Boolean, optional: true },
+        context: { type: Object, optional: true },
+        domain: { type: Array, optional: true },
         nameCreateField: { type: String, optional: true },
         searchLimit: { type: Number, optional: true },
         relation: { type: String, optional: true },
@@ -70,6 +72,7 @@ export class Many2OneField extends Component {
         searchLimit: 7,
         string: "",
         canScanBarcode: false,
+        context: {},
     };
 
     static SEARCH_MORE_LIMIT = 320;
@@ -98,7 +101,7 @@ export class Many2OneField extends Component {
             onRecordSaved: async (record) => {
                 const resId = this.value[0];
                 const fields = ["display_name"];
-                const context = this.props.record.getFieldContext(this.props.name);
+                const { context } = this.props;
                 const records = await this.orm.read(this.relation, [resId], fields, { context });
                 await this.updateRecord(m2oTupleFromData(records[0]));
                 if (this.props.record.model.root.id !== this.props.record.id) {
@@ -151,14 +154,11 @@ export class Many2OneField extends Component {
     get string() {
         return this.props.string || this.props.record.fields[this.props.name].string || "";
     }
-    get context() {
-        return this.props.record.getFieldContext(this.props.name);
-    }
-    get domain() {
-        return this.props.record.getFieldDomain(this.props.name);
-    }
     get hasExternalButton() {
         return this.props.canOpen && !!this.value && !this.state.isFloating;
+    }
+    get context() {
+        return this.props.context;
     }
     get displayName() {
         return this.value ? this.value[1].split("\n")[0] : "";
@@ -203,7 +203,7 @@ export class Many2OneField extends Component {
         };
     }
     getDomain() {
-        return this.domain.toList(this.context);
+        return this.props.domain || this.props.record.getFieldDomain(this.props.name);
     }
     async openAction() {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
@@ -299,7 +299,7 @@ export const many2OneField = {
     component: Many2OneField,
     displayName: _lt("Many2one"),
     supportedTypes: ["many2one"],
-    extractProps: ({ attrs, options, string }) => {
+    extractProps({ attrs, options, string }, dynamicInfo) {
         const canCreate =
             attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !options.no_create;
         return {
@@ -309,6 +309,8 @@ export const many2OneField = {
             canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
             canQuickCreate: canCreate && !options.no_quick_create,
             canCreateEdit: canCreate && !options.no_create_edit,
+            context: dynamicInfo.context,
+            domain: dynamicInfo.domain,
             nameCreateField: options.create_name_field,
             canScanBarcode: !!options.can_scan_barcode,
             string,

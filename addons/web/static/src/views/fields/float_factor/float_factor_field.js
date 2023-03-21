@@ -29,10 +29,11 @@ export class FloatFactorField extends FloatField {
 export const floatFactorField = {
     ...floatField,
     component: FloatFactorField,
-    extractProps: (fieldInfo) => ({
-        ...floatField.extractProps(fieldInfo),
-        factor: fieldInfo.options.factor,
-    }),
+    extractProps({ options }) {
+        const props = floatField.extractProps(...arguments);
+        props.factor = options.factor;
+        return props;
+    },
 };
 
 registry.category("fields").add("float_factor", floatFactorField);
