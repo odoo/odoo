@@ -86,7 +86,6 @@ class TestItEdi(AccountEdiTestCommon):
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': 'l10n_it_edi_test',
             'company_id': cls.company.id,
-            'edi_format_id': cls.edi_format.id,
             'edi_identification': 'l10n_it_edi_test',
             'private_key': 'l10n_it_edi_test',
         })
