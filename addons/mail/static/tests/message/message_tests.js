@@ -1170,7 +1170,7 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
-    await click(".o-composer-suggestion:contains(Test Partner)");
+    await click(".o-mail-Composer-suggestion:contains(Test Partner)");
     await click(".o-mail-Composer-send");
     await click(".o_mail_redirect");
     assert.containsOnce($, ".o-mail-ChatWindow-content");
@@ -1216,7 +1216,7 @@ QUnit.test("Channel should be opened after clicking on its mention", async (asse
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-composer-suggestion:contains(my-channel)");
+    await click(".o-mail-Composer-suggestion:contains(my-channel)");
     await click(".o-mail-Composer-send");
     await click(".o_channel_redirect");
     assert.containsOnce($, ".o-mail-ChatWindow-content");

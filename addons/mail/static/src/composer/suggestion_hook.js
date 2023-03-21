@@ -17,7 +17,7 @@ export function useSuggestion() {
                 position: undefined,
                 term: undefined,
             });
-            self.state.items.length = 0;
+            self.state.items = undefined;
         },
         detect() {
             const selectionEnd = comp.props.composer.selection.end;
@@ -113,7 +113,7 @@ export function useSuggestion() {
         },
         state: useState({
             count: 0,
-            items: [],
+            items: undefined,
         }),
         update() {
             if (!self.search.delimiter || !comp.props.composer.thread) {
@@ -127,16 +127,16 @@ export function useSuggestion() {
             if (!suggestions) {
                 return;
             }
-            const [main, extra = { suggestions: [] }] = suggestions;
+            const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             // arbitrary limit to avoid displaying too many elements at once
             // ideally a load more mechanism should be introduced
             const limit = 8;
-            main.suggestions.length = Math.min(main.suggestions.length, limit);
-            extra.suggestions.length = Math.min(
-                extra.suggestions.length,
-                limit - main.suggestions.length
+            mainSuggestions.length = Math.min(mainSuggestions.length, limit);
+            extraSuggestions.length = Math.min(
+                extraSuggestions.length,
+                limit - mainSuggestions.length
             );
-            self.state.items = [main, extra];
+            self.state.items = { type, mainSuggestions, extraSuggestions };
         },
     };
     useEffect(
