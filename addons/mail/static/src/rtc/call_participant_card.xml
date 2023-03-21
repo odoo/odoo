@@ -36,6 +36,9 @@
                     </small>
                 </span>
                 <div class="o-mail-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex flex-row-reverse">
+                    <span t-if="rtcSession.isRaisingHand" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-500" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="raising hand" aria-label="raising hand">
+                        <i class="fa fa-hand-paper-o"/>
+                    </span>
                     <span t-if="rtcSession.isSelfMuted and !rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="muted" aria-label="muted">
                         <i class="fa fa-microphone-slash"/>
                     </span>

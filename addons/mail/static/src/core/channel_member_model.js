@@ -11,6 +11,7 @@ import { createLocalId } from "../utils/misc";
  */
 export class ChannelMember {
     personaLocalId;
+    rtcSessionId;
     threadId;
     typingTimer;
     /** @type {import("@mail/core/store_service").Store} */
@@ -22,6 +23,10 @@ export class ChannelMember {
 
     set persona(persona) {
         this.personaLocalId = persona?.localId;
+    }
+
+    get rtcSession() {
+        return this._store.rtcSessions[this.rtcSessionId];
     }
 
     get thread() {

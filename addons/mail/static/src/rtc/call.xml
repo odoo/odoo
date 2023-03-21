@@ -3,7 +3,6 @@
 
     <t t-name="mail.Call" owl="1">
         <div class="o-mail-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
-            <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
             <div class="d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto bg-black-50" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
@@ -29,6 +28,9 @@
                     <div t-on-mousemove="onMousemoveOverlay">
                         <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
                     </div>
+                </div>
+                <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': state.isFullscreen, 'ps-2 pb-2': !state.isFullscreen }">
+                    <span class="bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': state.isFullscreen, 'p-2': !state.isFullscreen }" t-foreach="callNotifications" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
                 </div>
             </div>
             <div t-if="state.sidebar and props.thread.activeRtcSession" class="o-mail-Call-sidebar d-flex align-items-center h-100 flex-column">
