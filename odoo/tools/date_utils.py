@@ -216,25 +216,35 @@ def json_default(obj):
 def date_range(start, end, step=relativedelta(months=1)):
     """Date range generator with a step interval.
 
-    :param datetime start: beginning date of the range.
-    :param datetime end: ending date of the range.
+    :param date | datetime start: beginning date of the range.
+    :param date | datetime end: ending date of the range.
     :param relativedelta step: interval of the range.
     :return: a range of datetime from start to end.
     :rtype: Iterator[datetime]
     """
+    if isinstance(start, datetime) and isinstance(end, datetime):
+        are_naive = start.tzinfo is None and end.tzinfo is None
+        are_utc = start.tzinfo == pytz.utc and end.tzinfo == pytz.utc
 
-    are_naive = start.tzinfo is None and end.tzinfo is None
-    are_utc = start.tzinfo == pytz.utc and end.tzinfo == pytz.utc
+        # Cases with miscellenous timezone are more complexe because of DST.
+        are_others = start.tzinfo and end.tzinfo and not are_utc
 
-    # Cases with miscellenous timezone are more complexe because of DST.
-    are_others = start.tzinfo and end.tzinfo and not are_utc
-
-    if are_others:
-        if start.tzinfo.zone != end.tzinfo.zone:
+        if are_others and start.tzinfo.zone != end.tzinfo.zone:
             raise ValueError("Timezones of start argument and end argument seem inconsistent")
 
-    if not are_naive and not are_utc and not are_others:
-        raise ValueError("Timezones of start argument and end argument mismatch")
+        if not are_naive and not are_utc and not are_others:
+            raise ValueError("Timezones of start argument and end argument mismatch")
+
+        dt = start.replace(tzinfo=None)
+        end_dt = end.replace(tzinfo=None)
+        post_process = start.tzinfo.localize if start.tzinfo else lambda dt: dt
+
+    elif isinstance(start, date) and isinstance(end, date):
+        dt, end_dt = start, end
+        post_process = lambda dt: dt
+
+    else:
+        raise ValueError("start/end should be both date or both datetime type")
 
     if start > end:
         raise ValueError("start > end, start date must be before end")
@@ -242,13 +252,6 @@ def date_range(start, end, step=relativedelta(months=1)):
     if start == start + step:
         raise ValueError("Looks like step is null")
 
-    if start.tzinfo:
-        localize = start.tzinfo.localize
-    else:
-        localize = lambda dt: dt
-
-    dt = start.replace(tzinfo=None)
-    end = end.replace(tzinfo=None)
-    while dt <= end:
-        yield localize(dt)
+    while dt <= end_dt:
+        yield post_process(dt)
         dt = dt + step

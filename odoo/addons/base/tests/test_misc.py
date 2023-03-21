@@ -97,6 +97,29 @@ class TestDateRangeFunction(BaseCase):
 
         self.assertEqual(dates, expected)
 
+    def test_date_range_with_date(self):
+        """ Check date_range with naive datetimes. """
+        start = datetime.date(1985, 1, 1)
+        end = datetime.date(1986, 1, 1)
+
+        expected = [
+            datetime.date(1985, 1, 1),
+            datetime.date(1985, 2, 1),
+            datetime.date(1985, 3, 1),
+            datetime.date(1985, 4, 1),
+            datetime.date(1985, 5, 1),
+            datetime.date(1985, 6, 1),
+            datetime.date(1985, 7, 1),
+            datetime.date(1985, 8, 1),
+            datetime.date(1985, 9, 1),
+            datetime.date(1985, 10, 1),
+            datetime.date(1985, 11, 1),
+            datetime.date(1985, 12, 1),
+            datetime.date(1986, 1, 1),
+        ]
+
+        self.assertEqual(list(date_utils.date_range(start, end)), expected)
+
     def test_date_range_with_timezone_aware_datetimes_other_than_utc(self):
         """ Check date_range with timezone-aware datetimes other than UTC."""
         timezone = pytz.timezone('Europe/Brussels')
