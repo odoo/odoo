@@ -118,7 +118,7 @@
                     </div>
                     <group name="member_partner_info">
                         <group name="group_owner">
-                            <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                            <field name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                         </group>
                         <group name="group_user">
                             <field name="company_id" attrs="{'invisible': [('user_id', '=', False)]}"
