@@ -54,7 +54,7 @@ export class SubtaskKanbanList extends Component {
                         type: "many2many",
                         relation: "res.users",
                         field: this.props.record.activeFields.user_ids.field,
-                        fieldsToFetch: this.props.record.activeFields.user_ids.fieldsToFetch,
+                        relatedFields: this.props.record.activeFields.user_ids.relatedFields,
                         attrs: this.props.record.activeFields.user_ids.attrs,
                         options: this.props.record.activeFields.user_ids.options,
                     },
