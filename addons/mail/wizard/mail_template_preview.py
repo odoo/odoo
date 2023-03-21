@@ -74,6 +74,7 @@ class MailTemplatePreview(models.TransientModel):
         mail_template = self.mail_template_id.with_context(lang=self.lang)
         if not self.resource_ref or not self.resource_ref.id:
             self._set_mail_attributes()
+            self.error_msg = False
         else:
             try:
                 mail_values = mail_template.with_context(template_preview_lang=self.lang)._generate_template(
