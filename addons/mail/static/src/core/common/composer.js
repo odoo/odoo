@@ -3,7 +3,7 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
-import { useEmojiPicker } from "@mail/core/common/emoji_picker";
+import { EmojiPicker, useEmojiPicker } from "@mail/core/common/emoji_picker";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -22,10 +22,12 @@ import {
     onMounted,
     useChildSubEnv,
     useEffect,
+    useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -54,6 +56,7 @@ const EDIT_CLICK_TYPE = {
 export class Composer extends Component {
     static components = {
         AttachmentList,
+        EmojiPicker,
         FileUploader,
         NavigableList,
     };
@@ -84,6 +87,10 @@ export class Composer extends Component {
                 send_keybind: this.sendKeybind,
             })
         );
+        this.KEYBOARD = {
+            NONE: "None",
+            EMOJI: "Emoji",
+        };
         this.messaging = useMessaging();
         this.store = useStore();
         if (this.allowUpload) {
@@ -103,6 +110,7 @@ export class Composer extends Component {
         this.state = useState({
             autofocus: 0,
             active: true,
+            keyboard: this.KEYBOARD.NONE,
         });
         this.selection = useSelection({
             refName: "textarea",
@@ -114,7 +122,7 @@ export class Composer extends Component {
                     !this.isEventTrusted(ev) ||
                     isEventHandled(ev, "sidebar.openThread") ||
                     isEventHandled(ev, "emoji.selectEmoji") ||
-                    isEventHandled(ev, "composer.clickOnAddEmoji") ||
+                    isEventHandled(ev, "Composer.onClickAddEmoji") ||
                     isEventHandled(ev, "composer.clickOnAddAttachment") ||
                     isEventHandled(ev, "composer.selectSuggestion")
                 );
@@ -141,10 +149,26 @@ export class Composer extends Component {
         useChildSubEnv({
             inComposer: true,
         });
-        useEmojiPicker(useRef("emoji-picker"), {
-            onSelect: (str) => this.addEmoji(str),
-            onClose: () => this.state.autofocus++,
-        });
+        if (!this.ui.isSmall) {
+            useEmojiPicker(useRef("emoji-button"), {
+                onSelect: (str) => this.addEmoji(str),
+                onClose: () => this.state.autofocus++,
+            });
+        }
+        useExternalListener(
+            browser,
+            "click",
+            async (ev) => {
+                if (this.state.keyboard === this.KEYBOARD.NONE) {
+                    return;
+                }
+                await new Promise(setTimeout); // let bubbling to catch marked event handled
+                if (!this.isEventHandledByPicker(ev)) {
+                    this.state.keyboard = this.KEYBOARD.NONE;
+                }
+            },
+            true
+        );
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
@@ -231,6 +255,17 @@ export class Composer extends Component {
 
     get sendKeybind() {
         return this.props.mode === "extended" ? _t("CTRL-Enter") : _t("Enter");
+    }
+
+    /**
+     * @param {Event} ev
+     * @returns {boolean}
+     */
+    isEventHandledByPicker(ev) {
+        return (
+            isEventHandled(ev, "Composer.onClickAddEmoji") ||
+            isEventHandled(ev, "EmojiPicker.onClick")
+        );
     }
 
     get thread() {
@@ -434,7 +469,9 @@ export class Composer extends Component {
     }
 
     onClickAddEmoji(ev) {
-        markEventHandled(ev, "composer.clickOnAddEmoji");
+        markEventHandled(ev, "Composer.onClickAddEmoji");
+        this.state.keyboard =
+            this.state.keyboard === this.KEYBOARD.EMOJI ? this.KEYBOARD.NONE : this.KEYBOARD.EMOJI;
     }
 
     isEventTrusted(ev) {
@@ -471,8 +508,6 @@ export class Composer extends Component {
 
     async sendMessage() {
         await this.processMessage(async (value) => {
-            const thread =
-                this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
             const postData = {
                 attachments: this.props.composer.attachments,
                 isNote:
@@ -482,17 +517,35 @@ export class Composer extends Component {
                 cannedResponseIds: [...this.props.composer.cannedResponseIds],
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
-            const message = await this.threadService.post(thread, value, postData);
-            if (this.props.composer.thread.type === "mailbox") {
-                this.env.services.notification.add(
-                    sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
-                    { type: "info" }
-                );
-            }
-            this.suggestion?.clearRawMentions();
-            this.suggestion?.clearCannedReponses();
-            this.props.messageToReplyTo?.cancel();
+            await this._sendMessage(value, postData);
         });
+    }
+
+    /**
+     * @typedef postData
+     * @property {import('@mail/attachments/attachment_model').Attachment[]} attachments
+     * @property {boolean} isNote
+     * @property {number} parentId
+     * @property {import("@mail/composer/composer_model").RawMentions} rawMentions
+     */
+
+    /**
+     * @param {string} value message body
+     * @param {postData} postData Message meta data info
+     */
+    async _sendMessage(value, postData) {
+        const thread =
+            this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
+        const message = await this.threadService.post(thread, value, postData);
+        if (this.props.composer.thread.type === "mailbox") {
+            this.env.services.notification.add(
+                sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
+                { type: "info" }
+            );
+        }
+        this.suggestion?.clearRawMentions();
+        this.suggestion?.clearCannedReponses();
+        this.props.messageToReplyTo?.cancel();
     }
 
     async editMessage() {

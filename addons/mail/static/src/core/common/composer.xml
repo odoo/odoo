@@ -73,7 +73,7 @@
                         }"
                     >
                         <div class="d-flex flex-grow-1 align-items-center" >
-                            <button class="btn border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
+                            <button class="btn border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"/>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
                                     <button t-att-disabled="!state.active" class="btn fa fa-paperclip border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"/>
@@ -95,6 +95,7 @@
                     attachments="props.composer.attachments"
                     unlinkAttachment="attachmentUploader.unlink"
                     imagesHeight="50"/>
+                <EmojiPicker t-if="ui.isSmall and state.keyboard === KEYBOARD.EMOJI" className="'o-mail-Composer-bottomPicker w-100'" onSelect="(str) => this.addEmoji(str)"/>
             </div>
         </div>
         <span t-if="props.composer.message" class="text-muted" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>

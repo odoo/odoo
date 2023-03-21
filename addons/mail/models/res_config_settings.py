@@ -39,6 +39,27 @@ class ResConfigSettings(models.TransientModel):
     primary_color = fields.Char(related='company_id.primary_color', string="Header Color", readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', string="Button Color", readonly=False)
 
+    tenor_api_key = fields.Char(
+        'Tenor API key',
+        config_parameter='discuss.tenor_api_key',
+        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
+    )
+    tenor_content_filter = fields.Selection(
+        [('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low'),
+        ('off', 'Off')],
+        string='Tenor content filter',
+        help="https://developers.google.com/tenor/guides/content-filtering",
+        config_parameter='discuss.tenor_content_filter',
+        default='low',
+    )
+    tenor_gif_limit = fields.Integer(
+        default=8,
+        config_parameter='discuss.tenor_gif_limit',
+        help="Fetch up to the specified number of GIF.",
+    )
+
     def _compute_fail_counter(self):
         previous_date = fields.Datetime.now() - datetime.timedelta(days=30)
 

@@ -10,7 +10,12 @@ import {
     replaceArrayWithCompare,
 } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId, onChange, nullifyClearCommands } from "@mail/utils/common/misc";
+import {
+    assignDefined,
+    createLocalId,
+    onChange,
+    nullifyClearCommands,
+} from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -885,7 +890,7 @@ export class ThreadService {
     async post(
         thread,
         body,
-        { attachments = [], isNote = false, parentId, rawMentions, cannedResponseIds }
+        { attachments = [], isNote = false, parentId, rawMentions = {}, cannedResponseIds } = {}
     ) {
         let tmpMsg;
         const params = await this.getMessagePostParams({

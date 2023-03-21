@@ -33,6 +33,7 @@ import { session } from "@web/session";
 import { makeMockXHR } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
+import { gifPickerService } from "@mail/discuss/gif_picker/common/gif_picker_service";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -180,6 +181,7 @@ export const setupManager = {
             im_status: imStatusService,
             effect: effectService,
             "discuss.channel.member": channelMemberService,
+            "discuss.gifPicker": gifPickerService,
             "mail.notification.permission": notificationPermissionService,
             "mail.suggestion": suggestionService,
             "mail.store": storeService,
