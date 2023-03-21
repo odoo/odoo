@@ -55,14 +55,8 @@ class WebsiteSaleDigital(CustomerPortal):
     ], type='http', auth='public')
     def download_attachment(self, attachment_id):
         # Check if this is a valid attachment id
-        attachment = request.env['ir.attachment'].sudo().search_read(
-            [('id', '=', int(attachment_id))],
-            ["name", "datas", "mimetype", "res_model", "res_id", "type", "url"]
-        )
-
-        if attachment:
-            attachment = attachment[0]
-        else:
+        attachment = request.env['ir.attachment'].sudo().browse(int(attachment_id)).exists()
+        if not attachment:
             return request.redirect(self.orders_page)
 
         # Check if the user has bought the associated product
@@ -83,4 +77,4 @@ class WebsiteSaleDigital(CustomerPortal):
         else:
             return request.redirect(self.orders_page)
 
-        return self.env['ir.binary']._get_stream_from(attachment).get_response(as_attachment=True)
+        return request.env['ir.binary']._get_stream_from(attachment).get_response(as_attachment=True)
