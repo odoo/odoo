@@ -218,6 +218,7 @@ class TestUi(odoo.tests.HttpCase):
     def test_10_website_conditional_visibility(self):
         self.start_tour('/', 'conditional_visibility_1', login='admin')
         self.start_tour('/', 'conditional_visibility_2', login='admin')
+        self.start_tour('/', 'conditional_visibility_3', login='admin')
 
     def test_11_website_snippet_background_edition(self):
         self.env['ir.attachment'].create({

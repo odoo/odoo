@@ -3057,17 +3057,11 @@ options.registry.ConditionalVisibility = options.Class.extend({
     async onTargetShow() {
         this.$target[0].classList.remove('o_conditional_hidden');
     },
+    // Todo: remove me in master.
     /**
      * @override
      */
-    cleanForSave() {
-        // Kinda hacky: the snippet is forced hidden via onTargetHide on save
-        // but should be marked as visible as when entering edit mode later, the
-        // snippet will be shown naturally (as the CSS rules won't apply).
-        // Without this, the "eye" icon of the visibility panel would be shut
-        // when entering edit mode.
-        this.trigger_up('snippet_option_visibility_update', { show: true });
-    },
+    cleanForSave() {},
 
     //--------------------------------------------------------------------------
     // Options
