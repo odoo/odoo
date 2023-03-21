@@ -10,7 +10,7 @@
                 t-att-class="{
                     'px-3 py-4 o-extended': extended,
                     'p-3': normal,
-                    'o-hasSelfAvatar px-3': !this.env.inChatWindow and thread,
+                    'o-hasSelfAvatar px-3': !env.inChatWindow and thread,
                 }">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact">
                 <img class="o-mail-Composer-avatar mt-1 rounded-circle" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
@@ -82,7 +82,7 @@
                     t-att-disabled="isSendButtonDisabled"
                     aria-label="Send"
                 >
-                    <t t-if="this.store.isSmall"><i class="fa fa-paper-plane-o"/></t>
+                    <t t-if="store.isSmall"><i class="fa fa-paper-plane-o"/></t>
                     <t t-else="">Send</t>
                 </button>
             </div>
@@ -99,7 +99,7 @@
         </div>
         <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
     </div>
-    <NavigableList t-if="this.suggestion" class="'o-composer-suggestion-list'" t-props="navigableListProps"/>
+    <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
 
     <t t-name="mail.Composer.suggestionPartner" owl="1">

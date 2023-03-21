@@ -210,7 +210,7 @@ QUnit.test("mention a channel with space in the name", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General good boy");
@@ -222,7 +222,7 @@ QUnit.test('mention a channel with "&" in the name', async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General & good");
@@ -545,7 +545,7 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
-    await click(".o-composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce(
         $(".o-mail-Message-body"),
@@ -577,10 +577,10 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Te");
-    await click(".o-composer-suggestion:eq(0)");
+    await click(".o-mail-Composer-suggestion:eq(0)");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Te");
-    await click(".o-composer-suggestion:eq(1)");
+    await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message-body");
     assert.containsOnce(
@@ -600,7 +600,7 @@ QUnit.test("mention a channel on a second line when the first line contains #", 
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#blabla\n");
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General good");
@@ -614,7 +614,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "#");
-        await click(".o-composer-suggestion");
+        await click(".o-mail-Composer-suggestion");
         const text = $(".o-mail-Composer-input").val();
         $(".o-mail-Composer-input").val(text.slice(0, -1));
         await insertText(".o-mail-Composer-input", ", test");
@@ -641,10 +641,10 @@ QUnit.test("mention 2 different channels that have the same name", async (assert
     await openDiscuss(channelId_1);
     await insertText(".o-mail-Composer-input", "#");
     await insertText(".o-mail-Composer-input", "m");
-    await click(".o-composer-suggestion:eq(0)");
+    await click(".o-mail-Composer-suggestion:eq(0)");
     await insertText(".o-mail-Composer-input", "#");
     await insertText(".o-mail-Composer-input", "m");
-    await click(".o-composer-suggestion:eq(1)");
+    await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message-body");
     assert.containsOnce(
@@ -677,7 +677,7 @@ QUnit.test(
         await insertText(".o-mail-Composer-input", "email@odoo.com\n");
         await insertText(".o-mail-Composer-input", "@");
         await insertText(".o-mail-Composer-input", "Te");
-        await click(".o-composer-suggestion");
+        await click(".o-mail-Composer-suggestion");
         await click(".o-mail-Composer-send");
         assert.containsOnce(
             $(".o-mail-Message-body"),

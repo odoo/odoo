@@ -364,7 +364,7 @@ QUnit.test(
         });
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "/");
-        await click(".o-composer-suggestion");
+        await click(".o-mail-Composer-suggestion");
         await insertText(".o-mail-Composer-input", " is user?");
         assert.verifySteps([], "No rpc done");
     }
@@ -378,10 +378,10 @@ QUnit.test("add an emoji after a command", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-composer-suggestion-list .o-open");
+    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "/");
-    await click(".o-composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "/who ",
@@ -404,11 +404,11 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-composer-suggestion");
+    assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-composer-suggestion");
-    await click(".o-composer-suggestion");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "Hello! How are you? ",
@@ -438,12 +438,12 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-composer-suggestion");
+    assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
-    await click(".o-composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner ");
 
     await click("button[aria-label='Emojis']");
@@ -459,7 +459,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-composer-suggestion");
+    assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     assert.strictEqual(
@@ -468,8 +468,8 @@ QUnit.test("mention a channel after some text", async (assert) => {
         "text content of composer should have content"
     );
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-composer-suggestion");
-    await click(".o-composer-suggestion");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "bluhbluh #General ",
@@ -485,11 +485,11 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-composer-suggestion");
+    assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-composer-suggestion");
-    await click(".o-composer-suggestion");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "#General ",

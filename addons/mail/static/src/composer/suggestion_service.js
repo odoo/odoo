@@ -99,16 +99,11 @@ class SuggestionService {
             case "/":
                 return this.searchChannelCommand(cleanedSearchTerm, thread, sort);
         }
-        return [
-            {
-                type: undefined,
-                suggestions: [],
-            },
-            {
-                type: undefined,
-                suggestions: [],
-            },
-        ];
+        return {
+            type: undefined,
+            mainSuggestions: [],
+            extraSuggestions: [],
+        };
     }
 
     searchChannelCommand(cleanedSearchTerm, thread, sort) {
@@ -164,12 +159,10 @@ class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return [
-            {
-                type: "ChannelCommand",
-                suggestions: sort ? commands.sort(sortFunc) : commands,
-            },
-        ];
+        return {
+            type: "ChannelCommand",
+            mainSuggestions: sort ? commands.sort(sortFunc) : commands,
+        };
     }
 
     searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
@@ -285,16 +278,11 @@ class SuggestionService {
             }
             return p1.id - p2.id;
         };
-        return [
-            {
-                type: "Partner",
-                suggestions: sort ? mainSuggestionList.sort(sortFunc) : mainSuggestionList,
-            },
-            {
-                type: "Partner",
-                suggestions: sort ? extraSuggestionList.sort(sortFunc) : extraSuggestionList,
-            },
-        ];
+        return {
+            type: "Partner",
+            mainSuggestions: sort ? mainSuggestionList.sort(sortFunc) : mainSuggestionList,
+            extraSuggestions: sort ? extraSuggestionList.sort(sortFunc) : extraSuggestionList,
+        };
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
@@ -332,12 +320,10 @@ class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return [
-            {
-                type: "CannedResponse",
-                suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
-            },
-        ];
+        return {
+            type: "CannedResponse",
+            mainSuggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
+        };
     }
 
     searchChannelSuggestions(cleanedSearchTerm, thread, sort) {
@@ -400,12 +386,10 @@ class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return [
-            {
-                type: "Thread",
-                suggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
-            },
-        ];
+        return {
+            type: "Thread",
+            mainSuggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
+        };
     }
 }
 

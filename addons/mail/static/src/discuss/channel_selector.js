@@ -179,16 +179,12 @@ export class ChannelSelector extends Component {
             anchorRef: this.rootRef.el,
             position: "bottom",
             onSelect: (ev, option) => this.onSelect(option),
-            sources: [
-                {
-                    placeholder: "Loading",
-                    optionTemplate:
-                        this.props.category.id === "channels"
-                            ? "mail.ChannelSelector.channel"
-                            : "mail.ChannelSelector.chat",
-                    options: this.fetchSuggestions(this.state.value),
-                },
-            ],
+            placeholder: _t("Loading"),
+            optionTemplate:
+                this.props.category.id === "channels"
+                    ? "mail.ChannelSelector.channel"
+                    : "mail.ChannelSelector.chat",
+            options: this.fetchSuggestions(this.state.value),
         };
     }
 }

@@ -20,33 +20,22 @@ export class NavigableList extends Component {
     static template = "mail.NavigableList";
     static props = {
         anchorRef: {},
-        position: { type: String, optional: true },
-        onSelect: { type: Function },
-        sources: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    placeholder: { type: String, optional: true },
-                    optionTemplate: { type: String, optional: true },
-                    options: [Array, Promise],
-                },
-            },
-        },
         class: { type: String, optional: true },
+        onSelect: { type: Function },
+        options: { type: [Array, Promise] },
+        optionTemplate: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+        position: { type: String, optional: true },
     };
     static defaultProps = { position: "bottom" };
 
     setup() {
-        this.nextOptionId = 0;
-        this.nextSourceId = 0;
         this.rootRef = useRef("root");
-        this.sources = [];
         this.state = useState({
-            activeSourceOption: null,
-            navigationRev: 0,
+            activeOption: null,
+            isLoading: false,
             open: false,
-            optionsRev: 0,
+            options: [],
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -78,88 +67,49 @@ export class NavigableList extends Component {
         });
     }
 
-    get isOpened() {
-        return this.state.open;
-    }
-
-    get hasOptions() {
-        for (const source of this.sources) {
-            if (source.isLoading || source.options.length) {
-                return true;
-            }
-        }
-        return false;
+    get show() {
+        return Boolean(this.state.open && (this.state.isLoading || this.state.options.length));
     }
 
     open() {
-        this.loadSources();
+        this.load().then(() => {
+            this.state.open = true;
+            this.navigate("first");
+        });
     }
 
     close() {
         this.state.open = false;
-        this.state.activeSourceOption = null;
+        this.state.activeOption = null;
     }
 
-    loadSources() {
-        this.sources = [];
-        const proms = [];
-        for (const pSource of this.props.sources) {
-            if (pSource.options.length === 0) {
-                continue;
-            }
-            const source = this.makeSource(pSource);
-            this.sources.push(source);
-            const options = pSource.options;
-            if (options instanceof Promise) {
-                source.isLoading = true;
-                const prom = options.then((options) => {
-                    source.options = options.map((option) => this.makeOption(option));
-                    source.isLoading = false;
-                    if (source.options.length === 0) {
-                        this.sources = this.sources.filter((s) => s !== source);
-                    }
-                    this.state.optionsRev++;
-                });
-                proms.push(prom);
-            } else {
-                source.options = options.map((option) => this.makeOption(option));
-            }
-        }
-        Promise.all(proms).then(() => {
-            this.navigate(0);
-        });
-        if (this.sources.length === 0) {
-            return;
-        }
-        this.state.open = true;
-    }
-
-    makeOption(option) {
-        return Object.assign(Object.create(option), {
-            id: ++this.nextOptionId,
-        });
-    }
-
-    makeSource(source) {
-        return {
-            id: ++this.nextSourceId,
-            options: [],
-            isLoading: false,
-            placeholder: source.placeholder,
-            optionTemplate: source.optionTemplate,
+    async load() {
+        this.state.options = [];
+        const makeOption = (opt) => {
+            return Object.assign(Object.create(opt), {
+                id: this.state.options.length,
+            });
         };
+        if (this.props.options instanceof Promise) {
+            this.state.isLoading = true;
+            return this.props.options.then((opts) => {
+                opts.forEach((opt) => this.state.options.push(makeOption(opt)));
+                this.state.isLoading = false;
+            });
+        }
+        if (this.props.options instanceof Array) {
+            if (this.props.options.length === 0) {
+                return;
+            }
+            this.props.options.forEach((opt) => this.state.options.push(makeOption(opt)));
+        }
     }
 
-    isActiveSourceOption([sourceIndex, optionIndex]) {
-        return (
-            this.state.activeSourceOption &&
-            this.state.activeSourceOption[0] === sourceIndex &&
-            this.state.activeSourceOption[1] === optionIndex
-        );
+    isActiveOption(option) {
+        return this.state.activeOption?.id === option.id;
     }
 
-    selectOption(ev, indices, params = {}) {
-        const option = this.sources[indices[0]].options[indices[1]];
+    selectOption(ev, option, params = {}) {
         if (option.unselectable) {
             this.close();
             return;
@@ -171,85 +121,67 @@ export class NavigableList extends Component {
     }
 
     navigate(direction) {
-        let step = Math.sign(direction);
-        if (!step) {
-            this.state.activeSourceOption = null;
-            step = 1;
-        } else {
-            this.state.navigationRev++;
-        }
-        if (this.state.activeSourceOption) {
-            let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-            let source = this.sources[sourceIndex];
-            optionIndex += step;
-            if (0 > optionIndex || optionIndex >= source.options.length) {
-                sourceIndex += step;
-                source = this.sources[sourceIndex];
-                while (source && source.isLoading) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
+        const activeOptionId = this.state.activeOption ? this.state.activeOption.id : -1;
+        let targetId = undefined;
+        switch (direction) {
+            case "first":
+                targetId = 0;
+                break;
+            case "last":
+                targetId = this.state.options.length - 1;
+                break;
+            case "previous":
+                targetId = activeOptionId - 1;
+                if (targetId < 0) {
+                    this.navigate("last");
+                    return;
                 }
-                if (source) {
-                    optionIndex = step < 0 ? source.options.length - 1 : 0;
+                break;
+            case "next":
+                targetId = activeOptionId + 1;
+                if (targetId > this.state.options.length - 1) {
+                    this.navigate("first");
+                    return;
                 }
-            }
-            if (source) {
-                this.state.activeSourceOption = [sourceIndex, optionIndex];
-            } else {
-                this.state.activeSourceOption =
-                    direction > 0
-                        ? [0, 0]
-                        : [
-                              this.sources.length - 1,
-                              this.sources[this.sources.length - 1].options.length - 1,
-                          ];
-            }
-        } else {
-            let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
-            let source = this.sources[sourceIndex];
-            while (source && source.isLoading) {
-                sourceIndex += step;
-                source = this.sources[sourceIndex];
-            }
-            if (source) {
-                const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                this.state.activeSourceOption = [sourceIndex, optionIndex];
-            }
+                break;
+            default:
+                return;
         }
+        this.state.activeOption = this.state.options.find((o) => o.id === targetId);
     }
 
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
-                if (!this.isOpened || !this.state.activeSourceOption) {
+                if (!this.show || !this.state.activeOption) {
                     return;
                 }
                 markEventHandled(ev, "NavigableList.select");
-                this.selectOption(ev, this.state.activeSourceOption);
+                this.selectOption(ev, this.state.activeOption);
                 break;
             case "escape":
-                if (!this.isOpened) {
+                if (!this.show) {
                     return;
                 }
                 markEventHandled(ev, "NavigableList.close");
                 this.close();
                 break;
             case "tab":
-                this.navigate(+1);
-                if (!this.isOpened) {
+                this.navigate("next");
+                if (!this.show) {
                     this.open();
                 }
                 break;
             case "arrowup":
-                this.navigate(-1);
-                if (!this.isOpened) {
+                this.navigate("previous");
+                if (!this.show) {
                     this.open();
                 }
                 break;
             case "arrowdown":
-                this.navigate(+1);
-                if (!this.isOpened) {
+                this.navigate("next");
+                if (!this.show) {
                     this.open();
                 }
                 break;
@@ -259,15 +191,7 @@ export class NavigableList extends Component {
         ev.preventDefault();
     }
 
-    onOptionMouseEnter(indices) {
-        this.state.activeSourceOption = indices;
-    }
-
-    onOptionMouseLeave() {
-        this.state.activeSourceOption = null;
-    }
-
-    onOptionClick(ev, indices) {
-        this.selectOption(ev, indices);
+    onOptionMouseEnter(option) {
+        this.state.activeOption = option;
     }
 }

@@ -112,9 +112,9 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
 
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsOnce($, ".o-composer-suggestion-list .o-open");
+    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-composer-suggestion-list .o-open");
+    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.containsOnce($, ".o-mail-Composer");
 
     click(".o-mail-Composer-input").catch(() => {});
