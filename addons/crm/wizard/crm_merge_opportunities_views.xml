@@ -8,7 +8,7 @@
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
                         <field name="user_id" class="oe_inline"/>
-                        <field name="team_id" class="oe_inline" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                        <field name="team_id" class="oe_inline" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                     </group>
                     <group string="Select Leads/Opportunities">
                         <field name="opportunity_ids" nolabel="1">

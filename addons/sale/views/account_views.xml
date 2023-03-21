@@ -32,7 +32,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
-                <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
             </xpath>
             <xpath expr="//group[@id='other_tab_group']" position="inside">
                 <group string="Marketing"
