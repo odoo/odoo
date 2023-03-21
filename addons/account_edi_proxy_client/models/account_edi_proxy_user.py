@@ -1,4 +1,4 @@
-from odoo import models, fields, _
+from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 from .account_edi_proxy_auth import OdooEdiProxyAuth
 
@@ -17,9 +17,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
-DEFAULT_SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
-DEFAULT_TEST_SERVER_URL = 'https://iap-services-test.odoo.com'
 TIMEOUT = 30
 
 
@@ -45,28 +42,63 @@ class AccountEdiProxyClientUser(models.Model):
     id_client = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
-    edi_format_id = fields.Many2one('account.edi.format', required=True)
-    edi_format_code = fields.Char(related='edi_format_id.code', readonly=True)
-    edi_identification = fields.Char(required=True, help="The unique id that identifies this user for on the edi format, typically the vat")
+    edi_identification = fields.Char(required=True, help="The unique id that identifies this user, typically the vat")
     private_key = fields.Binary(required=True, attachment=False, groups="base.group_system", help="The key to encrypt all the user's data")
     private_key_filename = fields.Char(compute='_compute_private_key_filename')
     refresh_token = fields.Char(groups="base.group_system")
+    proxy_type = fields.Selection(
+        selection=[],
+        string="Proxy type",
+        compute='_compute_proxy_type',
+        readonly=False,
+        store=True,
+    )
+    edi_mode = fields.Selection(
+        selection=[
+            ('prod', 'Production mode'),
+            ('test', 'Test mode'),
+            ('demo', 'Demo mode'),
+        ],
+        string='EDI operating mode',
+    )
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_edi_identification_per_for', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
+        ('unique_edi_identification', 'unique(edi_identification, proxy_type, edi_mode)', 'This edi identification is already assigned to a user'),
     ]
+
+    @api.depends('company_id')
+    def _compute_proxy_type(self):
+        for user in self:
+            user.proxy_type = False
 
     def _compute_private_key_filename(self):
         for record in self:
             record.private_key_filename = f'{record.id_client}_{record.edi_identification}.key'
 
-    def _get_demo_state(self):
-        demo_state = self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.demo', False)
-        return 'prod' if demo_state in ['prod', False] else 'test' if demo_state == 'test' else 'demo'
+    def _get_proxy_urls(self):
+        # To extend
+        return {}
 
-    def _get_server_url(self):
-        return DEFAULT_TEST_SERVER_URL if self._get_demo_state() == 'test' else self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+    def _get_server_url(self, proxy_type=None, edi_mode=None):
+        proxy_type = proxy_type or self.proxy_type
+        edi_mode = edi_mode or self.edi_mode
+        proxy_urls = self._get_proxy_urls()
+        # letting this traceback in case of a KeyError, as that would mean something's wrong with the code
+        return proxy_urls[proxy_type][edi_mode]
+
+    def _get_proxy_users(self, company, proxy_type):
+        '''Returns proxy users associated with the given company and proxy type.
+        '''
+        return company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == proxy_type)
+
+    def _get_proxy_identification(self, company):
+        '''Returns the key that will identify company uniquely
+        within a specific proxy type and edi operating mode.
+        or raises a UserError (if the user didn't fill the related field).
+        TO OVERRIDE
+        '''
+        return False
 
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
@@ -78,7 +110,7 @@ class AccountEdiProxyClientUser(models.Model):
             'id': uuid.uuid4().hex,
         }
 
-        if self._get_demo_state() == 'demo':
+        if self.edi_mode == 'demo':
             # Last barrier : in case the demo mode is not handled by the caller, we block access.
             raise Exception("Can't access the proxy in demo mode")
 
@@ -113,7 +145,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         return response['result']
 
-    def _register_proxy_user(self, company, edi_format, edi_identification):
+    def _register_proxy_user(self, company, proxy_type, edi_mode, edi_identification):
         ''' Generate the public_key/private_key that will be used to encrypt the file, send a request to the proxy
         to register the user with the public key and create the user with the private key.
 
@@ -139,18 +171,18 @@ class AccountEdiProxyClientUser(models.Model):
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        if self._get_demo_state() == 'demo':
+        if edi_mode == 'demo':
             # simulate registration
             response = {'id_client': f'demo{company.id}', 'refresh_token': 'demo'}
         else:
             try:
                 # b64encode returns a bytestring, we need it as a string
-                response = self._make_request(self._get_server_url() + '/iap/account_edi/1/create_user', params={
+                response = self._make_request(self._get_server_url(proxy_type, edi_mode) + '/iap/account_edi/2/create_user', params={
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
-                    'edi_format_code': edi_format.code,
                     'edi_identification': edi_identification,
-                    'public_key': base64.b64encode(public_pem).decode()
+                    'public_key': base64.b64encode(public_pem).decode(),
+                    'proxy_type': proxy_type,
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
@@ -160,7 +192,8 @@ class AccountEdiProxyClientUser(models.Model):
         self.create({
             'id_client': response['id_client'],
             'company_id': company.id,
-            'edi_format_id': edi_format.id,
+            'proxy_type': proxy_type,
+            'edi_mode': edi_mode,
             'edi_identification': edi_identification,
             'private_key': base64.b64encode(private_pem),
             'refresh_token': response['refresh_token'],

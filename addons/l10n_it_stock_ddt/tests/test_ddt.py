@@ -32,9 +32,9 @@ class TestDDT(TestSaleCommon):
         })
 
         settings = cls.env['res.config.settings'].create({})
-        if hasattr(settings, 'button_create_proxy_user'):
+        if hasattr(settings, '_create_proxy_user'):
             # Needed when `l10n_it_edi_sdiscoop` is installed
-            settings.button_create_proxy_user()
+            settings._create_proxy_user(cls.company_data['company'], 'demo')
 
 
     def test_ddt_flow(self):
