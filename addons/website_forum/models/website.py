@@ -8,11 +8,13 @@ from odoo.addons.http_routing.models.ir_http import url_for
 class Website(models.Model):
     _inherit = 'website'
 
-    @api.model
-    def get_default_forum_count(self):
-        self.forums_count = self.env['forum.forum'].search_count(self.website_domain())
+    forum_count = fields.Integer(readonly=True, default=0)
 
-    forums_count = fields.Integer(readonly=True, default=get_default_forum_count)
+    @api.model_create_multi
+    def create(self, vals_list):
+        websites = super().create(vals_list)
+        websites._update_forum_count()
+        return websites
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
@@ -37,3 +39,18 @@ class Website(models.Model):
         if search_type in ['forums', 'forum_posts_only', 'all']:
             result.append(self.env['forum.post']._search_get_detail(self, order, options))
         return result
+
+    def _update_forum_count(self):
+        """ Update count of forum linked to some websites. This has to be
+        done manually as website_id=False on forum model means a shared forum.
+        There is therefore no straightforward relationship to be used between
+        forum and website.
+
+        This method either runs on self (if not void), either on all existing
+        websites (to update globally counters, notably when a new forum is
+        created). """
+        websites = self if self else self.search([])
+        for website in websites:
+            website.forum_count = self.env['forum.forum'].sudo().search_count(
+                website.website_domain()
+            )

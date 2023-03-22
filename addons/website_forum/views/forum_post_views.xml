@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<odoo>
+<odoo><data noupdate="1">
 
-<record id="view_forum_post_form" model="ir.ui.view">
-    <field name="name">forum.post.form</field>
+<record id="forum_post_view_form" model="ir.ui.view">
+    <field name="name">forum.post.view.form</field>
     <field name="model">forum.post</field>
     <field name="arch" type="xml">
         <form string="Forum Post">
@@ -67,8 +67,8 @@
     </field>
 </record>
 
-<record id="view_forum_post_search" model="ir.ui.view">
-    <field name="name">forum.post.search</field>
+<record id="forum_post_view_search" model="ir.ui.view">
+    <field name="name">forum.post.view.search</field>
     <field name="model">forum.post</field>
     <field name="arch" type="xml">
         <search string="Search in Post">
@@ -94,8 +94,8 @@
     </field>
 </record>
 
-<record id="view_forum_post_graph" model="ir.ui.view">
-    <field name="name">forum.post.graph</field>
+<record id="forum_post_view_graph" model="ir.ui.view">
+    <field name="name">forum.post.view.graph</field>
     <field name="model">forum.post</field>
     <field name="arch" type="xml">
         <graph string="Graph of Posts" sample="1">
@@ -105,8 +105,8 @@
     </field>
 </record>
 
-<record id="view_forum_post_list" model="ir.ui.view">
-    <field name="name">Forum Post Pages Tree</field>
+<record id="forum_post_view_tree" model="ir.ui.view">
+    <field name="name">forum.post.view.tree</field>
     <field name="model">forum.post</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
@@ -165,15 +165,15 @@
     </field>
 </record>
 
-<record id="action_forum_post" model="ir.actions.act_window">
+<record id="forum_post_action" model="ir.actions.act_window">
     <field name="name">Forum Post Pages</field>
     <field name="res_model">forum.post</field>
     <field name="view_mode">tree,kanban,graph</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('view_forum_post_list')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('forum_post_view_tree')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('forum_post_view_kanban')}),
     ]"/>
-    <field name="search_view_id" ref="view_forum_post_search"/>
+    <field name="search_view_id" ref="forum_post_view_search"/>
     <field name="context">{'search_default_posts': 1, 'create_action': 'website_forum.forum_forum_action_add'}</field>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
@@ -182,10 +182,18 @@
     </field>
 </record>
 
-<menuitem id="menu_forum_post_pages"
-    parent="website.menu_content"
-    sequence="80"
-    name="Forum Posts"
-    action="action_forum_post"/>
+<record id="forum_post_action_favorites" model="ir.actions.act_window">
+    <field name="name">Users favorite posts</field>
+    <field name="res_model">forum.post</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('forum_id', '=', active_id), ('favourite_count', '>', 0), ('state', 'in', ('active', 'close'))]</field>
+</record>
 
-</odoo>
+<record id="forum_post_action_forum_main" model="ir.actions.act_window">
+    <field name="name">Posts</field>
+    <field name="res_model">forum.post</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('forum_id', '=', active_id), ('parent_id', '=', False), ('state', 'in', ('active', 'close'))]</field>
+</record>
+
+</data></odoo>
