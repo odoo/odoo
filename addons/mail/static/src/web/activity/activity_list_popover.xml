@@ -3,7 +3,7 @@
     <t t-name="mail.ActivityListPopover" owl="1">
         <div class="o-mail-ActivityListPopover d-flex flex-column" t-ref="root">
             <div class="overflow-y-auto d-flex flex-column flex-grow-1">
-                <span t-if="activities.length === 0" class="p-3 text-center fst-italic text-500 border-bottom">Schedule activities to help you get things done.</span>
+                <span t-if="activities.length === 0" class="p-3 text-center fst-italic text-500 border-bottom fs-6">Schedule activities to help you get things done.</span>
                 <t t-if="overdueActivities.length > 0">
                     <div class="d-flex bg-100 py-2 border-bottom">
                         <span class="text-danger fw-bold mx-3">Overdue</span>
