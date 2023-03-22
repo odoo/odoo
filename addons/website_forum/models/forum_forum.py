@@ -139,7 +139,10 @@ class Forum(models.Model):
     @api.depends('post_ids')
     def _compute_last_post_id(self):
         for forum in self:
-            forum.last_post_id = forum.post_ids.search([('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')], order='create_date desc', limit=1)
+            forum.last_post_id = forum.post_ids.search(
+                [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')],
+                order='create_date desc', limit=1,
+            )
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
