@@ -119,7 +119,8 @@ PIP_TO_INSTALL="
     PyKCS11 \
     vcgencmd \
     RPi.GPIO \
-    rjsmin==1.1.0"
+    rjsmin==1.1.0 \
+    websocket-client==1.6.3"
 
 mkdir venv
 python3 -m venv venv
