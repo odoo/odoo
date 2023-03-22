@@ -71,15 +71,35 @@ if hasattr(time, 'tzset'):
 # ensure that zlib does not throw error -5 when decompressing
 # because some pdf won't fit into allocated memory
 # https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# If zlib throws a -3 error (incorrect data check), try to
+# decompress as much as possible and ignore the error.
 # ----------------------------------------------------------
 import PyPDF2
 
 try:
     import zlib
+    from io import BytesIO
+
+    def _decompress_corrupted(data):
+        zobj = zlib.decompressobj()
+        f = BytesIO(data)
+        result_data = b''
+        buffer = f.read(1)
+        try:
+            while buffer:
+                result_data += zobj.decompress(buffer)
+                buffer = f.read(1)
+        except zlib.error as e:
+            if e.args[0] != 'Error -3 while decompressing data: incorrect data check':
+                raise e
+        return result_data
 
     def _decompress(data):
         zobj = zlib.decompressobj()
-        return zobj.decompress(data)
+        try:
+            return zobj.decompress(data)
+        except zlib.error:
+            return _decompress_corrupted(data)
 
     PyPDF2.filters.decompress = _decompress
 except ImportError:
