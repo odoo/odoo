@@ -7,9 +7,11 @@ import {
     editInput,
     getFixture,
     nextTick,
+    patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
 
 let serverData;
 let target;
@@ -218,6 +220,10 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
     });
 
     QUnit.module("PropertiesField");
@@ -729,10 +735,6 @@ QUnit.module("Fields", (hooks) => {
         const createNewTag = async (selector, text) => {
             await click(target, selector);
             await editInput(target, selector, text);
-            for (let i = 0; i < 50; ++i) {
-                // Wait until the dropdown appears
-                await nextTick();
-            }
             await triggerEvent(target, selector, "keydown", { key: "Enter" });
             await nextTick();
         };
@@ -898,9 +900,6 @@ QUnit.module("Fields", (hooks) => {
         // Quick create a user
         await click(target, ".o_property_field:nth-child(2) .o_property_field_value input");
         await editInput(target, ".o_property_field:nth-child(2) input", "New User");
-        for (let i = 0; i < 50; ++i) {
-            await nextTick();
-        } // wait until the dropdown appears
         await click(target, ".o_property_field:nth-child(2) .o_m2o_dropdown_option_create");
         selectedUser = target.querySelector(
             ".o_property_field:nth-child(2) .o_property_field_value input"
@@ -997,9 +996,6 @@ QUnit.module("Fields", (hooks) => {
         // Quick create a user
         await click(target, ".o_property_field:nth-child(2) .o_property_field_value input");
         await editInput(target, ".o_property_field:nth-child(2) input", "New User");
-        for (let i = 0; i < 50; ++i) {
-            await nextTick();
-        } // wait until the dropdown appears
         await click(target, ".o_property_field:nth-child(2) .o_m2o_dropdown_option_create");
         assert.deepEqual(
             getSelectedUsers(),
