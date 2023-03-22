@@ -20,10 +20,12 @@ Allow users to sign up and reset their password
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         'views/res_config_settings_views.xml',
+        'views/res_users_signup_views.xml',
         'views/res_users_views.xml',
         'views/auth_signup_login_templates.xml',
         'views/auth_signup_templates_email.xml',
         'views/webclient_templates.xml',
+        'security/ir.model.access.csv',
         ],
     'bootstrap': True,
     'assets': {

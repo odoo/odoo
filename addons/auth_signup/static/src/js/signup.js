@@ -21,3 +21,14 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
         $btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
     },
 });
+
+publicWidget.registry.NewRegistration = publicWidget.Widget.extend({
+    selector: '#auth_signup_new_register',
+    events: {
+        click: '_onClick',
+    },
+
+    async _onClick(e) {
+        window.location.href = '/web/signup';
+    }
+});

@@ -39,36 +39,98 @@ class AuthSignupHome(Home):
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
 
-        if 'error' not in qcontext and request.httprequest.method == 'POST':
-            try:
-                self.do_signup(qcontext)
-                # Send an account creation confirmation email
-                User = request.env['res.users']
-                user_sudo = User.sudo().search(
-                    User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
-                )
-                template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
-                if user_sudo and template:
-                    template.sudo().send_mail(user_sudo.id, force_send=True)
-                return self.web_login(*args, **kw)
-            except UserError as e:
-                qcontext['error'] = e.args[0]
-            except (SignupError, AssertionError) as e:
-                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
-                    qcontext["error"] = _("Another user is already registered using this email address.")
-                else:
-                    _logger.warning("%s", e)
-                    qcontext['error'] = _("Could not create a new account.") + "\n" + str(e)
+        if not qcontext.get('email_confirmation_enabled'):
+            if 'error' not in qcontext and request.httprequest.method == 'POST':
+                try:
+                    self.do_signup(qcontext)
+                    # Send an account creation confirmation email
+                    User = request.env['res.users']
+                    user_sudo = User.sudo().search(
+                        User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
+                    )
+                    template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
+                    if user_sudo and template:
+                        template.sudo().send_mail(user_sudo.id, force_send=True)
+                    return self.web_login(*args, **kw)
+                except UserError as e:
+                    qcontext['error'] = e.args[0]
+                except (SignupError, AssertionError) as e:
+                    if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
+                        qcontext["error"] = _("Another user is already registered using this email address.")
+                    else:
+                        _logger.error("%s", e)
+                        qcontext['error'] = _("Could not create a new account.")
 
-        elif 'signup_email' in qcontext:
-            user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
-            if user:
-                return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
+            elif 'signup_email' in qcontext:
+                user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
+                if user:
+                    return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
+
+        else:
+            if 'error' not in qcontext and request.httprequest.method == 'POST' and 'login' in qcontext:
+                try:
+                    if not request.env['res.users.signup'].sudo().search([("login", "=", qcontext.get("login"))]):
+                        if not request.env['res.users'].sudo().with_context(active_test=False).search([("login", "=", qcontext.get("login"))]):
+                            values = self._prepare_signup_values(qcontext)
+                            SignupUser = request.env['res.users.signup'].sudo().create(values)
+                            SignupUser.signup(qcontext)
+
+                            response = request.render('auth_signup.res_user_signup')
+                            response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+                            response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+                            return response
+                        else:
+                            raise SignupError(_("Another user is already registered using this email address."))
+                    else:
+                        # Another temporary is user is already registerd using this email address.
+                        response = request.render('auth_signup.res_user_signup_pending', qcontext)
+                        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+                        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+                        return response
+                except UserError as e:
+                    qcontext['error'] = e.args[0]
+                except (SignupError, AssertionError) as e:
+                    if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
+                        qcontext["error"] = _("Another user is already registered using this email address.")
+                    else:
+                        _logger.error("%s", e)
+                        qcontext['error'] = _("Could not create a new account.")
+
+            elif 'error' not in qcontext and 'login' in qcontext:
+                signup_user = request.env['res.users.signup'].sudo().search([('login', '=', qcontext['login'])])
+                if signup_user:
+                    success = signup_user.send_mail()
+                    if success:
+                        qcontext['success'] = _("A new mail has been sent")
+                    else:
+                        qcontext['error'] = _("Wait a little before sending more mails.")
+
+                    response = request.render('auth_signup.res_user_signup_pending', qcontext)
+                    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+                    response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+                    return response
+
+            elif 'error' not in qcontext and 'signup_email' in qcontext:
+                user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
+                if user:
+                    return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
 
         response = request.render('auth_signup.signup', qcontext)
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
+
+    @http.route('/web/confirm', type='http', auth='public', website=True, sitemap=False)
+    def web_auth_confirm(self, *args, **kw):
+        if kw.get('token'):
+            signup_user = request.env['res.users.signup'].sudo().search([('token', '=', kw['token'])])
+            if signup_user:
+                user = signup_user.confirm_account()
+                return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'message': _("Your account has been confirmed, you can login.")}))
+            else:
+                return request.render('auth_signup.res_user_signup_confirm', qcontext={'error':_("Wrong confirmation token")})
+        else:
+            raise werkzeug.exceptions.NotFound()
 
     @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False)
     def web_auth_reset_password(self, *args, **kw):
@@ -116,6 +178,7 @@ class AuthSignupHome(Home):
             'disable_database_manager': not tools.config['list_db'],
             'signup_enabled': request.env['res.users']._get_signup_invitation_scope() == 'b2c',
             'reset_password_enabled': get_param('auth_signup.reset_password') == 'True',
+            'email_confirmation_enabled': get_param('auth_signup.email_confirmation') == 'True',
         }
 
     def get_auth_signup_qcontext(self):

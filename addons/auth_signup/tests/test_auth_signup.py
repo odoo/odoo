@@ -18,6 +18,9 @@ class TestAuthSignupFlow(HttpCase):
     def _activate_free_signup(self):
         self.default_values.update({'auth_signup_uninvited': 'b2c'})
 
+    def _activate_confirmation_mail_on_signup(self):
+        self.default_values.update({'auth_signup_confirmation_mail':'True'})
+
     def _get_free_signup_url(self):
         return '/web/signup'
 
@@ -29,14 +32,18 @@ class TestAuthSignupFlow(HttpCase):
         # Activate free signup
         self._activate_free_signup()
 
+        # Activate confirmation mail on signup
+        self._activate_confirmation_mail_on_signup()
+
         # Get csrf_token
         self.authenticate(None, None)
         csrf_token = http.Request.csrf_token(self)
 
         # Values from login form
         name = 'toto'
+        address = 'toto@example.com'
         payload = {
-            'login': 'toto@example.com',
+            'login': address,
             'name': name,
             'password': 'mypassword',
             'confirm_password': 'mypassword',
@@ -48,11 +55,23 @@ class TestAuthSignupFlow(HttpCase):
             # Call the controller
             url_free_signup = self._get_free_signup_url()
             self.url_open(url_free_signup, data=payload)
-            # Check if an email is sent to the new userw
-            new_user = self.env['res.users'].search([('name', '=', name)])
+            # Check if a res_users_signup is created and gets his confirmation mail
+            new_user = self.env['res.users.signup'].search([('name', '=', name)])
             self.assertTrue(new_user)
-            mail = self.env['mail.message'].search([('message_type', '=', 'email_outgoing'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
-            self.assertTrue(mail, "The new user must be informed of his registration")
+            mail = self.env['mail.message'].search([('message_type', '=', 'email'), ('subject', '=', 'Your confirmation token for registration')], limit=1)
+            if not mail:
+                mail = self.env['mail.mail'].search([('email_to', '=', address)], limit=1)
+            self.assertTrue(mail, "The new user must receive the confirmation token")
+            # Check that the email contains the token
+            body = mail['body_html']
+            self.assertNotEqual(body.find("?token="), -1, "The mail must contain the token")
+            # Confirm the creation of the res_user with the informations of the res_users_signup and check it
+            new_user.confirm_account()
+            final_user = self.env['res.users'].search([('name', '=', name)])
+            self.assertTrue(final_user)
+            # Check that res_users_signup has no entry for the test user anymore (unlink worked)
+            new_user = self.env['res.users.signup'].search([('name', '=', name)])
+            self.assertFalse(new_user)
 
     def test_compute_signup_url(self):
         user = self.env.ref('base.user_demo')
