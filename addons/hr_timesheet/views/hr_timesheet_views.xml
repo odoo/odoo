@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <!-- Timesheet root menus -->
-        <menuitem id="timesheet_menu_root"
-            name="Timesheets"
-            sequence="75"
-            groups="group_hr_timesheet_user"
-            web_icon="hr_timesheet,static/description/icon_timesheet.png"/>
-
-        <menuitem id="menu_hr_time_tracking"
-            name="Timesheets"
-            parent="timesheet_menu_root"
-            groups = "group_hr_timesheet_approver"
-            sequence="5"/>
-
-        <!--
-            Timesheet line Views
-        -->
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
@@ -276,7 +259,7 @@
         </record>
 
         <!--
-            Menus and Actions
+            Actions
         -->
         <record id="act_hr_timesheet_line" model="ir.actions.act_window">
             <field name="name">My Timesheets</field>
@@ -332,18 +315,6 @@
             <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_my"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
-
-        <menuitem id="timesheet_menu_activity_mine"
-            name="My Timesheets"
-            groups="group_hr_timesheet_approver"
-            parent="menu_hr_time_tracking"
-            action="act_hr_timesheet_line"/>
-
-        <menuitem id="timesheet_menu_activity_user"
-            name="My Timesheets"
-            groups="group_hr_timesheet_user"
-            parent="timesheet_menu_root"
-            action="act_hr_timesheet_line"/>
 
         <record id="timesheet_action_task" model="ir.actions.act_window">
             <field name="name">Task's Timesheets</field>
@@ -422,11 +393,70 @@
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 
-        <menuitem id="timesheet_menu_activity_all"
-            name="All Timesheets"
-            parent="menu_hr_time_tracking"
-            action="timesheet_action_all"
-            groups="hr_timesheet.group_hr_timesheet_approver"/>
+        <record id="timesheet_action_from_employee" model="ir.actions.act_window">
+            <field name="name">Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="domain">[('project_id', '!=', False), ('employee_id', '=', active_id)]</field>
+            <field name="context">{
+                'default_employee_id': active_id,
+                "is_timesheet": 1,
+            }</field>
+        </record>
 
+        <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
+            <field name="name">Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">tree,kanban,pivot,graph,form</field>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="domain">[('project_id', '=', active_id)]</field>
+            <field name="context">{
+                "default_project_id": active_id,
+                "is_timesheet": 1,
+            }</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
+              </p><p>
+                Track your working hours by projects every day and invoice this time to your customers.
+              </p>
+            </field>
+        </record>
+
+        <record id="act_hr_timesheet_line_by_project_view_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_by_project_view_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="sequence" eval="2"/>
+            <field name="view_id" ref="view_kanban_account_analytic_line"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_by_project_view_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="sequence" eval="3"/>
+            <field name="view_id" ref="view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_by_project_view_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="sequence" eval="4"/>
+            <field name="view_id" ref="view_hr_timesheet_line_graph_all"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_by_project_view_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
+        </record>
     </data>
 </odoo>
