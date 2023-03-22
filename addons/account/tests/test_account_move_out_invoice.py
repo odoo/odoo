@@ -3352,3 +3352,38 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.product_a.property_account_income_id.deprecated = True
         with self.assertRaises(UserError), self.cr.savepoint():
             move.action_post()
+
+    def test_change_currency_id(self):
+        """
+        Test that we are able to change currency on invoice,
+        even when a default currency is set on journal
+        """
+        self.company_data['default_journal_sale'].currency_id = self.company_data['currency']
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                    'tax_ids': False,
+                })
+            ],
+        })
+
+        self.assertEqual(move.currency_id, self.company_data['currency'])
+        move.currency_id = self.currency_data['currency']
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
+        self.assertRecordValues(move.line_ids, [
+            {
+                'debit': 0.0,
+                'credit': self.currency_data['currency']._convert(750.0, self.company_data['currency'], self.env.company, fields.Date.today()),
+            },
+            {
+                'debit': self.currency_data['currency']._convert(750.0, self.company_data['currency'], self.env.company, fields.Date.today()),
+                'credit': 0.0,
+            },
+        ])
