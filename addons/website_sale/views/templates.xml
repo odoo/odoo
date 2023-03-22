@@ -1447,9 +1447,6 @@
                             </div>
                         </td>
                         <td class="text-center td-price" name="price">
-                            <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
-
                             <t t-if="env.company.show_line_subtotals_tax_selection == 'tax_excluded'">
                                 <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
@@ -1457,7 +1454,11 @@
                                 <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
                             <t t-if="line.discount">
-                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                                <t t-set="price_not_reduced" t-value="line.price_unit_before_discount_taxexcl"
+                                   t-if="env.company.show_line_subtotals_tax_selection == 'tax_excluded'"/>
+                                <t t-set="price_not_reduced" t-value="line.price_unit_before_discount_taxinc"
+                                   t-if="env.company.show_line_subtotals_tax_selection == 'tax_included'"/>
+                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="price_not_reduced" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                             </t>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                 class="cart_product_base_unit_price d-block text-muted"

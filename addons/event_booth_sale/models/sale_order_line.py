@@ -72,6 +72,16 @@ class SaleOrderLine(models.Model):
         """
         super()._compute_name()
 
+    @api.depends('event_booth_pending_ids')
+    def _compute_price_unit_before_discount_taxexcl(self):
+        """ Overridden to add the compute dependency (the price "unit" depends on the number of booth selected)"""
+        super()._compute_price_unit_before_discount_taxexcl()
+
+    @api.depends('event_booth_pending_ids')
+    def _compute_price_unit_before_discount_taxinc(self):
+        """ Overridden to add the compute dependency (the price "unit" depends on the number of booth selected)"""
+        super()._compute_price_unit_before_discount_taxinc()
+
     def _update_event_booths(self, set_paid=False):
         for so_line in self.filtered('is_event_booth'):
             if so_line.event_booth_pending_ids and not so_line.event_booth_ids:
@@ -104,6 +114,12 @@ class SaleOrderLine(models.Model):
             )
 
         return super()._get_display_price()
+
+    def _get_price_unit_before_discount_taxexcl(self):
+        self.ensure_one()
+        if self.event_booth_pending_ids and self.event_id:
+            return sum(booth._origin.booth_category_id.price for booth in self.event_booth_pending_ids)
+        return super()._get_price_unit_before_discount_taxexcl()
 
     @api.depends('event_booth_registration_ids')
     def _compute_price_unit(self):

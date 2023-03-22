@@ -28,9 +28,6 @@
                 <t t-set="div_class" t-value="''"/>
             </t>
         </xpath>
-        <xpath expr="//del" position="attributes">
-            <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
-        </xpath>
     </template>
 
     <!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
