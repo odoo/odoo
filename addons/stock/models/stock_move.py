@@ -1929,11 +1929,11 @@ class StockMove(models.Model):
             if move.state not in ('partially_available', 'assigned'):
                 continue
             for move_line in move.move_line_ids:
-                if move.has_tracking != 'none' and (
-                    (move.picking_type_id.use_existing_lots and not move_line.lot_id) or
-                    (move.picking_type_id.use_create_lots and not move_line.lot_name)):
-                    continue
-                move_line.qty_done = move_line.product_uom_qty
+                if move.has_tracking == 'none' or\
+                    (move.picking_type_id.use_existing_lots and move_line.lot_id) or\
+                    (move.picking_type_id.use_create_lots and move_line.lot_name) or\
+                    (not move.picking_type_id.use_existing_lots and not move.picking_type_id.use_create_lots):
+                    move_line.qty_done = move_line.product_uom_qty
 
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if
