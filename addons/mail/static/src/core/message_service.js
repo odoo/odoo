@@ -13,6 +13,8 @@ import { assignDefined, createLocalId } from "../utils/misc";
 
 const commandRegistry = registry.category("mail.channel_commands");
 
+const { DateTime } = luxon;
+
 export class MessageService {
     constructor(env, services) {
         this.env = env;
@@ -20,6 +22,7 @@ export class MessageService {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
+        this.userService = services.user;
         /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
@@ -479,10 +482,22 @@ export class MessageService {
             return msg1.id - msg2.id;
         });
     }
+
+    scheduledDateSimple(message) {
+        return message.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE, {
+            locale: this.userService.lang.replace("_", "-"),
+        });
+    }
+
+    dateSimple(message) {
+        return message.datetime.toLocaleString(DateTime.TIME_SIMPLE, {
+            locale: this.userService.lang.replace("_", "-"),
+        });
+    }
 }
 
 export const messageService = {
-    dependencies: ["mail.store", "rpc", "orm", "mail.persona", "mail.attachment"],
+    dependencies: ["mail.store", "rpc", "orm", "user", "mail.persona", "mail.attachment"],
     start(env, services) {
         return new MessageService(env, services);
     },

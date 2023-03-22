@@ -24,7 +24,7 @@
             >
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
-                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight }">
+                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-center': props.squashed }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-on-click="ev => this.onClickAuthor(ev)">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded-circle o_object_fit_cover"
                                 t-att-title="authorText"
@@ -33,8 +33,8 @@
                             <ImStatus t-if="message.author" persona="message.author" className="imStatusClassName"/>
                         </div>
                         <t t-elif="!message.isTransient">
-                            <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2" t-att-title="message.datetimeStr">
-                                <t t-esc="message.datetimeSimpleStr"/>
+                            <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
+                                <t t-esc="messageService.dateSimple(message)"/>
                             </small>
                             <div t-att-class="{ 'position-absolute bottom-0 mb-1': !env.inChatter }">
                                 <MessageSeenIndicator
@@ -66,7 +66,7 @@
                                     (from <a t-att-href="message.url">#<t t-esc="message.originThread?.displayName"/></a>)
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="props.message.scheduledDateShort">
+                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>
