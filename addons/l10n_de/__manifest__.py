@@ -8,7 +8,7 @@
     'author': 'openbig.org (http://www.openbig.org)',
     'version': '1.1',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/germany.html',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 ==============================================================================
@@ -24,6 +24,9 @@ German accounting chart and localization.
         'data/account_account_tags_data.xml',
         'views/account_view.xml',
         'views/res_company_views.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
 }
