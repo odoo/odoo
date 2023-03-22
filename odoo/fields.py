@@ -1403,6 +1403,13 @@ class Integer(Field):
 
     group_operator = 'sum'
 
+    def _get_attrs(self, model_class, name):
+        res = super()._get_attrs(model_class, name)
+        # The default group_operator is None for sequence fields
+        if 'group_operator' not in res and name == 'sequence':
+            res['group_operator'] = None
+        return res
+
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
 
