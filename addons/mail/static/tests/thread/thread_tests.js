@@ -269,6 +269,7 @@ QUnit.test(
         assert.verifySteps(["rpc:channel_fetch"]);
 
         $(".o-mail-Composer-input")[0].focus();
+        await waitUntil(".o-mail-Message");
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
@@ -951,3 +952,34 @@ QUnit.test(
         assert.verifySteps([]);
     }
 );
+
+QUnit.test("can be marked as read while loading", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Test</p>",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const loadDeferred = makeDeferred();
+    const { openDiscuss } = await start({
+        async mockRPC(route) {
+            if (route === "/mail/channel/messages") {
+                await loadDeferred;
+            }
+        },
+    });
+    await openDiscuss(undefined, { waitUntilMessagesLoaded: false });
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem-counter:contains(1)");
+    await click(".o-mail-DiscussCategoryItem:contains(Demo)");
+    await afterNextRender(loadDeferred.resolve);
+    assert.containsNone($, ".o-mail-DiscussCategoryItem-counter");
+});

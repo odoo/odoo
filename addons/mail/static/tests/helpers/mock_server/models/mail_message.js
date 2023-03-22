@@ -334,6 +334,9 @@ patch(MockServer.prototype, "mail/models/mail_message", {
             ["is_read", "=", false],
             ["mail_message_id", "in", messages.map((messages) => messages.id)],
         ]);
+        if (notifications.length === 0) {
+            return;
+        }
         this.pyEnv["mail.notification"].write(
             notifications.map((notification) => notification.id),
             { is_read: true }
