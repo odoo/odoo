@@ -737,7 +737,7 @@ class AccountChartTemplate(models.AbstractModel):
                                 key.split('/')[0]: (
                                     value if '@' in key
                                     else [] if '/' in key
-                                    else (value and ast.literal_eval(value) or False) if model_fields[key].type in ('boolean', 'int', 'float')
+                                    else (value and ast.literal_eval(value) or False) if key in model_fields and model_fields[key].type in ('boolean', 'int', 'float')
                                     else value
                                 )
                                 for key, value in row.items()
