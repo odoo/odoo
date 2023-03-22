@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
 
-from odoo import api, fields, models, _, SUPERUSER_ID, Command
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, format_datetime
 
@@ -668,7 +668,6 @@ class MrpWorkorder(models.Model):
         return True
 
     def end_all(self):
-        self.employee_ids = [Command.clear()]
         return self.end_previous(doall=True)
 
     def button_pending(self):

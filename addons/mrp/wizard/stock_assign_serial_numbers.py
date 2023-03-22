@@ -17,6 +17,7 @@ class StockAssignSerialNumbers(models.TransientModel):
     show_apply = fields.Boolean() # Technical field to show the Apply button
     show_backorders = fields.Boolean() # Technical field to show the Create Backorder and No Backorder buttons
     multiple_lot_components_names = fields.Text() # Names of components with multiple lots, used to show warning
+    mark_as_done = fields.Boolean("Valide all the productions after the split")
 
     def generate_serial_numbers_production(self):
         if self.next_serial_number and self.next_serial_count:
@@ -80,6 +81,9 @@ class StockAssignSerialNumbers(models.TransientModel):
         if productions and len(production_lots) < len(productions):
             productions[-1].move_raw_ids.move_line_ids.write({'qty_done': 0})
             productions[-1].state = "confirmed"
+
+        if self.mark_as_done:
+            productions.button_mark_done()
 
     def apply(self):
         self._assign_serial_numbers()
