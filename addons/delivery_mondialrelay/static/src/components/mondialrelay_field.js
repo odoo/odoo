@@ -67,7 +67,7 @@ export class MondialRelayField extends Component {
                     'city': RelaySelected.Ville,
                     'country': RelaySelected.Pays,
                 });
-                this.props.update(values);
+                this.props.record.update({ [this.props.name]: values });
             },
             OnNoResultReturned: () => {
                 // HACK while Mondial Relay fix his bug

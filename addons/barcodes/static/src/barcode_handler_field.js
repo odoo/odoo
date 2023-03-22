@@ -13,7 +13,7 @@ export class BarcodeHandlerField extends Component {
     }
     onBarcodeScanned(event) {
         const { barcode } = event.detail;
-        this.props.update(barcode);
+        this.props.record.update({ [this.props.name]: barcode });
     }
 }
 

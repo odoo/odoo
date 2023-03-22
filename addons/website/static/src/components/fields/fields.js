@@ -45,7 +45,7 @@ class PageUrlField extends Component {
     updateValues() {
         // HACK: update redirect data from the URL field.
         // TODO: remove this and use a transient model with redirect fields.
-        this.props.update(this.state);
+        this.props.record.update({ [this.props.name]: this.state });
     }
 }
 
@@ -86,7 +86,7 @@ export class ImageRadioField extends Component {
      * @param {String} value
      */
     onSelectValue(value) {
-        this.props.update(value);
+        this.props.record.update({ [this.props.name]: value });
     }
 }
 
