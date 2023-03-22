@@ -18,21 +18,18 @@
                         </setting>
                         <setting id="email_servers_setting" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com)." documentation="/applications/general/email_communication/email_servers.html" help="Configure your own email servers">
                             <field name="external_email_server_default"/>
-                            <div class="content-group mb-3"  attrs="{'invisible': [('external_email_server_default', '=', False)]}">
-                                <div class="mt16" id="mail_alias_domain">
-                                    <label for="alias_domain" class="o_light_label"/>
-                                    <span>@</span>
-                                    <field name="alias_domain" placeholder='e.g. "mycompany.com"'/>
-                                </div>
-                                <div class="mt8">
-                                    <button type="action"
-                                    name="%(action_email_server_tree)d"
-                                    string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
-                                </div>
-                                <div class="mt8">
-                                    <button type="action"
-                                    name="%(base.action_ir_mail_server_list)d"
-                                    string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                            <div class="content-group mb-3" attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                                <div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(action_email_server_tree)d"
+                                        string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(base.action_ir_mail_server_list)d"
+                                        string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
                                 </div>
                             </div>
                         </setting>
@@ -53,6 +50,9 @@
                                     <strong>Save</strong> this page and come back here to set up the feature.
                                 </div>
                             </div>
+                        </setting>
+                        <setting id="email-alias-setting" string="Alias Domain" help="Use a different domain for your mail aliases" documentation="/applications/general/email_communication/email_domain.html#be-spf-compliant">
+                            <span>@<field name="alias_domain" placeholder='e.g. "mycompany.com"'/></span>
                         </setting>
                         <setting help="Add your twilio credentials for ICE servers">
                             <field name="use_twilio_rtc_servers"/>
