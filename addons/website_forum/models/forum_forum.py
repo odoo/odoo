@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
 
@@ -17,6 +17,27 @@ class Forum(models.Model):
         'website.searchable.mixin',
     ]
     _order = "sequence"
+
+    def _get_default_welcome_message(self):
+        return """
+<section>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="text-center">Welcome!</h1>
+                <p class="text-400 text-center">%(message_intro)s<br/>%(message_post)s</p>
+            </div>
+            <div class="col text-center mt-3">
+                <a href="#" class="js_close_intro btn btn-outline-light mr-2">%(hide_text)s</a>
+                <a class="btn btn-light forum_register_url" href="/web/login">%(register_text)s</a>
+            </div>
+        </div>
+    </div>
+</section>""" % {
+    'message_intro': _("This community is for professionals and enthusiasts of our products and services."),
+    'message_post': _("Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."),
+    'hide_text': _('Hide Intro'),
+    'register_text': _('Register')}
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
@@ -41,27 +62,9 @@ class Forum(models.Model):
     description = fields.Text('Description', translate=True)
     teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
     welcome_message = fields.Html(
-        'Welcome Message',
-        translate=True,
-        default="""<section>
-                        <div class="container py-5">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <h1 class="text-center">Welcome!</h1>
-                                    <p class="text-400 text-center">
-                                        This community is for professionals and enthusiasts of our products and services.
-                                        <br/>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.
-                                    </p>
-                                </div>
-                                <div class="col text-center mt-3">
-                                    <a href="#" class="js_close_intro btn btn-outline-light mr-2">Hide Intro</a>
-                                    <a class="btn btn-light forum_register_url" href="/web/login">Register</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>""",
-        sanitize_attributes=False,
-        sanitize_form=False)
+        'Welcome Message', translate=html_translate,
+        default=_get_default_welcome_message,
+        sanitize_attributes=False, sanitize_form=False)
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
         ('write_date desc', 'Last Updated'),
