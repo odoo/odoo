@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import math
 import time
 from ast import literal_eval
 from datetime import date, timedelta
@@ -88,6 +89,9 @@ class PickingType(models.Model):
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
+    auto_print_reception_report_labels = fields.Boolean(
+        "Auto Print Reception Report Labels",
+        help="If this checkbox is ticked, Odoo will automatically print the reception report labels of a picking when it is validated.")
 
     auto_print_package_label = fields.Boolean(
         "Auto Print Package Label",
@@ -1730,4 +1734,19 @@ class Picking(models.Model):
             action = self.env.ref("stock.action_report_delivery").report_action(pickings_to_print.ids, config=False)
             clean_action(action, self.env)
             report_actions.append(action)
+
+        if self.user_has_groups('stock.group_reception_report'):
+            reception_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_reception_report_labels and p.picking_type_id.code != 'outgoing')
+            if reception_labels_to_print:
+                moves_to_print = reception_labels_to_print.move_ids.move_dest_ids
+                if moves_to_print:
+                    # needs to be string to support python + js calls to report
+                    quantities = ','.join(str(qty) for qty in moves_to_print.mapped(lambda m: math.ceil(m.product_uom_qty)))
+                    data = {
+                        'docids': moves_to_print.ids,
+                        'quantity': quantities,
+                    }
+                    action = self.env.ref('stock.label_picking').report_action(moves_to_print, data=data, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
         return report_actions
