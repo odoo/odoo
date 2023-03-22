@@ -24,6 +24,10 @@ class TestForumCommon(common.TransactionCase):
     def setUpClass(cls):
         super(TestForumCommon, cls).setUpClass()
 
+        # default base data
+        cls.base_website = cls.env.ref("website.default_website")
+        cls.base_forum = cls.env.ref("website_forum.forum_help")
+
         Forum = cls.env['forum.forum']
         Post = cls.env['forum.post']
 
@@ -93,4 +97,10 @@ class TestForumCommon(common.TransactionCase):
             'content': 'I am an anteater.',
             'forum_id': cls.forum.id,
             'parent_id': cls.post.id,
+        })
+
+    @classmethod
+    def _activate_multi_website(cls):
+        cls.website_2 = cls.env['website'].create({
+            'name': 'Second Website on same company',
         })
