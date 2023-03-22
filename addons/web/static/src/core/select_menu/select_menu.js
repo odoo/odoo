@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, useRef } from "@odoo/owl";
+import { Component, useState, useRef, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _lt } from "@web/core/l10n/translation";
@@ -88,20 +88,25 @@ export class SelectMenu extends Component {
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
         );
+
+        this.selectedChoice = this.getSelectedChoice(this.props);
+        onWillUpdateProps((nextProps) => {
+            if (this.props.value !== nextProps.value) {
+                this.selectedChoice = this.getSelectedChoice(nextProps);
+            }
+        });
     }
 
     get displayValue() {
-        if (this.props.value !== undefined) {
-            const choices = [...this.props.choices, ...this.props.groups.flatMap((g) => g.choices)];
-            const value = choices.find((c) => {
-                if (typeof c.value === "object" && typeof this.props.value === "object") {
-                    return shallowEqual(c.value, this.props.value);
-                }
-                return c.value === this.props.value;
-            });
-            return value ? value.label : this.props.value;
-        }
-        return "";
+        return this.selectedChoice ? this.selectedChoice.label : "";
+    }
+
+    get canDeselect() {
+        return (
+            !this.props.required &&
+            this.selectedChoice !== undefined &&
+            this.selectedChoice !== null
+        );
     }
 
     get multiSelectChoices() {
@@ -150,10 +155,6 @@ export class SelectMenu extends Component {
         }
     }
 
-    canClear() {
-        return !this.props.required && this.props.value != null;
-    }
-
     onInput(searchString) {
         this.filterOptions(searchString);
 
@@ -161,6 +162,28 @@ export class SelectMenu extends Component {
         const inputContainer = this.inputContainerRef.el;
         if (inputContainer && inputContainer.parentNode) {
             inputContainer.parentNode.scrollTo(0, 0);
+        }
+    }
+
+    getSelectedChoice(props) {
+        if (props.value) {
+            const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
+            return choices.find((c) => {
+                if (typeof c.value === "object" && typeof props.value === "object") {
+                    return shallowEqual(c.value, props.value);
+                }
+                return c.value === props.value;
+            });
+        } else {
+            return undefined;
+        }
+    }
+
+    onItemSelected(value) {
+        if (this.props.multiSelect) {
+            this.props.onSelect([...this.props.value, value]);
+        } else {
+            this.props.onSelect(value);
         }
     }
 
@@ -236,14 +259,6 @@ export class SelectMenu extends Component {
             return [];
         }
         return choices.flatMap((choice, index) => (index === 0 ? 0 : choice.isGroup ? index : []));
-    }
-
-    onItemSelected(value) {
-        if (this.props.multiSelect) {
-            this.props.onSelect([...this.props.value, value]);
-        } else {
-            this.props.onSelect(value);
-        }
     }
 
     // ==========================================================================================

@@ -100,16 +100,12 @@ QUnit.module("Web Components", (hooks) => {
             class Parent extends Component {
                 setup() {
                     this.state = useState({ value: "world" });
-                    this.choices = [
-                        { label: "Hello", value: "hello" },
-                    ];
+                    this.choices = [{ label: "Hello", value: "hello" }];
                     this.groups = [
                         {
                             label: "Group A",
-                            choices: [
-                                { label: "World", value: "world" },
-                            ]
-                        }
+                            choices: [{ label: "World", value: "world" }],
+                        },
                     ];
                 }
 
@@ -230,12 +226,74 @@ QUnit.module("Web Components", (hooks) => {
         );
     });
 
+    QUnit.test("Value with no corresponding choices displays as if no choice was selected", async (assert) => {
+        class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.state.value"
+                />
+            `;
+            setup() {
+                this.choices = [
+                    { label: "World", value: "world" },
+                    { label: "Hello", value: "hello" },
+                ];
+                this.state = useState({ value: "coucou"});
+            }
+            setValue(newValue) {
+                this.state.value = newValue;
+            }
+        }
+
+        await mount(Parent, target, { env });
+        assert.equal(getValue(), "", `The toggler should be empty`);
+    });
+
+    QUnit.test("Changing value props properly updates the selected choice", async (assert) => {
+        class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.state.value"
+                />
+            `;
+            setup() {
+                this.choices = [
+                    { label: "Z", value: { hello: "world" } },
+                    { label: "A", value: { paper: "company" } },
+                ];
+                this.state = useState({ value: { paper: "company" }});
+            }
+            setValue(newValue) {
+                this.state.value = newValue;
+            }
+        }
+
+        const comp = await mount(Parent, target, { env });
+        assert.equal(
+            getValue(),
+            "A",
+            `The select value shoud be "A"`
+        );
+
+        comp.setValue({ hello: "world" });
+        await nextTick();
+        assert.equal(
+            getValue(),
+            "Z",
+            `After changing the value props, the select value shoud be "Z"`
+        );
+    });
+
     QUnit.test(
         "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
             class Parent extends Component {
                 setup() {
-                    this.state = useState({ value: "Hello" });
+                    this.state = useState({ value: "hello" });
                     this.choices = [
                         { label: "Hello", value: "hello" },
                         { label: "World", value: "world" },
