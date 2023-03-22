@@ -22,7 +22,7 @@
                         <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
                         <t t-else="" t-slot="default" />
                     </span>
-                    <span t-if="canClear()" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
+                    <span t-if="canDeselect" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
                         <i class="fa fa-times"></i>
                     </span>
                 </t>
