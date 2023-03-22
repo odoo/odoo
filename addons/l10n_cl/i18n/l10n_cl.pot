@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.2alpha1+e\n"
+"Project-Id-Version: Odoo Server 16.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-08 13:13+0000\n"
-"PO-Revision-Date: 2023-02-08 13:13+0000\n"
+"POT-Creation-Date: 2023-03-22 14:20+0000\n"
+"PO-Revision-Date: 2023-03-22 14:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,9 +83,7 @@ msgstr ""
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
-msgid ""
-"<span "
-"groups=\"account.group_show_line_subtotals_tax_included\">Amount</span>"
+msgid "<span>Amount</span>"
 msgstr ""
 
 #. module: l10n_cl
@@ -540,19 +538,6 @@ msgid "FACT TR"
 msgstr ""
 
 #. module: l10n_cl
-#: model:l10n_latam.document.type,report_name:l10n_cl.dc_a_f_dtn
-#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fc_f_dte
-#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fc_f_dtn
-#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ftf_f_dtn
-msgid "FACTURA"
-msgstr ""
-
-#. module: l10n_cl
-#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fzf_f_dtn
-msgid "FACTURA ZF"
-msgstr ""
-
-#. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_I_f_dtn
 msgid "FAI"
 msgstr ""
@@ -655,7 +640,16 @@ msgstr ""
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_a_f_dte
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_a_f_dtn
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fc_f_dte
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fc_f_dtn
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ftf_f_dtn
 msgid "INVOICE"
+msgstr ""
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fzf_f_dtn
+msgid "INVOICE ZF"
 msgstr ""
 
 #. module: l10n_cl
@@ -832,16 +826,6 @@ msgstr ""
 #. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_ndp
 msgid "NP"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__name
-msgid "Name"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__report_name
-msgid "Name that will be printed in reports, for example \"CREDIT NOTE\""
 msgstr ""
 
 #. module: l10n_cl
@@ -1140,11 +1124,6 @@ msgid "Remaining Tax Credit"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__report_name
-msgid "Report name"
-msgstr ""
-
-#. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_resol
 msgid "Resolution"
 msgstr ""
@@ -1167,7 +1146,6 @@ msgstr ""
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_account_tax__l10n_cl_sii_code
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template__l10n_cl_sii_code
 #: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__l10n_cl_sii_code
 msgid "SII Code"
 msgstr ""
@@ -1403,22 +1381,12 @@ msgid "Taxpayer Type"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr ""
-
-#. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "The DIN document is intended to be used only with RUT 60805000-0 (Tesorería "
 "General de La República)"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__name
-msgid "The document name"
 msgstr ""
 
 #. module: l10n_cl
