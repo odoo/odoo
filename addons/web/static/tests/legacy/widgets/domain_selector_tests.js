@@ -265,7 +265,7 @@ QUnit.module('DomainSelector', {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 5);
         assert.strictEqual(document.querySelector('div[name="foo"]').closest('.modal-body').style.overflow,
-            'visible', "modal should have visible overflow if there is inline domain field widget");
+            '', "modal should have no overflow after viewing inline domain field widget");
     });
 
     QUnit.test("edit a domain with the debug textarea", async function (assert) {
