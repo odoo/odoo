@@ -314,6 +314,7 @@ class Project(models.Model):
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, check_company=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    company_ids = fields.Many2many('res.company', string='Company access')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
@@ -1195,6 +1196,15 @@ class Task(models.Model):
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
         required=True, copy=True, default=_default_company_id)
+    company_ids = fields.Many2many('res.company', string='Company access', compute='_compute_company_ids', store=True, readonly=False,
+        copy=True, default=False)
+    """
+    company_ids = fields.Many2many('res.company', string='Company Access', related='project_id.company_ids', default=False)    
+    test failed :
+    odoo/addons/project/tests/test_project_flow.py", line 311, in test_task_with_no_project
+    odoo/addons/project/tests/test_access_rights.py", line 364, in test_project_user_crud_own_private_task
+    why is default=True not taken into account in a related field ?
+    """
     color = fields.Integer(string='Color Index')
     rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
@@ -1570,6 +1580,13 @@ class Task(models.Model):
     def _compute_company_id(self):
         for task in self.filtered(lambda task: task.project_id):
             task.company_id = task.project_id.company_id
+
+    @api.depends('project_id.company_ids')
+    def _compute_company_ids(self):
+        for task in self:
+            if not task.project_id:
+                continue
+            task.company_ids = task.project_id.company_ids
 
     @api.depends('project_id')
     def _compute_stage_id(self):
