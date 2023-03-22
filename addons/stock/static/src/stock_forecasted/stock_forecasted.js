@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -22,6 +23,11 @@ export class StockForecasted extends Component {
         this.resModel = this.context.active_model;
         this.title = this.props.action.name;
         this.warehouses = useState([]);
+        this.title = this.props.action.name || _t("Forecasted Report");
+        if(!this.context.active_id){
+            this.context.active_id = this.props.action.params.active_id;
+            this.reloadReport();
+        }
 
         onWillStart(this._getReportValues);
     }
