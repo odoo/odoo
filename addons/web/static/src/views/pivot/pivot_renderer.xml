@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PivotRenderer" owl="1">
+        <t t-call="web.PivotView.Buttons"/>
         <div class="o_pivot table-responsive">
 
             <table
@@ -31,7 +32,7 @@
                                     o_empty: cell.value === undefined,
                                     'cursor-pointer': cell.value !== undefined,
                                     'fw-bold': cell.isBold,
-                                }" t-on-click="() => this.onCellClicked(cell)"
+                                }" t-on-click="() => this.onOpenView(cell)"
                                    t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
                                 <t t-if="cell.value !== undefined">
                                     <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{

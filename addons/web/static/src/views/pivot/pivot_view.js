@@ -21,7 +21,6 @@ export const pivotView = {
     ArchParser: PivotArchParser,
     SearchModel: PivotSearchModel,
     searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
-    buttonTemplate: "web.PivotView.Buttons",
 
     props: (genericProps, view) => {
         const modelParams = {};
@@ -57,7 +56,6 @@ export const pivotView = {
             Model: view.Model,
             modelParams,
             Renderer: view.Renderer,
-            buttonTemplate: view.buttonTemplate,
         };
     },
 };

@@ -20,13 +20,10 @@
                 </div>
             </div>
         </DatePicker>
-    </t>
-
-    <t t-name="calendar.AttendeeCalendarController.controlButtons" t-inherit="web.CalendarController.controlButtons" owl="1">
-        <xpath expr="//span[hasclass('o_calendar_navigation_buttons')]" position="before">
-            <span class="o_calendar_create_buttons">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-create-button">
                 <button class="btn btn-primary o-calendar-button-new me-1" t-on-click="onClickAddButton">New</button>
-            </span>
+            </t>
         </xpath>
     </t>
 </templates>
