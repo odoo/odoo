@@ -15,7 +15,7 @@ import { registry } from "@web/core/registry";
 export class SmsWidget extends EmojisTextField {
     setup() {
         super.setup();
-        this._emojiAdded = () => this.props.update(this.targetEditElement.el.value);
+        this._emojiAdded = () => this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
         this.notification = useService('notification');
     }
 
@@ -83,7 +83,7 @@ export class SmsWidget extends EmojisTextField {
                 this.env._t("Your SMS Text Message must include at least one non-whitespace character"),
                 { type: 'danger' },
             )
-            await this.props.update(content.trim());
+            await this.props.record.update({ [this.props.name]: content.trim() });
         }
     }
 
@@ -93,7 +93,7 @@ export class SmsWidget extends EmojisTextField {
      */
     async onInput(ev) {
         super.onInput(...arguments);
-        await this.props.update(this.targetEditElement.el.value);
+        await this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
     }
 }
 SmsWidget.template = 'sms.SmsWidget';
