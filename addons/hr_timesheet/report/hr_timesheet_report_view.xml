@@ -185,35 +185,5 @@
             <field name="view_id" ref="hr_timesheet.timesheets_analysis_report_graph_task"/>
             <field name="act_window_id" ref="timesheet_action_report_by_task"/>
         </record>
-
-        <menuitem id="menu_timesheets_reports"
-            name="Reporting"
-            parent="timesheet_menu_root"
-            sequence="99"/>
-
-        <menuitem id="menu_timesheets_reports_timesheet"
-            name="Timesheets"
-            parent="menu_timesheets_reports"
-            sequence="10"/>
-
-        <menuitem id="menu_hr_activity_analysis"
-            parent="menu_timesheets_reports_timesheet"
-            action="act_hr_timesheet_report"
-            groups="hr_timesheet.group_hr_timesheet_approver"
-            name="By Employee"
-            sequence="10"/>
-
-        <menuitem id="timesheet_menu_report_timesheet_by_project"
-            parent="menu_timesheets_reports_timesheet"
-            action="timesheet_action_report_by_project"
-            name="By Project"
-            sequence="15"/>
-
-        <menuitem id="timesheet_menu_report_timesheet_by_task"
-            parent="menu_timesheets_reports_timesheet"
-            action="timesheet_action_report_by_task"
-            name="By Task"
-            sequence="20"/>
-
     </data>
 </odoo>
