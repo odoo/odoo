@@ -105,14 +105,6 @@ export class Message {
         );
     }
 
-    get scheduledDateShort() {
-        return this.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE);
-    }
-
-    get datetimeSimpleStr() {
-        return this.datetime.toLocaleString(DateTime.TIME_SIMPLE);
-    }
-
     get datetimeShort() {
         return this.datetime.toLocaleString(DateTime.DATETIME_SHORT);
     }
