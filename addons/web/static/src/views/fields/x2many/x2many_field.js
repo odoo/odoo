@@ -43,7 +43,7 @@ export class X2ManyField extends Component {
             this.isMany2Many
         );
 
-        this.archInfo = this.props.views[this.props.viewMode] || {};
+        this.archInfo = this.props.views?.[this.props.viewMode] || {};
 
         const { activeActions, creates } = this.archInfo;
         if (this.props.viewMode === "kanban") {
@@ -277,11 +277,13 @@ export const x2ManyField = {
             addLabel: attrs["add-label"],
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
-            viewMode,
-            views,
             crudOptions: options,
             string,
         };
+        if (viewMode) {
+            props.views = views;
+            props.viewMode = viewMode;
+        }
         if (widget) {
             props.widget = widget;
         }
