@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from lxml import etree
 import re
 
-from odoo import api, Command, fields, models, _, _lt
+from odoo import api, fields, models, _, _lt
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 
