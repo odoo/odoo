@@ -83,7 +83,7 @@
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
-                <field name="date_start" optional="show" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
+                <field name="date_start" optional="hide" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
                 <field name="date_finished" optional="hide" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
                 <field name="duration_expected" widget="float_time" sum="expected duration"/>
                 <field name="duration" widget="mrp_timer"
@@ -101,8 +101,7 @@
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
-                        title="Open Work Order"
-                    context="{'default_workcenter_id': workcenter_id}"/>
+                        title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
                 <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
@@ -119,6 +118,7 @@
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">0</attribute>
                 <attribute name="sample">1</attribute>
+                <attribute name="editable"/>
             </xpath>
             <field name="workcenter_id" position="after">
                 <field name="production_id" optional="hide"/>
@@ -149,11 +149,21 @@
                         </div>
                     </button>
                 </div>
-                <field name="workcenter_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="workcenter_id"/>
+                    </group>
+                    <group>
+                        <field name="product_id" readonly="1"/>
+                        <field name="qty_production" readonly="1"/>
+                        <field name="finished_lot_id" readonly="1"/>
+                    </group>
+                </group>
                 <group>
                     <group attrs="{'invisible': [('date_start', '=', False)]}">
                         <label for="date_start" string="Scheduled Date" attrs="{'invisible': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
@@ -512,6 +522,7 @@
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
+        <field name="view_id" ref="mrp.mrp_production_workorder_tree_view"/>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True, 'search_default_waiting': True}</field>
         <field name="help" type="html">
