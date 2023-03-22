@@ -12,7 +12,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">100</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(00)(\d{18})</field>
+            <field name="pattern">^(00)(\d{18})$</field>
             <field name="type">package</field>
             <field name="gs1_content_type">identifier</field>
         </record>
@@ -22,7 +22,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">101</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(01)(\d{14})</field>
+            <field name="pattern">^(01)(\d{14})$</field>
             <field name="type">product</field>
             <field name="gs1_content_type">identifier</field>
         </record>
@@ -32,7 +32,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">102</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(02)(\d{14})</field>
+            <field name="pattern">^(02)(\d{14})$</field>
             <field name="type">product</field>
             <field name="gs1_content_type">identifier</field>
         </record>
@@ -42,7 +42,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">110</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(410)(\d{13})</field>
+            <field name="pattern">^(410)(\d{13})$</field>
             <field name="type">location_dest</field>
             <field name="gs1_content_type">identifier</field>
         </record>
@@ -52,7 +52,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">113</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(413)(\d{13})</field>
+            <field name="pattern">^(413)(\d{13})$</field>
             <field name="type">location_dest</field>
             <field name="gs1_content_type">identifier</field>
         </record>
@@ -62,7 +62,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">114</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(414)(\d{13})</field>
+            <field name="pattern">^(414)(\d{13})$</field>
             <field name="type">location</field>
             <field name="gs1_content_type">identifier</field>
         </record>
@@ -73,7 +73,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">125</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(10)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="pattern">^(10)([!"%-/0-9:-?A-Z_a-z]{0,20})$</field>
             <field name="type">lot</field>
             <field name="gs1_content_type">alpha</field>
         </record>
@@ -83,7 +83,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">126</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(21)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="pattern">^(21)([!"%-/0-9:-?A-Z_a-z]{0,20})$</field>
             <field name="type">lot</field>
             <field name="gs1_content_type">alpha</field>
         </record>
@@ -94,7 +94,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">137</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(13)(\d{6})</field>
+            <field name="pattern">^(13)(\d{6})$</field>
             <field name="type">pack_date</field>
             <field name="gs1_content_type">date</field>
         </record>
@@ -104,7 +104,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">138</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(15)(\d{6})</field>
+            <field name="pattern">^(15)(\d{6})$</field>
             <field name="type">use_date</field>
             <field name="gs1_content_type">date</field>
         </record>
@@ -114,7 +114,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">139</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(17)(\d{6})</field>
+            <field name="pattern">^(17)(\d{6})$</field>
             <field name="type">expiration_date</field>
             <field name="gs1_content_type">date</field>
         </record>
@@ -125,7 +125,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">300</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(30)(\d{0,8})</field>
+            <field name="pattern">^(30)(\d{0,8})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_unit"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -137,7 +137,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">305</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(37)(\d{0,8})</field>
+            <field name="pattern">^(37)(\d{0,8})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_unit"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -149,7 +149,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">310</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(310[0-5])(\d{6})</field>
+            <field name="pattern">^(310[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_kgm"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -161,7 +161,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">311</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(311[0-5])(\d{6})</field>
+            <field name="pattern">^(311[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_meter"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -173,7 +173,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">314</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(314[0-5])(\d{6})</field>
+            <field name="pattern">^(314[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.uom_square_meter"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -185,7 +185,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">315</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(315[0-5])(\d{6})</field>
+            <field name="pattern">^(315[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_litre"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -197,7 +197,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">316</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(316[0-5])(\d{6})</field>
+            <field name="pattern">^(316[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_cubic_meter"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -209,7 +209,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">320</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(320[0-5])(\d{6})</field>
+            <field name="pattern">^(320[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_lb"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -221,7 +221,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">321</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(321[0-5])(\d{6})</field>
+            <field name="pattern">^(321[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_inch"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -233,7 +233,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">322</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(322[0-5])(\d{6})</field>
+            <field name="pattern">^(322[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_foot"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -245,7 +245,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">323</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(322[0-5])(\d{6})</field>
+            <field name="pattern">^(322[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_yard"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -257,7 +257,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">351</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(351[0-5])(\d{6})</field>
+            <field name="pattern">^(351[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.uom_square_foot"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -269,7 +269,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">357</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(357[0-5])(\d{6})</field>
+            <field name="pattern">^(357[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_oz"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -281,7 +281,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">360</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(360[0-5])(\d{6})</field>
+            <field name="pattern">^(360[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_qt"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -293,7 +293,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">361</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(361[0-5])(\d{6})</field>
+            <field name="pattern">^(361[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_gal"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -305,7 +305,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">364</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(364[0-5])(\d{6})</field>
+            <field name="pattern">^(364[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_cubic_inch"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -317,7 +317,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">365</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(365[0-5])(\d{6})</field>
+            <field name="pattern">^(365[0-5])(\d{6})$</field>
             <field name="associated_uom_id" ref="uom.product_uom_cubic_foot"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
@@ -330,7 +330,7 @@
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">500</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(91)([!"%-/0-9:-?A-Z_a-z]{0,90})</field>
+            <field name="pattern">^(91)([!"%-/0-9:-?A-Z_a-z]{0,90})$</field>
             <field name="type">package_type</field>
             <field name="gs1_content_type">alpha</field>
         </record>
