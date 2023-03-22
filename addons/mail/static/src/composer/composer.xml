@@ -11,7 +11,7 @@
                     'px-3 py-4 o-extended': extended,
                     'p-3': normal,
                     'o-hasSelfAvatar px-3': !env.inChatWindow and thread,
-                }">
+                }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact">
                 <img class="o-mail-Composer-avatar mt-1 rounded-circle" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
             </div>
