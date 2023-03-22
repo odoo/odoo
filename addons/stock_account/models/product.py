@@ -692,6 +692,10 @@ class ProductProduct(models.Model):
         # If there's still quantity to invoice but we're out of candidates, we chose the standard
         # price to estimate the anglo saxon price unit.
         missing = qty_to_invoice - qty_valued
+        for sml in stock_moves.move_line_ids:
+            if not sml.owner_id or sml.owner_id == sml.company_id.partner_id:
+                continue
+            missing -= sml.product_uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
         if float_compare(missing, 0, precision_rounding=self.uom_id.rounding) > 0:
             valuation += self.standard_price * missing
 

@@ -442,6 +442,7 @@ class Post(models.Model):
             post.karma_unlink = post.forum_id.karma_unlink_own if is_creator else post.forum_id.karma_unlink_all
             post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
             post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
+            post.karma_flag = post.forum_id.karma_flag
 
             post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
             post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer
