@@ -2319,10 +2319,11 @@
 
     <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//section[@id='details']//td[@id='product_name']/*" position="replace">
-            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">
+            <t t-set="line_product_url" t-value="line._get_product_website_url()"/>
+            <a t-if="line_product_url" t-att-href="line_product_url">
                 <span t-field="line.name" />
             </a>
-            <t t-if="not line.product_id.website_published">
+            <t t-else="">
                 <span t-field="line.name" />
             </t>
         </xpath>

@@ -106,3 +106,10 @@ class SaleOrderLine(models.Model):
         for record in self:
             if record.event_ticket_id:
                 record.name_short = record.event_ticket_id.display_name
+
+    def _get_product_website_url(self):
+        """ Override to return the link of the event instead of the product if the product is an event. """
+        self.ensure_one()
+        if self.product_id.detailed_type == 'event':
+            return self.event_id.website_published and self.event_id.website_url
+        return super()._get_product_website_url()
