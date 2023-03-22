@@ -49,6 +49,7 @@ class account_journal(models.Model):
                     LEFT JOIN mail_activity_type act_type ON act.activity_type_id = act_type.id
                 WHERE act.res_model = 'account.move'
                     AND m.journal_id = %s
+                    AND (act_type.category != 'tax_report' OR (act_type.category = 'tax_report' AND act.date_deadline <= CURRENT_DATE))
             '''
             self.env.cr.execute(sql_query, (journal.id,))
             for activity in self.env.cr.dictfetchall():
@@ -316,15 +317,15 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount_total']
+                to_check_balance = read[0]['amount_total_signed']
         elif self.type == 'general':
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount_total']
+                to_check_balance = read[0]['amount_total_signed']
 
         is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
 

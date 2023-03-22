@@ -8,7 +8,7 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
-    
+
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
 
@@ -33,7 +33,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # create some expense and validate it (expense at cost)
         # Submit to Manager
         sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expense for John Smith',
+            'name': 'Expense for John Smith 1',
             'employee_id': self.expense_employee.id,
             'journal_id': self.company_data['default_journal_purchase'].id,
         })
@@ -71,7 +71,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         })
         # Submit to Manager
         sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expense for John Smith',
+            'name': 'Expense for John Smith 2',
             'employee_id': self.expense_employee.id,
             'journal_id': self.company_data['default_journal_purchase'].id,
         })

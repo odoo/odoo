@@ -430,4 +430,46 @@ QUnit.module("Fields", (hooks) => {
         });
         assert.containsNone(target, "button.fa-download");
     });
+
+    QUnit.test("BinaryField filename is updated when using the pager", async function (assert) {
+        serverData.models.partner.records.push(
+            {
+                id: 1,
+                document: "abc",
+                foo: "abc.txt",
+            },
+            {
+                id: 2,
+                document: "def",
+                foo: "def.txt",
+            }
+        );
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                    <field name="foo"/>
+                </form>
+            `,
+            resIds: [1, 2],
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value,
+            "abc.txt",
+            'displayed value should be "abc.txt"'
+        );
+
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value,
+            "def.txt",
+            'displayed value should be changed to "def.txt"'
+        );
+    });
 });

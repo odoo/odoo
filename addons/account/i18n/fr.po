@@ -1446,6 +1446,13 @@ msgstr ""
 "destination."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
+msgstr "Un relevé devrait uniquement contenir des lignes du même journal."
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
@@ -4047,7 +4054,7 @@ msgid ""
 "\"cancel\" if the invoice is already reconciled."
 msgstr ""
 "Choisissez comment vous souhaitez créditer cette facture. Vous ne pouvez pas"
-" \"modifier\" ou \"annuler\" si la facture est déjà rapprochée."
+" \"éditer\" ou \"annuler\" si la facture est déjà rapprochée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -6129,7 +6136,7 @@ msgstr "Escompte accordé pour cette ligne"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Edit"
-msgstr "Modifier"
+msgstr "Éditer"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
@@ -6154,7 +6161,7 @@ msgstr "Signature d'ajout d'email"
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__email_alias
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
-msgstr "Alias d'email"
+msgstr "Alias de messagerie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_layout_xmlid
@@ -14814,6 +14821,24 @@ msgstr ""
 "paiements, mais vous en sélectionné certains des deux types."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr "Le solde courant (%s) ne correspond pas au solde de clôture précisé."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+"Le solde d'ouverture ne correspond pas au solde de clôture du relevé "
+"précédent ou un relevé précédent est absent."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr "La ligne de relevé qui a créé cette entrée"
@@ -15662,6 +15687,17 @@ msgstr "Type d'activité d'exception enregistrée."
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
 msgstr "HAUT"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
+"Impossible de créer un relevé en raison de transactions manquantes. Vous "
+"pouvez réorganiser les transactions avant de continuer."
 
 #. module: account
 #. odoo-python

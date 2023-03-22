@@ -785,6 +785,25 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
+        "using a many2one widget must take into account the decorations",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <tree>
+                    <field name="user_id" decoration-danger="int_field > 9" widget="many2one"/>
+                    <field name="int_field"/>
+                </tree>`,
+            });
+
+            assert.containsOnce(target, ".o_list_many2one a.text-danger");
+            assert.containsN(target, ".o_data_row", 3);
+        }
+    );
+
+    QUnit.test(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
             assert.expect(10);
@@ -4086,9 +4105,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
-        serverData.models.partner.records[0].display_name =
-            "Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery Loooooooooooooooooooooooooooooooooooooooooooong Naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame";
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -4106,8 +4122,9 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_many2one .dropdown-menu");
 
         const dropdown = document.querySelector(".o_field_many2one .dropdown-menu");
-        await triggerScroll(dropdown, { left: 50 }, false);
-        assert.strictEqual(dropdown.scrollLeft, 50, "a scroll happened");
+        dropdown.style = "max-height: 40px;";
+        await triggerScroll(dropdown, { top: 50 }, false);
+        assert.strictEqual(dropdown.scrollTop, 50, "a scroll happened");
         assert.containsOnce(target, ".o_field_many2one .dropdown-menu");
 
         await triggerScroll(target, { top: 50 });
