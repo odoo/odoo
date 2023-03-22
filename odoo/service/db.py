@@ -133,6 +133,25 @@ def _create_empty_database(name):
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
 
+    #Fix database issues for postgres 15
+    try:
+        db = odoo.sql_db.db_connect(name)
+        with db.cursor() as cr:
+            cr.execute("SELECT version();")
+            postgres_full_version = cr.fetchone()[0]
+            # If postgres version >=15.0 create a schema as the name of
+            # the db user
+            if float(postgres_full_version.split(" ")[1].split(".")[0]) >= 15:
+                env = exec_pg_environ()
+                db_user = env['PGUSER']
+                qry = sql.SQL("CREATE SCHEMA {} AUTHORIZATION {}").format(
+                    sql.Identifier(db_user),
+                    sql.Identifier(db_user)
+                )
+                cr.execute(qry)
+    except psycopg2.Error as e:
+        _logger.warning("Unable to create schema")
+
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):
     """ Similar to exp_create but blocking."""
