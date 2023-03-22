@@ -5,6 +5,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 import { ScrollPosition } from "@mail/core/scroll_position_model";
 import { createLocalId } from "../utils/misc";
+import { Deferred } from "@web/core/utils/concurrency";
 
 /**
  * @typedef SeenInfo
@@ -55,6 +56,7 @@ export class Thread {
     isAdmin = false;
     loadMore = false;
     isLoadingAttachments = false;
+    isLoadedDeferred = new Deferred();
     isLoaded = false;
     /** @type {import("@mail/attachments/attachment_model").Attachment} */
     mainAttachment;
@@ -87,6 +89,8 @@ export class Thread {
     canPostOnReadonly;
     /** @type {String} */
     last_interest_dt;
+    /** @type {number} */
+    lastServerMessageId;
 
     constructor(store, data) {
         Object.assign(this, {
