@@ -520,7 +520,14 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         with Form(po) as po_form:
             with po_form.order_line.edit(0) as line:
-                line.product_qty = 8
+                with self.assertLogs(level="WARNING") as log_catcher:
+                    line.product_qty = 8
+
+        self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
+        self.assertIn(
+            'This product is packaged by 10.00 Units. You should purchase 10.00 Units.',
+            log_catcher.output[0],
+        )
 
         self.assertEqual(po.picking_ids.move_lines.product_uom_qty, 8)
 
