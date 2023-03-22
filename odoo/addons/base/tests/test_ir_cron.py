@@ -71,7 +71,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         super().setUpClass()
 
         freezer = freeze_time(cls.cr.now())
-        freezer.start()
+        cls.frozen_datetime = freezer.start()
         cls.addClassCleanup(freezer.stop)
 
         cls.cron = cls.env['ir.cron'].create(cls._get_cron_data(cls.env))
@@ -158,6 +158,51 @@ class TestIrCron(TransactionCase, CronMixinCase):
             [job['id'] for job in ready_jobs if job['id'] in crons._ids],
             list(crons._ids),
         )
+
+    def test_cron_skip_unactive_triggers(self):
+        # Situation: an admin disable the cron and another user triggers
+        # the cron to be executed *now*, the cron shouldn't be ready and
+        # the trigger should not be stored.
+
+        self.cron.active = False
+        self.cron.nextcall = fields.Datetime.now() + timedelta(days=2)
+        self.cron.flush_recordset()
+        with self.capture_triggers() as capture:
+            self.cron._trigger()
+
+        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
+        self.assertNotIn(self.cron.id, [job['id'] for job in ready_jobs],
+            "the cron shouldn't be ready")
+        self.assertFalse(capture.records, "trigger should has been skipped")
+
+    def test_cron_keep_future_triggers(self):
+        # Situation: yesterday an admin disabled the cron, while the
+        # cron was disabled, another user triggered it to run today.
+        # In case the cron as been re-enabled before "today", it should
+        # run.
+
+        # go yesterday
+        self.frozen_datetime.tick(delta=timedelta(days=-1))
+
+        # admin disable the cron
+        self.cron.active = False
+        self.cron.nextcall = fields.Datetime.now() + timedelta(days=10)
+        self.cron.flush_recordset()
+
+        # user triggers the cron to run *tomorrow of yesterday (=today)
+        with self.capture_triggers() as capture:
+            self.cron._trigger(at=fields.Datetime.now() + timedelta(days=1))
+
+        # admin re-enable the cron
+        self.cron.active = True
+        self.cron.flush_recordset()
+
+        # go today, check the cron should run
+        self.frozen_datetime.tick(delta=timedelta(days=1))
+        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
+        self.assertIn(self.cron.id, [job['id'] for job in ready_jobs],
+            "cron should be ready")
+        self.assertTrue(capture.records, "trigger should has been kept")
 
     def test_cron_process_job(self):
 
