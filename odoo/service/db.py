@@ -133,6 +133,14 @@ def _create_empty_database(name):
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
 
+    # restore legacy behaviour on pg15+
+    try:
+        db = odoo.sql_db.db_connect(name)
+        with db.cursor() as cr:
+            cr.execute("GRANT CREATE ON SCHEMA PUBLIC TO PUBLIC")
+    except psycopg2.Error as e:
+        _logger.warning("Unable to make public schema public-accessible: %s", e)
+
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):
     """ Similar to exp_create but blocking."""
