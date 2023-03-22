@@ -11,7 +11,6 @@ export const attendeeCalendarView = {
     Controller: AttendeeCalendarController,
     Model: AttendeeCalendarModel,
     Renderer: AttendeeCalendarRenderer,
-    buttonTemplate: "calendar.AttendeeCalendarController.controlButtons",
 };
 
 registry.category("views").add("attendee_calendar", attendeeCalendarView);
