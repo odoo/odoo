@@ -10,6 +10,8 @@ import { renderToString } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 const NO_DATA = _lt("No data");
 
@@ -49,6 +51,7 @@ export class GraphRenderer extends Component {
         this.canvasRef = useRef("canvas");
         this.containerRef = useRef("container");
         this.cookies = useService("cookie");
+        this.actionService = useService("action");
 
         this.chart = null;
         this.tooltip = null;
@@ -450,15 +453,8 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getScaleOptions() {
-        const {
-            allIntegers,
-            fields,
-            groupBy,
-            measure,
-            measures,
-            mode,
-            stacked,
-        } = this.model.metaData;
+        const { allIntegers, fields, groupBy, measure, measures, mode, stacked } =
+            this.model.metaData;
         if (mode === "pie") {
             return {};
         }
@@ -558,7 +554,7 @@ export class GraphRenderer extends Component {
         const { _datasetIndex, _index } = activeElement;
         const { domains } = this.chart.data.datasets[_datasetIndex];
         if (domains) {
-            this.props.onGraphClicked(domains[_index]);
+            this.onGraphClickedFinal(domains[_index]);
         }
     }
 
@@ -674,7 +670,88 @@ export class GraphRenderer extends Component {
         // advancing the animation service.
         Chart.animationService.advance();
     }
+
+    /**
+     * Execute the action to open the view on the current model.
+     *
+     * @param {Array} domain
+     * @param {Array} views
+     * @param {Object} context
+     */
+    openView(domain, views, context) {
+        this.actionService.doAction(
+            {
+                context,
+                domain,
+                name: this.model.metaData.title,
+                res_model: this.model.metaData.resModel,
+                target: "current",
+                type: "ir.actions.act_window",
+                views,
+            },
+            {
+                viewType: "list",
+            }
+        );
+    }
+    /**
+     * @param {string} domain the domain of the clicked area
+     */
+    onGraphClickedFinal(domain) {
+        const { context } = this.model.metaData;
+
+        Object.keys(context).forEach((x) => {
+            if (x === "group_by" || x.startsWith("search_default_")) {
+                delete context[x];
+            }
+        });
+
+        const views = {};
+        for (const [viewId, viewType] of this.env.config.views || []) {
+            views[viewType] = viewId;
+        }
+        function getView(viewType) {
+            return [views[viewType] || false, viewType];
+        }
+        const actionViews = [getView("list"), getView("form")];
+        this.openView(domain, actionViews, context);
+    }
+
+    /**
+     * @param {Object} param0
+     * @param {string} param0.measure
+     */
+    onMeasureSelected({ measure }) {
+        this.model.updateMetaData({ measure });
+    }
+
+    /**
+     * @param {"bar"|"line"|"pie"} mode
+     */
+    onModeSelected(mode) {
+        this.model.updateMetaData({ mode });
+    }
+
+    /**
+     * @param {"ASC"|"DESC"} order
+     */
+    toggleOrder(order) {
+        const { order: currentOrder } = this.model.metaData;
+        const nextOrder = currentOrder === order ? null : order;
+        this.model.updateMetaData({ order: nextOrder });
+    }
+
+    toggleStacked() {
+        const { stacked } = this.model.metaData;
+        this.model.updateMetaData({ stacked: !stacked });
+    }
+
+    toggleCumulated() {
+        const { cumulated } = this.model.metaData;
+        this.model.updateMetaData({ cumulated: !cumulated });
+    }
 }
 
 GraphRenderer.template = "web.GraphRenderer";
-GraphRenderer.props = ["class?", "model", "onGraphClicked"];
+GraphRenderer.components = { Dropdown, DropdownItem };
+GraphRenderer.props = ["class?", "model", "buttonTemplate"];

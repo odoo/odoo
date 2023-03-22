@@ -28,7 +28,7 @@
                 </t>
             </t>
         </xpath>
-        <xpath expr="//Layout/t[@t-set-slot='layout-buttons']" position="replace">
+        <xpath expr="//Layout" position="inside">
             <t t-set-slot="layout-buttons">
                 <t t-call="{{ props.buttonTemplate }}"/>
             </t>

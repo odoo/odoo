@@ -28,8 +28,11 @@
     </t>
 
     <t t-name="web.GraphRenderer" owl="1">
-        <div t-att-class="'o_graph_renderer o_renderer h-100 ' + props.class" t-ref="root">
-            <div class="o_graph_canvas_container h-100 position-relative" t-ref="container">
+        <div t-att-class="'o_graph_renderer o_renderer h-100 d-flex flex-column border-top ' + props.class" t-ref="root">
+            <div class="d-flex gap-1 mt-2 mx-3 mb-3">
+                <t t-call="{{ props.buttonTemplate }}"/>
+            </div>
+            <div class="o_graph_canvas_container flex-grow-1 position-relative" t-ref="container">
                 <canvas t-ref="canvas" />
             </div>
         </div>

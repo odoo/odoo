@@ -49,13 +49,6 @@ export class CalendarCommonRenderer extends Component {
         useEffect(() => {
             this.updateSize();
         });
-
-        useEffect(
-            (view) => {
-                this.env.config.setDisplayName(`${this.props.displayName} (${view.title})`);
-            },
-            () => [this.fc.api.view]
-        );
     }
 
     get options() {

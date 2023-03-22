@@ -12,6 +12,9 @@
                     </t>
                 </t>
 
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
                 <t t-set-slot="control-panel-always-buttons">
                     <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                         <MultiRecordViewButton
@@ -26,12 +29,6 @@
                             title="button.title"
                         />
                     </t>
-                </t>
-
-                <t t-set-slot="layout-buttons">
-                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
-                        <t t-call="{{ props.buttonTemplate }}"/>
-                    </div>
                 </t>
 
                 <t t-set-slot="layout-actions">

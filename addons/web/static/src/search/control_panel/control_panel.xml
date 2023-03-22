@@ -5,8 +5,9 @@
         <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root">
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center w-100 w-md-50 w-lg-auto">
-                    <div class="o_control_panel_create_button d-empty-none d-print-none me-2">
+                    <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none me-2">
                         <t t-slot="control-panel-create-button"/>
+                        <t t-slot="layout-buttons"/>
                         <t t-slot="control-panel-always-buttons"/>
                     </div>
                     <t t-if="env.config.noBreadcrumbs">
@@ -42,9 +43,6 @@
                         </t>
                     </nav>
                 </div>
-            </div>
-            <div class="o_control_panel_secondary d-flex gap-2">
-                <t t-slot="layout-buttons"/>
             </div>
         </div>
     </t>
