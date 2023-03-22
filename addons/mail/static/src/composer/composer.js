@@ -40,6 +40,7 @@ export class Composer extends Component {
     };
     static defaultProps = {
         mode: "normal",
+        className: "",
     }; // mode = compact, normal, extended
     static props = [
         "composer",
@@ -53,6 +54,7 @@ export class Composer extends Component {
         "dropzoneRef?",
         "messageEdition?",
         "messageComponent?",
+        "className?",
     ];
     static template = "mail.Composer";
 
