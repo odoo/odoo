@@ -141,7 +141,7 @@ export class TaxTotalsComponent extends Component {
     _onChangeTaxValueByTaxGroup({ oldValue, newValue, taxGroupId }) {
         if (oldValue === newValue) return;
         this.totals.amount_total = this.totals.amount_untaxed + newValue;
-        this.props.update(this.totals);
+        this.props.record.update({ [this.props.name]: this.totals });
     }
 
     _format(amount) {
