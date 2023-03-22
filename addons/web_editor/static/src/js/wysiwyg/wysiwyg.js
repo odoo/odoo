@@ -1067,6 +1067,10 @@ const Wysiwyg = Widget.extend({
                         return;
                     }
                     let $node = $(field);
+                    // Do not forward "unstyled" copies to other nodes.
+                    if ($node.hasClass('o_translation_without_style')) {
+                        return;
+                    }
                     let $nodes = $odooFields.filter(function () {
                         return this !== field;
                     });
@@ -1119,6 +1123,16 @@ const Wysiwyg = Widget.extend({
                     }
                     const html = $node.html();
                     for (const node of $nodes) {
+                        if (node.classList.contains('o_translation_without_style')) {
+                            // For generated elements such as the navigation
+                            // labels of website's table of content, only the
+                            // text of the referenced translation must be used.
+                            const text = $node.text();
+                            if (node.innerText !== text) {
+                                node.innerText = text;
+                            }
+                            continue;
+                        }
                         if (node.innerHTML !== html) {
                             node.innerHTML = html;
                         }
@@ -2438,7 +2452,7 @@ const Wysiwyg = Widget.extend({
             this.$editable.find('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
         }
         const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
-        if (e.target.closest('.oe-toolbar') || (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))) {
+        if (e.target.closest('.oe-toolbar') || e.target.closest('.o_we_crop_buttons') || (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))) {
             this._shouldDelayBlur = true;
         } else {
             if (this._pendingBlur && !e.target.closest('.o_wysiwyg_wrapper')) {
