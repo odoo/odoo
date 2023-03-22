@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module alias=website.s_website_form **/
     
     import core from "web.core";
     import time from "web.time";
