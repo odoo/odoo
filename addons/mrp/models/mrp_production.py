@@ -647,9 +647,12 @@ class MrpProduction(models.Model):
     def _compute_show_serial_mass_produce(self):
         self.show_serial_mass_produce = False
         for order in self:
-            if order.state == 'confirmed' and order.product_id.tracking == 'serial' and \
+            if order.state in ['confirmed', 'progress', 'to_close'] and order.product_id.tracking == 'serial' and \
                     float_compare(order.product_qty, 1, precision_rounding=order.product_uom_id.rounding) > 0 and \
                     float_compare(order.qty_producing, order.product_qty, precision_rounding=order.product_uom_id.rounding) < 0:
+                moves_with_tracking = order.move_raw_ids.filtered(lambda m: m.has_tracking)
+                if any(len(m.move_line_ids.lot_id) > 1 for m in moves_with_tracking):
+                    continue
                 order.show_serial_mass_produce = True
 
     @api.depends('state', 'move_finished_ids')
@@ -1924,6 +1927,9 @@ class MrpProduction(models.Model):
                 'state': 'done',
             })
 
+        if self.env.context.get('skip_redirection'):
+            return True
+
         if not backorders:
             if self.env.context.get('from_workorder'):
                 return {
@@ -1995,7 +2001,7 @@ class MrpProduction(models.Model):
             'name': _('Scrap'),
             'view_mode': 'form',
             'res_model': 'stock.scrap',
-            'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
+            'views': [[self.env.ref('stock.stock_scrap_form_view2').id, 'form']],
             'type': 'ir.actions.act_window',
             'context': {'default_production_id': self.id,
                         'product_ids': (self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids,
@@ -2095,14 +2101,14 @@ class MrpProduction(models.Model):
             'target': 'new',
         }
 
-    def action_serial_mass_produce_wizard(self):
+    def action_serial_mass_produce_wizard(self, mark_as_done=False):
         self.ensure_one()
         self._check_company()
-        if self.state != 'confirmed':
+        if self.state not in ['confirmed', 'progress', 'to_close']:
             return
         if self.product_id.tracking != 'serial':
             return
-        if self.reservation_state != 'assigned':
+        if self.state == 'confirmed' and self.reservation_state != 'assigned':
             missing_components = {move.product_id for move in self.move_raw_ids if float_compare(move.reserved_availability, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0}
             message = _("Make sure enough quantities of these components are reserved to do the production:\n")
             message += "\n".join(component.name for component in missing_components)
@@ -2124,6 +2130,7 @@ class MrpProduction(models.Model):
             'default_next_serial_number': next_serial,
             'default_next_serial_count': self.product_qty - self.qty_produced,
             'default_multiple_lot_components_names': ",".join(c.display_name for c in multiple_lot_components) if multiple_lot_components else None,
+            'default_mark_as_done': mark_as_done,
         }
         return action
 
