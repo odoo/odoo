@@ -108,11 +108,11 @@ class CouponProgram(models.Model):
         rule = self.rule_id
         reward = self.reward_id
         # unlink the program
-        super(CouponProgram, self).unlink()
+        res = super().unlink()
         # then unlink the rule and reward
         rule.unlink()
         reward.unlink()
-        return True
+        return res
 
     def toggle_active(self):
         super(CouponProgram, self).toggle_active()
