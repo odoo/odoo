@@ -618,6 +618,7 @@ export const massMailingHtmlField = {
         inlineField: fieldInfo.options['inline-field'],
         iframeHtmlClass: fieldInfo.attrs.iframeHtmlClass,
     }),
+    fieldDependencies: [{ name: 'body_html', type: 'html' }],
 };
 
 registry.category("fields").add("mass_mailing_html", massMailingHtmlField);
