@@ -185,6 +185,7 @@ class Post(models.Model):
             else:
                 post.relevancy = 0
 
+    @api.depends_context('uid')
     def _compute_user_vote(self):
         votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
         mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
@@ -200,6 +201,7 @@ class Post(models.Model):
         for post in self:
             post.vote_count = result[post.id]
 
+    @api.depends_context('uid')
     def _compute_user_favourite(self):
         for post in self:
             post.user_favourite = post._uid in post.favourite_ids.ids
@@ -212,13 +214,14 @@ class Post(models.Model):
     @api.depends('create_uid', 'parent_id')
     def _compute_self_reply(self):
         for post in self:
-            post.self_reply = post.parent_id.create_uid.id == post._uid
+            post.self_reply = post.parent_id.create_uid == post.create_uid
 
     @api.depends('child_ids')
     def _compute_child_count(self):
         for post in self:
             post.child_count = len(post.child_ids)
 
+    @api.depends_context('uid')
     def _compute_uid_has_answered(self):
         for post in self:
             post.uid_has_answered = post._uid in post.child_ids.create_uid.ids
