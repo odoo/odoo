@@ -6,6 +6,7 @@ import { renderToString } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { parseFloat, InvalidNumberError } from "@web/views/fields/parsers";
 import { useState } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -18,6 +19,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         this.notification = useService("pos_notification");
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.pos = usePos();
         this.hardwareProxy = useService("hardware_proxy");
         this.state = useState({
             /** @type {'in'|'out'} */
@@ -43,7 +45,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             this.state.errorMessage = this.env._t("Insert a positive amount");
             return;
         }
-        const formattedAmount = this.env.pos.format_currency(amount);
+        const formattedAmount = this.pos.globalState.format_currency(amount);
         if (!amount) {
             this.notification.add(
                 sprintf(_t("Cash in/out of %s is ignored."), formattedAmount),
@@ -57,7 +59,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
         await this.orm.call("pos.session", "try_cash_in_out", [
-            [this.env.pos.pos_session.id],
+            [this.pos.globalState.pos_session.id],
             type,
             amount,
             reason,
@@ -71,8 +73,8 @@ export class CashMovePopup extends AbstractAwaitablePopup {
                     amount,
                     translatedType,
                     formattedAmount,
-                    cashier: this.env.pos.get_cashier(),
-                    company: this.env.pos.company,
+                    cashier: this.pos.globalState.get_cashier(),
+                    company: this.pos.globalState.company,
                 },
             });
             const printResult = await this.hardwareProxy.printer.print_receipt(renderedReceipt);

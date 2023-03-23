@@ -1,12 +1,13 @@
 /** @odoo-module */
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { Component, useRef, useState, useSubEnv } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class BaseProductAttribute extends Component {
     setup() {
         super.setup();
+        this.pos = usePos();
         this.env.attribute_components.push(this);
-
         this.attribute = this.props.attribute;
         this.values = this.attribute.values;
         this.state = useState({
