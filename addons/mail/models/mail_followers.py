@@ -43,15 +43,8 @@ class Followers(models.Model):
                                help="If the related partner is active (if exist) or if related channel exist")
 
     def _invalidate_documents(self, vals_list=None):
-        """ Invalidate the cache of the documents followed by ``self``.
-
-        Modifying followers change access rights to individual documents. As the
-        cache may contain accessible/inaccessible data, one has to refresh it.
-        """
-        to_invalidate = defaultdict(list)
-        for record in (vals_list or [{'res_model': rec.res_model, 'res_id': rec.res_id} for rec in self]):
-            if record.get('res_id'):
-                to_invalidate[record.get('res_model')].append(record.get('res_id'))
+        # TODO remove in master
+        pass
 
     @api.model_create_multi
     def create(self, vals_list):
