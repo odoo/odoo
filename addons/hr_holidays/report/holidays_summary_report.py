@@ -28,31 +28,33 @@ class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
     _description = 'Holidays Summary Report'
 
-    def _get_header_info(self, start_date, holiday_type):
+    def _get_header_info(self, start_date, end_date, holiday_type):
         st_date = fields.Date.from_string(start_date)
+        en_date = fields.Date.from_string(end_date)
         return {
-            'start_date': fields.Date.to_string(st_date),
-            'end_date': fields.Date.to_string(st_date + relativedelta(days=59)),
+            'start_date': st_date,
+            'end_date': en_date,
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
 
     def _date_is_day_off(self, date):
         return date.weekday() in (calendar.SATURDAY, calendar.SUNDAY,)
 
-    def _get_day(self, start_date):
+    def _get_day(self, start_date, end_date):
         res = []
         start_date = fields.Date.from_string(start_date)
-        for x in range(0, 60):
+        end_date = fields.Date.from_string(end_date)
+        while start_date < end_date:
             color = '#ababab' if self._date_is_day_off(start_date) else ''
-            res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
+            res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day, 'color': color})
             start_date = start_date + relativedelta(days=1)
         return res
 
-    def _get_months(self, start_date):
+    def _get_months(self, start_date, end_date):
         # it works for geting month name between two dates.
         res = []
         start_date = fields.Date.from_string(start_date)
-        end_date = start_date + relativedelta(days=59)
+        end_date = fields.Date.from_string(end_date)
         while start_date <= end_date:
             last_date = start_date + relativedelta(day=1, months=+1, days=-1)
             if last_date > end_date:
@@ -62,16 +64,19 @@ class HrHolidaySummaryReport(models.AbstractModel):
             start_date += relativedelta(day=1, months=+1)
         return res
 
-    def _get_leaves_summary(self, start_date, empid, holiday_type):
+    def _get_leaves_summary(self, start_date, end_date, empid, holiday_type):
         res = []
         count = 0
         start_date = fields.Date.from_string(start_date)
-        end_date = start_date + relativedelta(days=59)
-        for index in range(0, 60):
-            current = start_date + timedelta(index)
+        end_date = fields.Date.from_string(end_date)
+        index = 0
+        current = start_date
+        while current < end_date:
+            current = current + timedelta(1)
             res.append({'day': current.day, 'color': ''})
-            if self._date_is_day_off(current) :
+            if self._date_is_day_off(current):
                 res[index]['color'] = '#ababab'
+            index += 1
 
         holidays = self._get_leaves(start_date, self.env['hr.employee'].browse(empid), holiday_type)
 
@@ -106,14 +111,14 @@ class HrHolidaySummaryReport(models.AbstractModel):
                 res.append({
                     'dept': department.name,
                     'data': [
-                        self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type'])
+                        self._get_leaves_summary(data['date_from'], data['date_to'], emp.id, data['holiday_type'])
                         for emp in employees.filtered(lambda emp: emp.department_id.id == department.id)
                     ],
-                    'color': self._get_day(data['date_from']),
+                    'color': self._get_day(data['date_from'], data['date_to']),
                 })
         elif 'emp' in data:
             res.append({'data': [
-                self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type'])
+                self._get_leaves_summary(data['date_from'], data['date_to'], emp.id, data['holiday_type'])
                 for emp in self._get_employees(data)
             ]})
         return res
@@ -137,7 +142,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
         if {'depts', 'emp'} & data.keys():
             employees = self._get_employees(data)
 
-        holidays = self._get_leaves(fields.Date.from_string(data['date_from']), employees, data['holiday_type'])
+        holidays = self._get_leaves(fields.Date.from_string(data['date_from']), employees, data['holiday_type'], data['date_to'])
 
         for leave_type in holidays.holiday_status_id:
             res.append({'color': COLORS_MAP[leave_type.color], 'name': leave_type.name})
@@ -155,9 +160,9 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'doc_ids': self.ids,
             'doc_model': holidays_report.model,
             'docs': holidays,
-            'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
-            'get_day': self._get_day(data['form']['date_from']),
-            'get_months': self._get_months(data['form']['date_from']),
+            'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['date_to'], data['form']['holiday_type']),
+            'get_day': self._get_day(data['form']['date_from'], data['form']['date_to']),
+            'get_months': self._get_months(data['form']['date_from'], data['form']['date_to']),
             'get_data_from_report': self._get_data_from_report(data['form']),
             'get_holidays_status': self._get_holidays_status(data['form']),
         }

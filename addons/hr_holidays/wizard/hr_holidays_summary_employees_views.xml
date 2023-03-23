@@ -8,9 +8,8 @@
                 <form string="Time Off Summary">
                     <group col="4" colspan="6">
                         <field name="date_from"/>
-                        <newline/>
+                        <field name="date_to"/>
                         <field name="holiday_type"/>
-                        <newline/>
                         <field name="emp" invisible="True"/>
                     </group>
                     <footer>
@@ -28,6 +27,7 @@
             <field name="target">new</field>
             <field name="binding_model_id" ref="hr.model_hr_employee" />
             <field name="binding_type">report</field>
+            <field name="context">{'dialog_size' : 'medium'}</field>
         </record>
 
 </odoo>

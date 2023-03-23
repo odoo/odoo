@@ -3,14 +3,17 @@
 import time
 
 from odoo import api, fields, models
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class HolidaysSummaryEmployee(models.TransientModel):
 
     _name = 'hr.holidays.summary.employee'
     _description = 'HR Time Off Summary Report By Employee'
 
-    date_from = fields.Date(string='From', required=True, default=lambda *a: time.strftime('%Y-%m-01'))
+    date_from = fields.Date(string='From', required=True, default=lambda self: fields.Date.to_string(datetime.today().replace(day=1)))
+    date_to = fields.Date(string='To', required=True, default=lambda self: fields.Date.to_string(datetime.today().replace(day=1) + relativedelta(months=2)))
+
     emp = fields.Many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', string='Employee(s)')
     holiday_type = fields.Selection([
         ('Approved', 'Approved'),
