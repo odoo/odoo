@@ -131,6 +131,9 @@ class AccountEdiXmlCII(models.AbstractModel):
                 'amount_type': tax.amount_type,
             }
 
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice)
+
         # Create file content.
         tax_details = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
 
