@@ -358,6 +358,12 @@ QUnit.module("domain", {}, () => {
             /invalid domain .* \(missing 1 segment/
         );
         assert.throws(() => new Domain(["!"]), /invalid domain .* \(missing 1 segment/);
+        assert.throws(() => new Domain(`[(1, 2)]`), /Invalid domain AST/);
+        assert.throws(() => new Domain(`[(1, 2, 3, 4)]`), /Invalid domain AST/);
+        assert.throws(() => new Domain(`["a"]`), /Invalid domain AST/);
+        assert.throws(() => new Domain(`[1]`), /Invalid domain AST/);
+        assert.throws(() => new Domain(`[x]`), /Invalid domain AST/);
+        assert.throws(() => new Domain(`[True]`), /Invalid domain AST/); // will possibly change with CHM work
     });
 
     QUnit.test("follow relations", function (assert) {

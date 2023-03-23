@@ -230,10 +230,23 @@ function normalizeDomainAST(domain, op = "&") {
     }
     let expected = 1;
     for (const child of domain.value) {
-        if (child.type === 1 /* String */ && (child.value === "&" || child.value === "|")) {
-            expected++;
-        } else if (child.type !== 1 /* String */ || child.value !== "!") {
-            expected--;
+        switch (child.type) {
+            case 1 /* String */:
+                if (child.value === "&" || child.value === "|") {
+                    expected++;
+                } else if (child.value !== "!") {
+                    throw new InvalidDomainError("Invalid domain AST");
+                }
+                break;
+            case 4: /* list */
+            case 10 /* tuple */:
+                if (child.value.length === 3) {
+                    expected--;
+                    break;
+                }
+                throw new InvalidDomainError("Invalid domain AST");
+            default:
+                throw new InvalidDomainError("Invalid domain AST");
         }
     }
     const values = domain.value.slice();

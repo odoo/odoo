@@ -595,12 +595,15 @@ QUnit.module("Fields", (hooks) => {
                 "2 record(s)"
             );
 
-            await editInput(target, ".o_domain_debug_input", "[['abc']]");
+            await editInput(target, ".o_domain_debug_input", "[['abc', '=', 1]]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
+            assert.verifySteps([]);
+
+            await editInput(target, ".o_domain_debug_input", "[['abc']]");
             assert.verifySteps([]);
 
             await clickSave(target);
@@ -614,7 +617,7 @@ QUnit.module("Fields", (hooks) => {
                 ".o_form_view .o_form_editable",
                 "the view is still in edit mode"
             );
-            assert.verifySteps(['[["abc"]]']);
+            assert.verifySteps([]);
         }
     );
 
