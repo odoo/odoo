@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
@@ -54,6 +54,13 @@ class StockPickingBatch(models.Model):
               - If manually set then scheduled date for all transfers in batch will automatically update to this date.
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
                 but this scheduled date will not be set for all transfers in batch.""")
+
+    @api.constrains('name')
+    def _check_name(self):
+        for batch in self:
+            if batch.name != 'New':
+                if self.search_count([('name', '=', batch.name)]) > 1:
+                    raise ValidationError(_('The batch name must be unique! Please choose another one.'))
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
