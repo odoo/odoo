@@ -3,6 +3,7 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useState } from "@odoo/owl";
 import { CurrencyAmount } from "../Misc/CurrencyAmount";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
     static components = { CurrencyAmount };
@@ -10,11 +11,12 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
 
     setup() {
         super.setup();
-        this.currency = this.env.pos.currency;
+        this.pos = usePos();
+        this.currency = this.pos.globalState.currency;
         this.state = useState({
             moneyDetails: this.props.moneyDetails
                 ? { ...this.props.moneyDetails }
-                : Object.fromEntries(this.env.pos.bills.map((bill) => [bill.value, 0])),
+                : Object.fromEntries(this.pos.globalState.bills.map((bill) => [bill.value, 0])),
             total: this.props.total ? this.props.total : 0,
         });
     }
@@ -34,16 +36,16 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
             (total, money) => total + money[0] * money[1],
             0
         );
-        this.state.total = this.env.pos.round_decimals_currency(total);
+        this.state.total = this.pos.globalState.round_decimals_currency(total);
     }
     //@override
     async getPayload() {
         let moneyDetailsNotes = this.state.total ? "Money details: \n" : null;
-        this.env.pos.bills.forEach((bill) => {
+        this.pos.globalState.bills.forEach((bill) => {
             if (this.state.moneyDetails[bill.value]) {
                 moneyDetailsNotes += `  - ${
                     this.state.moneyDetails[bill.value]
-                } x ${this.env.pos.format_currency(bill.value)}\n`;
+                } x ${this.pos.globalState.format_currency(bill.value)}\n`;
             }
         });
         return {

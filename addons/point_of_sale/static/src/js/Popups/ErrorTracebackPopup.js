@@ -2,7 +2,7 @@
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _lt } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 // formerly ErrorTracebackPopupWidget
 export class ErrorTracebackPopup extends ErrorPopup {
@@ -18,7 +18,7 @@ export class ErrorTracebackPopup extends ErrorPopup {
     };
 
     setup() {
-        this.pos = useService("pos");
+        this.pos = usePos();
     }
 
     get tracebackUrl() {
@@ -30,7 +30,7 @@ export class ErrorTracebackPopup extends ErrorPopup {
         return `${this.env._t("error")} ${moment().format("YYYY-MM-DD-HH-mm-ss")}.txt`;
     }
     emailTraceback() {
-        const address = this.env.pos.company.email;
+        const address = this.pos.globalState.company.email;
         const subject = this.env._t("IMPORTANT: Bug Report From Odoo Point Of Sale");
         window.open(
             "mailto:" +

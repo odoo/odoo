@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
  * Props:
@@ -14,17 +15,18 @@ export class ProductInfoPopup extends AbstractAwaitablePopup {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         Object.assign(this, this.props.info);
     }
     searchProduct(productName) {
-        this.env.pos.setSelectedCategoryId(0);
-        this.env.pos.searchProductWord = productName;
+        this.pos.globalState.setSelectedCategoryId(0);
+        this.pos.globalState.searchProductWord = productName;
         this.cancel();
     }
     _hasMarginsCostsAccessRights() {
         const isAccessibleToEveryUser =
-            this.env.pos.config.is_margins_costs_accessible_to_every_user;
-        const isCashierManager = this.env.pos.get_cashier().role === "manager";
+            this.pos.globalState.config.is_margins_costs_accessible_to_every_user;
+        const isCashierManager = this.pos.globalState.get_cashier().role === "manager";
         return isAccessibleToEveryUser || isCashierManager;
     }
 }

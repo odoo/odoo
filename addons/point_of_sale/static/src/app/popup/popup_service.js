@@ -2,13 +2,9 @@
 
 import { Component, reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { usePos } from "@point_of_sale/app/pos_hook";
+
 export class PopupContainer extends Component {
     static template = "point_of_sale.PopupContainer";
-    setup() {
-        // FIXME POSREF: remove this when Chrome uses the new env
-        this.__owl__.childEnv = usePos().legacyEnv;
-    }
 }
 
 // FIXME POSREF: probably should use the main dialog service from web long term.

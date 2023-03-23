@@ -2,6 +2,7 @@
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useService } from "@web/core/utils/hooks";
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 import { useState } from "@odoo/owl";
 
@@ -13,19 +14,20 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         super.setup();
         this.manualInputCashCount = null;
         this.moneyDetails = null;
+        this.pos = usePos();
         this.state = useState({
             notes: "",
-            openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
+            openingCash: this.pos.globalState.pos_session.cash_register_balance_start || 0,
         });
         this.popup = useService("popup");
         this.orm = useService("orm");
     }
     //@override
     async confirm() {
-        this.env.pos.pos_session.cash_register_balance_start = this.state.openingCash;
-        this.env.pos.pos_session.state = "opened";
+        this.pos.globalState.pos_session.cash_register_balance_start = this.state.openingCash;
+        this.pos.globalState.pos_session.state = "opened";
         this.orm.call("pos.session", "set_cashbox_pos", [
-            this.env.pos.pos_session.id,
+            this.pos.globalState.pos_session.id,
             this.state.openingCash,
             this.state.notes,
         ]);

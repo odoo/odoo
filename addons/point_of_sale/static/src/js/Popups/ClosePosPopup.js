@@ -11,6 +11,7 @@ import { useState } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
 import { _t } from "@web/core/l10n/translation";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
     static components = { SaleDetailsButton };
@@ -18,12 +19,13 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         this.popup = useService("popup");
-        this.pos = useService("pos");
         this.orm = useService("orm");
         this.hardwareProxy = useService("hardware_proxy");
+        this.legacyActionManager = useService("legacy_action_manager");
         this.manualInputCashCount = false;
-        this.cashControl = this.env.pos.config.cash_control;
+        this.cashControl = this.pos.globalState.config.cash_control;
         this.closeSessionClicked = false;
         this.moneyDetails = null;
         Object.assign(this, this.props.info);
@@ -54,7 +56,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                         "The maximum difference allowed is %s.\n\
                         Please contact your manager to accept the closing difference."
                     ),
-                    this.env.pos.format_currency(this.amountAuthorizedDiff)
+                    this.pos.globalState.format_currency(this.amountAuthorizedDiff)
                 ),
                 confirmText: this.env._t("OK"),
             });
@@ -77,7 +79,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
-                this.env.pos.round_decimals_currency(
+                this.pos.globalState.round_decimals_currency(
                     this.state.payments[[this.defaultCashDetails.id]].counted -
                         this.defaultCashDetails.amount
                 );
@@ -89,9 +91,9 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async downloadSalesReport() {
-        await this.env.legacyActionManager.do_action("point_of_sale.sale_details_report", {
+        await this.legacyActionManager.do_action("point_of_sale.sale_details_report", {
             additional_context: {
-                active_ids: [this.env.pos.pos_session.id],
+                active_ids: [this.pos.globalState.pos_session.id],
             },
         });
     }
@@ -105,7 +107,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } else {
             expectedAmount = this.otherPaymentMethods.find((pm) => paymentId === pm.id).amount;
         }
-        this.state.payments[paymentId].difference = this.env.pos.round_decimals_currency(
+        this.state.payments[paymentId].difference = this.pos.globalState.round_decimals_currency(
             this.state.payments[paymentId].counted - expectedAmount
         );
     }
@@ -129,12 +131,12 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         if (!this.closeSessionClicked) {
             this.closeSessionClicked = true;
 
-            if (this.env.pos.config.cashControl) {
+            if (this.pos.globalState.config.cashControl) {
                 const response = await this.orm.call(
                     "pos.session",
-                    "post_closing_cash_details"[this.env.pos.pos_session.id],
+                    "post_closing_cash_details"[this.pos.globalState.pos_session.id],
                     {
-                        counted_cash: this.env.pos.config.cashControl
+                        counted_cash: this.pos.globalState.config.cashControl
                             ? this.state.payments[this.defaultCashDetails.id].counted
                             : 0,
                     }
@@ -147,7 +149,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
 
             try {
                 await this.orm.call("pos.session", "update_closing_control_state_session", [
-                    this.env.pos.pos_session.id,
+                    this.pos.globalState.pos_session.id,
                     this.state.notes,
                 ]);
             } catch (error) {
@@ -168,7 +170,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                     .filter((pm) => pm.type == "bank")
                     .map((pm) => [pm.id, this.state.payments[pm.id].difference]);
                 const response = await this.orm.call("pos.session", "close_session_from_ui", [
-                    this.env.pos.pos_session.id,
+                    this.pos.globalState.pos_session.id,
                     bankPaymentMethodDiffPairs,
                 ]);
                 if (!response.successful) {
