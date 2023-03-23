@@ -552,9 +552,9 @@ class Channel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
+    def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
         # link message to channel
-        rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, notify_by_email=notify_by_email, **kwargs)
 
         message_format_values = message.message_format()[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
