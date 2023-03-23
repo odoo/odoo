@@ -12,7 +12,7 @@ import {
 } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
-import { TagsList } from "./tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
