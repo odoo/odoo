@@ -1400,3 +1400,22 @@ QUnit.test("Mark as unread", async (assert) => {
     assert.containsOnce($, ".o-mail-Thread-newMessage");
     assert.containsOnce($, ".o-mail-DiscussCategoryItem .badge:contains(1)");
 });
+
+QUnit.test("Avatar of unknown author", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create({
+        body: "<p>Want to know features and benefits of using the new software.</p>",
+        email_from: "md@oilcompany.fr",
+        message_type: "email",
+        subject: "Need Details",
+        model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+        author_id: null,
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    assert.containsOnce(
+        $,
+        ".o-mail-Message-avatar[data-src*='mail/static/src/img/email_icon.png']"
+    );
+});
