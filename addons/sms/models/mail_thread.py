@@ -242,9 +242,19 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
+<<<<<<< HEAD
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
         self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
+||||||| parent of b4a7bc55fda (temp)
+    def _notify_thread(self, message, msg_vals=False, **kwargs):
+        recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        self._notify_record_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
+=======
+    def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
+        recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, notify_by_email=notify_by_email, **kwargs)
+        self._notify_record_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
+>>>>>>> b4a7bc55fda (temp)
         return recipients_data
 
     def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
