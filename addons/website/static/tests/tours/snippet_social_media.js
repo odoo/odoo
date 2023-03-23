@@ -62,7 +62,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
 }, [
     wTourUtils.dragNDrop({id: 's_social_media', name: 'Social Media'}),
     wTourUtils.clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
-    ...addNewSocialNetwork(6, 6, 'https://www.youtu.be/y7TlnAv6cto'),
+    ...addNewSocialNetwork(7, 7, 'https://www.youtu.be/y7TlnAv6cto'),
     {
         content: 'Click on the toggle to hide Facebook',
         trigger: 'we-list table we-button.o_we_user_value_widget',
@@ -81,14 +81,14 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: 'Check drop completed',
-        trigger: 'we-list table input:eq(6)[data-media="facebook"]',
+        trigger: 'we-list table input:eq(7)[data-media="facebook"]',
         run: () => {}, // This is a check.
     },
     ...preventRaceConditionStep,
     // Create a Link for which we don't have an icon to propose.
-    ...addNewSocialNetwork(7, 6, 'https://whatever.it/1EdSw9X'),
+    ...addNewSocialNetwork(8, 7, 'https://whatever.it/1EdSw9X'),
     // Create a custom instagram link.
-    ...addNewSocialNetwork(8, 7, 'https://instagr.am/odoo.official/'),
+    ...addNewSocialNetwork(9, 8, 'https://instagr.am/odoo.official/'),
     {
         content: "Check if the result is correct before removing",
         trigger: "iframe .s_social_media" +
@@ -97,21 +97,22 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
                  ":has(a:eq(3)[href='/website/social/instagram'])" +
                  ":has(a:eq(4)[href='/website/social/github'])" +
-                 ":has(a:eq(5)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube))" +
-                 ":has(a:eq(6)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
-                 ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
+                 ":has(a:eq(5)[href='/website/social/tiktok'])" +
+                 ":has(a:eq(6)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube))" +
+                 ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
+                 ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
         run: () => {}, // This is a check.
     },
     // Create a custom link, not officially supported, ensure icon is found.
     {
         content: 'Change custom social to unsupported link',
-        trigger: 'we-list table input:eq(5)',
+        trigger: 'we-list table input:eq(6)',
         run: 'text_blur https://www.paypal.com/abc',
     },
     {
         content: "Ensure paypal icon is found",
         trigger: "iframe .s_social_media" +
-                 ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
+                 ":has(a:eq(6)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
         run: () => {}, // This is a check.
     },
     ...preventRaceConditionStep,
@@ -122,7 +123,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Ensure custom link was removed",
-        trigger: 'iframe .s_social_media:has(a:eq(5)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
+        trigger: 'iframe .s_social_media:has(a:eq(6)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
         run: () => {}, // This is a check.
     },
     {
@@ -138,9 +139,10 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
                  ":has(a:eq(3)[href='/website/social/instagram'])" +
                  ":has(a:eq(4)[href='/website/social/github'])" +
-                 ":has(a:eq(5)[href='/website/social/facebook'])" +
-                 ":has(a:eq(6)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
-                 ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
+                 ":has(a:eq(5)[href='/website/social/tiktok'])" +
+                 ":has(a:eq(6)[href='/website/social/facebook'])" +
+                 ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
+                 ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
         run: () => {}, // This is a check.
     },
     {

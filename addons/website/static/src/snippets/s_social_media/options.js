@@ -255,7 +255,7 @@ options.registry.SocialMedia = options.Class.extend({
                 model: 'website',
                 method: 'read',
                 args: [websiteId, ['social_facebook', 'social_twitter', 'social_linkedin',
-                    'social_youtube', 'social_instagram', 'social_github']],
+                    'social_youtube', 'social_instagram', 'social_github', 'social_tiktok']],
             }).then(function (values) {
                 [dbSocialValues] = values;
                 delete dbSocialValues.id;
@@ -270,13 +270,12 @@ options.registry.SocialMedia = options.Class.extend({
      * @return {String} The social network to which the url leads to.
      */
     _findRelevantSocialMedia(url) {
+        // Note that linkedin, twitter, github and tiktok will also work because
+        // the url will match the good icon so we don't need a specific regex.
         const supportedSocialMedia = [
             ['facebook', /^(https?:\/\/)(www\.)?(facebook|fb|m\.facebook)\.(com|me).*$/],
-            ['twitter', /^(https?:\/\/)((www\.)?twitter\.com).*$/],
             ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be).*$/],
             ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com).*$/],
-            ['linkedin', /^(https?:\/\/)((www\.)?linkedin\.com).*$/],
-            ['github', /^(https?:\/\/)((www\.)?github\.com).*$/],
         ];
         for (const [socialMedia, regex] of supportedSocialMedia) {
             if (regex.test(url)) {
