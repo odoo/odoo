@@ -2,7 +2,7 @@
 
 from odoo import _, models, Command
 from odoo.tools import float_repr
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
 
 from zeep import Client
@@ -110,6 +110,16 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
+
+    def _validate_taxes(self, invoice):
+        """ Validate the structure of the tax repartition lines (invalid structure could lead to unexpected results)
+        """
+        for tax in invoice.invoice_line_ids.tax_ids:
+            try:
+                tax._validate_repartition_lines()
+            except ValidationError as e:
+                error_msg = _("Tax '%s' is invalid: %s", tax.name, e.args[0])  # args[0] gives the error message
+                raise ValidationError(error_msg)
 
     def _get_tax_unece_codes(self, invoice, tax):
         """
