@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
-"PO-Revision-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"PO-Revision-Date: 2023-03-23 09:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
@@ -727,11 +726,6 @@ msgid "<p>Create a public or private channel.</p>"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-msgid "<span class=\"col-md-5 col-lg-4 col-sm-12 ps-0\">Force a language: </span>"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
 msgstr ""
@@ -769,6 +763,26 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
+msgid "<span>If this was done by you:</span><br/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
+msgid "<span>If this was not done by you:</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
+msgid "<span>Open Record</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
+msgid "<span>We suggest you start by</span>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
@@ -778,11 +792,6 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
 msgstr ""
 
 #. module: mail
@@ -934,6 +943,13 @@ msgid "Access restricted to group \"%(groupFullName)s\""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid "Account"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Action"
@@ -945,6 +961,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_needaction
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
@@ -998,7 +1015,7 @@ msgid "Active"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__active_domain
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain
 msgid "Active domain"
 msgstr ""
 
@@ -1186,6 +1203,11 @@ msgid "Add or join a channel"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
+msgid "Add signature"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
@@ -1294,6 +1316,13 @@ msgid "All"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_resend_message.py:0
+#, python-format
+msgid "All partners must belong to the same message"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -1360,8 +1389,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1490,6 +1519,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "At this point lang should be correctly set"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Attach a file"
 msgstr ""
@@ -1513,6 +1549,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
@@ -1729,6 +1766,20 @@ msgid "Base Templates"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_batch
+msgid "Batch composition"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Batch log cannot support attachments or tracking values on more than 1 "
+"document"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
@@ -1787,6 +1838,12 @@ msgid "Body"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
+msgid "Body content is the same as tmeplate"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
@@ -1798,6 +1855,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
+#: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_bounce
 msgid "Bounce"
 msgstr ""
 
@@ -2144,14 +2202,14 @@ msgid "Chats"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
-#: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
-msgid "Child Messages"
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
+msgid "Check Exclusion List"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-msgid "Choose an example"
+#: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
+msgid "Child Messages"
 msgstr ""
 
 #. module: mail
@@ -2309,9 +2367,8 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
-#: code:addons/mail/static/src/models/mail_template.js:0
 #: code:addons/mail/static/src/models/composer_view.js:0
+#: code:addons/mail/static/src/models/mail_template.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2417,6 +2474,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Contact"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
+msgid "Contact your administrator"
 msgstr ""
 
 #. module: mail
@@ -2751,6 +2813,7 @@ msgid "Deafen"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
@@ -2869,11 +2932,6 @@ msgid "Delete Emails"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
-msgid "Delete Message Copy"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
 msgstr ""
@@ -2883,6 +2941,13 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_compose_message.py:0
+#, python-format
+msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
 msgstr ""
 
 #. module: mail
@@ -3027,13 +3092,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete_message
-msgid ""
-"Do not keep a copy of the email in the document communication history (mass "
-"mailing only)"
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/attachment_delete_confirm_view.js:0
 #, python-format
@@ -3147,7 +3205,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Due in %s days"
@@ -3181,6 +3238,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
 msgid "Duration of voice activity in ms"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template__report_template_ids
+msgid "Dynamic Reports"
 msgstr ""
 
 #. module: mail
@@ -3256,7 +3318,6 @@ msgid "Email"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_add_signature
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_add_signature
 msgid "Email Add Signature"
@@ -3303,6 +3364,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
+#: model:ir.model.fields,field_description:mail.field_mail_template__email_layout_xmlid
 msgid "Email Notification Layout"
 msgstr ""
 
@@ -3571,25 +3633,27 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render QWeb template : %s)"
+msgid "Failed to render QWeb template : %(template_src)s)"
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render inline_template template : %s)"
+msgid "Failed to render inline_template template : %(template_txt)s)"
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %s"
+msgid "Failed to render template : %(view_ref)s"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
+#: model:ir.model.fields,field_description:mail.field_mail_resend_partner__failure_reason
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
 msgstr ""
@@ -3630,13 +3694,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__starred_partner_ids
 msgid "Favorited By"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
-#, python-format
-msgid "Feedback"
 msgstr ""
 
 #. module: mail
@@ -3757,6 +3814,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
@@ -3770,6 +3828,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
@@ -3827,6 +3886,11 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Force Send"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
+msgid "Force a Language:"
 msgstr ""
 
 #. module: mail
@@ -4064,6 +4128,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__has_message
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__has_message
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__has_message
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__has_message
 #: model:ir.model.fields,field_description:mail.field_res_partner__has_message
 #: model:ir.model.fields,field_description:mail.field_res_users__has_message
 msgid "Has Message"
@@ -4313,6 +4378,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
@@ -4324,6 +4390,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_has_error
+#: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_has_error
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
@@ -4334,11 +4401,6 @@ msgstr ""
 msgid ""
 "If set every modification done to this field is tracked in the chatter. "
 "Value is used to order tracking values."
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_mail__to_delete
-msgid "If set, the mail will be deleted during the next Email Queue CRON run."
 msgstr ""
 
 #. module: mail
@@ -4439,6 +4501,14 @@ msgid "Image is a link"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__scheduled_date
+msgid ""
+"In comment mode: if set, postpone notifications sending. In mass mail mode: "
+"if sent, send emails after that date. This date is considered as being in "
+"UTC timezone."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -4533,6 +4603,13 @@ msgid "Invalid"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_compose_message.py:0
+#, python-format
+msgid "Invalid domain %(domain)r (type %(domain_type)s)"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_invalid
 msgid "Invalid email address"
@@ -4564,11 +4641,51 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/wizard/mail_compose_message.py:0
+#, python-format
+msgid "Invalid res_ids %(res_ids_str)s (type %(res_ids_type)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid ""
-"Invalid server name !\n"
+"Invalid server name!\n"
 " %s"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Invalid template or view source %(svalue)s (type %(stype)s), should be a "
+"record or an XMLID"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Invalid template or view source Xml ID %(source_ref)s does not exist anymore"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Invalid template or view source record %(svalue)s, is %(model)s instead"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
 
 #. module: mail
@@ -4662,6 +4779,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
@@ -4680,6 +4798,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_is_log
+msgid "Is a log"
 msgstr ""
 
 #. module: mail
@@ -5017,8 +5140,19 @@ msgid "Keep Attachments"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
+msgid "Keep Message Copy"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__original
 msgid "Keep Original"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete_keep_log
+msgid ""
+"Keep a copy of the email content if emails are removed (mass mailing only)"
 msgstr ""
 
 #. module: mail
@@ -5312,11 +5446,6 @@ msgid "Log an internal note..."
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
-msgid "Log as Internal Note"
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter/chatter.xml:0
 #: code:addons/mail/static/src/models/composer_view.js:0
@@ -5421,6 +5550,11 @@ msgid "Mail Layout"
 msgstr ""
 
 #. module: mail
+#: model:ir.model,name:mail.model_mail_thread_main_attachment
+msgid "Mail Main Attachment management"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
 msgid "Mail Message Id Int"
 msgstr ""
@@ -5473,6 +5607,15 @@ msgid "Mail Tracking Value"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_compose_message.py:0
+#, python-format
+msgid ""
+"Mail composer in comment mode should run on at least one record. No records "
+"found (model %(model_name)s)."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
 msgid "Mail has been created to notify people of an existing mail.message"
 msgstr ""
@@ -5507,25 +5650,27 @@ msgid "Mailboxes"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Mailing or posting with a source should not be called with an empty "
+"%(source_type)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_ids
 msgid "Mails"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_main_attachment_id
-#: model:ir.model.fields,field_description:mail.field_mail_channel__message_main_attachment_id
-#: model:ir.model.fields,field_description:mail.field_mail_thread__message_main_attachment_id
-#: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_main_attachment_id
-#: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_main_attachment_id
-#: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
-#: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tools/debug_manager.js:0
 #: code:addons/mail/static/src/js/tools/debug_manager.js:0
 #, python-format
 msgid "Manage Messages"
@@ -5656,6 +5801,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_has_error
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
@@ -5683,7 +5829,6 @@ msgid "Message Reactions"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
 #: model:ir.model.fields,field_description:mail.field_mail_mail__record_name
 #: model:ir.model.fields,field_description:mail.field_mail_message__record_name
 msgid "Message Record Name"
@@ -5786,6 +5931,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_ids
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
@@ -6026,13 +6172,6 @@ msgid "Name"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_template__report_name
-msgid ""
-"Name to use for the generated report file (may contain placeholders)\n"
-"The extension can be omitted and will then come from the report type."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__needaction
 #: model:ir.model.fields,field_description:mail.field_mail_message__needaction
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -6117,10 +6256,7 @@ msgid "Next Activities"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-#, python-format
 msgid "Next Activity"
 msgstr ""
 
@@ -6315,6 +6451,7 @@ msgid "Note"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_resend_partner__notification_id
 #: model:ir.model.fields,field_description:mail.field_res_users__notification_type
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -6334,6 +6471,33 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
 msgid "Notification Type"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Notification should receive attachments as a list of list or tuples "
+"(received %(aids)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Notification should receive attachments records as a list of IDs (received "
+"%(aids)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Notification should receive partners given as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
 
 #. module: mail
@@ -6357,21 +6521,12 @@ msgid "Notifications"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify
-msgid "Notify followers"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_compose_message__notify
-msgid "Notify followers of the document (mass post only)"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
@@ -6390,6 +6545,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of errors"
@@ -6401,6 +6557,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
@@ -6412,6 +6569,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -6632,7 +6790,9 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Only users belonging to the \"%s\" group can modify dynamic templates."
+msgid ""
+"Only users belonging to the \"%(group_name)s\" group can modify dynamic "
+"templates."
 msgstr ""
 
 #. module: mail
@@ -6669,13 +6829,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/models/message_view.js:0
-#, python-format
-msgid "Open profile"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/models/call_systray_menu.js:0
 #, python-format
 msgid "Open conference: %s"
@@ -6686,6 +6839,13 @@ msgstr ""
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Open in Discuss"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
 msgstr ""
 
 #. module: mail
@@ -6727,11 +6887,6 @@ msgstr ""
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_template__report_template
-msgid "Optional report to print and attach"
 msgstr ""
 
 #. module: mail
@@ -6896,6 +7051,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__partner_id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_id
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__partner_id
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "Partner"
 msgstr ""
 
@@ -6908,6 +7064,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
+#: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
 msgstr ""
 
@@ -7074,11 +7231,6 @@ msgid "Post as Note"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
-msgid "Post on Multiple Documents"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
 msgid "Post on a document"
 msgstr ""
@@ -7104,8 +7256,26 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid ""
-"Posting a message with channels as listeners is not supported since Odoo "
-"14.3+. Please update code accordingly."
+"Posting a message should receive attachments as a list of list or tuples "
+"(received %(aids)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Posting a message should receive attachments records as a list of IDs "
+"(received %(aids)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Posting a message should receive partners as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
 
 #. module: mail
@@ -7384,6 +7554,11 @@ msgid "Recipients"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
 msgstr ""
@@ -7391,6 +7566,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
 msgid "Record"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
+msgid "Record Name"
 msgstr ""
 
 #. module: mail
@@ -7448,12 +7628,16 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_id
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_id
 msgid "Related Document ID"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_ids
+msgid "Related Document IDs"
 msgstr ""
 
 #. module: mail
@@ -7536,6 +7720,15 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_composer_mixin.py:0
+#, python-format
+msgid ""
+"Rendering of %(field_name)s is not possible as no counterpart on template."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_composer_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid ""
@@ -7590,8 +7783,10 @@ msgid "Replying to"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_template__report_name
-msgid "Report Filename"
+#. odoo-python
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "Report"
 msgstr ""
 
 #. module: mail
@@ -7602,6 +7797,16 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
 msgid "Res Users Settings"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
+msgid "Resend"
+msgstr ""
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_resend_partner_action
+msgid "Resend Email"
 msgstr ""
 
 #. module: mail
@@ -7632,8 +7837,14 @@ msgid "Reset Zoom (0)"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
+msgid "Resetting Your Password"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 msgid "Responsible"
 msgstr ""
 
@@ -7671,7 +7882,7 @@ msgid "Review All Templates"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
 msgstr ""
 
@@ -7837,6 +8048,7 @@ msgid "Schedule an activity"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__scheduled_date
 msgid "Scheduled Date"
@@ -7946,6 +8158,32 @@ msgstr ""
 #: code:addons/mail/static/src/views/activity/activity_controller.js:0
 #, python-format
 msgid "Search: %s"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid "Security Update: Email Changed"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid "Security Update: Login Changed"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid "Security Update: Password Changed"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+msgid "See Error Details"
 msgstr ""
 
 #. module: mail
@@ -8063,6 +8301,11 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__force_send
+msgid "Send mailing or notifications directly"
 msgstr ""
 
 #. module: mail
@@ -8710,14 +8953,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Template rendering for language should be called with a list of IDs."
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_render_mixin.py:0
-#, python-format
-msgid "Template rendering should be called only using on a list of IDs."
+msgid ""
+"Template rendering should be called only using on a list of IDs; received "
+"%(res_ids)r instead."
 msgstr ""
 
 #. module: mail
@@ -8726,7 +8964,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
-"or raw)."
+"or raw); received %(engine)s instead."
 msgstr ""
 
 #. module: mail
@@ -8739,6 +8977,16 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Test & Confirm"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
+msgid "Test Record:"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+msgid "Text Contents"
 msgstr ""
 
 #. module: mail
@@ -8771,8 +9019,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
 
 #. module: mail
@@ -8828,13 +9077,6 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_composer_mixin.py:0
-#, python-format
-msgid "The field %s does not exist on the model %s"
 msgstr ""
 
 #. module: mail
@@ -9023,7 +9265,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/backend_components/activity_exception/activity_exception.xml:0
-#: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "This record has an exception activity."
 msgstr ""
@@ -9033,6 +9274,22 @@ msgstr ""
 #: code:addons/mail/models/mail_channel_member.py:0
 #, python-format
 msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid ""
+"Those values are not supported as options when rendering: %(param_names)s"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
 
 #. module: mail
@@ -9047,6 +9304,11 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #, python-format
 msgid "Thread Image"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
+msgid "Thread-Enabled"
 msgstr ""
 
 #. module: mail
@@ -9106,11 +9368,6 @@ msgid "To (Partners)"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__to_delete
-msgid "To Delete"
-msgstr ""
-
-#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To Do"
 msgstr ""
@@ -9127,7 +9384,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/backend_components/activity_list_view/activity_list_view.xml:0
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
-#: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -9167,7 +9423,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Tomorrow"
@@ -9555,13 +9810,15 @@ msgid "Use a local script to fetch your emails and create new records."
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
-msgid "Use active domain"
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Use an Outlook Server"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Use an Outlook Server"
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "Use message_notify to send a notification to an user."
 msgstr ""
 
 #. module: mail
@@ -9572,6 +9829,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
+msgid "Used as context used to evaluate composer domain"
 msgstr ""
 
 #. module: mail
@@ -9839,7 +10101,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/list_field_activity_view.js:0
 #, python-format
 msgid "Warning"
@@ -9923,7 +10184,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #: code:addons/mail/static/src/models/message.js:0
 #, python-format
@@ -10024,6 +10284,11 @@ msgstr ""
 #: code:addons/mail/static/src/models/user.js:0
 #, python-format
 msgid "You can only open the profile of existing users."
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
+msgid "You can safely ignore this message"
 msgstr ""
 
 #. module: mail
@@ -10131,6 +10396,28 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Your"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid ""
+"Your account email has been changed from %(old_email)s to %(new_email)s."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid "Your account login has been updated"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#, python-format
+msgid "Your account password has been updated"
 msgstr ""
 
 #. module: mail
@@ -16001,8 +16288,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -23916,31 +24203,6 @@ msgid "merwoman"
 msgstr ""
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_thread.py:0
-#, python-format
-msgid ""
-"message_post does not support model and res_id parameters anymore. Please "
-"call message_post on record."
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_thread.py:0
-#, python-format
-msgid ""
-"message_post does not support subtype parameter anymore. Please give a valid"
-" subtype_id or subtype_xmlid value instead."
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_thread.py:0
-#, python-format
-msgid "message_post partner_ids and must be integer list, not commands."
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -28152,11 +28414,6 @@ msgid "record button"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-msgid "record:"
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -32143,6 +32400,13 @@ msgid "teller"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "template"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -33664,6 +33928,13 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "videocassette"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "view"
 msgstr ""
 
 #. module: mail
