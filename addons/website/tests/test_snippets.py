@@ -17,7 +17,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_empty_parent_autoremove', login='admin')
 
     def test_02_default_shape_gets_palette_colors(self):
-        self.start_tour('/@/?enable_editor=1', "default_shape_gets_palette_colors", login='admin')
+        self.start_tour('/@/', 'default_shape_gets_palette_colors', login='admin')
 
     def test_03_snippets_all_drag_and_drop(self):
         with MockRequest(self.env, website=self.env['website'].browse(1)):

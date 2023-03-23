@@ -2,7 +2,7 @@ odoo.define('website.tour.focus_blur_snippets', function (require) {
 'use strict';
 
 const { loadJS } = require('@web/core/assets');
-const { registry } = require("@web/core/registry");
+const wTourUtils = require("website.tour_utils");
 
 const blockIDToData = {
     parent: {
@@ -50,13 +50,14 @@ function clickAndCheck(blockID, expected) {
 
 window.focusBlurSnippetsResult = [];
 
-registry.category("web_tour.tours").add('focus_blur_snippets', {
+wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     test: true,
-    url: '/?enable_editor=1',
-    steps: [
+    url: "/",
+    edition: true,
+}, [
     {
         content: 'First load our custom JS options',
-        trigger: '#oe_snippets.o_loaded',
+        trigger: "body",
         run: function () {
             loadJS('/website/static/tests/tour_utils/focus_blur_snippets_options.js').then(function () {
                 $('iframe:not(.o_ignore_in_tour)').contents().find('body').addClass('focus_blur_snippets_options_loaded');
@@ -78,5 +79,5 @@ registry.category("web_tour.tours").add('focus_blur_snippets', {
     ...clickAndCheck('child1', ['blur parent', 'focus parent', 'focus child1']),
     ...clickAndCheck('child2', ['blur parent', 'blur child1', 'focus parent', 'focus child2']),
     ...clickAndCheck('parent', ['blur parent', 'blur child2', 'focus parent']),
-]});
+]);
 });

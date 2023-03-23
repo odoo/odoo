@@ -11,7 +11,6 @@ odoo.define('website_crm.tour', function(require) {
     }, [{
         content: "Select contact form",
         trigger: "iframe #wrap.o_editable section.s_website_form",
-        extra_trigger: "iframe body.editor_enable",
     }, {
         content: "Open action select",
         trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
