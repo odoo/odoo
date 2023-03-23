@@ -8,7 +8,7 @@ tour.register("snippet_image_gallery", {
     test: true,
     url: "/",
 }, [
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
