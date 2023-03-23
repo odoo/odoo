@@ -67,6 +67,10 @@ class TestHttp(http.Controller):
     def echo_http_csrf(self, **kwargs):
         return str(kwargs)
 
+    @http.route('/test_http/echo-http-context-lang', type='http', auth='public', methods=['GET'], csrf=False)
+    def echo_http_context_lang(self, **kwargs):
+        return request.env.context.get('lang', '')
+
     @http.route('/test_http/echo-json', type='json', auth='none', methods=['POST'], csrf=False)
     def echo_json(self, **kwargs):
         return kwargs

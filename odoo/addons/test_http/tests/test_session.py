@@ -88,3 +88,46 @@ class TestHttpSession(TestHttpBase):
         res = self.multidb_url_open('/test_http/greeting-user')
         res.raise_for_status()
         self.assertEqual(res.status_code, 200, "Should not be redirected to /web/login")
+
+    def test_session5_default_lang(self):
+        self.env['res.lang']._activate_lang('en_US')  # default lang
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+
+        with self.subTest(case='no preferred lang'):
+            res = self.url_open('/test_http/echo-http-context-lang')
+            self.assertEqual(res.text, 'en_US')
+
+        with self.subTest(case='fr preferred and fr_FR enabled'):
+            res = self.url_open('/test_http/echo-http-context-lang', headers={
+                'Accept-Language': 'fr',
+            })
+            self.assertEqual(res.text, 'fr_FR')
+
+        with self.subTest(case='fr preferred but fr_FR disabled'):
+            lang_fr.active = False
+            res = self.url_open('/test_http/echo-http-context-lang', headers={
+                'Accept-Language': 'fr',
+            })
+            self.assertEqual(res.text, 'en_US')
+
+    def test_session6_saved_lang(self):
+        session = self.authenticate('demo', 'demo')
+        self.env['res.lang']._activate_lang('en_US')  # default lang
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+
+        with self.subTest(case='no saved lang'):
+            res = self.url_open('/test_http/echo-http-context-lang')
+            self.assertEqual(res.text, 'en_US')
+
+        with self.subTest(case='fr saved and fr_FR enabled'):
+            session.context['lang'] = 'fr_FR'
+            odoo.http.root.session_store.save(session)
+            res = self.url_open('/test_http/echo-http-context-lang')
+            self.assertEqual(res.text, 'fr_FR')
+
+        with self.subTest(case='fr saved but fr_FR disabled'):
+            session['lang'] = 'fr_FR'
+            odoo.http.root.session_store.save(session)
+            lang_fr.active = False
+            res = self.url_open('/test_http/echo-http-context-lang')
+            self.assertEqual(res.text, 'en_US')
