@@ -219,27 +219,28 @@ class IrHttp(models.AbstractModel):
             modules = self.pool._init_modules
         if not lang:
             lang = self._context.get("lang")
-        langs = self.env['res.lang']._lang_get(lang)
-        lang_params = None
-        if langs:
-            lang_params = {
-                "name": langs.name,
-                "direction": langs.direction,
-                "date_format": langs.date_format,
-                "time_format": langs.time_format,
-                "grouping": langs.grouping,
-                "decimal_point": langs.decimal_point,
-                "thousands_sep": langs.thousands_sep,
-                "week_start": langs.week_start,
-            }
-            lang_params['week_start'] = int(lang_params['week_start'])
-            lang_params['code'] = lang
+        res_lang = self.env['res.lang']._lang_get(lang)
+        if not res_lang:
+            return None, None
+
+        lang_params = {
+            'name': res_lang.name,
+            'direction': res_lang.direction,
+            'date_format': res_lang.date_format,
+            'time_format': res_lang.time_format,
+            'grouping': res_lang.grouping,
+            'decimal_point': res_lang.decimal_point,
+            'thousands_sep': res_lang.thousands_sep,
+            'week_start': int(res_lang.week_start),
+            'code': res_lang.code
+        }
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
-        translations_per_module = {}
-        for module in modules:
-            translations_per_module[module] = code_translations.get_web_translations(module, lang)
+        translations_per_module = {
+            module: code_translations.get_web_translations(module, res_lang.code)
+            for module in modules
+        }
 
         return translations_per_module, lang_params
 

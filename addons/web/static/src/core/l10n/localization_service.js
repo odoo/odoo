@@ -45,6 +45,10 @@ export const localizationService = {
             multi_lang: multiLang,
         } = await response.json();
 
+        if (!userLocalization) {
+            throw new Error("Language (" + lang + ") is not available");
+        }
+
         // FIXME We flatten the result of the python route.
         // Eventually, we want a new python route to return directly the good result.
         const terms = {};
