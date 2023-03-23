@@ -20,12 +20,7 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
         trigger: '.o_website_preview[data-view-xmlid="website.contactus"]',
         run: () => null, // it's a check
     },
-    wTourUtils.clickOnEdit(),
-    {
-        content: "wait for edition to be started",
-        trigger: 'iframe body.editor_enable',
-        run: () => null, // it's a check
-    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "click on a link that would trigger navigation",
         trigger: 'iframe a[href="/"]',

@@ -33,7 +33,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     },
 },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     content: "Modify the version of snippets",
     trigger: '#oe_snippets .o_panel_body > .oe_snippet',
