@@ -186,8 +186,10 @@ class ReportMoOverview(models.AbstractModel):
 
     def _format_component_move(self, production, move_raw, replenishments, company, replenish_data, level, index):
         product = move_raw.product_id
-        mo_cost = sum(rep.get('summary', {}).get('mo_cost', 0.0) for rep in replenishments)
-        product_cost = product.standard_price * move_raw.product_qty
+        replenish_mo_cost = sum(rep.get('summary', {}).get('mo_cost', 0.0) for rep in replenishments)
+        replenish_quantity = sum(rep.get('summary', {}).get('quantity', 0.0) for rep in replenishments)
+        missing_quantity = move_raw.product_uom_qty - replenish_quantity
+        mo_cost = replenish_mo_cost + (product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
         component = {
             'level': level,
             'index': index,
@@ -203,8 +205,8 @@ class ReportMoOverview(models.AbstractModel):
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, move_raw.product_uom) if product.type == 'product' else False,
             'quantity_reserved': self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data),
             'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
-            'mo_cost': company.currency_id.round(mo_cost if replenishments else product_cost),
-            'product_cost': company.currency_id.round(product_cost),
+            'mo_cost': company.currency_id.round(mo_cost),
+            'product_cost': company.currency_id.round(product.standard_price * move_raw.product_qty),
             'currency_id': company.currency_id.id,
             'currency': company.currency_id,
         }
@@ -276,7 +278,7 @@ class ReportMoOverview(models.AbstractModel):
                 'quantity': min(move_raw.product_uom_qty, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom)),  # Avoid over-rounding
                 'uom_name': move_raw.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(forecast_line['uom_id']['rounding']),
-                'mo_cost': self._get_replenishment_cost(product, forecast_line['quantity'], forecast_uom_id, currency, forecast_line['move_in']),
+                'mo_cost': forecast_line.get('cost', self._get_replenishment_cost(product, forecast_line['quantity'], forecast_uom_id, currency, forecast_line.get('move_in'))),
                 'product_cost': currency.round(forecast_uom_id._compute_quantity(forecast_line['quantity'], product.uom_id) * product.standard_price),
                 'currency_id': currency.id,
                 'currency': currency,
@@ -400,7 +402,11 @@ class ReportMoOverview(models.AbstractModel):
                     continue
                 if production_id and extra.get('production_id', False) and extra['production_id'] != production_id:
                     continue
-                taken_from_extra = min(line_qty, extra['uom']._compute_quantity(extra['quantity'], forecast_line['uom_id']))
+                if 'init_quantity' not in extra:
+                    extra['init_quantity'] = extra['quantity']
+                converted_qty = extra['uom']._compute_quantity(extra['quantity'], forecast_line['uom_id'])
+                taken_from_extra = min(line_qty, converted_qty)
+                ratio = taken_from_extra / extra['uom']._compute_quantity(extra['init_quantity'], forecast_line['uom_id'])
                 line_qty -= taken_from_extra
                 # Create copy of the current forecast line to add a possible replenishment.
                 # Needs to be a copy since it might take multiple replenishment to fulfill a single "out" line.
@@ -410,8 +416,9 @@ class ReportMoOverview(models.AbstractModel):
                     '_name': extra['_name'],
                     'id': extra['id'],
                 }
+                new_extra_line['cost'] = extra['cost'] * ratio
                 lines_with_extras.append(new_extra_line)
-                extra['quantity'] -= taken_from_extra
+                extra['quantity'] -= forecast_line['uom_id']._compute_quantity(taken_from_extra, extra['uom'])
                 if float_compare(extra['quantity'], 0, precision_rounding=product_rounding) <= 0:
                     index_to_remove.append(index)
                 if float_is_zero(line_qty, precision_rounding=product_rounding):

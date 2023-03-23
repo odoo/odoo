@@ -30,10 +30,14 @@ class ReportMoOverview(models.AbstractModel):
         return res
 
     def _format_extra_replenishment(self, po_line, quantity, production_id=False):
+        po = po_line.order_id
+        price = po_line.taxes_id.with_context(round=False).compute_all(
+            po_line.price_unit, currency=po.currency_id, quantity=quantity, product=po_line.product_id, partner=po.partner_id
+        )['total_void']
         return {
             '_name': 'purchase.order',
-            'id': po_line.order_id.id,
-            'cost': po_line.price_total,
+            'id': po.id,
+            'cost': price,
             'quantity': quantity,
             'uom': po_line.product_uom,
             'production_id': production_id
@@ -61,5 +65,11 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):
         if move_in and move_in.purchase_line_id:
-            return currency.round(move_in.purchase_line_id.price_unit * uom_id._compute_quantity(quantity, move_in.purchase_line_id.product_uom))
+            po_line = move_in.purchase_line_id
+            po = po_line.order_id
+            price = po_line.taxes_id.with_context(round=False).compute_all(
+                po_line.price_unit, currency=po.currency_id, quantity=uom_id._compute_quantity(quantity, move_in.purchase_line_id.product_uom),
+                product=po_line.product_id, partner=po.partner_id
+            )['total_void']
+            return currency.round(price)
         return super()._get_replenishment_cost(product, quantity, uom_id, currency, move_in)
