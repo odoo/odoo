@@ -49,7 +49,9 @@ class TestStockLot(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location
+            'location_dest_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         move_a = self.MoveObj.create({
@@ -145,6 +147,8 @@ class TestStockLot(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
 
         move_b = self.MoveObj.create({
@@ -192,6 +196,8 @@ class TestStockLot(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
 
         move_c = self.MoveObj.create({
@@ -336,9 +342,8 @@ class TestStockLot(TestStockCommon):
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
-            move.product_uom_qty = 4
+            move.quantity_done = 4
         receipt = picking_form.save()
-        receipt.action_confirm()
 
         # Defines a date during the receipt.
         move = receipt.move_ids_without_package[0]
@@ -346,7 +351,6 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(move.use_expiration_date, True)
         line.lot_name = 'Apple Box #3'
         line.expiration_date = expiration_date
-        line.qty_done = 4
 
         receipt._action_done()
         # Get back the lot created when the picking was done...

@@ -505,15 +505,11 @@ class TestTraceability(TestMrpCommon):
         moveA = self.env['stock.move'].create({
             'name': 'Picking A move',
             'product_id': endproductA.id,
-            'product_uom_qty': 1,
+            'quantity_done': 1,
             'product_uom': endproductA.uom_id.id,
             'picking_id': pickingA_out.id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id})
-
-        # Confirm and assign pickingA
-        pickingA_out.action_confirm()
-        pickingA_out.action_assign()
 
         # Set move_line lot_id to the mrp.production lot_producing_id
         moveA.move_line_ids[0].write({

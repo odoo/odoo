@@ -22,6 +22,7 @@ class StockPicking(models.Model):
             'move_type': 'direct',
             'location_id': location_id,
             'location_dest_id': location_dest_id,
+            'state': 'draft',
         }
 
 

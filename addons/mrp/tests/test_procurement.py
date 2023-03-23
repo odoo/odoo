@@ -455,6 +455,7 @@ class TestProcurement(TestMrpCommon):
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
+        pick_output.action_reset_draft()
         pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
         pick_output.action_assign()
 

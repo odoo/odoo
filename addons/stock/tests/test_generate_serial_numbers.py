@@ -507,6 +507,8 @@ class StockGenerate(StockGenerateCommon):
             'picking_type_id': self.warehouse.in_type_id.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move = self.env['stock.move'].create({
             'name': self.product_serial.name,

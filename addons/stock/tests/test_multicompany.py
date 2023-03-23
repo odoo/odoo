@@ -196,6 +196,8 @@ class TestMultiCompany(TransactionCase):
             'picking_type_id': self.warehouse_a.in_type_id.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.stock_location_a.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.assertEqual(picking.company_id, self.company_a)
         move1 = self.env['stock.move'].create({
@@ -555,6 +557,8 @@ class TestMultiCompany(TransactionCase):
             'picking_type_id': self.warehouse_a.out_type_id.id,
             'location_id': self.stock_location_a.id,
             'location_dest_id': customer_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_wha_to_cus = self.env['stock.move'].create({
             'name': "WH_A to Customer",

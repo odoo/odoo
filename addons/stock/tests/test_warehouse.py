@@ -283,6 +283,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': warehouse_shop.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
         })
+        picking_out.action_reset_draft()
         self.env['stock.move'].create({
             'name': product.name,
             'product_id': product.id,
@@ -365,6 +366,8 @@ class TestWarehouse(TestStockCommon):
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_namur.lot_stock_id.id,
             'location_dest_id': customer_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': product.name,
@@ -409,6 +412,8 @@ class TestWarehouse(TestStockCommon):
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
             'location_dest_id': customer_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': product.name,

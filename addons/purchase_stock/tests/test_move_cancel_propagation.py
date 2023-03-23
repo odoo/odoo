@@ -52,6 +52,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'ship_only', 'reception_steps': 'one_step'})
         self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
         self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
 
         # Find PO related to picking.
@@ -81,6 +82,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'ship_only', 'reception_steps': 'one_step'})
         self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
         self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
 
         # Find PO related to picking.
@@ -111,6 +113,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_ship', 'reception_steps': 'two_steps'})
         self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
         self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
 
         # Find purchase order related to picking.
@@ -145,6 +148,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_ship', 'reception_steps': 'two_steps'})
         self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
         self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
 
         # Find PO related to picking.
@@ -183,6 +187,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_pack_ship', 'reception_steps': 'three_steps'})
         self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
         self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
 
         # Find PO related to picking.
@@ -219,6 +224,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_pack_ship', 'reception_steps': 'three_steps'})
         self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
         self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
 
         # Find PO related to picking.

@@ -708,11 +708,8 @@ class TestUnbuild(TestMrpCommon):
         internal_form.location_dest_id = subloc01
         with internal_form.move_ids_without_package.new() as move:
             move.product_id = p_final
-            move.product_uom_qty = 1.0
+            move.quantity_done = 1.0
         internal_transfer = internal_form.save()
-        internal_transfer.action_confirm()
-        internal_transfer.action_assign()
-        internal_transfer.move_line_ids.qty_done = 1.0
         internal_transfer.button_validate()
 
         unbuild_order_form = Form(self.env['mrp.unbuild'])

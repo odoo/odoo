@@ -97,6 +97,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             })
 
         # Assign this outgoing shipment and process the delivery
+        outgoing_shipment.action_reset_draft()
         outgoing_shipment.action_assign()
         res = outgoing_shipment.button_validate()
         Form(self.env['stock.immediate.transfer'].with_context(res['context'])).save().process()

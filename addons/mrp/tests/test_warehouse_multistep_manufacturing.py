@@ -146,7 +146,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'location_dest_id': self.customer_location,
             'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
+
         self.env['stock.move'].create({
             'name': self.finished_product.name,
             'product_id': self.finished_product.id,
@@ -226,6 +229,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'location_dest_id': self.customer_location,
             'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': self.finished_product.name,
