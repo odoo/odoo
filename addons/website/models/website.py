@@ -18,7 +18,7 @@ from werkzeug.exceptions import NotFound
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.tools import similarity_score, text_from_html
+from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError, AccessError
@@ -295,6 +295,20 @@ class Website(models.Model):
         self._force()
         configurator_action_todo = self.env.ref('website.website_configurator_todo')
         return configurator_action_todo.action_launch()
+
+    def _is_indexable_url(self, url):
+        """
+        Returns True if the given url has to be indexed by search engines.
+        It is considered that the website must be indexed if the domain name
+        matches the URL. We check if they are equal while ignoring the www. and
+        http(s). This is to index the site even if the user put the www. in the
+        settings while he has a configuration that redirects the www. to the
+        naked domain for example (same thing for http and https).
+
+        :param url: the url to check
+        :return: True if the url has to be indexed, False otherwise
+        """
+        return get_base_domain(url, True) == get_base_domain(self.domain, True)
 
     # ----------------------------------------------------------
     # Configurator
@@ -991,7 +1005,7 @@ class Website(models.Model):
             is host:port in the version of `url_parse` we use."""
             # Here we add http:// to the domain if it's not set because
             # `url_parse` expects it to be set to correctly return the `netloc`.
-            website_domain = urls.url_parse(website.domain or '').netloc
+            website_domain = get_base_domain(website.domain)
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)
