@@ -78,7 +78,7 @@ class MailTracking(models.Model):
                 'old_value_char': initial_value and initial_value.sudo().name_get()[0][1] or '',
                 'new_value_char': new_value and new_value.sudo().name_get()[0][1] or ''
             })
-        else:
+        elif col_info['type'] != 'binary':
             tracked = False
 
         if tracked:

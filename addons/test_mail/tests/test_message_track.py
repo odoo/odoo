@@ -262,6 +262,32 @@ class TestTracking(TestMailCommon):
             ('container_id', 'many2one', False, container),
         ])
 
+    def test_tracked_binary(self):
+        # Test: Check that a tracked binary field creates trackings without values when modified
+        # no tracking at creation
+        record = self.env['mail.test.track.binary'].create({'name': ''})
+        self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 1)
+        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 0)
+
+        # tracking when setting the value
+        record.write({'picture': b'Y29vbF9waG90bw=='})
+        self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 2)
+        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 1)
+        self.assertTracking(record.message_ids[0], [
+            ('picture', 'char', False, False),
+        ])
+
+        # tracking when changing the value
+        record.write({'picture': b'YXdlc29tZV9waG90bw=='})
+        self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 3)
+        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 1)
+        self.assertTracking(record.message_ids[0], [
+            ('picture', 'char', False, False),
+        ])
+
     def test_tracked_compute(self):
         # no tracking at creation
         record = self.env['mail.test.track.compute'].create({})

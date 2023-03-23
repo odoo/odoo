@@ -54,6 +54,15 @@ class MailTestFieldType(models.Model):
         return super(MailTestFieldType, self).create(vals_list)
 
 
+class MailTestTrackBinary(models.Model):
+    _name = 'mail.test.track.binary'
+    _description = "Test tracking with binary field"
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    picture = fields.Binary(tracking=True)
+
+
 class MailTestTrackCompute(models.Model):
     _name = 'mail.test.track.compute'
     _description = "Test tracking with computed fields"
