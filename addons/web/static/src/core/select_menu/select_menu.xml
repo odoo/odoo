@@ -12,13 +12,20 @@
             onScroll.bind="onScroll"
         >
             <t t-set-slot="toggler">
-                <span class="o_select_menu_toggler_slot text-start">
-                    <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
-                    <t t-else="" t-slot="default" />
-                </span>
-                <span t-if="canClear()" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
-                    <i class="fa fa-times"></i>
-                </span>
+                <t t-if="props.multiSelect">
+                    <div class="text-wrap text-start">
+                        <TagsList tags="multiSelectChoices"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <span class="o_select_menu_toggler_slot text-start text-truncate">
+                        <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
+                        <t t-else="" t-slot="default" />
+                    </span>
+                    <span t-if="canClear()" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
+                        <i class="fa fa-times"></i>
+                    </span>
+                </t>
                 <span class="o_select_menu_toggler_caret p-0 m-0">
                     <i class="fa fa-caret-down"></i>
                 </span>
@@ -45,7 +52,7 @@
                 </div>
                 <DropdownItem
                     t-if="!choice.isGroup"
-                    onSelected="() => this.props.onSelect(choice.value)"
+                    onSelected="() => this.onItemSelected(choice.value)"
                     class="getItemClass(choice)"
                 >
                     <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>

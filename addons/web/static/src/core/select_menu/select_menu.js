@@ -8,16 +8,18 @@ import { shallowEqual } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";
 
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, TagsList };
 
     static defaultProps = {
         value: undefined,
         class: "",
         togglerClass: "",
+        multiSelect: false,
         onSelect: () => {},
         required: false,
         searchable: true,
@@ -64,6 +66,7 @@ export class SelectMenu extends Component {
         searchable: { type: Boolean, optional: true },
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
+        multiSelect: { type: Boolean, optional: true },
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -101,6 +104,24 @@ export class SelectMenu extends Component {
         return "";
     }
 
+    get multiSelectChoices() {
+        const choices = [
+            ...this.props.choices,
+            ...this.props.groups.flatMap((g) => g.choices),
+        ].filter((c) => this.props.value.includes(c.value));
+        return choices.map((c) => {
+            return {
+                id: c.value,
+                text: c.label,
+                onDelete: () => {
+                    const values = [...this.props.value];
+                    values.splice(values.indexOf(c.value), 1);
+                    this.props.onSelect(values);
+                },
+            };
+        });
+    }
+
     onOpened() {
         // Using useAutofocus inside the dropdown does not
         // work properly so we set the focus manually.
@@ -115,6 +136,9 @@ export class SelectMenu extends Component {
     }
 
     isOptionSelected(choice) {
+        if (this.props.multiSelect) {
+            return this.props.value.includes(choice.value);
+        }
         return this.props.value === choice.value;
     }
 
@@ -212,6 +236,14 @@ export class SelectMenu extends Component {
             return [];
         }
         return choices.flatMap((choice, index) => (index === 0 ? 0 : choice.isGroup ? index : []));
+    }
+
+    onItemSelected(value) {
+        if (this.props.multiSelect) {
+            this.props.onSelect([...this.props.value, value]);
+        } else {
+            this.props.onSelect(value);
+        }
     }
 
     // ==========================================================================================
