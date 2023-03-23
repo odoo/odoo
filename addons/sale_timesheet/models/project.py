@@ -55,7 +55,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
-    allocated_hours = fields.Float(compute='_compute_allocated_hours', store=True, readonly=False, copy=False)
+    allocated_hours = fields.Float(copy=False)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
