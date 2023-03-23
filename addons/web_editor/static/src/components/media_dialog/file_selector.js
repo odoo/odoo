@@ -136,6 +136,7 @@ FileSelectorControlPanel.components = {
 
 export class FileSelector extends Component {
     setup() {
+        this.notificationService = useService("notification");
         this.orm = useService('orm');
         this.uploadService = useService('upload');
         this.keepLast = new KeepLast();
@@ -256,7 +257,33 @@ export class FileSelector extends Component {
     }
 
     async uploadUrl(url) {
-        await this.uploadService.uploadUrl(url, { resModel: this.props.resModel, resId: this.props.resId }, attachment => this.onUploaded(attachment));
+        await fetch(url).then(async result => {
+            const blob = await result.blob();
+            blob.id = new Date().getTime();
+            blob.name = new URL(url).pathname.split("/").findLast(s => s);
+            await this.uploadFiles([blob]);
+        }).catch(async () => {
+            await new Promise(resolve => {
+                // If it works from an image, use URL.
+                const imageEl = document.createElement("img");
+                imageEl.onerror = () => {
+                    // This message is about the blob fetch failure.
+                    // It is only displayed if the fallback did not work.
+                    this.notificationService.add(this.env._t("An error occurred while fetching the entered URL."), {
+                        title: this.env._t("Error"),
+                        sticky: true,
+                    });
+                    resolve();
+                };
+                imageEl.onload = () => {
+                    this.uploadService.uploadUrl(url, {
+                        resModel: this.props.resModel,
+                        resId: this.props.resId,
+                    }, attachment => this.onUploaded(attachment)).then(resolve);
+                };
+                imageEl.src = url;
+            });
+        });
     }
 
     async onUploaded(attachment) {
