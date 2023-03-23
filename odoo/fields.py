@@ -3706,10 +3706,12 @@ class Properties(Field):
 
         dict_value = {}
         for property_definition in values_list:
-            property_value = property_definition.get('value') or False
+            property_value = property_definition.get('value')
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
 
+            if property_type not in ('integer', 'float') or property_value != 0:
+                property_value = property_value or False
             if property_type in ('many2one', 'many2many') and property_model and property_value:
                 # check that value are correct before storing them in database
                 if property_type == 'many2many' and property_value and not is_list_of(property_value, int):
