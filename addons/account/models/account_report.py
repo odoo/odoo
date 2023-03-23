@@ -591,7 +591,7 @@ class AccountReportExpression(models.Model):
 
         return totals_by_code
 
-    def _get_matching_tags(self):
+    def _get_matching_tags(self, sign=None):
         """ Returns all the signed account.account.tags records whose name matches any of the formulas of the tax_tags expressions contained in self.
         """
         tag_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
@@ -601,7 +601,7 @@ class AccountReportExpression(models.Model):
         or_domains = []
         for tag_expression in tag_expressions:
             country = tag_expression.report_line_id.report_id.country_id
-            or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id))
+            or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id, sign))
 
         return self.env['account.account.tag'].with_context(active_test=False).search(osv.expression.OR(or_domains))
 
