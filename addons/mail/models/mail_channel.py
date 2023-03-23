@@ -558,12 +558,12 @@ class Channel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
-    def _notify_thread(self, message, msg_vals=False, temporary_id=None, **kwargs):
+    def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
 
         message_format_values = message.message_format()[0]
-        bus_notifications = self._channel_message_notifications(message, message_format_values, temporary_id)
+        bus_notifications = self._channel_message_notifications(message, message_format_values)
         # Last interest and is_pinned are updated for a chat when posting a message.
         # So a notification is needed to update UI, and it should come before the
         # notification of the message itself to ensure the channel automatically opens.
@@ -717,15 +717,14 @@ class Channel(models.Model):
                     notifications.append((partner, 'mail.channel/legacy_insert', channel_info))
         return notifications
 
-    def _channel_message_notifications(self, message, message_format=False, temporary_id=None):
+    def _channel_message_notifications(self, message, message_format=False):
         """ Generate the bus notifications for the given message
             :param message : the mail.message to sent
-            :param temporary_id: temporary id of the message on the client side.
             :returns list of bus notifications (tuple (bus_channe, message_content))
         """
         message_format = dict(message_format or message.message_format()[0])
-        if temporary_id:
-            message_format['temporary_id'] = temporary_id
+        if 'temporary_id' in self.env.context:
+            message_format['temporary_id'] = self.env.context['temporary_id']
         notifications = []
         for channel in self:
             payload = {

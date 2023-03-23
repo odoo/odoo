@@ -57,14 +57,13 @@ QUnit.test("can post a message on a record thread", async (assert) => {
             if (route === "/mail/message/post") {
                 assert.step(route);
                 const expected = {
+                    context: args.context,
                     post_data: {
                         body: "hey",
                         attachment_ids: [],
                         message_type: "comment",
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_comment",
-                        // cannot predict which temporary id will be passed.
-                        temporary_id: args.post_data.temporary_id,
                     },
                     thread_id: partnerId,
                     thread_model: "res.partner",
@@ -95,14 +94,13 @@ QUnit.test("can post a note on a record thread", async (assert) => {
             if (route === "/mail/message/post") {
                 assert.step(route);
                 const expected = {
+                    context: args.context,
                     post_data: {
                         attachment_ids: [],
                         body: "hey",
                         message_type: "comment",
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_note",
-                        // cannot predict which temporary id will be passed.
-                        temporary_id: args.post_data.temporary_id,
                     },
                     thread_id: partnerId,
                     thread_model: "res.partner",

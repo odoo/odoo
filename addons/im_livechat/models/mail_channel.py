@@ -34,12 +34,12 @@ class MailChannel(models.Model):
             if record.channel_type == 'livechat':
                 record.is_chat = True
 
-    def _channel_message_notifications(self, message, message_format=False, temporary_id=None):
+    def _channel_message_notifications(self, message, message_format=False):
         """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
             should be added to the notification, since the user cannot be listining to the channel.
         """
-        notifications = super()._channel_message_notifications(message=message, message_format=message_format, temporary_id=temporary_id)
+        notifications = super()._channel_message_notifications(message=message, message_format=message_format)
         for channel in self:
             # add uuid to allow anonymous to listen
             if channel.channel_type == 'livechat':
