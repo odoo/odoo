@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -23,6 +24,9 @@ class SaleOrder(models.Model):
         for so in self:
             if not any(line.product_type == 'event' for line in so.order_line):
                 continue
+            for line in so.order_line:
+                if line.product_type == 'event' and not line.event_id:
+                    raise ValidationError(_('One or more events are not configured.'))
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
             if len(self) == 1:

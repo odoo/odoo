@@ -37,7 +37,11 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 });
                 if (result.has_optional_products) {
                     this._openProductConfigurator('options');
-                } else {
+                }
+                else if(this.props.record.data.product_type == 'event_booth') {
+                    this._onBoothProductUpdate();
+                }
+                else {
                     this._onProductUpdate();
                 }
             }
@@ -148,6 +152,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
             await this.props.record.update(await this._convertConfiguratorDataToUpdateData(mainProduct));
             this._onProductUpdate();
+            this._onBoothProductUpdate();
             const optionalProductLinesCreationContext = this._convertConfiguratorDataToLinesCreationContext(optionalProducts);
             for (let optionalProductLineCreationContext of optionalProductLinesCreationContext) {
                 const line = await saleOrderRecord.data.order_line.addNew({

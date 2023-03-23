@@ -22,3 +22,20 @@ class EventConfigurator(models.TransientModel):
                     _('Invalid ticket choice "%(ticket_name)s" for event "%(event_name)s".'))
         if error_messages:
             raise ValidationError('\n'.join(error_messages))
+
+    def action_configure_event(self):
+        self.ensure_one()
+
+        return {
+            "type": "ir.actions.act_window_close",
+            "infos": {
+                "eventConfiguration": {
+                    "event_id": [
+                        self.event_id.id,
+                        self.event_id.display_name],
+                    "event_ticket_id": [
+                        self.event_ticket_id.id,
+                        self.event_ticket_id.display_name],
+                },
+            },
+        }

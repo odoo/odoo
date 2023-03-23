@@ -81,6 +81,9 @@ class SaleOrderLine(models.Model):
         The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
         """
         super()._compute_name()
+        for line in self:
+            if line.product_type == 'event':
+                line.name = line._get_sale_order_line_multiline_description_sale()
 
     def unlink(self):
         self._unlink_associated_registrations()
@@ -98,8 +101,11 @@ class SaleOrderLine(models.Model):
                 So in that case we use the description computed from the ticket, instead of the description computed from the product.
                 We need this override to be defined here in sales order line (and not in product) because here is the only place where the event_ticket_id is referenced.
         """
-        if self.event_ticket_id:
-            return self.event_ticket_id._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
+        if self.product_type == 'event':
+            if self.event_ticket_id:
+                return self.event_ticket_id._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
+            else:
+                return 'please configure this event'
         else:
             return super()._get_sale_order_line_multiline_description_sale()
 

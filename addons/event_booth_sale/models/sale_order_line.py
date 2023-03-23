@@ -38,6 +38,8 @@ class SaleOrderLine(models.Model):
 
     def _inverse_event_booth_pending_ids(self):
         for so_line in self:
+            if so_line.product_type == 'event_booth' and not so_line.event_id:
+                raise ValidationError(_('One or more event booths are not configured.'))
             self.env['event.booth.registration'].create([{
                 'event_booth_id': booth.id,
                 'sale_order_line_id': so_line.id,
@@ -71,6 +73,9 @@ class SaleOrderLine(models.Model):
         The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
         """
         super()._compute_name()
+        for line in self:
+            if line.product_type == 'event_booth':
+                line.name = line._get_sale_order_line_multiline_description_sale()
 
     def _update_event_booths(self, set_paid=False):
         for so_line in self.filtered('is_event_booth'):
@@ -86,7 +91,9 @@ class SaleOrderLine(models.Model):
         return True
 
     def _get_sale_order_line_multiline_description_sale(self):
-        if self.event_booth_pending_ids:
+        if not self.event_id and self.product_type == 'event_booth':
+            return 'please configure this booth event'
+        elif self.event_booth_pending_ids:
             return self.event_booth_pending_ids._get_booth_multiline_description()
         return super()._get_sale_order_line_multiline_description_sale()
 

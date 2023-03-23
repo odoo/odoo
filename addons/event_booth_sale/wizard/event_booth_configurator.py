@@ -32,3 +32,23 @@ class EventBoothConfigurator(models.TransientModel):
     def _check_if_no_booth_ids(self):
         if any(not wizard.event_booth_ids for wizard in self):
             raise ValidationError(_('You have to select at least one booth.'))
+
+    def action_configure_event_booth(self):
+        self.ensure_one()
+        
+        return {
+            "type": "ir.actions.act_window_close",
+            "infos": {
+                "eventBoothConfiguration": {
+                    "event_id":[
+                        self.event_id.id,
+                        self.event_id.display_name],
+                    "event_booth_category_id":[
+                        self.event_booth_category_id.id,
+                        self.event_booth_category_id.display_name],
+                    "event_booth_pending_ids":[
+                        self.event_booth_ids.id,
+                        self.event_booth_ids.display_name],
+                },
+            },
+        }
