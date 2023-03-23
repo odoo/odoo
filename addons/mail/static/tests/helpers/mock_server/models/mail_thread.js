@@ -175,8 +175,7 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
             kwargs.email_from,
             context
         );
-        const { temporary_id, ...postData } = kwargs;
-        const values = Object.assign({}, postData, {
+        const values = Object.assign({}, kwargs, {
             author_id,
             email_from,
             is_discussion: subtype_xmlid === "mail.mt_comment",
@@ -186,8 +185,10 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
         });
         delete values.subtype_xmlid;
         const messageId = this.pyEnv["mail.message"].create(values);
-        this._mockMailThread_NotifyThread(model, ids, messageId, temporary_id);
-        return Object.assign(this._mockMailMessageMessageFormat([messageId])[0], { temporary_id });
+        this._mockMailThread_NotifyThread(model, ids, messageId, context?.temporary_id);
+        return Object.assign(this._mockMailMessageMessageFormat([messageId])[0], {
+            temporary_id: context?.temporary_id,
+        });
     },
     /**
      * Simulates `message_subscribe` on `mail.thread`.
