@@ -256,6 +256,10 @@ class WebsiteEventController(http.Controller):
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
+        Extracts question answers:
+        - For both questions asked 'once_per_order' and questions asked to every attendee
+        - For questions of type 'simple_choice', extracting the suggested answer id
+        - For questions of type 'text_box', extracting the text answer of the attendee.
 
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
@@ -267,23 +271,49 @@ class WebsiteEventController(http.Controller):
                 raise UserError(_("This ticket is not available for sale for this event"))
         registrations = {}
         global_values = {}
+        general_answer_ids = []
         for key, value in form_details.items():
-            counter, attr_name = key.split('-', 1)
-            field_name = attr_name.split('-')[0]
-            if field_name not in registration_fields:
-                continue
-            elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
-                value = int(value) or False  # 0 is considered as a void many2one aka False
-            else:
-                value = value
+            if 'question_answer' in key and value:
+                dummy, registration_index, question_id = key.split('-')
+                question_sudo = request.env['event.question'].browse(int(question_id))
+                answer_values = None
+                if question_sudo.question_type == 'simple_choice':
+                    answer_values = {
+                        'question_id': int(question_id),
+                        'value_answer_id': int(value)
+                    }
+                elif question_sudo.question_type == 'text_box':
+                    answer_values = {
+                        'question_id': int(question_id),
+                        'value_text_box': value
+                    }
 
-            if counter == '0':
-                global_values[attr_name] = value
+                if answer_values and not int(registration_index):
+                    general_answer_ids.append((0, 0, answer_values))
+                elif answer_values:
+                    registrations.setdefault(registration_index, dict())\
+                        .setdefault('registration_answer_ids', list()).append((0, 0, answer_values))
             else:
-                registrations.setdefault(counter, dict())[attr_name] = value
+                counter, attr_name = key.split('-', 1)
+                field_name = attr_name.split('-')[0]
+                if field_name not in registration_fields:
+                    continue
+                elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
+                    value = int(value) or False  # 0 is considered as a void many2one aka False
+                else:
+                    value = value
+
+                if counter == '0':
+                    global_values[attr_name] = value
+                else:
+                    registrations.setdefault(counter, dict())[attr_name] = value
         for key, value in global_values.items():
             for registration in registrations.values():
                 registration[key] = value
+
+        if general_answer_ids:
+            for registration in registrations.values():
+                registration.setdefault('registration_answer_ids', list()).extend(general_answer_ids)
 
         return list(registrations.values())
 

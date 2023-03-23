@@ -20,6 +20,23 @@
             <xpath expr="//field[@name='mobile']" position="after">
                 <field name="visitor_id" groups="base.group_no_one"/>
             </xpath>
+            <sheet position="inside">
+                <notebook>
+                    <page string="Questions" name="questions">
+                        <field name="registration_answer_ids" widget="one2many">
+                            <tree editable="bottom">
+                                <field name="event_id" invisible="1" />
+                                <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
+                                <field name="question_type" string="Type" />
+                                <field name="value_answer_id"
+                                    attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}"
+                                    domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
+                                <field name="value_text_box" attrs="{'invisible': [('question_type', '!=', 'text_box')]}" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
         </field>
     </record>
 
@@ -31,6 +48,20 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="visitor_id" optional="hide" groups="base.group_no_one"/>
             </xpath>
+            <field name="state" position="before">
+                <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_view_search" model="ir.ui.view">
+        <field name="name">event.registration.view.search.inherit.online</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_registration_search"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="registration_answer_ids" string="Selected Answers"/>
+            </field>
         </field>
     </record>
 </data></odoo>

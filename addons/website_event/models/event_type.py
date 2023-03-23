@@ -16,6 +16,9 @@ class EventType(models.Model):
     menu_register_cta = fields.Boolean(
         'Extra Register Button', compute='_compute_menu_register_cta',
         readonly=False, store=True)
+    question_ids = fields.One2many(
+        'event.question', 'event_type_id',
+        string='Questions', copy=True)
 
     @api.depends('website_menu')
     def _compute_community_menu(self):
