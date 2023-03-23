@@ -171,7 +171,6 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
     <xpath expr="//div[@id='o_wblog_posts_loop_container']" position="after">
-        <div t-if="opt_blog_list_view" class="border-end d-none d-lg-block" style="opacity: 0.5"/>
         <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ms-lg-5'}">
             <t t-call="website_blog.sidebar_blog_index"/>
         </div>
