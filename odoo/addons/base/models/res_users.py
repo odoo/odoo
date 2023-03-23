@@ -326,6 +326,9 @@ class Users(models.Model):
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
+    res_users_settings_ids = fields.One2many('res.users.settings', 'user_id')
+    # Provide a target for relateds that is not a x2Many field.
+    res_users_settings_id = fields.Many2one('res.users.settings', string="Settings", compute='_compute_res_users_settings_id', search='_search_res_users_settings_id')
 
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
@@ -458,6 +461,15 @@ class Users(models.Model):
             user.accesses_count = len(groups.model_access)
             user.rules_count = len(groups.rule_groups)
             user.groups_count = len(groups)
+
+    @api.depends('res_users_settings_ids')
+    def _compute_res_users_settings_id(self):
+        for user in self:
+            user.res_users_settings_id = user.res_users_settings_ids and user.res_users_settings_ids[0]
+
+    @api.model
+    def _search_res_users_settings_id(self, operator, operand):
+        return [('res_users_settings_ids', operator, operand)]
 
     @api.onchange('login')
     def on_change_login(self):
