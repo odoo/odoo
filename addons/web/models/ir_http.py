@@ -95,6 +95,7 @@ class Http(models.AbstractModel):
             "is_admin": user._is_admin() if session_uid else False,
             "user_context": user_context,
             "db": self.env.cr.dbname,
+            "user_settings": self.env['res.users.settings']._find_or_create_for_user(user)._res_users_settings_format(),
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
             "support_url": "https://www.odoo.com/buy",

@@ -33,6 +33,8 @@ export const userService = {
             ...session.user_context,
             uid: session.uid,
         };
+        let settings = session.user_settings;
+        delete session.user_settings;
         return {
             get context() {
                 return Object.assign({}, context);
@@ -49,7 +51,21 @@ export const userService = {
             async checkAccessRight(model, operation) {
                 return accessRightCache.read(model, operation);
             },
-
+            get settings() {
+                return settings;
+            },
+            async setUserSettings(key, value) {
+                settings = await env.services.orm.call(
+                    "res.users.settings",
+                    "set_res_users_settings",
+                    [[this.settings.id]],
+                    {
+                        new_settings: {
+                            [key]: value,
+                        },
+                    }
+                );
+            },
             name: session.name,
             userName: session.username,
             isAdmin: session.is_admin,
