@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import tour from "web_tour.tour";
+import wTourUtils from "website.tour_utils";
 
 tour.register('edit_translated_page_redirect', {
     test: true,
@@ -11,13 +12,14 @@ tour.register('edit_translated_page_redirect', {
         trigger: 'a.o_frontend_to_backend_edit_btn',
     },
     {
-        content: "Enter edit mode",
-        extra_trigger: 'iframe main:has([data-for="contactus_form"])',
-        trigger: '.o_edit_website_container > a',
+        content: "Check the data-for attribute",
+        trigger: 'iframe main:has([data-for="contactus_form"])',
+        run: () => {}, // it's a check
     },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
-        content: 'check editor dashboard',
-        trigger: '#oe_snippets.o_loaded',
+        content: "Go to /nl",
+        trigger: "body",
         run: () => {
             // After checking the presence of the editor dashboard, we visit a
             // translated version of the homepage. The homepage is a special
@@ -29,14 +31,5 @@ tour.register('edit_translated_page_redirect', {
         content: "Enter backend",
         trigger: 'a.o_frontend_to_backend_edit_btn',
     },
-    {
-        content: "Enter edit mode",
-        extra_trigger: 'iframe #wrapwrap',
-        trigger: '.o_edit_website_container > a',
-    },
-    {
-        content: 'check editor dashboard',
-        trigger: '#oe_snippets.o_loaded',
-        run: () => {},
-    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
 ]);
