@@ -80,7 +80,7 @@ class MrpProduction(models.Model):
         if consumption_issues:
             return self._action_generate_consumption_wizard(consumption_issues)
 
-        self._update_finished_move()
+        self.sudo()._update_finished_move() # Portal user may need sudo rights to update pickings
         self.subcontracting_has_been_recorded = True
 
         quantity_issues = self._get_quantity_produced_issues()

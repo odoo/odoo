@@ -916,6 +916,8 @@ class TestStockValuation(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': self.env['res.partner'].search([], limit=1).id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move3 = self.env['stock.move'].create({
             'name': 'out 10',
@@ -926,8 +928,9 @@ class TestStockValuation(TransactionCase):
             'product_uom_qty': 10.0,
             'picking_id': out_pick.id,
         })
-        move3._action_confirm()
-        move3._action_assign()
+        out_pick.action_reset_draft()
+        out_pick.action_confirm()
+        out_pick.action_assign()
         move3.move_line_ids.qty_done = 10.0
         move3._action_done()
 
@@ -1458,6 +1461,8 @@ class TestStockValuation(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         move1 = self.env['stock.move'].create({
@@ -1540,6 +1545,8 @@ class TestStockValuation(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move3 = self.env['stock.move'].create({
             'picking_id': delivery.id,
@@ -3916,6 +3923,8 @@ class TestStockValuation(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'owner_id': self.env.company.partner_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         move = self.env['stock.move'].create({
@@ -3947,6 +3956,8 @@ class TestStockValuation(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'owner_id': self.env.company.partner_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         move = self.env['stock.move'].create({

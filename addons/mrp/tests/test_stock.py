@@ -304,7 +304,6 @@ class TestKitPicking(common.TestMrpCommon):
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'immediate_transfer': True
         })
         move_receipt_1 = self.env['stock.move'].create({
             'name': self.kit_parent.name,
@@ -366,6 +365,8 @@ class TestKitPicking(common.TestMrpCommon):
             'picking_type_id': in_type.id,
             'location_id': customer_location.id,
             'location_dest_id': stock_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'move_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,

@@ -274,6 +274,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'picking_type_id': incoming_picking_type.id,
             'picking_id': picking.id,
         })
+        picking.action_reset_draft()
         picking.action_confirm()
         res_dict = picking.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()

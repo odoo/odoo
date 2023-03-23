@@ -273,8 +273,8 @@ class TestCreatePicking(common.TestProductCommon):
             'procure_method': 'make_to_order',
             'picking_id': customer_picking.id,
         })
-
-        customer_move._action_confirm()
+        customer_picking.action_reset_draft()
+        customer_picking.action_confirm()
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
         self.assertTrue(purchase_order, 'No purchase order created.')
@@ -420,7 +420,8 @@ class TestCreatePicking(common.TestProductCommon):
             'picking_id': delivery_order.id,
         })
 
-        customer_move._action_confirm()
+        delivery_order.action_reset_draft()
+        delivery_order.action_confirm()
         # find created po the product
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
 

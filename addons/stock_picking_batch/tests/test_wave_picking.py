@@ -67,6 +67,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_out,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -94,6 +96,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_out,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -111,6 +115,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_out,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -128,6 +134,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_internal,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -334,7 +342,6 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out,
             'company_id': self.env.company.id,
-            'immediate_transfer': True,
         })
         ml1 = self.env['stock.move.line'].create({
             'product_id': self.productA.id,
@@ -361,7 +368,6 @@ class TestBatchPicking(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })
-        picking.action_confirm()
 
         ml1._add_to_wave()
         wave = self.env['stock.picking.batch'].search([
@@ -414,6 +420,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'Test Wave',
@@ -467,6 +475,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_in,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': self.productA.name,

@@ -63,7 +63,6 @@ class TestPacking(TestPackingCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id
         })
-        picking_ship.action_confirm()
         pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
         pack_action_model = pack_action['res_model']
@@ -97,9 +96,7 @@ class TestPacking(TestPackingCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id
         })
-
-        self.assertEqual(picking_ship.state, 'draft', 'Delivery state should be draft.')
+        self.assertEqual(picking_ship.state, 'assigned', 'Delivery state should be assigned.')
         self.assertFalse(picking_ship.sale_id.id, 'Sale order shouldn\'t be set')
-        picking_ship.action_confirm()
         picking_ship.button_validate()
         self.assertEqual(picking_ship.state, 'done')

@@ -313,7 +313,7 @@ class Picking(models.Model):
         ('assigned', 'Ready'),
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
-    ], string='Status', compute='_compute_state',
+    ], string='Status', compute='_compute_state', default='assigned',
         copy=False, index=True, readonly=True, store=True, tracking=True,
         help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
              " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
@@ -365,8 +365,7 @@ class Picking(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, readonly=True, index=True,
-        default=_default_picking_type_id,
-        states={'draft': [('readonly', False)]})
+        default=_default_picking_type_id)
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
         readonly=True)
@@ -400,9 +399,6 @@ class Picking(models.Model):
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
         help='Technical field used to compute whether the button "Check Availability" should be displayed.')
-    show_mark_as_todo = fields.Boolean(
-        compute='_compute_show_mark_as_todo',
-        help='Technical field used to compute whether the button "Mark as Todo" should be displayed.')
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to decide whether the button "Validate" should be displayed.')
@@ -426,7 +422,7 @@ class Picking(models.Model):
     show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
-    immediate_transfer = fields.Boolean(default=False)
+    immediate_transfer = fields.Boolean(default=True)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
     products_availability = fields.Char(
@@ -443,14 +439,14 @@ class Picking(models.Model):
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
 
-    @api.depends('show_validate', 'immediate_transfer',
+    @api.depends('show_validate',
                  'move_ids.reserved_availability',
                  'move_ids.quantity_done')
     def _compute_show_qty_button(self):
         self.show_set_qty_button = False
         self.show_clear_qty_button = False
         for picking in self:
-            if not picking.show_validate or picking.immediate_transfer:
+            if not picking.show_validate:
                 continue
             if any(float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding) and not float_is_zero(m.reserved_availability, precision_rounding=m.product_uom.rounding) for m in picking.move_ids):
                 picking.show_set_qty_button = True
@@ -511,7 +507,7 @@ class Picking(models.Model):
                 picking.show_operations = True
                 continue
             if picking.picking_type_id.show_operations:
-                if (picking.state == 'draft' and picking.immediate_transfer) or picking.state != 'draft':
+                if (picking.state == 'draft') or picking.state != 'draft':
                     picking.show_operations = True
                 else:
                     picking.show_operations = False
@@ -545,7 +541,7 @@ class Picking(models.Model):
                 ]
             })
 
-    @api.depends('move_type', 'immediate_transfer', 'move_ids.state', 'move_ids.picking_id')
+    @api.depends('move_type', 'move_ids.state', 'move_ids.picking_id')
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
         - Draft: only used for "planned pickings"
@@ -574,7 +570,9 @@ class Picking(models.Model):
             picking_move_lines[picking_id.id].add(move.id)
         for picking in self:
             picking_id = (picking.ids and picking.ids[0]) or picking.id
-            if not picking_moves_state_map[picking_id]:
+            if not picking_moves_state_map[picking_id] and picking.immediate_transfer:
+                continue
+            elif not picking_moves_state_map[picking_id]:
                 picking.state = 'draft'
             elif picking_moves_state_map[picking_id]['any_draft']:
                 picking.state = 'draft'
@@ -633,13 +631,13 @@ class Picking(models.Model):
         for picking in self:
             picking.has_packages = bool(cnt_by_picking.get(picking.id, False))
 
-    @api.depends('immediate_transfer', 'state')
+    @api.depends('state')
     def _compute_show_check_availability(self):
         """ According to `picking.show_check_availability`, the "check availability" button will be
         displayed in the form view of a picking.
         """
         for picking in self:
-            if picking.immediate_transfer or picking.state not in ('confirmed', 'waiting', 'assigned'):
+            if picking.state not in ('confirmed', 'waiting', 'assigned'):
                 picking.show_check_availability = False
                 continue
             picking.show_check_availability = any(
@@ -648,24 +646,15 @@ class Picking(models.Model):
                 for move in picking.move_ids
             )
 
-    @api.depends('state', 'move_ids')
-    def _compute_show_mark_as_todo(self):
-        for picking in self:
-            if picking.immediate_transfer or picking.state != 'draft':
-                picking.show_mark_as_todo = False
-            else:
-                picking.show_mark_as_todo = True
-
     @api.depends('state')
     def _compute_show_validate(self):
         for picking in self:
-            if not (picking.immediate_transfer) and picking.state == 'draft':
+            if picking.state == 'draft':
                 picking.show_validate = False
             elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned'):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
-
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
         self.show_allocation = False
@@ -678,7 +667,7 @@ class Picking(models.Model):
     def _compute_location_id(self):
         for picking in self:
             picking = picking.with_company(picking.company_id)
-            if picking.picking_type_id and picking.state == 'draft':
+            if picking.picking_type_id:
                 if picking.picking_type_id.default_location_src_id:
                     location_id = picking.picking_type_id.default_location_src_id.id
                 elif picking.partner_id:
@@ -776,6 +765,12 @@ class Picking(models.Model):
             # order to get a determinist execution of `_set_scheduled_date`
             scheduled_dates.append(vals.pop('scheduled_date', False))
 
+            # immediate transfer is a default value allow in specific cases (interface only)
+            if vals.get('state', 'assigned') != 'assigned':
+                vals['immediate_transfer'] = False
+            if self.env['ir.config_parameter'].sudo().get_param('stock.no_default_immediate_tranfer'):
+                vals['immediate_transfer'] = False
+
         pickings = super().create(vals_list)
 
         for picking, scheduled_date in zip(pickings, scheduled_dates):
@@ -842,6 +837,8 @@ class Picking(models.Model):
 
     def action_confirm(self):
         self._check_company()
+        if not self.env.context.get('skip_draft'):
+            self.filtered(lambda p: p.state in ['assigned', 'draft'] and p.immediate_transfer).action_reset_draft()
         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
         self.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm()
@@ -856,6 +853,7 @@ class Picking(models.Model):
         also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
+        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         self.filtered(lambda picking: picking.state == 'draft').action_confirm()
         moves = self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done')).sorted(
             key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
@@ -876,6 +874,13 @@ class Picking(models.Model):
         self.write({'is_locked': True})
         self.filtered(lambda x: not x.move_ids).state = 'cancel'
         return True
+
+    def action_reset_draft(self):
+        picking_to_reset = self.filtered(lambda p: p.state not in ('done', 'cancel'))
+        picking_to_reset.do_unreserve()
+        picking_to_reset.immediate_transfer = False
+        picking_to_reset.move_ids.quantity_done = 0
+        picking_to_reset.move_ids.state = 'draft'
 
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
@@ -936,7 +941,7 @@ class Picking(models.Model):
         else:
             for move in self.move_ids:
                 if not move.package_level_id:
-                    if move.state == 'assigned' and move.picking_id and not move.picking_id.immediate_transfer or move.state == 'done':
+                    if move.state == 'assigned' and move.picking_id or move.state == 'done':
                         if any(not ml.package_level_id for ml in move.move_line_ids):
                             move_ids_without_package |= move
                     else:
@@ -1223,9 +1228,8 @@ class Picking(models.Model):
                 continue
             if not picking.move_ids and not picking.package_level_ids:
                 continue
-            if picking.immediate_transfer or any(move.additional for move in picking.move_ids):
-                picking.action_confirm()
-                # Make sure the reservation is bypassed in immediate transfer mode.
+            if any(move.additional for move in picking.move_ids):
+                picking.with_context(skip_draft=picking.immediate_transfer).action_confirm()
                 if picking.immediate_transfer:
                     picking.move_ids.write({'state': 'assigned'})
 
@@ -1498,7 +1502,6 @@ class Picking(models.Model):
             picking_move_lines = self.move_line_ids
             if (
                 not self.picking_type_id.show_reserved
-                and not self.immediate_transfer
                 and not self.env.context.get('barcode_view')
             ):
                 picking_move_lines = self.move_line_nosuggest_ids

@@ -55,7 +55,7 @@ class StockMove(models.Model):
     product_uom_qty = fields.Float(
         'Demand',
         digits='Product Unit of Measure',
-        default=1.0, required=True, states={'done': [('readonly', True)]},
+        default=0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
              "quantity of products that were actually moved. For other "
@@ -248,7 +248,6 @@ class StockMove(models.Model):
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and
-                                             move._show_details_in_draft() and
                                              move.show_operations is False)
 
     def _compute_show_reserved_availability(self):
@@ -392,7 +391,7 @@ class StockMove(models.Model):
 
         def _process_increase(move, quantity):
             moves = move
-            if move.picking_id.immediate_transfer:
+            if move.picking_id and move.picking_id.immediate_transfer:
                 moves = move._action_confirm(merge=False)
             # Kits, already handle in action_explode, should be clean in master
             if len(moves) > 1:
@@ -681,7 +680,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                 (self - move_to_unreserve).filtered(lambda m: m.state == 'assigned').write({'state': 'partially_available'})
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
-                receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
+                receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m:
+                     m.location_id.usage == 'supplier'
+                     and m.state in ('partially_available', 'assigned')
+                     and not m.picking_id.immediate_transfer)
                 move_to_recompute_state |= self - move_to_unreserve - receipt_moves_to_reassign
         # propagate product_packaging_id changes in the stock move chain
         if 'product_packaging_id' in vals:
@@ -784,7 +786,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 show_source_location=self.picking_type_id.code != 'incoming',
                 show_destination_location=self.picking_type_id.code != 'outgoing',
                 show_package=not self.location_id.usage == 'supplier',
-                show_reserved_quantity=self.state != 'done' and not self.picking_id.immediate_transfer and self.picking_type_id.code != 'incoming'
+                show_reserved_quantity=self.state != 'done' and self.picking_type_id.code != 'incoming'
             ),
         }
 
@@ -1194,7 +1196,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             ('location_dest_id', '=', self.location_dest_id.id),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
-            ('immediate_transfer', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
         if self.partner_id and (self.location_id.usage == 'transit' or self.location_dest_id.usage == 'transit'):
             domain += [('partner_id', '=', self.partner_id.id)]
@@ -1328,6 +1329,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,
             'location_dest_id': self.mapped('location_dest_id').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         }
 
     def _should_be_assigned(self):
@@ -1408,8 +1411,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         neg_r_moves._assign_picking()
 
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
-        moves.filtered(lambda move: not move.picking_id.immediate_transfer
-                       and move.state in ('confirmed', 'partially_available')
+        moves.filtered(lambda move: move.state in ('confirmed', 'partially_available')
                        and (move._should_bypass_reservation()
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
@@ -1676,7 +1678,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 assigned_moves_ids.add(move.id)
                 moves_to_redirect.add(move.id)
             else:
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) and not force_qty:
                     assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
@@ -1876,8 +1878,8 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
-        if any(move.state not in ('draft', 'cancel') for move in self):
-            raise UserError(_('You can only delete draft or cancelled moves.'))
+        if any(move.state not in ('draft', 'cancel') and (move.move_orig_ids or move.move_dest_ids) for move in self):
+            raise UserError(_('You can not delete moves linked to another operation'))
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
@@ -2111,10 +2113,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
                 move.procure_method = 'make_to_order'
-
-    def _show_details_in_draft(self):
-        self.ensure_one()
-        return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """

@@ -153,9 +153,6 @@ class StockMove(models.Model):
             bom = move._get_subcontract_bom()
             if not bom:
                 continue
-            if float_is_zero(move.product_qty, precision_rounding=move.product_uom.rounding) and\
-                    move.picking_id.immediate_transfer is True:
-                raise UserError(_("To subcontract, use a planned transfer."))
             move.write({
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
@@ -241,7 +238,10 @@ class StockMove(models.Model):
 
     def _update_subcontract_order_qty(self, new_quantity):
         for move in self:
-            quantity_to_remove = move.product_uom_qty - new_quantity
+            move_quantity = move.quantity_done if move.from_immediate_transfer else move.product_uom_qty
+            quantity_to_remove = move_quantity - new_quantity
+            if float_is_zero(quantity_to_remove, precision_rounding=move.product_uom.rounding):
+                continue
             productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[::-1]
             # Cancel productions until reach new_quantity
             for production in productions:

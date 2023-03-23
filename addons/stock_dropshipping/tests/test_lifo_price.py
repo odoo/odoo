@@ -100,7 +100,7 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         #         ...
         #     }
         #     ...
-        out_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream

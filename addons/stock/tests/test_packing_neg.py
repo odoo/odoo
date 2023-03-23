@@ -47,6 +47,8 @@ class TestPackingNeg(TransactionCase):
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         pick_neg = self.env['stock.picking'].create(vals)
         pick_neg._onchange_picking_type()
@@ -104,6 +106,8 @@ class TestPackingNeg(TransactionCase):
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         delivery_order_neg = self.env['stock.picking'].create(vals)
         delivery_order_neg._onchange_picking_type()
@@ -161,6 +165,8 @@ class TestPackingNeg(TransactionCase):
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         delivery_reconcile = self.env['stock.picking'].create(vals)
         delivery_reconcile._onchange_picking_type()

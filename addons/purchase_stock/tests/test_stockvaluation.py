@@ -1624,7 +1624,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'location_id': stock_location.id,
                 'location_dest_id': customer_location.id,
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         })
+        delivery01.action_reset_draft()
         delivery01.action_confirm()
         delivery01.move_ids._set_quantities_to_reservation()
         delivery01.button_validate()
@@ -1695,7 +1698,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'location_id': stock_location.id,
                 'location_dest_id': customer_location.id,
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         })
+        delivery02.action_reset_draft()
         delivery02.action_confirm()
         delivery02.move_ids._set_quantities_to_reservation()
         delivery02.button_validate()
@@ -1748,7 +1754,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'location_id': stock_location.id,
                 'location_dest_id': customer_location.id,
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         })
+        delivery.action_reset_draft()
         delivery.action_confirm()
         delivery.move_ids._set_quantities_to_reservation()
         delivery.button_validate()

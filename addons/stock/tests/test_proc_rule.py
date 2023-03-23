@@ -91,6 +91,8 @@ class TestProcRule(TransactionCase):
                 'location_id': self.ref('stock.stock_location_output'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         pick_output = self.env['stock.picking'].create(vals)
         pick_output.move_ids._onchange_product_id()

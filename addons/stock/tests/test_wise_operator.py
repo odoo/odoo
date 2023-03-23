@@ -48,6 +48,8 @@ class TestWiseOperator(TransactionCase):
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         pick1_wise = self.env['stock.picking'].create(vals)
         pick1_wise._onchange_picking_type()
@@ -95,6 +97,8 @@ class TestWiseOperator(TransactionCase):
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         delivery_order_wise1 = self.env['stock.picking'].create(vals)
         delivery_order_wise1._onchange_picking_type()
@@ -120,6 +124,8 @@ class TestWiseOperator(TransactionCase):
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         }
         delivery_order_wise2 = self.env['stock.picking'].create(vals)
         delivery_order_wise2._onchange_picking_type()
