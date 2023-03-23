@@ -86,17 +86,6 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
                 context: this.comp.env.session.user_context,
             });
 
-            const saleOrderIds = saleOrders.flatMap((saleOrder) => saleOrder.id);
-            const saleOrdersAmountUnpaid = await this.rpc({
-                model: 'sale.order',
-                method: 'get_order_amount_unpaid',
-                args: [saleOrderIds],
-                context: this.comp.env.session.user_context,
-            });
-            for (const saleOrder of saleOrders) {
-                saleOrder.amount_unpaid = saleOrdersAmountUnpaid[saleOrder.id];
-            }
-
             return saleOrders;
         }
 

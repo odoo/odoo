@@ -274,6 +274,31 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             self.WebsiteSaleController.pricelist('')
             self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
 
+    def test_04_pl_reset_on_login(self):
+        """Check that after login, the SO pricelist is correctly recomputed."""
+        test_user = self.env['res.users'].create({
+            'name': 'Toto',
+            'login': 'long_enough_password',
+            'password': 'long_enough_password',
+        })
+        eur_pl = self.env['product.pricelist'].create({
+            'name': 'EUR_test',
+            'website_id': self.website.id,
+            'code': 'EUR_test',
+        })
+        test_user.partner_id.property_product_pricelist = eur_pl
+
+        public_user_env = self.env(user=self.website.user_id)
+        so = self._create_so(public_user_env.user.partner_id.id)
+
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id, website_sale_current_pl=so.pricelist_id.id):
+            order = self.website.sale_get_order()
+            pl = order.pricelist_id
+            self.assertNotEqual(pl, eur_pl)
+            order_b = self.website.with_user(test_user).sale_get_order()
+            self.assertEqual(order, order_b)
+            self.assertEqual(order_b.pricelist_id, eur_pl)
+
     # TEST WEBSITE & MULTI COMPANY
 
     def test_05_create_so_with_website_and_multi_company(self):
