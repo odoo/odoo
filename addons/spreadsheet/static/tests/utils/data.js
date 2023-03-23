@@ -218,12 +218,12 @@ export function getBasicData() {
         "spreadsheet.template": {
             fields: {
                 name: { string: "Name", type: "char" },
-                data: { string: "Data", type: "binary" },
+                spreadsheet_data: { string: "Spreadsheet Data", type: "text" },
                 thumbnail: { string: "Thumbnail", type: "binary" },
             },
             records: [
-                { id: 1, name: "Template 1", data: btoa("{}") },
-                { id: 2, name: "Template 2", data: btoa("{}") },
+                { id: 1, name: "Template 1", spreadsheet_data: {} },
+                { id: 2, name: "Template 2", spreadsheet_data: {} },
             ],
         },
         "res.currency": {
