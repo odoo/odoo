@@ -8,9 +8,8 @@
 		<field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
 		<field name="arch" type="xml">
 			<xpath expr="//app[@name='purchase']" position="inside">
-				<field name="is_installed_sale" invisible="1"/>
-				<block title="Logistics" attrs="{'invisible': [('is_installed_sale', '=', False)]}" name="request_vendor_setting_container">
-					<setting title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse." help="Request your vendors to deliver to your customers"
+				<block title="Logistics" name="request_vendor_setting_container">
+					<setting title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse." help="Request your vendors to deliver to your customers/subcontractors"
 							 documentation="/applications/inventory_and_mrp/inventory/management/delivery/dropshipping.html">
 						<field name="module_stock_dropshipping"/>
 					</setting>

@@ -20,10 +20,9 @@ going through the retailer's warehouse. In this case no
 internal transfer document is needed.
 
 """,
-    'depends': ['sale_purchase_stock'],
+    'depends': ['purchase_stock'],
     'data': [
         'data/stock_data.xml',
-        'views/sale_order_views.xml',
         'views/stock_picking_views.xml',
         'views/purchase_order_views.xml'
     ],
