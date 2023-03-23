@@ -123,6 +123,9 @@ class AccountEdiXmlCII(models.AbstractModel):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)
 
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice)
+
         # Create file content.
         tax_details = invoice._prepare_edi_tax_details(
             grouping_key_generator=lambda tax_values: {
