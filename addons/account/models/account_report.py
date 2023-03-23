@@ -293,7 +293,7 @@ class AccountReportLine(models.Model):
         copied_line = self.copy({
             'report_id': copied_report.id,
             'parent_id': parent and parent.id,
-            'code': self.code and self._get_copied_code(),
+            'code': self._get_copied_code(),
         })
 
         # Keep track of old_code -> new_code in a mutable dict
@@ -324,6 +324,8 @@ class AccountReportLine(models.Model):
         :return: an unique code for the copied account.report.line
         '''
         self.ensure_one()
+        if not self.code:
+            return False
         code = self.code + '_COPY'
         while self.search_count([('code', '=', code)]) > 0:
             code += '_COPY'
