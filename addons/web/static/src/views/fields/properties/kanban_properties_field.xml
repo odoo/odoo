@@ -6,7 +6,7 @@
                 t-foreach="propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
-                t-if="propertyConfiguration.value &amp;&amp; propertyConfiguration.view_in_kanban">
+                t-if="(propertyConfiguration.value || ['integer', 'float'].includes(propertyConfiguration.type)) &amp;&amp; propertyConfiguration.view_in_kanban">
                 <div class="mw-100 text-truncate">
                     <PropertyValue
                         id="generateUniqueDomID()"
