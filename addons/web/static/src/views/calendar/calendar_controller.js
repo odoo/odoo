@@ -15,7 +15,7 @@ import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
 
 import { Component, useState } from "@odoo/owl";
 
-export const SCALE_LABELS = {
+const SCALE_LABELS = {
     day: _lt("Day"),
     week: _lt("Week"),
     month: _lt("Month"),

@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { useStore } from "../core/messaging_hook";
-import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { NavigableList } from "../composer/navigable_list";
 import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
