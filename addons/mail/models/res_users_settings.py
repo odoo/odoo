@@ -5,11 +5,8 @@ from odoo import api, fields, models
 
 
 class ResUsersSettings(models.Model):
-    _name = 'res.users.settings'
-    _description = 'User Settings'
-    _rec_name = 'user_id'
+    _inherit = 'res.users.settings'
 
-    user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
     is_discuss_sidebar_category_channel_open = fields.Boolean(string="Is discuss sidebar category channel open?", default=True)
     is_discuss_sidebar_category_chat_open = fields.Boolean(string="Is discuss sidebar category chat open?", default=True)
 
@@ -19,37 +16,18 @@ class ResUsersSettings(models.Model):
     voice_active_duration = fields.Integer(string="Duration of voice activity in ms", help="How long the audio broadcast will remain active after passing the volume threshold")
     volume_settings_ids = fields.One2many('res.users.settings.volumes', 'user_setting_id', string="Volumes of other partners")
 
-    _sql_constraints = [
-        ('unique_user_id', 'UNIQUE(user_id)', 'One user should only have one mail user settings.')
-    ]
-
     @api.model
-    def _find_or_create_for_user(self, user):
-        settings = user.sudo().res_users_settings_ids
-        if not settings:
-            settings = self.sudo().create({'user_id': user.id})
-        return settings
-
-    def _res_users_settings_format(self, fields_to_format=None):
-        self.ensure_one()
-        if not fields_to_format:
-            fields_to_format = [name for name, field in self._fields.items() if name == 'id' or not field.automatic]
-        res = self._read_format(fnames=fields_to_format)[0]
-        if 'user_id' in fields_to_format:
-            res['user_id'] = {'id': self.user_id.id}
+    def _format_settings(self, fields_to_format):
+        res = super()._format_settings(fields_to_format)
         if 'volume_settings_ids' in fields_to_format:
             volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
             res['volume_settings_ids'] = [('insert', volume_settings)]
         return res
 
     def set_res_users_settings(self, new_settings):
-        self.ensure_one()
-        changed_settings = {}
-        for setting in new_settings.keys():
-            if setting in self._fields and new_settings[setting] != self[setting]:
-                changed_settings[setting] = new_settings[setting]
-        self.write(changed_settings)
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'mail.record/insert', {'res.users.settings': self._res_users_settings_format([*changed_settings.keys(), 'id'])})
+        formated = super().set_res_users_settings(new_settings)
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'mail.record/insert', {'res.users.settings': formated})
+        return formated
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
         """
