@@ -52,25 +52,10 @@ class EventQuestion(models.Model):
           (Along with secondary pivot and tree views)
         - A tree view showing textual answers values for text_box questions. """
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("website_event_questions.action_event_registration_report")
+        action = self.env["ir.actions.actions"]._for_xml_id("website_event.action_event_registration_report")
         action['domain'] = [('question_id', '=', self.id)]
         if self.question_type == 'simple_choice':
             action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'tree')]
         elif self.question_type == 'text_box':
             action['views'] = [(False, 'tree')]
         return action
-
-class EventQuestionAnswer(models.Model):
-    """ Contains suggested answers to a 'simple_choice' event.question. """
-    _name = 'event.question.answer'
-    _order = 'sequence,id'
-    _description = 'Event Question Answer'
-
-    name = fields.Char('Answer', required=True, translate=True)
-    question_id = fields.Many2one('event.question', required=True, ondelete='cascade')
-    sequence = fields.Integer(default=10)
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_selected_answer(self):
-        if self.env['event.registration.answer'].search_count([('value_answer_id', 'in', self.ids)]):
-            raise UserError(_('You cannot delete an answer that has already been selected by attendees.'))

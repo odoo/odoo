@@ -4,12 +4,6 @@
 from odoo import fields, models
 
 
-class EventRegistration(models.Model):
-    """ Store answers on attendees. """
-    _inherit = 'event.registration'
-
-    registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
-
 class EventRegistrationAnswer(models.Model):
     """ Represents the user input answer for a single event.question """
     _name = 'event.registration.answer'
