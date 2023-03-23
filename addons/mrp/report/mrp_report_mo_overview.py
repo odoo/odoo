@@ -310,6 +310,7 @@ class ReportMoOverview(models.AbstractModel):
                 'product_model': product._name,
                 'product_id': product.id,
                 'quantity': missing_quantity,
+                'replenish_quantity': move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id),
                 'uom_name': move_raw.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
                 'product_cost': currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id)),

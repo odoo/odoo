@@ -48,7 +48,7 @@ export class MoOverviewLine extends Component {
 
     async openReplenish() {
         return this.actionService.doAction("stock.action_product_replenish", {
-            additionalContext: { default_product_id: this.data.product_id, default_quantity: this.data.quantity },
+            additionalContext: { default_product_id: this.data.product_id, default_quantity: this.data.replenish_quantity || this.data.quantity },
             onClose: (closeInfo) => {
                 if (closeInfo?.done) {
                     // Trigger the reload only if a replenishment was done.
@@ -138,6 +138,7 @@ MoOverviewLine.props = {
             state: { type: String, optional: true },
             formatted_state: { type: String, optional: true },
             quantity: Number,
+            replenish_quantity: { type: Number, optional: true },
             quantity_decorator: { type: [String, Boolean], optional: true },
             uom_name: { type: String, optional: true },
             uom_precision: { type: Number, optional: true },
