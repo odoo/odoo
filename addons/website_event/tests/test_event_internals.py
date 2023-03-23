@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
 from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_event_questions.controllers.main import WebsiteEvent
-from odoo.addons.website_event_questions.tests.common import TestEventQuestionCommon
+from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.addons.website_event.tests.common import TestEventQuestionCommon
 
 
 class TestEventData(TestEventQuestionCommon):
@@ -71,7 +71,7 @@ class TestEventData(TestEventQuestionCommon):
         }
 
         with MockRequest(self.env):
-            registrations = WebsiteEvent()._process_attendees_form(event, form_details)
+            registrations = WebsiteEventController()._process_attendees_form(event, form_details)
 
         self.assertEqual(registrations, [
             {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': ticket_id_1.id,
