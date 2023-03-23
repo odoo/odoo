@@ -283,7 +283,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/?enable_editor=1', "edit_link_popover", login="admin")
+        self.start_tour('/@/', 'edit_link_popover', login='admin')
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
@@ -353,7 +353,7 @@ class TestUi(odoo.tests.HttpCase):
             """,
         }])
 
-        self.start_tour("/?enable_editor=1", "focus_blur_snippets", login="admin")
+        self.start_tour('/', 'focus_blur_snippets', login='admin')
 
     def test_14_carousel_snippet_content_removal(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'carousel_content_removal', login='admin')
@@ -368,13 +368,13 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus', login='admin')
 
     def test_18_website_snippets_menu_tabs(self):
-        self.start_tour("/?enable_editor=1", "website_snippets_menu_tabs", login="admin")
+        self.start_tour('/', 'website_snippets_menu_tabs', login='admin')
 
     def test_19_website_page_options(self):
         self.start_tour("/web", "website_page_options", login="admin")
 
     def test_20_snippet_editor_panel_options(self):
-        self.start_tour("/@/?enable_editor=1", "snippet_editor_panel_options", login="admin")
+        self.start_tour('/@/', 'snippet_editor_panel_options', login='admin')
 
     def test_21_website_start_cloned_snippet(self):
         self.start_tour('/web', 'website_start_cloned_snippet', login='admin')
@@ -383,7 +383,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour('/web', 'website_gray_color_palette', login='admin')
 
     def test_23_website_multi_edition(self):
-        self.start_tour('/@?enable_editor=1', 'website_multi_edition', login='admin')
+        self.start_tour('/@/', 'website_multi_edition', login='admin')
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')

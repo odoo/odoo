@@ -171,12 +171,13 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "return to english version",
     trigger: 'iframe .js_language_selector a[data-url_code="en"]',
 }, {
-    content: "edit english version",
-    trigger: '.o_edit_website_container > a',
-    extra_trigger: 'iframe body:not(:has(#wrap p font:first:containsExact(paragraphs <b>describing</b>)))',
-}, {
+    content: "Check body",
+    trigger: "iframe body:not(:has(#wrap p font:first:containsExact(paragraphs <b>describing</b>)))",
+    run: function () {}, // it's a check
+},
+...wTourUtils.clickOnEditAndWaitEditMode(),
+{
     content: "select text",
-    extra_trigger: '#oe_snippets.o_loaded',
     trigger: 'iframe #wrap p',
     run: function (actionHelper) {
         actionHelper.click();

@@ -5,7 +5,7 @@ import wTourUtils from 'website.tour_utils';
 
 function editAddToCartSnippet() {
     return [
-        wTourUtils.clickOnEdit(),
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         wTourUtils.clickOnSnippet({id: 's_add_to_cart'})
     ]
 }
