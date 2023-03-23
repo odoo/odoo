@@ -5,7 +5,7 @@ import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductSc
 import { Component } from "@odoo/owl";
 
 export class CustomerButton extends Component {
-    static template = "pos_restaurant.CustomerButton";
+    static template = "point_of_sale.CustomerButton";
 
     setup() {
         this.pos = usePos();
