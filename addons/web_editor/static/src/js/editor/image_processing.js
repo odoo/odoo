@@ -437,7 +437,8 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         params: {src: src.split(/[?#]/)[0]},
     });
     // Check that url is local.
-    const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin;
+    const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin 
+        && !/\/web\/image\/\d+-redirect\//.test(original.image_src);
     if (isLocal && original.image_src) {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
