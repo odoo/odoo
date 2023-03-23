@@ -347,6 +347,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 '_tax_category_vals_': tax_category_vals,
             }
 
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice)
+
         # Compute the tax details for the whole invoice and each invoice line separately.
         taxes_vals = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
 
