@@ -25,7 +25,7 @@ wTourUtils.registerWebsitePreviewTour('newsletter_block_edition', {
         extra_trigger: 'iframe .s_newsletter_block input:propValue(admin@yourcompany.example.com)',
     },
     // Change the link style.
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: 'Click on the Subscribe button',
         trigger: 'iframe .s_newsletter_block .js_subscribe_btn',

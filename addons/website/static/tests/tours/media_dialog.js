@@ -1,15 +1,12 @@
 /** @odoo-module */
 
-import { registry } from "@web/core/registry";
 import wTourUtils from 'website.tour_utils';
 
-registry.category("web_tour.tours").add('website_media_dialog_undraw', {
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
     test: true,
     url: '/',
-    steps: [
-{
-    trigger: 'a[data-action=edit]',
-},
+    edition: true,
+}, [
 wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
@@ -21,7 +18,7 @@ wTourUtils.dragNDrop({
 {
     trigger: '.o_select_media_dialog:has(.o_we_search_select option[value="media-library"])',
 },
-]});
+]);
 
 wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     test: true,

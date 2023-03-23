@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import wTourUtils from "website.tour_utils";
 import newsletterPopupUseTour from "website_mass_mailing.tour.newsletter_popup_use";
 
-registry.category("web_tour.tours").add('newsletter_popup_edition', {
+wTourUtils.registerWebsitePreviewTour("newsletter_popup_edition", {
     test: true,
-    url: '/?enable_editor=1',
-    steps: [
+    url: "/",
+    edition: true,
+}, [
     wTourUtils.dragNDrop({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',
@@ -25,4 +25,4 @@ registry.category("web_tour.tours").add('newsletter_popup_edition', {
         extra_trigger: 'iframe body:not(.editor_enable)',
         run: newsletterPopupUseTour.ensurePopupNotVisible,
     }
-]});
+]);

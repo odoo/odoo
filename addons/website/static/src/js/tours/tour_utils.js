@@ -140,20 +140,6 @@ function changePaddingSize(direction) {
 }
 
 /**
- * Click on the top right edit button
- * @param {*} position Where the purple arrow will show up
- */
-function clickOnEdit(position = "bottom") {
-    return {
-        trigger: ".o_menu_systray .o_edit_website_container a",
-        content: Markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        extra_trigger: "body:not(.editor_has_snippets)",
-        position: position,
-        timeout: 30000,
-    };
-}
-
-/**
  * Simple click on an element in the page.
  * @param {*} elementName
  * @param {*} selector
@@ -164,6 +150,23 @@ function clickOnElement(elementName, selector) {
         trigger: selector,
         run: 'click'
     };
+}
+
+/**
+ * Click on the top right edit button and wait for the edit mode
+ *
+ * @param {string} position Where the purple arrow will show up
+ */
+function clickOnEditAndWaitEditMode(position = "bottom") {
+    return [{
+        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        trigger: ".o_menu_systray .o_edit_website_container a",
+        position: position,
+    }, {
+        content: "Check that we are in edit mode",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        run: () => null, // it's a check
+    }];
 }
 
 /**
@@ -403,8 +406,8 @@ export default {
     changeImage,
     changeOption,
     changePaddingSize,
-    clickOnEdit,
     clickOnElement,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
     clickOnText,
