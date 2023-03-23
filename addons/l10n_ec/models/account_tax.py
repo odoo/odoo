@@ -1,8 +1,36 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError
 
+ACCOUNT_TAX_TEMPLATES = ['l10n_ec.tax_vat_510_sup_01',
+'l10n_ec.tax_vat_510_sup_05',
+'l10n_ec.tax_vat_510_sup_06',
+'l10n_ec.tax_vat_510_sup_15',
+'l10n_ec.tax_vat_511_sup_03',
+'l10n_ec.tax_vat_512_sup_04',
+'l10n_ec.tax_vat_512_sup_05',
+'l10n_ec.tax_vat_512_sup_07',
+'l10n_ec.tax_vat_513_sup_01',
+'l10n_ec.tax_vat_514_sup_06',
+'l10n_ec.tax_vat_515_sup_03',
+'l10n_ec.tax_vat_516_sup_07',
+'l10n_ec.tax_vat_517_sup_02',
+'l10n_ec.tax_vat_517_sup_04',
+'l10n_ec.tax_vat_517_sup_05',
+'l10n_ec.tax_vat_517_sup_07',
+'l10n_ec.tax_vat_517_sup_15',
+'l10n_ec.tax_vat_518_sup_02',
+'l10n_ec.tax_vat_541_sup_02',
+'l10n_ec.tax_vat_542_sup_02',
+'l10n_ec.tax_vat_510_08_sup_01',
+'l10n_ec.tax_vat_545_sup_08',
+'l10n_ec.tax_vat_545_sup_08_vat0',
+'l10n_ec.tax_vat_545_sup_08_vat_exempt',
+'l10n_ec.tax_vat_545_sup_08_vat_not_charged',
+'l10n_ec.tax_vat_545_sup_09',
+]
 
 class AccountTax(models.Model):
 
@@ -51,3 +79,8 @@ class AccountTaxTemplate(models.Model):
         string="Code ATS",
         help="Tax Identification Code for the Simplified Transactional Annex",
     )
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_last_account_template(self):
+        if self.get_external_id()[self.id] in ACCOUNT_TAX_TEMPLATES:
+            raise UserError(_("You cannot delete account template %s as it is used in another module but you can archive it.") % self.name)
