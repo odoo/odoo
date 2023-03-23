@@ -1198,7 +1198,7 @@ class PosOrder(models.Model):
         # As we cannot use currency_id in the domain (because it is not a stored field),
         # we must do it after the search.
         pos_config = self.env['pos.config'].browse(config_id)
-        orders.filtered(lambda order: order.currency_id == pos_config.currency_id)
+        orders = orders.filtered(lambda order: order.currency_id == pos_config.currency_id)
         orderlines = self.env['pos.order.line'].search(['|', ('refunded_orderline_id.order_id', 'in', orders.ids), ('order_id', 'in', orders.ids)])
 
         # We will return to the frontend the ids and the date of their last modification
