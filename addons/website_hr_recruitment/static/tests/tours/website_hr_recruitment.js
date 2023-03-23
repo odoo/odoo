@@ -72,12 +72,11 @@
     }, {
         content: 'Check if the Guru form is present',
         trigger: 'iframe form'
-    }, {
-        content: 'Enter in edit mode',
-        trigger: '.o_edit_website_container > a',
-    }, {
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
         content: 'Add a fake default value for the job_id field',
-        trigger: '#oe_snippets.o_loaded',
+        trigger: "body",
         run: () => {
             // It must be done in this way because the editor does not allow to
             // put a default value on a field with type="hidden".
@@ -86,7 +85,6 @@
     }, {
         content: 'Edit the form',
         trigger: 'iframe input[type="file"]',
-        extra_trigger: '#oe_snippets.o_loaded',
     }, {
         content: 'Add a new field',
         trigger: 'we-button[data-add-field]',
@@ -115,12 +113,11 @@
                 console.error('The job_id field has a wrong value');
             }
         }
-    }, {
-        content: 'Enter in edit mode',
-        trigger: '.o_edit_website_container > a',
-    }, {
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
         content: 'Verify that the job_id field has kept its default value',
-        trigger: '#oe_snippets.o_loaded',
+        trigger: "body",
         run: () => {
             if (!document.querySelector('.o_iframe:not(.o_ignore_in_tour)').contentDocument.querySelector('input[name="job_id"][value="FAKE_JOB_ID_DEFAULT_VAL"]')) {
                 console.error('The job_id field has lost its default value');

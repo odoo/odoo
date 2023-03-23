@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
+import wTourUtils from 'website.tour_utils';
 
 const blockIDToData = {
     parent: {
@@ -49,10 +49,11 @@ function clickAndCheck(blockID, expected) {
 
 window.focusBlurSnippetsResult = [];
 
-registry.category("web_tour.tours").add('focus_blur_snippets', {
+wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     test: true,
-    url: '/?enable_editor=1',
-    steps: [
+    url: "/",
+    edition: true,
+}, [
     {
         content: 'Drag the custom block into the page',
         trigger: '#snippet_structure .oe_snippet:has(.oe_snippet_body.s_focusblur) .oe_snippet_thumbnail',
@@ -67,4 +68,4 @@ registry.category("web_tour.tours").add('focus_blur_snippets', {
     ...clickAndCheck('child1', ['blur parent', 'focus parent', 'focus child1']),
     ...clickAndCheck('child2', ['blur parent', 'blur child1', 'focus parent', 'focus child2']),
     ...clickAndCheck('parent', ['blur parent', 'blur child2', 'focus parent']),
-]});
+]);
