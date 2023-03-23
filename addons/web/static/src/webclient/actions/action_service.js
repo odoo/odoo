@@ -484,7 +484,7 @@ function makeActionManager(env) {
         for (const key of specialKeys) {
             if (key in action) {
                 if (key === "help") {
-                    viewProps.noContentHelp = action.help;
+                    viewProps.noContentHelp = markup(action.help);
                 } else {
                     viewProps[key] = action[key];
                 }
