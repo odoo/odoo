@@ -65,6 +65,7 @@ class ResCompany(models.Model):
 
             if not orders:
                 msg_alert = (_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS', self.env.company.name))
+                raise UserError(msg_alert)
 
             previous_hash = u''
             corrupted_orders = []
