@@ -185,7 +185,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         """
         tag_name = "55b"
         tax_report_line = self._create_basic_tax_report_line(self.tax_report_1, "Line 55 bis", tag_name)
-        test_tag = tax_report_line.expression_ids._get_matching_tags().filtered(lambda tag: not tag.tax_negate)
+        test_tag = tax_report_line.expression_ids._get_matching_tags("+")
         self.env['account.tax.group'].create({
             'name': 'Tax group',
             'country_id': self.tax_report_1.country_id.id,
