@@ -4,6 +4,7 @@
 import logging
 import pytz
 import threading
+from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
 from markupsafe import Markup
@@ -996,6 +997,12 @@ class Lead(models.Model):
         if additional_values:
             self.write(dict(additional_values))
         return res
+
+    @api.model
+    def action_set_lost_with_reason(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_lost_action')
+        action.update({'context': {**self.env.context, **literal_eval(action.get('context', '{}'))}})
+        return action
 
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
