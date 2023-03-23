@@ -612,10 +612,11 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(input.value, expected);
         };
 
+        await editValue("0", "0.00");
         await editValue("2", "2.00");
         await editValue("2.11", "2.11");
         await editValue("2.1234567", "2.12", "Decimal precision is 2");
-        await editValue("azerty", "", "Wrong float value should be interpreted as empty");
+        await editValue("azerty", "0.00", "Wrong float value should be interpreted as 0.00");
         await editValue("1,2,3,4,5,6.1,2,3,5", "123456.12");
 
         // change type to integer
@@ -623,11 +624,12 @@ QUnit.module("Fields", (hooks) => {
         await changeType(target, "integer");
         await closePopover(target);
 
+        await editValue("0", "0");
         await editValue("2", "2");
-        await editValue("2.11", "");
-        await editValue("azerty", "", "Wrong integer value should be interpreted as empty");
+        await editValue("2.11", "0");
+        await editValue("azerty", "0", "Wrong integer value should be interpreted as 0");
         await editValue("1,2,3,4,5,6", "123456");
-        await editValue("1,2,3,4,5,6.1,2,3", "");
+        await editValue("1,2,3,4,5,6.1,2,3", "0");
     });
 
     /**
