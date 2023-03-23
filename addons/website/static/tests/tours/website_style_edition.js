@@ -18,7 +18,6 @@ wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     edition: true,
 }, [{
     content: "Go to theme options",
-    extra_trigger: '#oe_snippets.o_loaded',
     trigger: '.o_we_customize_theme_btn',
 }, {
     content: "Change font size",
@@ -38,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     trigger: 'iframe body:not(.editor_enable) #wrapwrap',
     run: checkFontSize,
 },
-wTourUtils.clickOnEdit(),
+...wTourUtils.clickOnEditAndWaitEditMode(),
 wTourUtils.goToTheme(),
 {
     content: "Click on the Background Image selection",

@@ -360,15 +360,10 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
         },
         // Check that if we edit again and save again the default value is not deleted.
-        {
-            content: 'Enter in edit mode again',
-            trigger: '.o_edit_website_container > a',
-            run: 'click',
-        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Edit the form',
             trigger: 'iframe .s_website_form_field:eq(0) input',
-            extra_trigger: 'button[data-action="save"]',
             run: 'click',
         },
         ...addCustomField('many2one', 'select', 'Select Field', true),
@@ -382,11 +377,10 @@ odoo.define('website.tour.form_editor', function (require) {
             extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
         },
-        wTourUtils.clickOnEdit(),
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Click on the submit button',
             trigger: 'iframe .s_website_form_send',
-            extra_trigger: '.o_website_preview.editor_enable',
             run: 'click',
         },
         {
@@ -453,15 +447,13 @@ odoo.define('website.tour.form_editor', function (require) {
     wTourUtils.registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         test: true,
         url: '/',
+        edition: true,
     }, [
         // Create a form with two checkboxes: the second one required but
         // invisible when the first one is checked. Basically this should allow
         // to have: both checkboxes are visible by default but the form can
         // only be sent if one of the checkbox is checked.
         {
-            content: "Enter edit mode",
-            trigger: '.o_edit_website_container > a',
-        }, {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop iframe #wrap',

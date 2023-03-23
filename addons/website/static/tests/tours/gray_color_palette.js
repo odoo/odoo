@@ -28,7 +28,6 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     {
         content: "Go to theme options",
         trigger: '.o_we_customize_theme_btn',
-        extra_trigger: '#oe_snippets.o_loaded',
     },
     {
         content: "Toggle gray color palette",
