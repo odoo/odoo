@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import wTourUtils from 'website.tour_utils';
 
-registry.category("web_tour.tours").add("website_snippets_menu_tabs", {
+wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
     test: true,
-    url: "/?enable_editor=1",
-    steps: [
+    url: "/",
+    edition: true,
+}, [
     wTourUtils.goToTheme(),
     {
         content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
@@ -30,4 +30,4 @@ registry.category("web_tour.tours").add("website_snippets_menu_tabs", {
         trigger: '.o_we_customize_panel > we-customizeblock-options',
         run: () => null, // it's a check
     },
-]});
+]);

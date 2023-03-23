@@ -2,29 +2,27 @@ odoo.define('website.tour.specific_website_editor', function (require) {
 'use strict';
 
 const { registry } = require("@web/core/registry");
+const wTourUtils = require("website.tour_utils");
 
-registry.category("web_tour.tours").add('generic_website_editor', {
+wTourUtils.registerWebsitePreviewTour("generic_website_editor", {
     test: true,
-    steps: [{
-    content: 'Click edit button',
-    trigger: '.o_edit_website_container > a',
-},
-{
+    edition: true,
+}, [{
     trigger: 'iframe body:not([data-hello="world"])',
-    extra_trigger: '#oe_snippets.o_loaded',
     content: 'Check that the editor DOM matches its website-generic features',
     run: function () {}, // Simple check
-}]});
+}]);
 
+// Good practice would have been to use `wTourUtils.registerWebsitePreviewTour`
+// for this tour with `edition: true` and remove the first step to enter edit
+// mode. Unfortunately this breaks the page and therefore the test fails for
+// unknown reason.
 registry.category("web_tour.tours").add('specific_website_editor', {
     test: true,
-    steps: [{
-    content: 'Click edit button',
-    trigger: '.o_edit_website_container > a',
-},
+    steps: [
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     trigger: 'iframe body[data-hello="world"]',
-    extra_trigger: '#oe_snippets.o_loaded',
     content: 'Check that the editor DOM matches its website-specific features',
     run: function () {}, // Simple check
 }]});
