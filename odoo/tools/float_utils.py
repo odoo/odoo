@@ -205,7 +205,7 @@ def float_repr(value, precision_digits):
     # Can't use str() here because it seems to have an intrinsic
     # rounding to 12 significant digits, which causes a loss of
     # precision. e.g. str(123456789.1234) == str(123456789.123)!!
-    return ("%%.%sf" % precision_digits) % value
+    return "%.*f" % (precision_digits, value)
 
 
 def float_split_str(value, precision_digits):
