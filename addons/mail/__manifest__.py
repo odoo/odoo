@@ -166,7 +166,6 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
-            'web/static/src/views/fields/many2many_tags/tags_list.*',
 
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/env.js',

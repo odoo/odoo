@@ -8,7 +8,7 @@ import { shallowEqual } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";

@@ -8,7 +8,7 @@ import { DateTimePicker, DatePicker } from "@web/core/datepicker/datepicker";
 import { Domain } from "@web/core/domain";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { useService } from "@web/core/utils/hooks";
-import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { PropertyTags } from "./property_tags";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";

@@ -6,7 +6,7 @@ import {
     many2ManyTagsField,
     Many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { TagsList } from "../many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {

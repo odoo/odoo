@@ -11,7 +11,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { AnalyticAutoComplete } from "../autocomplete/autocomplete";
 
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { formatPercentage } from "@web/views/fields/formatters";

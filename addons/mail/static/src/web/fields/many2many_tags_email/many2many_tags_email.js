@@ -8,7 +8,7 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { _t } from "@web/core/l10n/translation";
 
 import { onMounted, onWillUpdateProps } from "@odoo/owl";

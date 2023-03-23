@@ -2,7 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
