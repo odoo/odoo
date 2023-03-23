@@ -79,7 +79,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="notification_type"/>
                                     <field name="template_model_id" invisible="1"/>
-                                    <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                                    <field name="template_ref" options="{'hide_model': True, 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                                     <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                     <field name="interval_unit"/>
                                     <field name="interval_type"/>
