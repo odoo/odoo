@@ -1989,6 +1989,12 @@ class AccountMove(models.Model):
             # self.line_ids -= existing_cash_rounding_line
             return
 
+        # No update needed
+        if existing_cash_rounding_line \
+            and existing_cash_rounding_line.balance == diff_balance \
+            and existing_cash_rounding_line.amount_currency == diff_amount_currency:
+            return
+
         _apply_cash_rounding(self, diff_balance, diff_amount_currency, existing_cash_rounding_line)
 
     @contextmanager
