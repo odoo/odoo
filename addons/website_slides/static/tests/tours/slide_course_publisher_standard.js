@@ -60,17 +60,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     extra_trigger: '.o_we_url_success',
 }, {
     content: 'eLearning: is the Corgi set ?',
-    trigger: 'iframe img.o_wslides_course_pict',
-    run: function () {
-        const $imgCorgi = $('.o_website_preview iframe').contents().find('img.o_wslides_course_pict');
-        const expectedImageUrlRegex=/GoldWinnerPembrookeWelshCorgi.jpg/;
-        if (expectedImageUrlRegex.test($imgCorgi.attr('src'))) {
-            $imgCorgi.addClass('o_wslides_tour_success');
-        }
-    },
-}, {
-    content: 'eLearning: the Corgi is set !',
-    trigger: 'iframe img.o_wslides_course_pict.o_wslides_tour_success',
+    trigger: 'iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
 }, {
     content: 'eLearning: save course edition',
     trigger: 'button[data-action="save"]',
