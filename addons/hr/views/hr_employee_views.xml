@@ -76,9 +76,9 @@
                                 </h2>
                                 <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_user"/>
                             </div>
-                            <div class="o_employee_avatar m-0 p-0">
+                            <div class="o_employee_avatar position-relative d-flex flex-column align-items-start m-0 p-0">
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
-                                <div id="hr_presence_status" class="d-flex align-items-end fs-6 o_employee_availability">
+                                <div id="hr_presence_status" class="o_employee_availability position-absolute top-0 end-0 d-flex align-items-end mt-n2 me-n2 rounded-circle bg-view fs-6">
                                     <!-- Employee is present/connected and it is normal according to his work schedule  -->
                                     <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
                                     <!-- Employee is not present and it is normal according to his work schedule -->
