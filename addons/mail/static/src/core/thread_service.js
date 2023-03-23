@@ -674,13 +674,15 @@ export class ThreadService {
         }
         const tmpId = `${thread.localId}_${new Date().valueOf()}`;
         const params = {
+            context: {
+                temporary_id: tmpId,
+            },
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
-                temporary_id: tmpId,
             },
             thread_id: thread.id,
             thread_model: thread.model,
