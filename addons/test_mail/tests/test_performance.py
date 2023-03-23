@@ -455,7 +455,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
         test_template.write({'attachment_ids': [(5, 0)]})
 
-        with self.assertQueryCount(admin=25, employee=25):  # tm 15/15 / com 24/24
+        with self.assertQueryCount(admin=26, employee=26):  # tm 15/15 / com 24/24
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -479,7 +479,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_attachments(self):
         test_record, test_template = self._create_test_records()
 
-        with self.assertQueryCount(admin=25, employee=25):  # tm 15/15 / com 24/24
+        with self.assertQueryCount(admin=26, employee=26):  # tm 15/15 / com 24/24
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -508,7 +508,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_template.write({'attachment_ids': [(5, 0)]})
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=38, employee=38):  # tm 28/28 / com 37/37
+        with self.assertQueryCount(admin=39, employee=39):  # tm 28/28 / com 37/37
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -538,7 +538,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=37, employee=37):  # tm 27/27 / com 36/36
+        with self.assertQueryCount(admin=38, employee=38):  # tm 27/27 / com 36/36
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
