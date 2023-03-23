@@ -203,10 +203,12 @@ class ProductTemplate(models.Model):
                 base_price = base_sales_prices[template.id]
 
             if base_price and base_price != price_reduce:
-                base_price = self.env['account.tax']._fix_tax_included_price_company(
-                    base_price, product_taxes, taxes, self.env.company)
-                base_price = taxes.compute_all(base_price, currency, 1, template, partner_sudo)[
-                    tax_display]
+                if not template.compare_list_price:
+                    # Compare_list_price are never tax included
+                    base_price = self.env['account.tax']._fix_tax_included_price_company(
+                        base_price, product_taxes, taxes, self.env.company)
+                    base_price = taxes.compute_all(base_price, currency, 1, template, partner_sudo)[
+                        tax_display]
                 template_price_vals['base_price'] = base_price
                 if base_price > price_reduce:
                     base_price = self.env['account.tax']._fix_tax_included_price_company(
