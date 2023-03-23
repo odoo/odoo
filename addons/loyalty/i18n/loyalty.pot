@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2023-03-23 09:13+0000\n"
+"PO-Revision-Date: 2023-03-23 09:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -95,6 +95,17 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "(tax excluded)"
+msgstr ""
+
+#. module: loyalty
+#: model:loyalty.program,name:loyalty.10_percent_coupon
+msgid "10% Discount Coupons"
+msgstr ""
+
+#. module: loyalty
+#: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
+#: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
+msgid "10% on your order"
 msgstr ""
 
 #. module: loyalty
@@ -485,6 +496,11 @@ msgid "Buy 2 products and get a third one for free"
 msgstr ""
 
 #. module: loyalty
+#: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
 msgid "Buy X Get Y"
 msgstr ""
@@ -529,6 +545,11 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
 msgid "Code"
+msgstr ""
+
+#. module: loyalty
+#: model:loyalty.program,name:loyalty.10_percent_with_code
+msgid "Code for 10% on orders"
 msgstr ""
 
 #. module: loyalty
@@ -602,6 +623,11 @@ msgid "Coupon point(s)"
 msgstr ""
 
 #. module: loyalty
+#: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
+msgid "Coupon points"
+msgstr ""
+
+#. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
 msgstr ""
@@ -664,6 +690,7 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
 #, python-format
 msgid "Credit(s)"
 msgstr ""
@@ -768,6 +795,7 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
 #, python-format
 msgid "Discount point(s)"
 msgstr ""
@@ -889,6 +917,11 @@ msgid "Free Product - %s"
 msgstr ""
 
 #. module: loyalty
+#: model:loyalty.reward,description:loyalty.3_cabinets_plus_1_free_reward
+msgid "Free Product - Large Cabinet"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
@@ -958,6 +991,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.actions.report,name:loyalty.report_gift_card
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__gift_card
+#: model:loyalty.reward,description:loyalty.gift_card_program_reward
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
 #, python-format
 msgid "Gift Card"
@@ -981,6 +1015,7 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,name:loyalty.gift_card_program
 #, python-format
 msgid "Gift Cards"
 msgstr ""
@@ -1174,11 +1209,6 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr ""
-
-#. module: loyalty
-#: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_main_attachment_id
-msgid "Main Attachment"
 msgstr ""
 
 #. module: loyalty
@@ -1432,6 +1462,11 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Quantity to generate"
+msgstr ""
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
+msgid "Ratings"
 msgstr ""
 
 #. module: loyalty
@@ -1716,16 +1751,6 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "You can not delete a program in an active state"
-msgstr ""
-
-#. module: loyalty
-#: model:mail.template,report_name:loyalty.mail_template_loyalty_card
-msgid "Your Coupon Code"
-msgstr ""
-
-#. module: loyalty
-#: model:mail.template,report_name:loyalty.mail_template_gift_card
-msgid "Your Gift Card"
 msgstr ""
 
 #. module: loyalty
