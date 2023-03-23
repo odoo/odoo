@@ -87,7 +87,16 @@ _region_specific_vat_codes = {
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    vies_failed_message = fields.Char('Technical field display a message to the user if the VIES check fails.', store=False)
+    vies_valid = fields.Boolean(
+        string="Intra-Community Valid",
+        compute='_compute_vies_valid', store=True, readonly=False,
+        tracking=True,
+        help='European VAT numbers are automatically checked on the VIES database.',
+    )
+    # Field representing whether vies_valid is relevant for selecting a fiscal position on this partner
+    perform_vies_validation = fields.Boolean(compute='_compute_perform_vies_validation')
+    # Technical field used to determine the VAT to check
+    vies_vat_to_check = fields.Char(compute='_compute_vies_vat_to_check')
 
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
@@ -113,30 +122,37 @@ class ResPartner(models.Model):
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
 
-    @api.model
-    @tools.ormcache('vat')
-    def _check_vies(self, vat):
-        # Store the VIES result in the cache. In case an exception is raised during the request
-        # (e.g. service unavailable), the fallback on simple_vat_check is not kept in cache.
-        return check_vies(vat)
+    @api.depends('vat', 'country_id')
+    def _compute_vies_vat_to_check(self):
+        """ Retrieve the VAT number, if one such exists, to be used when checking against the VIES system """
+        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
+        for partner in self:
+            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
+            # a partner for which they haven't yet input VAT, and one not subject to VAT
+            if not partner.vat or len(partner.vat) == 1:
+                partner.vies_vat_to_check = ''
+                continue
+            country_code, number = partner._split_vat(partner.vat)
+            if not country_code.isalpha() and partner.country_id:
+                country_code = partner.country_id.code
+                number = partner.vat
+            partner.vies_vat_to_check = (
+                country_code.upper() in eu_country_codes or
+                country_code.lower() in _region_specific_vat_codes
+            ) and self._fix_vat_number(country_code + number, partner.country_id.id) or ''
 
-    @api.model
-    def vies_vat_check(self, country_code, vat_number):
-        try:
-            # Validate against  VAT Information Exchange System (VIES)
-            # see also http://ec.europa.eu/taxation_customs/vies/
-            vies_result = self._check_vies(country_code.upper() + vat_number)
-            return vies_result['valid']
-        except InvalidComponent:
-            return False
-        except Exception:
-            # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
-            # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
-            # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
-            # with VIES if any of these arise, including the first one (it means invalid
-            # country code or empty VAT number), so we return True and ignore the result.
-            _logger.exception("Failed VIES VAT check.")
-            return True
+    @api.depends_context('company')
+    @api.depends('vies_vat_to_check')
+    def _compute_perform_vies_validation(self):
+        """ Determine whether to show VIES validity on the current VAT number """
+        for partner in self:
+            to_check = partner.vies_vat_to_check
+            company_code = self.env.company.account_fiscal_country_id.code
+            partner.perform_vies_validation = (
+                to_check
+                and not to_check[:2].upper() == company_code
+                and self.env.company.vat_check_vies
+            )
 
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
@@ -169,27 +185,30 @@ class ResPartner(models.Model):
                 msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
                 raise ValidationError(msg)
 
-    @api.onchange('vat', 'country_id')
-    def _onchange_check_vies(self):
-        """ Check the VAT number with VIES, if enabled. Return a non-blocking warning if the check fails."""
-        if self.env.context.get('company_id'):
-            company = self.env['res.company'].browse(self.env.context['company_id'])
-        else:
-            company = self.env.company
-        if not company.vat_check_vies:
+    @api.depends('vies_vat_to_check')
+    def _compute_vies_valid(self):
+        """ Check the VAT number with VIES, if enabled."""
+        if not self.env['res.company'].sudo().search_count([('vat_check_vies', '=', True)]):
+            self.vies_valid = False
             return
 
-        eu_countries = self.env.ref('base.europe').country_ids
-        for eu_partner_company in self.filtered(lambda partner: partner.country_id in eu_countries and partner.is_company):
-            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
-            # A partner for which they didn't input VAT, and the one not subject to VAT
-            if not eu_partner_company.vat or len(eu_partner_company.vat) == 1:
+        for partner in self:
+            if not partner.vies_vat_to_check:
+                partner.vies_valid = False
                 continue
-            country = eu_partner_company.country_id
-            if self._run_vies_test(eu_partner_company.vat, country) is False:
-                self.vies_failed_message = _("The VAT number %s failed the VIES VAT validation check.", eu_partner_company.vat)
-            else:
-                self.vies_failed_message = False
+            try:
+                vies_valid = check_vies(partner.vies_vat_to_check, timeout=10)
+                partner.vies_valid = vies_valid['valid']
+            except Exception as e:
+                if partner._origin.id:
+                    msg = ""
+                    if isinstance(e, OSError):
+                        msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vies_vat_to_check)
+                    elif isinstance(e, InvalidComponent):
+                        msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vies_vat_to_check)
+                    partner._origin.message_post(body=msg)
+                _logger.exception("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
+                partner.vies_valid = False
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
@@ -216,29 +235,6 @@ class ResPartner(models.Model):
         # This is necessary to support an ORM limitation: setting vat and country_id together on a company
         # triggers two distinct write on res.partner, one for each field, both triggering this constraint.
         # If vat is set before country_id, the constraint must not break.
-        return check_result
-
-    @api.model
-    def _run_vies_test(self, vat_number, default_country):
-        """ Validate a VAT number using the VIES VAT validation. """
-        check_result = None
-
-        # First check with country code as prefix of the TIN
-        vat_country_code, vat_number_split = self._split_vat(vat_number)
-        vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())])
-        if not vat_has_legit_country_code:
-            vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
-        if vat_has_legit_country_code:
-            check_result = self.vies_vat_check(vat_country_code, vat_number_split)
-            if check_result:
-                return vat_country_code
-
-        # If it fails, check with default_country (if it exists)
-        if default_country:
-            check_result = self.vies_vat_check(default_country.code.lower(), vat_number)
-            if check_result:
-                return default_country.code.lower()
-
         return check_result
 
     @api.model

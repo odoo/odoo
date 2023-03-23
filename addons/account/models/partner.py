@@ -209,6 +209,10 @@ class AccountFiscalPosition(models.Model):
             fpos = self.search(base_domain + null_country_dom, limit=1)
         return fpos
 
+    def _get_vat_valid(self, delivery, company=None):
+        """ Hook for determining VAT validity with more complex VAT requirements """
+        return bool(delivery.vat)
+
     @api.model
     def _get_fiscal_position(self, partner, delivery=None):
         """
@@ -235,11 +239,11 @@ class AccountFiscalPosition(models.Model):
             return manual_fiscal_position
 
         # First search only matching VAT positions
-        vat_required = bool(partner.vat)
-        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
+        vat_valid = self._get_vat_valid(delivery, company)
+        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_valid)
 
         # Then if VAT required found no match, try positions that do not require it
-        if not fp and vat_required:
+        if not fp and vat_valid:
             fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
         return fp or self.env['account.fiscal.position']
