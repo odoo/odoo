@@ -116,7 +116,7 @@ export class GraphModel extends Model {
             this.initialGroupBy = searchParams.context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
         }
         const metaData = this._buildMetaData();
-        return this._fetchDataPoints(metaData);
+        await this._fetchDataPoints(metaData);
     }
 
     /**
@@ -243,7 +243,7 @@ export class GraphModel extends Model {
         // dataPoints + labels --> datasetsTmp --> datasets
         const datasetsTmp = {};
         for (const dataPt of dataPoints) {
-            const { domain, labelIndex, originIndex, trueLabel, value } = dataPt;
+            const { domain, labelIndex, originIndex, trueLabel, value, identifier } = dataPt;
             const datasetLabel = this._getDatasetLabel(dataPt);
             if (!(datasetLabel in datasetsTmp)) {
                 let dataLength = labels.length;
@@ -256,11 +256,13 @@ export class GraphModel extends Model {
                     domains: new Array(dataLength).fill([]),
                     label: datasetLabel,
                     originIndex: originIndex,
+                    identifiers: new Set(),
                 };
             }
             datasetsTmp[datasetLabel].data[labelIndex] = value;
             datasetsTmp[datasetLabel].domains[labelIndex] = domain;
             datasetsTmp[datasetLabel].trueLabels[labelIndex] = trueLabel;
+            datasetsTmp[datasetLabel].identifiers.add(identifier);
         }
         // sort by origin
         let datasets = sortBy(Object.values(datasetsTmp), "originIndex");
@@ -446,10 +448,11 @@ export class GraphModel extends Model {
                         for (const group of data.groups) {
                             const { __domain, __count } = group;
                             const labels = [];
-
+                            const rawValues = [];
                             for (const gb of groupBy) {
                                 let label;
                                 const val = group[gb.spec];
+                                rawValues.push({ [gb.spec]: val });
                                 const fieldName = gb.fieldName;
                                 const { type } = fields[fieldName];
                                 if (type === "boolean") {
@@ -493,6 +496,7 @@ export class GraphModel extends Model {
                                 value,
                                 labels,
                                 originIndex,
+                                identifier: JSON.stringify(rawValues),
                             });
                         }
                         return dataPoints;
@@ -553,7 +557,7 @@ export class GraphModel extends Model {
     /**
      * @protected
      */
-    async _prepareData() {
+    _prepareData() {
         const processedDataPoints = this._getProcessedDataPoints();
         this.data = this._getData(processedDataPoints);
         this.lineOverlayDataset = null;
