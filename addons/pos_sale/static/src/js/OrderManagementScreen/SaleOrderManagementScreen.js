@@ -356,6 +356,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                     "fiscal_position_id",
                     "amount_total",
                     "amount_untaxed",
+                    "amount_unpaid",
                     "picking_ids",
                     "partner_shipping_id",
                     "partner_invoice_id"
@@ -363,14 +364,6 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
             ],
             context: this.env.session.user_context,
         });
-
-        const saleOrdersAmountUnpaid = await this.rpc({
-            model: "sale.order",
-            method: "get_order_amount_unpaid",
-            args: [[id]],
-            context: this.env.session.user_context,
-        });
-        sale_order[0].amount_unpaid = saleOrdersAmountUnpaid[sale_order[0].id];
 
         const sale_lines = await this._getSOLines(sale_order[0].order_line);
         sale_order[0].order_line = sale_lines;
