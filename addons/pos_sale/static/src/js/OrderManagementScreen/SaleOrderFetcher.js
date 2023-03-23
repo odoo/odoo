@@ -81,16 +81,6 @@ class SaleOrderFetcher extends EventBus {
             { offset, limit }
         );
 
-        const saleOrderIds = saleOrders.flatMap((saleOrder) => saleOrder.id);
-        const saleOrdersAmountUnpaid = await this.orm.call(
-            "sale.order",
-            "get_order_amount_unpaid",
-            [saleOrderIds]
-        );
-        for (const saleOrder of saleOrders) {
-            saleOrder.amount_unpaid = saleOrdersAmountUnpaid[saleOrder.id];
-        }
-
         this.pos.globalState.set_synch("connected");
         return saleOrders;
     }

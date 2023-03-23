@@ -316,16 +316,10 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                 "fiscal_position_id",
                 "amount_total",
                 "amount_untaxed",
+                "amount_unpaid",
                 "picking_ids",
             ]
         );
-
-        const saleOrdersAmountUnpaid = await this.orm.call(
-            "sale.order",
-            "get_order_amount_unpaid",
-            [[id]]
-        );
-        sale_order.amount_unpaid = saleOrdersAmountUnpaid[sale_order.id];
 
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
