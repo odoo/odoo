@@ -30,7 +30,11 @@ class TestVirtualAvailable(TestStockCommon):
             'quantity': 10.0,
             'owner_id': cls.user_stock_user.partner_id.id})
 
-        cls.picking_out = cls.env['stock.picking'].create({'picking_type_id': cls.env.ref('stock.picking_type_out').id})
+        cls.picking_out = cls.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id': cls.env.ref('stock.picking_type_out').id
+        })
         cls.env['stock.move'].create({
             'name': 'a move',
             'product_id': cls.product_3.id,
@@ -41,6 +45,8 @@ class TestVirtualAvailable(TestStockCommon):
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
 
         cls.picking_out_2 = cls.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
             'picking_type_id': cls.env.ref('stock.picking_type_out').id})
         cls.env['stock.move'].create({
             'restrict_partner_id': cls.user_stock_user.partner_id.id,
@@ -143,6 +149,8 @@ class TestVirtualAvailable(TestStockCommon):
             'location_id': self.env.ref('stock.stock_location_customers').id,
             'location_dest_id': self.env.ref('stock.stock_location_stock').id,
             'picking_type_id': self.ref('stock.picking_type_in'),
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test',

@@ -138,7 +138,7 @@ class StockPicking(models.Model):
             'bom_id': bom.id,
             'location_src_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
-            'product_qty': subcontract_move.product_uom_qty,
+            'product_qty': subcontract_move.from_immediate_transfer and subcontract_move.quantity_done or subcontract_move.product_qty,
             'picking_type_id': warehouse.subcontracting_type_id.id,
             'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay)
         }
@@ -150,7 +150,8 @@ class StockPicking(models.Model):
             # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
                 continue
-            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
+            quantity = move.from_immediate_transfer and move.quantity_done or move.product_qty
+            if float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))

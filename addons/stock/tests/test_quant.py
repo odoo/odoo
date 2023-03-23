@@ -773,6 +773,8 @@ class StockQuant(TransactionCase):
                 'product_uom_qty': 10,
                 'product_uom': self.product.uom_id.id,
             })],
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         picking.action_confirm()
 

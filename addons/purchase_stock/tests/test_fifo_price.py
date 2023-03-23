@@ -99,6 +99,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             })
 
         # I assign this outgoing shipment
+        outgoing_shipment.action_reset_draft()
         outgoing_shipment.action_assign()
 
         # Process the delivery of the outgoing shipment
@@ -124,6 +125,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             })
 
         # I assign this outgoing shipment
+        outgoing_shipment_uom.action_reset_draft()
         outgoing_shipment_uom.action_assign()
 
         # Process the delivery of the outgoing shipment
@@ -184,6 +186,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         })
 
         # I assign this outgoing shipment
+        outgoing_shipment_cur.action_reset_draft()
         outgoing_shipment_cur.action_assign()
 
         # Process the delivery of the outgoing shipment
@@ -206,6 +209,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             })
 
         # I assign this outgoing shipment
+        outgoing_shipment_ret.action_reset_draft()
         outgoing_shipment_ret.action_assign()
         res = outgoing_shipment_ret.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()

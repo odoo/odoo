@@ -54,8 +54,9 @@ class TestSubcontractingPortalUi(HttpCase):
         picking_form.partner_id = self.partner_portal
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
-            move.product_uom_qty = 2
+            move.quantity_done = 2
         picking_receipt = picking_form.save()
+        picking_receipt.action_reset_draft()
         picking_receipt.action_confirm()
 
         self.start_tour("/my/productions", 'subcontracting_portal_tour', login="georges1")

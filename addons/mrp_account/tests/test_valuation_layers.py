@@ -334,6 +334,8 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_in.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'move_line_ids': [(0, 0, {
                 'product_id': self.product1.id,
                 'qty_done': 1,
