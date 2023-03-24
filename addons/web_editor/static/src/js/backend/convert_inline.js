@@ -1,7 +1,9 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { descendants, getAdjacentNextSiblings, getAdjacentPreviousSiblings, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
+import { descendants, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
+
+/* global html2canvas */
 
 //--------------------------------------------------------------------------
 // Constants
@@ -520,17 +522,10 @@ function enforceTablesResponsivity(editable) {
                 // Hack that makes vertical-align possible within an inline-block.
                 const wrapper = document.createElement('div');
                 wrapper.style.setProperty('display', 'inline-block');
-                const firstNonCommentChild = [...td.childNodes].find(child => child.nodeType !== Node.COMMENT_NODE);
-                let anchor;
-                if (firstNonCommentChild) {
-                    anchor = getAdjacentPreviousSiblings(firstNonCommentChild)
-                        .filter(sib => sib.nodeType !== Node.TEXT_NODE)
-                        .shift();
-                }
                 for (const child of [...td.childNodes].filter(child => child.nodeType !== Node.COMMENT_NODE)) {
                     wrapper.append(child);
                 }
-                anchor ? anchor.after(wrapper) : td.append(wrapper);
+                td.append(wrapper);
                 const centeringSpan = document.createElement('span');
                 centeringSpan.style.setProperty('height', '100%');
                 centeringSpan.style.setProperty('display', 'inline-block');
@@ -627,6 +622,7 @@ async function toInline($editable, cssRules, $iframe) {
         };
     };
 
+    await flattenBackgroundImages(editable);
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -639,7 +635,6 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
-    flattenBackgroundImages(editable);
     responsiveToStaticForOutlook(editable);
     enforceTablesResponsivity(editable);
     formatTables($editable);
@@ -663,7 +658,6 @@ async function toInline($editable, cssRules, $iframe) {
     }
     $editable.addClass('odoo-editor-editable');
 }
-const XMLNS_URN = 'urn:schemas-microsoft-com:vml';
 /**
  * Take all elements with a `background-image` style and convert them, along
  * with their contents, to `png` images. The images are then appended to the
@@ -672,30 +666,35 @@ const XMLNS_URN = 'urn:schemas-microsoft-com:vml';
  *
  * @param {Element} editable
  */
-function flattenBackgroundImages(editable) {
-    const backgroundImages = [...editable.querySelectorAll('*[style*=background-image]')].reverse();
-    for (const backgroundImage of backgroundImages) {
-        const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
-        const url = backgroundImage.style.backgroundImage.match(/url\("?(.+?)"?\)/)[1];
-        const vmlStyle = `border:0;display:inline-block;width:${width*.75}pt;height:${height*.75}pt;`;
-        const fontSize = getComputedStyle(backgroundImage).fontSize;
-        [...backgroundImage.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || fontSize));
-        const div = document.createElement('div');
-        div.style.fontSize = 0;
-        div.replaceChildren(...backgroundImage.childNodes);
-        const topDiv = document.createElement('div');
-        topDiv.append(div);
-        backgroundImage.append(document.createComment(`[if mso]>
-            <v:image xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="${vmlStyle}" src="${url}"/>
-            <v:rect xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="position:absolute;${vmlStyle}">
-            <v:fill opacity="0%" color="#000000"/>
-            <v:textbox inset="0,0,0,0">
-        <![endif]`));
-        backgroundImage.append(topDiv);
-        backgroundImage.append(document.createComment(`[if mso]>
-            </v:textbox>
-            </v:rect>
-        <![endif]`));
+async function flattenBackgroundImages(editable) {
+    for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
+        if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
+            const iframe = document.createElement('iframe');
+            const style = getComputedStyle(backgroundImage);
+            const clonedBackground = backgroundImage.cloneNode(true);
+            clonedBackground.style.height = style['height'];
+            clonedBackground.style.width = style['width'];
+            iframe.style.height = style['height'];
+            iframe.style.width = style['width'];
+            backgroundImage.after(iframe);
+            iframe.contentDocument.body.append(clonedBackground);
+            iframe.contentDocument.body.style.margin = 0;
+
+            const canvas = await html2canvas(clonedBackground, { scale: 1 });
+            const image = document.createElement('img');
+            image.setAttribute('src', canvas.toDataURL('png'));
+            image.setAttribute('width', canvas.getAttribute('width'));
+            image.setAttribute('height', canvas.getAttribute('height'));
+            image.style.setProperty('margin', 0);
+            image.style.setProperty('display', 'block'); // Ensure no added vertical space.
+            // Clean up the original element.
+            backgroundImage.replaceChildren(...descendants(backgroundImage).filter(node => node.nodeType === Node.COMMENT_NODE));
+            backgroundImage.style.setProperty('padding', 0);
+            backgroundImage.style.removeProperty('background-image');
+            backgroundImage.prepend(image); // Add the image to the original element.
+            backgroundImage.className = backgroundImage.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
+            iframe.remove();
+        }
     }
 }
 /**
