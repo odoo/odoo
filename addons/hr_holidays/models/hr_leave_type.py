@@ -312,7 +312,8 @@ class HolidaysType(models.Model):
                                     leave_unit = 'hours'
                                 if holiday_status_id.requires_allocation != 'no':
                                     for available_allocation in sorted_available_allocations:
-                                        if available_allocation.date_to and available_allocation.date_to < leave.date_from.date():
+                                        if (available_allocation.date_to and available_allocation.date_to < leave.date_from.date()) \
+                                            or (available_allocation.date_from > leave.date_to.date()):
                                             continue
                                         virtual_remaining_leaves = (available_allocation.number_of_days if leave_unit == 'days' else available_allocation.number_of_hours_display) - allocations_days_consumed[employee_id][holiday_status_id][available_allocation]['virtual_leaves_taken']
                                         max_leaves = min(virtual_remaining_leaves, leave_duration)
@@ -351,7 +352,7 @@ class HolidaysType(models.Model):
                     if future_allocation_interval[0].date() > search_date:
                         continue
                     for allocation in future_allocation_interval[2]:
-                        if not allocation.active:
+                        if not allocation.active or allocation.date_from > search_date:
                             continue
                         days_consumed = allocations_days_consumed[employee_id][holiday_status_id][allocation]
                         if future_allocation_interval[1] != fields.datetime.combine(date, time.max) + timedelta(days=5*365):
