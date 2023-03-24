@@ -351,7 +351,7 @@ export class Messaging {
                     if (!channel) {
                         // for example seen from another browser, the current one has no
                         // knowledge of the channel
-                        return;
+                        continue;
                     }
                     if (this.store.user.id === partner_id) {
                         channel.serverLastSeenMsgBySelf = last_message_id;
