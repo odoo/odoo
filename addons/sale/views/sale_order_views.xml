@@ -114,6 +114,12 @@
                   decoration-info="state == 'draft' or invoice_status == 'to invoice'"
                   decoration-primary="state == 'sent'"
                   decoration-muted="state == 'cancel'">
+                <header>
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d" 
+                            type="action" 
+                            string="Create Invoices" 
+                            class="btn-secondary"/>
+                </header>
                 <field name="message_needaction" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
 
