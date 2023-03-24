@@ -12,19 +12,19 @@ class StockMove(models.Model):
         res += self.filtered(lambda m: m.bom_line_id.bom_id.product_tmpl_id.id == product.product_tmpl_id.id)
         return res
 
-    def _generate_analytic_lines_data(self, unit_amount, amount):
-        vals = super()._generate_analytic_lines_data(unit_amount, amount)
-        if self.raw_material_production_id.analytic_account_id:
+    def _generate_analytic_lines_data(self, unit_amount, amount, distribution, account, distribution_on_each_plan):
+        vals = super()._generate_analytic_lines_data(unit_amount, amount, distribution, account, distribution_on_each_plan)
+        if self._get_analytic_distribution():
             vals['name'] = _('[Raw] %s', self.product_id.display_name)
             vals['ref'] = self.raw_material_production_id.display_name
             vals['category'] = 'manufacturing_order'
         return vals
 
-    def _get_analytic_account(self):
-        account = self.raw_material_production_id.analytic_account_id
-        if account:
-            return account
-        return super()._get_analytic_account()
+    def _get_analytic_distribution(self):
+        distribution = self.raw_material_production_id.analytic_distribution
+        if distribution:
+            return distribution
+        return super()._get_analytic_distribution()
 
     def _ignore_automatic_valuation(self):
         return bool(self.raw_material_production_id)

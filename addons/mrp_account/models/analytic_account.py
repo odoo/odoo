@@ -8,11 +8,11 @@ class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    production_ids = fields.One2many('mrp.production', 'analytic_account_id', string='Manufacturing Orders')
+    production_ids = fields.Many2many('mrp.production')
     production_count = fields.Integer("Manufacturing Orders Count", compute='_compute_production_count')
-    bom_ids = fields.One2many('mrp.bom', 'analytic_account_id', string='Bills of Materials')
+    bom_ids = fields.Many2many('mrp.bom')
     bom_count = fields.Integer("BoM Count", compute='_compute_bom_count')
-    workcenter_ids = fields.One2many('mrp.workcenter', 'costs_hour_account_id', string='Workcenters')
+    workcenter_ids = fields.Many2many('mrp.workcenter')
     workorder_count = fields.Integer("Work Order Count", compute='_compute_workorder_count')
 
     @api.depends('production_ids')
@@ -77,3 +77,14 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     category = fields.Selection(selection_add=[('manufacturing_order', 'Manufacturing Order')])
+
+class AccountAnalyticApplicability(models.Model):
+    _inherit = 'account.analytic.applicability'
+    _description = "Analytic Plan's Applicabilities"
+
+    business_domain = fields.Selection(
+        selection_add=[
+            ('manufacturing_order', 'Manufacturing Order'),
+        ],
+        ondelete={'manufacturing_order': 'cascade'},
+    )

@@ -6,7 +6,9 @@
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='picking_type_id']" position="after">
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_distribution" widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       options="{'product_field': 'product_id'}"/>
             </xpath>
         </field>
     </record>

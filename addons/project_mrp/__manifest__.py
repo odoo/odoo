@@ -7,9 +7,6 @@
     'summary': "Monitor MRP using project",
     'category': 'Services/Project',
     'depends': ['mrp_account', 'project'],
-    'demo': [
-        'data/project_mrp_demo.xml',
-    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }
