@@ -231,8 +231,17 @@ function makeFakeModelState() {
         hasAllDaySlot: true,
         hasEditDialog: false,
         hasQuickCreate: false,
-        popoverFields: {
+        popoverFieldNodes: {
             name: Field.parseFieldNode(fakeFieldNode, fakeModels, "event", "calendar"),
+        },
+        popoverFields: {
+            name: {
+                context: "{}",
+                invisible: false,
+                readonly: false,
+                required: false,
+                onChange: false,
+            },
         },
         rangeEnd: makeFakeDate().endOf("month"),
         rangeStart: makeFakeDate().startOf("month"),

@@ -11,6 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/model";
+import { extractFieldsFromArchInfo } from "@web/views/relational_model/utils";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -22,8 +23,12 @@ export class CalendarModel extends Model {
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
+        const fieldNodes = params.popoverFieldNodes;
+        const { activeFields, fields } = extractFieldsFromArchInfo({ fieldNodes }, params.fields);
         this.meta = {
             ...params,
+            popoverFields: activeFields,
+            fields,
             firstDayOfWeek: localization.weekStart,
             formViewId: params.formViewId || formViewIdFromConfig,
         };
@@ -109,6 +114,9 @@ export class CalendarModel extends Model {
     }
     get isTimeHidden() {
         return this.meta.isTimeHidden;
+    }
+    get popoverFieldNodes() {
+        return this.meta.popoverFieldNodes;
     }
     get popoverFields() {
         return this.meta.popoverFields;

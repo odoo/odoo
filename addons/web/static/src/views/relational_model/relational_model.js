@@ -244,12 +244,18 @@ export class RelationalModel extends Model {
     }
 
     async _loadRecord({ resModel, resId, activeFields, fields, context }) {
-        const fieldSpec = getFieldsSpec(activeFields, fields);
-        console.log("Unity field spec", fieldSpec);
+        const evalContext = {
+            ...context,
+            active_id: resId,
+            active_ids: [resId],
+            active_model: resModel,
+            current_company_id: this.company.currentCompany.id,
+        };
         const kwargs = {
             context: { bin_size: true, ...context },
-            fields: getFieldsSpec(activeFields, fields),
+            fields: getFieldsSpec(activeFields, fields, evalContext),
         };
+        console.log("Unity field spec", kwargs.fields);
         const records = await this.orm.call(resModel, "web_read_unity", [[resId]], kwargs);
         console.log("Unity response", records);
         return records[0];
@@ -264,11 +270,9 @@ export class RelationalModel extends Model {
         offset = 0,
         resModel,
     }) {
-        const fieldSpec = getFieldsSpec(activeFields, fields);
-        console.log("Unity field spec", fieldSpec);
         const countLimit = Math.max(this.countLimit, offset + limit);
         const kwargs = {
-            fields: fieldSpec,
+            fields: getFieldsSpec(activeFields, fields, context),
             domain: domain,
             offset: offset,
             limit: limit,
@@ -277,15 +281,11 @@ export class RelationalModel extends Model {
         if (countLimit !== Number.MAX_SAFE_INTEGER) {
             kwargs.count_limit = countLimit + 1;
         }
+        console.log("Unity field spec", kwargs.fields);
         const response = await this.orm.call(resModel, "web_search_read_unity", [], kwargs);
         this.countLimit = countLimit;
         console.log("Unity response", response);
         return response;
-    }
-
-    async loadNewRecord(params) {
-        const records = await this._loadNewRecord(params);
-        return records[0];
     }
 }
 

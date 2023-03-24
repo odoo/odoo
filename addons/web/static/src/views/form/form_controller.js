@@ -18,7 +18,7 @@ import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { addFieldDependencies, getActiveFieldsFromArchInfo } from "../relational_model/utils";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "../relational_model/utils";
 
 import { Component, onRendered, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 
@@ -108,10 +108,11 @@ export class FormController extends Component {
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
-        const activeFields = getActiveFieldsFromArchInfo(this.archInfo, this.props.fields, {
-            isSmall: this.env.isSmall,
-        });
-        addFieldDependencies(activeFields, this.props.fields, [
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.archInfo,
+            this.props.fields
+        );
+        addFieldDependencies(activeFields, fields, [
             { name: "display_name", type: "char", readonly: true },
         ]);
 
@@ -139,7 +140,7 @@ export class FormController extends Component {
                 resModel: this.props.resModel,
                 resId: this.props.resId || false,
                 resIds: this.props.resIds || (this.props.resId ? [this.props.resId] : []),
-                fields: this.props.fields,
+                fields,
                 activeFields,
                 viewMode: "form",
                 rootType: "record",

@@ -40,6 +40,7 @@ export class Record extends DataPoint {
         this._urgentSave = false;
         this._onWillSaveRecord = params.onWillSaveRecord || (() => {});
         this._onRecordSaved = params.onRecordSaved || (() => {});
+        this._parentRecord = params.parentRecord;
     }
 
     // -------------------------------------------------------------------------
@@ -274,9 +275,13 @@ export class Record extends DataPoint {
             }
         }
         evalContext.id = this.resId || false;
-        // if (this.getParentRecordContext) {
-        //     evalContext.parent = this.getParentRecordContext();
-        // }
+        if (this._parentRecord) {
+            Object.defineProperty(evalContext, "parent", {
+                get() {
+                    return this._parentRecord.evalContext;
+                },
+            });
+        }
         return evalContext;
     }
 
@@ -309,11 +314,11 @@ export class Record extends DataPoint {
         let record;
         if (resId) {
             params.resId = resId;
-            record = await this.model.keepLast.add(this.model._loadRecord(params));
+            record = await this.model._loadRecord(params);
             this._values = this._parseServerValues(record);
             this._changes = {};
         } else {
-            record = await this.model.keepLast.add(this.model.loadNewRecord(params));
+            record = await this.model._loadNewRecord(params);
             this._values = {};
             this._changes = this._parseServerValues(
                 Object.assign(this._getDefaultValues(), record)

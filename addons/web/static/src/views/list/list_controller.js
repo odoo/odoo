@@ -19,7 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { useSetupView } from "@web/views/view_hook";
-import { getActiveFieldsFromArchInfo } from "../relational_model/utils";
+import { extractFieldsFromArchInfo } from "../relational_model/utils";
 
 import {
     Component,
@@ -46,10 +46,12 @@ export class ListController extends Component {
         this.editable = this.props.editable ? this.archInfo.editable : false;
         this.multiEdit = this.archInfo.multiEdit;
         this.activeActions = this.archInfo.activeActions;
-        const fields = { ...this.props.fields };
         const { rootState } = this.props.state || {};
         const { defaultGroupBy, rawExpand } = this.archInfo;
-        const activeFields = getActiveFieldsFromArchInfo(this.archInfo, fields);
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.archInfo,
+            this.props.fields
+        );
 
         const model = useModel(this.props.Model, {
             resModel: this.props.resModel,

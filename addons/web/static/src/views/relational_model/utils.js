@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { makeContext } from "@web/core/context";
 import { omit } from "@web/core/utils/objects";
 
 export const addFieldDependencies = (activeFields, fields, fieldDependencies = []) => {
@@ -25,12 +26,9 @@ export const addFieldDependencies = (activeFields, fields, fieldDependencies = [
     }
 };
 
-export const getActiveFieldsFromArchInfo = (
-    { fieldNodes, widgetNodes },
-    fields,
-    { isSmall } = {}
-) => {
+export const extractFieldsFromArchInfo = ({ fieldNodes, widgetNodes }, fields) => {
     const activeFields = {};
+    fields = { ...fields };
     for (const fieldNode of Object.values(fieldNodes)) {
         const fieldName = fieldNode.name;
         const modifiers = fieldNode.modifiers || {};
@@ -46,17 +44,11 @@ export const getActiveFieldsFromArchInfo = (
                 continue; // always invisible
             }
             if (fieldNode.views) {
-                let viewMode = fieldNode.viewMode;
-                if (viewMode.split(",").length !== 1) {
-                    viewMode = isSmall ? "kanban" : "list";
-                }
-                const viewDescr = fieldNode.views[viewMode];
-                activeFields[fieldName].related = {
-                    activeFields: getActiveFieldsFromArchInfo(viewDescr, viewDescr.fields, {
-                        isSmall,
-                    }),
-                    fields: viewDescr.fields,
-                };
+                const viewDescr = fieldNode.views[fieldNode.viewMode];
+                activeFields[fieldName].related = extractFieldsFromArchInfo(
+                    viewDescr,
+                    viewDescr.fields
+                );
             }
         } else {
             // TODO (see task description for multiple occurrences of fields)
@@ -68,10 +60,40 @@ export const getActiveFieldsFromArchInfo = (
     for (const widgetInfo of Object.values(widgetNodes || {})) {
         addFieldDependencies(activeFields, fields, widgetInfo.widget.fieldDependencies);
     }
-    return activeFields;
+    return { activeFields, fields };
 };
 
-export const getFieldsSpec = (activeFields, fields) => {
+const SENTINEL = Symbol("sentinel");
+function getFieldContext(fieldName, activeFields, evalContext, parentActiveFields = null) {
+    const rawContext = activeFields[fieldName].context;
+    if (!rawContext || rawContext === "{}") {
+        return;
+    }
+
+    evalContext = { ...evalContext };
+    for (const fieldName in activeFields) {
+        evalContext[fieldName] = SENTINEL;
+    }
+    if (parentActiveFields) {
+        evalContext.parent = {};
+        for (const fieldName in parentActiveFields) {
+            evalContext.parent[fieldName] = SENTINEL;
+        }
+    }
+    const evaluatedContext = makeContext([rawContext], evalContext);
+    for (const key in evaluatedContext) {
+        if (evaluatedContext[key] === SENTINEL || key.startsWith("default_")) {
+            // FIXME: this isn't perfect, a value might be evaluted to something else
+            // than the symbol because of the symbol
+            delete evaluatedContext[key];
+        }
+    }
+    if (Object.keys(evaluatedContext).length > 0) {
+        return evaluatedContext;
+    }
+}
+
+export const getFieldsSpec = (activeFields, fields, evalContext, parentActiveFields = null) => {
     console.log("getFieldsSpec");
     const fieldsSpec = {};
     for (const fieldName in activeFields) {
@@ -81,13 +103,25 @@ export const getFieldsSpec = (activeFields, fields) => {
         if (fieldDescr.related) {
             fieldsSpec[fieldName].fields = getFieldsSpec(
                 fieldDescr.related.activeFields,
-                fieldDescr.related.fields
+                fieldDescr.related.fields,
+                evalContext,
+                activeFields
             );
-            // fieldsSpec[fieldName].context = fieldDescr.context; // TODO: evaluate (without record)
         }
         // M2O
-        if (fields[fieldName].type === "many2one") {
-            fieldsSpec[fieldName].fields = { display_name: {} }; // TODO: not necessary if always invisible
+        if (fields[fieldName].type === "many2one" && fieldDescr.invisible !== true) {
+            fieldsSpec[fieldName].fields = { display_name: {} };
+        }
+        if (["many2one", "one2many", "many2many"].includes(fields[fieldName].type)) {
+            const context = getFieldContext(
+                fieldName,
+                activeFields,
+                evalContext,
+                parentActiveFields
+            );
+            if (context) {
+                fieldsSpec[fieldName].context = context;
+            }
         }
     }
     return fieldsSpec;

@@ -74,6 +74,10 @@ export class DataPoint {
                     // for now, onchange still returns many2one values as pairs [id, display_name]
                     return value;
                 }
+                if (Number.isInteger(value)) {
+                    // for always invisible many2ones, unity directly returns the id, not a pair
+                    return [value, ""];
+                }
                 return value ? [value.id, value.display_name] : false;
             }
             case "one2many":
@@ -85,6 +89,7 @@ export class DataPoint {
                     activeFields: (related && related.activeFields) || {},
                     fields: (related && related.fields) || {},
                     data: value,
+                    parent: this,
                 });
             }
         }

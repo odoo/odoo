@@ -5,7 +5,6 @@ import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
 import { evalDomain } from "@web/views/utils";
-import { getActiveFieldsFromArchInfo } from "@web/views/relational_model/utils";
 
 import { Component } from "@odoo/owl";
 
@@ -26,15 +25,11 @@ export class CalendarCommonPopover extends Component {
         return this.props.model.canDelete;
     }
     get activeFields() {
-        return getActiveFieldsFromArchInfo(
-            { fieldNodes: this.props.model.popoverFields },
-            this.props.model.fields
-        );
+        return this.props.model.popoverFields;
     }
 
-    isInvisible(fieldName, record) {
-        const { invisible } = this.props.model.popoverFields[fieldName].modifiers;
-        return evalDomain(invisible, record.evalContext);
+    isInvisible(fieldNode, record) {
+        return evalDomain(fieldNode.modifiers.invisible, record.evalContext);
     }
 
     computeDateTimeAndDuration() {

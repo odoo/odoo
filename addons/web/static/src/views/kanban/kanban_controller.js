@@ -9,7 +9,7 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { canQuickCreate, KanbanRenderer } from "./kanban_renderer";
-import { getActiveFieldsFromArchInfo } from "../relational_model/utils";
+import { extractFieldsFromArchInfo } from "../relational_model/utils";
 
 import { Component, useRef, useState } from "@odoo/owl";
 
@@ -18,10 +18,11 @@ import { Component, useRef, useState } from "@odoo/owl";
 export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
-        const { Model, resModel, fields, archInfo, limit, defaultGroupBy, state } = this.props;
+        const { Model, resModel, archInfo, limit, defaultGroupBy, state } = this.props;
         const { rootState } = state || {};
+        const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
         const model = useModel(Model, {
-            activeFields: getActiveFieldsFromArchInfo(archInfo, fields),
+            activeFields,
             progressAttributes: archInfo.progressAttributes,
             fields,
             resModel,

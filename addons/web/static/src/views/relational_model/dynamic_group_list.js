@@ -37,7 +37,7 @@ export class DynamicGroupList extends DynamicList {
             .flat();
     }
 
-    // FIXME: only for list, but makes sense, maybe rename into record_count?
+    // FIXME: only for list, but makes sense, maybe rename into recordCount?
     // count already exists and is the number of groups
     get nbTotalRecords() {
         return this.groups.reduce((acc, group) => acc + group.count, 0);

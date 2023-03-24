@@ -4,6 +4,7 @@ import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
+import { utils } from "@web/core/ui/ui_service";
 import {
     archParseBoolean,
     evalDomain,
@@ -13,6 +14,8 @@ import {
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
+
+const isSmall = utils.isSmall;
 
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
@@ -287,10 +290,14 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 } else if (!views.list && views.kanban) {
                     viewMode = "kanban";
                 } else if (views.list && views.kanban) {
-                    viewMode = "list,kanban";
+                    viewMode = isSmall() ? "kanban" : "list";
                 }
             } else {
-                viewMode = viewMode.replace("tree", "list");
+                if (viewMode.split(",").length !== 1) {
+                    viewMode = isSmall() ? "kanban" : "list";
+                } else {
+                    viewMode = viewMode === "tree" ? "list" : viewMode;
+                }
             }
             fieldInfo.viewMode = viewMode;
         }

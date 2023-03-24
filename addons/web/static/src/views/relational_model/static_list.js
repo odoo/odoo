@@ -4,6 +4,7 @@ import { DataPoint } from "./datapoint";
 
 export class StaticList extends DataPoint {
     setup(params) {
+        this._parent = params.parent;
         this.orderBy = params.orderBy || [];
         this.limit = params.limit || 40;
         this.offset = params.offset || 0;
@@ -16,6 +17,7 @@ export class StaticList extends DataPoint {
                     resModel: this.resModel,
                     fields: this.fields,
                     data: r,
+                    parentRecord: this._parent,
                 })
         );
         this.count = this.resIds.length;
@@ -27,6 +29,12 @@ export class StaticList extends DataPoint {
 
     get currentIds() {
         return this.records.map((r) => r.resId);
+    }
+
+    get evalContext() {
+        return {
+            parent: this._parent.evalContext,
+        };
     }
 
     // -------------------------------------------------------------------------
