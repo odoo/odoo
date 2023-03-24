@@ -68,6 +68,4 @@ class AccountMoveSend(models.Model):
                 ])\
                 ._snailmail_print(immediate=False)
 
-            moves.is_move_sent = True
-
         return moves
