@@ -319,7 +319,10 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
             if allocation.type_request_unit == 'hour':
-                allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_days = allocation.number_of_hours_display / \
+                    (allocation.employee_id.sudo().resource_calendar_id.hours_per_day \
+                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day \
+                    or HOURS_PER_DAY)
             if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
