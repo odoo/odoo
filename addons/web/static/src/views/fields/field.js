@@ -141,10 +141,6 @@ export class Field extends Component {
 
                 const dynamicInfo = {
                     get context() {
-                        const evalContext = record.getEvalContext
-                            ? record.getEvalContext(false)
-                            : record.evalContext;
-
                         const context = {};
                         for (const key in record.context) {
                             if (!key.startsWith("default_")) {
@@ -154,17 +150,13 @@ export class Field extends Component {
 
                         return {
                             ...context,
-                            ...makeContext([fieldInfo.context], evalContext),
+                            ...makeContext([fieldInfo.context], record.evalContext),
                         };
                     },
                     get domain() {
-                        const evalContext = record.getEvalContext
-                            ? record.getEvalContext(true)
-                            : record.evalContext;
-
-                        return fieldInfo.domain
-                            ? new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList()
-                            : undefined;
+                        if (fieldInfo.domain) {
+                            return new Domain(evaluateExpr(fieldInfo.domain, record.evalContext)).toList();
+                        }
                     },
                     readonly: readonlyFromModifiers,
                     get required() {

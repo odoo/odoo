@@ -8,39 +8,48 @@ import { _t } from "@web/core/l10n/translation";
 import { evalDomain, isNumeric, isX2Many } from "@web/views/utils";
 import { DataPoint } from "./datapoint";
 import { getOnChangeSpec } from "./utils";
-import { FormErrorDialog } from "@web/views/form/form_error_dialog/form_error_dialog";
 
 export class Record extends DataPoint {
     setup(params) {
+        this._parentRecord = params.parentRecord;
+        this._onWillSaveRecord = params.onWillSaveRecord || (() => {});
+        this._onRecordSaved = params.onRecordSaved || (() => {});
+
         this.resId = params.data.id || false;
         this.resIds = params.resIds || [];
-        // multiple fields: we could loop here on activeFields and generate a
-        // StaticList for each (and an entry in data), but we would have more datapoints
+        if (params.mode === "readonly") {
+            this.isInEdition = false;
+        } else {
+            this.isInEdition = params.mode === "edit" || !this.resId;
+        }
+
         if (this.resId) {
             this._values = this._parseServerValues(params.data);
             this._changes = {};
         } else {
-            // FIXME: I'm wondering whereas these initial values shouldn't be in _values instead of _changes
             this._values = {};
             this._changes = this._parseServerValues(
                 Object.assign(this._getDefaultValues(), params.data)
             );
         }
         this.data = { ...this._values, ...this._changes };
-        this.evalContext = this._computeEvalContext();
-        if (params.mode === "readonly") {
-            this.isInEdition = false;
+        const parentRecord = this._parentRecord;
+        if (parentRecord) {
+            this.evalContext = {
+                get parent() {
+                    return parentRecord.evalContext;
+                },
+            };
         } else {
-            this.isInEdition = params.mode === "edit" || !this.resId;
+            this.evalContext = {};
         }
+        this._setEvalContext();
+
         this.selected = false; // TODO: rename into isSelected?
         this.isDirty = false; // TODO: turn private? askChanges must be called beforehand to ensure the value is correct
         this._invalidFields = new Set();
         this._closeInvalidFieldsNotification = () => {};
         this._urgentSave = false;
-        this._onWillSaveRecord = params.onWillSaveRecord || (() => {});
-        this._onRecordSaved = params.onRecordSaved || (() => {});
-        this._parentRecord = params.parentRecord;
     }
 
     // -------------------------------------------------------------------------
@@ -275,13 +284,6 @@ export class Record extends DataPoint {
             }
         }
         evalContext.id = this.resId || false;
-        if (this._parentRecord) {
-            Object.defineProperty(evalContext, "parent", {
-                get() {
-                    return this._parentRecord.evalContext;
-                },
-            });
-        }
         return evalContext;
     }
 
@@ -337,7 +339,7 @@ export class Record extends DataPoint {
         }
     }
 
-    async _save({ noReload, force, useSaveErrorDialog } = {}) {
+    async _save({ noReload, force, onError } = {}) {
         if (!this.isDirty && !force) {
             return true;
         }
@@ -373,17 +375,8 @@ export class Record extends DataPoint {
                 await this.model.orm.write(this.resModel, [resId], changes, kwargs);
             }
         } catch (e) {
-            if (useSaveErrorDialog) {
-                return new Promise((resolve) => {
-                    this.model.dialog.add(FormErrorDialog, {
-                        message: e.data.message,
-                        onDiscard: () => {
-                            this._discard();
-                            resolve(true);
-                        },
-                        onStayHere: () => resolve(false),
-                    });
-                });
+            if (onError) {
+                return onError(e, { discard: () => this._discard() });
             }
             if (!this.isInEdition) {
                 await this._load(resId);
