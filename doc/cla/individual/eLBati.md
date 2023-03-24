@@ -10,3 +10,4 @@ Signed,
 
 Lorenzo Battistini lorenzo.battistini@agilebg.com (up to 2019-02-01) https://github.com/eLBati
 Lorenzo Battistini elbaddy@gmail.com https://github.com/eLBati
+Lorenzo Battistini lb@takobi.online https://github.com/eLBati
