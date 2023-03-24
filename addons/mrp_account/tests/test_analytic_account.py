@@ -9,7 +9,13 @@ class TestMrpAnalyticAccount(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.write({'groups_id': [(4, cls.env.ref('analytic.group_analytic_accounting').id),]})
+        # The group 'mrp.group_mrp_routings' is required to make the field
+        # 'workorder_ids' visible in the view of 'mrp.production'. The subviews
+        #  of `workorder_ids` must be present in many tests to create records.
+        cls.env.user.groups_id += (
+            cls.env.ref('analytic.group_analytic_accounting')
+            + cls.env.ref('mrp.group_mrp_routings')
+        )
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan',
