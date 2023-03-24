@@ -68,6 +68,7 @@ class AccountMove(models.Model):
                         "balance": balance,
                         "name": "",
                         "account_id": move.expense_sheet_id.expense_line_ids[0]._get_expense_account_destination(),
+                        "amount_currency": balance,
                     }
                 }
 
