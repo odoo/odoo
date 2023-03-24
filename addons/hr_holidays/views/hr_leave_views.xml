@@ -241,9 +241,9 @@
                 <field name="tz_mismatch" invisible="1"/>
                 <field name="holiday_type" invisible="1"/>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div class="o_hr_leave_content row">
-                    <div class="o_hr_leave_column col_left col-md-6 col-12">
-                        <div name="title" class="o_hr_leave_title" invisible="1">
+                <div class="o_hr_leave_content row m-0">
+                    <div class="o_hr_leave_column col_left col-md-6 col-12 p-4">
+                        <div name="title" class="o_hr_leave_title mb-2 fs-2 lh-sm fw-bold" invisible="1">
                             <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
                             <field name="employee_ids" invisible="1"/>
                             <field name="display_name" attrs="{'invisible': [('holiday_status_id', '=', False)]}"/>
@@ -445,7 +445,7 @@
                 <field name="name" widget="text"/>
             </field>
             <xpath expr="//div[hasclass('col_left')]" position="after">
-                <div class="o_hr_leave_column col_right col-md-6 col-12">
+                <div class="o_hr_leave_column col_right col-md-6 col-12 p-4 bg-200 text-700">
                     <widget name="hr_leave_stats"/>
                 </div>
             </xpath>

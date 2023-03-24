@@ -99,9 +99,9 @@
                     </group>
                     <span class="oe_grey" invisible="1">
                     </span>
-                    <div class="o_hr_holidays_hierarchy">
-                        <div class="o_hr_holidays_title">Rules</div>
-                        <div class="o_hr_holidays_hierarchy_readonly" attrs="{'invisible': [('level_ids', '!=', [])]}">
+                    <div class="o_hr_holidays_hierarchy pt-3 pe-0 pb-4 ps-4 overflow-x-auto shadow-sm">
+                        <div class="o_hr_holidays_title py-0 fs-2">Rules</div>
+                        <div class="o_hr_holidays_hierarchy_readonly pt-5 ps-5 pe-0 pb-0" attrs="{'invisible': [('level_ids', '!=', [])]}">
                             <p>
                                 No rule has been set up for this accrual plan.
                             </p>
@@ -131,8 +131,8 @@
                                 <field name="is_based_on_worked_time"/>
                                 <templates>
                                     <div t-name="kanban-box" class="border-0 bg-transparent">
-                                        <div class="o_hr_holidays_body oe_kanban_global_click">
-                                            <div class="o_hr_holidays_timeline text-center">
+                                        <div class="o_hr_holidays_body oe_kanban_global_click ms-3 pt-4">
+                                            <div class="o_hr_holidays_timeline position-absolute top-0 start-0 mt-5 ms-1 py-1 rounded-2 bg-view text-center shadow-sm">
                                                 Level <span class="o_hr_holidays_plan_level_level"/>
                                             </div>
                                             <t t-if="!read_only_mode">
@@ -146,8 +146,8 @@
                                         </div>
                                     </div>
                                     <t t-name="level_content">
-                                        <div class="o_hr_holidays_card">
-                                            <div class="content">
+                                        <div class="o_hr_holidays_card position-relative ms-4 rounded-2 bg-view shadow-sm">
+                                            <div class="content position-relative p-2 fs-5">
                                                 <div>
                                                     <t t-if="record.start_count.value > 0">
                                                         Starts <field name="start_count" widget="integer"/> <field name="start_type"/> after allocation start date
