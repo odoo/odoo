@@ -3450,7 +3450,7 @@ class BaseModel(metaclass=MetaModel):
                     orderby = fields[field].get('order')
                 except AttributeError:
                     # fields is a list and not a dict, so it doesn't have any information about a specific order
-                    orderby = None
+                    orderby = 'Id'
                 field.read(fetched, orderby)
 
         return fetched
