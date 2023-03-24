@@ -16,8 +16,6 @@ class IrUiMenu(models.Model):
     @api.model
     def get_user_roots(self):
         kiosk = self.browse()
-        if self.env.user.has_group('hr_attendance.group_hr_attendance_kiosk'):
+        if self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
             kiosk = self.env.ref('hr_attendance.menu_hr_attendance_kiosk')
-            if not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
-                return kiosk
         return super().get_user_roots() - kiosk
