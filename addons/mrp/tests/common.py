@@ -93,9 +93,11 @@ class TestMrpCommon(common2.TestStockCommon):
             notification_type='inbox',
             groups='mrp.group_mrp_manager, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
         )
-        # Required for `product_uom_id` to be visible in the view
-        # This class is used by a lot of tests which sets `product_uom_id` on `mrp.production`
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        # Both groups below are required to make fields `product_uom_id` and
+        # `workorder_ids` to be visible in the view of `mrp.production`. The
+        # field `product_uom_id` must be set by many tests, and subviews of
+        # `workorder_ids` must be present in many tests to create records.
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom') + cls.env.ref('mrp.group_mrp_routings')
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
