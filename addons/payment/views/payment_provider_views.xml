@@ -25,6 +25,7 @@
                 <field name="show_auth_msg" invisible="1"/>
                 <field name="show_done_msg" invisible="1"/>
                 <field name="show_cancel_msg" invisible="1"/>
+                <field name="require_currency" invisible="1"/>
                 <field name="code" invisible="1"/>
                 <sheet>
                     <!-- === Stat Buttons === -->
@@ -96,7 +97,8 @@
                                                widget="many2many_tags"
                                                placeholder="Select currencies. Leave empty not to restrict any."
                                                context="{'active_test': False}"
-                                               options="{'no_create': True}"/>
+                                               options="{'no_create': True}"
+                                               attrs="{'required': [('require_currency', '=', True), ('state', '!=', 'disabled')]}"/>
                                     </div>
                                     <field name="available_country_ids"
                                            widget="many2many_tags"
