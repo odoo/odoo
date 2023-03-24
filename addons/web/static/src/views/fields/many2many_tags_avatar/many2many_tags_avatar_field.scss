@@ -24,10 +24,78 @@
         .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
             visibility: hidden;
         }
+<<<<<<< HEAD
         &:hover {
             .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
                 visibility: visible;
             }
+||||||| parent of 5887e1046ea (temp)
+
+        a {
+            color: inherit;
+        }
+
+        .o_badge_text {
+            @include o-text-overflow(inline-block);
+            max-width: 200px;
+            color: inherit;
+            line-height: 1.1;
+        }
+
+        .o_delete {
+            color: inherit;
+            cursor: pointer;
+            padding-left: 4px;
+            line-height: 1;
+        }
+
+        img {
+            height: 1.4em;
+            width: 1.4em;
+            object-fit: cover;
+        }
+
+        .o_badge_text, .o_delete {
+            padding-top: 0.25em;
+            padding-bottom: 0.25em;
+        }
+
+        .o_tag_badge_text {
+            padding-left:2px;
+=======
+
+        a {
+            color: inherit;
+        }
+
+        .o_badge_text, .o_tag_badge_text {
+            @include o-text-overflow(inline-block);
+            max-width: 200px;
+            color: inherit;
+            line-height: 1.1;
+        }
+
+        .o_delete {
+            color: inherit;
+            cursor: pointer;
+            padding-left: 4px;
+            line-height: 1;
+        }
+
+        img {
+            height: 1.4em;
+            width: 1.4em;
+            object-fit: cover;
+        }
+
+        .o_badge_text, .o_delete {
+            padding-top: 0.25em;
+            padding-bottom: 0.25em;
+        }
+
+        .o_tag_badge_text {
+            padding-left:2px;
+>>>>>>> 5887e1046ea (temp)
         }
     }
 }
