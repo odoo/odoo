@@ -61,7 +61,6 @@ from .tools import (
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
     partition, populate, Query, ReversedIterable, split_every, unique,
 )
-from .tools.func import frame_codeinfo
 from .tools.lru import LRU
 from .tools.translate import _, _lt
 
@@ -69,7 +68,18 @@ _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
-regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.[a-z0-9]+)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile(r'''
+    ^
+    (\s*
+        ((?P<field>[a-z0-9:_]+|"[a-z0-9:_]+")(\.(?P<property>[a-z0-9_]+))?)
+        (\s+(?P<direction>desc|asc))?
+        (\s+(?P<nulls>nulls\ first|nulls\ last))?
+        \s*
+        (,|$)
+    )+
+    (?<!,)
+    $
+''', re.IGNORECASE | re.VERBOSE)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -4573,17 +4583,17 @@ class BaseModel(metaclass=MetaModel):
 
         order_by_elements = []
         for order_part in order_spec.split(','):
-            order_split = order_part.strip().split(' ')
-            order_field = order_split[0].strip()
-
-            property_name = None
-            if "." in order_field:
-                order_field, property_name = order_field.split('.', 1)
+            order_match = regex_order.match(order_part)
+            order_field = order_match['field']
+            property_name = order_match['property']
+            if property_name:
                 check_property_field_value_name(property_name)
-
-            order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+            order_direction = (order_match['direction'] or '').upper()
+            order_nulls = (order_match['nulls'] or '').upper()
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
+                if order_nulls:
+                    order_nulls = 'NULLS LAST' if order_nulls == 'NULLS FIRST' else 'NULLS FIRST'
             do_reverse = order_direction == 'DESC'
 
             field = self._fields.get(order_field)
@@ -4591,12 +4601,18 @@ class BaseModel(metaclass=MetaModel):
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
 
             if order_field == 'id':
-                order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))
+                order_by_elements.append(f'"{alias}"."{order_field}" {order_direction} {order_nulls}')
             else:
                 if field.inherited:
                     field = field.base_field
                 if field.store and field.type == 'many2one':
                     key = (field.model_name, field.comodel_name, order_field)
+                    if order_nulls:
+                        qname = self._inherits_join_calc(alias, order_field, query)
+                        if order_nulls == 'NULLS LAST':
+                            order_by_elements.append(f"{qname} IS NULL")
+                        elif order_nulls == 'NULLS FIRST':
+                            order_by_elements.append(f"{qname} IS NOT NULL")
                     if key not in seen:
                         seen.add(key)
                         order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
@@ -4606,7 +4622,7 @@ class BaseModel(metaclass=MetaModel):
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     elif field.type == 'properties' and property_name:
                         qualifield_name = f"({qualifield_name} -> '{property_name}')"
-                    order_by_elements.append("%s %s" % (qualifield_name, order_direction))
+                    order_by_elements.append(f"{qualifield_name} {order_direction} {order_nulls}")
                 else:
                     _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
                     continue  # ignore non-readable or "non-joinable" fields
