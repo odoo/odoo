@@ -50,6 +50,17 @@ jobs:
           docker build . -f docker/Dockerfile -t "${GHCR_IMAGE_NAME}:${BRANCH_NAME}" -t "${GHCR_IMAGE_NAME}:${SHORT_REV}" --pull
         fi
 
+    # documentation: https://github.com/aquasecurity/trivy-action
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: "${GHCR_IMAGE_NAME}:${SHORT_REV}"
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+
     - name: Push Image to ghcr
       run: |
         docker push "${GHCR_IMAGE_NAME}:${SHORT_REV}"
