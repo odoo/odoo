@@ -11,6 +11,7 @@ class AccountAnalyticPlan(models.Model):
     _parent_store = True
     _rec_name = 'complete_name'
     _order = 'complete_name asc'
+    _check_company_auto = True
 
     def _default_color(self):
         return randint(1, 11)
