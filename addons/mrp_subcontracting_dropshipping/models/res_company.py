@@ -33,7 +33,7 @@ class ResCompany(models.Model):
                 'company_id': company.id,
                 'warehouse_id': False,
                 'sequence_id': sequence.id,
-                'code': 'incoming',
+                'code': 'dropship',
                 'default_location_src_id': self.env.ref('stock.stock_location_suppliers').id,
                 'default_location_dest_id': company.subcontracting_location_id.id,
                 'sequence_code': 'DSC',
