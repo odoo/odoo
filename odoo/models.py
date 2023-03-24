@@ -1968,6 +1968,8 @@ class BaseModel(metaclass=MetaModel):
             elif order_field in aggregated_fields:
                 order_split[0] = '"%s"' % order_field
                 orderby_terms.append(' '.join(order_split))
+            elif order_field == "__count":
+                 orderby_terms.append(' '.join(order_split))
             elif order_field not in self._fields:
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
             elif order_field == 'sequence':
