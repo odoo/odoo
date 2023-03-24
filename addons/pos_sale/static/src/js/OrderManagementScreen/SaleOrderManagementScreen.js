@@ -280,17 +280,9 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             const sale_order = await this.rpc({
                 model: 'sale.order',
                 method: 'read',
-                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed']],
+                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid']],
                 context: this.env.session.user_context,
             });
-
-            const saleOrdersAmountUnpaid = await this.rpc({
-                model: 'sale.order',
-                method: 'get_order_amount_unpaid',
-                args: [[id]],
-                context: this.env.session.user_context,
-            });
-            sale_order[0].amount_unpaid = saleOrdersAmountUnpaid[sale_order[0].id];
 
             const sale_lines = await this._getSOLines(sale_order[0].order_line);
             sale_order[0].order_line = sale_lines;

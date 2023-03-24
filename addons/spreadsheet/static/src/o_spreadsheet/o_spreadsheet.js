@@ -9960,6 +9960,7 @@
     const LINE_HEIGHT = 1.2;
     css /* scss */ `
   div.o-scorecard {
+    font-family: ${DEFAULT_FONT};
     user-select: none;
     background-color: white;
     display: flex;
@@ -19369,6 +19370,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.setContent(this.initialContent || "");
         }
         setContent(text, selection, raise) {
+            text = text.replace(/[\r\n]/g, "");
             const isNewCurrentContent = this.currentContent !== text;
             this.currentContent = text;
             if (selection) {
@@ -19698,6 +19700,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         start = 0;
                     if (end > this.el.textContent.length)
                         end = this.el.textContent.length;
+                    if (start > this.el.textContent.length)
+                        start = this.el.textContent.length;
                 }
                 let startNode = this.findChildAtCharacterIndex(start);
                 let endNode = this.findChildAtCharacterIndex(end);
@@ -19923,6 +19927,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     flex-grow: 1;
     max-height: inherit;
     .o-composer {
+      font-family: ${DEFAULT_FONT};
       caret-color: black;
       padding-left: 3px;
       padding-right: 3px;
@@ -22509,6 +22514,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         onInput(ev) {
+            // the user meant to paste in the sheet, not open the composer with the pasted content
+            if (!ev.isComposing && ev.inputType === "insertFromPaste") {
+                return;
+            }
             if (ev.data) {
                 // if the user types a character on the grid, it means he wants to start composing the selected cell with that
                 // character
@@ -38356,9 +38365,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       color: #333;
     }
 
-    * {
-      font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
-    }
     &,
     *,
     *:before,
@@ -39534,6 +39540,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             }
                             else if (range.zone[start] >= min && range.zone[end] <= max) {
                                 changeType = "REMOVE";
+                                newRange = range.clone({ ...this.getInvalidRange() });
                             }
                             else if (range.zone[start] <= max && range.zone[end] >= max) {
                                 const toRemove = max - range.zone[start] + 1;
@@ -39599,8 +39606,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             return { changeType: "NONE" };
                         }
                         const invalidSheetName = this.getters.getSheetName(cmd.sheetId);
-                        const sheetId = "";
-                        range = range.clone({ sheetId, invalidSheetName });
+                        range = range.clone({
+                            ...this.getInvalidRange(),
+                            invalidSheetName,
+                        });
                         return { changeType: "REMOVE", range };
                     }, cmd.sheetId);
                     break;
@@ -39863,6 +39872,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 str = colFixed + col + rowFixed + row;
             }
             return str;
+        }
+        getInvalidRange() {
+            return {
+                parts: [],
+                prefixSheet: false,
+                zone: { left: -1, top: -1, right: -1, bottom: -1 },
+                sheetId: "",
+                invalidXc: INCORRECT_RANGE_STRING,
+            };
         }
     }
     RangeAdapter.getters = [
@@ -42470,9 +42488,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.4';
-    __info__.date = '2023-03-16T12:14:53.272Z';
-    __info__.hash = 'ebbb1f0';
+    __info__.version = '16.0.5';
+    __info__.date = '2023-03-23T11:44:43.413Z';
+    __info__.hash = '53150ef';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
