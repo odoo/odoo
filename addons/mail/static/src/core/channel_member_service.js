@@ -37,7 +37,7 @@ export class ChannelMemberService {
         switch (command) {
             case "insert":
                 {
-                    if (!member.thread.channelMembers.includes(member)) {
+                    if (!member.thread?.channelMembers?.includes(member)) {
                         member.thread.channelMembers.push(member);
                     }
                 }
