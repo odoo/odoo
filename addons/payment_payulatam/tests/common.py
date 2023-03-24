@@ -28,3 +28,6 @@ class PayULatamCommon(PaymentCommon):
             'transaction_id': '7008bc34-8258-4857-b866-7d4d7982bd73',
             'value': str(cls.amount)
         }
+
+        cls.async_notification_data_webhook = cls.async_notification_data.copy()
+        cls.async_notification_data_webhook["sign"] = 'e227f90e64808320953dbbcb5ee96c9f'

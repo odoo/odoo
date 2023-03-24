@@ -1,11 +1,22 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'NotificationMessageView',
+    recordMethods: {
+        onComponentUpdate() {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem && this.messageListViewItemOwner.isPartiallyVisible()) {
+                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem.handleVisibleMessage(this.message);
+            }
+        },
+    },
     fields: {
+        component: attr(),
         message: one('Message', {
             related: 'messageListViewItemOwner.message',
             inverse: 'notificationMessageViews',

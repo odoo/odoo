@@ -7,85 +7,8 @@ import { Transition } from "@web/core/transition";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-
-const { Component, useState } = owl;
-
-class FilterAutoComplete extends Component {
-    setup() {
-        this.orm = useService("orm");
-        this.addDialog = useOwnedDialogs();
-        this.state = useState({
-            value: "",
-        });
-        this.sources = [{ placeholder: _t("Loading..."), options: this.loadSource.bind(this) }];
-    }
-    async loadSource(request) {
-        const records = await this.orm.call(this.props.resModel, "name_search", [], {
-            name: request,
-            operator: "ilike",
-            args: this.props.domain,
-            limit: 8,
-            context: {},
-        });
-
-        const options = records.map((result) => ({
-            value: result[0],
-            label: result[1],
-        }));
-
-        if (records.length > 7) {
-            options.push({
-                label: _t("Search More..."),
-                action: this.onSearchMore.bind(this, request),
-            });
-        }
-
-        return options;
-    }
-    async onSearchMore(request) {
-        let dynamicFilters = [];
-        if (request.length) {
-            const nameGets = await this.orm.call(this.props.resModel, "name_search", [], {
-                name: request,
-                args: this.props.domain,
-                operator: "ilike",
-                context: {},
-            });
-
-            dynamicFilters = [
-                {
-                    description: sprintf(_t("Quick search: %s"), request),
-                    domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
-                },
-            ];
-        }
-        const title = sprintf(this.env._t("Search: %s"), this.props.searchMoreTitle);
-        this.addDialog(SelectCreateDialog, {
-            title: title || _t("Select records"),
-            noCreate: true,
-            multiSelect: false,
-            resModel: this.props.resModel,
-            context: {},
-            domain: this.props.domain,
-            onSelected: (...args) => {
-                console.log(...args);
-            },
-            dynamicFilters,
-        });
-    }
-
-    onInput({ inputValue }) {
-        this.state.value = inputValue;
-    }
-    onSelect(option, params = {}) {
-        this.props.onSelect(option.value);
-        this.state.value = "";
-    }
-}
-FilterAutoComplete.template = "web.FilterAutoComplete";
-FilterAutoComplete.components = {
-    AutoComplete,
-};
+import { getColor } from "../colors";
+import { Component, useState } from "@odoo/owl";
 
 class CalendarFilterTooltip extends Component {}
 CalendarFilterTooltip.template = "web.CalendarFilterPanel.tooltip";
@@ -98,27 +21,99 @@ export class CalendarFilterPanel extends Component {
             collapsed: {},
             fieldRev: 1,
         });
-
+        this.addDialog = useOwnedDialogs();
+        this.orm = useService("orm");
         this.popover = usePopover();
         this.removePopover = null;
     }
 
+    getFilterColor(filter) {
+        return filter.colorIndex !== null ? "o_cw_filter_color_" + getColor(filter.colorIndex) : "";
+    }
+
     getAutoCompleteProps(section) {
         return {
-            resModel: this.props.model.fields[section.fieldName].relation,
-            domain: [
-                [
-                    "id",
-                    "not in",
-                    section.filters.filter((f) => f.type !== "all").map((f) => f.value),
-                ],
-            ],
-            searchMoreTitle: section.label,
+            autoSelect: true,
+            resetOnSelect: true,
             placeholder: `+ ${_t("Add")} ${section.label}`,
-            onSelect: (value) => {
-                this.props.model.createFilter(section.fieldName, value);
+            sources: [
+                {
+                    placeholder: _t("Loading..."),
+                    options: (request) => this.loadSource(section, request),
+                },
+            ],
+            onSelect: (option, params = {}) => {
+                if (option.action) {
+                    option.action(params);
+                    return;
+                }
+                this.props.model.createFilter(section.fieldName, option.value);
             },
+            value: "",
         };
+    }
+
+    async loadSource(section, request) {
+        const resModel = this.props.model.fields[section.fieldName].relation;
+        const domain = [
+            ["id", "not in", section.filters.filter((f) => f.type !== "all").map((f) => f.value)],
+        ];
+        const records = await this.orm.call(resModel, "name_search", [], {
+            name: request,
+            operator: "ilike",
+            args: domain,
+            limit: 8,
+            context: {},
+        });
+
+        const options = records.map((result) => ({
+            value: result[0],
+            label: result[1],
+        }));
+
+        if (records.length > 7) {
+            options.push({
+                label: _t("Search More..."),
+                action: () => this.onSearchMore(section, resModel, domain, request),
+            });
+        }
+
+        if (records.length === 0) {
+            options.push({
+                label: _t("No records"),
+                classList: "o_m2o_no_result",
+                unselectable: true,
+            });
+        }
+
+        return options;
+    }
+
+    async onSearchMore(section, resModel, domain, request) {
+        const dynamicFilters = [];
+        if (request.length) {
+            const nameGets = await this.orm.call(resModel, "name_search", [], {
+                name: request,
+                args: domain,
+                operator: "ilike",
+                context: {},
+            });
+            dynamicFilters.push({
+                description: sprintf(_t("Quick search: %s"), request),
+                domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
+            });
+        }
+        const title = sprintf(_t("Search: %s"), section.label);
+        this.addDialog(SelectCreateDialog, {
+            title,
+            noCreate: true,
+            multiSelect: false,
+            resModel,
+            context: {},
+            domain,
+            onSelected: ([resId]) => this.props.model.createFilter(section.fieldName, resId),
+            dynamicFilters,
+        });
     }
 
     get nextFilterId() {
@@ -220,7 +215,7 @@ export class CalendarFilterPanel extends Component {
 }
 
 CalendarFilterPanel.components = {
-    FilterAutoComplete,
+    AutoComplete,
     Transition,
 };
 CalendarFilterPanel.template = "web.CalendarFilterPanel";

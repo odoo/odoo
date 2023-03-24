@@ -25,6 +25,7 @@ registerModel({
          */
         start() {
             this.env.services['bus_service'].addEventListener('notification', this._handleNotifications);
+            this.env.services['bus_service'].start();
         },
         /**
          * @private
@@ -273,7 +274,7 @@ registerModel({
             // particular the case with the `uuid` field that is assumed
             // "required" by the rest of the code and is necessary for some
             // features such as chat windows.
-            if (!channel) {
+            if (!channel || !channel.channel_type) {
                 const res = await this.messaging.models['Thread'].performRpcChannelInfo({ ids: [channelId] });
                 if (!this.exists()) {
                     return;

@@ -3,6 +3,7 @@
 # 	* phone_validation
 # 
 # Translators:
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -46,7 +47,7 @@ msgstr "Aggiungi un numero di telefono alla lista nera"
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_search
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "In archivio"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -113,7 +114,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_date
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -139,13 +140,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_follower_ids
 msgid "Followers"
-msgstr "Follower"
+msgstr "Seguito da"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
@@ -163,13 +164,13 @@ msgstr "ID"
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Se selezionato, nuovi messaggi richiedono attenzione."
+msgstr "Se selezionata, nuovi messaggi richiedono attenzione."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Se selezionato, alcuni messaggi presentano un errore di consegna."
+msgstr "Se selezionata, alcuni messaggi presentano un errore di consegna."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -225,7 +226,7 @@ msgstr "Campo telefono principale non valido nel modello %s"
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist____last_update
@@ -262,6 +263,12 @@ msgstr "Errore di consegna messaggio"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_ids
 msgid "Messages"
 msgstr "Messaggi"
+
+#. module: phone_validation
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid "Missing definition of phone fields."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number

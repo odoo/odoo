@@ -23,7 +23,7 @@ const { FieldOne2Many } = relationalFields;
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
 const fieldRegistryOwl = require('web.field_registry_owl');
 
-const { onMounted, onWillUnmount, xml } = owl;
+const { onMounted, onWillUnmount, xml } = require("@odoo/owl");
 
 QUnit.module('Legacy fields', {}, function () {
 

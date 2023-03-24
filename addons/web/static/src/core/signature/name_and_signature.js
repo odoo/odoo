@@ -8,7 +8,7 @@ import { pick } from "@web/core/utils/objects";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-const { Component, useState, onWillStart, useRef, useEffect } = owl;
+import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -203,7 +203,11 @@ export class NameAndSignature extends Component {
                 let height = 0;
                 const ratio = image.width / image.height;
 
-                const canvas = this.signatureRef.el.querySelector("canvas");
+                const signatureEl = this.signatureRef.el;
+                if (!signatureEl) {
+                    return;
+                }
+                const canvas = signatureEl.querySelector("canvas");
                 const context = canvas.getContext("2d");
 
                 if (image.width / canvas.width > image.height / canvas.height) {

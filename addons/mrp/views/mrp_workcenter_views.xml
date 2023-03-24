@@ -33,6 +33,7 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Work Center" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
                     <field name="code" optional="show"/>
@@ -283,7 +284,7 @@
                                         <div role="menuitem" aria-haspopup="true" class="col-8">
                                             <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
-                                        <div role="menuitem" class="text-end">
+                                        <div role="menuitem" class="col-4">
                                             <a type="edit">Settings</a>
                                         </div>
                                     </div>

@@ -1083,7 +1083,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "e012bf45-55dc-4c46-b069-bc090a467d73",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1100,7 +1099,7 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
                             "groupBy": [
                                 "date:month"
                             ],
@@ -1299,13 +1298,13 @@
                 "amount_total",
                 "state"
             ],
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "model": "pos.order",
             "context": {},
             "orderBy": [
                 {
                     "name": "amount_total",
-                    "asc": true
+                    "desc": true
                 }
             ],
             "id": "1",
@@ -1320,7 +1319,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "1",
             "measures": [
                 {
@@ -1350,7 +1349,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "2",
             "measures": [
                 {
@@ -1381,6 +1380,7 @@
                 "group_by": []
             },
             "domain": [
+                ["state", "in", ["paid", "done", "invoiced"]],
                 [
                     "user_id",
                     "!=",
@@ -1417,6 +1417,7 @@
                 "group_by": []
             },
             "domain": [
+                ["state", "in", ["paid", "done", "invoiced"]],
                 [
                     "product_id",
                     "!=",
@@ -1452,7 +1453,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "5",
             "measures": [
                 {
@@ -1473,7 +1474,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "6",
             "measures": [
                 {
@@ -1495,7 +1496,7 @@
             "id": "ff0e1a26-3d4c-48b6-85a6-2777b522bb52",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_month",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
@@ -1724,10 +1725,15 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "lines.product_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "e012bf45-55dc-4c46-b069-bc090a467d73": {
-                    "field": "product_id",
+                    "field": "product_tmpl_id",
                     "type": "many2one"
                 }
             }

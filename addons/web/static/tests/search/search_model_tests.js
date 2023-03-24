@@ -3,7 +3,7 @@
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 class TestComponent extends Component {}
 TestComponent.template = xml`<div class="o_test_component"/>`;
@@ -740,6 +740,27 @@ QUnit.module("Search", (hooks) => {
                 description: "Quick search",
                 domain: [["id", "in", [1, 3, 4]]],
                 isDefault: true,
+                type: "filter",
+            },
+        ]);
+    });
+
+    QUnit.test("process a dynamic filter with a isDefault key to false", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            dynamicFilters: [
+                {
+                    description: "Quick search",
+                    domain: [],
+                    is_default: false,
+                },
+            ],
+        });
+        assert.deepEqual(sanitizeSearchItems(model), [
+            {
+                description: "Quick search",
+                domain: [],
+                isDefault: false,
                 type: "filter",
             },
         ]);

@@ -66,7 +66,6 @@ BomOverviewTable.components = {
     BomOverviewComponentsBlock,
 };
 BomOverviewTable.props = {
-    bus: Object,
     showOptions: {
         type: Object,
         shape: {
@@ -81,4 +80,5 @@ BomOverviewTable.props = {
     uomName: { type: String, optional: true },
     currentWarehouseId: { type: Number, optional: true },
     data: Object,
+    changeFolded: Function,
 };

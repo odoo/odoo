@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,18 +21,21 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
@@ -39,6 +43,7 @@ msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
@@ -161,6 +166,7 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -169,6 +175,7 @@ msgid ""
 msgstr "%s 상품의 재고 입고 계정을 찾을 수 없습니다. 이 조작을 처리하기 전에 제품 범주 또는 위치에서 하나를 정의해야 합니다."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -180,6 +187,7 @@ msgstr ""
 " "
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -204,6 +212,7 @@ msgid "Config Settings"
 msgstr "설정 구성"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -220,6 +229,7 @@ msgid "Costing Method"
 msgstr "원가계산 방법"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
@@ -298,7 +308,7 @@ msgstr "설명"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "청구서에 로트 및 일련 번호 표시"
+msgstr "청구서에 로트 및 일련번호 표시"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
@@ -309,7 +319,7 @@ msgstr "표시명"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "청구서에 일련 번호 및 로트 번호 표시"
+msgstr "청구서에 일련번호 및 로트 번호 표시"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -317,6 +327,7 @@ msgid "Documentation"
 msgstr "문서화"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -328,7 +339,7 @@ msgstr "제품 범주의 변경으로 인해(%s에서 %s로), %s 상품 서식�
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
 msgid "First In First Out (FIFO)"
-msgstr "선입 선출 (FIFO)"
+msgstr "선입선출 (FIFO)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -357,6 +368,7 @@ msgid "Inventory Locations"
 msgstr "재고 공간"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
@@ -373,7 +385,7 @@ msgstr "재고 평가"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
 msgid "Invoice Line"
-msgstr "청구서 라인"
+msgstr "청구서 내역"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
@@ -427,7 +439,7 @@ msgstr "다음과 연결됨"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "로트 및 일련 번호가 청구서에 나타납니다"
+msgstr "로트 및 일련번호가 청구서에 표시됩니다"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -435,12 +447,14 @@ msgid "Manual"
 msgstr "수동"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
@@ -462,7 +476,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"
-msgstr ""
+msgstr "이동한 수량"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
@@ -472,6 +486,11 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Open Valuation Layer"
 msgstr ""
 
 #. module: stock_account
@@ -503,6 +522,7 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "품목 이동 (재고 이동 상세)"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
@@ -517,9 +537,10 @@ msgstr "품목 양식"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr "파생 품목"
+msgstr "품목 세부선택"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
@@ -581,6 +602,7 @@ msgid "Return Picking Line"
 msgstr "반품 선별 내역"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
@@ -651,8 +673,8 @@ msgid "Stock Request an Inventory Count"
 msgstr ""
 
 #. module: stock_account
-#. openerp-web
-#: code:addons/stock_account/static/src/js/report_stock_forecasted.js:0
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
@@ -704,6 +726,7 @@ msgstr ""
 "이 필드는 빠른 검색을 위해 사용할 수 있습니다."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -712,6 +735,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
@@ -721,12 +745,14 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -735,6 +761,7 @@ msgid ""
 msgstr "이동 명세가 일관된 상태가 아닙니다. 일부는 들어오고 다른 하나는 회사를 떠납니다."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -744,6 +771,7 @@ msgid ""
 msgstr "이동 명세가 일관된 상태가 아닙니다. 회사 간 이동 위치를 통과해야 하는 한 단계로 회사 간을 수행하고 있습니다."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -857,7 +885,7 @@ msgid "Valuation Report"
 msgstr ""
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/xml/inventory_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 #, python-format
@@ -865,6 +893,7 @@ msgid "Valuation at Date"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
@@ -873,10 +902,12 @@ msgstr "상품 범주 %s의 평가 방법이 %s에서 %s로 변경되었습니�
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
 msgid "Value"
-msgstr "가치"
+msgstr "값"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
+#, python-format
 msgid "Value On Hand:"
 msgstr ""
 
@@ -886,6 +917,7 @@ msgid "Value Svl"
 msgstr "값 Svl"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
@@ -922,18 +954,21 @@ msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -943,6 +978,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -951,6 +987,7 @@ msgid ""
 msgstr "제품 범주에 정의된 입고 평가 계정이 없습니다. 이 작업을 처리하기 전에 하나를 정의해야 합니다."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -959,6 +996,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -967,6 +1005,7 @@ msgid ""
 msgstr "제품 범주에 재고 분개가 정의되어 있지 않으면 계정과목표를 설치했는지 확인하십시오."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
@@ -978,6 +1017,7 @@ msgid ""
 msgstr "제품 범주에 정의된 재고 평가 계정이 없습니다. 이 작업을 처리하기 전에 하나를 정의해야 합니다."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."

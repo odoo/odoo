@@ -16,7 +16,7 @@ import { TagsList } from "./tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 class Many2ManyTagsFieldColorListPopover extends Component {}
 Many2ManyTagsFieldColorListPopover.template = "web.Many2ManyTagsFieldColorListPopover";
@@ -53,6 +53,9 @@ export class Many2ManyTagsField extends Component {
         });
 
         this.update = (recordlist) => {
+            if (!recordlist) {
+                return;
+            }
             if (Array.isArray(recordlist)) {
                 const resIds = recordlist.map((rec) => rec.id);
                 return saveRecord(resIds);

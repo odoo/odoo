@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
+import re
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_round
+from odoo.tools.misc import groupby
+from odoo.exceptions import UserError
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
@@ -54,7 +57,8 @@ class DeliveryCarrier(models.Model):
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
     zip_prefix_ids = fields.Many2many(
-        'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes')
+        'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes',
+        help="Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')")
     carrier_description = fields.Text(
         'Carrier Description', translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
@@ -99,11 +103,12 @@ class DeliveryCarrier(models.Model):
             c.debug_logging = not c.debug_logging
 
     def install_more_provider(self):
+        exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
         return {
-            'name': 'New Providers',
+            'name': _('New Providers'),
             'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
             'type': 'ir.actions.act_window',
             'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
@@ -119,8 +124,10 @@ class DeliveryCarrier(models.Model):
             return False
         if self.state_ids and partner.state_id not in self.state_ids:
             return False
-        if self.zip_prefix_ids and not partner.zip.upper().startswith(tuple(self.zip_prefix_ids.mapped('name'))):
-            return False
+        if self.zip_prefix_ids:
+            regex = re.compile('|'.join(['^' + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped('name')]))
+            if not re.match(regex, partner.zip.upper()):
+                return False
         return True
 
     @api.onchange('integration_level')
@@ -322,6 +329,9 @@ class DeliveryCarrier(models.Model):
             total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
 
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
+        if total_weight == 0.0:
+            weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (weight_uom_name))
         # If max weight == 0 => division by 0. If this happens, we want to have
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
@@ -329,10 +339,17 @@ class DeliveryCarrier(models.Model):
         total_full_packages = int(total_weight / max_weight)
         last_package_weight = total_weight % max_weight
 
-        package_weights = [max_weight] * total_full_packages + [last_package_weight] if last_package_weight else []
+        package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
+        order_commodities = self._get_commodities_from_order(order)
+
+        # Split the commodities value uniformly as well
+        for commodity in order_commodities:
+            commodity.monetary_value /= len(package_weights)
+            commodity.qty = max(1, commodity.qty // len(package_weights))
+
         for weight in package_weights:
-            packages.append(DeliveryPackage(None, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
+            packages.append(DeliveryPackage(order_commodities, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
         return packages
 
     def _get_packages_from_picking(self, picking, default_package_type):
@@ -360,6 +377,8 @@ class DeliveryCarrier(models.Model):
             for move_line in picking.move_line_ids:
                 package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
             packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+        elif not packages:
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_name))
 
         return packages
 
@@ -377,14 +396,17 @@ class DeliveryCarrier(models.Model):
     def _get_commodities_from_stock_move_lines(self, move_lines):
         commodities = []
 
-        for line in move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu']):
-            if line.state == 'done':
-                unit_quantity = line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
-            else:
-                unit_quantity = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+        product_lines = move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu'])
+        for product, lines in groupby(product_lines, lambda x: x.product_id):
+            unit_quantity = sum(
+                line.product_uom_id._compute_quantity(
+                    line.qty_done if line.state == 'done' else line.reserved_uom_qty,
+                    product.uom_id)
+                for line in lines)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
-            country_of_origin = line.product_id.country_of_origin.code or line.picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
-            commodities.append(DeliveryCommodity(line.product_id, amount=rounded_qty, monetary_value=line.sale_price, country_of_origin=country_of_origin))
+            country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
+            sale_price = sum(line.sale_price for line in lines)
+            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=sale_price, country_of_origin=country_of_origin))
 
         return commodities
 

@@ -39,7 +39,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         for order in self:
-            order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', 'False'), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
+            order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
 
     @api.depends('order_line.product_id.service_tracking')
@@ -163,3 +163,8 @@ class SaleOrder(models.Model):
         if 'state' in values and values['state'] == 'cancel':
             self.project_id.sudo().sale_line_id = False
         return super(SaleOrder, self).write(values)
+
+    def _prepare_analytic_account_data(self, prefix=None):
+        result = super(SaleOrder, self)._prepare_analytic_account_data(prefix=prefix)
+        result['plan_id'] = self.company_id.analytic_plan_id.id or result['plan_id']
+        return result

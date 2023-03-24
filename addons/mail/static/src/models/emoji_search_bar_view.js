@@ -5,6 +5,13 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiSearchBarView',
+    lifecycleHooks: {
+        _created() {
+            if (!this.messaging.device.isSmall) {
+                this.update({ isDoFocus: true });
+            }
+        }
+    },
     recordMethods: {
         /**
          * Handles OWL update on this EmojiSearchBarView component.
@@ -65,7 +72,7 @@ registerModel({
         }),
         inputRef: attr(),
         isDoFocus: attr({
-            default: true,
+            default: false,
         }),
         isFocused: attr({
             default: false,

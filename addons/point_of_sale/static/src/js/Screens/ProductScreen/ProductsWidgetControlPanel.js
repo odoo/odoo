@@ -17,8 +17,6 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
 
             onMounted(() => {
                 this.env.posbus.on('search-product-from-info-popup', this, this.searchProductFromInfo)
-                if(!this.env.pos.config.limited_products_loading)
-                    this.env.pos.isEveryProductLoaded = true;
             });
 
             onWillUnmount(() => {
@@ -40,15 +38,15 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
         }
         async _onPressEnterKey() {
             if (!this.searchWordInput.el.value) return;
-            if (!this.env.pos.isEveryProductLoaded) {
-                const result = await this.loadProductFromDB();
-                this.showNotification(
-                    _.str.sprintf(this.env._t('%s product(s) found for "%s".'),
-                        result.length,
-                        this.searchWordInput.el.value)
-                    , 3000);
-                if (!result.length) this._clearSearch();
-            }
+            const result = await this.loadProductFromDB();
+            this.showNotification(
+                _.str.sprintf(
+                    this.env._t('%s product(s) found for "%s".'),
+                    result.length,
+                    this.searchWordInput.el.value
+                ),
+                3000
+            );
         }
         searchProductFromInfo(productName) {
             this.searchWordInput.el.value = productName;
@@ -66,11 +64,13 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 let ProductIds = await this.rpc({
                     model: 'product.product',
                     method: 'search',
-                    args: [['&', ['name', 'ilike', this.searchWordInput.el.value + "%"], ['available_in_pos', '=', true]]],
+                    args: [['&',['available_in_pos', '=', true], '|','|',
+                     ['name', 'ilike', this.searchWordInput.el.value],
+                     ['default_code', 'ilike', this.searchWordInput.el.value],
+                     ['barcode', 'ilike', this.searchWordInput.el.value]]],
                     context: this.env.session.user_context,
                 });
                 if(ProductIds.length) {
-                    if (!this.env.pos.isEveryProductLoaded) await this.env.pos.updateIsEveryProductLoaded();
                     await this.env.pos._addProducts(ProductIds, false);
                 }
                 this.trigger('update-product-list');

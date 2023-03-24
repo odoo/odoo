@@ -304,8 +304,8 @@ class AutomaticEntryWizard(models.TransientModel):
             preview_columns = [
                 {'field': 'account_id', 'label': _('Account')},
                 {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-right text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-right text-nowrap'},
+                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
+                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
             ]
             if record.action == 'change_account':
                 preview_columns[2:2] = [{'field': 'partner_id', 'label': _('Partner')}]
@@ -346,7 +346,7 @@ class AutomaticEntryWizard(models.TransientModel):
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
 
-            if accrual_account.reconcile:
+            if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
                 destination_move_offset += 2
                 accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]

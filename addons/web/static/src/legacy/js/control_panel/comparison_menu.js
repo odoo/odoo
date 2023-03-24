@@ -2,7 +2,7 @@ odoo.define("web.ComparisonMenu", function (require) {
     "use strict";
 
     const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const { DropdownItem } = require("@web/core/dropdown/dropdown_item");
+    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require("web.Model");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
@@ -29,7 +29,7 @@ odoo.define("web.ComparisonMenu", function (require) {
         }
     }
     ComparisonMenu.template = "web.ComparisonMenu";
-    ComparisonMenu.components = { Dropdown, DropdownItem };
+    ComparisonMenu.components = { Dropdown, DropdownItem: SearchDropdownItem };
 
     return ComparisonMenu;
 });

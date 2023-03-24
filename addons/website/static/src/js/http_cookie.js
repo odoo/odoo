@@ -11,6 +11,14 @@ cookieUtils.isAllowedCookie = (type) => {
             return true;
         }
         const consents = JSON.parse(cookieUtils.getCookie('website_cookies_bar') || '{}');
+
+        // pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
+        // In that case we delete that cookie and let the user choose again.
+        if (typeof consents !== 'object') {
+            cookieUtils.deleteCookie('website_cookies_bar');
+            return false;
+        }
+
         if ('optional' in consents) {
             return consents['optional'];
         }

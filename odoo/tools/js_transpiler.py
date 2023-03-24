@@ -389,7 +389,7 @@ IMPORT_BASIC_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     import\s+                           # import
-    (?P<object>{(\s*\w+\s*,?\s*)+})\s*  # { a, b, c as x, ... }
+    (?P<object>{[\s\w,]+})\s*           # { a, b, c as x, ... }
     from\s*                             # from
     (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
     """, re.MULTILINE | re.VERBOSE)
@@ -471,7 +471,7 @@ IMPORT_DEFAULT_AND_NAMED_RE = re.compile(r"""
     (?P<space>\s*)                                  # space and empty line
     import\s+                                       # import
     (?P<default_export>\w+)\s*,\s*                  # default variable name,
-    (?P<named_exports>{(\s*\w+\s*,?\s*)+})\s*       # { a, b, c as x, ... }
+    (?P<named_exports>{[\s\w,]+})\s*                # { a, b, c as x, ... }
     from\s*                                         # from
     (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
     """, re.MULTILINE | re.VERBOSE)

@@ -49,6 +49,7 @@ class account_journal(models.Model):
                     LEFT JOIN mail_activity_type act_type ON act.activity_type_id = act_type.id
                 WHERE act.res_model = 'account.move'
                     AND m.journal_id = %s
+                    AND (act_type.category != 'tax_report' OR (act_type.category = 'tax_report' AND act.date_deadline <= CURRENT_DATE))
             '''
             self.env.cr.execute(sql_query, (journal.id,))
             for activity in self.env.cr.dictfetchall():
@@ -276,16 +277,21 @@ class account_journal(models.Model):
             outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
                 domain=[('parent_state', '=', 'posted')])
 
-            self._cr.execute('''
-                SELECT COUNT(st_line.id)
-                FROM account_bank_statement_line st_line
-                JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
-                WHERE st_line_move.journal_id IN %s
-                AND NOT st_line.is_reconciled
-                AND st_line_move.to_check IS NOT TRUE
-                AND st_line_move.state = 'posted'
-            ''', [tuple(self.ids)])
-            number_to_reconcile = self.env.cr.fetchone()[0]
+            if self.default_account_id:
+                self._cr.execute('''
+                    SELECT COUNT(st_line.id)
+                    FROM account_bank_statement_line st_line
+                    JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
+                    JOIN account_move_line aml ON aml.move_id = st_line_move.id
+                    WHERE st_line_move.journal_id IN %s
+                    AND NOT st_line.is_reconciled
+                    AND st_line_move.to_check IS NOT TRUE
+                    AND st_line_move.state = 'posted'
+                    AND aml.account_id = %s
+                ''', [tuple(self.ids), self.default_account_id.id])
+                number_to_reconcile = self.env.cr.fetchone()[0]
+            else:
+                number_to_reconcile = 0
 
             to_check_ids = self.to_check_ids()
             number_to_check = len(to_check_ids)
@@ -311,15 +317,15 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount_total']
+                to_check_balance = read[0]['amount_total_signed']
         elif self.type == 'general':
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount_total']
+                to_check_balance = read[0]['amount_total_signed']
 
         is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
 

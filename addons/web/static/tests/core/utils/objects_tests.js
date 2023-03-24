@@ -1,9 +1,18 @@
 /** @odoo-module **/
 
-import { pick, shallowEqual } from "@web/core/utils/objects";
+import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 
 QUnit.module("utils", () => {
     QUnit.module("Objects");
+
+    QUnit.test("omit", function (assert) {
+        assert.deepEqual(omit({}), {});
+        assert.deepEqual(omit({}, "a"), {});
+        assert.deepEqual(omit({ a: 1 }), { a: 1 });
+        assert.deepEqual(omit({ a: 1 }, "a"), {});
+        assert.deepEqual(omit({ a: 1, b: 2 }, "c", "a"), { b: 2 });
+        assert.deepEqual(omit({ a: 1, b: 2 }, "b", "c"), { a: 1 });
+    });
 
     QUnit.test("pick", function (assert) {
         assert.deepEqual(pick({}), {});

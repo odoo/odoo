@@ -179,7 +179,7 @@ class TestCreatePicking(common.TestProductCommon):
     def test_03_uom(self):
         """ Buy a dozen of products stocked in units. Check that the quantities on the purchase order
         lines as well as the received quantities are handled in dozen while the moves themselves
-        are handled in units. Edit the ordered quantities, check that the quantites are correctly
+        are handled in units. Edit the ordered quantities, check that the quantities are correctly
         updated on the moves. Edit the ir.config_parameter to propagate the uom of the purchase order
         lines to the moves and edit a last time the ordered quantities. Receive, check the quantities.
         """

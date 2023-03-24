@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +51,9 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    Ya se hicieron algunas entregas. Se pueden crear devoluciones a partir de las órdenes de entrega.\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -106,7 +110,8 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "All planned operations included"
 msgstr "Todas las operaciones planeadas incluidas"
@@ -123,21 +128,24 @@ msgstr "Lo antes posible"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.js:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Availability"
 msgstr "Disponibilidad"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Available"
 msgstr "Disponible"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Available in stock"
 msgstr "Existencias disponibles"
@@ -190,7 +198,7 @@ msgstr "Órdenes de entrega"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "Estado de entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -262,7 +270,8 @@ msgstr "Fecha prevista"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Expected Delivery"
 msgstr "Entrega esperada"
@@ -279,7 +288,8 @@ msgstr "Pronóstico de la fecha prevista"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
 msgstr "Stock previsto"
@@ -292,7 +302,7 @@ msgstr "Cant. Libre Hoy"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "Completamente entregado"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -323,7 +333,7 @@ msgstr "Incoterm"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Ubicación del Incoterm"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
@@ -428,14 +438,21 @@ msgstr "Avanzar las fechas de entrega previstas por"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No enough future availaibility"
 msgstr "No hay suficiente disponibilidad futura"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "No future availability"
+msgstr "No hay disponibilidad futura"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availaibility"
 msgstr "No hay disponibilidad futura"
@@ -443,7 +460,14 @@ msgstr "No hay disponibilidad futura"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "Sin entregar"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Not enough future availability"
+msgstr "No hay suficiente disponibilidad futura"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -456,7 +480,8 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "On"
 msgstr "Al"
@@ -464,7 +489,7 @@ msgstr "Al"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "Parcialmente entregado"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -493,20 +518,24 @@ msgid "Qty To Deliver"
 msgstr "Cant. Por Entregar"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+#. openerp-web
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Quotations"
 msgstr "Cotizaciones"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Remaining demand available at"
 msgstr "La demanda restante está disponible en"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Reserved"
 msgstr "Reservado"
@@ -647,7 +676,7 @@ msgstr "Informe de Regla de Inventario"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
 msgstr "La entrega"
@@ -671,10 +700,13 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
+"La cantidad ordenada no puede disminuir por debajo del importe que ya se "
+"entregó. En su lugar, cree una devolución en su inventario."
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "This product is replenished on demand."
 msgstr "Este producto se repone bajo demanda."
@@ -696,7 +728,8 @@ msgstr "Usuario"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "View Forecast"
 msgstr "Ver previsión"
@@ -757,7 +790,7 @@ msgstr "procesado en lugar de"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."
 msgstr "se retrasará."

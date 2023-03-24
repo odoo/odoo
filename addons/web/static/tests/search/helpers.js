@@ -19,7 +19,7 @@ import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 

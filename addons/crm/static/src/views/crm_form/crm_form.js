@@ -68,11 +68,11 @@ export class CrmFormRecord extends Record {
             const newStageId = bm.get(bm.localData[recordID]._changes.stage_id).data.id;
             changedStage = oldStageId !== newStageId;
         }
-        const res = await super.save(...arguments);
-        if (changedStage) {
+        const isSaved = await super.save(...arguments);
+        if (changedStage && isSaved) {
             await checkRainbowmanMessage(this.model.orm, this.model.effect, this.resId);
         }
-        return res;
+        return isSaved;
     }
 }
 

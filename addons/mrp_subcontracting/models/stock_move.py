@@ -145,7 +145,6 @@ class StockMove(models.Model):
 
     def _action_confirm(self, merge=True, merge_into=False):
         subcontract_details_per_picking = defaultdict(list)
-        move_to_not_merge = self.env['stock.move']
         for move in self:
             if move.location_id.usage != 'supplier' or move.location_dest_id.usage == 'supplier':
                 continue
@@ -157,7 +156,6 @@ class StockMove(models.Model):
             if float_is_zero(move.product_qty, precision_rounding=move.product_uom.rounding) and\
                     move.picking_id.immediate_transfer is True:
                 raise UserError(_("To subcontract, use a planned transfer."))
-            subcontract_details_per_picking[move.picking_id].append((move, bom))
             move.write({
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
@@ -166,13 +164,13 @@ class StockMove(models.Model):
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 # We don't care if the MO decreases even when done since everything is handled through picking
                 continue
-            move_to_not_merge |= move
+        res = super()._action_confirm(merge=merge, merge_into=merge_into)
+        for move in res:
+            if move.is_subcontract:
+                subcontract_details_per_picking[move.picking_id].append((move, move._get_subcontract_bom()))
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
 
-        # We avoid merging move due to complication with stock.rule.
-        res = super(StockMove, move_to_not_merge)._action_confirm(merge=False)
-        res |= super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
         if subcontract_details_per_picking:
             self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
         return res
@@ -247,8 +245,6 @@ class StockMove(models.Model):
             productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[::-1]
             # Cancel productions until reach new_quantity
             for production in productions:
-                if quantity_to_remove <= 0.0:
-                    break
                 if quantity_to_remove >= production.product_qty:
                     quantity_to_remove -= production.product_qty
                     production.with_context(skip_activity=True).action_cancel()

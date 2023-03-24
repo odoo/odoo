@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Abe Manyo, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +103,7 @@ msgstr "Tindakan Otomatis"
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
 #: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
-msgstr ""
+msgstr "Tindakan Otomatis"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -538,7 +538,7 @@ msgstr "URL lengkap untuk mengakses server yang bertindak melalui website."
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr ""
+msgstr "Pemicu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -564,6 +564,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Tipe tindakan server. Value berikut tersedia:\n"
+"- 'Execute Kode Python': satu blok kode python akan dilaksanakan\n"
+"- 'Buat Record baru': buat record baru dengan value baru\n"
+"- 'Update Record': update value dari record\n"
+"- 'Execute beberapa tindakan': definisikan tindakan yang akan memicu beberapa tindakan server\n"
+"- 'Kirim Email': post pesan, catatan atau kirim email (Diskusi)\n"
+"- 'Tambahkan Follower': menambahkan follower ke record (Diskusi)\n"
+"- 'Buat Aktivitas Berikutnya': buat aktivitas (Diskusi)\n"
+"- 'Buat Pesan Teks SMS': kirim SMS, catat mereka di dokumen (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -615,12 +624,12 @@ msgstr "Peringatan"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
 msgid "Website Path"
-msgstr "Situs web jalan"
+msgstr "Website Path"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
 msgid "Website Url"
-msgstr ""
+msgstr "Url Website"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

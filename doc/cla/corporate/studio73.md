@@ -8,12 +8,16 @@ declaration.
 
 Signed,
 
-Pablo Fuentes pablo@studio73.es https://github.com/fuentes010
+Pablo Fuentes pablo@studio73.es https://github.com/fuentes73
 
 List of contributors:
 
-Pablo Fuentes pablo@studio73.es https://github.com/fuentes010
-Jordi Tolsa jordi@studio73.es https://github.com/jortolsa
+Pablo Fuentes pablo@studio73.es https://github.com/fuentes73
+Jordi Tolsa jordi@studio73.es https://github.com/jortolsa-s73
 Ioan Galan ioan@studio73.es https://github.com/ioans73
-Abraham Anes abraham@studio73.es https://github.com/abranes
-Ethan Hildick ethan@studio73.es https://github.com/hildickethan
+Ethan Hildick ethan@studio73.es https://github.com/hildickethan-s73
+Ferran Mora ferran@studio73.es https://github.com/ferran-s73
+Carlos Reyes carlos@studio73.es https://github.com/reyes4711-s73
+Miguel Gandia miguel@studio73.es https://github.com/miguel-s73
+Roger Amorós roger@studio73.es https://github.com/rabbitjon-s73
+Guillermo Llinares guillermo@studio73.es https://github.com/willerr-mo-s73

@@ -3,19 +3,25 @@
 # 	* sales_team
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Otgonbayar.A <gobi.mn@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Bayarkhuu Bataa, 2022
+# hish, 2022
+# Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022
+# Батболд <batbold.ts@gmail.com>, 2022
+# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
+# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2022
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2022
+# Otgonbayar.A <gobi.mn@gmail.com>, 2022
+# Onii Onii <onii0223@yahoo.com>, 2022
+# Martin Trigaux, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,34 +30,47 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+msgid "<span class=\"bg-odoo\">Archived</span>"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>New</span>"
 msgstr "<span>Шинэ</span>"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>Reporting</span>"
 msgstr "<span>Тайлан</span>"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>View</span>"
 msgstr "<span>Харах</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
 msgstr "Үйлдэл шаардсан"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
-msgstr "Идэвхитэй"
+msgstr "Идэвхтэй"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
@@ -59,28 +78,61 @@ msgid "Activity Types"
 msgstr "Ажилбарын төрөл"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
+msgid "Add a Team Member"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
 msgid ""
-"Add members to automatically assign their documents to this sales team. You "
-"can only be member of one team."
+"Add members to automatically assign their documents to this sales team."
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team_member.py:0
+#, python-format
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
 msgstr ""
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Archived"
 msgstr "Архивласан"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_attachment_count
 msgid "Attachment Count"
 msgstr "Хавсралтын тоо"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Avatar"
 msgstr "Зураг"
@@ -92,15 +144,20 @@ msgid "Big Pretty Button :)"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_crm_tag
+msgid "CRM Tag"
+msgstr ""
+
+#. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
-msgid "Channel Members"
-msgstr "Сувгийн гишүүд"
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
+msgid "Color"
+msgstr "Өнгө"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
@@ -109,13 +166,20 @@ msgstr "Өнгөний индекс"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__company_id
 msgid "Company"
 msgstr "Компани"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Configuration"
 msgstr "Тохиргоо"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "Зөвлөх"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -123,12 +187,31 @@ msgid "Contact"
 msgstr "Харилцах хаяг"
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_uid
 msgid "Created by"
 msgstr "Үүсгэсэн этгээд"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_date
 msgid "Created on"
 msgstr "Үүсгэсэн огноо"
 
@@ -148,16 +231,27 @@ msgid "Dashboard Graph Data"
 msgstr ""
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr ""
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "Зохиомж"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__email
+msgid "Email"
+msgstr "Имэйл"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -181,37 +275,56 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_follower_ids
 msgid "Followers"
 msgstr "Дагагчид"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Дагагчид (Сувагууд)"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Дагагчид (Харилцагчид)"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+msgid "Group By"
+msgstr "Бүлэглэлт"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Group By..."
 msgstr "Бүлэглэх..."
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__has_message
+msgid "Has Message"
+msgstr "Мессежтэй"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Хэрэв сонгогдсон бол, шинэ зурвасууд таны анхаарлыг шаардана."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Үүнийг сонговол алдаа үүсэх үед зурвасууд ирнэ."
 
@@ -219,7 +332,7 @@ msgstr "Үүнийг сонговол алдаа үүсэх үед зурвас�
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If set, this Sales Team will be used for sales and assignations related to "
+"If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
 
@@ -231,64 +344,141 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
+msgid "Image"
+msgstr "Зураг"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
+msgid "Image (128)"
+msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "Мэдээлэл"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_is_follower
 msgid "Is Follower"
 msgstr "Дагагч эсэх"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag____last_update
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member____last_update
 msgid "Last Modified on"
 msgstr "Сүүлд зассан огноо"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_uid
 msgid "Last Updated by"
 msgstr "Сүүлд зассан этгээд"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_date
 msgid "Last Updated on"
 msgstr "Сүүлд зассан огноо"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Үндсэн хавсралт"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
+msgid "Member Company"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
+msgid "Member Warning"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Members"
+msgstr "Гишүүд"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
+msgid "Membership Issue Warning"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error
 msgid "Message Delivery error"
-msgstr "Алдаа үүссэн талаарх зурвас"
+msgstr "Зурвас илгээх алдаа"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_ids
 msgid "Messages"
 msgstr "Зурвасууд"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__mobile
+msgid "Mobile"
+msgstr "Гар утас"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
+msgid "Multiple Memberships Allowed"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
+msgid "Name"
+msgstr "Нэр"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Үйлдлийн тоо"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Алдааны тоо"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Үйлдэл шаардсан зурвасын тоо"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Уншаагүй зурвасын тоо"
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "Бусад"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
+msgid "Phone"
+msgstr "Утас"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
@@ -296,42 +486,86 @@ msgid "Point of Sale"
 msgstr "Борлуулалтын цэг"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "Бараа"
+
+#. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Sales"
 msgstr "Борлуулалт"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
+msgid "Sales Men"
+msgstr "Борлуулагч нар"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+msgid "Sales Person"
+msgstr "Борлуулагч"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__crm_team_id
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
 msgstr "Борлуулалтын баг"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Sales Team name..."
+#: model:ir.model,name:sales_team.model_crm_team_member
+msgid "Sales Team Member"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid ""
-"Sales Team the user is member of. Used to compute the members of a Sales "
-"Team through the inverse one2many"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
+#: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
+msgid "Sales Team Members"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
+msgid "Sales Team Members (incl. inactive)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_config
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
+#: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
 msgid "Sales Teams"
 msgstr "Борлуулалтын баг"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_id
+msgid "Salesperson"
+msgstr "Борлуулагч"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
+msgid "Salespersons"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
 msgstr "Борлуулалтын багийн хайлт"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Sample data"
+msgstr "Жишээ өгөгдөл"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -339,35 +573,104 @@ msgid "Sequence"
 msgstr "Дугаарлалт"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "Settings"
-msgstr "Тохиргоо"
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "Үйлчилгээ"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
+msgstr "Дашборданд харуулах"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "Програм хангамж"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
+msgid "Tag Name"
+msgstr "Пайзын нэр"
+
+#. module: sales_team
+#: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Пайзын нэр аль хэдийн үүссэн байна !"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+msgid "Tags"
+msgstr "Пайз"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Team Details"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Team Leader"
 msgstr "Багийн Ахлагч"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.actions.act_window,name:sales_team.crm_team_member_action
 msgid "Team Members"
 msgstr "Багийн гишүүд"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_pipelines_act
-msgid "Team Pipelines"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
+msgid "Team Members are salespersons assigned to specific teams."
 msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
+msgid "Teams"
+msgstr "Багууд"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
 msgstr "Сувгийн өнгө"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
+msgid "The default company for this user."
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
+msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "Сургалт"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
+msgid "UX: Limit to team company or all if no company"
+msgstr ""
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -377,28 +680,45 @@ msgid "Undefined graph model for Sales Team: %s"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
-msgid "Unread Messages"
-msgstr "Уншаагүй зурвас"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
+msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Уншаагүй зурвасын тоолуур"
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
-"                    Each team will work with a separate pipeline."
+"                Each team will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_users
+msgid "User"
+msgstr "Хэрэглэгч"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
+msgid "User Company"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
+msgid "User In Teams"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
-msgid "User's Sales Team"
-msgstr "Хэрэглэгчийн Борлуулалтын баг"
+msgid "User Sales Team"
+msgstr ""
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -411,9 +731,9 @@ msgid "User: Own Documents Only"
 msgstr "Хэрэглэгч: Зөвхөн Өөрийн Баримтууд"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_users
-msgid "Users"
-msgstr "Хэрэглэгчид"
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
+msgid "Users assigned to this team."
+msgstr ""
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -421,14 +741,22 @@ msgid "Website"
 msgstr "Вэбсайт"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-msgid "Website Messages"
-msgstr "Вебсайтын зурвас"
+#: code:addons/sales_team/models/crm_team_member.py:0
+#, python-format
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
+msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-msgid "Website communication history"
-msgstr "Вебсайтын харилцааны түүх"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "e.g. North America"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
+msgid "e.g. Services"
+msgstr ""
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

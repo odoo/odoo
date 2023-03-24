@@ -42,6 +42,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             this._toggleAnimatedTextButton();
         };
         this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
+
+        // editor_has_snippets is, amongst other things, in charge of hiding the
+        // backend navbar with a CSS animation. But we also need to make it
+        // display: none when the animation finishes for efficiency but also so
+        // that the tour tooltips pointing at the navbar disappear. This could
+        // rely on listening to the transitionend event but it seems more future
+        // proof to just add a delay after which the navbar is hidden.
+        this._hideBackendNavbarTimeout = setTimeout(() => {
+            this.el.ownerDocument.body.classList.add('editor_has_snippets_hide_backend_navbar');
+        }, 500);
     },
     /**
      * @override
@@ -50,6 +60,26 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this._super(...arguments);
         this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
         this.$body[0].classList.remove('o_animated_text_highlighted');
+        clearTimeout(this._hideBackendNavbarTimeout);
+        this.el.ownerDocument.body.classList.remove('editor_has_snippets_hide_backend_navbar');
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @todo adapt in master. This override will disable the link popover on
+     * "s_share" items in stable versions. It should be replaced simply by
+     * adding the "o_no_link_popover" class in XML.
+     *
+     * @override
+     */
+    async callPostSnippetDrop($target) {
+        if ($target[0].classList.contains('s_share')) {
+            $target[0].classList.add('o_no_link_popover');
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -69,26 +99,72 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: as a stable fix we decided to introduce a new
+        // option for image in grid mode to change the default "cover" display
+        // into "contain" should the user prefer it. Note: to be sure, this
+        // targets all images but is only displayed if the image acts as a grid
+        // image (parent column has the right class).
+        $html.find('[data-js="WebsiteAnimate"]').eq(0).before($(_.str.sprintf(`
+            <div data-js="GridImage" data-selector="img">
+                <we-select string="%s">
+                    <we-button data-change-grid-image-mode="cover">%s</we-button>
+                    <we-button data-change-grid-image-mode="contain">%s</we-button>
+                </we-select>
+            </div>
+        `, _t("Position"), _t("Cover"), _t("Contain"))));
+        // TODO remove me in master
+        $html.find('[data-attribute-name="interval"]')[0].dataset.attributeName = "bsInterval";
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
      * @private
-     * @param {boolean} [reconfigure=false]
-     * @param {boolean} [onlyIfUndefined=false]
+     * @param {boolean} [reconfigure=false] // TODO name is confusing "alwaysReconfigure" is better
+     * @param {boolean} [onlyIfUndefined=false] // TODO name is confusing "configureIfNecessary" is better
      */
     async _configureGMapAPI({reconfigure, onlyIfUndefined}) {
+        if (!reconfigure && !onlyIfUndefined) {
+            return false;
+        }
+
         const apiKey = await new Promise(resolve => {
             this.getParent().trigger_up('gmap_api_key_request', {
                 onSuccess: key => resolve(key),
             });
         });
-        if (!reconfigure && (apiKey || !onlyIfUndefined)) {
+        const apiKeyValidation = apiKey ? await this._validateGMapAPIKey(apiKey) : {
+            isValid: false,
+            message: undefined,
+        };
+        if (!reconfigure && onlyIfUndefined && apiKey && apiKeyValidation.isValid) {
             return false;
         }
+
         let websiteId;
         this.trigger_up('context_get', {
             callback: ctx => websiteId = ctx['website_id'],
         });
+
+        function applyError(message) {
+            const $apiKeyInput = this.find('#api_key_input');
+            const $apiKeyHelp = this.find('#api_key_help');
+            $apiKeyInput.addClass('is-invalid');
+            $apiKeyHelp.empty().text(message);
+        }
+
+        const $content = $(qweb.render('website.s_google_map_modal', {
+            apiKey: apiKey,
+        }));
+        if (!apiKeyValidation.isValid && apiKeyValidation.message) {
+            applyError.call($content, apiKeyValidation.message);
+        }
+
         return new Promise(resolve => {
             let invalidated = false;
             const dialog = new Dialog(this, {
@@ -96,54 +172,56 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 title: _t("Google Map API Key"),
                 buttons: [
                     {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
-                        const $apiKeyInput = dialog.$('#api_key_input');
-                        const valueAPIKey = $apiKeyInput.val();
-                        const $apiKeyHelp = dialog.$('#api_key_help');
+                        const valueAPIKey = dialog.$('#api_key_input').val();
                         if (!valueAPIKey) {
-                            $apiKeyInput.addClass('is-invalid');
-                            $apiKeyHelp.text(_t("Enter an API Key"));
+                            applyError.call(dialog.$el, _t("Enter an API Key"));
                             return;
                         }
                         const $button = $(ev.currentTarget);
                         $button.prop('disabled', true);
-                        try {
-                            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${valueAPIKey}`);
-                            if (response.status === 200) {
-                                await this._rpc({
-                                    model: 'website',
-                                    method: 'write',
-                                    args: [
-                                        [websiteId],
-                                        {google_maps_api_key: valueAPIKey},
-                                    ],
-                                });
-                                invalidated = true;
-                                dialog.close();
-                            } else {
-                                const text = await response.text();
-                                $apiKeyInput.addClass('is-invalid');
-                                $apiKeyHelp.empty().text(
-                                    _t("Invalid API Key. The following error was returned by Google:")
-                                ).append($('<i/>', {
-                                    text: text,
-                                    class: 'ms-1',
-                                }));
-                            }
-                        } catch (_e) {
-                            $apiKeyHelp.text(_t("Check your connection and try again"));
-                        } finally {
-                            $button.prop("disabled", false);
+                        const res = await this._validateGMapAPIKey(valueAPIKey);
+                        if (res.isValid) {
+                            await this._rpc({
+                                model: 'website',
+                                method: 'write',
+                                args: [
+                                    [websiteId],
+                                    {google_maps_api_key: valueAPIKey},
+                                ],
+                            });
+                            invalidated = true;
+                            dialog.close();
+                        } else {
+                            applyError.call(dialog.$el, res.message);
                         }
+                        $button.prop("disabled", false);
                     }},
                     {text: _t("Cancel"), close: true}
                 ],
-                $content: $(qweb.render('website.s_google_map_modal', {
-                    apiKey: apiKey,
-                })),
+                $content: $content,
             });
             dialog.on('closed', this, () => resolve(invalidated));
             dialog.open();
         });
+    },
+    /**
+     * @private
+     */
+    async _validateGMapAPIKey(key) {
+        try {
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${key}`);
+            const isValid = (response.status === 200);
+            return {
+                isValid: isValid,
+                message: !isValid &&
+                    _t("Invalid API Key. The following error was returned by Google:") + " " + (await response.text()),
+            };
+        } catch (_err) {
+            return {
+                isValid: false,
+                message: _t("Check your connection and try again"),
+            };
+        }
     },
     /**
      * @override
@@ -430,7 +508,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 }
             }
         }
-    }
+    },
 });
 
 weSnippetEditor.SnippetEditor.include({

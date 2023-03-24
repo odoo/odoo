@@ -20,9 +20,9 @@ patch(AttendeeCalendarController.prototype, "microsoft_calendar_microsoft_calend
         );
         const syncResult = await this.model.syncMicrosoftCalendar();
         if (syncResult.status === "need_auth") {
-            this.configureCalendarProviderSync("microsoft");
+            window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {
-            if (Number.isInteger(syncResult.action)) {
+            if (this.isSystemUser) {
                 this.dialog.add(ConfirmationDialog, {
                     title: this.env._t("Configuration"),
                     body: this.env._t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"),

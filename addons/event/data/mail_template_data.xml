@@ -221,11 +221,12 @@
 
                 <tr><td valign="top" style="font-size: 14px;">
                     <!-- GOOGLE MAPS LINK -->
-                    <t t-if="event_address">
+                    <t t-if="event_address and location">
                         <table style="width:100%;"><tr><td>
                             <div>
+                                <i class="fa fa-map-marker"/>
                                 <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
-                                    <img t-attf-src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}" style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                    See location on Google Maps
                                 </a>
                             </div>
                         </td></tr></table>
@@ -445,8 +446,9 @@
                     <!-- GOOGLE MAPS LINK -->
                     <table t-if="event_address" style="width:100%;"><tr><td>
                         <div>
+                            <i class="fa fa-map-marker"/>
                             <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
-                                <img t-attf-src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}" style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                See location on Google Maps
                             </a>
                         </div>
                     </td></tr></table>

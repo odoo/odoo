@@ -198,17 +198,18 @@ registerModel({
             if (!action) {
                 return;
             }
-            this.env.services.action.doAction(
-                action,
-                {
-                    onClose: () => {
-                        if (!thread.exists()) {
-                            return;
-                        }
-                        thread.fetchData(['activities']);
+            await new Promise(resolve => {
+                this.env.services.action.doAction(
+                    action,
+                    {
+                        onClose: resolve,
                     },
-                },
-            );
+                );
+            });
+            if (!thread.exists()) {
+                return;
+            }
+            thread.fetchData(['activities']);
         },
     },
     fields: {

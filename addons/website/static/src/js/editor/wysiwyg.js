@@ -3,6 +3,7 @@ odoo.define('website.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('website.snippet.editor');
+let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -17,7 +18,9 @@ var snippetsEditor = require('website.snippet.editor');
  */
 function toggleDropdown($toggles, show) {
     return Promise.all(_.map($toggles, toggle => {
-        const $toggle = $(toggle);
+        // We must select the element via the iframe so that the event handlers
+        // declared on the iframe are triggered.
+        const $toggle = toggle.ownerDocument.defaultView.$(toggle);
         const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
@@ -101,6 +104,15 @@ const WebsiteWysiwyg = Wysiwyg.extend({
      * @override
      */
     destroy: function () {
+        // We do not need the cache to live longer than the edition.
+        // Keeping it alive could end up in a corrupt state without the user
+        // even noticing. (If the values were changed in another tab or by
+        // someone else, when edit starts again here, without a clear cache at
+        // destroy, options will have wrong social media values).
+        // It would also survive (multi) website switch, not fetching the values
+        // from the accessed website.
+        socialMediaOptions.clearDbSocialValuesCache();
+
         this._restoreMegaMenus();
         this._super.apply(this, arguments);
     },
@@ -286,6 +298,26 @@ snippetsEditor.SnippetsMenu.include({
             this.$body.off('.snippets_menu');
         }
         return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        // Clean unstyled translations
+        return this._super(...arguments).then(() => {
+            for (const el of this.options.editable[0].querySelectorAll('.o_translation_without_style')) {
+                el.classList.remove('o_translation_without_style');
+                if (el.dataset.oeTranslationSaveSha) {
+                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
+                    delete el.dataset.oeTranslationSaveSha;
+                }
+            }
+        });
     },
 
     //--------------------------------------------------------------------------

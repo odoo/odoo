@@ -7,7 +7,7 @@
 	}
 }
 
-@keyframes slide-right {
+@keyframes slide-end {
 	0% {
 		opacity: 0;
 		transform: translateX(5%);
@@ -21,7 +21,7 @@
 	}
 }
 
-@keyframes slide-left {
+@keyframes slide-start {
 	0% {
 		opacity: 0;
 		transform: translateX(-5%);
@@ -29,7 +29,7 @@
 }
 
 .o_popover {
-	@each $direction in (top, right, bottom, left) {		
+	@each $direction in (top, end, bottom, start) {
 		&.bs-popover-#{$direction} {
 			animation: 0.2s slide-#{$direction};
 		}
@@ -62,7 +62,7 @@
 	&.o-popover--ls .popover-arrow, &.o-popover--rs .popover-arrow {
 		top: $popover-border-radius;
 	}
-	
+
 	&.o-popover--le .popover-arrow, &.o-popover--re .popover-arrow {
 		bottom: $popover-border-radius;
 	}

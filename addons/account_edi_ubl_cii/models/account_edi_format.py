@@ -16,6 +16,7 @@ FORMAT_CODES = [
     'nlcius_1',
     'efff_1',
     'ubl_2_1',
+    'ubl_a_nz',
 ]
 
 class AccountEdiFormat(models.Model):
@@ -64,6 +65,8 @@ class AccountEdiFormat(models.Model):
             return self.env['account.edi.xml.ubl_de']
         if self.code == 'efff_1' and company.country_id.code == 'BE':
             return self.env['account.edi.xml.ubl_efff']
+        if self.code == 'ubl_a_nz' and company.country_id.code in ['AU', 'NZ']:
+            return self.env['account.edi.xml.ubl_a_nz']
 
     def _is_ubl_cii_available(self, company):
         """
@@ -149,10 +152,11 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
             return super()._prepare_invoice_report(pdf_writer, edi_document)
-        if not edi_document.attachment_id:
+        attachment = edi_document.sudo().attachment_id
+        if not attachment:
             return
 
-        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='text/xml')
+        pdf_writer.embed_odoo_attachment(attachment, subtype='text/xml')
         if not pdf_writer.is_pdfa:
             try:
                 pdf_writer.convert_to_pdfa()

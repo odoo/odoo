@@ -5,7 +5,7 @@ import { ProfilingItem } from "./profiling_item";
 import { session } from "@web/session";
 import { profilingSystrayItem } from "./profiling_systray_item";
 
-const { EventBus, reactive } = owl;
+import { EventBus, reactive } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 

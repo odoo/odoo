@@ -18,7 +18,7 @@ import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 
-const { markup, toRaw } = owl;
+import { markup, toRaw } from "@odoo/owl";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -359,7 +359,7 @@ export class Record extends DataPoint {
         return this._invalidFields.has(fieldName);
     }
 
-    async load(params = {}) {
+    async load(params = {}, options = {}) {
         if (!this.__bm_handle__) {
             this.__bm_handle__ = await this.model.__bm__.load({
                 ...this.__bm_load_params__,
@@ -368,6 +368,7 @@ export class Record extends DataPoint {
         } else {
             this.__bm_handle__ = await this.model.__bm__.reload(this.__bm_handle__, {
                 viewType: this.__viewType,
+                keepChanges: !!options.keepChanges,
             });
         }
         this.__syncData();
@@ -503,6 +504,31 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(changes)) {
             const fieldType = this.fields[fieldName].type;
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
+            // special case for many2ones: they can be updated with a new name (e.g. if edited from
+            // the dialog), but in the basic_model it worked differently, we had a datapoint for the
+            // many2one value and we reloaded it directly. In the new model, we directly update the
+            // value [id, display_name], so we reload beforehand, in the many2one field itself. In
+            // the next few lines, we thus manually apply the renaming on the legacy datapoint.
+            if (this.fields[fieldName].type === "many2one" && Array.isArray(changes[fieldName])) {
+                const newName = changes[fieldName][1];
+                if (newName || newName === "") {
+                    const bm = this.model.__bm__;
+                    const m2oDatapointId = bm.get(this.__bm_handle__).data[fieldName].id;
+                    const m2oDatapoint = bm.localData[m2oDatapointId];
+                    if (m2oDatapoint && m2oDatapoint.data.id === changes[fieldName][0]) {
+                        m2oDatapoint.data.display_name = newName;
+                    }
+                }
+            }
+            // same for reference fields
+            if (this.fields[fieldName].type === "reference" && changes[fieldName].displayName) {
+                const bm = this.model.__bm__;
+                const m2oDatapointId = bm.get(this.__bm_handle__).data[fieldName].id;
+                const m2oDatapoint = bm.localData[m2oDatapointId];
+                if (m2oDatapoint) {
+                    m2oDatapoint.data.display_name = changes[fieldName].displayName;
+                }
+            }
         }
         if (this._urgentSave) {
             const fieldNames = await this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
@@ -1098,9 +1124,11 @@ export class RelationalModel extends Model {
             throw "only record root type is supported";
         }
 
+        this.__component = params.component;
+
         this.root = null;
 
-        this.__bm__ = new BasicModel(this, {
+        this.__bm__ = new this.constructor.LegacyModel(this, {
             fields: params.fields || {},
             modelName: params.resModel,
             useSampleModel: false, // FIXME AAB
@@ -1319,7 +1347,25 @@ export class RelationalModel extends Model {
             if (payload.service === "ajax" && payload.method === "rpc") {
                 // ajax service uses an extra 'target' argument for rpc
                 args = args.concat(ev.target);
-                return payload.callback(owl.Component.env.session.rpc(...args));
+                if (owl.status(this.__component) === "destroyed") {
+                    console.warn("Component is destroyed");
+                    return payload.callback(new Promise(() => {}));
+                }
+                const prom = new Promise((resolve, reject) => {
+                    owl.Component.env.session
+                        .rpc(...args)
+                        .then((value) => {
+                            if (owl.status(this.__component) !== "destroyed") {
+                                resolve(value);
+                            }
+                        })
+                        .guardedCatch((reason) => {
+                            if (owl.status(this.__component) !== "destroyed") {
+                                reject(reason);
+                            }
+                        });
+                });
+                return payload.callback(prom);
             } else if (payload.service === "notification") {
                 return this.notificationService.add(payload.message, {
                     className: payload.className,
@@ -1351,7 +1397,11 @@ export class RelationalModel extends Model {
             const legacyOptions = mapDoActionOptionAPI(payload.options);
             return this.actionService.doAction(payload.action, legacyOptions);
         } else if (evType === "reload") {
-            return this.load();
+            return this.load().then(() => {
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            });
         }
         throw new Error(`trigger_up(${evType}) not handled in relational model`);
     }
@@ -1380,4 +1430,5 @@ export class RelationalModel extends Model {
     }
 }
 RelationalModel.services = ["action", "dialog", "notification"];
+RelationalModel.LegacyModel = BasicModel;
 RelationalModel.Record = Record;

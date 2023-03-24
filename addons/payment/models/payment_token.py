@@ -11,8 +11,7 @@ class PaymentToken(models.Model):
     _order = 'partner_id, id desc'
     _description = 'Payment Token'
 
-    provider_id = fields.Many2one(
-        string="provider Account", comodel_name='payment.provider', required=True)
+    provider_id = fields.Many2one(string="Provider", comodel_name='payment.provider', required=True)
     provider_code = fields.Selection(related='provider_id.code')
     payment_details = fields.Char(
         string="Payment Details", help="The clear part of the payment method's payment details.",
@@ -113,7 +112,7 @@ class PaymentToken(models.Model):
         """
         self.ensure_one()
 
-        padding_length = max_length - len(self.payment_details)
+        padding_length = max_length - len(self.payment_details or '')
         if not self.payment_details:
             create_date_str = self.create_date.strftime('%Y/%m/%d')
             display_name = _("Payment details saved on %(date)s", date=create_date_str)

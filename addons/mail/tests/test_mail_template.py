@@ -5,10 +5,11 @@ from markupsafe import Markup
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import get_module_resource
-from odoo.tests import Form, users
+from odoo.tests import Form, tagged, users
 from odoo.tools import convert_file
 
 
+@tagged('mail_template')
 class TestMailTemplate(MailCommon):
 
     @classmethod
@@ -52,7 +53,9 @@ class TestMailTemplate(MailCommon):
     def test_mail_template_acl(self):
         # Sanity check
         self.assertTrue(self.user_admin.has_group('mail.group_mail_template_editor'))
+        self.assertTrue(self.user_admin.has_group('base.group_sanitize_override'))
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
+        self.assertFalse(self.user_employee.has_group('base.group_sanitize_override'))
 
         # Group System can create / write / unlink mail template
         mail_template = self.env['mail.template'].with_user(self.user_admin).create({'name': 'Test template'})
@@ -147,6 +150,7 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(server.active)
 
 
+@tagged('mail_template')
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, *args):
@@ -184,3 +188,17 @@ class TestMailTemplateReset(MailCommon):
 
         # subject is not there in the data file template, so it should be set to False
         self.assertFalse(mail_template.subject, "Subject should be set to False")
+
+@tagged('-at_install', 'post_install')
+class TestConfigRestrictEditor(MailCommon):
+
+    def test_switch_icp_value(self):
+        # Sanity check
+        self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))
+        self.assertFalse(self.user_employee.has_group('base.group_system'))
+
+        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
+
+        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
+        self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))

@@ -127,7 +127,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                         self.assertMailMail(partner, state_mapping[status], author=author, content=content, fields_values=fields_values)
                 # specific if email is False -> could have troubles finding it if several falsy traces
                 elif not email and status in ('cancel', 'bounce'):
-                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[status], content=content, fields_values=fields_values)
+                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[status], author=author, content=content, fields_values=fields_values)
                 else:
                     self.assertMailMailWEmails([email], state_mapping[status], author=author, content=content, fields_values=fields_values)
 

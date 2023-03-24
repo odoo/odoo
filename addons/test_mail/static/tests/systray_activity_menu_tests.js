@@ -104,14 +104,12 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     assert.containsN(document.body, '.o_ActivityMenuView_activityGroupActionButton', 2,
                        "widget should have 2 activity view icons");
 
-    var first = document.querySelector('.o_ActivityMenuView_activityGroupActionButton');
-    var second = document.querySelectorAll('.o_ActivityMenuView_activityGroupActionButton')[1];
-    assert.strictEqual(first.getAttribute('data-model_name'), "res.partner",
-                       "first activity action should link to 'res.partner'");
+    var first = document.querySelector('.o_ActivityMenuView_activityGroupActionButton[data-model_name="res.partner"]');
+    var second = document.querySelector('.o_ActivityMenuView_activityGroupActionButton[data-model_name="mail.test.activity"]');
+    assert.ok(first, "should have activity action linked to 'res.partner'");
     assert.hasClass(first, 'fa-clock-o', "should display the activity action icon");
 
-    assert.strictEqual(second.getAttribute('data-model_name'), "mail.test.activity",
-                       "Second activity action should link to 'mail.test.activity'");
+    assert.ok(second, "should have activity action linked to 'mail.test.activity'");
     assert.hasClass(second, 'fa-clock-o', "should display the activity action icon");
 
     patchWithCleanup(env.services.action, {

@@ -22,6 +22,7 @@ QUnit.module("Analytic", (hooks) => {
                         plan_id: { string: "Plan", type: "many2one", relation: "plan" },
                         root_plan_id: { string: "Root Plan", type: "many2one", relation: "plan" },
                         color: { string: "Color", type: "integer" },
+                        code: { string: "Ref", type: "string"},
                     },
                     records: [
                         {id: 1, color: 1, root_plan_id: 2, plan_id: 2, name: "RD" },

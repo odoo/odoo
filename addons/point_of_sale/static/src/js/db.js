@@ -27,7 +27,7 @@ var PosDB = core.Class.extend({
         options = options || {};
         this.name = options.name || this.name;
         this.limit = options.limit || this.limit;
-        
+
         if (options.uuid) {
             this.name = this.name + '_' + options.uuid;
         }
@@ -40,7 +40,11 @@ var PosDB = core.Class.extend({
         this.partner_sorted = [];
         this.partner_by_id = {};
         this.partner_by_barcode = {};
+        // FIXME before master: partner_search_string is no longer used but is kept for partial
+        // compatibility with customizations. The string is no longer useful but we don't want
+        // a custo to crash when calling a method (eg .split()) on it.
         this.partner_search_string = "";
+        this.partner_search_strings = {};
         this.partner_write_date = null;
 
         this.category_by_id = {};
@@ -52,7 +56,7 @@ var PosDB = core.Class.extend({
         this.category_search_string = {};
     },
 
-    /** 
+    /**
      * sets an uuid to prevent conflict in locally stored data between multiple PoS Configs. By
      * using the uuid of the config the local storage from other configs will not get effected nor
      * loaded in sessions that don't belong to them.
@@ -64,8 +68,8 @@ var PosDB = core.Class.extend({
     },
 
     /* returns the category object from its id. If you pass a list of id as parameters, you get
-     * a list of category objects. 
-     */  
+     * a list of category objects.
+     */
     get_category_by_id: function(categ_id){
         if(categ_id instanceof Array){
             var list = [];
@@ -82,7 +86,7 @@ var PosDB = core.Class.extend({
             return this.category_by_id[categ_id];
         }
     },
-    /* returns a list of the category's child categories ids, or an empty list 
+    /* returns a list of the category's child categories ids, or an empty list
      * if a category has no childs */
     get_category_childs_ids: function(categ_id){
         return this.category_childs[categ_id] || [];
@@ -98,7 +102,7 @@ var PosDB = core.Class.extend({
         return this.category_parent[categ_id] || this.root_category_id;
     },
     /* adds categories definitions to the database. categories is a list of categories objects as
-     * returned by the openerp server. Categories must be inserted before the products or the 
+     * returned by the openerp server. Categories must be inserted before the products or the
      * product/ categories association may (will) not work properly */
     add_categories: function(categories){
         var self = this;
@@ -261,7 +265,7 @@ var PosDB = core.Class.extend({
         return str;
     },
     add_partners: function(partners){
-        var updated_count = 0;
+        var updated = {};
         var new_write_date = '';
         var partner;
         for(var i = 0, len = partners.length; i < len; i++){
@@ -276,45 +280,56 @@ var PosDB = core.Class.extend({
                 // FIXME: The write_date is stored with milisec precision in the database
                 // but the dates we get back are only precise to the second. This means when
                 // you read partners modified strictly after time X, you get back partners that were
-                // modified X - 1 sec ago. 
+                // modified X - 1 sec ago.
                 continue;
-            } else if ( new_write_date < partner.write_date ) { 
+            } else if ( new_write_date < partner.write_date ) {
                 new_write_date  = partner.write_date;
             }
             if (!this.partner_by_id[partner.id]) {
                 this.partner_sorted.push(partner.id);
+            } else {
+                const oldPartner = this.partner_by_id[partner.id];
+                if (oldPartner.barcode) {
+                    delete this.partner_by_barcode[oldPartner.barcode];
+                }
             }
+            if (partner.barcode) {
+                this.partner_by_barcode[partner.barcode] = partner;
+            }
+            updated[partner.id] = partner;
             this.partner_by_id[partner.id] = partner;
-
-            updated_count += 1;
         }
 
         this.partner_write_date = new_write_date || this.partner_write_date;
 
-        if (updated_count) {
-            // If there were updates, we need to completely 
-            // rebuild the search string and the barcode indexing
+        const updatedChunks = new Set();
+        const CHUNK_SIZE = 100;
+        for (const id in updated) {
+            const chunkId = Math.floor(id / CHUNK_SIZE);
+            if (updatedChunks.has(chunkId)) {
+                // another partner in this chunk was updated and we already rebuild the chunk
+                continue;
+            }
+            updatedChunks.add(chunkId);
+            // If there were updates, we need to rebuild the search string for this chunk
+            let searchString = "";
 
-            this.partner_search_string = "";
-            this.partner_by_barcode = {};
-
-            for (var id in this.partner_by_id) {
-                partner = this.partner_by_id[id];
-
-                if(partner.barcode){
-                    this.partner_by_barcode[partner.barcode] = partner;
+            for (let id = chunkId * CHUNK_SIZE; id < (chunkId + 1) * CHUNK_SIZE; id++) {
+                if (!(id in this.partner_by_id)) {
+                    continue;
                 }
+                const partner = this.partner_by_id[id];
                 partner.address = (partner.street ? partner.street + ', ': '') +
                                   (partner.zip ? partner.zip + ', ': '') +
                                   (partner.city ? partner.city + ', ': '') +
                                   (partner.state_id ? partner.state_id[1] + ', ': '') +
                                   (partner.country_id ? partner.country_id[1]: '');
-                this.partner_search_string += this._partner_search_string(partner);
+                searchString += this._partner_search_string(partner);
             }
 
-            this.partner_search_string = utils.unaccent(this.partner_search_string);
+            this.partner_search_strings[chunkId] = utils.unaccent(searchString);
         }
-        return updated_count;
+        return Object.keys(updated).length;
     },
     get_partner_write_date: function(){
         return this.partner_write_date || "1970-01-01 00:00:00";
@@ -342,13 +357,15 @@ var PosDB = core.Class.extend({
             return [];
         }
         var results = [];
-        for(var i = 0; i < this.limit; i++){
-            var r = re.exec(this.partner_search_string);
+        const searchStrings = Object.values(this.partner_search_strings).reverse();
+        let searchString = searchStrings.pop();
+        while (searchString && results.length < this.limit) {
+            var r = re.exec(searchString);
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
-            }else{
-                break;
+            } else {
+                searchString = searchStrings.pop();
             }
         }
         return results;
@@ -394,7 +411,7 @@ var PosDB = core.Class.extend({
     },
     /* returns a list of products with :
      * - a category that is or is a child of category_id,
-     * - a name, package or barcode containing the query (case insensitive) 
+     * - a name, package or barcode containing the query (case insensitive)
      */
     search_product_in_category: function(category_id, query){
         try {
@@ -523,12 +540,12 @@ var PosDB = core.Class.extend({
      */
     get_unpaid_orders_to_sync: function(ids){
         const savedOrders = this.load('unpaid_orders',[]);
-        return savedOrders.filter(order => ids.includes(order.id));
+        return savedOrders.filter(order => ids.includes(order.id) && (order.data.server_id || order.data.lines.length || order.data.statement_ids.length));
     },
     /**
      * Add a given order to the orders to be removed from the server.
      *
-     * If an order is removed from a table it also has to be removed from the server to prevent it from reapearing 
+     * If an order is removed from a table it also has to be removed from the server to prevent it from reapearing
      * after syncing. This function will add the server_id of the order to a list of orders still to be removed.
      * @param {object} order object.
      */
@@ -552,7 +569,7 @@ var PosDB = core.Class.extend({
      */
     set_ids_removed_from_server: function(ids){
         var to_remove = this.load('unpaid_orders_to_remove',[]);
-        
+
         to_remove = _.filter(to_remove, function(id){
             return !ids.includes(id);
         });
@@ -563,4 +580,3 @@ var PosDB = core.Class.extend({
 return PosDB;
 
 });
-

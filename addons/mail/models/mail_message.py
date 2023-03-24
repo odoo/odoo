@@ -135,7 +135,7 @@ class Message(models.Model):
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_notification', string='Partners with Need Action',
-        context={'active_test': False}, depends=['notification_ids'])
+        context={'active_test': False}, depends=['notification_ids'], copy=False)
     needaction = fields.Boolean(
         'Need Action', compute='_compute_needaction', search='_search_needaction')
     has_error = fields.Boolean(
@@ -295,7 +295,7 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self.flush_recordset(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
+        self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute("""
@@ -603,20 +603,43 @@ class Message(models.Model):
 
         messages = super(Message, self).create(values_list)
 
-        check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        # link back attachments to records, to filter out attachments linked to
+        # the same records as the message (considered as ok if message is ok)
+        # and check rights on other documents
+        attachments_tocheck = self.env['ir.attachment']
+        doc_to_attachment_ids = defaultdict(set)
+        if all(isinstance(command, int) or command[0] in (4, 6)
+               for values in values_list
+               for command in values.get('attachment_ids') or []):
             for values in values_list:
-                for command in values.get('attachment_ids'):
+                message_attachment_ids = set()
+                for command in values.get('attachment_ids') or []:
                     if isinstance(command, int):
-                        check_attachment_access += [command]
+                        message_attachment_ids.add(command)
                     elif command[0] == 6:
-                        check_attachment_access += command[2]
+                        message_attachment_ids |= set(command[2])
                     else:  # command[0] == 4:
-                        check_attachment_access += [command[1]]
+                        message_attachment_ids.add(command[1])
+                if message_attachment_ids:
+                    key = (values.get('model'), values.get('res_id'))
+                    doc_to_attachment_ids[key] |= message_attachment_ids
+
+            attachment_ids_all = {
+                attachment_id
+                for doc_attachment_ids in doc_to_attachment_ids
+                for attachment_id in doc_attachment_ids
+            }
+            AttachmentSudo = self.env['ir.attachment'].sudo().with_prefetch(list(attachment_ids_all))
+            for (model, res_id), doc_attachment_ids in doc_to_attachment_ids.items():
+                # check only attachments belonging to another model, access already
+                # checked on message for other attachments
+                attachments_tocheck += AttachmentSudo.browse(doc_attachment_ids).filtered(
+                    lambda att: att.res_model != model or att.res_id != res_id
+                ).sudo(False)
         else:
-            check_attachment_access = messages.mapped('attachment_ids').ids  # fallback on read if any unknow command
-        if check_attachment_access:
-            self.env['ir.attachment'].browse(check_attachment_access).check(mode='read')
+            attachments_tocheck = messages.attachment_ids  # fallback on read if any unknown command
+        if attachments_tocheck:
+            attachments_tocheck.check('read')
 
         for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
             if tracking_values_cmd:
@@ -653,15 +676,14 @@ class Message(models.Model):
     def unlink(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
+        # the cache of the related document doesn't need to be invalidate (see @_invalidate_documents)
+        # because the unlink method invalidates the whole cache anyway
         if not self:
             return True
         self.check_access_rule('unlink')
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
-        for elem in self:
-            if elem.is_thread_message():
-                elem._invalidate_documents()
         return super(Message, self).unlink()
 
     @api.model
@@ -1091,7 +1113,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
 
     def _get_search_domain_share(self):

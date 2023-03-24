@@ -11,7 +11,7 @@
                     <group states="choose" string="Export Settings">
                         <field name="lang"/>
                         <field name="format"/>
-                        <field name="modules" widget="many2many_tags"/>
+                        <field name="modules" widget="many2many_tags" options="{'no_create': True}"/>
                     </group>
                     <div states="get">
                         <h2>Export Complete</h2>

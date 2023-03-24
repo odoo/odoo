@@ -99,6 +99,9 @@ var Tip = Widget.extend({
         this.el.style.removeProperty('transition');
         this.$tooltip_content.html(this.info.content);
         this.$window = $(window);
+        // Fix the content font size as it was used to compute the height and
+        // width of the container.
+        this.$tooltip_content[0].style.fontSize = getComputedStyle(this.$tooltip_content[0])['font-size'];
 
         this.$tooltip_content.css({
             width: "100%",
@@ -635,7 +638,13 @@ var Tip = Widget.extend({
  * @param {string} [run] the run parameter of the tip (only strings are useful)
  */
 Tip.getConsumeEventType = function ($element, run) {
-    if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
+    if ($element.has("input.o-autocomplete--input.o_input").length > 0) {
+        // Components that utilizes the AutoComplete component is expected to
+        // contain an input with the class o-autocomplete--input.
+        // And when an option is selected, the component triggers
+        // 'AutoComplete:OPTION_SELECTED' event.
+        return 'AutoComplete:OPTION_SELECTED';
+    } else if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
         return 'autocompleteselect';
     } else if ($element.is("textarea") || $element.filter("input").is(function () {
         var type = $(this).attr("type");

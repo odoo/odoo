@@ -9,7 +9,6 @@ import time
 _logger = logging.getLogger(__name__)
 
 
-@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestAr(AccountTestInvoicingCommon):
 
     @classmethod

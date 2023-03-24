@@ -3,20 +3,22 @@
 # 	* account
 # 
 # Translators:
-# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
 # Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2022
 # Martin Trigaux, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # arfa simoncelli, 2022
-# Abe Manyo, 2022
+# Danu S Pratomo, 2022
+# Edi Santoso <repopamor@gmail.com>, 2022
+# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2023
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -61,6 +64,7 @@ msgstr ""
 "        "
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
@@ -87,18 +91,21 @@ msgid "# of Digits"
 msgstr "# dari Digit"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
 msgstr "#Dibuat oleh: %s"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "%(action)s for journal %(journal)s"
 msgstr "%(action)s untuk jurnal %(journal)s"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
@@ -110,18 +117,21 @@ msgid "%<span class=\"px-3\"/>("
 msgstr "%<span class=\"px-3\"/>("
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "%d moves"
 msgstr "%d pindahan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Salinan)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
@@ -132,36 +142,42 @@ msgid "%s (copy)"
 msgstr "%s (salinan)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
 msgstr "%s (pembulatan)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
 msgstr "%s Termasuk Pajak"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
 msgstr "%s Tidak Termasuk Pajak"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -172,23 +188,26 @@ msgstr ""
 "dari jumlah yang harus dibayar"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
 msgstr "%s bukan sebuah field tersimpan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
 msgstr "%s.salinan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "(copy)"
-msgstr "(copy)"
+msgstr "(salinan)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -196,6 +215,7 @@ msgid "(included)."
 msgstr "(termasuk)."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "(including this document) "
@@ -234,7 +254,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr "- Urutan dokumen menjadi dapat disunting pada semua dokumen."
+msgstr "- Membuat agar urutan dokumen dapat di-edit pada semua dokumen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -261,10 +281,11 @@ msgid ". You might want to put a higher number here."
 msgstr ". Anda mungkin ingin memasukan angka lebih tinggi di sini."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr "... (%s lainya)"
+msgstr "... (%s lainnya)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -573,7 +594,7 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Kirim pesan</b>"
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Konfigurasi Server "
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Konfigurasi Peladen "
 "Email"
 
 #. module: account
@@ -582,6 +603,7 @@ msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> Cetak"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -590,6 +612,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -605,19 +628,6 @@ msgid ""
 msgstr ""
 "<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
 "'!=', '/'), ('quick_edit_mode', '=', True)]}\">Konsep</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-msgid ""
-"<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Invoice</span>\n"
-"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Invoices</span>\n"
-"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Credit Note</span>\n"
-"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Credit Notes</span>"
-msgstr ""
-"<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Faktur</span>\n"
-"<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Faktur-Faktur</span>\n"
-"<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Catatan Kredit</span>\n"
-"<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Catatan-Catatan Kredit</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -637,20 +647,16 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
-"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
+"<span attrs=\"{'invisible': [('reconciled_invoices_type', '!=', 'invoice')]}\"> Invoice</span>\n"
+"                                        <span attrs=\"{'invisible': [('reconciled_invoices_type', '=', 'invoice')]}\"> Credit Note</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Tagihan</span>\n"
-"                                 <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Tagihan-tagihan</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid ""
-"<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Statement line</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Statement lines</span>"
+"<span attrs=\"{'invisible': [('rule_type', '!=', 'invoice_matching')]}\" "
+"class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Baris Pernyataan</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Baris Pernyataan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -748,13 +754,6 @@ msgstr ""
 "<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> atau"
 " </span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "<span class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
-msgstr ""
-"<span class=\"o_form_label o_td_label\">Mencocokkan Faktur/tagihan "
-"dengan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -980,7 +979,7 @@ msgstr "<span role=\"separator\">Tampil</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">Balance in GL</span>"
+msgstr "<span title=\"Balance in General Ledger\">Saldo di Buku Besar</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -999,12 +998,17 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
-msgstr "<span> (CR)</span>"
+msgstr "<span> (KR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (DR)</span>"
 msgstr "<span> (DR)</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span> Bill</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1015,6 +1019,11 @@ msgstr "<span> Dari </span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
 msgstr "<span> Ke </span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span> Transaction</span>"
+msgstr "<span> Transaksi</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1046,7 +1055,7 @@ msgstr "<span>Deskripsi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr "<span>Disc.%</span>"
+msgstr "<span>Diskon.%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1099,7 +1108,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "Laporan"
+msgstr "<span>Laporan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1118,6 +1127,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
+"<span>Entri ini telah dibuat melalui aplikasi Invoice, sebelum menginstal "
+"Accounting. Saldo telah diimpor secara terpisah.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1129,11 +1140,6 @@ msgstr "<span>Ini adalah pratinjau dari Syarat &amp; Ketentuan anda.</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
 msgstr "<span>Harga Satuan</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>Upload Invoices</span>"
-msgstr "<span>Unggah Faktur</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1239,6 +1245,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
+msgid "<strong>Total Rounded</strong>"
+msgstr "<strong>Total Dibulatkan</strong>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total</strong>"
@@ -1250,6 +1261,7 @@ msgid "<strong>Type: </strong>"
 msgstr "<strong>Tipe: </strong>"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: %(email)s"
@@ -1264,6 +1276,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "A bank account can belong to only one journal."
@@ -1278,10 +1291,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr ""
+msgstr "Posisi fiskal dengan PPN luar negeri sudah ada di wilayah ini."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1295,7 +1309,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
+msgstr "Nama grup jurnal harus unik per perusahaan"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1307,18 +1321,30 @@ msgstr ""
 "berkaitan dengan bisnis sehari-hari."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
+"Baris tidak dapat memiliki turunan dan nilai pengelompokan (baris '%s') "
+"secara bersamaan."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:0
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "A payment must always belongs to a bank or cash journal."
+msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid "A payment must always belongs to a bank or cash journal."
+msgstr "Pembayaran harus selalu terhubung dengan bank atau jurnal kas."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -1327,6 +1353,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -1353,6 +1380,7 @@ msgstr ""
 "begitu, jumlah dari subtotal tiap baris sama dengan total termasuk pajak."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created: %s"
@@ -1362,16 +1390,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
+msgstr "Pembayaran kedua akan dibuat secara otomatis di jurnal tujuan."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
 msgstr ""
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Posisi fiskal pajak hanya dapat didefinisikan satu kali pada pajak yang "
+"Fiscal Position pajak hanya dapat didefinisikan satu kali pada pajak yang "
 "sama."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -1380,6 +1416,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_users.py:0
 #, python-format
 msgid ""
@@ -1416,6 +1453,7 @@ msgid "According to each type of account"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model,name:account.model_account_account
@@ -1432,6 +1470,7 @@ msgid "Account"
 msgstr "Akun"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -1447,7 +1486,7 @@ msgstr "Pembulatan Uang Tunai"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Template Bagan Akun"
+msgstr "Templat Bagan Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -1483,6 +1522,7 @@ msgid "Account Groups"
 msgstr "Grup Akun"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
@@ -1517,7 +1557,7 @@ msgstr "Akun Jurnal"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr "Account Journal Group"
+msgstr "Grup Jurnal Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1575,7 +1615,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
-msgstr "Account Root"
+msgstr "Akar Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1592,7 +1632,7 @@ msgstr "Statistik Akun"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Tag Akun"
+msgstr "Tanda Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
@@ -1611,13 +1651,13 @@ msgstr "Akun Pajak"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "Account Tax Group"
+msgstr "Grup Akun Pajak"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "Template Akun Pajak"
+msgstr "Templat Akun Pajak"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
@@ -1628,7 +1668,7 @@ msgstr "Akun TaxCloud"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr "Template Akun untuk Penilaian Persediaan"
+msgstr "Templat Akun untuk Penilaian Persediaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
@@ -1661,7 +1701,7 @@ msgstr "Pembatalan Rekonsiliasi Akun"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr "Account codes first 2 digits"
+msgstr "2 digit awal kode Akun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -1715,7 +1755,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr "Account report with payment lines"
+msgstr "laporan Akun dengan baris pembayaran"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
@@ -1725,7 +1765,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "Tag akun"
+msgstr "Tanda Akun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__property_cash_basis_base_account_id
@@ -1785,12 +1825,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "Account with Entries"
+msgstr "Akun dengan Entri"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
 #: model:ir.cron,cron_name:account.ir_cron_auto_post_draft_entry
-#: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
@@ -1810,7 +1849,7 @@ msgstr "Akuntansi"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Dashboard Akuntansi"
+msgstr "Dasbor Akuntansi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -1840,11 +1879,12 @@ msgid "Accounting Information"
 msgstr "Informasi Akuntansi"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr "Accounting Periods"
+msgstr "Periode Akuntansi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report
@@ -1910,15 +1950,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr "Akun Accrual"
+msgstr "Akun Akrual"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrual Moves"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid ""
@@ -1927,6 +1969,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued %s entry as of %s"
@@ -1935,7 +1978,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Accrued Account"
-msgstr "Accrued Account"
+msgstr "Akun yang masih harus dibayar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
@@ -1943,6 +1986,7 @@ msgid "Accrued Orders Wizard"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued total"
@@ -2066,7 +2110,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -2109,7 +2153,7 @@ msgstr "Tambahkan jurnal"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Add a journal group"
-msgstr "Add a journal group"
+msgstr "Tambah grup jurnal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2117,7 +2161,7 @@ msgid "Add a line"
 msgstr "Tambahkan satu baris"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
@@ -2187,6 +2231,7 @@ msgid "Adjusting Amount"
 msgstr "Menyesuaikan Jumlah"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -2196,6 +2241,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -2204,6 +2250,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -2237,7 +2284,7 @@ msgid "Affect Subsequent Taxes"
 msgstr "Pengaruh Pajak Berikutnya"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #, python-format
 msgid "After"
@@ -2264,6 +2311,7 @@ msgid "Alias domain"
 msgstr "Domain alias"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid "All"
@@ -2275,12 +2323,14 @@ msgid "All Users Lock Date"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "All accounts on the lines must be of the same type."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "All entries are hashed."
@@ -2484,7 +2534,7 @@ msgid "Amount to Pay (foreign currency)"
 msgstr "Jumlah Bayar (mata uang asing)"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -2492,12 +2542,14 @@ msgid "Amount:"
 msgstr "Jumlah:"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
 msgstr "An Off-Balance account can not be reconcilable"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not have taxes"
@@ -2528,12 +2580,14 @@ msgstr ""
 "                informasi tertentu."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "An error has occurred."
-msgstr ""
+msgstr "Telah terjadi kesalahan."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -2579,9 +2633,8 @@ msgid "Analytic Distribution Models"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_stored_char
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
+#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
+msgid "Analytic Filter"
 msgstr ""
 
 #. module: account
@@ -2610,6 +2663,12 @@ msgid "Analytic Plans"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
 msgstr "Baris Analitik"
@@ -2620,19 +2679,25 @@ msgid "Analytics"
 msgstr "Analitik"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
 msgstr ""
+"Setiap item jurnal pada akun utang harus memiliki tanggal jatuh tempo dan "
+"sebaliknya."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
 "Any journal item on a receivable account must have a due date and vice "
 "versa."
 msgstr ""
+"Setiap item jurnal pada akun piutang harus memiliki tanggal jatuh tempo dan "
+"sebaliknya."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -2654,13 +2719,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__auto_apply
 msgid "Apply automatically this fiscal position."
-msgstr "Terapkan otomatis posisi fiskal ini."
+msgstr "Terapkan otomatis fiscal position ini."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery country matches the group."
-msgstr ""
+msgstr "Berlaku hanya jika negara pengiriman sesuai dengan grup."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
@@ -2701,7 +2766,7 @@ msgid "Asset"
 msgstr "Aktiva"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2720,6 +2785,7 @@ msgid "At Date"
 msgstr "Pada tanggal"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/populate/res_company.py:0
 #, python-format
 msgid ""
@@ -2730,7 +2796,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
-msgstr ""
+msgstr "Pada awal tahun fiskal"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_period
@@ -2742,11 +2808,6 @@ msgstr "Pada awal periode"
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "Attach a file"
 msgstr "Lampirkan berkas"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
-msgid "Attachment"
-msgstr "Lampiran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
@@ -2763,6 +2824,7 @@ msgid "Attachment Count"
 msgstr "Hitungan Lampiran"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__attachment_ids
@@ -2838,6 +2900,7 @@ msgid "Auto-validate"
 msgstr "Auto-validate"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
@@ -2900,6 +2963,7 @@ msgid "Average Price"
 msgstr "Harga Rata-rata"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "BILL"
@@ -2917,7 +2981,7 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #, python-format
@@ -2925,12 +2989,14 @@ msgid "Balance Sheet"
 msgstr "Lembar Saldo"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "Balance percentage can't be 0"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -2957,18 +3023,21 @@ msgid "Bank Account"
 msgstr "Akun Bank"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s created"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s updated"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s with number %s deleted"
@@ -3053,6 +3122,7 @@ msgid "Bank Statements"
 msgstr "Rekening Koran"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 #, python-format
@@ -3060,10 +3130,11 @@ msgid "Bank Suspense Account"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transaksi Bank"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3104,6 +3175,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bank: Balance"
@@ -3118,7 +3190,7 @@ msgstr "Bank"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__base
 msgid "Base"
-msgstr "Dasar"
+msgstr "Base"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_base_affected
@@ -3184,7 +3256,7 @@ msgid "Batch Payments"
 msgstr "Batch Payments"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #, python-format
 msgid "Before"
@@ -3234,6 +3306,7 @@ msgid "Billing Administrator"
 msgstr "Billing Administrator"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_in_invoice_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_invoice_type
@@ -3258,6 +3331,7 @@ msgid "Bills to Validate"
 msgstr "Tagihan untuk Divalidasi"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bills to pay"
@@ -3267,7 +3341,7 @@ msgstr "Tagihan yang harus dibayar"
 #: model:ir.model.fields,field_description:account.field_account_report_column__blank_if_zero
 #: model:ir.model.fields,field_description:account.field_account_report_expression__blank_if_zero
 msgid "Blank if Zero"
-msgstr ""
+msgstr "Kosong jika Nol"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -3313,8 +3387,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"Dengan menghapus centang kolom aktif, Anda dapat menyembunyikan posisi "
-"fiskal tampa menghapusnya."
+"Dengan menghapus centang kolom aktif, Anda dapat menyembunyikan fiscal "
+"position tampa menghapusnya."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -3325,6 +3399,7 @@ msgstr ""
 " tidak akan dipakai."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -3362,6 +3437,7 @@ msgid "CSV Import"
 msgstr "Impor CSV"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "CUST"
@@ -3370,7 +3446,7 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Dapat Mengedit Badan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
@@ -3422,18 +3498,21 @@ msgid "Cancelled Invoice"
 msgstr "Faktur Dibatalkan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create a purchase document in a non purchase journal"
-msgstr ""
+msgstr "Tidak dapat membuat dokumen pembelian dalam jurnal non pembelian"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create a sale document in a non sale journal"
-msgstr ""
+msgstr "Tidak dapat membuat dokumen penjualan dalam jurnal non penjualan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -3444,6 +3523,7 @@ msgstr ""
 "Silakan ke Konfigurasi Akun."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -3451,6 +3531,7 @@ msgid "Cannot generate an unused account code."
 msgstr "Tidak dapat membuat kode akun yang tidak terpakai."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -3460,6 +3541,7 @@ msgstr ""
 "'Shortcode'."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -3472,12 +3554,14 @@ msgid "Carry Over To"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Carryover lines for: %s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -3497,6 +3581,7 @@ msgid "Cash Basis"
 msgstr "Basis Kas"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_created_move_ids
@@ -3519,6 +3604,7 @@ msgid "Cash Basis Origin"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Basis Taxes"
@@ -3537,6 +3623,7 @@ msgid "Cash Difference Expense Account"
 msgstr "Cash Difference Expense Account"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Gain"
@@ -3549,12 +3636,14 @@ msgid "Cash Difference Income Account"
 msgstr "Cash Difference Income Account"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Loss"
 msgstr "Kerugian Pendapatan Kas"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Gain"
@@ -3566,6 +3655,7 @@ msgid "Cash Discount Gain account"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Loss"
@@ -3623,12 +3713,21 @@ msgid "Cash Statement"
 msgstr "Cash Statement"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash basis transition account"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Cash: Balance"
@@ -3676,6 +3775,7 @@ msgid "Change label of the counterpart that will hold the payment difference"
 msgstr "Ganti label dari kontra yang akan diisi perbedaan pembayaran"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid ""
@@ -3686,6 +3786,7 @@ msgstr ""
 "Anda. Silahkan langsung hubungi kami untuk operasi ini."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid ""
@@ -3696,6 +3797,7 @@ msgstr ""
 " your account. Please contact us directly for this operation."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid ""
@@ -3721,6 +3823,7 @@ msgid "Chart Templates"
 msgstr "Template Bagan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #: model:ir.actions.act_window,name:account.action_account_form
 #: model:ir.model.fields,field_description:account.field_account_report__chart_template_id
@@ -3743,7 +3846,7 @@ msgstr "Bagan akun-akun"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of accounts set."
-msgstr ""
+msgstr "Bagan akun dibuat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -3900,7 +4003,7 @@ msgstr "Indeks Warna"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__column_ids
 msgid "Columns"
-msgstr ""
+msgstr "Kolom"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__groupby
@@ -4081,9 +4184,10 @@ msgstr "Configuration review"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Configure"
-msgstr "Atur"
+msgstr "Konfigurasi"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -4101,12 +4205,12 @@ msgstr "Congratulations! You are all set."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Connect"
-msgstr ""
+msgstr "Connect"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Connect your financial accounts in seconds."
-msgstr ""
+msgstr "Hubungkan akun keuangan Anda dalam hitungan detik."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
@@ -4160,6 +4264,7 @@ msgstr ""
 "yang sama. Konversi akan dibuat berdasarkan rasio."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
@@ -4177,6 +4282,7 @@ msgid "Cost of Revenue"
 msgstr "Harga Pokok Penjualan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -4185,12 +4291,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Could not determine carryover target automatically for expression %s."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -4201,7 +4309,7 @@ msgstr ""
 "entries existing."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.js:0
 #, python-format
 msgid "Could not upload files"
@@ -4308,6 +4416,7 @@ msgid "Create Payment"
 msgstr "Create Payment"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Create a Bank Account"
@@ -4399,6 +4508,7 @@ msgid "Create first invoice"
 msgstr "Buat invoice pertama"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Create invoice/bill"
@@ -4410,8 +4520,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
+"Buat faktur, daftarkan pembayaran dan terus lacak diskusi dengan pelanggan-"
+"pelanggan Anda."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4419,8 +4529,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
-"Create invoices, register payments and keep track of the discussions with "
-"your vendors."
+"Buat faktur, daftarkan pembayaran dan terus lacak diskusi dengan vendor-"
+"vendor Anda."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -4430,7 +4540,7 @@ msgstr "Buat pembulatan kas pertama kali"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr "Buat invoice pertama Anda."
+msgstr "Buat faktur pertama Anda."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -4549,6 +4659,7 @@ msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
@@ -4589,6 +4700,7 @@ msgid "Credit Move"
 msgstr "Pergerakan Kredit"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
@@ -4599,6 +4711,7 @@ msgid "Credit Note"
 msgstr "Catatan Kredit"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
@@ -4695,6 +4808,7 @@ msgid "Currency Rate"
 msgstr "Kurs Mata Uang"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
@@ -4702,15 +4816,7 @@ msgid "Currency exchange rate difference"
 msgstr "Perbedaan kurs valas"
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid "Currency exchange rate difference (cash basis)"
-msgstr ""
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Currency must always be provided in order to generate a QR-code"
@@ -4808,6 +4914,8 @@ msgid "Customer Invoice"
 msgstr "Faktur Pelanggan"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -4823,6 +4931,7 @@ msgid "Customer Invoices and Vendor Bills"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Customer Payment"
@@ -4859,6 +4968,7 @@ msgid "Customer Reference"
 msgstr "Referensi Pelanggan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Customer Reimbursement"
@@ -4893,15 +5003,15 @@ msgstr "Pelanggan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize"
-msgstr "Penyesuaian"
+msgstr "Kustomisasi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr "Customize the look of your invoices."
+msgstr "Kustomisasi tampilan faktur Anda."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Customize your layout."
@@ -4948,7 +5058,8 @@ msgid "Data consistency check"
 msgstr "Data consistency check"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -5012,7 +5123,7 @@ msgstr ""
 "pembukaan."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -5046,6 +5157,7 @@ msgid "Days to add after the end of the month"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
@@ -5091,6 +5203,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "Akun Bawaan"
 
@@ -5205,7 +5318,7 @@ msgstr "Define the smallest coinage of the currency used to pay by cash"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years &amp; tax returns periodicity."
-msgstr "Define your fiscal years &amp; tax returns periodicity."
+msgstr "Tetapkan tahun fiskal &amp; tanggal periode restitusi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -5302,6 +5415,7 @@ msgid "Description on the Invoice"
 msgstr "Deskripsi pada Faktur"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_payment__destination_account_id
 #, python-format
@@ -5314,6 +5428,7 @@ msgid "Destination Journal"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Destination journal"
@@ -5385,7 +5500,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__disabled
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Disabled"
-msgstr ""
+msgstr "Dinonaktifkan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5397,7 +5512,7 @@ msgstr "Disc.%"
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Discard"
-msgstr "Abaikan"
+msgstr "Buang"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5448,6 +5563,7 @@ msgid "Discount amount in Currency"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
@@ -5570,12 +5686,18 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
+#: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_tax_form
+msgid "Distribution for Refunds"
 msgstr ""
 
 #. module: account
@@ -5589,6 +5711,7 @@ msgid "Distribution when the tax is used on an invoice"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -5669,12 +5792,14 @@ msgid "Draft"
 msgstr "Draft"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Bill"
 msgstr "Rancangan Tagihan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
@@ -5686,12 +5811,14 @@ msgid "Draft Entries"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Draft Entry"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5705,30 +5832,35 @@ msgid "Draft Invoices"
 msgstr "Rancangan Faktur"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Draft Payment"
 msgstr "Rancangan Pembayaran"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Purchase Receipt"
 msgstr "Draft Purchase Receipt"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Sales Receipt"
 msgstr "Draft Sales Receipt"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
 msgstr "Draft Vendor Credit Note"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Due"
@@ -5740,6 +5872,7 @@ msgid "Due Amount for"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_date_due
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_date_due
@@ -5779,6 +5912,7 @@ msgid "Duplicated Ref"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -5804,6 +5938,7 @@ msgid "EX WORKS"
 msgstr "EX WORKS"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -5811,6 +5946,7 @@ msgid "EXCH"
 msgstr "EXCH"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
@@ -5819,6 +5955,7 @@ msgid "Early Payment Discount"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 #: code:addons/account/models/account_move_line.py:0
@@ -5827,6 +5964,7 @@ msgid "Early Payment Discount (%s)"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Early Payment Discount (Exchange Difference)"
@@ -5845,7 +5983,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Edit"
-msgstr "Sunting"
+msgstr "Edit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
@@ -5942,24 +6080,28 @@ msgid "Entries Count"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Entries are hashed from %s (%s)"
 msgstr "Entries are hashed from %s (%s)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Entries are not from the same account: %s != %s"
 msgstr "Entri tidak dari akun yang sama: %s != %s"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Entries can only be created for a single company at a time."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Entries doesn't belong to the same company: %s != %s"
@@ -5978,6 +6120,7 @@ msgid "Entries to Review"
 msgstr "Entri untuk Ditinjau Ulang"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "Entries: %(account)s"
@@ -5999,7 +6142,7 @@ msgid "Epd Needed"
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
@@ -6011,6 +6154,7 @@ msgid "Equity"
 msgstr "Ekuitas"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid ""
@@ -6019,6 +6163,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Error!"
@@ -6060,7 +6205,8 @@ msgid "Example Preview"
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6090,7 +6236,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "Antisipasi Bagan Akun"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -6203,15 +6350,10 @@ msgid "Figure Type"
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
-msgid "Filter Analytic"
 msgstr ""
 
 #. module: account
@@ -6283,7 +6425,7 @@ msgstr "Nomor Urut Baru Pertama"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "First invoice sent!"
-msgstr "Invoice pertama terkirim!"
+msgstr "Invoice pertama dikirim!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -6340,20 +6482,20 @@ msgstr "Periode Fiskal"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "Posisi Fiskal"
+msgstr "Fiscal Position"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 msgid "Fiscal Position Template"
-msgstr "Template Posisi Fiskal"
+msgstr "Template Fiscal Position"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Posisi Fiskal"
+msgstr "Fiscal Position"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -6447,7 +6589,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_follower_ids
 msgid "Followers"
-msgstr "Pengikut"
+msgstr "Follower"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_partner_ids
@@ -6461,7 +6603,7 @@ msgstr "Pengikut"
 #: model:ir.model.fields,field_description:account.field_res_company__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Pengikut (Rekanan)"
+msgstr "Follower (Mitra)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_type_icon
@@ -6486,6 +6628,7 @@ msgid "For percent enter a ratio between 0-100."
 msgstr "Untuk persen masukkan rasio antara 0-100."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "For this entry to be automatically posted, it required a bill date."
@@ -6537,12 +6680,14 @@ msgid "Foreign Vat Header Mode"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign account (%s)"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account (%s)"
@@ -6680,6 +6825,7 @@ msgid "Generate Entries"
 msgstr "Buat Entri"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
@@ -6687,6 +6833,7 @@ msgid "Generated Documents"
 msgstr "Generated Documents"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Generated Entries"
@@ -6708,6 +6855,7 @@ msgid "Get warnings when invoicing specific customers"
 msgstr "Munculkan peringatan ketika menagih pelanggan tertentu"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
@@ -6770,6 +6918,7 @@ msgid "Group payments into a single batch to ease the reconciliation process"
 msgstr "Group payments into a single batch to ease the reconciliation process"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -6804,7 +6953,7 @@ msgstr "Ada Entri Akuntansi"
 #: model:ir.model.fields,field_description:account.field_res_company__has_message
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Memiliki Pesan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -6934,6 +7083,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
@@ -7144,6 +7294,7 @@ msgstr ""
 "dapat dinonaktifkan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -7164,12 +7315,14 @@ msgid "Import .qif files"
 msgstr "Impor file .qif"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Import Template for Chart of Accounts"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
@@ -7211,6 +7364,7 @@ msgid "Import your bank statements in QIF"
 msgstr "Impor rekening koran anda dalam format QIF"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Import your first bill"
@@ -7284,7 +7438,7 @@ msgid "Included in Price"
 msgstr "Masukkan dalam Harga"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income
@@ -7320,6 +7474,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/setup_wizards.py:0
 #, python-format
 msgid ""
@@ -7377,7 +7532,7 @@ msgid "Indicates that this journal item is a tax line"
 msgstr "Indicates that this journal item is a tax line"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -7450,6 +7605,7 @@ msgid "Internal Reference"
 msgstr "Referensi Internal"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #: model:ir.model.fields,field_description:account.field_account_payment__is_internal_transfer
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7517,12 +7673,14 @@ msgid "Invalid"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "\"Kode Pos\" tidak valid, silakan konfigurasi yang betul."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -7539,6 +7697,7 @@ msgid "Investing & Extraordinary Activities"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
@@ -7569,6 +7728,7 @@ msgid "Invoice Count"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
@@ -7607,7 +7767,7 @@ msgstr "Invoice Has Outstanding"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Invoice Layout"
-msgstr "Invoice Layout"
+msgstr "Tata Letak Faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7674,6 +7834,7 @@ msgid "Invoice Totals"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -7682,6 +7843,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -7690,6 +7852,7 @@ msgstr ""
 "Distribusi Faktur dan nota kredit harus memiliki nomor baris yang sama."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -7698,6 +7861,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -7752,6 +7916,7 @@ msgid "Invoiced"
 msgstr "Telah Difakturkan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
 #: model:ir.actions.report,name:account.account_invoices
@@ -7791,6 +7956,7 @@ msgid "Invoices Statistics"
 msgstr "Statistik Faktur"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
@@ -7799,7 +7965,7 @@ msgstr "Faktur terhutang kepada Anda"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Invoices to Validate"
+msgstr "Faktur untuk Divalidasi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -7814,12 +7980,14 @@ msgid "Invoices without Payment"
 msgstr "Faktur tanpa Pembayaran"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices/Bills Partial Match if Underpaid"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices/Bills Perfect Match"
@@ -7879,13 +8047,6 @@ msgstr "Is Greater Than"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
-msgid ""
-"When checked, 0 values will not show when displaying this expression's "
-"value."
 msgstr ""
 
 #. module: account
@@ -7958,6 +8119,7 @@ msgid "It indicates that the invoice/payment has been sent."
 msgstr "Ini mengindikasikan bahwa invoice/pembayaran telah terkirim"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
@@ -7998,7 +8160,8 @@ msgid "Journal Currency"
 msgstr "Mata Uang Jurnal"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -8018,7 +8181,8 @@ msgid "Journal Entries by Date"
 msgstr "Journal Entries by Date"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -8037,6 +8201,7 @@ msgid "Journal Entry"
 msgstr "Entri Jurnal"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -8045,6 +8210,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -8054,6 +8220,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -8062,6 +8229,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -8075,7 +8243,7 @@ msgid "Journal Entry Date"
 msgstr "Tanggal Entri Jurnal"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -8105,6 +8273,7 @@ msgid "Journal Item"
 msgstr "Item Jurnal"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Journal Item %s updated"
@@ -8181,6 +8350,7 @@ msgid "Journal items where matching number isn't set"
 msgstr "Artikel jurnal di mana nomor pencocokan belum ditetapkan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
@@ -8205,7 +8375,7 @@ msgid "Journal where to create the entry."
 msgstr "Jurnal untuk membuat entri."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -8216,6 +8386,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model:ir.ui.menu,name:account.menu_finance_entries_accounting_miscellaneous
 msgid "Journals"
 msgstr "Jurnal-jurnal"
 
@@ -8311,6 +8482,7 @@ msgid "Kpi Account Total Revenue Value"
 msgstr "Kpi Account Total Revenue Value"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ref
@@ -8574,7 +8746,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late Invoices"
-msgstr ""
+msgstr "Faktur Terlambat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
@@ -8603,6 +8775,7 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr "Referensi hukum yang harus dicetak pada faktur."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Less Payment"
@@ -8614,7 +8787,7 @@ msgid "Let your customers pay their invoices online"
 msgstr "Ijinkan pelanggan Anda untuk membayar faktur secara daring"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Let's send the invoice."
@@ -8626,7 +8799,7 @@ msgid "Level"
 msgstr "Tingkatan"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #, python-format
@@ -8661,6 +8834,7 @@ msgid "Lines"
 msgstr "Baris"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
@@ -8672,6 +8846,7 @@ msgid "Liquidity"
 msgstr "Likuiditas"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Liquidity Transfer"
@@ -8706,7 +8881,7 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Looks good. Let's continue."
@@ -8731,6 +8906,7 @@ msgid "Loss Exchange Rate Account"
 msgstr "Akun Kerugian Valas"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "MISC"
@@ -8803,6 +8979,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Manual entry"
@@ -8816,6 +8993,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: Dapatkan bayaran melalui metode apapun diluar Odoo.\n"
+"Penyedia Pembayaran: Setiap penyedia pembayaran memiliki Metode Pembayaran sendiri. Minta transaksi ke/atau kartu berkat token pembayaran yang disimpan oleh mitra saat membeli atau subscribe online.\n"
+"Batch Deposit: Pilih beberapa cek pelanggan secara sekaligus untuk membuat dan mengirimkan batch deposit ke bank Anda. Anda membutuhkan modul account_batch_payment.\n"
+"SEPA Direct Debit: Dapatkan bayaran di SEPA zone berkat mandat yang mitra Anda akan berikan ke Anda. Anda membutuhkan modul account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -8836,6 +9017,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: Dapatkan bayaran melalui metode apapun diluar Odoo.\n"
+"Penyedia Pembayaran: Setiap penyedia pembayaran memiliki Metode Pembayaran sendiri. Minta transaksi ke/atau kartu berkat token pembayaran yang disimpan oleh mitra saat membeli atau subscribe online.\n"
+"Cek: Bayar tagihan dengan cek dan cetak dari Odoo.\n"
+"Batch Deposit: Pilih beberapa cek pelanggan secara sekaligus untuk membuat dan mengirimkan batch deposit ke bank Anda. Anda membutuhkan modul account_batch_payment.\n"
+"SEPA Credit Transfer: Bayar di SEPA zone dengan mengirimkan file SEPA Credit Transfer ke bank Anda. Anda membutuhkan modul account_sepa.\n"
+"SEPA Direct Debit: Dapatkan bayaran di SEPA zone berkat mandat yang mitra Anda akan berikan ke Anda. Anda membutuhkan modul account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -8902,6 +9089,7 @@ msgid "Matched Journal Items"
 msgstr "Artikel Jurnal Sudah Dicocokkan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Transactions"
@@ -8927,10 +9115,20 @@ msgid "Matching Order"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
+msgid "Matching categories"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
 msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
+msgid "Matching partners"
 msgstr ""
 
 #. module: account
@@ -8950,7 +9148,7 @@ msgid "Memo"
 msgstr "Memo"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -9019,7 +9217,6 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__general
-#: model:ir.ui.menu,name:account.menu_finance_entries_accounting_miscellaneous
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9027,18 +9224,21 @@ msgid "Miscellaneous"
 msgstr "Lain-lain"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Miscellaneous Operations"
 msgstr "Operasi Lain-lain"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "Missing 'active_model' in context."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 #, python-format
 msgid "Missing foreign currencies on partials having ids: %s"
@@ -9137,7 +9337,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Deadline Kegiatan Saya"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9247,7 +9447,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Kalender Acara Aktivitas Berikutnya"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -9306,12 +9506,14 @@ msgid "No Template"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "No attachment was provided"
 msgstr "No attachment was provided"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -9320,6 +9522,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid ""
@@ -9330,6 +9533,7 @@ msgstr ""
 "bills."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "No possible action found with the selected lines."
@@ -9414,6 +9618,7 @@ msgid "Not Contains"
 msgstr "Not Contains"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Not Due"
@@ -9493,7 +9698,7 @@ msgid "November"
 msgstr "November"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Now, we'll create your first invoice."
@@ -9656,14 +9861,14 @@ msgid "Once done, press continue."
 msgstr "Setelah selesai, tekan lanjutkan."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once everything is as you want it, validate."
 msgstr "Setelah semuanya seperti yang Anda inginkan, validasi."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid ""
@@ -9684,7 +9889,7 @@ msgstr ""
 "Akuntansi."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, press CONFIRM."
@@ -9696,18 +9901,14 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move_line.py:0
-#, python-format
-msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "One or more selected lines already belong to a complete statement."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -9721,16 +9922,7 @@ msgid "Only Tax Exigible Lines"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
-msgid "Only Those Partner Categories"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
-msgid "Only Those Partners"
-msgstr ""
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -9739,12 +9931,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Only administrators can load a chart of accounts"
 msgstr "Only administrators can load a chart of accounts"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
@@ -9769,6 +9963,7 @@ msgstr ""
 " termasuk tanggal ini. Misalnya dapat digunakan untuk mengunci tahun pajak."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "Oops"
@@ -9781,6 +9976,7 @@ msgid "Open"
 msgstr "Terbuka"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Open list"
@@ -9822,6 +10018,7 @@ msgid "Opening Journal"
 msgstr "Jurnal Pembukaan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 #, python-format
@@ -9834,6 +10031,7 @@ msgid "Opening Move Posted"
 msgstr "Pergerakan Pembukaan Terekam"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #, python-format
@@ -9851,6 +10049,7 @@ msgid "Operation Templates"
 msgstr "Template Operasi"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -9860,7 +10059,7 @@ msgstr "Operation not supported"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__optional
 msgid "Optional"
-msgstr ""
+msgstr "Opsiona"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__nocreate
@@ -9883,6 +10082,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Or send a bill to %s@%s"
@@ -9956,7 +10156,7 @@ msgid "Originator tax group"
 msgstr "Originator tax group"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #, python-format
@@ -10021,6 +10221,7 @@ msgid "Outstanding Account"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Payments"
@@ -10037,6 +10238,7 @@ msgid "Outstanding Payments accounts"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Receipts"
@@ -10053,12 +10255,14 @@ msgid "Outstanding Receipts accounts"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding credits"
 msgstr "Kredit belum selesai"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding debits"
@@ -10094,19 +10298,21 @@ msgid "Paid"
 msgstr "Lunas"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Bills"
 msgstr "Tagihan Terbayar"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Invoices"
 msgstr "Faktur Lunas"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10177,6 +10383,7 @@ msgid "Partially Paid"
 msgstr "Terbayar Sebagian"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_id
@@ -10244,16 +10451,17 @@ msgid "Partner Type"
 msgstr "Tipe Rekanan"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
+msgid "Partner is Set"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
-msgid "Partner should be set"
-msgstr ""
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10291,6 +10499,7 @@ msgid "Payables"
 msgstr "Utang"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_id
 #: model:ir.model.fields,field_description:account.field_account_move__payment_id
@@ -10522,6 +10731,7 @@ msgid "Payment: Payment Receipt"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #: model:ir.actions.act_window,name:account.action_account_payments
 #: model:ir.actions.act_window,name:account.action_account_payments_payable
@@ -10560,6 +10770,7 @@ msgid "Percentage"
 msgstr "Persentase"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Percentage must be between 0 and 100"
@@ -10594,6 +10805,7 @@ msgid "Percentage of statement line"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
@@ -10610,24 +10822,45 @@ msgid "Period Comparison"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Please install Accounting for this feature"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -10637,12 +10870,14 @@ msgstr ""
 "Mohon pasang skema akun atau buat sebuah jurnal bebas sebelum melanjutkan."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_cash_rounding.py:0
 #, python-format
 msgid "Please set a strictly positive rounding value."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -10729,6 +10964,7 @@ msgid "Posted Journal Items"
 msgstr "Artikel Jurnal Terekam"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -10910,7 +11146,7 @@ msgid "Products"
 msgstr "Produk"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #, python-format
@@ -10938,6 +11174,7 @@ msgid "Purchase Receipt"
 msgstr "Kuitansi pembelian"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Purchase Receipt Created"
@@ -10979,12 +11216,6 @@ msgid "QR Codes"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "QR-codes can only be generated for invoice entries."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "Kuantitas"
@@ -11004,6 +11235,13 @@ msgstr "Triwulanan"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_mode
 msgid "Quick Edit Mode"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_encoding_vals
+#: model:ir.model.fields,field_description:account.field_account_move__quick_encoding_vals
+#: model:ir.model.fields,field_description:account.field_account_payment__quick_encoding_vals
+msgid "Quick Encoding Vals"
 msgstr ""
 
 #. module: account
@@ -11154,6 +11392,7 @@ msgid "Reconciliation Parts"
 msgstr "Bagian Rekonsiliasi"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
@@ -11165,6 +11404,7 @@ msgid "Ref."
 msgstr "Ref."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__ref
@@ -11192,6 +11432,7 @@ msgid "Refund"
 msgstr "Pengembalian Dana"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Refund Created"
@@ -11220,6 +11461,7 @@ msgid "Refunds"
 msgstr "Pengembalian"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.server,name:account.action_account_invoice_from_list
 #: model:ir.model,name:account.model_account_payment_register
@@ -11403,6 +11645,7 @@ msgid "Residual Amount in Currency"
 msgstr "Jumlah Sisa dalam Mata Uang"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Residual amount"
@@ -11448,6 +11691,7 @@ msgstr ""
 "Restrict to propositions having the same currency as the statement line."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
@@ -11485,6 +11729,7 @@ msgid "Reversal date"
 msgstr "Tanggal Pembalikan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal date must be posterior to date."
@@ -11498,12 +11743,14 @@ msgid "Reversal of"
 msgstr "Reversal of"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_full_reconcile.py:0
 #: code:addons/account/models/account_partial_reconcile.py:0
 #: code:addons/account/wizard/account_move_reversal.py:0
@@ -11529,6 +11776,7 @@ msgid "Reverse Journal Entry"
 msgstr "Reverse Journal Entry"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reverse Moves"
@@ -11545,7 +11793,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Review"
-msgstr "Review"
+msgstr "Tinjauan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
@@ -11683,6 +11931,7 @@ msgid "Sales Receipt"
 msgstr "Struk"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sales Receipt Created"
@@ -11718,6 +11967,7 @@ msgid "Same Currency"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Sample data"
@@ -11749,6 +11999,7 @@ msgid "Save this page and come back here to set up the feature."
 msgstr "Simpan halaman ini dan kembali ke sini untuk mengatur fitur."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Scan me with your banking app."
@@ -11847,6 +12098,7 @@ msgid "Secure Sequence"
 msgstr "Secure Sequence"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Securisation of %s - %s"
@@ -11860,7 +12112,7 @@ msgid "Security Token"
 msgstr "Token Keamanan"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 #: code:addons/account/static/src/xml/legacy_account_journal_activity.xml:0
 #, python-format
@@ -11903,7 +12155,7 @@ msgid "Select an old vendor bill"
 msgstr "Select an old vendor bill"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
@@ -11975,6 +12227,7 @@ msgid "Send Email"
 msgstr "Kirim Email"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -11995,7 +12248,7 @@ msgid "Send invoices and payment follow-ups by post"
 msgstr "Send invoices and payment follow-ups by post"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid ""
@@ -12025,7 +12278,7 @@ msgid "Send receipts by email"
 msgstr "Kirim resi melalui email"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Send the invoice and check what the customer will receive."
@@ -12130,7 +12383,7 @@ msgid "Services"
 msgstr "Jasa"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
@@ -12163,12 +12416,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Set default Taxes for sales and purchase transactions."
-msgstr ""
+msgstr "Tetapkan Pajak standar untuk transaksi penjualan dan pembelian."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Set taxes"
-msgstr "Set taxes"
+msgstr "Tetapkan pajak"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__visible
@@ -12206,7 +12459,7 @@ msgstr "Pengaturan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "Setup your chart of accounts and record initial balances."
+msgstr "Siapkan bagan akun Anda dan catat saldo awal."
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12286,6 +12539,7 @@ msgid "Show Reset To Draft Button"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
@@ -12329,6 +12583,7 @@ msgid "Show line subtotals without taxes (B2B)"
 msgstr "Tampilkan subtotal tiap baris sebelum pajak (B2B)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show unposted entries"
@@ -12340,6 +12595,7 @@ msgid "Snailmail"
 msgstr "Snailmail"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -12348,6 +12604,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -12356,6 +12613,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -12420,7 +12678,7 @@ msgid ""
 msgstr "Tentukan bagaimana jumlah pada faktur akan dibulatkan"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
@@ -12501,6 +12759,7 @@ msgid "Statement Reports"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "Statement line percentage can't be 0"
@@ -12536,6 +12795,7 @@ msgid "States Count"
 msgstr "Jumlah Status"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__state
 #: model:ir.model.fields,field_description:account.field_account_move__state
@@ -12573,7 +12833,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Step Completed!"
-msgstr "Step Completed!"
+msgstr "Langkah Selesai!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12978,6 +13238,7 @@ msgid "Tax display B2C"
 msgstr "Tampilan pajak B2C"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -12993,6 +13254,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -13042,6 +13304,7 @@ msgid "TaxCloud"
 msgstr "TaxCloud"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/company.py:0
 #: model:account.tax.group,name:account.tax_group_taxes
@@ -13071,6 +13334,7 @@ msgid "Taxes Mapping"
 msgstr "Pemetaan Pajak"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -13081,7 +13345,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Taxes set."
-msgstr ""
+msgstr "Pajak ditetapkan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13099,7 +13363,8 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
-"Perpajakan, posisi fiskal, bagan akun &amp; laporan resmi untuk negara Anda"
+"Perpajakan, fiscal position, bagan akun &amp; laporan resmi untuk negara "
+"Anda"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -13138,7 +13403,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Template untuk Posisi Fiskal"
+msgstr "Template untuk Fiscal Position"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -13184,6 +13449,7 @@ msgid "Terms & Conditions format"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
@@ -13203,6 +13469,7 @@ msgid "That is the date of the opening entry."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
@@ -13212,6 +13479,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -13236,6 +13504,7 @@ msgstr ""
 "Anda dapat menggunakan kolom ini untuk pencarian cepat."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13244,12 +13513,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The Months and Days of the Payment Terms lines must be positive."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #, python-format
@@ -13257,12 +13528,23 @@ msgid "The Payment Term must have one Balance line."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "The account %s (%s) is deprecated."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -13270,6 +13552,7 @@ msgid "The account code can only contain alphanumeric characters and dots."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -13280,6 +13563,7 @@ msgstr ""
 "berarti akun tidak dapat memiliki tipe 'piutang' atau 'hutang'."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -13322,12 +13606,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -13338,6 +13624,7 @@ msgstr ""
 "group or left empty."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -13365,6 +13652,7 @@ msgid "The chart template for the company (if any)"
 msgstr "Template bagan untuk perusahaan (jika ada)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
@@ -13378,6 +13666,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Klien secara eksplisit mengecualikan syarat dan ketentuan standar mereka "
+"sendiri, bahkan bila hal tersebut dibuat setelah syarat dan ketentuan "
+"standar penjualan. Agar valid, derogation apapun harus disetujui secara "
+"eksplisit terlebih dahulu secara tertulis."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_code_company_uniq
@@ -13390,6 +13682,7 @@ msgid "The combination code/payment type already exists!"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13415,11 +13708,12 @@ msgid "The country for which this tax is applicable."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 
 #. module: account
@@ -13466,6 +13760,7 @@ msgid "The current highest number is"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13474,6 +13769,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13482,18 +13778,21 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date of some related entries is protected by a lock date"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The discount days of the Payment Terms lines must be positive."
@@ -13507,6 +13806,7 @@ msgid "The document(s) that generated the invoice."
 msgstr "The document(s) that generated the invoice."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
@@ -13525,12 +13825,14 @@ msgstr ""
 "beban (Harga Pokok Penjualan) diakui pada saat faktur pelanggan divalidasi."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid "The field %s must be filled."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13541,6 +13843,7 @@ msgstr ""
 "Customer Invoice."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13564,6 +13867,7 @@ msgid "The following Journal Entries will be generated"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid ""
@@ -13572,6 +13876,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_invoice_send.py:0
 #, python-format
 msgid ""
@@ -13582,6 +13887,7 @@ msgstr ""
 "don't have email address."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -13589,12 +13895,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -13617,12 +13925,14 @@ msgstr ""
 "                                            data without breaking the hash chain for subsequent parts."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "Pemegang akun bank jurnal harus perusahaan (%s)."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13630,19 +13940,21 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "The invoice having been sent, the button has changed priority."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
@@ -13668,6 +13980,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
@@ -13705,13 +14018,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "The next step is payment registration."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -13747,6 +14061,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
@@ -13763,6 +14078,7 @@ msgstr ""
 "sejak terakhir kali dilakukan pencocokan faktur & pembayaran."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -13794,6 +14110,7 @@ msgid "The payment's currency."
 msgstr "Mata uang pembayaran"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13909,12 +14226,14 @@ msgid "The recurrence will end on"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The regex is not valid"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -13928,6 +14247,7 @@ msgid "The report this report is a variant of."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "The requested page is invalid, or doesn't exist anymore."
@@ -13972,12 +14292,14 @@ msgstr ""
 "diterapkan."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
 msgstr "Format nomor urut telah berubah."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
@@ -13986,6 +14308,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13994,6 +14317,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14003,6 +14327,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14012,6 +14337,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid ""
@@ -14020,11 +14346,28 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid ""
 "The sequences of this journal are different for Payments and non-Payments "
 "but you selected some of both types."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
 msgstr ""
 
 #. module: account
@@ -14056,6 +14399,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "The tax group must have the same country_id as the tax using it."
@@ -14088,6 +14432,7 @@ msgid "The type of documnet on which the repartition line should be applied"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -14096,12 +14441,6 @@ msgid ""
 msgstr ""
 "Tipe standar dari akun kredit/debit jurnal tidak dapat berupa 'piutang' atau"
 " 'hutang'."
-
-#. module: account
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "The values for the created account need to be verified."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -14116,12 +14455,14 @@ msgid "There are currently no invoices and payments for your account."
 msgstr "Saat ini tidak ada faktur dan pembayaran untuk akun Anda."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
 msgstr "There are no journal items in the draft state to post."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -14132,6 +14473,7 @@ msgstr ""
 " merekam atau menghapusnya."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -14147,6 +14489,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 #, python-format
 msgid ""
@@ -14155,6 +14498,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -14168,6 +14512,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
 msgstr "Terdapat eror ketika memproses halaman ini."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14194,6 +14546,7 @@ msgid "This Quarter"
 msgstr "Triwulan Ini"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "This Week"
@@ -14211,6 +14564,7 @@ msgid "This account can be used for outgoing payments"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14245,6 +14599,7 @@ msgid "This account will be used when validating a customer invoice."
 msgstr "Akun ini akan digunakan ketika memvalidasi faktur pelanggan."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This action isn't available for this document."
@@ -14271,6 +14626,7 @@ msgstr ""
 "-This installs the account_batch_payment module."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "This can only be used on journal items"
@@ -14286,6 +14642,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14295,6 +14652,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14303,12 +14661,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been duplicated from %s%s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -14338,6 +14698,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -14348,6 +14709,7 @@ msgstr ""
 "perusahaannya."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -14368,6 +14730,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
@@ -14380,6 +14743,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
@@ -14409,6 +14773,7 @@ msgstr ""
 "yang sama untuk beberapa kali)."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
@@ -14435,6 +14800,16 @@ msgstr ""
 " dan faktur pelanggan"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -14443,12 +14818,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This recurring entry originated from %s"
@@ -14528,7 +14905,7 @@ msgid "Today Activities"
 msgstr "Aktivitas Hari ini"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
@@ -14537,6 +14914,7 @@ msgstr "Aktivitas Hari ini"
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14609,6 +14987,13 @@ msgid "Total Residual in Currency"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
+#, python-format
+msgid "Total Rounded"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
@@ -14647,7 +15032,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc"
-msgstr "Track costs &amp; revenues by project, department, etc"
+msgstr "Lacak biaya &amp; pendapatan berdasarkan project, departemen, dsb"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -14663,6 +15048,7 @@ msgid "Transaction Type Parameter"
 msgstr "Transaction Type Parameter"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer"
@@ -14674,18 +15060,21 @@ msgid "Transfer Date"
 msgstr "Tanggal Transfer"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
@@ -14693,6 +15082,7 @@ msgid "Transfer from %s"
 msgstr "Transfer dari %s"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
@@ -14707,6 +15097,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
@@ -14719,6 +15110,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__message_type
 #: model:ir.model.fields,field_description:account.field_account_journal__type
 #: model:ir.model.fields,field_description:account.field_account_move__move_type
+#: model:ir.model.fields,field_description:account.field_account_move_line__move_type
 #: model:ir.model.fields,field_description:account.field_account_payment__move_type
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__rule_type
@@ -14734,6 +15126,11 @@ msgstr "Jenis"
 #: model:ir.model.fields,field_description:account.field_account_payment__type_name
 msgid "Type Name"
 msgstr "Type Name"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
+msgid "Type a message..."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__qr_code_method
@@ -14761,12 +15158,23 @@ msgid "UP"
 msgstr "UP"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Undefined Yet"
 msgstr "Belum Didefinisikan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Undistributed Profits/Losses"
@@ -14820,6 +15228,12 @@ msgid "Unposted"
 msgstr "Belum Terekam"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Entri Jurnal Belum Terekam"
@@ -14830,7 +15244,7 @@ msgid "Unposted Journal Items"
 msgstr "Artikel Jurnal Belum Terekam"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -14855,12 +15269,14 @@ msgid "Unreconciled Entries"
 msgstr "Ayat-ayat yang Rekonsiliasinya Dibatalkan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unreconciled Transactions"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
@@ -14892,6 +15308,7 @@ msgid "Update Terms"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Update Terms & Conditions"
@@ -14903,13 +15320,15 @@ msgid "Update exchange rates automatically"
 msgstr "Perbarui kurs secara otomatis"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
+#: code:addons/account/static/src/components/bills_upload/bills_upload.js:0
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 #, python-format
 msgid "Upload"
 msgstr "Unggah"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
@@ -15078,11 +15497,11 @@ msgstr ""
 "rule)."
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "Validasi."
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -15106,6 +15525,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Nilai untuk jumlah yang di writeoff\n"
+"    * Persentase: Persentase saldo, di antara 0 dan 100.\n"
+"    * Tetap: Nilai tetap dari writeoff. Jumlah yang akan dihitung sebagai debit bila negatif, sebagai kredit bila positif.\n"
+"    * Dari Label: Tidak perlu regex delimiter, hanya regex yang dibutuhkan. Misalnya bila Anda ingin extract jumlah dari\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Anda dapat memasukkan\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -15145,12 +15571,15 @@ msgid "Vendor Bill Count"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
 msgstr "Vendor Bill Created"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -15168,6 +15597,7 @@ msgid "Vendor Credit Note"
 msgstr "Catatan Kredit Pemasok"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
@@ -15188,6 +15618,7 @@ msgid "Vendor Payments"
 msgstr "Vendor Payments"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
@@ -15213,7 +15644,7 @@ msgid "Vendors"
 msgstr "Pemasok"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -15231,6 +15662,7 @@ msgid "Warning"
 msgstr "Peringatan"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for %s"
@@ -15257,6 +15689,7 @@ msgid "Warnings in Invoices"
 msgstr "Warnings in Invoices"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -15309,15 +15742,22 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_report_line__blank_if_zero
-msgid "When checked, 0 values will not show in this column."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
 msgid ""
 "When checked this line and everything after it will be printed on a new "
 "page."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_column__blank_if_zero
+msgid "When checked, 0 values will not show in this column."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
+msgid ""
+"When checked, 0 values will not show when displaying this expression's "
+"value."
 msgstr ""
 
 #. module: account
@@ -15364,14 +15804,14 @@ msgid "With tax"
 msgstr "Dengan pajak"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
@@ -15388,6 +15828,17 @@ msgid "Yearly"
 msgstr "Tahunan"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -15412,6 +15863,7 @@ msgstr ""
 "is the Odoo reference."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -15424,6 +15876,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
@@ -15434,6 +15887,7 @@ msgstr ""
 "However, you can archive it."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid ""
@@ -15441,6 +15895,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -15449,24 +15904,28 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "You can only print the original document for vendor bills."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
@@ -15475,18 +15934,21 @@ msgstr ""
 "terposting."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "You can only send invoices."
@@ -15499,11 +15961,12 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"You can set here the default communication that will appear on customer "
-"invoices, once validated, to help the customer to refer to that particular "
-"invoice when making the payment."
+"Anda dapat menetapkan di sini keterangan komunikasi yang akan muncul pada "
+"faktur pelanggan, setelah divalidasi, untuk membantu pelanggan mengingat dan"
+" merujuk pada faktur tersebut saat melakukan pembayaran."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15514,6 +15977,7 @@ msgstr ""
 "items linked to it."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -15524,6 +15988,7 @@ msgstr ""
 "entries linked to it."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -15534,6 +15999,7 @@ msgstr ""
 "linked to it."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -15543,6 +16009,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
@@ -15551,6 +16018,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
@@ -15559,12 +16027,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "You can't delete a report that has variants."
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_method.py:0
 #, python-format
 msgid ""
@@ -15573,12 +16043,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "You can't mix fixed amount with early payment percentage"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -15587,6 +16059,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
@@ -15595,6 +16068,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
@@ -15603,6 +16077,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -15611,6 +16086,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -15619,6 +16095,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15627,6 +16104,7 @@ msgstr ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15638,6 +16116,7 @@ msgstr ""
 "'Penasihat'"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -15645,6 +16124,13 @@ msgid ""
 "already exist"
 msgstr ""
 "Anda tidak dapat mengubah perusahaan karena beberapa item jurnal telah ada."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -15657,6 +16143,7 @@ msgstr ""
 "artikel jurnal."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15665,6 +16152,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -15673,6 +16161,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -15681,6 +16170,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
@@ -15689,6 +16179,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15699,6 +16190,7 @@ msgstr ""
 "move and post it after."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -15707,26 +16199,21 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"You cannot delete this entry, as it has already consumed a sequence number "
-"and is not the last one in the chain. You should probably revert it instead."
-msgstr ""
-
-#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -15738,6 +16225,7 @@ msgstr ""
 "pengaturan ini."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -15748,17 +16236,18 @@ msgstr ""
 "Journal Entry (id): %s (%s)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15767,6 +16256,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15775,6 +16265,7 @@ msgstr ""
 "You cannot edit the journal of an account move if it has been posted once."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15785,6 +16276,7 @@ msgstr ""
 "bisa disesuaikan. (kode akun: %s)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15795,6 +16287,7 @@ msgstr ""
 "type. (accounts: %s)"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15805,6 +16298,7 @@ msgstr ""
 "mode."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -15815,6 +16309,7 @@ msgstr ""
 "entries."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -15825,6 +16320,7 @@ msgstr ""
 "reset the journal entry to draft to do so."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15835,6 +16331,7 @@ msgstr ""
 "accounting."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15843,12 +16340,14 @@ msgstr ""
 "You cannot perform this action on an account that contains journal items."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 #, python-format
 msgid ""
@@ -15857,6 +16356,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15865,6 +16365,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15873,6 +16374,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15881,18 +16383,21 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr "You cannot reset to draft a tax cash basis journal entry."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr "You cannot reset to draft an exchange difference journal entry."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15903,6 +16408,7 @@ msgstr ""
 "beberapa entri jurnal yang memiliki mata uang asing yang berbeda."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15913,18 +16419,21 @@ msgstr ""
 "reconciliations are still pending."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
 msgstr "You cannot use a deprecated account."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr "You cannot use taxes on lines with an Off-Balance account"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -15933,6 +16442,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -15941,6 +16451,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
@@ -15949,12 +16460,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate a document with an inactive currency: %s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15967,6 +16480,7 @@ msgstr ""
 "credit note or refund."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
@@ -15983,12 +16497,14 @@ msgid "You have selected the following document types at the same time:"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
 msgstr "You need to add a line before posting."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -15998,6 +16514,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16007,6 +16524,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16018,6 +16536,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
 msgstr ""
 
 #. module: account
@@ -16048,6 +16573,7 @@ msgid "[FURN_8999] Three-Seat Sofa"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16066,14 +16592,14 @@ msgid "activate the currency of the invoice"
 msgstr ""
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
 #, python-format
 msgid "are not shown in the preview"
 msgstr "tidak ditampilkan dalam pratinjau"
 
 #. module: account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
@@ -16119,12 +16645,12 @@ msgstr "e.g Bank of America"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g GEBABEBB"
-msgstr ""
+msgstr "contohnya GEBABEBB"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. 101000"
-msgstr ""
+msgstr "contohnya 101000"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -16134,12 +16660,12 @@ msgstr "misalnya Biaya Bank"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
-msgstr ""
+msgstr "contohnya Aset Terkini"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Customer Invoices"
-msgstr ""
+msgstr "contohnya Faktur Pelanggan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
@@ -16149,18 +16675,20 @@ msgstr "e.g. GAAP, IFRS, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr ""
+msgstr "contohnya Berikan panggilan telepon, periksa dengan orang lain , ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. INV"
-msgstr ""
+msgstr "contohnya INV"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
 msgstr ""
+"untuk pelanggan ini. Anda dapat mengalokasikannya untuk menandai nota kredit"
+" ini sebagai lunas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16173,12 +16701,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
+"untuk vendor ini. Anda dapat mengalokasikannya untuk menandai tagihan ini "
+"sebagai lunas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
 msgstr ""
+"untuk vendor ini. Anda dapat mengalokasikannya untuk menandai nota kredit "
+"ini sebagai lunas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16188,13 +16720,13 @@ msgstr "here"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "if paid before"
-msgstr ""
+msgstr "bila dibayar sebelumnya"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__payment_tolerance_type__fixed_amount
 msgid "in amount"
-msgstr ""
+msgstr "dalam jumlah"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16202,12 +16734,14 @@ msgid ""
 "in its entirety and does not include any costs relating to the legislation "
 "of the country in which the client is located."
 msgstr ""
+"secara sepenuhnya dan belum termasuk biaya apapun yang terkait legislasi "
+"negara di mana klien berada."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__payment_tolerance_type__percentage
 msgid "in percentage"
-msgstr ""
+msgstr "dalam persentase"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
@@ -16231,6 +16765,9 @@ msgid ""
 " to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
+"harus diberitahukan mengenai klaim apapun melalui surat dengan pengiriman "
+"yang tercatat ke kantor yang terdaftar dalam waktu 8 hari dari pengiriman "
+"barang atau pelaksanaan layanan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -16274,6 +16811,8 @@ msgid ""
 "reserves the right to call on the services of a debt recovery company. All "
 "legal expenses will be payable by the client."
 msgstr ""
+"memiliki hak untuk menggunakan layanan perusahaan pemulihan hutang. Semua "
+"biaya hukum akan dapat menjadi tanggungan klien."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16281,17 +16820,20 @@ msgid ""
 "reserves the right to request a fixed interest payment amounting to 10% of "
 "the sum remaining due."
 msgstr ""
+"memiliki hak untuk meminta pembayaran bunga tetap sejumlah 10% dari jumlah "
+"yang tersisa jatuh tempo."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "pajak"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "the destination journal"
-msgstr ""
+msgstr "jurnal tujuan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -16311,7 +16853,7 @@ msgstr "to check"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "to create the taxes for this country."
-msgstr ""
+msgstr "untuk membuat pajak untuk negara ini."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16322,10 +16864,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "user"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16333,51 +16876,58 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"akan diotorisasi untuk menangguhkan ketetapan layanan apapun tanpa "
+"peringatan terlebih dahulu dalam kasus pembayaran terlambat."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
-msgstr ""
+msgstr "dengan pdf faktur sebagai lampiran."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {date}"
-msgstr ""
+msgstr "{label}: Penyesuaian Entri pada {date}"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {new_date}"
-msgstr ""
+msgstr "{label}: Penyesuaian Entri pada {new_date}"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% pengakuan pada {new_date}"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% untuk melakukan pengakuan pada {new_date}"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','-') }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Nota Kredit (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Faktur (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -16385,3 +16935,5 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
+"{{ object.company_id.name }} Resi Pembayaran (Ref {{ object.name or 'n/a' "
+"}})"

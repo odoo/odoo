@@ -9,7 +9,7 @@ import { Domain } from "@web/core/domain";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, onWillUpdateProps, useState } = owl;
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class DomainField extends Component {
     setup() {
@@ -59,17 +59,21 @@ export class DomainField extends Component {
     }
 
     onButtonClick() {
-        this.addDialog(SelectCreateDialog, {
-            title: this.env._t("Selected records"),
-            noCreate: true,
-            multiSelect: false,
-            resModel: this.getResModel(this.props),
-            domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
-            context: this.getContext(this.props) || {},
-        }, {
-            // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
-            onClose: () => this.loadCount(this.props)
-        });
+        this.addDialog(
+            SelectCreateDialog,
+            {
+                title: this.env._t("Selected records"),
+                noCreate: true,
+                multiSelect: false,
+                resModel: this.getResModel(this.props),
+                domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
+                context: this.getContext(this.props) || {},
+            },
+            {
+                // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
+                onClose: () => this.loadCount(this.props),
+            }
+        );
     }
     get isValidDomain() {
         try {

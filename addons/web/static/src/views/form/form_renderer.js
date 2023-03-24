@@ -16,7 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-const { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } = owl;
+import { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } from "@odoo/owl";
 
 export class FormRenderer extends Component {
     setup() {
@@ -49,9 +49,10 @@ export class FormRenderer extends Component {
                     }
                     let elementToFocus;
                     if (isVirtual) {
+                        const focusableSelectors = ['input[type="text"]', 'textarea', '[contenteditable]'];
                         elementToFocus =
                             (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
-                            rootEl.querySelector(`.o_content .o_field_widget input[type="text"]`);
+                            rootEl.querySelector(focusableSelectors.map(sel => `.o_content .o_field_widget ${sel}`).join(', '));
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();

@@ -24,7 +24,7 @@
         <field name="name">sale.order.calendar</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+            <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5" quick_add="False">
                 <field name="currency_id" invisible="1"/>
                 <field name="partner_id" avatar_field="avatar_128"/>
                 <field name="amount_total" widget="monetary"/>
@@ -155,6 +155,7 @@
                 <field name="team_id" optional="hide"/>
                 <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                 <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
                 <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
                 <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
@@ -201,23 +202,23 @@
                 <button id="create_invoice_percentage" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                     type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="q"
                     attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary" data-hotkey="g"/>
+                <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary" data-hotkey="g" context="{'validate_analytic': True}"/>
                 <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice"
                     groups="sale.group_proforma_sales" class="btn-primary"
-                    attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
+                    attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
                 <button name="action_confirm" id="action_confirm" data-hotkey="v"
-                    string="Confirm" class="btn-primary" type="object"
+                    string="Confirm" class="btn-primary" type="object" context="{'validate_analytic': True}"
                     attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
                 <button name="action_confirm" data-hotkey="v"
-                    string="Confirm" type="object"
+                    string="Confirm" type="object" context="{'validate_analytic': True}"
                     attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g"/>
+                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
+                <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g" context="{'validate_analytic': True}"/>
                 <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}" data-hotkey="z"/>
                 <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
-            <div groups="account.group_account_invoice,account.group_account_readonly"
+            <div
                  class="alert alert-warning mb-0" role="alert"
                  attrs="{'invisible': [('partner_credit_warning', '=', '')]}">
                 <field name="partner_credit_warning"/>
@@ -261,7 +262,7 @@
                         <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
                             <label for="date_order" string="Order Date"/>
                         </div>
-                        <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
+                        <field name="date_order" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
                         <field name="show_update_pricelist" invisible="1"/>
                         <label for="pricelist_id" groups="product.group_product_pricelist"/>
                         <div groups="product.group_product_pricelist" class="o_row">
@@ -275,7 +276,7 @@
                         </div>
                         <field name="company_id" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
-                        <field name="pricelist_id" invisible="1"/>
+                        <field name="pricelist_id" invisible="1" groups="!product.group_product_pricelist"/>
                         <field name="tax_country_id" invisible="1"/>
                         <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
                     </group>
@@ -553,8 +554,7 @@
                                                         <div class="row">
                                                             <div class="col-12 text-muted">
                                                                 Quantity:
-                                                                <t t-out="record.product_uom_qty.value"/>
-                                                                <t t-out="record.product_uom.value"/>
+                                                                <t t-out="record.product_uom_qty.value"/> <t t-out="record.product_uom.value"/>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -637,7 +637,7 @@
                                     <field name="origin"/>
                                 </group>
                                 <group name="utm_link" colspan="2" class="mt-0">
-                                    <field name="campaign_id"/>
+                                    <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
                                     <field name="medium_id"/>
                                     <field name="source_id"/>
                                 </group>

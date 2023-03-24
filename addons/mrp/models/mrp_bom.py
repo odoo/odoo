@@ -41,7 +41,7 @@ class MrpBom(models.Model):
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits='Unit of Measure', required=True,
+        digits='Product Unit of Measure', required=True,
         help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -224,7 +224,7 @@ class MrpBom(models.Model):
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
-        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids)]
+        domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
         if company_id or self.env.context.get('company_id'):
             domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
         if picking_type:
@@ -402,6 +402,8 @@ class MrpBomLine(models.Model):
         'Manual Consumption', default=False, compute='_compute_manual_consumption', store=True, copy=True,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+    manual_consumption_readonly = fields.Boolean(
+        'Manual Consumption Readonly', compute='_compute_manual_consumption_readonly')
 
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater or equal to 0.\n'
@@ -411,15 +413,23 @@ class MrpBomLine(models.Model):
 
     @api.depends('product_id', 'tracking', 'operation_id')
     def _compute_manual_consumption(self):
-        self.filtered(lambda m: m.tracking != 'none' or m.operation_id).manual_consumption = True
+        for line in self:
+            line.manual_consumption = (line.tracking != 'none' or line.operation_id)
+
+    @api.depends('tracking', 'operation_id')
+    def _compute_manual_consumption_readonly(self):
+        for line in self:
+            line.manual_consumption_readonly = (line.tracking != 'none' or line.operation_id)
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
+        products = self.product_id
+        bom_by_product = self.env['mrp.bom']._bom_find(products)
         for line in self:
             if not line.product_id:
                 line.child_bom_id = False
             else:
-                line.child_bom_id = self.env['mrp.bom']._bom_find(line.product_id)[line.product_id]
+                line.child_bom_id = bom_by_product.get(line.product_id, False)
 
     @api.depends('product_id')
     def _compute_attachments_count(self):

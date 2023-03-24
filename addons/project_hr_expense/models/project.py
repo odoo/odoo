@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from collections import Counter
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
@@ -18,12 +17,18 @@ class Project(models.Model):
             self.expenses_count = 0
             return
         query = self.env['hr.expense']._search([])
-        query.add_where('hr_expense.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
-        query_string, query_param = query.select('analytic_distribution')
+        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
+
+        query.order = None
+        query_string, query_param = query.select(
+            'jsonb_object_keys(analytic_distribution) as account_id',
+            'COUNT(DISTINCT(id)) as expense_count',
+        )
+        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
         self._cr.execute(query_string, query_param)
-        mapped_data = Counter(account for data in self._cr.dictfetchall() for account in data['analytic_distribution'])
+        data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
         for project in self:
-            project.expenses_count = mapped_data.get(project.analytic_account_id.id, 0)
+            project.expenses_count = data.get(project.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
@@ -62,6 +67,16 @@ class Project(models.Model):
         sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
         sequence_per_invoice_type['expenses'] = 11
         return sequence_per_invoice_type
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        # As both purchase orders and expenses (paid by employee) create vendor bills,
+        # we need to make sure they are exclusive in the profitability report.
+        move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
+        query = self.env['account.move.line']._search([
+            ('move_id.expense_sheet_id', '!=', False),
+            ('id', 'not in', move_line_ids),
+        ])
+        return move_line_ids + list(query)
 
     def _get_expenses_profitability_items(self, with_action=True):
         if not self.analytic_account_id:

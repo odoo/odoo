@@ -437,7 +437,7 @@ class AccountPayment(models.Model):
             else:
                 pay.payment_method_line_id = False
 
-    @api.depends('payment_type', 'journal_id')
+    @api.depends('payment_type', 'journal_id', 'currency_id')
     def _compute_payment_method_line_fields(self):
         for pay in self:
             pay.available_payment_method_line_ids = pay.journal_id._get_available_payment_method_lines(pay.payment_type)
@@ -671,7 +671,7 @@ class AccountPayment(models.Model):
 
     def new(self, values=None, origin=None, ref=None):
         payment = super(AccountPayment, self.with_context(is_payment=True)).new(values, origin, ref)
-        if not payment.journal_id:  # might not be computed because declared by inheritance
+        if not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
             payment.move_id._compute_journal_id()
         return payment
 
@@ -815,6 +815,13 @@ class AccountPayment(models.Model):
             move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
             pay.write(move._cleanup_write_orm_values(pay, payment_vals_to_write))
 
+    @api.model
+    def _get_trigger_fields_to_synchronize(self):
+        return (
+            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
+        )
+
     def _synchronize_to_moves(self, changed_fields):
         ''' Update the account.move regarding the modified account.payment.
         :param changed_fields: A list containing all modified fields on account.payment.
@@ -822,10 +829,7 @@ class AccountPayment(models.Model):
         if self._context.get('skip_account_move_synchronization'):
             return
 
-        if not any(field_name in changed_fields for field_name in (
-            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
-        )):
+        if not any(field_name in changed_fields for field_name in self._get_trigger_fields_to_synchronize()):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):
@@ -835,7 +839,7 @@ class AccountPayment(models.Model):
             # This allows to create a new payment with custom 'line_ids'.
 
             write_off_line_vals = []
-            if writeoff_lines:
+            if liquidity_lines and counterpart_lines and writeoff_lines:
                 write_off_line_vals.append({
                     'name': writeoff_lines[0].name,
                     'account_id': writeoff_lines[0].account_id.id,
@@ -848,8 +852,8 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
             line_ids_commands = [
-                (1, liquidity_lines.id, line_vals_list[0]),
-                (1, counterpart_lines.id, line_vals_list[1]),
+                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
+                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
             ]
 
             for line in writeoff_lines:

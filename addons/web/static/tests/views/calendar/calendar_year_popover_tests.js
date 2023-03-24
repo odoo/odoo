@@ -90,7 +90,7 @@ QUnit.module("CalendarView - YearPopover", ({ beforeEach }) => {
     QUnit.test("group records", async (assert) => {
         await start({});
 
-        assert.containsN(target, ".o_cw_body > div", 4);
+        assert.containsN(target, ".o_cw_body > div", 5);
         assert.containsN(target, ".o_cw_body > a", 5);
 
         const sectionTitles = target.querySelectorAll(".o_cw_body > div");
@@ -101,7 +101,7 @@ QUnit.module("CalendarView - YearPopover", ({ beforeEach }) => {
 
         assert.strictEqual(
             target.querySelector(".o_cw_body").textContent.trim(),
-            "July 16, 2021R114:00 R2July 13-17, 2021R4July 15-17, 2021R3July 15-19, 2021R5"
+            "July 16, 2021R114:00 R2July 13-17, 2021R4July 15-17, 2021R3July 15-19, 2021R5 Create"
         );
     });
 

@@ -3,15 +3,15 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +20,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+#, python-format
 msgid "Analytic Account"
 msgstr "Kostenstelle"
 
@@ -57,8 +59,10 @@ msgid "Bill of Material"
 msgstr "Stückliste"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Bills of Materials"
 msgstr "Stücklisten"
 
@@ -103,15 +107,6 @@ msgid "Extra Unit Cost"
 msgstr ""
 
 #. module: mrp_account
-#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
-msgid ""
-"Fill this only if you want automatic analytic accounting entries on "
-"production orders."
-msgstr ""
-"Nur ausfüllen, wenn Sie automatische Kostenbuchungen für Fertigungsaufträge "
-"erzeugen möchten."
-
-#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
 msgstr "Buchungszeile"
@@ -122,8 +117,10 @@ msgid "Manufacturing Order"
 msgstr "Fertigungsauftrag"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Manufacturing Orders"
 msgstr "Fertigungsaufträge"
 
@@ -135,6 +132,13 @@ msgstr "Anzahl Fertigungsaufträge"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
 msgid "Mo Analytic Account Line"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
+msgid ""
+"Posts analytical accounting entries in real time for both component and "
+"operational costs."
 msgstr ""
 
 #. module: mrp_account
@@ -183,6 +187,11 @@ msgid "Work Center"
 msgstr "Arbeitsplatz"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
+msgid "Work Center Usage"
+msgstr "Work-Center Auslastung"
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
 msgstr "Arbeitsauftrag"
@@ -191,6 +200,12 @@ msgstr "Arbeitsauftrag"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
 msgstr "Anzahl Arbeitsaufträge"
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
+#, python-format
+msgid "Work Orders"
+msgstr "Arbeitsaufträge"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
@@ -203,12 +218,14 @@ msgid "Workcenters"
 msgstr "Work-Center"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
 msgstr "[Raw] %s"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format

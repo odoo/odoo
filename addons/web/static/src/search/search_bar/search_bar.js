@@ -7,7 +7,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"];
@@ -187,7 +187,8 @@ export class SearchBar extends Component {
                 // Pass
             }
         }
-        const options = await this.orm.call(field.relation, "name_search", domain, {
+        const options = await this.orm.call(field.relation, "name_search", [], {
+            args: domain,
             context: field.context,
             limit: 8,
             name: query.trim(),

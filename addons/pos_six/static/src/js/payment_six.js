@@ -5,7 +5,7 @@ odoo.define('pos_six.payment', function (require) {
 const { Gui } = require('point_of_sale.Gui');
 var core = require('web.core');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
-
+const { escape } = require("@web/core/utils/strings");
 var _t = core._t;
 
 window.onTimApiReady = function () {};
@@ -146,15 +146,14 @@ var PaymentSix = PaymentInterface.extend({
 
     _printReceipts: function (receipts) {
         _.forEach(receipts, (receipt) => {
-            var value = receipt.value.replace(/\n/g, "<br />");
             if (receipt.recipient === timapi.constants.Recipient.merchant && this.pos.env.proxy.printer) {
                 this.pos.env.proxy.printer.print_receipt(
                     "<div class='pos-receipt'><div class='pos-payment-terminal-receipt'>" +
-                        value +
+                        escape(receipt.value).replace(/\n/g, "<br />") +
                     "</div></div>"
                 );
             } else if (receipt.recipient === timapi.constants.Recipient.cardholder) {
-                this.pos.get_order().selected_paymentline.set_receipt_info(value);
+                this.pos.get_order().selected_paymentline.set_receipt_info(receipt.value);
             }
         });
     },

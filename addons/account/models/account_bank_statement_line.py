@@ -1,11 +1,11 @@
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import html2plaintext
-from odoo.osv.expression import get_unaccent_wrapper
 
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
 from xmlrpc.client import MAXINT
+from itertools import product
 
 
 class AccountBankStatementLine(models.Model):
@@ -28,17 +28,16 @@ class AccountBankStatementLine(models.Model):
         # to enter the next transaction, they do not have to enter the date and the statement every time until the
         # statement is completed. It is only possible if we know the journal that is used, so it can only be done
         # in a view in which the journal is already set and so is single journal view.
-        if'journal_id' in defaults:
-            last_line = self.search([('journal_id', '=', defaults.get('journal_id'))], limit=1)
+        if 'journal_id' in defaults and 'date' in fields_list:
+            last_line = self.search([
+                ('journal_id', '=', defaults.get('journal_id')),
+                ('state', '=', 'posted'),
+            ], limit=1)
             statement = last_line.statement_id
-            if statement and not statement.is_complete:
-                defaults.setdefault(
-                    'statement_id', statement.id
-                )
-                if statement.date:
-                    defaults.setdefault(
-                        'date', statement.date
-                    )
+            if statement:
+                defaults.setdefault('date', statement.date)
+            elif last_line:
+                defaults.setdefault('date', last_line.date)
 
         return defaults
 
@@ -156,20 +155,24 @@ class AccountBankStatementLine(models.Model):
         # that the running balance is always relative to the latest statement. In this way we do not need to calculate
         # the running balance for all statement lines every time.
         # If there are statements inside the computed range, their balance_start has priority over calculated balance.
+        # we have to compute running balance for draft lines because they are visible and also
+        # the user can split on that lines, but their balance should be the same as previous posted line
+        # we do the same for the canceled lines, in order to keep using them as anchor points
 
         self.statement_id.flush_model(['balance_start', 'first_line_index'])
-        self.flush_model(['internal_index', 'date', 'journal_id', 'statement_id', 'amount'])
+        self.flush_model(['internal_index', 'date', 'journal_id', 'statement_id', 'amount', 'state'])
         record_by_id = {x.id: x for x in self}
 
         for journal in self.journal_id:
-            journal_lines = self.filtered(lambda line: line.journal_id == journal).sorted('internal_index')
-            max_index = max(journal_lines.mapped('internal_index'))
-            min_index = min(journal_lines.mapped('internal_index'))
+            journal_lines_indexes = self.filtered(lambda line: line.journal_id == journal)\
+                .sorted('internal_index')\
+                .mapped('internal_index')
+            min_index, max_index = journal_lines_indexes[0], journal_lines_indexes[-1]
 
             # Find the oldest index for each journal.
             self._cr.execute(
                 """
-                    SELECT first_line_index, balance_start
+                    SELECT first_line_index, COALESCE(balance_start, 0.0)
                     FROM account_bank_statement
                     WHERE
                         first_line_index < %s
@@ -194,9 +197,10 @@ class AccountBankStatementLine(models.Model):
                         st_line.id,
                         st_line.amount,
                         st.first_line_index = st_line.internal_index AS is_anchor,
-                        st.balance_start
+                        COALESCE(st.balance_start, 0.0),
+                        move.state
                     FROM account_bank_statement_line st_line
-                    JOIN account_move move ON move.statement_line_id = st_line.id
+                    JOIN account_move move ON move.id = st_line.move_id
                     LEFT JOIN account_bank_statement st ON st.id = st_line.statement_id
                     WHERE
                         st_line.internal_index <= %s
@@ -206,10 +210,11 @@ class AccountBankStatementLine(models.Model):
                 """,
                 [max_index, journal.id] + extra_params,
             )
-            for st_line_id, amount, is_anchor, balance_start in self._cr.fetchall():
+            for st_line_id, amount, is_anchor, balance_start, state in self._cr.fetchall():
                 if is_anchor:
                     current_running_balance = balance_start
-                current_running_balance += amount
+                if state == 'posted':
+                    current_running_balance += amount
                 if record_by_id.get(st_line_id):
                     record_by_id[st_line_id].running_balance = current_running_balance
 
@@ -271,15 +276,6 @@ class AccountBankStatementLine(models.Model):
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
 
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        """
-        Reset the statement line when the journal is changed. In some rare cases that journal is not in the context
-        the journal_id field might be accessible to the user. In this cse we need to reset the statement_id field when
-        the journal_id is changed.
-        :return:
-        """
-        self.statement_id = self._get_default_statement(self.journal_id.id, self.date)
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -325,11 +321,23 @@ class AccountBankStatementLine(models.Model):
                 if statement.journal_id:
                     vals['journal_id'] = statement.journal_id.id
 
+            # Avoid having the same foreign_currency_id as currency_id.
+            if vals.get('journal_id') and vals.get('foreign_currency_id'):
+                journal = self.env['account.journal'].browse(vals['journal_id'])
+                journal_currency = journal.currency_id or journal.company_id.currency_id
+                if vals['foreign_currency_id'] == journal_currency.id:
+                    vals['foreign_currency_id'] = None
+                    vals['amount_currency'] = 0.0
+
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
 
             # Hack to force different account instead of the suspense account.
             counterpart_account_ids.append(vals.pop('counterpart_account_id', None))
+
+            #Set the amount to 0 if it's not specified.
+            if 'amount' not in vals:
+                vals['amount'] = 0
 
         st_lines = super().create(vals_list)
 
@@ -464,18 +472,6 @@ class AccountBankStatementLine(models.Model):
                 ('company_id', '=', self.env.company.id)
             ], limit=1)
 
-    @api.model
-    def _get_default_statement(self, journal_id=None, date=None):
-        statement = self.search(
-            domain=[
-                ('journal_id', '=', journal_id or self._get_default_journal().id),
-                ('date', '<=', date or fields.Date.today()),
-            ],
-            limit=1
-        ).statement_id
-        if not statement.is_complete:
-            return statement
-
     def _get_st_line_strings_for_matching(self, allowed_fields=None):
         """ Collect the strings that could be used on the statement line to perform some matching.
 
@@ -484,26 +480,47 @@ class AccountBankStatementLine(models.Model):
         """
         self.ensure_one()
 
-        def _get_text_value(field_name):
-            if self._fields[field_name].type == 'html':
-                return self[field_name] and html2plaintext(self[field_name])
-            else:
-                return self[field_name]
-
         st_line_text_values = []
-        if allowed_fields is None or 'payment_ref' in allowed_fields:
-            value = _get_text_value('payment_ref')
+        if not allowed_fields or 'payment_ref' in allowed_fields:
+            if self.payment_ref:
+                st_line_text_values.append(self.payment_ref)
+        if not allowed_fields or 'narration' in allowed_fields:
+            value = html2plaintext(self.narration or "")
             if value:
                 st_line_text_values.append(value)
-        if allowed_fields is None or 'narration' in allowed_fields:
-            value = _get_text_value('narration')
-            if value:
-                st_line_text_values.append(value)
-        if allowed_fields is None or 'ref' in allowed_fields:
-            value = _get_text_value('ref')
-            if value:
-                st_line_text_values.append(value)
+        if not allowed_fields or 'ref' in allowed_fields:
+            if self.ref:
+                st_line_text_values.append(self.ref)
         return st_line_text_values
+
+    def _get_accounting_amounts_and_currencies(self):
+        """ Retrieve the transaction amount, journal amount and the company amount with their corresponding currencies
+        from the journal entry linked to the statement line.
+        All returned amounts will be positive for an inbound transaction, negative for an outbound one.
+
+        :return: (
+            transaction_amount, transaction_currency,
+            journal_amount, journal_currency,
+            company_amount, company_currency,
+        )
+        """
+        self.ensure_one()
+        liquidity_line, suspense_line, other_lines = self._seek_for_lines()
+        if suspense_line and not other_lines:
+            transaction_amount = -suspense_line.amount_currency
+            transaction_currency = suspense_line.currency_id
+        else:
+            # In case of to_check or partial reconciliation, we can't trust the suspense line.
+            transaction_amount = self.amount_currency if self.foreign_currency_id else self.amount
+            transaction_currency = self.foreign_currency_id or liquidity_line.currency_id
+        return (
+            transaction_amount,
+            transaction_currency,
+            sum(liquidity_line.mapped('amount_currency')),
+            liquidity_line.currency_id,
+            sum(liquidity_line.mapped('balance')),
+            liquidity_line.company_currency_id,
+        )
 
     def _prepare_counterpart_amounts_using_st_line_rate(self, currency, balance, amount_currency):
         """ Convert the amounts passed as parameters to the statement line currency using the rates provided by the
@@ -520,13 +537,14 @@ class AccountBankStatementLine(models.Model):
             * amount_currency:  The amount to consider expressed in statement line's foreign currency.
         """
         self.ensure_one()
-        company_amount, company_currency, journal_amount, journal_currency, transaction_amount, foreign_currency \
-            = self._get_amounts_with_currencies()
+
+        transaction_amount, transaction_currency, journal_amount, journal_currency, company_amount, company_currency \
+            = self._get_accounting_amounts_and_currencies()
 
         rate_journal2foreign_curr = journal_amount and abs(transaction_amount) / abs(journal_amount)
         rate_comp2journal_curr = company_amount and abs(journal_amount) / abs(company_amount)
 
-        if currency == foreign_currency:
+        if currency == transaction_currency:
             trans_amount_currency = amount_currency
             if rate_journal2foreign_curr:
                 journ_amount_currency = journal_currency.round(trans_amount_currency / rate_journal2foreign_curr)
@@ -537,14 +555,14 @@ class AccountBankStatementLine(models.Model):
             else:
                 new_balance = 0.0
         elif currency == journal_currency:
-            trans_amount_currency = foreign_currency.round(amount_currency * rate_journal2foreign_curr)
+            trans_amount_currency = transaction_currency.round(amount_currency * rate_journal2foreign_curr)
             if rate_comp2journal_curr:
                 new_balance = company_currency.round(amount_currency / rate_comp2journal_curr)
             else:
                 new_balance = 0.0
         else:
             journ_amount_currency = journal_currency.round(balance * rate_comp2journal_curr)
-            trans_amount_currency = foreign_currency.round(journ_amount_currency * rate_journal2foreign_curr)
+            trans_amount_currency = transaction_currency.round(journ_amount_currency * rate_journal2foreign_curr)
             new_balance = balance
 
         return {
@@ -614,12 +632,18 @@ class AccountBankStatementLine(models.Model):
 
         # Retrieve the partner from the partner name.
         if self.partner_name:
-            domain = [
-                ('parent_id', '=', False),
-                ('name', 'ilike', self.partner_name),
-            ]
-            for extra_domain in ([('company_id', '=', self.company_id.id)], []):
-                partner = self.env['res.partner'].search(extra_domain + domain, limit=1)
+            domains = product(
+                [
+                    ('name', '=ilike', self.partner_name),
+                    ('name', 'ilike', self.partner_name),
+                ],
+                [
+                    ('company_id', '=', self.company_id.id),
+                    ('company_id', '=', False),
+                ],
+            )
+            for domain in domains:
+                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=1)
                 if partner:
                     return partner
 
@@ -632,46 +656,6 @@ class AccountBankStatementLine(models.Model):
             partner = rec_model._get_partner_from_mapping(self)
             if partner and rec_model._is_applicable_for(self, partner):
                 return partner
-
-        # Retrieve the partner from statement line text values.
-        st_line_text_values = self._get_st_line_strings_for_matching()
-        unaccent = get_unaccent_wrapper(self._cr)
-        sub_queries = []
-        params = []
-        for text_value in st_line_text_values:
-            if not text_value:
-                continue
-
-            # Find a partner having a name contained inside the statement line values.
-            # Take care a partner could contain some special characters in its name that needs to be escaped.
-            sub_queries.append(rf'''
-                {unaccent("%s")} ~* ('^' || (
-                   SELECT STRING_AGG(CONCAT('(?=.*\m', chunk[1], '\M)'), '')
-                   FROM regexp_matches({unaccent('partner.name')}, '\w{{3,}}', 'g') AS chunk
-                ))
-            ''')
-            params.append(text_value)
-
-        if sub_queries:
-            self.env['res.partner'].flush_model(['company_id', 'name'])
-            self.env['account.move.line'].flush_model(['partner_id', 'company_id'])
-            self._cr.execute(
-                '''
-                    SELECT aml.partner_id
-                    FROM account_move_line aml
-                    JOIN res_partner partner ON
-                        aml.partner_id = partner.id
-                        AND partner.name IS NOT NULL
-                        AND partner.active
-                        AND ((''' + ') OR ('.join(sub_queries) + '''))
-                    WHERE aml.company_id = %s
-                    LIMIT 1
-                ''',
-                params + [self.company_id.id],
-            )
-            row = self._cr.fetchone()
-            if row:
-                return self.env['res.partner'].browse(row[0])
 
         return self.env['res.partner']
 

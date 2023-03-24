@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_category_property_form" model="ir.ui.view">
+        <field name="name">product.category.property.form.inherit.stock</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="account.view_category_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_income_categ_id" position="before">
+                <field name="property_account_creditor_price_difference_categ"
+                    domain="[('deprecated','=',False)]" groups="account.group_account_readonly"
+                    attrs="{'invisible':[('property_valuation', '=', 'manual_periodic')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="property_account_expense_id" position="after">
+                <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" groups="account.group_account_readonly"/>
+            </field>
+        </field>
+    </record>
+</odoo>

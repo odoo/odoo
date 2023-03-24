@@ -453,4 +453,27 @@ QUnit.module("Fields", (hooks) => {
             target.querySelectorAll(".o_field_widget[name=float_field] input")[1].value
         );
     });
+
+    QUnit.test("float field with digits=0", async function (assert) {
+        // This isn't in the orm documentation, so it shouldn't be supported, but
+        // people do it and thus now we need to support it.
+        // Historically, it behaves like "no digits attribute defined", so it
+        // fallbacks on a precision of 2 digits.
+        // We will change that in master s.t. we do not round anymore in that case.
+        serverData.models.partner.fields.float_field.digits = 0;
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: '<form><field name="float_field"/></form>',
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_float input").value,
+            "0.36",
+            "should contain a number rounded to 1 decimal"
+        );
+    });
 });

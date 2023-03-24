@@ -4,14 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,6 +146,7 @@ msgid "Alternative Purchase Order"
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
@@ -165,9 +169,9 @@ msgid "Analytic"
 msgstr "分析"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr ""
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "分析精度"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -216,6 +220,7 @@ msgid "Cancelled"
 msgstr "取消済"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
@@ -242,10 +247,7 @@ msgid "Clear"
 msgstr "クリア"
 
 #. module: purchase_requisition
-#. openerp-web
-#: code:addons/purchase_requisition/static/src/xml/purchase_order_line_compare.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
-#, python-format
 msgid "Clear Selected"
 msgstr ""
 
@@ -267,6 +269,7 @@ msgid "Company"
 msgstr "会社"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
@@ -316,6 +319,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
@@ -486,7 +490,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
-"If this is checked, the product quantites of the original PO will be copied"
+"If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
 
 #. module: purchase_requisition
@@ -567,7 +571,7 @@ msgstr "メッセージ"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "活動の締切"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -592,7 +596,7 @@ msgstr "新規見積"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "次の活動カレンダーイベント"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
@@ -610,6 +614,7 @@ msgid "Next Activity Type"
 msgstr "次の活動タイプ"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
@@ -897,12 +902,14 @@ msgid "Show all records which has next action date is before today"
 msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid ""
@@ -975,6 +982,7 @@ msgid "The original PO that this alternative PO is being created for."
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -984,12 +992,14 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
-msgid "There are no quantites to clear."
+msgid "There are no quantities to clear."
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
@@ -998,6 +1008,7 @@ msgid ""
 msgstr "この仕入先には既に包括注文があります。新しい契約を作成するのではなく、この未完了の包括注文を完了させることをお勧めします。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
@@ -1057,6 +1068,7 @@ msgid "Warning Messages"
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1065,6 +1077,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1073,6 +1086,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
@@ -1106,18 +1120,21 @@ msgid "Wizard to preset values for alternative PO"
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid "You can only delete draft requisitions."
+msgid "You can only delete draft or cancelled requisitions."
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -1126,12 +1143,14 @@ msgid "You cannot confirm the blanket order without price."
 msgstr "価格のない包括注文を確認することはできません。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr "数量のない包括注文を確認することはできません。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""

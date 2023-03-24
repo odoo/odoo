@@ -9,14 +9,17 @@
 # ExcaliberX <excaliberx@gmail.com>, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
+# Roy Sayag, 2022
+# NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +36,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid " - On product with the following taxes: %(taxes)s"
@@ -41,15 +45,17 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "<span class=\"fa fa-clipboard\"/> Copy"
-msgstr ""
+msgstr "<span class=\"fa fa-clipboard\"/>עותק"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "A better global discount is already applied."
-msgstr ""
+msgstr "הנחה גלובלית טובה יותר כבר הוחלה"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -65,7 +71,7 @@ msgstr "החל"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
 msgid "Available Rewards"
-msgstr ""
+msgstr "הטבות זמניות"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -80,7 +86,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
 msgid "Code:"
-msgstr ""
+msgstr "קוד:"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
@@ -100,6 +106,7 @@ msgid "Coupon Point"
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
@@ -133,9 +140,10 @@ msgstr "בטל"
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "הנחות ותכניות"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(desc)s%(tax_str)s"
@@ -156,9 +164,10 @@ msgstr "הזן קוד קידום מכירות או קוד קופון"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
 msgid "Expired Date:"
-msgstr ""
+msgstr "תאריך תפוגה:"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Free Product - %(product)s"
@@ -167,17 +176,17 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift #"
-msgstr ""
+msgstr "מתנה מספר "
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift Card Code"
-msgstr ""
+msgstr "קוד כרטיס מתנה"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "כרטיסי מתנה & eWallet"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -192,12 +201,14 @@ msgid "ID"
 msgstr "מזהה"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Invalid product to claim."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
@@ -247,12 +258,12 @@ msgstr "הטבת חברת מועדון"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
 msgid "Manually Applied Coupons"
-msgstr ""
+msgstr "קופונים ליישום ידני"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
 msgid "Manually Triggered Rules"
-msgstr ""
+msgstr "כללים המופעלים באופן ידני"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
@@ -260,6 +271,7 @@ msgid "Multi Product"
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -268,6 +280,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "No reward selected."
@@ -276,13 +289,14 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "No rewards available for this customer!"
-msgstr ""
+msgstr "אין הטבות זמינות עבור לקוח זה"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
-msgstr ""
+msgstr "הטבה אחת או יותר בהזמנה אינה תקינה, אנא בדוק את ההטבות"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
@@ -379,12 +393,21 @@ msgid "Selected Reward"
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
-msgid "The coupon can only be claimed on future orders."
+msgid "TEMPORARY DISCOUNT LINE"
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon can only be claimed on future orders."
+msgstr "הקופון יכול להתממש על הזמנות עתידיות"
+
+#. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
@@ -396,6 +419,7 @@ msgid "The coupon points entry already exists."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The program is not available for this order."
@@ -407,6 +431,7 @@ msgid "The sales order from which coupon is generated"
 msgstr "הזמנת הלקוח ממנה נוצר הקופון"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "There is nothing to discount"
@@ -418,12 +443,14 @@ msgid "These are the products that can be claimed with this rule."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is expired (%s)."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
@@ -431,36 +458,42 @@ msgid "This code is invalid (%s)."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon has already been used."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon is expired."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is already applied to this order."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is not available for public users."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program requires a code to be applied."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This promo code is already applied."
@@ -472,6 +505,7 @@ msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "You don't have the required product quantities on your sales order."
@@ -483,3 +517,5 @@ msgid ""
 "You will find below your gift cards code. An email has been sent with it. "
 "You can use it starting right now."
 msgstr ""
+"למטה אפשר למצוא את קוד כרטיס המתנה. גם נשלך מייל עם הפרטים. אפשר להתחיל "
+"להשתמש בכרטיס המתנה מ... עכשיו!"

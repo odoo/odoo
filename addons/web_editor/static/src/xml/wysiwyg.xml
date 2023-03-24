@@ -169,14 +169,14 @@
         <span class="me-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
         <div class="w-100">
             <div class="d-flex">
-                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1" t-esc="widget.href" title="Open in a new tab"/>
-                <a href="#" class="mx-2 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
+                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1 text-truncate" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" class="mx-1 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
                     <i class="fa fa-clone"/>
                 </a>
-                <a href="#" class="mx-2 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
+                <a href="#" class="mx-1 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
                     <i class="fa fa-edit"/>
                 </a>
-                <a href="#" class="ms-2 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
+                <a href="#" class="ms-1 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
                     <i class="fa fa-chain-broken"/>
                 </a>
             </div>
@@ -266,7 +266,7 @@
                             <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
                             <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
                             <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
+                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
                         </we-selection-items>
                     </div>
                 </we-select>
@@ -345,7 +345,7 @@
     <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">
         <div class="o_we_cropper_wrapper">
             <img class="o_we_cropper_img"/>
-            <div class="o_we_crop_buttons text-center mt16 position-absolute o_we_no_overlay" contenteditable="false">
+            <div class="o_we_crop_buttons text-center mt16 position-fixed o_we_no_overlay" contenteditable="false">
                 <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-bs-toggle="buttons">
                     <t t-foreach="widget.aspectRatios" t-as="ratio">
                         <t t-set="is_active" t-value="ratio === widget.aspectRatio"/>

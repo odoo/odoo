@@ -326,7 +326,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         if test_results and not test_results.wasSuccessful():
             _logger.error(
                 "Module %s: %d failures, %d errors of %d tests",
-                module_name, len(test_results.failures), len(test_results.errors),
+                module_name, test_results.failures_count, test_results.errors_count,
                 test_results.testsRun
             )
 
@@ -417,6 +417,11 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
+        if update_module and odoo.tools.table_exists(cr, 'ir_model_fields'):
+            # determine the fields which are currently translated in the database
+            cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE translate IS TRUE")
+            registry._database_translated_fields = {row[0] for row in cr.fetchall()}
+
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
@@ -483,14 +488,33 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
-        # check that all installed modules have been loaded by the registry after a migration/upgrade
-        cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
-        module_list = [name for (name,) in cr.fetchall() if name not in graph]
-        if module_list:
-            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", sorted(module_list))
+        if update_module:
+            # set up the registry without the patch for translated fields
+            database_translated_fields = registry._database_translated_fields
+            registry._database_translated_fields = ()
+            registry.setup_models(cr)
+            # determine which translated fields should no longer be translated,
+            # and make their model fix the database schema
+            models_to_untranslate = set()
+            for full_name in database_translated_fields:
+                model_name, field_name = full_name.rsplit('.', 1)
+                if model_name in registry:
+                    field = registry[model_name]._fields.get(field_name)
+                    if field and not field.translate:
+                        _logger.debug("Making field %s non-translated", field)
+                        models_to_untranslate.add(model_name)
+            registry.init_models(cr, list(models_to_untranslate), {'models_to_check': True})
 
         registry.loaded = True
         registry.setup_models(cr)
+
+        # check that all installed modules have been loaded by the registry
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        Module = env['ir.module.module']
+        modules = Module.search(Module._get_modules_to_load_domain(), order='name')
+        missing = [name for name in modules.mapped('name') if name not in graph]
+        if missing:
+            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
 
         # STEP 3.5: execute migration end-scripts
         migrations = odoo.modules.migration.MigrationManager(cr, graph)

@@ -309,7 +309,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" id="show_sale_receipts">
                                 <div class="o_setting_left_pane">
-                                    <field name="group_show_sale_receipts" widget="upgrade_boolean"/>
+                                    <field name="group_show_sale_receipts"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="show_sale_receipts_right_pane">
                                     <label for="group_show_sale_receipts"/>
@@ -432,7 +432,7 @@
                         <div class="row mt16 o_settings_container" id="account_vendor_bills">
                             <div class="col-xs-12 col-md-6 o_setting_box" id="show_purchase_receipts">
                                 <div class="o_setting_left_pane">
-                                    <field name="group_show_purchase_receipts" widget="upgrade_boolean"/>
+                                    <field name="group_show_purchase_receipts"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="show_purchase_receipts_right_pane">
                                     <label for="group_show_purchase_receipts"/>
@@ -534,6 +534,10 @@
                                             <div class="row mt8">
                                                 <label for="account_journal_payment_credit_account_id" class="col-lg-5 o_light_label"/>
                                                 <field name="account_journal_payment_credit_account_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="transfer_account_id"/>
                                             </div>
                                             <div class="row mt8">
                                                 <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>

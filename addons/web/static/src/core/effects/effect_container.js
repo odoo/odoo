@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component, xml, onWillDestroy } = owl;
+import { Component, xml, onWillDestroy } from "@odoo/owl";
 
 export class EffectContainer extends Component {
     setup() {

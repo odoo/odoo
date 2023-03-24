@@ -3,16 +3,16 @@
 # 	* hr_recruitment
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,20 +21,21 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "1 Meeting"
 msgstr "1 Зустріч"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
 msgstr "<b>Натисніть, щоб переглянути</b> додаток."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
@@ -43,7 +44,7 @@ msgstr ""
 "додатки."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
@@ -51,7 +52,7 @@ msgstr ""
 "<b>Перетягніть цю картку</b>, щоби кваліфікувати його для першого інтерв'ю."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -62,7 +63,7 @@ msgstr ""
 "надіслані або отримані електронні листи зберігаються в історії тут</i>"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -75,7 +76,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -103,6 +104,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
 "class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
+"class=\"oe_read_only\">Віддалено</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -115,6 +118,13 @@ msgid ""
 "                            </span>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                            </span>\n"
+"                            <span class=\"text-danger\">\n"
+"                                Усі заявки втратять дату прийняття на роботу та статус найму.\n"
+"                            </span>\n"
+"                        </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -141,6 +151,9 @@ msgid ""
 "attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
 " False)]}\">Refused</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" "
+"attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
+" False)]}\">Відхилено</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -164,7 +177,7 @@ msgstr "<span class=\"o_stat_text\">Відстежувачі</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_value\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">Співробітник</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -257,6 +270,73 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Вітаємо,\n"
+"                <br/><br/>\n"
+"                Ми підтверджуємо, що отримали вашу заявку на вакансію\n"
+"                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Досвідчений розробник</strong></a>\" в <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"                <br/><br/>\n"
+"                Ми скоро повернемося до вас.\n"
+"\n"
+"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Опис вакансії</a>\n"
+"                </div>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <t t-if=\"object.user_id\">\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Ваш контакт:</strong></h3>\n"
+"                    <p>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"                        <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"                        <span>Телефон: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"                    </p>\n"
+"                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </t>\n"
+"\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Який наступний крок?</strong></h3>\n"
+"                Зазвичай ми<strong>відповідаємо заявникам протягом кількох днів.</strong><br/><br/>\n"
+"                Не соромтеся <strong>зв'язуватися з нами, якщо ви хочете отримати зворотній\n"
+"                зв'язок швидше</strong> або якщо ви не отримаєте від нас новин\n"
+"                достатньо швидко (просто дайте відповідь на цей email).\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                <t t-set=\"location\" t-value=\"''\"/>\n"
+"                <t t-if=\"object.job_id.address_id.name\">\n"
+"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street\">\n"
+"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street2\">\n"
+"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.city\">\n"
+"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.zip\">\n"
+"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"                </t>\n"
+"                <br/>\n"
+"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"                </t>\n"
+"                <br/>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -341,6 +421,85 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"text-align: center\">\n"
+"                <h2>Вітаємо!</h2>\n"
+"                <div style=\"color:grey;\">Ваше резюме переглянуто.</div>\n"
+"            </div>\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Ми щойно переглянули ваше резюме, і воно\n"
+" привернуло нашу увагу. Оскільки ми вважаємо, що ви\n"
+" могли б чудово підійти на цю посаду, ваша заявка була\n"
+" відібрана для дзвінка чи співбесіди.\n"
+"                <br/><br/>\n"
+"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Вакансія</a>\n"
+"                </div>\n"
+"\n"
+"                <t t-if=\"object.user_id\">\n"
+"                    З вами скоро зв'яжеться:<br/>\n"
+"                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"                    <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"                    <span>Телефон: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"                    <br/><br/>\n"
+"                </t>\n"
+"                Скоро побачимося,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    -- <br/>\n"
+"                    Команда HR\n"
+"                    <t t-if=\"'website_url' in object.job_id and hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                        Дізнайтеся про <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">всі наші вакансії</a>.<br/>\n"
+"                    </t>\n"
+"                </div>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Який наступний крок?</strong></h3>\n"
+"                Зазвичай ми <strong>відповідаємо заявникам протягом кількох днів</strong>.\n"
+"                <br/><br/>\n"
+"                Наступний крок - або дзвінок, або зустріч в нашому офісі.\n"
+"                <br/>\n"
+"                Не соромтеся <strong>зв'язатися з нами, якщо ви хочете швидшого\n"
+"                зворотнього зв'язку</strong> або якщо ви не отримаєте від нас новин\n"
+"                достатньо швидко (просто дайте відповідь на цей email).\n"
+"                <br/>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                <t t-set=\"location\" t-value=\"''\"/>\n"
+"                <t t-if=\"object.job_id.address_id.name\">\n"
+"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street\">\n"
+"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street2\">\n"
+"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.city\">\n"
+"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.zip\">\n"
+"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"                </t>\n"
+"                <br/>\n"
+"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"                </t>\n"
+"                <br/>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -522,13 +681,13 @@ msgstr "Дії"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
-msgstr ""
+msgstr "Протерміновані дії"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Дії на сьогодні"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -657,12 +816,12 @@ msgstr "Електронна пошта заявника"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr "Заявник найманий"
+msgstr "Заявник найнятий"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Applicant hired<br/>"
-msgstr "Заявника прийнято на роботу<br/>"
+msgstr "Заявник найнятий<br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
@@ -684,7 +843,7 @@ msgstr "Заявники"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "Заявника найнято"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -731,7 +890,7 @@ msgstr "Підрахунок заявок"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "Статус заявки"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -758,6 +917,7 @@ msgstr "Заявки"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email or phone or mobile"
 msgstr ""
+"Заявки з тією самою електронною поштою, телефоном чи мобільним телефоном"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -797,6 +957,7 @@ msgid "Attachments"
 msgstr "Прикріпплення"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Attachments, like resumes, get indexed automatically."
@@ -818,24 +979,8 @@ msgid "Bachelor Degree"
 msgstr "Рівень бакалавра"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -868,12 +1013,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Digitization (OCR)"
-msgstr ""
+msgstr "Оцифрування CV (OCR)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Display"
-msgstr ""
+msgstr "Відображати CV"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -907,7 +1052,7 @@ msgid "Category of applicant"
 msgstr "Категорія заявника"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
@@ -940,9 +1085,10 @@ msgstr "Налаштування"
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Confirmation email sent to all new job applications"
-msgstr ""
+msgstr "Лист підтвердження надіслано всім новим заявникам"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
@@ -950,6 +1096,7 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Contact Email"
@@ -981,7 +1128,7 @@ msgid "Contract Signed"
 msgstr "Підписаний контракт"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
@@ -1006,7 +1153,7 @@ msgid "Create a Job Position"
 msgstr "Створити посаду"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
@@ -1147,7 +1294,7 @@ msgstr "Огляд"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your CV to extract name and email automatically."
-msgstr ""
+msgstr "Оцифруйте ваше CV щоби витягнути з нього ім'я та email автоматично."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1158,7 +1305,7 @@ msgstr "Відмінити"
 #: model:res.groups,name:hr_recruitment.group_applicant_cv_display
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display CV on application form"
-msgstr ""
+msgstr "Відображати CV на формі заявки"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
@@ -1173,6 +1320,7 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -1196,6 +1344,7 @@ msgid "Documentation"
 msgstr "Документація"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1259,6 +1408,7 @@ msgid "Email cc"
 msgstr "Email cc"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
@@ -1272,12 +1422,14 @@ msgid "Email subject for applications sent via email"
 msgstr "Тема електронного листа для заявок, надіслана через email"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
 msgstr "Необхідно встановити шаблон електронного листа для його відправлення"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
@@ -1308,7 +1460,7 @@ msgstr "Співробітники"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Employment Types"
-msgstr ""
+msgstr "Типи зайнятості"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
@@ -1338,7 +1490,7 @@ msgstr "Розширені фільтри"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
+msgstr "Розширений інтерв'юер"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1378,7 +1530,7 @@ msgstr "Підписники (Партнери)"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1429,7 +1581,7 @@ msgstr "Сірий логотип канбану"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
 msgid "Group Applicant Cv Display"
-msgstr ""
+msgstr "Відображення групування заявкників по резюме"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1445,7 +1597,7 @@ msgstr "Відповідальний відділу кадрів"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "Є домен"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
@@ -1546,24 +1698,8 @@ msgstr ""
 " не виймаючи його."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1587,7 +1723,7 @@ msgstr "Форми інтерв'ю"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Інтерв'юери"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -1610,6 +1746,7 @@ msgid "Is Warning Visible"
 msgstr "Чи видиме попередження"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1619,6 +1756,7 @@ msgid "Job"
 msgstr "Вакансія"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
@@ -1716,6 +1854,7 @@ msgid "Language"
 msgstr "Мова"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Last Meeting"
@@ -1775,6 +1914,7 @@ msgid "Late Activities"
 msgstr "Останні дії"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Let people apply by email to save time."
@@ -1787,7 +1927,7 @@ msgid "Let's create a job position."
 msgstr "Давайте створимо вакансію."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -1798,7 +1938,7 @@ msgstr ""
 "встановлено email для заявок та загальнодоступний опис вакансії."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
@@ -1806,21 +1946,21 @@ msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr "Давайте поглянемо, як <b>покращити</b> ваш <b>процес найму</b>."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
 msgstr "Давайте поглянемо на конвеєр заявок."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
 msgstr "Тепер давайте створимо нового співробітника."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s go back to the dashboard."
@@ -1829,7 +1969,7 @@ msgstr "Давайте повернемося на панель приладів
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
 msgid "LinkedIn Profile"
-msgstr ""
+msgstr "Профіль LinkedIn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
@@ -2002,24 +2142,28 @@ msgid "Next Activity Type"
 msgstr "Тип наступної дії"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Next Meeting"
 msgstr "Наступна зустріч"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Meeting"
 msgstr "Немає зустрічі"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Subject"
 msgstr "Без теми"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No application yet"
@@ -2102,7 +2246,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer : Manage all applicants"
-msgstr ""
+msgstr "Керівник: Управляйте всіма заявками"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
@@ -2146,7 +2290,7 @@ msgstr ""
 "мову, напр. {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
@@ -2227,24 +2371,8 @@ msgid "Publish available jobs on your website"
 msgstr "Опублікувати наявні вакансії на вашому веб-сайті"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -2298,7 +2426,7 @@ msgstr "Аналіз рекрутингу"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Recruitment Interviewer"
-msgstr ""
+msgstr "Інтерв'юер рекрутингу"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2313,22 +2441,22 @@ msgstr "Етапи рекрутингу"
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr ""
+msgstr "Рекрутинг: Підтвердження заявки"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Recruitment: Interest"
-msgstr ""
+msgstr "Рекрутинг: Зацікавлені"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Recruitment: Not interested anymore"
-msgstr ""
+msgstr "Рекрутинг: Більше не зацікавлені"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Recruitment: Refuse"
-msgstr ""
+msgstr "Рекрутинг: Відхилити"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -2351,6 +2479,7 @@ msgid "Refuse"
 msgstr "Відхилити"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
@@ -2385,7 +2514,7 @@ msgstr "Відхилено"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "Віддалено"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
@@ -2428,7 +2557,7 @@ msgstr "Відновлення"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr ""
+msgstr "Запущені заявники"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2456,7 +2585,7 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "Запропонована зарплата організацією, додаткові переваги"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
@@ -2490,9 +2619,10 @@ msgstr "Надіслати"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
-msgstr ""
+msgstr "Відправте CV в OCR для заповнення заявки"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
@@ -2522,7 +2652,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Відправте листи заявникам"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2530,7 +2660,7 @@ msgid "Send texts to your contacts"
 msgstr "Надішліть текст вашим контактам"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
@@ -2548,6 +2678,8 @@ msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
 msgstr ""
+"Налаштуйте цей шаблон на етап найму, щоб надсилати його, коли заявки "
+"досягнуть цього етапу"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2565,6 +2697,11 @@ msgstr "Показати всі записи, які мають дату нас�
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
 msgstr "Джерело"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_source_menu
+msgid "Source Analysis"
+msgstr "Аналіз джерела"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -2654,7 +2791,7 @@ msgstr "Тема"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr ""
+msgstr "Тема / Заявка"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2684,12 +2821,20 @@ msgid "Tags"
 msgstr "Мітки"
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_team_menu
+msgid "Team Performance"
+msgstr "Виконання команди"
+
+#. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_campaign.py:0
 #, python-format
 msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
 msgstr ""
+"UTM кампанії '%s' неможливо видалити, оскільки вона використовується в "
+"процесі рекрутингу."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
@@ -2707,6 +2852,7 @@ msgid "The date at which the applicant will be available to start working"
 msgstr "Дата, коли заявник зможе почати працювати"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid ""
@@ -2717,10 +2863,11 @@ msgstr ""
 " адреси електронної пошти."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "У наступних заявників немає адрес електронної пошти: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -2783,8 +2930,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Це джерело посилання, наприклад, пошукова система, інший домен або ім'я "
-"списку листів"
+"Це джерело посилання, наприклад, пошукова система, інший домен або назва "
+"списку розсилки"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -2794,6 +2941,11 @@ msgid ""
 msgstr ""
 "Цей етап складається у канбані, коли на цьому етапі відсутні записи для "
 "відображення."
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_stage_report_menu
+msgid "Time In Stage Analysis"
+msgstr "Час в аналізі етапів"
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2819,7 +2971,7 @@ msgstr "Підказки"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "Відстежувачі"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2866,6 +3018,8 @@ msgstr "Непрочитані повідомлення"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the CV or the file itself"
 msgstr ""
+"Використовуйте OCR для заповнення даних із зобрадення CV або безпосередньо з"
+" файлу"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -2914,7 +3068,7 @@ msgid "Website communication history"
 msgstr "Історія бесіди на сайті"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
@@ -2924,18 +3078,19 @@ msgstr "Яку вакансію ви хочете сьогодні закрит�
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr ""
+msgstr "Коли ви відхиляєте заявку, ви можете використати цей шаблон"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Напишіть ваше повідомлення..."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "Вам не дозволено виконувати цю дію."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2947,14 +3102,18 @@ msgstr ""
 "замість міток за замовчуванням."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_source.py:0
 #, python-format
 msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"Ви не можете видалити ці Джерела UTM оскільки вони пов'язані з наступними джерелами в рекрутингу:\n"
+"%(recruitment_sources)s"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."

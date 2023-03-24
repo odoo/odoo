@@ -7,7 +7,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { getFixture, mount, nextTick, triggerEvent } from "../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let target;

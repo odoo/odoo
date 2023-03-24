@@ -272,7 +272,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("char field translatable", async function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         serverData.models.partner.fields.foo.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -281,6 +281,7 @@ QUnit.module("Fields", (hooks) => {
         patchWithCleanup(session.user_context, {
             lang: "en_US",
         });
+        let call_get_field_translations = 0;
 
         await makeView({
             type: "form",
@@ -300,23 +301,39 @@ QUnit.module("Fields", (hooks) => {
                     return Promise.resolve([
                         ["en_US", "English"],
                         ["fr_BE", "French (Belgium)"],
+                        ["es_ES", "Spanish"],
                     ]);
                 }
                 if (route === "/web/dataset/call_kw/partner/get_field_translations") {
-                    return Promise.resolve([
-                        [
-                            { lang: "en_US", source: "yop", value: "yop" },
-                            { lang: "fr_BE", source: "yop", value: "valeur français" },
-                        ],
-                        { translation_type: "char", translation_show_source: false },
-                    ]);
+                    if (call_get_field_translations === 0) {
+                        call_get_field_translations = 1;
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "yop", value: "yop" },
+                                { lang: "fr_BE", source: "yop", value: "yop français" },
+                                { lang: "es_ES", source: "yop", value: "yop español" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
+                    if (call_get_field_translations === 1) {
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "bar", value: "bar" },
+                                { lang: "fr_BE", source: "bar", value: "yop français" },
+                                { lang: "es_ES", source: "bar", value: "bar" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
                 }
                 if (route === "/web/dataset/call_kw/partner/update_field_translations") {
                     assert.deepEqual(
                         args[2],
-                        { en_US: "english value" },
-                        "the new translation value should be written"
+                        { en_US: "bar", es_ES: false },
+                        "the new translation value should be written and the value false voids the translation"
                     );
+                    serverData.models.partner.records[0].foo = "bar";
                     return Promise.resolve(null);
                 }
             },
@@ -340,41 +357,109 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(
             target,
             ".modal .o_translation_dialog .translation",
-            2,
-            "two rows should be visible"
+            3,
+            "three rows should be visible"
         );
 
-        let enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
-        assert.strictEqual(enFields[0].value, "yop", "English translation should be filled");
+        let translations = target.querySelectorAll(
+            ".modal .o_translation_dialog .translation input"
+        );
+        assert.strictEqual(translations[0].value, "yop", "English translation should be filled");
         assert.strictEqual(
-            enFields[enFields.length - 1].value,
-            "valeur français",
+            translations[1].value,
+            "yop français",
             "French translation should be filled"
         );
+        assert.strictEqual(
+            translations[2].value,
+            "yop español",
+            "Spanish translation should be filled"
+        );
 
-        await editInput(enFields[0], null, "english value");
+        await editInput(translations[0], null, "bar"); // set the en_US(user language) translation to "foo"
+        await editInput(translations[2], null, ""); // void the es_ES translation
         await click(target, ".modal button.btn-primary"); // save
 
         assert.strictEqual(
             target.querySelector(`.o_field_char input[type="text"]`).value,
-            "english value",
+            "bar",
             "the new translation was not transfered to modified record"
         );
 
-        await editInput(target, `.o_field_char input[type="text"]`, "new english value");
+        await editInput(target, `.o_field_char input[type="text"]`, "baz");
         await click(target, ".o_field_char .btn.o_field_translate");
 
-        enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
+        translations = target.querySelectorAll(".modal .o_translation_dialog .translation input");
         assert.strictEqual(
-            enFields[0].value,
-            "new english value",
+            translations[0].value,
+            "baz",
             "Modified value should be used instead of translation"
         );
         assert.strictEqual(
-            enFields[enFields.length - 1].value,
-            "valeur français",
-            "French translation should be filled"
+            translations[1].value,
+            "yop français",
+            "French translation shouldn't be changed"
         );
+        assert.strictEqual(
+            translations[2].value,
+            "bar",
+            "Spanish translation should fallback to the English translation"
+        );
+    });
+
+    QUnit.test("translation dialog should close if field is not there anymore", async function (assert) {
+        // In this test, we simulate the case where the field is removed from the view
+        // this can happend for example if the user click the back button of the browser.
+        serverData.models.partner.fields.foo.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+        patchWithCleanup(session.user_context, {
+            lang: "en_US",
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="int_field" />
+                            <field name="foo"  attrs="{'invisible': [('int_field', '==', 9)]}"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                        ["es_ES", "Spanish"],
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    return Promise.resolve([
+                        [
+                            { lang: "en_US", source: "yop", value: "yop" },
+                            { lang: "fr_BE", source: "yop", value: "valeur français" },
+                            { lang: "es_ES", source: "yop", value: "yop español" },
+                        ],
+                        { translation_type: "char", translation_show_source: false },
+                    ]);
+                }
+            },
+        });
+
+        assert.hasClass(target.querySelector("[name=foo] input"), "o_field_translate");
+
+        await click(target, ".o_field_char .btn.o_field_translate");
+        assert.containsOnce(target, ".modal", "a translate modal should be visible");
+        await editInput(target, ".o_field_widget[name=int_field] input", "9");
+        await nextTick();
+        assert.containsNone(target, "[name=foo] input", "the field foo should be invisible");
+        assert.containsNone(target, ".modal", "a translate modal should not be visible");
     });
 
     QUnit.test("html field translatable", async function (assert) {

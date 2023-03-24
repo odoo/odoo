@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
-const { Component, useState, useRef, useEffect } = owl;
+import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
 export class SettingsPage extends Component {
     setup() {

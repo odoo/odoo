@@ -8,7 +8,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, onWillUpdateProps } = owl;
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 let registryActionId = 0;
 /**
  * Action menus (or Action/Print bar, previously called 'Sidebar')

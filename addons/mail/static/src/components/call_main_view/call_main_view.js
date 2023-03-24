@@ -5,7 +5,7 @@ import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
+const { Component, onMounted, onWillUnmount } = owl;
 
 export class CallMainView extends Component {
 
@@ -17,6 +17,11 @@ export class CallMainView extends Component {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'tileContainerRef', refName: 'tileContainer', });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
+        onMounted(() => {
+            this.resizeObserver = new ResizeObserver(() => this.callMainView.onResize());
+            this.resizeObserver.observe(this.root.el);
+        });
+        onWillUnmount(() => this.resizeObserver.disconnect());
     }
 
     //--------------------------------------------------------------------------

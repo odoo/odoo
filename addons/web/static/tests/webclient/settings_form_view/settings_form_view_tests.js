@@ -15,6 +15,9 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { registerCleanup } from "../../helpers/cleanup";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { session } from "@web/session";
+import { pick } from "@web/core/utils/objects";
 
 let target;
 let serverData;
@@ -469,6 +472,234 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
+    QUnit.test("resIds should contains only 1 id", async function (assert) {
+        assert.expect(1);
+
+        serverData.models["res.config.settings"].fields.foo_text = {
+            string: "Foo",
+            type: "char",
+            default: "My little Foo Value",
+            translate: true,
+            searchable: true,
+            trim: true,
+        };
+        registry
+            .category("services")
+            .add("localization", makeFakeLocalizationService({ multiLang: true }), {
+                force: true,
+            });
+        patchWithCleanup(session.user_context, {
+            lang: "en_US",
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_right_pane">
+                                            <label for="Foo Text"/>
+                                            <div class="content-group">
+                                                <div class="mt16">
+                                                    <field name="foo_text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>`,
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/res.config.settings/get_field_translations") {
+                    return Promise.resolve([
+                        [
+                            {
+                                lang: "en_US",
+                                source: "My little Foo Value",
+                                value: "My little Foo Value",
+                            },
+                            {
+                                lang: "fr_BE",
+                                source: "My little Foo Value",
+                                value: "Valeur de mon petit Foo",
+                            },
+                        ],
+                        {
+                            translation_type: "char",
+                            translation_show_source: true,
+                        },
+                    ]);
+                }
+                if (route === "/web/dataset/call_button" && method === "execute") {
+                    assert.deepEqual(args, [[2]]);
+                    return true;
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_field_char .btn.o_field_translate")); // Transalte
+        await click(target.querySelector(".modal-footer .btn-primary")); // Warning dialog (OK)
+        await click(target.querySelectorAll(".modal-footer .btn")[1]); // Discard
+        await click(target.querySelector(".o_form_button_save")); // Save Settings
+    });
+
+    QUnit.test("settings views does not read existing id when reload", async function (assert) {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            4: {
+                id: 4,
+                name: "Other action",
+                res_model: "task",
+                target: "new",
+                type: "ir.actions.act_window",
+                views: [["view_ref", "form"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                    <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button name="4" string="Execute action" type="action"/>
+                            </div>
+                        </div>
+                    </form>`,
+            "task,view_ref,form": `
+                    <form>
+                        <field name="display_name"/>
+                    </form>`,
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (args.method) {
+                assert.step(args.method);
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
+
+        assert.verifySteps([
+            "get_views", // initial setting action
+            "onchange", // this is a setting view => new record transient record
+        ]);
+
+        await click(target.querySelector("button[name='4']"));
+
+        assert.verifySteps([
+            "create", // settings: create the record before doing the action
+            "read", // settings: read the created record
+            "get_views", // dialog: get views
+            "onchange", // dialog: onchange
+        ]);
+
+        await click(target, ".modal button.btn.btn-primary.o_form_button_save");
+        assert.verifySteps([
+            "create", // dialog: create the record before doing back to the settings
+            "read", // dialog: read the created record
+            "onchange", // settings: when we come back, we want to restart from scratch
+        ]);
+    });
+
+    QUnit.test(
+        "settings views ask for confirmation when leaving if dirty",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Settings view",
+                    res_model: "res.config.settings",
+                    type: "ir.actions.act_window",
+                    views: [[1, "form"]],
+                },
+                4: {
+                    id: 4,
+                    name: "Other action",
+                    res_model: "task",
+                    type: "ir.actions.act_window",
+                    views: [["view_ref", "form"]],
+                },
+            };
+
+            serverData.views = {
+                "res.config.settings,1,form": `
+                    <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`,
+                "res.config.settings,false,search": `<search/>`,
+                "task,view_ref,form": `
+                        <form>
+                            <field name="display_name"/>
+                        </form>`,
+                "task,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+
+            const action = doAction(webClient, 4);
+            await nextTick();
+            assert.containsNone(target, ".modal", "do not open modal if there is no change");
+            await action;
+
+            await doAction(webClient, 1);
+            await click(target, ".o_field_boolean input");
+            doAction(webClient, 4);
+            await nextTick();
+            assert.containsOnce(target, ".modal", "open modal if there is change");
+            assert.strictEqual(target.querySelector(".modal-title").textContent, "Unsaved changes");
+        }
+    );
+
     QUnit.test("Auto save: don't save on closing tab/browser", async function (assert) {
         assert.expect(3);
 
@@ -506,6 +737,34 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         window.dispatchEvent(new Event("beforeunload"));
         await nextTick();
+    });
+
+    QUnit.test("correctly copy attributes to compiled labels", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <label for="foo" string="Label Before" class="a"/>
+                                            <field name="foo" class="b"/>
+                                            <label for="foo" string="Label After" class="c"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`,
+        });
+
+        assert.hasClass(target.querySelectorAll(".o_form_label")[0], "a");
+        assert.hasClass(target.querySelector(".o_field_widget.o_field_boolean"), "b");
+        assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
     });
 
     QUnit.test("settings views does not write the id on the url", async function (assert) {
@@ -1427,8 +1686,8 @@ QUnit.module("SettingsFormView", (hooks) => {
         <div class="o_setting_container">
             <SettingsPage slots="{NoContentHelper:props.slots.NoContentHelper}" initialTab="props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}]" class="'settings'">
                 <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" class="'app_settings_block'">
-                    <FormLabel t-props="{id:'display_name',fieldName:'display_name',record:props.record,fieldInfo:props.archInfo.fieldNodes['display_name'],className:&quot;highhopes&quot;}" string="\`My&quot; little '  Label\`"/>
-                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+                    <FormLabel id="'display_name'" fieldName="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
+                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" setDirty.alike="props.setFieldAsDirty"/>
                 </SettingsApp>
             </SettingsPage>
         </div>`;
@@ -1479,7 +1738,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         const expectedCompiled = `
             <HighlightText originalText="\`this is Baz value: \`"/>
-            <Field id="'baz'" name="'baz'" record="props.record" fieldInfo="props.archInfo.fieldNodes['baz']"/>
+            <Field id="'baz'" name="'baz'" record="props.record" fieldInfo="props.archInfo.fieldNodes['baz']" setDirty.alike="props.setFieldAsDirty"/>
             <HighlightText originalText="\` and this is the after text\`"/>`;
         assert.areEquivalent(
             compiled.querySelector("Setting div.o_setting_right_pane div.text-muted").innerHTML,
@@ -1586,5 +1845,53 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         await click(target.querySelector(".settings_tab [data-key='otherapp']"));
         assert.strictEqual(scrollingEl.scrollTop, scrollTop);
+    });
+
+    QUnit.test("server actions are called with the correct context", async (assert) => {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            2: {
+                model_name: "partner",
+                name: "Action partner",
+                type: "ir.actions.server",
+                usage: "ir_actions_server",
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+             <form string="Settings" js_class="base_settings">
+                <div class="settings">
+                    <div class="app_settings_block">
+                        <button name="2" type="action"/>
+                    </div>
+                </div>
+             </form>
+            `,
+            "res.config.settings,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/action/run") {
+                assert.step(route);
+                assert.deepEqual(pick(args.context, "active_id", "active_ids", "active_model"), {
+                    active_id: 1,
+                    active_ids: [1],
+                    active_model: "res.config.settings",
+                });
+                return new Promise(() => {});
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        await click(target.querySelector("button[name='2']"));
+        assert.verifySteps(["/web/action/run"]);
     });
 });

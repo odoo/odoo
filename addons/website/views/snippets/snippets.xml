@@ -268,7 +268,7 @@
             <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
             <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
             <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
         </we-select>
         <we-colorpicker data-dependencies="border_width_opt"
                         t-att-data-apply-to="apply_to"
@@ -642,6 +642,8 @@
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div:not(.o_grid_item_image) > img, #{so_content_addition_selector}"
         data-drop-in=".content, nav"/>
+    <!-- TODO in master: remove the `.content` above, as it will not refer to
+        anything when the `content` classes in carousel will be removed. -->
 
     <div data-js="SnippetSave"
         t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}, .s_popup"
@@ -1190,6 +1192,7 @@
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]">
         <!-- Min height of section -->
+        <!-- TODO adapt in master, this is patched in JS -->
         <we-button-group string="Height" data-show-scroll-button="">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
             <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
@@ -1325,6 +1328,9 @@
             <we-button data-name="layout_popup_opt" data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_middle,s_popup_size_md">Popup</we-button>
         </we-select>
     </div>
+
+    <!-- Image position in grid -->
+    <!-- TODO something is added here in JS to handle grid image position mode -->
 
     <!-- Website Animate -->
     <div data-js="WebsiteAnimate"

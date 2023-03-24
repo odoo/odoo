@@ -29,7 +29,7 @@ import { _t } from "@web/core/l10n/translation";
 
 
 const serviceRegistry = registry.category("services");
-const { Component, App, whenReady } = owl;
+import { Component, App, whenReady } from "@odoo/owl";
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)

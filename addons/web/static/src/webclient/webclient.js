@@ -9,7 +9,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
-const { Component, onMounted, useExternalListener, useState } = owl;
+import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 
 export class WebClient extends Component {
     setup() {
@@ -100,6 +100,7 @@ export class WebClient extends Component {
         // we do not want any other listener to execute.
         if (
             ev.ctrlKey &&
+            !ev.target.isContentEditable &&
             ((ev.target instanceof HTMLAnchorElement && ev.target.href) ||
                 (ev.target instanceof HTMLElement && ev.target.closest("a[href]:not([href=''])")))
         ) {

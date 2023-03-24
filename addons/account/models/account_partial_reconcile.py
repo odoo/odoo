@@ -160,6 +160,7 @@ class AccountPartialReconcile(models.Model):
                 partial_amount_currency = 0.0
                 rate_amount = 0.0
                 rate_amount_currency = 0.0
+
                 if partial.debit_move_id.move_id == move:
                     partial_amount += partial.amount
                     partial_amount_currency += partial.debit_amount_currency
@@ -167,6 +168,7 @@ class AccountPartialReconcile(models.Model):
                     rate_amount_currency -= partial.credit_move_id.amount_currency
                     source_line = partial.debit_move_id
                     counterpart_line = partial.credit_move_id
+
                 if partial.credit_move_id.move_id == move:
                     partial_amount += partial.amount
                     partial_amount_currency += partial.credit_amount_currency
@@ -174,6 +176,16 @@ class AccountPartialReconcile(models.Model):
                     rate_amount_currency += partial.debit_move_id.amount_currency
                     source_line = partial.credit_move_id
                     counterpart_line = partial.debit_move_id
+
+                if partial.debit_move_id.move_id.is_invoice(include_receipts=True) and partial.credit_move_id.move_id.is_invoice(include_receipts=True):
+                    # Will match when reconciling a refund with an invoice.
+                    # In this case, we want to use the rate of each businness document to compute its cash basis entry,
+                    # not the rate of what it's reconciled with.
+                    rate_amount = source_line.balance
+                    rate_amount_currency = source_line.amount_currency
+                    payment_date = move.date
+                else:
+                    payment_date = counterpart_line.date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
@@ -197,7 +209,7 @@ class AccountPartialReconcile(models.Model):
                         counterpart_line.company_currency_id,
                         source_line.currency_id,
                         counterpart_line.company_id,
-                        counterpart_line.date,
+                        payment_date,
                     )
                 elif rate_amount:
                     payment_rate = rate_amount_currency / rate_amount
@@ -291,7 +303,7 @@ class AccountPartialReconcile(models.Model):
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
-            'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.account_id.id,
+            'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.company_id.account_cash_basis_base_account_id.id or tax_line.account_id.id,
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,

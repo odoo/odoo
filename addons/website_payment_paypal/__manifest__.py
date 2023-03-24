@@ -8,10 +8,7 @@
     'sequence': 365,
     'summary': 'Website - Payment Paypal',
     'depends': ['website_payment', 'payment_paypal'],
-    'data': [
-        'views/res_config_settings_views.xml'
-    ],
-    'application': True,
+    'application': False,
     'auto_install': True,
     'license': 'LGPL-3',
 }

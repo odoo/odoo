@@ -68,11 +68,11 @@ class TaxReportTest(AccountTestInvoicingCommon):
             ],
         })
 
-    def _get_tax_tags(self, country, tag_name=None):
+    def _get_tax_tags(self, country, tag_name=None, active_test=True):
         domain = [('country_id', '=', country.id), ('applicability', '=', 'taxes')]
         if tag_name:
-            domain.append(('name', 'like', '_' + tag_name ))
-        return self.env['account.account.tag'].search(domain)
+            domain.append(('name', 'like', '_' + tag_name))
+        return self.env['account.account.tag'].with_context(active_test=active_test).search(domain)
 
     def test_create_shared_tags(self):
         self.assertEqual(len(self._get_tax_tags(self.test_country_1, tag_name='01')), 2, "tax_tags expressions created for reports within the same countries using the same formula should create a single pair of tags.")
@@ -178,3 +178,78 @@ class TaxReportTest(AccountTestInvoicingCommon):
                 # Tags already exist since 'copied_report_1' belongs to 'test_country_2'
                 for tag in line_tags:
                     self.assertIn(tag, country_2_tags_after_change, "The tax_tags expressions sharing their tags with other report should not receive new tags since they already exist.")
+
+    def test_unlink_report_line_tags_used_by_amls(self):
+        """
+        Deletion of a report line whose tags are still referenced by an aml should archive tags and not delete them.
+        """
+        tag_name = "55b"
+        tax_report_line = self._create_basic_tax_report_line(self.tax_report_1, "Line 55 bis", tag_name)
+        test_tag = tax_report_line.expression_ids._get_matching_tags().filtered(lambda tag: not tag.tax_negate)
+        test_tax = self.env['account.tax'].create({
+            'name': "Test tax",
+            'amount_type': 'percent',
+            'amount': 25,
+            'country_id': self.tax_report_1.country_id.id,
+            'type_tax_use': 'sale',
+            'invoice_repartition_line_ids': [
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [Command.link(test_tag.id)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'tax'}),
+            ],
+        })
+
+        # Make sure the fiscal country allows using this tax directly
+        self.env.company.account_fiscal_country_id = self.test_country_1
+
+        test_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '1992-12-22',
+            'invoice_line_ids': [
+                (0, 0, {'quantity': 1, 'price_unit': 42, 'tax_ids': [Command.set([test_tax.id])]}),
+            ],
+        })
+        test_invoice.action_post()
+
+        tax_report_line.unlink()
+        tags_after = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
+        # only the +tag_name should be kept (and archived), -tag_name should be unlinked
+        self.assertEqual(tags_after.mapped('tax_negate'), [False], "Unlinking a tax_tags expression should keep the tag if it was used on move lines, and unlink it otherwise.")
+        self.assertEqual(tags_after.mapped('active'), [False], "Unlinking a tax_tags expression should archive the tag if it was used on move lines, and unlink it otherwise.")
+        self.assertEqual(len(test_tax.invoice_repartition_line_ids.tag_ids), 0, "After a tag is archived it shouldn't be on tax repartition lines.")
+
+    def test_unlink_report_line_tags_used_by_other_expression(self):
+        """
+        Deletion of a report line whose tags are still referenced in other expression should not delete nor archive tags.
+        """
+        tag_name = self.tax_report_line_1_1.expression_ids.formula  # tag "O1" is used in both line 1.1 and line 2.1
+        tags_before = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
+        tags_archived_before = tags_before.filtered(lambda tag: not tag.active)
+        self.tax_report_line_1_1.unlink()
+        tags_after = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
+        tags_archived_after = tags_after.filtered(lambda tag: not tag.active)
+        self.assertEqual(len(tags_after), len(tags_before), "Unlinking a report expression whose tags are used by another expression should not delete them.")
+        self.assertEqual(len(tags_archived_after), len(tags_archived_before), "Unlinking a report expression whose tags are used by another expression should not archive them.")
+
+    def test_tag_recreation_archived(self):
+        """
+        In a situation where we have only one of the two (+ and -) sign that exist
+        we want only the missing sign to be re-created if we try to reuse the same tag name.
+        (We can get into this state when only one of the signs were used by aml: then we archived it and deleted the complement.)
+        """
+        tag_name = self.tax_report_line_1_55.expression_ids.formula
+        tags_before = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
+        tags_before[0].unlink()  # we unlink one and archive the other, doesn't matter which one
+        tags_before[1].active = False
+        self._create_basic_tax_report_line(self.tax_report_1, "Line 55 bis", tag_name)
+        tags_after = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
+        self.assertEqual(len(tags_after), 2, "When creating a tax report line with an archived tag and it's complement doesn't exist, it should be re-created.")
+        self.assertEqual(tags_after.mapped('name'), ['+' + tag_name, '-' + tag_name], "After creating a tax report line with an archived tag and when its complement doesn't exist, both a negative and a positive tag should be created.")

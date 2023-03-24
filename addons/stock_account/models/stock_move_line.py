@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.tools import float_is_zero
+from odoo.tools import float_compare, float_is_zero
 
 
 class StockMoveLine(models.Model):
@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
             if move_line.state != 'done':
                 continue
             rounding = move.product_id.uom_id.rounding
-            diff = move_line.qty_done
+            diff = move.product_uom._compute_quantity(move_line.qty_done, move.product_id.uom_id)
             if float_is_zero(diff, precision_rounding=rounding):
                 continue
             self._create_correction_svl(move, diff)
@@ -41,8 +41,10 @@ class StockMoveLine(models.Model):
                 if move_line.state != 'done':
                     continue
                 move = move_line.move_id
+                if float_compare(vals['qty_done'], move_line.qty_done, precision_rounding=move.product_uom.rounding) == 0:
+                    continue
                 rounding = move.product_id.uom_id.rounding
-                diff = vals['qty_done'] - move_line.qty_done
+                diff = move.product_uom._compute_quantity(vals['qty_done'] - move_line.qty_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 if float_is_zero(diff, precision_rounding=rounding):
                     continue
                 self._create_correction_svl(move, diff)

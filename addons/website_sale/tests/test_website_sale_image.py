@@ -210,6 +210,17 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
             [('key', '=', 'website_sale.product_picture_magnify_click')]
         ).write({'active': True})
 
+        # Ensure that only one pricelist is available during the test, with the company currency.
+        # This ensures that tours with triggers on the amounts will run properly.
+        # To this purpose, we will ensure that only the public_pricelist is available for the default_website.
+        public_pricelist = self.env.ref('product.list0')
+        default_website = self.env.ref('website.default_website')
+        self.env['product.pricelist'].search([
+            ('id', '!=', public_pricelist.id),
+            ('website_id', 'in', [False, default_website.id])]
+        ).website_id = self.env.ref('website.website2')
+        public_pricelist.currency_id = self.env.company.currency_id
+
         self.start_tour("/", 'shop_zoom', login="admin")
 
         # CASE: unlink move image to fallback if fallback image empty

@@ -5,7 +5,7 @@ import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "@web/views/sample_server";
 import { useSetupView } from "@web/views/view_hook";
 
-const { EventBus, onWillStart, onWillUpdateProps, useComponent } = owl;
+import { EventBus, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams

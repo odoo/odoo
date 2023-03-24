@@ -70,8 +70,8 @@ export class AnalyticDistribution extends Component {
             fieldString: this.env._t("Analytic Distribution Template"),
         });
         this.allPlans = [];
-        this.lastAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
-        this.lastProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+        this.lastAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
+        this.lastProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
     }
 
     // Lifecycle
@@ -79,12 +79,6 @@ export class AnalyticDistribution extends Component {
         if (this.editingRecord) {
             await this.fetchAllPlans(this.props);
         }
-        const args = {
-            domain: [["name", "like", "Percentage Analytic"]],
-            fields: ["digits"],
-            context: [],
-        }
-        this.decimal_precision = await this.orm.call("decimal.precision", "search_read", [], args);
         await this.formatData(this.props);
     }
 
@@ -94,8 +88,8 @@ export class AnalyticDistribution extends Component {
         // or a model applies that contains unavailable plans
         // This should only execute when these fields have changed, therefore we use the `_field` props.
         const valueChanged = JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value);
-        const currentAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
-        const currentProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+        const currentAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
+        const currentProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
         const accountChanged = !shallowEqual(this.lastAccount, currentAccount);
         const productChanged = !shallowEqual(this.lastProduct, currentProduct);
         if (valueChanged || accountChanged || productChanged) {
@@ -160,6 +154,9 @@ export class AnalyticDistribution extends Component {
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
         }
+        if (this.props.record.data.company_id) {
+            args['company_id'] = this.props.record.data.company_id[0];
+        }
         return args;
     }
 
@@ -199,12 +196,19 @@ export class AnalyticDistribution extends Component {
 
     async loadOptionsSourceAnalytic(request) {
         let domain = [['id', 'not in', this.existingAnalyticAccountIDs]];
+        if (this.props.record.data.company_id){
+            domain.push(
+                '|',
+                ['company_id', '=', this.props.record.data.company_id[0]],
+                ['company_id', '=', false]
+            );
+        }
 
         if (this.activeGroup) {
             domain.push(['root_plan_id', '=', this.activeGroup]);
         }
 
-        const records = await this.fetchAnalyticAccounts([...domain, ["name", "ilike", request]], 7);
+        const records = await this.fetchAnalyticAccounts([...domain, '|', ["name", "ilike", request], ['code', 'ilike', request]], 7);
 
         let options = records.map((result) => ({
             value: result.id,
@@ -565,8 +569,7 @@ export class AnalyticDistribution extends Component {
     }
 
     formatPercentage(value) {
-        return formatPercentage(value / 100, { digits: [false, this.decimal_precision[0].digits || 2] });
-
+        return formatPercentage(value / 100, { digits: [false, this.props.record.data.analytic_precision || 2] });
     }
 }
 AnalyticDistribution.template = "analytic.AnalyticDistribution";
@@ -574,6 +577,10 @@ AnalyticDistribution.supportedTypes = ["char", "text"];
 AnalyticDistribution.components = {
     AnalyticAutoComplete,
     TagsList,
+}
+
+AnalyticDistribution.fieldDependencies = {
+    analytic_precision: { type: 'integer' },
 }
 AnalyticDistribution.props = {
     ...standardFieldProps,

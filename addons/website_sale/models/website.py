@@ -8,11 +8,6 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import url_for
-from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
-
-SEARCH_TYPE_MODELS['products'] |= 'product.public.category', 'product.template'
-SEARCH_TYPE_MODELS['product_categories_only'] |= 'product.public.category',
-SEARCH_TYPE_MODELS['products_only'] |= 'product.template',
 
 _logger = logging.getLogger(__name__)
 
@@ -377,7 +372,10 @@ class Website(models.Model):
             previous_fiscal_position = sale_order_sudo.fiscal_position_id
             previous_pricelist = sale_order_sudo.pricelist_id
 
+            # Reset the session pricelist according to logged partner pl
+            request.session.pop('website_sale_current_pl', None)
             pricelist_id = self._get_current_pricelist_id(partner_sudo)
+            request.session['website_sale_current_pl'] = pricelist_id
 
             # change the partner, and trigger the computes (fpos)
             sale_order_sudo.write({
@@ -467,7 +465,7 @@ class Website(models.Model):
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request.website.partner_id.id == partner_sudo.id:
+        if request and request.website.partner_id.id == partner_sudo.id:
             country_code = request.geoip.get('country_code')
             if country_code:
                 country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id
@@ -493,6 +491,14 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
+
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if search_type in ['products', 'product_categories_only', 'all']:
+            result.append(self.env['product.public.category']._search_get_detail(self, order, options))
+        if search_type in ['products', 'products_only', 'all']:
+            result.append(self.env['product.template']._search_get_detail(self, order, options))
+        return result
 
     def _get_product_page_proportions(self):
         """
@@ -542,6 +548,13 @@ class Website(models.Model):
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
                 template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
                 sale_order.cart_recovery_email_sent = True
+
+    def _display_partner_b2b_fields(self):
+        """ This method is to be inherited by localizations and return
+        True if localization should always displayed b2b fields """
+        self.ensure_one()
+
+        return self.is_view_active('website_sale.address_b2b')
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

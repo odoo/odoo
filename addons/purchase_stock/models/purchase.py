@@ -189,7 +189,7 @@ class PurchaseOrder(models.Model):
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
             if parent._name == 'stock.picking':
-                if parent.state == 'cancel':
+                if parent.state in ['cancel', 'done']:
                     continue
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
@@ -307,7 +307,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
         if self._context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.to_date(r.date) <= self._context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
@@ -321,7 +321,7 @@ class PurchaseOrderLine(models.Model):
                 # the PO. Therefore, we can skip them since they will be handled later on.
                 for move in line._get_po_line_moves():
                     if move.state == 'done':
-                        if move.location_dest_id.usage == "supplier":
+                        if move._is_purchase_return():
                             if move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
@@ -330,17 +330,6 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
-                        elif (
-                            move.location_dest_id.usage == "internal"
-                            and move.location_id.usage != "supplier"
-                            and move.warehouse_id
-                            and move.location_dest_id
-                            not in self.env["stock.location"].search(
-                                [("id", "child_of", move.warehouse_id.view_location_id.id)]
-                            )
-                        ):
-                            if move.to_refund:
-                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line._track_qty_received(total)
@@ -369,6 +358,12 @@ class PurchaseOrderLine(models.Model):
             new_date = fields.Datetime.to_datetime(values['date_planned'])
             self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
         lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+
+        if 'product_packaging_id' in values:
+            self.move_ids.filtered(
+                lambda m: m.state not in ['cancel', 'done']
+            ).product_packaging_id = values['product_packaging_id']
+
         previous_product_qty = {line.id: line.product_uom_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         if 'price_unit' in values:
@@ -453,13 +448,13 @@ class PurchaseOrderLine(models.Model):
             price_unit = self.taxes_id.with_context(round=False).compute_all(
                 price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id, partner=self.order_id.partner_id
             )['total_void']
-            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
+            price_unit = price_unit / qty
         if self.product_uom.id != self.product_id.uom_id.id:
             price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
-        return price_unit
+        return float_round(price_unit, precision_digits=price_unit_prec)
 
     def _prepare_stock_moves(self, picking):
         """ Prepare the stock moves data for one order line. This function returns a list of
@@ -522,7 +517,7 @@ class PurchaseOrderLine(models.Model):
         return {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
-            'name': (self.name or '')[:2000],
+            'name': (self.product_id.display_name or '')[:2000],
             'product_id': self.product_id.id,
             'date': date_planned,
             'date_deadline': date_planned,

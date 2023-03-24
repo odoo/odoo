@@ -39,7 +39,7 @@ class RestaurantFloor(models.Model):
                     'Please close and validate the following open PoS Session before modifying this floor.\n'
                     'Open session: %s' % (' '.join(floor.pos_config_id.mapped('name')),))
             if vals.get('pos_config_id') and floor.pos_config_id.id and vals.get('pos_config_id') != floor.pos_config_id.id:
-                raise UserError('The %s is already used in another Pos Config.' % floor.name)
+                raise UserError(_('The %s is already used in another Pos Config.', floor.name))
         return super(RestaurantFloor, self).write(vals)
 
 

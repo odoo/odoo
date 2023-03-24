@@ -24,7 +24,7 @@
                             <t t-set="uom_name" t-value="sale_item.product_uom and sale_item.product_uom[1]"/>
                             <td>
                                 <t t-set="sol_name" t-value="sale_item.display_name"/>
-                                <a t-if="sale_item.action" class="o_rightpanel_button" href="#" t-on-click="() => this.onProjectActionClick(sale_item.action)">
+                                <a t-if="sale_item.action" class="o_rightpanel_button" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
                                     <t t-esc="sol_name"/>
                                 </a>
                                 <t t-else="" t-esc="sol_name"/>

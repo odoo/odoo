@@ -176,6 +176,11 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
 
+        if 'product_packaging_id' in values:
+            self.move_ids.filtered(
+                lambda m: m.state not in ['cancel', 'done']
+            ).product_packaging_id = values['product_packaging_id']
+
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
@@ -266,7 +271,7 @@ class SaleOrderLine(models.Model):
 
         moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
         if self._context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.to_date(r.date) <= self._context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
 
         for move in moves:
             if move.location_dest_id.usage == "customer":
@@ -330,7 +335,7 @@ class SaleOrderLine(models.Model):
             procurements.append(self.env['procurement.group'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_shipping_id.property_stock_customer,
-                line.name, line.order_id.name, line.order_id.company_id, values))
+                line.product_id.display_name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
 

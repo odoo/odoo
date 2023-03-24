@@ -36,8 +36,8 @@
                         <field name="property_valuation" invisible="1"/>
                         <field name="property_stock_valuation_account_id" options="{'no_create': True}" attrs="{'required':[('property_valuation', '=', 'real_time')]}"/>
                         <field name="property_stock_journal" attrs="{'required':[('property_valuation', '=', 'real_time')]}" />
-                        <field name="property_stock_account_input_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
-                        <field name="property_stock_account_output_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_input_categ_id" options="{'no_create': True}" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_output_categ_id" options="{'no_create': True}" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
                         <div colspan="2" class="alert alert-info mt16" role="status">
                             <b>Set other input/output accounts on specific </b><button name="%(stock.action_prod_inv_location_form)d" role="button" type="action" class="btn-link" style="padding: 0;vertical-align: baseline;" string="locations"/>.
                         </div>

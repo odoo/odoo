@@ -50,10 +50,8 @@ class Department(models.Model):
 
     @api.depends('parent_path')
     def _compute_master_department_id(self):
-        # Don't use the cache as the value is updated in SQL
-        parent_path_values = {e['id']: e['parent_path'] for e in self.read(['parent_path'])}
         for department in self:
-            department.master_department_id = int(parent_path_values[department.id].split('/')[0])
+            department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
         emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])

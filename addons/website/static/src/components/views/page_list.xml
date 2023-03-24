@@ -36,12 +36,12 @@
 </t>
 
 <t t-name="website.RecordFilter" owl="1">
-    <div class="btn-group" role="toolbar" aria-label="Main actions" t-if="'website_id' in props.archInfo.fieldNodes">
+    <div class="btn-group" role="toolbar" aria-label="Main actions" t-if="websiteSelection.length > 1">
         <button class="btn btn-light dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
         </button>
         <div class="dropdown-menu">
-            <t t-foreach="websiteSelection" t-as="website" t-key="website">
+            <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
                 <a role="menuitem" href="#" class="dropdown-item" t-on-click="() => this.onSelectWebsite(website)"><t t-esc="website.name"/></a>
                 <div t-if="!website.id" class="dropdown-divider"/>
             </t>

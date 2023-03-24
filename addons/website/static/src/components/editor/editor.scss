@@ -83,10 +83,62 @@
     }
 }
 
+@mixin preview-outline-button($type, $ccIndex) {
+    .btn-#{$type} {
+        background-color: transparent;
+        color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type});
+        border-color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type});
+    }
+    .btn-#{$type}:hover {
+        background-color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type});
+        color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type}-text);
+    }
+}
+
 .o_w_wysiwyg, .o_loading_dummy {
     #oe_snippets {
         transform: none;
         transition: none;
+
+        .o_we_cc_preview_wrapper {
+            @for $index from 1 through 5 {
+                &.o_cc#{$index} {
+                    background-color: var(--we-cp-o-cc#{$index}-bg);
+                    color: var(--we-cp-o-cc#{$index}-text);
+                    h1 {
+                        color: var(--we-cp-o-cc#{$index}-headings);
+                    }
+                    .btn-primary {
+                        background-color: var(--we-cp-o-cc#{$index}-btn-primary);
+                        color: var(--we-cp-o-cc#{$index}-btn-primary-text);
+                        border-color: var(--we-cp-o-cc#{$index}-btn-primary);
+                    }
+                    .btn-secondary {
+                        background-color: var(--we-cp-o-cc#{$index}-btn-secondary);
+                        color: var(--we-cp-o-cc#{$index}-btn-secondary-text);
+                        border-color: var(--we-cp-o-cc#{$index}-btn-secondary);
+                    }
+                }
+            }
+        }
+        &.o_we_has_btn_outline_primary {
+            .o_we_cc_preview_wrapper {
+                @for $index from 1 through 5 {
+                    &.o_cc#{$index} {
+                        @include preview-outline-button('primary', $index)
+                    }
+                }
+            }
+        }
+        &.o_we_has_btn_outline_secondary {
+            .o_we_cc_preview_wrapper {
+                @for $index from 1 through 5 {
+                    &.o_cc#{$index} {
+                        @include preview-outline-button('secondary', $index)
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -10,7 +10,7 @@ function removeDuplicates(array) {
     return [...new Set(array.map((el) => JSON.stringify(el)))].map((el) => JSON.parse(el));
 }
 
-class Request {
+export class Request {
     /**
      * @param {string} resModel
      * @param {string} method
@@ -251,7 +251,11 @@ export default class BatchEndpoint {
      */
     _notifyResults(batchResult) {
         for (const [request, result] of batchResult) {
-            this.successCallback(request, result);
+            if (result instanceof Error) {
+                this.failureCallback(request, result);
+            } else {
+                this.successCallback(request, result);
+            }
         }
     }
 

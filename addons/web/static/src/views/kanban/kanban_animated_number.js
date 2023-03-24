@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { formatInteger } from "@web/views/fields/formatters";
 
-const { Component, onWillUpdateProps, onWillUnmount, useState } = owl;
+import { Component, onWillUpdateProps, onWillUnmount, useState } from "@odoo/owl";
 
 export class KanbanAnimatedNumber extends Component {
     setup() {
@@ -14,6 +14,7 @@ export class KanbanAnimatedNumber extends Component {
             const { value: from } = this.props;
             const { value: to, duration } = nextProps;
             if (!this.constructor.enableAnimations || !duration || to <= from) {
+                browser.cancelAnimationFrame(this.handle);
                 this.state.value = to;
                 return;
             }

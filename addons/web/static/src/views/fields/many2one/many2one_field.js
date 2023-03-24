@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { standardFieldProps } from "../standard_field_props";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
+import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 class CreateConfirmationDialog extends Component {
     get title() {
@@ -61,8 +61,11 @@ export class Many2OneField extends Component {
             activeActions: this.state.activeActions,
             isToMany: false,
             onRecordSaved: async (record) => {
-                await this.props.record.load();
-                await this.props.update(m2oTupleFromData(record.data));
+                const resId = this.props.value[0];
+                const fields = ["display_name"];
+                const context = this.props.record.getFieldContext(this.props.name);
+                const records = await this.orm.read(this.relation, [resId], fields, { context });
+                await this.props.update(m2oTupleFromData(records[0]));
                 if (this.props.record.model.root.id !== this.props.record.id) {
                     this.props.record.switchMode("readonly");
                 }
@@ -110,6 +113,14 @@ export class Many2OneField extends Component {
     }
     get hasExternalButton() {
         return this.props.canOpen && !!this.props.value && !this.state.isFloating;
+    }
+    get classFromDecoration() {
+        for (const decorationName in this.props.decorations) {
+            if (this.props.decorations[decorationName]) {
+                return `text-${decorationName}`;
+            }
+        }
+        return "";
     }
     get displayName() {
         return this.props.value ? this.props.value[1].split("\n")[0] : "";
@@ -187,7 +198,7 @@ export class Many2OneField extends Component {
         }
     }
     onExternalBtnClick() {
-        if (this.props.openTarget === "current") {
+        if (this.props.openTarget === "current" && !this.env.inDialog) {
             this.openAction();
         } else {
             this.openDialog(this.resId);
@@ -232,7 +243,7 @@ export class Many2OneField extends Component {
             searchInput.value = barcode;
             searchInput.dispatchEvent(new Event("input"));
             if (this.env.isSmall) {
-                searchInput.click();
+                searchInput.dispatchEvent(new Event("barcode-search"));
             }
         }
     }
@@ -257,7 +268,7 @@ Many2OneField.props = {
     canWrite: { type: Boolean, optional: true },
     canQuickCreate: { type: Boolean, optional: true },
     canCreateEdit: { type: Boolean, optional: true },
-    createNameField: { type: String, optional: true },
+    nameCreateField: { type: String, optional: true },
     searchLimit: { type: Number, optional: true },
     relation: { type: String, optional: true },
     string: { type: String, optional: true },
@@ -270,7 +281,7 @@ Many2OneField.defaultProps = {
     canWrite: true,
     canQuickCreate: true,
     canCreateEdit: true,
-    createNameField: "name",
+    nameCreateField: "name",
     searchLimit: 7,
     string: "",
     canScanBarcode: false,
@@ -298,7 +309,7 @@ Many2OneField.extractProps = ({ attrs, field }) => {
         canCreateEdit: canCreate && !noCreateEdit,
         relation: field.relation,
         string: attrs.string || field.string,
-        createNameField: attrs.options.create_name_field,
+        nameCreateField: attrs.options.create_name_field,
         canScanBarcode: canScanBarcode,
         openTarget: attrs.open_target,
     };

@@ -14,8 +14,9 @@ import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { uuid } from "../../utils";
 
-const { Component, useState, onWillUpdateProps, useEffect, useRef } = owl;
+import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
 export class PropertyDefinition extends Component {
     setup() {
@@ -45,6 +46,8 @@ export class PropertyDefinition extends Component {
         });
 
         this._syncStateWithProps(propertyDefinition);
+
+        this._domInputIdPrefix = uuid();
 
         // update the state and fetch needed information
         onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
@@ -113,6 +116,15 @@ export class PropertyDefinition extends Component {
      */
     get propertyTagValues() {
         return (this.state.propertyDefinition.tags || []).map((tag) => tag[0]);
+    }
+
+    /**
+     * Return an unique ID to be used in the DOM.
+     *
+     * @returns {string}
+     */
+    getUniqueDomID(suffix) {
+        return `property_definition_${this._domInputIdPrefix}_${suffix}`;
     }
 
     /* --------------------------------------------------------
@@ -383,6 +395,7 @@ PropertyDefinition.props = {
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
     propertyDefinition: { optional: true },
+    hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },
     isNewlyCreated: { type: Boolean, optional: true },
     // index and number of properties, to hide the move arrows when needed

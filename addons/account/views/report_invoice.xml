@@ -88,7 +88,7 @@
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
 
-                        <table class="table table-sm o_main_table" name="invoice_line_table">
+                        <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
@@ -165,7 +165,7 @@
                     <div class="clearfix mb-4">
                         <div id="total" class="row">
                             <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                                <table class="table table-sm" style="page-break-inside: avoid;">
+                                <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
 
                                     <!--Tax totals-->
                                     <t t-set="tax_totals" t-value="o.tax_totals"/>
@@ -236,35 +236,18 @@
                     <div t-if="not is_html_empty(o.narration)" name="comment">
                         <span t-field="o.narration"/>
                     </div>
-                    <div t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">
+                    <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
-                    </div>
+                    </p>
                     <p t-if="o.invoice_incoterm_id" name="incoterm">
                         <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                     </p>
                     <div id="qrcode" t-if="o.display_qr_code and o.amount_residual > 0">
-                        <p t-if="qr_code_urls.get(o.id)">
+                        <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
+                        <p t-if="qr_code_url">
                             <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
-                            <img class="border border-dark rounded" t-att-src="qr_code_urls[o.id]"/>
+                            <img class="border border-dark rounded" t-att-src="qr_code_url"/>
                         </p>
-                        <p t-if="o.invoice_payment_term_id" name="payment_term">
-                            <span t-field="o.invoice_payment_term_id.note"/>
-                        </p>
-                        <div t-if="not is_html_empty(o.narration)" name="comment">
-                            <span t-field="o.narration"/>
-                        </div>
-                        <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">
-                            <span t-field="o.fiscal_position_id.note"/>
-                        </p>
-                        <p t-if="o.invoice_incoterm_id" name="incoterm">
-                            <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
-                        </p>
-                        <div id="qrcode" t-if="o.display_qr_code and o.amount_residual > 0">
-                            <p t-if="qr_code_urls.get(o.id)">
-                                <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
-                                <img class="border border-dark rounded" t-att-src="qr_code_urls[o.id]"/>
-                            </p>
-                        </div>
                     </div>
                 </div>
             </t>
@@ -294,11 +277,19 @@
                 <t t-call="account.tax_groups_totals"/>
             </t>
 
+            <t t-set="has_rounding" t-value="'formatted_amount_total_rounded' in tax_totals"/>
             <!--Total amount with all taxes-->
             <tr class="border-black o_total">
-                <td><strong>Total</strong></td>
+                <t t-if="has_rounding"><td>Total</td></t>
+                <t t-else=""><td><strong>Total</strong></td></t>
                 <td class="text-end">
                     <span t-esc="tax_totals['formatted_amount_total']"/>
+                </td>
+            </tr>
+            <tr t-if="has_rounding">
+                <td><strong>Total Rounded</strong></td>
+                <td class="text-end">
+                    <span t-esc="tax_totals['formatted_amount_total_rounded']"/>
                 </td>
             </tr>
         </template>

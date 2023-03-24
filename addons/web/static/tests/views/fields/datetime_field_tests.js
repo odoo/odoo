@@ -359,8 +359,45 @@ QUnit.module("Fields", (hooks) => {
                 "10/02/2019 09:00:00"
             );
             assert.strictEqual(
-                target.querySelector(".o_data_row:nth-child(1) .o_data_cell").textContent,
+                target.querySelector(".o_data_row:nth-child(2) .o_data_cell").textContent,
                 "10/02/2019 09:00:00"
+            );
+        }
+    );
+
+    QUnit.test(
+        "multi edition of DatetimeField in list view: clear date in input",
+        async function (assert) {
+            serverData.models.partner.records[1].datetime = "2017-02-08 10:00:00";
+
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: '<tree multi_edit="1"><field name="datetime"/></tree>',
+            });
+
+            const rows = target.querySelectorAll(".o_data_row");
+
+            // select two records and edit them
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
+
+            await click(rows[0], ".o_data_cell");
+
+            assert.containsOnce(target, "input.o_datepicker_input");
+            await editInput(target, ".o_datepicker_input", "");
+
+            assert.containsOnce(document.body, ".modal");
+            await click(target, ".modal .modal-footer .btn-primary");
+
+            assert.strictEqual(
+                target.querySelector(".o_data_row:first-child .o_data_cell").textContent,
+                ""
+            );
+            assert.strictEqual(
+                target.querySelector(".o_data_row:nth-child(2) .o_data_cell").textContent,
+                ""
             );
         }
     );

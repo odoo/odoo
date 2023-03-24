@@ -9,7 +9,7 @@ import { SettingsContainer } from "./settings/settings_container";
 import { SettingsApp } from "./settings/settings_app";
 import { SettingsPage } from "./settings/settings_page";
 
-const { useState } = owl;
+import { useState } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
 

@@ -42,10 +42,10 @@ export class InventoryReportListController extends ListController {
             const {print, action, other} = actionMenus;
             return Object.assign(
                 {},
-                print.filter(a => a.name !== 'Count Sheet'),
-                action.filter(a => a.name !== 'Set'),
+                print.filter(a => a.name !== this.env._t('Count Sheet')),
+                action.filter(a => a.name !== this.env._t('Set')),
                 { other: other },
-                );
+            );
         }
         return actionMenus;
     }

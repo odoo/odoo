@@ -87,6 +87,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/moment/moment.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
+            'web/static/lib/owl/odoo_module.js',
             'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/js/component_extension.js',
             'web/static/src/legacy/legacy_component.js',
@@ -208,7 +209,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/legacy/scss/domain_selector.scss',
             'web/static/src/legacy/scss/model_field_selector.scss',
-            'web/static/src/legacy/scss/progress_bar.scss',
             'web/static/src/legacy/scss/dropdown.scss',
             'web/static/src/legacy/scss/tooltip.scss',
             'web/static/src/legacy/scss/switch_company_menu.scss',
@@ -351,6 +351,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/underscore.string/lib/underscore.string.js',
             'web/static/lib/moment/moment.js',
             'web/static/lib/owl/owl.js',
+            'web/static/lib/owl/odoo_module.js',
             'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/js/component_extension.js',
             'web/static/src/legacy/legacy_component.js',

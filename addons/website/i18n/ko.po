@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Linkup <link-up@naver.com>, 2022
-# Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
+# Martin Trigaux, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_image_gallery/options.js:0
 #, python-format
 msgid " Add Images"
@@ -30,35 +31,39 @@ msgstr "이미지 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "\" 다음으로 경고 "
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "'URL'은 비워 둘 수 없습니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
-msgstr ""
+msgstr "\"URL to\"는 \"URL from\"에서 사용되지 않는 %s 매개변수를 포함할 수 없습니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "\"URL 대상\"이 유효하지 않습니다: %s"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "\"URL to\"는 \"URL from\"에 사용된 %s 매개변수를 포함해야 합니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must start with a leading slash."
@@ -73,7 +78,7 @@ msgstr "# 방문한 페이지"
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "# Visits"
-msgstr ""
+msgstr "# 방문수"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -101,18 +106,11 @@ msgid "$9.00"
 msgstr "$9.00"
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "%s (id:%s)"
-msgstr "%s (id : %s)"
-
-#. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "%s record(s) selected, are you sure you want to publish them all?"
-msgstr ""
+msgstr "%s개의 레코드를 선택했습니다. 모두 게시하시겠습니까?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -127,7 +125,7 @@ msgstr "&amp;lt;head&amp;gt;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -137,7 +135,7 @@ msgstr "' 일치하는 페이지가 없습니다."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "' did not match anything."
-msgstr ""
+msgstr "' 와 일치하는 항목이 없습니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -145,47 +143,51 @@ msgid ""
 "' did not match anything.\n"
 "                        Results are displayed for '"
 msgstr ""
+"' 와 일치하는 항목이 없습니다.\n"
+"                        다음에 대한 결과가 표시됩니다 '"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "' to link to an anchor."
-msgstr ""
+msgstr "' 앵커에 연결합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid ""
 "' to search a page.\n"
 "                    '"
 msgstr ""
+"' 페이지를 검색합니다.\n"
+"                    '"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' 은(는) 올바른 날짜가 아닙니다"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s'은(는) 올바른 일시가 아닙니다"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 #, python-format
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. 다음에 대한 결과 표시 중 '"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "(could be used in"
@@ -213,17 +215,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid ", .s_searchbar_input"
-msgstr ""
+msgstr ", .s_searchbar_input"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid ", .s_website_form"
-msgstr ""
+msgstr ", .s_website_form"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -237,16 +239,18 @@ msgid ""
 "                                                The website will still work if you reject or discard those cookies."
 msgstr ""
 ".\n"
-"                                                쿠키를 거부하거나 폐기해도 웹 사이트는 계속 작동합니다."
+"                                                쿠키 항목을 거부하거나 폐기해도 웹 사이트는 계속 동작합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid ""
 ".\n"
 "                    Changing its name will break these calls."
 msgstr ""
+".\n"
+"                    이름 변경 시 해당 호출이 중단됩니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -259,12 +263,12 @@ msgstr "...타임라인 콘텐츠를 필요에 맞게 전환합니다."
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
-msgstr ""
+msgstr "/contactus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1 km"
-msgstr ""
+msgstr "1 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -284,17 +288,17 @@ msgstr "1/4 - 3/4"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "10 m"
-msgstr ""
+msgstr "10 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 km"
-msgstr ""
+msgstr "100 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 m"
-msgstr ""
+msgstr "100 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -305,7 +309,7 @@ msgstr "100%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1000 km"
-msgstr ""
+msgstr "1000 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -315,54 +319,52 @@ msgstr "12"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "15 km"
-msgstr ""
+msgstr "15 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "2 <span class=\"visually-hidden\">(current)</span>"
-msgstr ""
+msgstr "2 <span class=\"visually-hidden\">(현재)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
-msgstr ""
+msgstr "2 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2.5 m"
-msgstr ""
+msgstr "2.5 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "20 m"
-msgstr ""
+msgstr "20 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "200 km"
-msgstr ""
+msgstr "200 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "200 m"
-msgstr ""
+msgstr "200 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2000 km"
-msgstr ""
+msgstr "2000 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "24x7 toll-free support"
-msgstr "연중 무휴 무료 지원"
+msgstr "무료로 연중무휴 지원 서비스"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "25%"
 msgstr "25%"
 
@@ -385,10 +387,10 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "30 km"
-msgstr ""
+msgstr "30 km"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/fields.xml:0
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
 #, python-format
@@ -396,7 +398,7 @@ msgid "301 Moved permanently"
 msgstr "301 영구 이동"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/fields.xml:0
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
 #, python-format
@@ -411,24 +413,24 @@ msgstr "308 다시보내기 / 다시쓰기"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "4 km"
-msgstr ""
+msgstr "4 km"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "4 steps"
-msgstr ""
+msgstr "4 단계"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "400 km"
-msgstr ""
+msgstr "400 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "400 m"
-msgstr ""
+msgstr "400 m"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
@@ -438,17 +440,17 @@ msgstr "404 찾지 못함"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "5 m"
-msgstr ""
+msgstr "5 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "50 km"
-msgstr ""
+msgstr "50 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "50 m"
-msgstr ""
+msgstr "50 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -470,10 +472,10 @@ msgstr "75%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "8 km"
-msgstr ""
+msgstr "8 km"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_progress_bar/options.js:0
 #, python-format
 msgid "80% Development"
@@ -485,56 +487,56 @@ msgid "<b>50,000+ companies</b> run Odoo to grow their businesses."
 msgstr "<b>50,000개 이상의 회사들</b>이 그들의 사업을 성장시키는데 Odoo를 사용합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Add</b> the selected image."
 msgstr "선택한 이미지 <b>추가하기</b>."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
 msgstr "홈페이지 디자인을 시작 하려면 <b>편집을 클릭</b>하세요."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click on a snippet</b> to access its options menu."
 msgstr "선택 사항 메뉴에 접근하려면 <b>스니펫을 클릭</b>하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click on a text</b> to start editing it."
 msgstr "편집을 시작하려면 <b>텍스트를 클릭</b>하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click</b> on this column to access its options."
 msgstr "선택 사항에 접근하려면 이 열을 <b>클릭</b>하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click</b> on this header to configure it."
 msgstr "이 헤더를 <b>클릭</b>하여 구성하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click</b> on this option to change the %s of the block."
 msgstr "블록의 %s를 변경하려면 이 선택 사항을 <b>클릭</b>하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid ""
@@ -543,7 +545,7 @@ msgid ""
 msgstr "이 메뉴를 통해 블록을 <b>사용자 지정</b>합니다. 이 블록의 배경색을 변경하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid ""
@@ -562,14 +564,14 @@ msgid "<b>Designed</b> for companies"
 msgstr "기업을 위한 <b>설계</b>"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Double click on an icon</b> to change it with one of your choice."
 msgstr "원하는 <b>아이콘을 두 번 클릭</b>하여 변경합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Double click on an image</b> to change it with one of your choice."
@@ -585,28 +587,28 @@ msgstr ""
 "Francisco CA 94134 <br/>United States"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Select</b> a %s."
 msgstr "%s를 <b>선택</b>하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Select</b> a Color Palette."
 msgstr "색상 팔레트를 <b>선택</b>하세요."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Slide</b> this button to change the %s padding"
 msgstr "%s 패딩을 변경하려면 이 버튼을 <b>밀어보세요</b>."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Slide</b> this button to change the column size."
@@ -616,10 +618,10 @@ msgstr "열 크기를 변경하려면 이 버튼을 <b>밀어보세요</b>."
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
+"<br/><br/>\n"
+"                    규칙 예시:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -637,6 +639,8 @@ msgid ""
 "<font style=\"font-size: 14px;\">Created in 2021, the company is young and "
 "dynamic. Discover the composition of the team and their skills.</font>"
 msgstr ""
+"<font style=\"font-size: 14px;\">2021년에 설립된 젊고 역동적인 회사입니다. 회사 내부 구성과 보유 기술에 "
+"대해 알아보십시오.</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -685,12 +689,12 @@ msgstr "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>2일전</small>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_page
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
 "<i class=\"fa fa-1x fa-fw fa-envelope "
 "me-2\"/><span>info@yourcompany.example.com</span>"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-envelope "
+"me-2\"/><span>info@yourcompany.example.com</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
@@ -698,6 +702,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>250 Executive Park Blvd, "
 "Suite 3400 • San Francisco CA 94134 • United States"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>250 Executive Park Blvd, "
+"Suite 3400 • San Francisco CA 94134 • United States"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -705,6 +711,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                        How to create my Plausible Shared Link"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                        나만의 멋진 공유 링크 만들기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -712,16 +720,18 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                        How to get my Measurement ID"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                        나만의 측정 ID 생성하기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "<i class=\"fa fa-eye ms-2 text-muted\" title=\"Go to View\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye ms-2 text-muted\" title=\"Go to View\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "<i class=\"fa fa-files-o ms-2 text-muted\" title=\"Show Arch Diff\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-files-o ms-2 text-muted\" title=\"Show Arch Diff\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -736,7 +746,7 @@ msgstr "<i class=\"fa fa-fw fa-heart\"/> 하트"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<i class=\"fa fa-fw fa-refresh me-1\"/> Replace Icon"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-refresh me-1\"/> 아이콘 바꾸기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -774,7 +784,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -782,6 +792,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
 "the default <strong>Page not found</strong> page."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> 이 줄 아래 내용을 편집하면 기본값이 적용됩니다. <strong>페이지를 찾을"
+" 수 없습니다.</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -804,22 +816,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_page
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
 "<i class=\"fa fa-map-marker fa-fw me-2\"/><span class=\"o_force_ltr\">3575 "
 "Fake Buena Vista Avenue</span>"
 msgstr ""
+"<i class=\"fa fa-map-marker fa-fw me-2\"/><span class=\"o_force_ltr\">3575 "
+"Fake Buena Vista Avenue</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_page
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
 "<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
 "555-0111</span>"
 msgstr ""
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
+"555-0111</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -827,6 +839,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "        <span>Add a language...</span>"
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"        <span>언어 추가</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -834,6 +848,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
 "                            <b>Events</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
+"                            <b>이벤트</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -841,6 +857,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
 "                            <b>About us</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
+"                            <b>회사 소개</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -848,6 +866,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
 "                            <b>Partners</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
+"                            <b>파트너</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -855,6 +875,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/>\n"
 "                            <b>Services</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/>\n"
+"                            <b>서비스</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -862,6 +884,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
 "                            <b>Help center</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
+"                            <b>헬프 센터</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -869,6 +893,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
 "                            <b>Guides</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
+"                            <b>가이드</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -876,6 +902,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/>\n"
 "                            <b>Our blog</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/>\n"
+"                            <b>블로그 방문</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -883,6 +911,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
 "                            <b>Customers</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
+"                            <b>고객</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -890,16 +920,18 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
 "                            <b>Products</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
+"                            <b>상품 소개</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> Contact us"
-msgstr ""
+msgstr "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> 문의하기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> Free returns"
-msgstr ""
+msgstr "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> 무료 반품"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -907,19 +939,21 @@ msgid ""
 "<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> Pickup"
 " in store"
 msgstr ""
+"<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> 매장 수령"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid ""
 "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> Express delivery"
-msgstr ""
+msgstr "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> 신속 배송 서비스"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
-msgstr "<i> 즉시 설정, 만족 또는 환불됨. </i>"
+msgstr "<i>즉시 설치 완료, 불만족 시 전액 환불</i>"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
@@ -931,6 +965,8 @@ msgid ""
 "<small class=\"s_social_media_title d-none\" "
 "contenteditable=\"true\"><b>Follow us</b></small>"
 msgstr ""
+"<small class=\"s_social_media_title d-none\" "
+"contenteditable=\"true\"><b>팔로우하기</b></small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
@@ -938,6 +974,8 @@ msgid ""
 "<small class=\"s_social_media_title text-muted d-none\" "
 "contenteditable=\"true\"><b>Follow us</b></small>"
 msgstr ""
+"<small class=\"s_social_media_title text-muted d-none\" "
+"contenteditable=\"true\"><b>팔로우하기</b></small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -946,10 +984,12 @@ msgid ""
 "                                        <i class=\"fa fa-info\"/>: type some of the first chars after 'google' is enough, we'll guess the rest.\n"
 "                                    </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                        <i class=\"fa fa-info\"/>: 'google' 뒤에 오는 첫 번째 문자 일부만 입력하면 나머지는 자동 입력됩니다.\n"
+"                                    </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid ""
 "<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
 "text</small>"
@@ -957,7 +997,6 @@ msgstr "<small id=\"emailHelp\" class=\"form-text text-muted\">양식 필드 도
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid ""
 "<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
 "your email with anyone else.</small>"
@@ -972,7 +1011,6 @@ msgstr "<small>/ 월</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "<small>TABS</small>"
 msgstr "<small>탭</small>"
 
@@ -1003,6 +1041,8 @@ msgid ""
 "<span class=\"carousel-control-next-icon\"/>\n"
 "                <span class=\"visually-hidden\">Next</span>"
 msgstr ""
+"<span class=\"carousel-control-next-icon\"/>\n"
+"                <span class=\"visually-hidden\">다음</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1011,6 +1051,8 @@ msgid ""
 "<span class=\"carousel-control-prev-icon\"/>\n"
 "                <span class=\"visually-hidden\">Previous</span>"
 msgstr ""
+"<span class=\"carousel-control-prev-icon\"/>\n"
+"                <span class=\"visually-hidden\">이전</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -1019,14 +1061,18 @@ msgid ""
 "                            <b><font style=\"font-size:14px;\">Discover our new products</font></b>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-block p-2\">\n"
+"                            <b><font style=\"font-size:14px;\">신제품을 확인해보세요</font></b>\n"
+"                        </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
 "<span class=\"fa fa-check-circle\"/>\n"
 "                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>메시지가 <b>성공적으로</b> 전송되었습니다</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -1034,6 +1080,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left fa-2x text-white\"/>\n"
 "                    <span class=\"visually-hidden\">Previous</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left fa-2x text-white\"/>\n"
+"                    <span class=\"visually-hidden\">이전</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -1041,21 +1089,23 @@ msgid ""
 "<span class=\"fa fa-chevron-right fa-2x text-white\"/>\n"
 "                    <span class=\"visually-hidden\">Next</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-right fa-2x text-white\"/>\n"
+"                    <span class=\"visually-hidden\">다음</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
 msgid "<span class=\"fa-2x\">×</span>"
-msgstr ""
+msgstr "<span class=\"fa-2x\">×</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
 msgid "<span class=\"list-inline-item\">|</span>"
-msgstr ""
+msgstr "<span class=\"list-inline-item\">|</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<span class=\"mx-2\">/</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">/</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1068,40 +1118,42 @@ msgid ""
 "<span class=\"o_add_language list-inline-item\" "
 "groups=\"website.group_website_restricted_editor\">|</span>"
 msgstr ""
+"<span class=\"o_add_language list-inline-item\" "
+"groups=\"website.group_website_restricted_editor\">|</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_copyright_company_name
 msgid ""
 "<span class=\"o_footer_copyright_name me-2\">Copyright &amp;copy; Company "
 "name</span>"
-msgstr ""
+msgstr "<span class=\"o_footer_copyright_name me-2\">저작권 및 회사명</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Email Marketing</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">이메일 마케팅</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Livechat</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">실시간 채팅</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Robots.txt</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Robots.txt</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Sitemap</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">사이트맵</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 msgid ""
 "<span class=\"pe-1\">We use cookies to provide you a better user experience "
 "on this website.</span>"
-msgstr ""
+msgstr "<span class=\"pe-1\">웹사이트 고객의 사용자 경험 개선을 위해 쿠키를 사용합니다..</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_badge
@@ -1110,6 +1162,9 @@ msgid ""
 "        <i class=\"fa fa-1x fa-fw fa-folder o_not-animable\"/>Category\n"
 "    </span>"
 msgstr ""
+"<span class=\"s_badge badge text-bg-secondary o_animable\" data-name=\"Badge\">\n"
+"        <i class=\"fa fa-1x fa-fw fa-folder o_not-animable\"/>카테고리\n"
+"    </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -1190,7 +1245,7 @@ msgstr "<span class=\"s_number display-4\">45</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "<span class=\"s_number display-4\">8</span>"
-msgstr ""
+msgstr "<span class=\"s_number display-4\">8</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -1199,56 +1254,55 @@ msgstr "<span class=\"s_progress_bar_text\">80% 개발</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">회사명</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">이메일 보내실 주소</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid ""
 "<span class=\"s_website_form_label_content\">Email</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid ""
 "<span class=\"s_website_form_label_content\">Name</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">이름</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr "<span class=\"s_website_form_label_content\">전화번호</span>"
+msgstr "<span class=\"s_website_form_label_content\">전화 번호</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">문의 내용</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">제목</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<span>Theme</span>"
-msgstr ""
+msgstr "<span>테마</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1261,6 +1315,15 @@ msgstr "CDN을 사용하면 웹 사이트의 내용을 어디에서나 방문자
 #: model_terms:ir.ui.view,arch_db:website.s_chart
 msgid "A Chart Title"
 msgstr "일람표 제목"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr "Google 맵에서 오류가 발생했습니다. 키 설정 관련 팝업 내용을 자세히 확인하십시오."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -1278,6 +1341,7 @@ msgstr ""
 " 사항이 포함되어 있습니다."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1316,7 +1380,7 @@ msgstr "쉼표로 구분된 필드 이름 목록"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_stores_locator
 msgid "A map and a listing of your stores"
-msgstr ""
+msgstr "지도 및 매장 목록"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
@@ -1349,7 +1413,7 @@ msgid ""
 msgstr "마지막 페이지 조회가 지난 5분 이내인 경우 방문자는 연결된 것으로 간주됩니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "API Key"
@@ -1358,7 +1422,7 @@ msgstr "API 키"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_about_us
 msgid "About Us"
-msgstr ""
+msgstr "회사 소개"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.aboutus
@@ -1389,22 +1453,21 @@ msgstr "액세스 토큰은 고유해야 합니다."
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Accessories"
-msgstr ""
+msgstr "기타"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
-msgstr "계정 및 영업 관리"
+msgstr "어카운트 및 영업 관리"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Accounts are usable across all your multiple websites"
-msgstr ""
+msgstr "여러 웹사이트 전체에서 계정을 사용할 수 있습니다"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "추가 작업"
 
@@ -1415,7 +1478,6 @@ msgstr "추가 작업"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Active"
 msgstr "활성"
 
@@ -1430,7 +1492,7 @@ msgstr ""
 "수행합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -1441,28 +1503,28 @@ msgstr "추가"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Elements"
-msgstr ""
+msgstr "요소 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Item"
-msgstr ""
+msgstr "아이템 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Add Media"
-msgstr ""
+msgstr "미디어 추가"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Add Mega Menu Item"
 msgstr "메가 메뉴 항목 추가하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Add Menu Item"
@@ -1471,7 +1533,7 @@ msgstr "메뉴 항목 추가하기"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_social_media_options
 msgid "Add New Social Network"
-msgstr ""
+msgstr "소셜 네트워크 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_add_product_widget
@@ -1481,17 +1543,17 @@ msgstr "상품 추가"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Add Row"
-msgstr ""
+msgstr "행 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Add Serie"
-msgstr ""
+msgstr "시리즈 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Slide"
-msgstr ""
+msgstr "슬라이드 추가"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -1501,10 +1563,10 @@ msgstr "탭 추가하기"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Add Year"
-msgstr ""
+msgstr "연도 추가"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
@@ -1517,7 +1579,7 @@ msgid "Add a caption to enhance the meaning of this image."
 msgstr "이 이미지의 의미를 향상시키기 위해 캡션을 추가합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_product_catalog/options.js:0
 #, python-format
 msgid "Add a description here"
@@ -1534,7 +1596,7 @@ msgid "Add a menu description."
 msgstr "메뉴 설명 추가하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #, python-format
 msgid "Add a menu item"
@@ -1551,13 +1613,14 @@ msgid "Add a new field at the end"
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Add languages"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Add new %s"
@@ -1574,7 +1637,7 @@ msgid "Add to cart"
 msgstr "장바구니에 담기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/dialog.js:0
 #, python-format
 msgid "Add to menu"
@@ -1597,8 +1660,10 @@ msgid "After"
 msgstr "이후"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Alert"
 msgstr "경고"
 
@@ -1654,7 +1719,7 @@ msgid "All Website Route"
 msgstr "모든 웹 사이트 경로"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_views_mixin.js:0
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #, python-format
@@ -1672,7 +1737,7 @@ msgid "All pages"
 msgstr "전체 페이지"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #, python-format
 msgid "All results"
@@ -1684,14 +1749,14 @@ msgid "All these icons are completely free for commercial use."
 msgstr "이 모든 아이콘은 상업적 사용으로도 완전 무료입니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Allow all cookies"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Allow the use of cookies from this website on this browser?"
@@ -1719,7 +1784,7 @@ msgid "Alows your visitors to chat with you"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Already installed"
@@ -1776,7 +1841,7 @@ msgid "An address must be specified for a map to be embedded"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "An error has occured, the form has not been sent."
@@ -1788,7 +1853,7 @@ msgid "An error occurred while rendering the template"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_analytics
@@ -1807,14 +1872,14 @@ msgid "Analytics<br/>(optional)"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Anchor copied to clipboard<br>Link: %s"
 msgstr "앵커가 클립보드에 복사되었습니다. <br>링크 : %s"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Anchor name"
@@ -1834,11 +1899,11 @@ msgid "And a great subtitle"
 msgstr "그리고 멋진 소제목"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Animate text"
-msgstr ""
+msgstr "텍스트 애니메이션"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -1872,6 +1937,7 @@ msgid "Apps"
 msgstr "앱"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/main.py:0
 #, python-format
 msgid "Apps url"
@@ -1903,11 +1969,18 @@ msgid "Archived"
 msgstr "보관됨"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "이 페이지를 삭제 하시겠습니까?"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "Are you sure you want to delete those pages ?"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -1915,7 +1988,7 @@ msgid "Arrows"
 msgstr "화살표"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/options.xml:0
 #, python-format
 msgid "As promised, we will offer 4 free tickets to our next summit."
@@ -1989,18 +2062,18 @@ msgstr "자동 리디렉션 언어"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Autosizing"
 msgstr "자동 크기 변경"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
 msgstr "웹 사이트에서 사용 가능"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
@@ -2008,7 +2081,6 @@ msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "BTS Base Colors"
 msgstr "BTS 기본 색상"
 
@@ -2018,7 +2090,7 @@ msgid "Backdrop"
 msgstr "배경"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2028,7 +2100,7 @@ msgid "Background"
 msgstr "배경"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/configurator_tour.js:0
 #: code:addons/website/static/src/js/tours/configurator_tour.js:0
 #, python-format
@@ -2036,8 +2108,10 @@ msgid "Background Shape"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Badge"
 msgstr "뱃지"
 
@@ -2074,12 +2148,12 @@ msgstr "기본 보기"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Basic sales &amp; marketing for up to 2 users"
-msgstr "최대 2명의 사용자를 위한 기본 영업 및 마케팅"
+msgstr "기본 영업 및 마케팅 지원, 최대 2명까지 사용 가능"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Beautiful snippets"
-msgstr "아름다운 스니펫"
+msgstr "멋진 스니펫"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2094,7 +2168,7 @@ msgstr "이전"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Beginner"
-msgstr "초보자"
+msgstr "기본형"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -2133,6 +2207,13 @@ msgid "Block"
 msgstr "블록"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Blockquote"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
@@ -2141,7 +2222,7 @@ msgid "Blog"
 msgstr "블로그"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Blog Post"
@@ -2168,7 +2249,7 @@ msgid "Bootstrap-based templates"
 msgstr "부트스트랩 기반 서식"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2235,17 +2316,15 @@ msgstr "박스"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Breadcrumb"
 msgstr "사이트 이동 경로"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Build my website"
-msgstr ""
+msgstr "내 웹사이트 만들기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -2253,18 +2332,18 @@ msgid "Building blocks system"
 msgstr "빌딩 블록 시스템"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Building your %s"
 msgstr "%s 만들기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "Building your website..."
-msgstr "웹사이트 만들기..."
+msgstr "웹사이트를 제작 중입니다..."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__bundle
@@ -2274,7 +2353,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Button"
 msgstr "버튼"
 
@@ -2337,7 +2415,7 @@ msgid "Can Publish"
 msgstr "게시 가능"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/dialog.js:0
 #: code:addons/website/static/src/components/dialog/page_properties.js:0
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
@@ -2353,39 +2431,39 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
 msgstr "현재 웹 사이트에서 사용중인 언어는 비활성화할 수 없습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/content/website_root.js:0
 #, python-format
 msgid "Cannot load google map."
 msgstr "구글 지도를 불러올 수 없습니다."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Card"
 msgstr "카드"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Card Body"
 msgstr "카드 본문"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Card Footer"
 msgstr "카드 꼬리말"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Card Header"
 msgstr "카드 머리말"
 
@@ -2453,7 +2531,7 @@ msgstr ""
 "                            테마의 범주를 찾아보십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid ""
@@ -2462,7 +2540,7 @@ msgid ""
 msgstr "색상표를 변경하면 모든 색상 사용자 지정이 재설정됩니다. 계속하시겠습니까?"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid ""
@@ -2474,7 +2552,10 @@ msgstr ""
 "지정이 재설정됩니다."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#, python-format
 msgid "Chart"
 msgstr "차트"
 
@@ -2489,14 +2570,14 @@ msgid "Check out now and get $20 off your first order."
 msgstr "지금 체크아웃하시고 첫 주문에서 20달러를 할인받으세요."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/content/website_root.js:0
 #, python-format
 msgid "Check your configuration."
 msgstr "설정을 확인하세요."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Check your connection and try again"
@@ -2534,11 +2615,11 @@ msgid "Children"
 msgstr "하위"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Choose"
-msgstr "선택"
+msgstr "선택하세요: "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -2549,25 +2630,25 @@ msgstr ""
 "생생한 이미지를 선택하고 그것에 대해 북돋아주는 문구를 씁니다. <br/>길어야 할 필요는 없지만 이미지를 보강할 수 있습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Choose an anchor name"
 msgstr "앵커 이름 선택"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Choose another theme"
 msgstr "앵커 테마 선택"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Choose your favorite"
-msgstr ""
+msgstr "마음에 드는 항목을 선택해보세요:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -2602,21 +2683,21 @@ msgstr ""
 "                            백엔드가 없습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Click here to go back to block tab."
 msgstr "블록 탭으로 돌아가려면 여기를 클릭하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_social_media/options.js:0
 #, python-format
 msgid "Click here to setup your social networks"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #, python-format
 msgid "Click on"
@@ -2635,14 +2716,14 @@ msgid "Click on the icon to adapt it <br/>to your purpose."
 msgstr "아이콘을 클릭하여 목적에 맞게 <br/>조정하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Click to choose more images"
 msgstr "더 많은 이미지를 선택하려면 클릭하십시오"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
@@ -2651,7 +2732,7 @@ msgid "Click to select"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -2746,6 +2827,7 @@ msgid "Companies"
 msgstr "회사"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website__company_id
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2756,12 +2838,11 @@ msgstr "회사"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
-msgstr "모든 규모의 팀을 위한 완벽한 CRM"
+msgstr "어떤 규모의 회사에도 적합한 완벽한 CRM"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Components"
 msgstr "구성 요소"
 
@@ -2796,14 +2877,14 @@ msgid "Configurator Done"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/dialog.js:0
 #, python-format
 msgid "Confirmation"
 msgstr "확정"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Connect Plausible"
@@ -2812,7 +2893,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Connect with us"
-msgstr "우리와 연결"
+msgstr "고객지원팀 연락처"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
@@ -2838,6 +2919,7 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.header_call_to_action
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -2846,6 +2928,7 @@ msgid "Contact Us"
 msgstr "문의하기"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Contact Visitor"
@@ -2860,17 +2943,17 @@ msgstr "방문자에게 문의"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 #: model_terms:ir.ui.view,arch_db:website.s_cover
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid "Contact us"
 msgstr "문의하기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid ""
 "Contact us about anything related to our company or services.<br/>\n"
 "                                    We'll do our best to get back to you as soon as possible."
 msgstr ""
+"저희 회사나 저희의 서비스에 대해 궁금한 점이 있으시면 문의 주시기 바랍니다.<br/>\n"
+"                                   최대한 빨리 답변드릴 수 있도록 하겠습니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -2886,6 +2969,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Contacts"
 msgstr "연락처"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Contain"
+msgstr "포함"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -2912,14 +3002,14 @@ msgid "Content Width"
 msgstr "내용 폭"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/editor/editor.js:0
 #, python-format
 msgid "Content saved."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "Content to translate"
@@ -2931,7 +3021,7 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -2975,14 +3065,14 @@ msgid "Copyright"
 msgstr "저작권"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
 msgid "Countdown ends in"
 msgstr "카운트다운 종료"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/options.xml:0
 #, python-format
 msgid "Countdown is over - Firework"
@@ -3002,15 +3092,18 @@ msgid "Country Flag"
 msgstr "국기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Course"
 msgstr "강좌"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.record_cover
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+#, python-format
 msgid "Cover"
 msgstr "표지"
 
@@ -3030,7 +3123,7 @@ msgid "Cover Properties Website Mixin"
 msgstr "표지 속성 웹사이트 혼합"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/dialog.js:0
 #: code:addons/website/static/src/js/utils.js:0
 #: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
@@ -3049,7 +3142,7 @@ msgid "Create a"
 msgstr "만들기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Create a Google Project and Get a Key"
@@ -3061,7 +3154,7 @@ msgid "Create a link to target this section"
 msgstr "이 섹션을 대상으로 하는 링크 만들기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Create new"
@@ -3124,7 +3217,7 @@ msgid "Curved arrow"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #, python-format
@@ -3147,7 +3240,7 @@ msgid "Custom Key"
 msgstr "사용자 정의 키"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Custom Url"
@@ -3159,7 +3252,7 @@ msgid "Custom end of <body> code"
 msgstr "사용자 정의 <body>코드 끝"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom end of body code"
@@ -3171,7 +3264,7 @@ msgid "Custom field"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom head code"
@@ -3211,7 +3304,7 @@ msgid "D - H - M - S"
 msgstr "D - H - M - S"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
@@ -3228,39 +3321,37 @@ msgid "Dashed"
 msgstr "현황판에 게시"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/services/website_service.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Data"
 msgstr "데이터"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Data Border"
 msgstr "데이터 테두리"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Data Color"
 msgstr "데이터 색상"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Dataset Border"
 msgstr "데이터셋 테두리"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Dataset Color"
@@ -3278,7 +3369,7 @@ msgid "Date &amp; Time"
 msgstr "날짜 &amp; 시간"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
 msgid "Days"
@@ -3351,7 +3442,7 @@ msgid "Delete Blocks"
 msgstr "블록 삭제"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
@@ -3359,7 +3450,7 @@ msgid "Delete Menu Item"
 msgstr "메뉴 항목 삭제"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.js:0
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
@@ -3375,14 +3466,14 @@ msgstr ""
 "위의 이미지를 삭제하거나 메시지를 삽입한 사진으로 바꾸꿉니다. <em>둥근 모서리</em> 스타일을 변경하려면 그림을 클릭합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Delete this font"
 msgstr "해당 글꼴 삭제하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid ""
@@ -3402,7 +3493,7 @@ msgid "Departments"
 msgstr "부서"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.js:0
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
@@ -3411,14 +3502,14 @@ msgid "Dependencies"
 msgstr "의존성"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Describe your field here."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__description
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -3460,7 +3551,7 @@ msgid "Designed to drive conversion"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Desktop"
@@ -3482,11 +3573,11 @@ msgid "Details"
 msgstr "세부 정보"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Detect"
-msgstr ""
+msgstr "자동 감지: "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -3502,15 +3593,12 @@ msgstr ""
 #. module: website
 #: model:ir.actions.server,name:website.website_disable_unused_snippets_assets_ir_actions_server
 #: model:ir.cron,cron_name:website.website_disable_unused_snippets_assets
-#: model:ir.cron,name:website.website_disable_unused_snippets_assets
 msgid "Disable unused snippets assets"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Disabled"
 msgstr "비활성화"
 
@@ -3525,7 +3613,7 @@ msgid "Disappears"
 msgstr "사라지기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
@@ -3632,18 +3720,21 @@ msgid "Display a customizable cookies bar on your website."
 msgstr "웹 사이트에 사용자 지정 가능한 쿠키 막대를 표시합니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the badges"
 msgstr "배지 표시"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the biography"
 msgstr "이력 표시"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the website description"
@@ -3668,14 +3759,14 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Do you want to edit the company data ?"
 msgstr "회사 정보를 수정하시겠습니까?"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Do you want to install the \"%s\" App?"
@@ -3697,14 +3788,14 @@ msgid "Domain"
 msgstr "도메인"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "Don't forget to update all links referring to this page."
-msgstr "이 페이지를 참조하는 모든 링크를 업데이트하는 것을 잊지 마십시오."
+msgid "Don't forget to update all links referring to it."
+msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Don't worry, you can switch later."
@@ -3746,7 +3837,7 @@ msgid "Doughnut"
 msgstr "도넛"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid ""
@@ -3754,7 +3845,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Drag to the right to get a submenu"
@@ -3768,12 +3859,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Dropdown"
 msgstr "드롭다운"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
@@ -3791,7 +3881,7 @@ msgid "Duplicate"
 msgstr "복제"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "Duplicate Page"
@@ -3837,14 +3927,14 @@ msgid ""
 msgstr "깨끗한 HTML 구조와 부트스트랩 CSS 덕분에 자신만의 오두 템플릿을 쉽게 디자인할 수 있습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Easily track your visitor with Plausible"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/systray_items/edit_website.js:0
@@ -3855,15 +3945,23 @@ msgid "Edit"
 msgstr "편집하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website/static/src/services/website_custom_menus.js:0
+#, python-format
+msgid "Edit %s"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
+#: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #, python-format
 msgid "Edit Menu"
 msgstr "메뉴 편집하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
@@ -3881,7 +3979,7 @@ msgid "Edit Styles"
 msgstr "스타일 편집하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_embed_code/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code_options
 #, python-format
@@ -3924,6 +4022,7 @@ msgid "Effect"
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Either action_server_id or filter_id must be provided."
@@ -3949,23 +4048,23 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Email address"
 msgstr "이메일 주소"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
-msgstr "지원 이메일"
+msgstr "이메일 지원"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Empty field name in %r"
 msgstr "%r의 필드명이 비어 있습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable billing on your Google Project"
@@ -3977,14 +4076,21 @@ msgid "Enable the form builder feature for this model."
 msgstr "이 모델에 대해 양식 작성기 기능을 사용하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr "Google 계정에서 정확한 Google 지도 API를 사용하도록 설정하세요."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid ""
@@ -3997,7 +4103,7 @@ msgid "Enter code that will be added into every page of your site"
 msgstr "사이트의 모든 페이지에 추가할 코드를 입력하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid ""
@@ -4006,7 +4112,6 @@ msgstr "사이트의 모든 페이지에 추가할 코드를 입력<head>하십�
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
 msgstr "이메일 입력"
 
@@ -4016,7 +4121,7 @@ msgid "Equal Widths"
 msgstr "폭 맞추기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form.xml:0
 #: code:addons/website/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4030,7 +4135,7 @@ msgid "Essential oils"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Event"
@@ -4069,7 +4174,7 @@ msgstr "예시"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Expert"
-msgstr "전문가"
+msgstr "엑스퍼트용"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_privacy_policy
@@ -4094,6 +4199,7 @@ msgid "Extension View"
 msgstr "확장 화면"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -4146,7 +4252,7 @@ msgid "Fade Out"
 msgstr "서서히 사라지기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Failed to install \"%s\""
@@ -4189,7 +4295,7 @@ msgid "Feature Url"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
@@ -4422,7 +4528,6 @@ msgstr "바닥글 표시"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Form"
 msgstr "양식"
 
@@ -4434,7 +4539,7 @@ msgid ""
 msgstr "양식 작업 꼬리표. 예 : crm.lead는 '이메일 보내기'이고 project.issue는 '문제 만들기'일 수 있습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #: model:website.configurator.feature,name:website.feature_module_forum
 #, python-format
@@ -4563,12 +4668,12 @@ msgstr "납품 받기"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Get access to all modules"
-msgstr "모든 모듈에 접근하기"
+msgstr "전체 모듈 사용 가능"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Get access to all modules and features"
-msgstr "모든 모듈 및 기능에 접근하기"
+msgstr "전체 모듈 및 기능 사용 가능"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -4592,7 +4697,7 @@ msgid "Glasses"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
@@ -4605,7 +4710,7 @@ msgid "Go to Page Manager"
 msgstr "페이지 관리자로 이동하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
@@ -4613,7 +4718,7 @@ msgid "Go to Website"
 msgstr "웹사이트로 이동하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Go to the Theme tab"
@@ -4635,7 +4740,7 @@ msgstr ""
 " 소통합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Good job! It's time to <b>Save</b> your work."
@@ -4653,7 +4758,7 @@ msgid "Google Analytics Key"
 msgstr "Google 웹 로그 분석 키"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Google Font address"
@@ -4665,7 +4770,7 @@ msgid "Google Map"
 msgstr "구글 지도"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Google Map API Key"
@@ -4748,14 +4853,14 @@ msgid "Groups"
 msgstr "그룹"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "H1"
 msgstr "H1"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "H2"
@@ -4763,13 +4868,11 @@ msgstr "H2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "H4 Card title"
 msgstr "H4 카드 제목"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "H5 Card subtitle"
 msgstr "H5 카드 소제목"
 
@@ -4809,7 +4912,7 @@ msgid "Hamburger menu"
 msgstr "햄버거 메뉴"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/options.xml:0
 #, python-format
 msgid "Happy Odoo Anniversary!"
@@ -4822,7 +4925,6 @@ msgstr "소셜 기본 이미지 있음"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Header"
 msgstr "머리글"
 
@@ -4856,37 +4958,31 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 1"
 msgstr "제목 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 2"
 msgstr "제목 2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 3"
 msgstr "제목 3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 4"
 msgstr "제목 4"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 5"
 msgstr "제목 5"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 6"
 msgstr "제목 6"
 
@@ -4896,8 +4992,11 @@ msgid "Headline"
 msgstr "제목"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Height"
 msgstr "높이"
 
@@ -4912,7 +5011,7 @@ msgid "Help center"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "Here are the visuals used to help you translate efficiently:"
@@ -4957,7 +5056,7 @@ msgid "High"
 msgstr "높음"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid ""
@@ -4966,7 +5065,7 @@ msgid ""
 msgstr "힌트 : 웹 사이트에서 Google지도를 사용하는 방법 (문의 페이지 및 스니펫)"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
@@ -4976,7 +5075,7 @@ msgid ""
 msgstr "힌트 : 기존 페이지를 검색하려면 '/'를 입력하고 앵커에 연결하려면 '#'을 입력하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
@@ -4987,14 +5086,12 @@ msgstr "힌트 : 기존 페이지를 검색하려면 '/'를 입력하고 앵커�
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
-#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "홈"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Home <span class=\"visually-hidden\">(current)</span>"
 msgstr ""
 
@@ -5004,7 +5101,7 @@ msgid "Home audio"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #, python-format
@@ -5012,7 +5109,8 @@ msgid "Home page of the current website"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5044,7 +5142,7 @@ msgid "Horizontal"
 msgstr "수평"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
 msgid "Hours"
@@ -5066,7 +5164,7 @@ msgid "Hybrid"
 msgstr "하이브리드"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
@@ -5074,18 +5172,18 @@ msgid "I agree"
 msgstr "동의합니다"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "I am sure about this."
 msgstr "나는 이것에 대해 확신합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "I want"
-msgstr ""
+msgstr "제작 목적은 "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__id
@@ -5107,6 +5205,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -5179,7 +5278,7 @@ msgstr ""
 "         "
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #, python-format
 msgid ""
@@ -5188,7 +5287,7 @@ msgid ""
 msgstr "현재 편집 내용을 취소하면 저장되지 않은 모든 변경 사항이 손실됩니다. 취소하여 편집 모드로 돌아갈 수 있습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_image_gallery/options.js:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -5203,7 +5302,7 @@ msgid "Image Cover"
 msgstr "이미지 커버"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #, python-format
 msgid "Image Gallery Dialog"
@@ -5256,14 +5355,14 @@ msgid "In Place"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "In the meantime we invite you to visit our"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid ""
@@ -5349,6 +5448,76 @@ msgid "Inputs"
 msgstr "입력"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a badge snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a blockquote snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a card snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a chart snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a progress bar snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a rating snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a share snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert a text Highlight snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert an alert snippet."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Insert an horizontal separator sippet."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid ""
 "Insert text styles like headers, bold, italic, lists, and fonts with\n"
@@ -5373,7 +5542,7 @@ msgid "Instagram Account"
 msgstr "인스타그램 계정"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Install"
@@ -5405,7 +5574,7 @@ msgid "Installed theme"
 msgstr "설치된 테마"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Installing \"%s\""
@@ -5428,7 +5597,7 @@ msgid "Intuitive system"
 msgstr "직관적인 시스템"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Invalid API Key. The following error was returned by Google:"
@@ -5580,7 +5749,7 @@ msgstr ""
 "                시스템을 사용하는 것이 좋습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "It looks like your file is being called by"
@@ -5593,13 +5762,11 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Item 1"
 msgstr "항목 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Item 2"
 msgstr "항목 2"
 
@@ -5614,7 +5781,7 @@ msgid "Jeans"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Job Position"
@@ -5627,7 +5794,7 @@ msgid "Join us and make your company a better place."
 msgstr "우리와 함께 귀하의 회사를 더 발전시키기."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
@@ -5650,14 +5817,14 @@ msgid "Keyboards"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Keyword"
 msgstr "핵심어"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Keywords"
@@ -5667,7 +5834,6 @@ msgstr "핵심어"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Label"
 msgstr "라벨"
 
@@ -5715,7 +5881,7 @@ msgstr "웹 사이트에서 사용 가능한 언어"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Laptops"
-msgstr ""
+msgstr "랩탑"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5724,7 +5890,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "크게"
 
@@ -5774,7 +5939,7 @@ msgid "Last Modified on"
 msgstr "최근 수정일"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Last Month"
@@ -5828,14 +5993,14 @@ msgid "Last Visited Page"
 msgstr "최근에 방문한 페이지"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Last Week"
 msgstr "지난 주"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Last Year"
@@ -5847,6 +6012,7 @@ msgid "Last action"
 msgstr "최근 작업"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/main.py:0
 #, python-format
 msgid "Last modified pages"
@@ -5861,7 +6027,7 @@ msgstr "최근 페이지 조회 일자"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 msgid "Latests news and case studies"
-msgstr ""
+msgstr "최신 뉴스 및 사례 연구"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -5906,12 +6072,12 @@ msgstr "왼쪽 메뉴"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Legal"
-msgstr "합법"
+msgstr "법적 안내 사항"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Legal Notice"
-msgstr ""
+msgstr "법적 고지"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5929,31 +6095,29 @@ msgid "Let your customers log in to see their documents"
 msgstr "고객이 로그인하여 문서를 확인할 수 있습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Let's do it"
-msgstr "그렇게 해 봅시다!"
+msgstr "시작합니다!"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Let's go!"
-msgstr ""
+msgstr "시작합니다!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Library"
 msgstr "라이브러리"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 msgid "Light"
-msgstr ""
+msgstr "가볍게"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
@@ -5963,7 +6127,7 @@ msgstr "한도"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
-msgstr "제한된 맞춤 설정"
+msgstr "일부 커스터마이징 기능 제공"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5979,13 +6143,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Link"
 msgstr "링크"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Link Anchor"
@@ -5998,13 +6160,11 @@ msgstr "링크 스타일"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Link button"
 msgstr "링크 버튼"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Link text"
 msgstr "링크 문자"
 
@@ -6049,14 +6209,14 @@ msgid "Live Preview"
 msgstr "실시간 미리보기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Livechat Widget"
 msgstr "실시간 채팅 위젯"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
@@ -6067,7 +6227,7 @@ msgid "Loading..."
 msgstr "불러오는 중..."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #, python-format
@@ -6112,7 +6272,7 @@ msgid "Main Menu"
 msgstr "주 메뉴"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.xml:0
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
@@ -6122,6 +6282,45 @@ msgstr "주요 활동"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Main page of your website served to visitors"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr "청구 기능이 활성화되어 있는지 확인하세요"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+"오류가 계속 표시되는 경우에는 반드시 기다려주시기 바랍니다. API가 활성화되면 즉시 사용이 가능하지만 Google에서는 잠시동안 오류 "
+"정보가 계속됩니다."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr "설정 항목이 올바르게 구성되었는지 확인하십시오."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
 msgstr ""
 
 #. module: website
@@ -6179,7 +6378,7 @@ msgid "Medium"
 msgstr "중간"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Mega Menu"
@@ -6203,10 +6402,8 @@ msgid "Men"
 msgstr "남성"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
-#, python-format
 msgid "Menu"
 msgstr "메뉴"
 
@@ -6237,11 +6434,14 @@ msgid "Menu using a copy of me"
 msgstr "내 사본을 이용한 메뉴"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#, python-format
 msgid "Menus"
 msgstr "메뉴"
+
+#. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "협력사 병합 마법사"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -6249,6 +6449,7 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "Metadata"
@@ -6280,20 +6481,27 @@ msgid "Min Axis"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Minimalist"
 msgstr "미니멀리스트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
 msgid "Minutes"
 msgstr "분"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 #, python-format
@@ -6306,14 +6514,14 @@ msgid "Mobile Preview"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile menu"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/mobile_preview.xml:0
 #: code:addons/website/static/src/systray_items/mobile_preview.xml:0
 #, python-format
@@ -6406,7 +6614,7 @@ msgid "Mosaic"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Most searched topics related to your keyword, ordered by importance"
@@ -6486,8 +6694,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_page
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid "My Company"
 msgstr "내 회사"
 
@@ -6506,7 +6712,7 @@ msgid "MyCompany"
 msgstr "내 회사"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__name
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__name
@@ -6526,7 +6732,7 @@ msgstr "이름"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Name (A-Z)"
-msgstr ""
+msgstr "제품명 순 (A-Z)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
@@ -6540,7 +6746,6 @@ msgstr "좁게"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Navbar"
 msgstr "검색바"
 
@@ -6567,14 +6772,14 @@ msgid "Neutralized"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #, python-format
 msgid "New"
 msgstr "신규"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/dialog.js:0
 #, python-format
 msgid "New Page"
@@ -6612,7 +6817,7 @@ msgid "Newsletter Popup"
 msgstr "뉴스레터 팝업"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
@@ -6625,7 +6830,6 @@ msgstr "뉴스레터 팝업"
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "다음"
@@ -6636,7 +6840,7 @@ msgid "No Slide Effect"
 msgstr "슬라이드 효과 없음"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 #, python-format
 msgid "No Url"
@@ -6655,10 +6859,10 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "No customization"
-msgstr "맞춤 설정 없음"
+msgstr "커스터마이징 불가"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
@@ -6676,14 +6880,14 @@ msgid "No partner linked for this visitor"
 msgstr "이 방문자와 연결된 파트너가 없습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "No result found, broaden your search."
-msgstr ""
+msgstr "검색 결과가 없습니다. 검색 범위를 넓혀서 다시 시도하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 #, python-format
@@ -6691,7 +6895,7 @@ msgid "No results found for '"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #, python-format
 msgid "No results found. Please try another search."
@@ -6700,7 +6904,7 @@ msgstr "검색 결과가 없습니다. 다른 검색을 시도하십시오."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "No support"
-msgstr "지원 없음"
+msgstr "지원 서비스 미제공"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -6778,7 +6982,7 @@ msgid "Number of languages"
 msgstr "언어 수"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "OR"
@@ -6788,17 +6992,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Odoo Information"
 msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#, python-format
-msgid "Odoo Logo"
-msgstr "Odoo 로고"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6841,7 +7034,7 @@ msgid "Offset (X, Y)"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/dialog.js:0
 #: code:addons/website/static/src/components/dialog/page_properties.js:0
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
@@ -6851,7 +7044,7 @@ msgid "Ok"
 msgstr "확인"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Ok, never show me this again"
@@ -6900,6 +7093,7 @@ msgid ""
 msgstr "사용자가 팝업을 닫으면 해당 기간 동안 다시 표시되지 않습니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_configurator_feature.py:0
 #, python-format
 msgid ""
@@ -6913,7 +7107,7 @@ msgid "Online"
 msgstr "온라인"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Only allow essential cookies"
@@ -6940,7 +7134,7 @@ msgstr ""
 " 결과는 이 보기의 실제 아치인 것처럼 사용됩니다.\n"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
@@ -6958,7 +7152,7 @@ msgid "Open Website Configurator"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #: model:ir.ui.menu,name:website.menu_optimize_seo
 #, python-format
@@ -6966,7 +7160,7 @@ msgid "Optimize SEO"
 msgstr "SEO 최적화"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
@@ -6974,7 +7168,7 @@ msgid "Option 1"
 msgstr "선택 사항 1"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
@@ -6982,7 +7176,7 @@ msgid "Option 2"
 msgstr "선택 사항 2"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
@@ -7002,9 +7196,10 @@ msgstr "주문자"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Order now"
-msgstr "지금 주문"
+msgstr "지금 결제하기"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "Other Information:"
@@ -7032,7 +7227,7 @@ msgid "Our team"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Our team will message you back as soon as possible."
@@ -7046,7 +7241,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Outline"
 msgstr "외곽선"
 
@@ -7076,9 +7270,7 @@ msgid "Paddings"
 msgstr "패딩"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
@@ -7091,19 +7283,7 @@ msgid "Page"
 msgstr "페이지"
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> contains a link to this page"
-msgstr "<b>%s</b> 페이지에는 이 페이지에 대한 링크가 포함되어 있습니다."
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> is calling this file"
-msgstr "<b>%s</b> 페이지는 이 파일을 호출합니다."
-
-#. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
@@ -7126,7 +7306,7 @@ msgid "Page Name"
 msgstr "페이지 명"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.js:0
 #, python-format
 msgid "Page Properties"
@@ -7181,9 +7361,7 @@ msgid "Page using a copy of me"
 msgstr "내 사본을 사용하는 페이지"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -7197,7 +7375,6 @@ msgstr "페이지"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Pagination"
 msgstr "쪽수 매기기"
 
@@ -7208,7 +7385,6 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid ""
 "Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
 "elit. <i>Integer posuere erat a ante</i>."
@@ -7218,7 +7394,6 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid ""
 "Paragraph with <strong>bold</strong>, <span class=\"text-"
 "muted\">muted</span> and <em>italic</em> texts"
@@ -7228,7 +7403,6 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Paragraph."
 msgstr "절."
 
@@ -7270,7 +7444,7 @@ msgstr "협력사"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Password"
-msgstr "암호"
+msgstr "비밀번호"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__path
@@ -7293,7 +7467,7 @@ msgid "Phones"
 msgstr "전화"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: model:ir.actions.act_window,name:website.theme_install_kanban_action
 #, python-format
@@ -7307,7 +7481,6 @@ msgstr "파이"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Pill"
 msgstr "필"
 
@@ -7320,6 +7493,13 @@ msgstr "필"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Placeholder"
 msgstr "자리 표시자"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr "API 배치"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -7352,7 +7532,7 @@ msgid "Plausible auth Key"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Please fill in the form correctly."
@@ -7362,7 +7542,7 @@ msgstr "양식을 정확하게 작성하십시오."
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid "Points of sale"
-msgstr ""
+msgstr "POS"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7375,9 +7555,12 @@ msgid "Portfolio"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Position"
 msgstr "영역"
 
@@ -7403,26 +7586,25 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Preset"
 msgstr "사전 설정"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy.js:0
 #, python-format
 msgid "Press %s for next %s"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Preview"
 msgstr "미리보기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
@@ -7435,7 +7617,6 @@ msgstr "미리보기"
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "이전"
@@ -7478,6 +7659,7 @@ msgid "Privacy"
 msgstr "비공개"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: model:website.configurator.feature,name:website.feature_page_privacy_policy
 #: model_terms:ir.ui.view,arch_db:website.privacy_policy
@@ -7486,7 +7668,7 @@ msgid "Privacy Policy"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_add_product_widget
 #, python-format
@@ -7499,12 +7681,12 @@ msgstr "품목"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Products"
-msgstr "품목"
+msgstr "상품 소개"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Professional"
-msgstr "전문용"
+msgstr "프로용"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -7515,6 +7697,13 @@ msgstr "전문가용 테마"
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Profile"
 msgstr "프로필"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Progress Bar"
+msgstr "진행 표시 줄"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -7558,7 +7747,7 @@ msgid "Public User"
 msgstr "일반 사용자"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.js:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 #, python-format
@@ -7566,11 +7755,11 @@ msgid "Publish"
 msgstr "발행"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "Publish Website Content"
-msgstr ""
+msgstr "웹사이트 콘텐츠 게시"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_career
@@ -7583,7 +7772,7 @@ msgid "Publish on-site and online events"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.js:0
 #: code:addons/website/static/src/js/backend/button.js:0
 #: code:addons/website/static/src/systray_items/publish.js:0
@@ -7641,19 +7830,26 @@ msgid "Radio Buttons"
 msgstr "단일 선택 버튼"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Rating"
+msgstr "평가"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Re-order"
 msgstr "재주문"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Ready to build the"
-msgstr ""
+msgstr "제작할 준비가 되셨나요?"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
@@ -7671,7 +7867,7 @@ msgid "Redirect"
 msgstr "리디렉션"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Redirect to URL in a new tab"
@@ -7714,7 +7910,7 @@ msgid "Related Page"
 msgstr "관련 페이지"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Related keywords"
@@ -7728,7 +7924,7 @@ msgid ""
 msgstr "선호하는 언어 또는 지역과 같은 웹 사이트의 기본 설정 모양 또는 동작에 대한 정보를 기억하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__remove
 #, python-format
@@ -7736,14 +7932,14 @@ msgid "Remove"
 msgstr "제거"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Remove Row"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Remove Serie"
@@ -7800,7 +7996,7 @@ msgid "Resources"
 msgstr "자원"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Respecting your privacy is our priority."
@@ -7870,6 +8066,7 @@ msgid "RoadMap"
 msgstr "로드맵"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/res_config_settings.py:0
 #: model:ir.model.fields,field_description:website.field_website__robots_txt
 #, python-format
@@ -7945,6 +8142,7 @@ msgid "Same as desktop"
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sample %s"
@@ -7967,7 +8165,7 @@ msgid "Saturation"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
@@ -7980,14 +8178,14 @@ msgid "Save"
 msgstr "저장"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save & Reload"
 msgstr "저장 및 다시 불러오기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save & copy"
@@ -8044,7 +8242,7 @@ msgid "Scroll down button"
 msgstr "아래로 스크롤 버튼"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Scroll down to next section"
@@ -8054,7 +8252,6 @@ msgstr "다음 섹션으로 스크롤"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "검색"
 
@@ -8071,7 +8268,7 @@ msgstr "리디렉션 검색"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "Search Results"
-msgstr ""
+msgstr "검색 결과"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -8137,7 +8334,7 @@ msgid "Secondary Style"
 msgstr "2차 스타일"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
 msgid "Seconds"
@@ -8149,7 +8346,7 @@ msgid "Section Subtitle"
 msgstr "영역 소제목"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Select an image for social share"
@@ -8166,7 +8363,7 @@ msgid "Select and delete blocks to remove features."
 msgstr "기능을 제거하려면 블록을 선택하고 삭제하십시오."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Select one font on"
@@ -8180,7 +8377,7 @@ msgstr "선택"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_shop
 msgid "Sell more with an eCommerce"
-msgstr ""
+msgstr "이커머스를 활용하여 매출을 증대시킵니다"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -8200,7 +8397,7 @@ msgid "Seo name"
 msgstr "Seo 이름"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Separate email addresses with a comma."
@@ -8208,9 +8405,15 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Separated link"
 msgstr "분리된 링크"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#, python-format
+msgid "Separator"
+msgstr "구분자"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
@@ -8224,11 +8427,11 @@ msgid "Sequence"
 msgstr "순서"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Serve font from Google servers"
-msgstr ""
+msgstr "Google 서버에서 글꼴 제공"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -8292,7 +8495,10 @@ msgid "Shake"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
+#, python-format
 msgid "Share"
 msgstr "공유"
 
@@ -8389,7 +8595,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
-msgstr ""
+msgstr "사이트맵 보기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8420,7 +8626,7 @@ msgstr "로그인함"
 #: model:ir.ui.menu,name:website.menu_site
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Site"
-msgstr ""
+msgstr "사이트"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8442,7 +8648,7 @@ msgid "Size"
 msgstr "사이즈"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Skip and start from scratch"
@@ -8506,7 +8712,6 @@ msgstr "슬로건"
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "작게"
 
@@ -8517,7 +8722,6 @@ msgstr "작은 머리글"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid ""
 "Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
 "<i>Integer posuere erat a ante</i>."
@@ -8541,7 +8745,7 @@ msgid "Social Networks"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Social Preview"
@@ -8554,12 +8758,11 @@ msgstr "고체"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Something else here"
 msgstr "다른 것"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Something went wrong."
@@ -8593,7 +8796,7 @@ msgstr "특정 사용자 계정"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "Specify a search term."
-msgstr ""
+msgstr "검색어를 입력하세요"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_default_field_id
@@ -8649,7 +8852,7 @@ msgid "Start Button"
 msgstr "시작 버튼"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Start Now"
@@ -8748,7 +8951,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
-#: model_terms:website.page,arch_db:website.contactus_page
 msgid "Submit"
 msgstr "제출"
 
@@ -8758,7 +8960,7 @@ msgid "Submit sitemap to Google"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form.xml:0
 #: code:addons/website/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -8770,7 +8972,7 @@ msgstr "성공"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_success_stories
 msgid "Success Stories"
-msgstr ""
+msgstr "성공 스토리"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -8783,6 +8985,7 @@ msgid "Surrounded"
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
@@ -8794,7 +8997,7 @@ msgid "Switch Theme"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "System Fonts"
@@ -8806,14 +9009,14 @@ msgid "T-shirts"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "TIP: Once loaded, follow the"
-msgstr ""
+msgstr "사용팁: 완료 후에는 다음의"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/translate_website.xml:0
 #, python-format
 msgid "TRANSLATE"
@@ -8866,38 +9069,16 @@ msgid "Tell what's the value for the <br/>customer for this feature."
 msgstr "이 기능에 대한 <br/>고객의 가치를 알려줍니다."
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Template"
 msgstr "템플릿"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "<b>%s (id : %s)</b> 서식은 이 페이지의 링크를 포함하고 있습니다."
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "<b>%s (id : %s)</b> 서식은 이 파일을 호출합니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "서식 대체"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Templates"
-msgstr "템플릿(서식)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -8936,7 +9117,10 @@ msgid "Text Color"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+#, python-format
 msgid "Text Highlight"
 msgstr ""
 
@@ -8957,12 +9141,11 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Thank You For Your Feedback"
@@ -8970,12 +9153,11 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid "Thank You!"
 msgstr "감사합니다!"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "The chosen name already exists"
@@ -8987,7 +9169,7 @@ msgid "The company this website belongs to"
 msgstr "이 웹 사이트가 속한 회사"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid ""
@@ -8996,7 +9178,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9005,7 +9187,7 @@ msgid ""
 msgstr "설명은 사용자가 지정하지 않는 한 페이지 내용을 기준으로 검색 엔진에서 생성됩니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9014,13 +9196,14 @@ msgid ""
 msgstr "설명은 사용자가 지정하지 않는 한 페이지 내용을 기준으로 소셜 미디어에서 생성됩니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
 msgstr "양식이 성공적으로 전송되었습니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "The form's specified model does not exist"
@@ -9037,26 +9220,28 @@ msgid "The full URL to access the document through the website."
 msgstr "웹사이트를 통해 문서에 접근 하는 전체 URL입니다."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
 msgstr "웹사이트를 통해 서버 작업에 접근하는 전체 URL입니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "The homepage URL should be relative and start with '/'."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "The installation of an App is already in progress."
 msgstr "앱 설치가 이미 진행 중입니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "The language of the keyword and related keywords."
@@ -9068,6 +9253,7 @@ msgid "The limit is the maximum number of records retrieved"
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "The limit must be between 1 and 16."
@@ -9090,7 +9276,7 @@ msgid "The team"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "The title will take a default value unless you specify one."
@@ -9108,7 +9294,7 @@ msgid "The website will still work if you reject or discard those cookies."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.model.fields,field_description:website.field_website__theme_id
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9128,16 +9314,15 @@ msgid "Theme Attachments"
 msgstr "테마 첨부파일"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Theme Colors"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Theme Options"
@@ -9168,13 +9353,14 @@ msgid "There are currently no pages for this website."
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "There are no contact and/or no email linked to this visitor."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "There is no field available for this option."
@@ -9220,6 +9406,13 @@ msgid "Third Menu"
 msgstr "세 번째 메뉴"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "This URL is contained in the '%s' of the following '%s'"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
@@ -9259,15 +9452,14 @@ msgstr ""
 "                                                                         화면이 깨진 경우 재설정(소프트)하는 데 유용합니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
-msgstr ""
+msgstr "Google 서버에서 이 글꼴을 방문자에게 호스팅 및 제공합니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "This is a \""
 msgstr "이것은 \""
 
@@ -9279,12 +9471,14 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "This message has been posted on your website!"
 msgstr "이 메시지가 귀하의 웹 사이트에 게시되었습니다!"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "This operator is not supported"
@@ -9304,13 +9498,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "This page is in the menu <b>%s</b>"
-msgstr "<b>%s</b> 메뉴에 이 페이지가 있습니다"
-
-#. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9335,7 +9523,7 @@ msgid "Time since last page view. E.g.: 2 minutes ago"
 msgstr "마지막 페이지 조회 이후의 시간입니다. 예 : 2분 전"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "Time's up! You can now visit"
@@ -9383,7 +9571,7 @@ msgid "Tip: Use royalty-free photos"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Title"
@@ -9430,14 +9618,12 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle"
 msgstr "토글"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle navigation"
 msgstr "탐색 전환"
 
@@ -9461,6 +9647,7 @@ msgid "Top"
 msgstr "상단"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "Top Menu for Website %s"
@@ -9508,14 +9695,14 @@ msgid "Transition"
 msgstr "화면 전환"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Translate Attribute"
 msgstr "특성 변환"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "Translated content"
@@ -9557,7 +9744,7 @@ msgid "Twitter Scroller"
 msgstr "트위터 스크롤러"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/fields.xml:0
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__type
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -9570,11 +9757,11 @@ msgid "Type"
 msgstr "유형"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Type '"
-msgstr ""
+msgstr "유형 '"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -9640,11 +9827,11 @@ msgid "UTM Source"
 msgstr "UTM 소스"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Unalterable unique identifier"
-msgstr ""
+msgstr "변경이 불가능한 고유 식별자"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9657,6 +9844,8 @@ msgid ""
 "Understand how visitors engage with our website, via Google Analytics.\n"
 "                                                Learn more about"
 msgstr ""
+"Google Analytics를 통해, 웹사이트로 방문자가 유입되는 방식을 검토합니다\n"
+"                                                자세히 알아보기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -9666,17 +9855,17 @@ msgstr "무제한 CRM 기능 및 지원"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited customization"
-msgstr "무제한 맞춤 설정"
+msgstr "무제한 커스터마이징 지원"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "Unpublish"
 msgstr "게시 취소"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.js:0
 #: code:addons/website/static/src/js/backend/button.js:0
 #: code:addons/website/static/src/systray_items/publish.js:0
@@ -9696,14 +9885,14 @@ msgid "Update theme"
 msgstr "테마 업데이트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Upload"
-msgstr "올리기"
+msgstr "업로드"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Uploaded file is too large."
@@ -9727,7 +9916,7 @@ msgid "Url of static flag image"
 msgstr "정적 플래그 이미지의 URL"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Url or Email"
@@ -9739,11 +9928,11 @@ msgid "Urls & Pages"
 msgstr "URL과 페이지"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
-msgstr ""
+msgstr "Google 지도를 웹사이트에서 사용합니다 (문의 페이지, 스니펫 등)."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
@@ -9816,35 +10005,35 @@ msgid "Used in FormBuilder Registry"
 msgstr "FormBuilder 레지스트리에서 사용"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page content"
 msgstr "페이지 내용에 사용"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page description"
 msgstr "페이지 설명에 사용"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page first level heading"
 msgstr "페이지 1 단계 제목에 사용"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page second level heading"
 msgstr "페이지 2 단계 제목에 사용"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page title"
@@ -9867,12 +10056,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Useful Links"
-msgstr ""
+msgstr "유용한 링크"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Useful options"
-msgstr ""
+msgstr "유용한 옵션"
 
 #. module: website
 #: model:ir.model,name:website.model_res_users
@@ -9886,14 +10075,13 @@ msgstr "사용자"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Utilities &amp; Typography"
 msgstr "유틸리티 및 타이포그래피"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Value"
-msgstr "가치"
+msgstr "값"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10016,7 +10204,7 @@ msgid "Visit Date"
 msgstr "방문일"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/options.xml:0
 #, python-format
 msgid "Visit our Facebook page to know if you are one of the lucky winners."
@@ -10106,6 +10294,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.\n"
 "                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance."
 msgstr ""
+"저희 회사는 모든 사람의 삶을 개선시킬 수 있는 혁신적인 제품을 만드는 것을 목표로 열정적인 사람들이 모인 팀입니다.  고객님이 비즈니스 중에 겪는 문제를 해결할 수 있는 훌륭한 제품을 만듭니다. \n"
+"                            <br/><br/>저희 제품은 최고의 성과를 목표로 하는 중소기업을 위해 만들어졌습니다. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
@@ -10141,7 +10331,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "We found these ones:"
@@ -10165,16 +10355,18 @@ msgid "We offer tailor-made products according to your needs and your budget."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid ""
 "We use cookies to provide improved experience on this website. You can learn"
 " more about our cookies and how we use them in our"
 msgstr ""
+"이 웹사이트에서는 고객 경험을 개선하기 위해서 쿠키를 사용합니다. 쿠키에 대한 자세한 내용과 쿠키 사용 방법은 다음에서 확인할 수 "
+"있습니다"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid ""
@@ -10183,16 +10375,15 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "빠른시간내에  연락 드리겠습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "We'll set you up and running in"
-msgstr ""
+msgstr "설정과 실행에 필요한 과정은 이것 뿐입니다 "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -10200,8 +10391,18 @@ msgid "Web Visitors"
 msgstr "웹사이트 방문자"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
@@ -10279,7 +10480,7 @@ msgid "Website Info"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_logo
 #: model:ir.model.fields,field_description:website.field_website__logo
@@ -10323,6 +10524,7 @@ msgid "Website Pages"
 msgstr "웹사이트 페이지"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10344,7 +10546,7 @@ msgid "Website Searchable Mixin"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 #, python-format
@@ -10377,6 +10579,7 @@ msgid "Website URL"
 msgstr "웹 사이트 URL"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -10389,6 +10592,7 @@ msgid "Website Visitor"
 msgstr "웹사이트 방문자"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Website Visitor #%s"
@@ -10397,7 +10601,6 @@ msgstr "웹사이트 방문자 #%s"
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
 #: model:ir.cron,cron_name:website.website_visitor_cron
-#: model:ir.cron,name:website.website_visitor_cron
 msgid "Website Visitor : clean inactive visitors"
 msgstr ""
 
@@ -10482,7 +10685,7 @@ msgid "Websites to translate"
 msgstr "웹사이트 번역"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #, python-format
 msgid "Welcome to your"
@@ -10510,13 +10713,13 @@ msgid "Women"
 msgstr "여성"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid ""
 "Would you like to save before being redirected? Unsaved changes will be "
 "discarded."
-msgstr ""
+msgstr "페이지 이동 전에 저장하시겠습니까? 저장하지 않은 변경 사항은 삭제됩니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote
@@ -10529,7 +10732,7 @@ msgstr "고객 중 한 명이 여기에 견적을 작성합니다. 따옴표는 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Write one or two paragraphs describing your product or services."
-msgstr ""
+msgstr "제품이나 서비스에 대한 설명을 한두 개의 단락으로 작성하십시오."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
@@ -10537,7 +10740,7 @@ msgstr ""
 msgid ""
 "Write one or two paragraphs describing your product or services. To be "
 "successful your content needs to be useful to your readers."
-msgstr ""
+msgstr "제품이나 서비스에 대한 설명을 한두 개의 단락으로 작성하십시오. 방문자에게 유용한 콘텐츠일수록 성공 확률이 높아집니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -10546,7 +10749,8 @@ msgid ""
 "feature.<br/> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
-"제품, 서비스 또는 특정 기능을 설명하는 하나 또는 두 개의 단락을 작성하십시오. <br/>성공하려면 컨텐츠가 독자에게 유용해야 합니다."
+"제품이나 서비스 또는 특정 기능에 대한 설명을 한두 개의 단락으로 작성하십시오. <br/> 방문자에게 유용한 콘텐츠일수록 성공 확률이 "
+"높아집니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -10560,7 +10764,7 @@ msgid "Year"
 msgstr "년"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "You are about to enter the translation mode."
@@ -10584,6 +10788,7 @@ msgid "You can edit, duplicate..."
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/res_users.py:0
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
 #, python-format
@@ -10591,47 +10796,57 @@ msgid "You can not have two users with the same login!"
 msgstr "동일한 로그인으로 두 명의 사용자를 가질 수 없습니다!"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "You can only use template prefixed by dynamic_filter_template_ "
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate a model field."
 msgstr "모델 필드를 복제할 수 없습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate the submit button of the form."
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove a field that is required by the model itself."
 msgstr "모델 자체에 필요한 필드는 제거할 수 없습니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove the submit button of the form"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
 msgid "You do not have the rights to publish/unpublish"
 msgstr "게시/게시취소 권한이 없습니다"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid ""
@@ -10640,6 +10855,7 @@ msgid ""
 msgstr "검색 결과에서 이 페이지를 숨겼습니다. 검색 엔진에 의해 색인이 생성되지 않습니다."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/res_config_settings.py:0
 #, python-format
 msgid "You haven't defined your domain"
@@ -10651,6 +10867,7 @@ msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "You must keep at least one website."
@@ -10672,11 +10889,11 @@ msgid "You will get results from blog posts, products, etc"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "You'll be able to create your pages later on."
-msgstr ""
+msgstr "나중에 페이지를 생성할 수도 있습니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
@@ -10686,14 +10903,14 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid "Your description looks too long."
 msgstr "설명이 너무 깁니다."
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid "Your description looks too short."
@@ -10707,7 +10924,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/editor/editor.js:0
 #, python-format
 msgid "Your modifications were saved to apply this option."
@@ -10762,67 +10979,67 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "a blog"
-msgstr ""
+msgstr "블로그"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "a business website"
-msgstr ""
+msgstr "비즈니스 웹사이트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "a new image"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "a pre-made Palette"
-msgstr ""
+msgstr "색상 팔레트 모음"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "an elearning platform"
-msgstr ""
+msgstr "온라인 학습 플랫폼"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "an event website"
-msgstr ""
+msgstr "행사용 웹사이트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "an online store"
-msgstr ""
+msgstr "온라인 스토어"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "and"
 msgstr "그리고"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "and copy paste the address of the font page here."
-msgstr ""
+msgstr "또한 여기에 글꼴 페이지 주소를 복사하여 붙여 넣으십시오."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10832,41 +11049,35 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "breadcrumb"
 msgstr "사이트 이동 경로"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "btn-outline-primary"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "btn-outline-secondary"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "btn-primary"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "btn-secondary"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "business"
-msgstr ""
+msgstr "경영을 위한 것입니다"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10909,11 +11120,11 @@ msgid "days"
 msgstr "일"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "develop the brand"
-msgstr ""
+msgstr "브랜드 개발"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -10934,7 +11145,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce"
-msgstr "전자 상거래"
+msgstr "이커머스"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_elearning
@@ -10942,6 +11153,7 @@ msgid "eLearning"
 msgstr "온라인 학습 관리"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "email"
@@ -10953,21 +11165,21 @@ msgid "evolution, growth"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "fonts.google.com"
 msgstr "fonts.google.com"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "for my"
-msgstr ""
+msgstr "이며 저의"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "found(s)"
@@ -10984,11 +11196,11 @@ msgid "free website"
 msgstr "무료 웹사이트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "from Logo"
-msgstr ""
+msgstr "로고 업로드하기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11001,11 +11213,11 @@ msgid "gallery, carousel"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "get leads"
-msgstr ""
+msgstr "잠재고객 확보"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11029,11 +11241,11 @@ msgid "hero, jumbotron"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "https://fonts.google.com/specimen/Roboto"
-msgstr ""
+msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11060,7 +11272,7 @@ msgid "image, media, illustration"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #, python-format
 msgid "in the top right corner to start designing."
@@ -11080,14 +11292,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 msgid "info@yourcompany.example.com"
-msgstr ""
+msgstr "info@yourcompany.example.com"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "inform customers"
-msgstr ""
+msgstr "고객 안내"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -11101,7 +11313,6 @@ msgstr "ir.ui.view"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "link"
 msgstr "링크"
 
@@ -11116,13 +11327,19 @@ msgid "menu, pricing"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "o-color-"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
@@ -11134,14 +11351,14 @@ msgid "organization, structure"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "perfect website?"
-msgstr ""
+msgstr "완벽한 웹사이트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 #, python-format
@@ -11150,16 +11367,15 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "placeholder"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "pointer to build the perfect page in 7 steps."
-msgstr ""
+msgstr "포인터를 따라가시면 완벽한 웹사이트를 7단계만에 제작하실 수 있습니다. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -11182,18 +11398,18 @@ msgid "rows"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "schedule appointments"
-msgstr ""
+msgstr "일정 예약하기"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "sell more"
-msgstr ""
+msgstr "판매 증진"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -11217,7 +11433,6 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "text link"
 msgstr ""
 
@@ -11227,7 +11442,7 @@ msgid "theme.ir.ui.view"
 msgstr "theme.ir.ui.view"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "this page"
@@ -11239,7 +11454,7 @@ msgid "valuation, rank"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 #, python-format
@@ -11247,11 +11462,11 @@ msgid "website"
 msgstr "웹 사이트"
 
 #. module: website
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "with the main objective to"
-msgstr ""
+msgstr "주요 목적은 다음을 위한 것입니다 "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500

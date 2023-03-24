@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { Field } from "@web/views/fields/field";
 import { useAutofocus } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ListConfirmationDialog extends Component {
     setup() {

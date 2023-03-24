@@ -12,6 +12,7 @@ export const assetsWatchdogService = {
         let bundleNotifTimerID = null;
 
         bus_service.addEventListener('notification', onNotification.bind(this));
+        bus_service.start();
 
         /**
          * Displays one notification on user's screen when assets have changed

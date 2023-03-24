@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
-import { getFixture, patchWithCleanup } from "../../helpers/utils";
+import { getFixture, patchTimeZone, patchWithCleanup } from "../../helpers/utils";
 import { clickDate, mountComponent, selectDateRange, makeEnv, makeFakeModel } from "./helpers";
 
 let target;
@@ -135,5 +135,20 @@ QUnit.module("CalendarView - YearRenderer", ({ beforeEach }) => {
         });
 
         await selectDateRange(target, "2021-07-02", "2021-07-05");
+    });
+
+    QUnit.test("display correct column header for days, independent of the timezone", async (assert) => {
+        // Regression test: when the system tz is somewhere in a negative GMT (in our example Alaska)
+        // the day headers of a months were incorrectly set. (S S M T W T F) instead of (S M T W T F S)
+        // if the first day of the week is Sunday.
+        patchTimeZone(-540); // UTC-9 = Alaska
+
+        await start({});
+
+        const dayHeaders = target
+            .querySelector(".fc-month-container")
+            .querySelectorAll(".fc-day-header");
+
+        assert.deepEqual([...dayHeaders].map((el) => el.textContent), ["S", "M", "T", "W", "T", "F", "S"]);
     });
 });

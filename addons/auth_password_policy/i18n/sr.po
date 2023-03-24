@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_password_policy
+# 	* auth_password_policy
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Martin Trigaux, 2022
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,64 +23,76 @@ msgstr ""
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Podešavanje konfiguracije"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr ""
+msgstr "Minimalna dužina lozinke"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
-
-#. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
-#, python-format
-msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+"Minimalan broj karaktera koje lozinka mora da sadrži, postavite na 0 da "
+"onemogućite."
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#: code:addons/auth_password_policy/static/src/password_field.js:0
+#, python-format
+msgid "Password"
+msgstr "Lozinka"
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
+#, python-format
+msgid "Passwords must have at least %d characters, got %d."
+msgstr "Lozinka mora imati najmanje %d karaktera, a ima %d."
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid ""
-"Required: %s.\n"
+"Required: %s\n"
 "\n"
-"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Obavezno: %s\n"
+"\n"
+"Savet: da povećate jačinu lozinke, produžite je, koristite više karaktera i koristite karaktere koji nisu slova."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
-msgid "Users"
-msgstr "Korisnici"
+msgid "User"
+msgstr "Korisnik"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d character classes"
-msgstr ""
+msgid "at least %s character classes"
+msgstr "najmanje %s klasa karaktera"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d characters"
-msgstr ""
+msgid "at least %s characters"
+msgstr "najmanje %s karaktera"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d words"
-msgstr ""
+msgid "at least %s words"
+msgstr "najmanje %s reči"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid "no requirements"
-msgstr ""
+msgstr "nema zahteva"

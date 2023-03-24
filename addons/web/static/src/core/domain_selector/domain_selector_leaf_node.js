@@ -4,8 +4,9 @@ import { useModelField } from "@web/core/model_field_selector/model_field_hook";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { registry } from "@web/core/registry";
 import { DomainSelectorControlPanel } from "./domain_selector_control_panel";
+import { DomainSelectorDefaultField } from "./fields/domain_selector_default_field";
 
-const { Component, onWillStart, onWillUpdateProps, useRef } = owl;
+import { Component, onWillStart, onWillUpdateProps, useRef } from "@odoo/owl";
 
 export class DomainSelectorLeafNode extends Component {
     setup() {
@@ -45,32 +46,44 @@ export class DomainSelectorLeafNode extends Component {
         );
     }
 
+    findOperator(operatorList, opToFind) {
+        return operatorList.find((o) =>
+            o.matches({
+                field: this.fieldInfo,
+                value: this.props.node.operands[1],
+                operator: opToFind,
+            })
+        );
+    }
+
+    getOperators(field) {
+        const operators = field.getOperators();
+        if (this.findOperator(operators, this.props.node.operator)) {
+            return operators;
+        }
+        return operators.concat(
+            this.findOperator(
+                registry.category("domain_selector/operator").getAll(),
+                this.props.node.operator
+            )
+        );
+    }
+
     getFieldComponent(type) {
-        return registry.category("domain_selector/fields").get(type, null);
+        return registry.category("domain_selector/fields").get(type, DomainSelectorDefaultField);
     }
     getOperatorInfo(operator) {
-        const op = this.getFieldComponent(this.fieldInfo.type)
-            .getOperators()
-            .find((op) =>
-                op.matches({
-                    field: this.fieldInfo,
-                    operator,
-                    value: this.props.node.operands[1],
-                })
-            );
+        const op = this.findOperator(
+            this.getFieldComponent(this.fieldInfo.type).getOperators(),
+            operator
+        );
         if (op) {
             return op;
         }
-        return registry
-            .category("domain_selector/operator")
-            .getAll()
-            .find((op) =>
-                op.matches({
-                    field: this.fieldInfo,
-                    operator: this.props.node.operator,
-                    value: this.props.node.operands[1],
-                })
-            );
+        return this.findOperator(
+            registry.category("domain_selector/operator").getAll(),
+            this.props.node.operator
+        );
     }
 
     async onFieldChange(fieldName) {

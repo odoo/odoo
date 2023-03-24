@@ -65,6 +65,7 @@
                         <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign" type="object" string="Check Availability"/>
                     </header>
+                    <field name="company_id" invisible="1"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
@@ -299,7 +300,7 @@
                                         domain="[('product_id','=',product_id)]"
                                     />
                                     <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
-                                            attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                            attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
                                             width="0.1"

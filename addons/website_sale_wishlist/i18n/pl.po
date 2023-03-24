@@ -3,24 +3,26 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
-# Tomasz Leppich <t.leppich@gmail.com>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
-# Bartłomiej Maliński <bartlomiej.malinski@gmail.com>, 2019
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
-# Maksym <ms@myodoo.pl>, 2019
+# Bartłomiej Maliński <bartlomiej.malinski@gmail.com>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Martin Trigaux, 2022
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
+# Piotr Strębski <strebski@gmail.com>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +31,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+"<i class=\"fa fa-fw fa-heart\"/>\n"
+"            Wishlist"
 msgstr ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Ulubione"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>Add to wishlist"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -46,13 +53,6 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Usuń</small>"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
-msgid ""
-"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
-"Add to wishlist"
-msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -75,9 +75,9 @@ msgid "Add to Wishlist"
 msgstr "Dodaj do ulubionych"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatyczne sprzątanie"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
+msgstr "Dodaj do listy życzeń"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -85,9 +85,14 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Contact Us"
+msgstr "Skontaktuj się z nami"
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
@@ -107,7 +112,7 @@ msgstr "Nazwa wyświetlana"
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "Zduplikowany produkt na liście życzeń tego partnera."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
@@ -142,7 +147,7 @@ msgstr "Właściciel"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__price
 msgid "Price"
-msgstr "Kwota"
+msgstr "Cena"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price
@@ -160,15 +165,15 @@ msgid "Pricelist when added"
 msgstr "Cennik po dodaniu"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_product_product
+#: model:ir.model,name:website_sale_wishlist.model_product_template
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "Produkt"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_product_template
-msgid "Product Template"
-msgstr "Szablon produktu"
+#: model:ir.model,name:website_sale_wishlist.model_product_product
+msgid "Product Variant"
+msgstr "Wariant produktu"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
@@ -186,9 +191,14 @@ msgid "Shop Wishlist"
 msgstr "Ulubione produkty"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr "Wyświetl pustą listę życzeń"
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
-msgid "Users"
-msgstr "Użytkownicy"
+msgid "User"
+msgstr "Użytkownik"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
@@ -198,5 +208,7 @@ msgstr "Strona WWW"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Wishlist"
 msgstr "Ulubione produkty"

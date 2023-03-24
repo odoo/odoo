@@ -307,7 +307,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
         &.active {
             & > * , &:hover, &:focus {
-                color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active})
+                color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
 
                 &:before {
                     top: 0;
@@ -398,9 +398,9 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 body:not(.editor_has_snippets) {
     .oe-toolbar {
-        // Bootstrap sets .modal z-index at 1050. Ensure toolbar is visible in
+        // Bootstrap sets .modal z-index at 1055. Ensure toolbar is visible in
         // modals. Only apply this to the toolbar if it's not in a snippets menu.
-        z-index: 1051;
+        z-index: 1056;
     }
 }
 @media only screen and (max-width: 767px) {
@@ -501,11 +501,7 @@ img.o_we_selected_image {
 .fa.o_we_selected_image::before {
     @extend %o-we-selected-image;
 }
-// Override default image selection color from portal. It prevents your from
-// seeing the images' quality clearly in the wysiwyg.
-img::selection {
-    background: transparent;
-}
+
 .o_we_media_author {
     font-size: 11px;
     @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
@@ -522,6 +518,23 @@ img::selection {
         height: initial !important;
         top: initial !important;
         left: initial !important;
+    }
+
+    .oe-toolbar.oe-floating {
+        box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        overflow-y: visible;
+
+        .dropdown-menu {
+            max-height: 200px;
+            overflow: auto;
+
+            &.colorpicker-menu {
+                bottom: auto;
+            }
+        }
     }
 }
 
@@ -592,6 +605,7 @@ img::selection {
         margin-top: 0.5rem;
         display: flex;
         flex-wrap: wrap;
+        bottom: 1rem;
 
         input[type=radio] {
             display: none;
@@ -653,13 +667,21 @@ img::selection {
     // buttons in the popover
     user-select: none;
 
+    // As the popover is displayed both in the frontend and the backend,
+    // the font styles need to be uniformized.
+    font-size: 12px;
+    font-weight: 400 !important;
+    .fw-bold {
+        font-weight: 500 !important;
+    }
+
     .o_we_preview_favicon > img {
         max-height: 16px;
         max-width: 16px;
     }
 
     .o_we_url_link {
-        word-break: break-all;
+        width: 100px;
     }
 
     .o_we_full_url {

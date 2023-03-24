@@ -314,3 +314,18 @@ class O2MChangesChildrenLines(models.Model):
     parent_id = fields.Many2one('o2m_changes_children')
     v = fields.Integer()
     vv = fields.Integer()
+
+class ResConfigTest(models.Model):
+    _inherit = 'res.config.settings'
+
+    _name = 'res.config.test'
+    _description = 'Config test'
+
+    param1 = fields.Integer(
+        string='Test parameter 1',
+        config_parameter='resConfigTest.parameter1',
+        default=1000)
+
+    param2 = fields.Many2one(
+        'res.config',
+        config_parameter="resConfigTest.parameter2")

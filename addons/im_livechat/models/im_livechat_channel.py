@@ -26,11 +26,17 @@ class ImLivechatChannel(models.Model):
     def _default_user_ids(self):
         return [(6, 0, [self._uid])]
 
+    def _default_button_text(self):
+        return _('Have a Question? Chat with us.')
+
+    def _default_default_message(self):
+        return _('How may I help you?')
+
     # attribute fields
     name = fields.Char('Channel Name', required=True)
-    button_text = fields.Char('Text of the Button', default=_('Have a Question? Chat with us.'),
+    button_text = fields.Char('Text of the Button', default=_default_button_text,
         help="Default text displayed on the Livechat Support Button")
-    default_message = fields.Char('Welcome Message', default='How may I help you?',
+    default_message = fields.Char('Welcome Message', default=_default_default_message,
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.")
     input_placeholder = fields.Char('Chat Input Placeholder', help='Text that prompts the user to initiate the chat.')
     header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
@@ -161,14 +167,15 @@ class ImLivechatChannel(models.Model):
             'name': name,
         }
 
-    def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None):
-        """ Return a mail.channel given a livechat channel. It creates one with a connected operator or with Odoobot as
+    def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, persisted=True):
+        """ Return a livechat session. If the session is persisted, creates a mail.channel record with a connected operator or with Odoobot as
             an operator if a chatbot has been configured, or return false otherwise
-            :param anonymous_name : the name of the anonymous person of the channel
+            :param anonymous_name : the name of the anonymous person of the session
             :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
             :param chatbot_script : chatbot script if there is one configured
             :param user_id : the id of the logged in visitor, if any
-            :param country_code : the country of the anonymous person of the channel
+            :param country_code : the country of the anonymous person of the session
+            :param persisted: whether or not the session should be persisted
             :type anonymous_name : str
             :return : channel header
             :rtype : dict
@@ -192,13 +199,23 @@ class ImLivechatChannel(models.Model):
         if not user_operator and not chatbot_script:
             # no one available
             return False
-
-        # create the session, and add the link with the given channel
         mail_channel_vals = self._get_livechat_mail_channel_vals(anonymous_name, user_operator, chatbot_script, user_id=user_id, country_id=country_id)
-        mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
-        if user_operator:
-            mail_channel._broadcast([user_operator.partner_id.id])
-        return mail_channel.sudo().channel_info()[0]
+        if persisted:
+            # create the session, and add the link with the given channel
+            mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
+            if user_operator:
+                mail_channel._broadcast([user_operator.partner_id.id])
+            return mail_channel.sudo().channel_info()[0]
+        else:
+            operator_partner_id = user_operator.partner_id if user_operator else chatbot_script.operator_partner_id
+            display_name = operator_partner_id.user_livechat_username or operator_partner_id.display_name
+            return {
+                'name': mail_channel_vals['name'],
+                'chatbot_current_step_id': mail_channel_vals['chatbot_current_step_id'],
+                'state': 'open',
+                'operator_pid': (operator_partner_id.id, display_name.replace(',', '')),
+                'chatbot_script_id': chatbot_script.id if chatbot_script else None
+            }
 
     def _get_random_operator(self):
         """ Return a random operator from the available users of the channel that have the lowest number of active livechats.

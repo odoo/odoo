@@ -7,7 +7,7 @@ var Registries = require('point_of_sale.Registries');
 const PosL10nSAOrder = (Order) => class PosL10nSAOrder extends Order {
     export_for_printing() {
         var result = super.export_for_printing(...arguments);
-        if (this.pos.company.country.code === 'SA') {
+        if (this.pos.company.country && this.pos.company.country.code === 'SA') {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter()

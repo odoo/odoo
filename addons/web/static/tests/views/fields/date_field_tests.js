@@ -1,19 +1,23 @@
 /** @odoo-module **/
 
-import { strftimeToLuxonFormat } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickCreate,
+    clickDiscard,
+    clickSave,
+    editInput,
     getFixture,
-    patchWithCleanup,
+    patchDate,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
     triggerEvents,
-    clickSave,
-    clickCreate,
+    triggerScroll,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { strftimeToLuxonFormat } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -341,7 +345,7 @@ QUnit.module("Fields", (hooks) => {
             "datepicker should be opened"
         );
 
-        await triggerEvent(target, null, "scroll");
+        await triggerScroll(target, { top: 50 });
         assert.containsNone(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -515,6 +519,43 @@ QUnit.module("Fields", (hooks) => {
             "the selected date should be displayed after saving"
         );
     });
+
+    QUnit.test(
+        "multi edition of DateField in list view: clear date in input",
+        async function (assert) {
+            serverData.models.partner.records[1].date = "2017-02-03";
+
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: '<tree multi_edit="1"><field name="date"/></tree>',
+            });
+
+            const rows = target.querySelectorAll(".o_data_row");
+
+            // select two records and edit them
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
+
+            await click(rows[0], ".o_data_cell");
+
+            assert.containsOnce(target, "input.o_datepicker_input");
+            await editInput(target, ".o_datepicker_input", "");
+
+            assert.containsOnce(document.body, ".modal");
+            await click(target, ".modal .modal-footer .btn-primary");
+
+            assert.strictEqual(
+                target.querySelector(".o_data_row:first-child .o_data_cell").textContent,
+                ""
+            );
+            assert.strictEqual(
+                target.querySelector(".o_data_row:nth-child(2) .o_data_cell").textContent,
+                ""
+            );
+        }
+    );
 
     QUnit.test("DateField remove value", async function (assert) {
         await makeView({
@@ -701,5 +742,36 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='date'] input").value,
             `08/01/${year}`
         );
+    });
+
+    QUnit.test("DateField: allow to use compute dates (+5d for instance)", async function (assert) {
+        patchDate(2021, 1, 15, 10, 0, 0); // current date : 15 Feb 2021 10:00:00
+        serverData.models.partner.fields.date.default = "2019-09-15";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="date"></field></form>',
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "09/15/2019"); // default date
+
+        // Calculate a new date from current date + 5 days
+        await editInput(target, ".o_field_widget[name=date] input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+
+        // Discard and do it again
+        await clickDiscard(target);
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "09/15/2019"); // default date
+        await editInput(target, ".o_field_widget[name=date] input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+
+        // Save and do it again
+        await clickSave(target);
+        // new computed date (current date + 5 days) is saved
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+        await editInput(target, ".o_field_widget[name=date] input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
     });
 });

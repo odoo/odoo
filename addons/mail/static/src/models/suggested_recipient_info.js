@@ -33,6 +33,12 @@ registerModel({
             identifying: true,
         }),
         /**
+         * Determines whether this suggested recipient has been checked on UI.
+         * A suggested recipient info is checked when current user manually set
+         * checkbox to "checked" value.
+         */
+        isChecked: attr(),
+        /**
          * Determines whether `this` will be added to recipients when posting a
          * new message on `this.thread`.
          */
@@ -41,7 +47,7 @@ registerModel({
              * Prevents selecting a recipient that does not have a partner.
              */
             compute() {
-                return this.partner ? this.isSelected : false;
+                return this.partner ? this.isChecked : false;
             },
             default: true,
         }),

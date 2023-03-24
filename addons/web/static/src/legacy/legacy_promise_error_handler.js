@@ -18,7 +18,7 @@ import { registry } from "@web/core/registry";
  * @returns {boolean}
  */
 function legacyRejectPromiseHandler(env, error, originalError) {
-    if (error.name === "UncaughtPromiseError") {
+    if (error.name.startsWith("UncaughtPromiseError")) {
         const isLegitError = originalError && originalError instanceof Error;
         const isLegacyRPC = originalError && originalError.legacy;
         if (!isLegitError && !isLegacyRPC) {

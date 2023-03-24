@@ -8,11 +8,11 @@ import { Record, RelationalModel } from "@web/views/basic_relational_model";
 export class EmployeeProfileRecord extends Record {
     async save() {
         const dirtyFields = this.dirtyFields.map((f) => f.name);
-        const res = await super.save(...arguments);
-        if (dirtyFields.includes("lang")) {
+        const isSaved = await super.save(...arguments);
+        if (isSaved && dirtyFields.includes("lang")) {
             this.model.actionService.doAction("reload_context");
         }
-        return res;
+        return isSaved;
     }
 }
 

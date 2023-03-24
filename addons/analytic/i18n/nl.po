@@ -3,16 +3,17 @@
 # 	* analytic
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,11 +22,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "(no accounts)"
-msgstr "(geen kostenplaatsen)"
+msgstr "(geen rekeningen)"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -40,7 +41,7 @@ msgstr "<span class=\"o_stat_text\">Bruto marge</span>"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
 msgid "Accounts"
-msgstr "Kostenplaatsen"
+msgstr "Rekeningen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -53,7 +54,7 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Add a line"
@@ -73,7 +74,7 @@ msgstr "Administratief"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr "Alle kostenplaatsen tellen mee"
+msgstr "Alle kostenplaats tellen mee"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -82,7 +83,7 @@ msgid "Amount"
 msgstr "Bedrag"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
@@ -122,21 +123,15 @@ msgstr "Aantal kostenplaatsen"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "Analytic Distribution Model"
-msgstr "Kostenplaatsenmodel"
+msgstr "Analytisch distributiemodel"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Kostenplaatsenmodellen"
+msgstr "Kostenplaatsdistributiemodellen"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_stored_char
-#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr "Kostenplaatsdistributie Opgeslagen Char"
-
-#. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Analytic Distribution Template"
@@ -145,7 +140,7 @@ msgstr "Sjabloon voor kostenplaatsdistributie"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr "Kostenplaatsitem"
+msgstr "Kostenplaatsboeking"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -153,7 +148,7 @@ msgstr "Kostenplaatsitem"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Items"
-msgstr "Kostenplaatsenboekingen"
+msgstr "Kostenplaatsboeking"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -163,23 +158,23 @@ msgstr "Kostenplaatsregel"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr "Kostenplaatsregels"
+msgstr "Kostenplaatsregel"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr "Kostenplaatsmix"
+msgstr "Analytisch mixin"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Plan"
-msgstr "Kostenplaatsplan"
+msgstr "Analytisch plan"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Toepassingen van kostenplaatsplan"
+msgstr "Toepassingen van kostenplaatsplannen"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -190,17 +185,25 @@ msgid "Analytic Plans"
 msgstr "Kostenplaatsplannen"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
+msgid "Analytic Precision"
+msgstr "Analytische nauwkeurigheid"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Analytic distribution to apply"
 msgstr "Toe te passen kostenplaatsdistributie"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Accounts"
 msgstr "Kostenplaatsen"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Plans"
@@ -263,7 +266,7 @@ msgstr "Categorie"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "Kostenplaatsenschema"
+msgstr "Analytisch grootboekschema"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
@@ -278,7 +281,7 @@ msgstr "Onderliggende"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr "Klik om een nieuw kostenplaatsplan toe te voegen."
+msgstr "Klik om een nieuw analytisch plan toe te voegen."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -376,7 +379,7 @@ msgstr "Datum"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr "Deactiveer de kostenplaats"
+msgstr "Deactiveer de rekening."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -425,11 +428,11 @@ msgid "Domain"
 msgstr "Domein"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Editing"
-msgstr "Wijzigend"
+msgstr "Bewerkend"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
@@ -473,7 +476,6 @@ msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
-#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Indien aangevinkt hebben sommige leveringen een fout."
 
@@ -485,12 +487,12 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"In Odoo worden verkopen en projecten geïmplementeerd door gebruik\n"
-"te maken van kostenplaatsen. Je kunt kosten en omzet eenvoudig\n"
+"In Odoo worden verkooporders en projecten geïmplementeerd door gebruik\n"
+"te maken van kostenplaatsen. Je kunt kosten en inkomsten eenvoudig\n"
 "vergelijken om je marges te analyseren."
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Invalid"
@@ -529,7 +531,7 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Loading..."
@@ -551,7 +553,7 @@ msgid "Main Attachment"
 msgstr "Hoofdbijlage"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
@@ -591,7 +593,7 @@ msgid "Nebula"
 msgstr "Nevel"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
@@ -605,10 +607,10 @@ msgstr "Nog geen activiteit"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr "Nog geen activiteit voor deze kostenplaats"
+msgstr "Nog geen activiteit voor deze rekening"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "No plans available"
@@ -635,11 +637,18 @@ msgid "Number of messages with delivery error"
 msgstr "Aantal berichten met leveringsfout"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "OK"
 msgstr "OK"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Een of meerdere regels vereisen een 100% kostenplaatsdistributie."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -647,7 +656,7 @@ msgid "Operating Costs"
 msgstr "Operatie kosten"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
@@ -728,11 +737,6 @@ msgid "Root Plan"
 msgstr "Rootplan"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Sms-bezorgingsfout"
-
-#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
 msgid "Seagate P2"
 msgstr "Seagate P2"
@@ -740,7 +744,7 @@ msgstr "Seagate P2"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Zoek kostenplaats boekingen"
+msgstr "Kostenplaatsregels zoeken"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -760,9 +764,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Selecteer een relatiecategorie waarvoor de kostenplaatdistributie zal worden"
-" gebruikt (bijv. maak een nieuwe klantfactuur of verkooporder aan als we "
-"deze relatie selecteren, neemt deze dit automatisch als een kostenplaats)"
+"Selecteer een relatiecategorie waarvoor de kostenplaatsdistributie zal "
+"worden gebruikt (bijv. maak een nieuwe klantfactuur of verkooporder aan als "
+"we deze relatie selecteren, neemt deze dit automatisch als een kostenplaats)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -791,14 +795,15 @@ msgid "Subplans"
 msgstr "Deelplannen"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 #, python-format
 msgid ""
 "The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
-"De geselecteerde kostenplaats behoort bij een ander bedrijf dan het bedrijf "
-"waarvoor je een kostenplaats probeert aan te maken"
+"De geselecteerde rekening behoort bij een ander bedrijf dan het bedrijf "
+"waarvoor je een kostenplaatsboeking probeert aan te maken"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -832,16 +837,12 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__website_message_ids
-msgid "Website Messages"
-msgstr "Website-berichten"
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
+msgid "View"
+msgstr "Bekijk"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account__website_message_ids
-msgid "Website communication history"
-msgstr "Geschiedenis van websitecommunicatie"
-
-#. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
@@ -849,7 +850,19 @@ msgid ""
 "some analytic items linked to it."
 msgstr ""
 "Je kunt geen ander bedrijf instellen op je kostenplaats omdat er al "
-"kostenplaatsitems aan zijn gekoppeld."
+"kostenplaatsboeking aan zijn gekoppeld."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_distribution_model.py:0
+#, python-format
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
+msgstr ""
+"Je hebt een distributie gedefinieerd met kostenplaatsen die behoren tot een "
+"specifiek bedrijf, maar een model dat wordt gedeeld tussen bedrijven of met "
+"een ander bedrijf."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

@@ -24,7 +24,7 @@
             <field name="model">change.password.wizard</field>
             <field name="arch" type="xml">
                 <form string="Change Password">
-                    <field name="user_ids"/>
+                    <field mode="tree" name="user_ids"/>
                     <footer>
                         <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
@@ -56,11 +56,12 @@
             <field name="model">res.users.identitycheck</field>
             <field name="arch" type="xml">
                 <form string="Password Confirmation">
-                    <sheet clas="bg-primary">
+                    <sheet class="bg-primary">
                         <h3><strong>Please enter your password to confirm you own this account</strong></h3>
                         <br/>
                         <div>
-                            <field class="col-10 col-md-6 px-0" name="password" autocomplete="current-password" required="True" password="True"/>
+                            <field class="o_field_highlight col-10 col-md-6 px-0" name="password" autocomplete="current-password"
+                                required="True" password="True" placeholder="************"/>
                         </div>
                         <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </sheet>
@@ -444,7 +445,7 @@
             <field name="model">res.users</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Users">
+                <form string="Users" edit="1">
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <h1>

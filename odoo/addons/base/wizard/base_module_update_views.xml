@@ -8,9 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Update Module List">
                     <field name="state" invisible="1"/>
-                    <separator string="Module Update Result"/>
+                    <separator string="Module Update Result" states="done"/>
                     <group states="init">
-                        <span class="o_form_label">Click on Update below to start the process...</span>
+                        <span class="o_form_label" colspan="2">Click on Update below to start the process...</span>
                     </group>
                     <group states="done" >
                         <field name="updated"/>

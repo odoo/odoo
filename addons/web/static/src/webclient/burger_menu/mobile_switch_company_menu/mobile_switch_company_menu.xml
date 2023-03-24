@@ -13,7 +13,7 @@
             <div class="d-flex menu_companies_item" t-att-data-company-id="id">
                 <div class="border-end toggle_company" t-att-class="{'border-primary' : isCompanyCurrent}" t-on-click="() => this.toggleCompany(id)">
                     <span class="btn border-0 p-2">
-                        <i t-attf-class="fa fa-fw h2 m-0 {{checkIcon}}"/>
+                        <i t-attf-class="fa fa-fw fs-2 m-0 {{checkIcon}}"/>
                     </span>
                 </div>
                 <div class="flex-grow-1 p-2 ms-1 log_into text-muted" t-att-class="{'alert-primary': isCompanyCurrent}" t-on-click="() => this.logIntoCompany(id)">

@@ -3,17 +3,18 @@
 # 	* hr_work_entry_contract
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,20 +34,29 @@ msgid ""
 "        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
 "    "
 msgstr ""
+"\n"
+"        定义了工作记录生成的来源\n"
+"\n"
+"        工作安排：工作记录将从以下的工作时间生成。\n"
+"        出勤：工作记录将从员工的出勤生成。(需要出勤应用程序)\n"
+"        计划：工作记录将从员工的计划生成。(需要计划应用程序)\n"
+"    "
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid "%s does not have a contract from %s to %s."
 msgstr "%s没有从%s 到 %s的合同。"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid ""
 "%s has multiple contracts from %s to %s. A work entry cannot overlap "
 "multiple contracts."
-msgstr "%s 有多个从 %s 到 %s的合约。工作条目不能与多个合同重叠。"
+msgstr "%s 有多个从 %s 到 %s的合同。工作条目不能与多个合同重叠。"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -54,17 +64,19 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
 "allowed to regenerate validated work entries"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" "
+"title=\"Warning\"/>您不被允许重新生成已验证的工作条目。"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
-"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
+"<span class=\"text-muted\">Warning: Work Entry Regeneration will erase all "
+"manual configuration (work entry type, deferred time off, ...).</span>"
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -124,7 +136,7 @@ msgid "Employees"
 msgstr "员工"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
 #, python-format
 msgid "Everybody's work entries"
@@ -143,9 +155,8 @@ msgstr "从"
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 #: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
-#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
 msgid "Generate Missing Work Entries"
-msgstr ""
+msgstr "生成缺失的工作条目"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -183,6 +194,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -197,7 +209,7 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
 msgid "Last Generation Date"
-msgstr ""
+msgstr "最后生成的日期"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
@@ -226,8 +238,8 @@ msgstr "最新日期"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "2022 年法定休假"
+msgid "Legal Leaves 2023"
+msgstr ""
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
@@ -241,7 +253,7 @@ msgid "Regenerate Employee Work Entries"
 msgstr "重新生成员工工作条目"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -260,13 +272,15 @@ msgid "Sick Time Off"
 msgstr "病假"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
 "Sorry, generating work entries from cancelled contracts is not allowed."
-msgstr ""
+msgstr "抱歉，不允许从取消的合同中生成工作条目。"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -321,7 +335,7 @@ msgstr "工作条目重生成"
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
-msgstr ""
+msgstr "工作记录来源"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar

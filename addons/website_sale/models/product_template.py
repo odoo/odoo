@@ -183,12 +183,7 @@ class ProductTemplate(models.Model):
 
             product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id == t.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
-
-            price_reduce = self.env['account.tax']._fix_tax_included_price_company(
-                price_reduce, product_taxes, taxes, self.env.company)
-
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            price_reduce = taxes.compute_all(price_reduce, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
 
             template_price_vals = {
                 'price_reduce': price_reduce
@@ -211,6 +206,8 @@ class ProductTemplate(models.Model):
                 base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
                     tax_display]
                 template_price_vals['base_price'] = base_price
+            template_price_vals['price_reduce'] = self.env['account.tax']._fix_tax_included_price_company(template_price_vals['price_reduce'], product_taxes, taxes, self.env.company)
+            template_price_vals['price_reduce'] = taxes.compute_all(template_price_vals['price_reduce'], pricelist.currency_id, 1, template, partner_sudo)[tax_display]
 
             res[template.id] = template_price_vals
 
@@ -242,9 +239,10 @@ class ProductTemplate(models.Model):
             partner = self.env.user.partner_id
             company_id = current_website.company_id
 
-            fpos = self.env['account.fiscal.position'].sudo()._get_fiscal_position(partner)
+            fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(partner)
+            fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
             product_taxes = product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id)
-            taxes = fpos.map_tax(product_taxes)
+            taxes = fiscal_position.map_tax(product_taxes)
 
             price = self._price_with_tax_computed(
                 combination_info['price'], product_taxes, taxes, company_id, pricelist, product,
@@ -272,7 +270,7 @@ class ProductTemplate(models.Model):
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=base_unit_price,
+                base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,

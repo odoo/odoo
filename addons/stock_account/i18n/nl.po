@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,18 +23,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
 msgstr " Product kostprijs bijgewerkt van %(previous)s naar %(new_cost)s."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [Geboekt op %s]"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
@@ -43,6 +47,7 @@ msgstr ""
 "%(product)s"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
@@ -59,6 +64,8 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">Gebruik een negatieve toegevoegde waarde om een daling van de productwaarde vast te leggen</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -149,7 +156,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
 msgid "Analytic Account Line"
-msgstr "Kostenplaatsregel"
+msgstr "Kostenplaatsboekingsregel"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -172,6 +179,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -183,6 +191,7 @@ msgstr ""
 "verwerken van deze bewerking."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -195,6 +204,7 @@ msgstr ""
 "verwerken van deze bewerking."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -208,7 +218,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "Kies een datum om de waardering van die datum op te halen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -222,6 +232,7 @@ msgid "Config Settings"
 msgstr "Configuratie instellingen"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -240,6 +251,7 @@ msgid "Costing Method"
 msgstr "Kostprijsbepaling"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
@@ -334,7 +346,7 @@ msgstr "Schermnaam"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "Toon serie & partijnummer op factuuren"
+msgstr "Toon serie & partijnummer op facturen"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -342,6 +354,7 @@ msgid "Documentation"
 msgstr "Documentatie"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -365,7 +378,7 @@ msgstr "Groepeer op..."
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Has Remaining Qty"
-msgstr ""
+msgstr "Heeft overgebleven hoeveelheid"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
@@ -384,6 +397,7 @@ msgid "Inventory Locations"
 msgstr "Voorraadlocaties"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
@@ -405,7 +419,7 @@ msgstr "Factuurregel"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "Herstelling van de factuurwaarde met de factuurvaluta"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -462,12 +476,14 @@ msgid "Manual"
 msgstr "Handmatig"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
 msgstr "Handmatige voorraadwaardering: %s."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
@@ -489,7 +505,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"
-msgstr ""
+msgstr "Verplaatste hoeveelheid"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
@@ -500,6 +516,11 @@ msgstr "Nieuwe waarde"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
 msgstr "Nieuwe waarde per hoeveelheid"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Open Valuation Layer"
+msgstr "Waardelaag openen"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -530,6 +551,7 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "Productverplaatsingen (voorraadverplaatsingsregels)"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
@@ -547,6 +569,7 @@ msgid "Product Variant"
 msgstr "Productvariant"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
@@ -608,6 +631,7 @@ msgid "Return Picking Line"
 msgstr "Retour pickingregel"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
@@ -679,7 +703,7 @@ msgid "Stock Request an Inventory Count"
 msgstr "Voorraad Een voorraadtelling aanvragen"
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
@@ -721,6 +745,9 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Technisch veld om de huidige door het bedrijf gekozen valuta correct weer te"
+" geven, dat overeenkomst met de totale waarde van de waardelagen van het "
+"product."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -732,6 +759,7 @@ msgstr ""
 "Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -742,6 +770,7 @@ msgstr ""
 "Valuation account."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
@@ -753,12 +782,14 @@ msgstr ""
 " toegangsrechten heeft."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
 msgstr "De toegevoegde waarde heeft geen invloed op de voorraadwaardering"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -769,6 +800,7 @@ msgstr ""
 "worden ontvangen en andere verlaten het bedrijf."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -781,6 +813,7 @@ msgstr ""
 "moeten gaan."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -797,16 +830,19 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
+"Er zijn geen waarderingslagen. Waarderingslagen worden gemaakt wanneer er "
+"productbewegingen zijn die van invloed zijn op de waardering van de "
+"voorraad."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Quantity"
-msgstr ""
+msgstr "Totale resterende hoeveelheid"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "Totale resterende waarde"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -898,7 +934,7 @@ msgstr "Waarde"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "Valuta van de waardering"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -906,14 +942,15 @@ msgid "Valuation Report"
 msgstr "Voorraadwaarde rapport"
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/xml/inventory_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 #, python-format
 msgid "Valuation at Date"
-msgstr ""
+msgstr "Waardering op huidig moment"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
@@ -927,11 +964,11 @@ msgid "Value"
 msgstr "Waarde"
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Huidige waardering:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -939,6 +976,7 @@ msgid "Value Svl"
 msgstr "Waarde Svl"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
@@ -983,18 +1021,21 @@ msgstr ""
 "Wizard-model om een voorraadvoorraad voor een product opnieuw te evalueren"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
 msgstr "Je kunt een product niet herwaarderen met een standaardkostenmethode."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr "Je kunt een product met geen of negatieve voorraad niet herwaarderen."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -1007,6 +1048,7 @@ msgstr ""
 "waarvoor je geen toegangsrechten heeft."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -1017,6 +1059,7 @@ msgstr ""
 "moet een er vóór de verwerking van deze bewerking definiëren."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -1027,6 +1070,7 @@ msgstr ""
 " Je moet er een definiëren voordat je deze bewerking kunt verwerken."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -1034,9 +1078,10 @@ msgid ""
 "you have installed a chart of accounts."
 msgstr ""
 "Je hebt geen voorraadboek gedefinieerd op je productcategorie, controleer of"
-" je een rekeningschema heeft geïnstalleerd."
+" je een grootboekschema heeft geïnstalleerd."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
@@ -1050,6 +1095,7 @@ msgstr ""
 "Je moet een er vóór de verwerking van deze bewerking definiëren."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."

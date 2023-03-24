@@ -8,7 +8,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { sprintf } from "@web/core/utils/strings";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class PropertyTagsColorListPopover extends Component {}
 PropertyTagsColorListPopover.template = "web.PropertyTagsColorListPopover";
@@ -218,7 +218,7 @@ export class PropertyTags extends Component {
      *
      * If we use the component for the tag configuration, clicking on "delete"
      * will remove the tags from the available tags. If we use the component
-     * the the tag selection, it will unselect the tag.
+     * the tag selection, it will unselect the tag.
      *
      * @param {string} deleteTag, ID of the tag to delete
      */
@@ -287,6 +287,7 @@ PropertyTags.components = {
 };
 
 PropertyTags.props = {
+    id: { type: String, optional: true },
     selectedTags: {}, // Tags value visible in the tags list
     tags: {}, // Tags definition visible in the dropdown
     // Define the behavior of the delete button on the tags, either

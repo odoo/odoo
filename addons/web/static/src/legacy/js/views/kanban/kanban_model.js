@@ -421,7 +421,14 @@ var KanbanModel = BasicModel.extend({
         // not specified in the progressbar attributes
         for (const groupId of list.data) {
             const group = this.localData[groupId];
-            const valuesCount = progressBar[group.value] || {};
+            let value = group.value;
+            if (value === true) {
+                value = "True";
+            } else if (value === false) {
+                value = "False";
+            }
+
+            const valuesCount = progressBar[value] || {};
             const valuesCountTotal = Object.keys(valuesCount).reduce((sum, key) => {
                 return sum + valuesCount[key];
             }, 0);

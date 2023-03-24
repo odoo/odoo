@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "mass_mailing.design_constants";
-import { toInline } from "web_editor.convertInline";
+import { toInline, getCSSRules } from "web_editor.convertInline";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
@@ -17,7 +17,6 @@ import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/ut
 
 const {
     onWillStart,
-    useEffect,
     useSubEnv,
     onWillUpdateProps,
 } = owl;
@@ -41,25 +40,17 @@ export class MassMailingHtmlField extends HtmlField {
                 this._hideIrrelevantTemplates();
             }
         });
-
-        useEffect(() => {
-            const listener = () => {
-                this._lastClickInIframe = false;
-            };
-            document.addEventListener('mousedown', listener, true);
-
-            return () => document.removeEventListener('mousedown', listener, true);
-        }, () => []);
     }
 
     get wysiwygOptions() {
         return {
             ...super.wysiwygOptions,
             onIframeUpdated: () => this.onIframeUpdated(),
+            foldSnippets: device.isMobile,
             snippets: 'mass_mailing.email_designer_snippets',
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
-            toolbarTemplate: 'mass_mailing.web_editor_toolbar',
+            toolbarTemplate: device.isMobile ? 'web_editor.toolbar' : 'mass_mailing.web_editor_toolbar',
             ...this.props.wysiwygOptions,
         };
     }
@@ -91,30 +82,62 @@ export class MassMailingHtmlField extends HtmlField {
         if (this.props.readonly || !this.isRendered) {
             return super.commitChanges();
         }
-
-        if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
-            this.wysiwyg.$iframeBody.find('*').css('font-family', '');
+        if (!this._isDirty()) {
+            // In case there is still a pending change while committing the
+            // changes from the save button, we need to wait for the previous
+            // operation to finish, otherwise the "inline field" of the mass
+            // mailing might not be saved.
+            return this._pendingCommitChanges;
         }
 
-        const $editable = this.wysiwyg.getEditable();
-        const initialHtml = $editable.html();
-        await this.wysiwyg.cleanForSave();
-        await this.wysiwyg.saveModifiedImages(this.$content);
+        this._pendingCommitChanges = (async () => {
+            if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
+                this.wysiwyg.$iframeBody.find('*').css('font-family', '');
+            }
 
-        await super.commitChanges();
+            const $editable = this.wysiwyg.getEditable();
+            this.wysiwyg.odooEditor.historyPauseSteps();
+            await this.wysiwyg.cleanForSave();
+            await this.wysiwyg.saveModifiedImages(this.$content);
 
-        const $editorEnable = $editable.closest('.editor_enable');
-        $editorEnable.removeClass('editor_enable');
-        // Prevent history reverts.
-        this.wysiwyg.odooEditor.observerUnactive('toInline');
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
-        this.wysiwyg.odooEditor.observerActive('toInline');
-        const inlineHtml = $editable.html();
-        $editorEnable.addClass('editor_enable');
-        this.wysiwyg.odooEditor.resetContent(initialHtml);
+            await super.commitChanges();
 
-        const fieldName = this.props.inlineField;
-        return this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+            const $editorEnable = $editable.closest('.editor_enable');
+            $editorEnable.removeClass('editor_enable');
+            // Prevent history reverts.
+            this.wysiwyg.odooEditor.observerUnactive('toInline');
+            const iframe = document.createElement('iframe');
+            iframe.style.height = '0px';
+            iframe.style.visibility = 'hidden';
+            iframe.setAttribute('sandbox', 'allow-same-origin'); // Make sure no scripts get executed.
+            const clonedHtmlNode = $editable[0].closest('html').cloneNode(true);
+            // Replace the body to only contain the target as we do not care for
+            // other elements (e.g. sidebar, toolbar, ...)
+            const clonedBody = clonedHtmlNode.querySelector('body');
+            const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
+            clonedBody.replaceChildren(clonedIframeTarget);
+            clonedHtmlNode.querySelectorAll('script').forEach(script => script.remove()); // Remove scripts.
+            iframe.srcdoc = clonedHtmlNode.outerHTML;
+            const iframePromise = new Promise((resolve) => {
+                iframe.addEventListener("load", resolve);
+            });
+            document.body.append(iframe);
+            // Wait for the css and images to be loaded.
+            await iframePromise;
+            const editableClone = iframe.contentDocument.querySelector('.note-editable');
+            this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
+            await toInline($(editableClone), this.cssRules, $(iframe));
+            iframe.remove();
+            this.wysiwyg.odooEditor.observerActive('toInline');
+            const inlineHtml = editableClone.innerHTML;
+            $editorEnable.addClass('editor_enable');
+            this.wysiwyg.odooEditor.historyUnpauseSteps();
+            this.wysiwyg.odooEditor.historyRevertCurrentStep();
+
+            const fieldName = this.props.inlineField;
+            await this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+        })();
+        return this._pendingCommitChanges;
     }
     async startWysiwyg(...args) {
         await super.startWysiwyg(...args);
@@ -152,10 +175,6 @@ export class MassMailingHtmlField extends HtmlField {
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.historyReset();
         this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
-
-        this.wysiwyg.odooEditor.document.addEventListener('mousedown', () => {
-            this._lastClickInIframe = true;
-        }, true);
 
         this.onIframeUpdated();
     }
@@ -208,15 +227,12 @@ export class MassMailingHtmlField extends HtmlField {
         // Overide `d-flex` class which style is `!important`
         $snippetsSideBar.find(`.o_we_website_top_actions > *:not(${selectorToKeep})`).attr('style', 'display: none!important');
 
-        if (device.isMobile) {
-            $snippetsSideBar.hide();
-            this.$content.attr('style', 'padding-left: 0px !important');
-        }
-
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
         const $codeview = this.wysiwyg.$iframe.contents().find('textarea.o_codeview');
+        // Unbind first the event handler as this method can be called multiple time during the component life.
+        $snippetsSideBar.off('click', '.o_codeview_btn');
         $snippetsSideBar.on('click', '.o_codeview_btn', () => {
             this.wysiwyg.odooEditor.observerUnactive();
             $codeview.toggleClass('d-none');
@@ -228,10 +244,13 @@ export class MassMailingHtmlField extends HtmlField {
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
+            this.wysiwyg.snippetsMenu.activateSnippet(false);
             this.onIframeUpdated();
         });
-
-        $snippetsSideBar.on('click', '.o_mobile_preview_btn', () => {
+        const $previewBtn = $snippetsSideBar.find('.o_mobile_preview_btn');
+        $previewBtn.off('click');
+        $previewBtn.on('click', () => {
+            $previewBtn.prop('disabled', true); // Prevent double execution when double-clicking on the button
             let mailingHtml = new DOMParser().parseFromString(this.wysiwyg.getValue(), 'text/html');
             [...mailingHtml.querySelectorAll('a')].forEach(el => {
                 el.style.setProperty('pointer-events', 'none');
@@ -239,13 +258,19 @@ export class MassMailingHtmlField extends HtmlField {
             this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
                 title: this.env._t("Mobile Preview"),
                 preview: mailingHtml.body.innerHTML,
+            }, {
+                onClose: () => $previewBtn.prop('disabled', false),
             });
         });
 
         if (!this._themeParams) {
             // Initialize theme parameters.
             this._themeClassNames = "";
-            this._themeParams = _.map($themes, (theme) => {
+            const displayableThemes =
+                device.isMobile ?
+                _.filter($themes, theme => !$(theme).data("hideFromMobile")) :
+                $themes;
+            this._themeParams = _.map(displayableThemes, (theme) => {
                 const $theme = $(theme);
                 const name = $theme.data("name");
                 const classname = "o_" + name + "_theme";
@@ -275,8 +300,8 @@ export class MassMailingHtmlField extends HtmlField {
                     layoutStyles: $theme.data('layout-styles'),
                 };
             });
-            $themes.parent().remove();
         }
+        $themes.parent().remove();
 
         if (!this._themeParams.length) {
             return;
@@ -311,6 +336,8 @@ export class MassMailingHtmlField extends HtmlField {
         const editableAreaIsEmpty = value === "" || value === blankEditable;
 
         if (editableAreaIsEmpty) {
+            // unfold to prevent toolbar from going over the menu
+            this.wysiwyg.snippetsMenu.setFolded(false);
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
 
@@ -326,6 +353,9 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframeBody.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
+            if (device.isMobile) {
+                this.wysiwyg.snippetsMenu.setFolded(true);
+            }
 
             this._switchImages(themeParams, $snippets);
 
@@ -351,6 +381,8 @@ export class MassMailingHtmlField extends HtmlField {
                     selection.removeAllRanges();
                     selection.addRange(range);
                 }
+                // mark selection done for tour testing
+                $editable.addClass('theme_selection_done');
             }, 0);
         });
 
@@ -429,12 +461,14 @@ export class MassMailingHtmlField extends HtmlField {
             .removeClass('d-none')
             .addClass('d-inline-block');
 
-        // Hide or show the help message if some templates are visible
+        // Hide or show the help message and preview wrapper based on whether there are any relevant templates
         if (sameModelTemplates.length) {
             iframeContent.find('.o_mailing_template_message').addClass('d-none');
+            iframeContent.find('.o_mailing_template_preview_wrapper').removeClass('d-none');
         } else {
             iframeContent.find('.o_mailing_template_message').removeClass('d-none');
             iframeContent.find('.o_mailing_template_message span').text(this.props.record.data.mailing_model_id[1]);
+            iframeContent.find('.o_mailing_template_preview_wrapper').addClass('d-none');
         }
     }
     /**
@@ -560,11 +594,6 @@ export class MassMailingHtmlField extends HtmlField {
     }
     async _getWysiwygClass() {
         return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
-    }
-    _onWysiwygBlur() {
-        if (!this._lastClickInIframe) {
-            super._onWysiwygBlur();
-        }
     }
 }
 

@@ -123,6 +123,13 @@ const DynamicSnippet = publicWidget.Widget.extend({
                     'limit': parseInt(nodeData.numberOfRecords),
                     'search_domain': this._getSearchDomain(),
                     'with_sample': this.editableMode,
+                    'context': {
+                        // TODO adapt in master (see _bugfix_force_minimum_max_limit_to_16)
+                        // in python. The `forceMinimumMaxLimitTo16` value in the
+                        // dataset is there only in dynamic snippets whose options
+                        // have been configured after this fix was merged.
+                        '_bugfix_force_minimum_max_limit_to_16': !!nodeData.forceMinimumMaxLimitTo16,
+                    },
                 }, this._getRpcParameters()),
             });
             this.data = filterFragments.map(Markup);
@@ -169,11 +176,18 @@ const DynamicSnippet = publicWidget.Widget.extend({
      */
     _render: function () {
         if (this.data.length > 0 || this.editableMode) {
-            this.$el.removeClass('d-none');
+            this.$el.removeClass('o_dynamic_empty');
             this._prepareContent();
         } else {
-            this.$el.addClass('d-none');
+            this.$el.addClass('o_dynamic_empty');
             this.renderedContent = '';
+        }
+        // TODO Remove in master: adapt already existing snippet from former version.
+        const classList = [...this.$el[0].classList];
+        if (classList.includes('d-none') && !classList.some(className => className.match(/^d-(md|lg)-(?!none)/))) {
+            // Remove the 'd-none' of the old template if it is not related to
+            // the visible on mobile option.
+            this.$el[0].classList.remove('d-none');
         }
         this._renderContent();
         this.trigger_up('widgets_start_request', {$target: this.$el.children(), options: {parent: this}});
@@ -213,7 +227,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _toggleVisibility: function (visible) {
-        this.$el.toggleClass('d-none', !visible);
+        this.$el.toggleClass('o_dynamic_empty', !visible);
     },
 
     //------------------------------------- -------------------------------------

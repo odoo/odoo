@@ -13,8 +13,9 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from '@web/core/position_hook';
+import { archParseBoolean } from '@web/views/utils';
 
-const { Component, useRef, useState, useEffect, onWillStart } = owl;
+import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
 export class PropertiesField extends Component {
     setup() {
@@ -82,6 +83,21 @@ export class PropertiesField extends Component {
     }
 
     /**
+     * Return the current properties value splitted in multiple groups/columns.
+     *
+     * @returns {Array<Array>}
+     */
+    get groupedPropertiesList() {
+        const columns = this.env.isSmall ? 1 : this.props.columns;
+        // If no properties, assure that the "Add Property" button is shown.
+        const res = [...Array(columns)].map(col => []);
+        this.propertiesList.forEach((val, index) => {
+            res[index % columns].push(val);
+        });
+        return res;
+    }
+
+    /**
      * Return false if we should not close the popover containing the
      * properties definition based on the event received.
      *
@@ -120,6 +136,15 @@ export class PropertiesField extends Component {
         }
 
         return false;
+    }
+
+    /**
+     * Generate an unique ID to be used in the DOM.
+     *
+     * @returns {string}
+     */
+    generateUniqueDomID() {
+        return `property_${uuid()}`;
     }
 
     /* --------------------------------------------------------
@@ -181,9 +206,9 @@ export class PropertiesField extends Component {
      * @param {string} propertyName
      */
     onPropertyEdit(event, propertyName) {
+        event.stopPropagation();
+        event.preventDefault();
         if (event.target.classList.contains("disabled")) {
-            event.stopPropagation();
-            event.preventDefault();
             // remove the glitch if we click on the edit button
             // while the popover is already opened
             return;
@@ -447,6 +472,7 @@ export class PropertiesField extends Component {
                 isNewlyCreated: isNewlyCreated,
                 propertyIndex: propertyIndex,
                 propertiesSize: propertiesList.length,
+                hideKanbanOption: this.props.hideKanbanOption,
             },
             {
                 preventClose: this.checkPopoverClose,
@@ -455,9 +481,28 @@ export class PropertiesField extends Component {
                 onClose: () => {
                     this.state.movedPropertyName = null;
                     target.classList.remove("disabled");
+                    if (isNewlyCreated) {
+                        this._setDefaultPropertyValue(currentName(propertyName));
+                    }
                 },
             },
         );
+    }
+
+    /**
+     * Write the default value on the given property.
+     *
+     * @param {string} propertyName
+     */
+    _setDefaultPropertyValue(propertyName) {
+        const propertiesValues = this.propertiesList;
+        const newProperty = propertiesValues.find((property) => property.name === propertyName);
+        newProperty.value = newProperty.default;
+        // it won't update the props, it's a trick because the onClose event of the popover
+        // is called not synchronously, and so if we click on "create a property", it will close
+        // the popover, calling this function, but the value will be overwritten because of onPropertyCreate
+        this.props.value = propertiesValues;
+        this.props.update(propertiesValues);
     }
 }
 
@@ -471,10 +516,12 @@ PropertiesField.components = {
 PropertiesField.props = {
     ...standardFieldProps,
     columns: { type: Number, optional: true },
+    hideKanbanOption: { type: Boolean, optional: true },
 };
 PropertiesField.extractProps = ({ attrs, field }) => {
     const columns = parseInt(attrs.columns || "1");
-    return { columns };
+    const hideKanbanOption = archParseBoolean(attrs.hideKanbanOption);
+    return { columns, hideKanbanOption };
 };
 
 PropertiesField.displayName = _lt("Properties");

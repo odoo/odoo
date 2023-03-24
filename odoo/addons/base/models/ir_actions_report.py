@@ -5,7 +5,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -22,13 +22,17 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader, utils
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+try:
+    from PyPDF2.errors import PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
 
@@ -42,12 +46,6 @@ try:
 except Exception:
     pass
 
-datamatrix_available = True
-try:
-    from pylibdmtx import pylibdmtx
-except Exception:
-    _logger.info('A package may be missing to print Data Matrix barcodes: pylibdmtx or libdmtx.')
-    datamatrix_available = False
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
@@ -221,7 +219,7 @@ class IrActionsReport(models.Model):
 
         :return: Boolean
         '''
-        return datamatrix_available
+        return True
 
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
@@ -297,6 +295,9 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--header-line'])
             if paperformat_id.disable_shrinking:
                 command_args.extend(['--disable-smart-shrinking'])
+
+        # Add extra time to allow the page to render
+        command_args.extend(['--javascript-delay', '1000'])
 
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
@@ -392,6 +393,7 @@ class IrActionsReport(models.Model):
     def _run_wkhtmltopdf(
             self,
             bodies,
+            report_ref=False,
             header=None,
             footer=None,
             landscape=False,
@@ -401,6 +403,7 @@ class IrActionsReport(models.Model):
         document.
 
         :param list[str] bodies: The html bodies of the report, one per page.
+        :param report_ref: report reference that is needed to get report paperformat.
         :param str header: The html header of the report containing all headers.
         :param str footer: The html footer of the report containing all footers.
         :param landscape: Force the pdf to be rendered under a landscape format.
@@ -409,7 +412,7 @@ class IrActionsReport(models.Model):
         :return: Content of the pdf as bytes
         :rtype: bytes
         '''
-        paperformat_id = self.get_paperformat()
+        paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
@@ -450,6 +453,7 @@ class IrActionsReport(models.Model):
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
+            err = ustr(err)
 
             if process.returncode not in [0, 1]:
                 if process.returncode == -11:
@@ -540,9 +544,9 @@ class IrActionsReport(models.Model):
         elif barcode_type == 'auto':
             symbology_guess = {8: 'EAN8', 13: 'EAN13'}
             barcode_type = symbology_guess.get(len(value), 'Code128')
-        elif barcode_type == 'DataMatrix' and not self.datamatrix_available():
-            # fallback to avoid stacktrack because reportlab won't recognize the type and error message isn't useful/will be blocking
-            barcode_type = 'Code128'
+        elif barcode_type == 'DataMatrix':
+            # Prevent a crash due to a lib change from pylibdmtx to reportlab
+            barcode_type = 'ECC200DataMatrix'
         elif barcode_type == 'QR':
             # for `QR` type, `quiet` is not supported. And is simply ignored.
             # But we can use `barBorder` to get a similar behaviour.
@@ -619,7 +623,7 @@ class IrActionsReport(models.Model):
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
-            except utils.PdfReadError:
+            except PdfReadError:
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -697,7 +701,7 @@ class IrActionsReport(models.Model):
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]
 
-            bodies, html_ids, header, footer, specific_paperformat_args = self._prepare_html(html, report_model=report_sudo.model)
+            bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
             if report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
                 raise UserError(_(
@@ -709,6 +713,7 @@ class IrActionsReport(models.Model):
 
             pdf_content = self._run_wkhtmltopdf(
                 bodies,
+                report_ref=report_ref,
                 header=header,
                 footer=footer,
                 landscape=self._context.get('landscape'),
@@ -778,7 +783,7 @@ class IrActionsReport(models.Model):
 
                     return collected_streams
 
-            collected_streams[False] = {'stream': pdf_content_stream}
+            collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
 
@@ -806,6 +811,14 @@ class IrActionsReport(models.Model):
                 if stream_data['attachment']:
                     continue
 
+                # if res_id is false
+                # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
+                if not res_id:
+                    _logger.warning(
+                        "These documents were not saved as an attachment because the template of %s doesn't "
+                        "have any headers seperating different instances of it. If you want it saved,"
+                        "please print the documents separately", report_sudo.report_name)
+                    continue
                 record = self.env[report_sudo.model].browse(res_id)
                 attachment_name = safe_eval(report_sudo.attachment, {'object': record, 'time': time})
 
@@ -888,7 +901,7 @@ class IrActionsReport(models.Model):
         return data
 
     @api.model
-    def _render(self, report_ref, res_ids, data):
+    def _render(self, report_ref, res_ids, data=None):
         report = self._get_report(report_ref)
         report_type = report.report_type.lower().replace('-', '_')
         render_func = getattr(self, '_render_' + report_type, None)

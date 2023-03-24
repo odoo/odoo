@@ -18,7 +18,7 @@ function compileChatter(node, params) {
     const chatterContainerXml = createElement('ChatterContainer');
     const parentURLQuery = new URLSearchParams(window.parent.location.search);
     setAttributes(chatterContainerXml, {
-        token: parentURLQuery.get('access_token') || '',
+        token: `'${parentURLQuery.get('access_token')}'` || '',
         resModel: params.resModel,
         resId: params.resId,
         projectSharingId: params.projectSharingId,

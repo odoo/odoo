@@ -20,8 +20,11 @@ BLACKLIST = {
     'auth_ldap', 'document_ftp', 'website_instantclick', 'pad',
     'pad_project', 'note_pad', 'pos_cache', 'pos_blackbox_be',
 }
-IGNORE = ('hw_', 'theme_', 'l10n_', 'test_', 'payment_')
+IGNORE = ('hw_', 'theme_', 'l10n_', 'test_')
 
+INSTALL_BLACKLIST = {
+    'payment_alipay', 'payment_ogone', 'payment_payulatam', 'payment_payumoney',
+}  # deprecated modules (cannot be installed manually through button_install anymore)
 
 def install(db_name, module_id, module_name):
     with odoo.registry(db_name).cursor() as cr:
@@ -82,6 +85,7 @@ def test_full(args):
         def valid(module):
             return not (
                 module.name in BLACKLIST
+                or module.name in INSTALL_BLACKLIST
                 or module.name.startswith(IGNORE)
                 or module.state in ('installed', 'uninstallable')
             )
@@ -117,7 +121,8 @@ def test_uninstall(args):
 
     for module_id, module_name in modules_todo:
         uninstall(args.database, module_id, module_name)
-        install(args.database, module_id, module_name)
+        if module_name not in INSTALL_BLACKLIST:
+            install(args.database, module_id, module_name)
 
 
 def test_scripts(args):

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
 
@@ -29,7 +29,7 @@ class StockMove(models.Model):
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if not self.purchase_line_id or not self.product_id.id:
+        if self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id:
             return super(StockMove, self)._get_price_unit()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
@@ -37,7 +37,7 @@ class StockMove(models.Model):
         received_qty = line.qty_received
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom)
-        if line.qty_invoiced > received_qty:
+        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
             move_layer = line.move_ids.stock_valuation_layer_ids
             invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
             receipt_value = sum(move_layer.mapped('value')) + sum(invoiced_layer.mapped('value'))
@@ -83,13 +83,22 @@ class StockMove(models.Model):
             return rslt
         svl = self.env['stock.valuation.layer'].browse(svl_id)
         if not svl.account_move_line_id:
-            # Do not use price_unit since we want the price tax excluded. And by the way, qty
-            # is in the UOM of the product, not the UOM of the PO line.
-            purchase_price_unit = (
-                self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
-                if self.purchase_line_id.product_uom_qty
-                else self.purchase_line_id.price_unit
-            )
+            if(self.purchase_line_id.product_id.cost_method == 'standard'):
+                purchase_price_unit = self.purchase_line_id.product_id.cost_currency_id._convert(
+                    self.purchase_line_id.product_id.standard_price,
+                    purchase_currency,
+                    self.company_id,
+                    self.date,
+                    round=False,
+                )
+            else:
+                # Do not use price_unit since we want the price tax excluded. And by the way, qty
+                # is in the UOM of the product, not the UOM of the PO line.
+                purchase_price_unit = (
+                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                    if self.purchase_line_id.product_uom_qty
+                    else self.purchase_line_id.price_unit
+                )
             currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
             rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
             rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
@@ -187,3 +196,21 @@ class StockMove(models.Model):
             raise UserError(
                 _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
         return valuation_price_unit_total, valuation_total_qty
+
+    def _is_purchase_return(self):
+        self.ensure_one()
+        return self.location_dest_id.usage == "supplier" or (
+                self.location_dest_id.usage == "internal"
+                and self.location_id.usage != "supplier"
+                and self.warehouse_id
+                and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
+        )
+
+    def _get_all_related_aml(self):
+        # The back and for between account_move and account_move_line is necessary to catch the
+        # additional lines from a cogs correction
+        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids.filtered(
+            lambda aml: aml.product_id == self.purchase_line_id.product_id)
+
+    def _get_all_related_sm(self, product):
+        return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)

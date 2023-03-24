@@ -6,6 +6,7 @@ import { WebClientViewAttachmentViewContainer } from "@mail/components/web_clien
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
+import { createElement } from "@web/core/utils/xml";
 import { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
@@ -39,22 +40,22 @@ patch(FormController.prototype, "mail", {
         }
 
         const { archInfo } = this.props;
-        const { arch, xmlDoc } = archInfo;
 
-        const template = document.createElement("t");
-        const xmlDocAttachmentPreview = xmlDoc.querySelector("div.o_attachment_preview");
+        const template = createElement("t");
+        const xmlDocAttachmentPreview = archInfo.xmlDoc.querySelector("div.o_attachment_preview");
         if (xmlDocAttachmentPreview && xmlDocAttachmentPreview.parentNode.nodeName === "form") {
             // TODO hasAttachmentViewer should also depend on the groups= and/or invisible modifier on o_attachment_preview (see invoice form)
             template.appendChild(xmlDocAttachmentPreview);
             this.hasAttachmentViewerInArch = true;
+            archInfo.arch = archInfo.xmlDoc.outerHTML;
         }
 
-        const xmlDocChatter = xmlDoc.querySelector("div.oe_chatter");
+        const xmlDocChatter = archInfo.xmlDoc.querySelector("div.oe_chatter");
         if (xmlDocChatter && xmlDocChatter.parentNode.nodeName === "form") {
             template.appendChild(xmlDocChatter.cloneNode(true));
         }
 
-        const mailTemplates = useViewCompiler(MailFormCompiler, arch, { Mail: template }, {});
+        const mailTemplates = useViewCompiler(MailFormCompiler, archInfo.arch, { Mail: template }, {});
         this.mailTemplate = mailTemplates.Mail;
 
         this.onResize = useDebounced(this.render, 200);

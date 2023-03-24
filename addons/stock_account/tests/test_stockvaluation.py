@@ -2108,7 +2108,7 @@ class TestStockValuation(TransactionCase):
         move5.move_line_ids.qty_done = 30.0
         move5._action_done()
 
-        self.assertEqual(move5.stock_valuation_layer_ids.value, -477.5)
+        self.assertEqual(move5.stock_valuation_layer_ids.value, -477.56)
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
@@ -2142,7 +2142,7 @@ class TestStockValuation(TransactionCase):
         move7.move_line_ids.qty_done = 50.0
         move7._action_done()
 
-        self.assertEqual(move7.stock_valuation_layer_ids.value, -796.0)
+        self.assertEqual(move7.stock_valuation_layer_ids.value, -795.94)
         self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
         self.assertAlmostEqual(self.product1.value_svl, 0.0)
 
@@ -3935,3 +3935,84 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move.stock_valuation_layer_ids.value, 10)
         self.assertEqual(move.stock_valuation_layer_ids.account_move_id.amount_total, 10)
+
+    def test_create_svl_different_uom(self):
+        """
+        Create a transfer and use in the move a different unit of measure than
+        the one set on the product form and ensure that when the qty done is changed
+        and the picking is already validated, an svl is created in the uom set in the product.
+        """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'owner_id': self.env.company.partner_id.id,
+        })
+
+        move = self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'name': 'test',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': uom_dozen.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 10,
+        })
+        receipt.action_confirm()
+        move.quantity_done = 1
+        receipt.button_validate()
+
+        self.assertEqual(self.product1.uom_name, 'Units')
+        self.assertEqual(self.product1.quantity_svl, 12)
+        move.quantity_done = 2
+        self.assertEqual(self.product1.quantity_svl, 24)
+
+    def test_replenishment_report_access_rights(self):
+        # One delivery and one receipt
+        pickings = self.env['stock.picking'].create([{
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [(0, 0, {
+                'name': 'delivery',
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.product1.id,
+                'product_uom': self.product1.uom_id.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 10,
+            })],
+        }, {
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': 'delivery',
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product1.id,
+                'product_uom': self.product1.uom_id.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 10,
+            })],
+        }])
+        pickings.action_confirm()
+
+        user_report = self.env['report.stock.report_product_product_replenishment'].with_user(self.inventory_user)
+        user_report.get_report_values(docids=self.product1.ids, serialize=True)
+        user_report.get_report_values(docids=self.product1.ids)
+
+    def test_average_manual_price_change(self):
+        """
+        When doing a Manual Price Change, an SVL is created to update the value_svl.
+        This test check that the value of this SVL is correct and does result in new_std_price * quantity.
+        To do so, we create 2 In moves, which result in a standard price rounded at $5.29, the non-rounded value ≃ 5.2857.
+        Then we update the standard price to $7
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 5, unit_cost=5)
+        self._make_in_move(self.product1, 2, unit_cost=6)
+        self.product1.write({'standard_price': 7})
+        self.assertEqual(self.product1.value_svl, 49)

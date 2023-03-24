@@ -54,15 +54,12 @@ class ConnectionManager(Thread):
             _logger.error('A error encountered : %s ' % e)
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
-        if db_uuid and enterprise_code:
-            helpers.add_credential(db_uuid, enterprise_code)
-
         # Save DB URL and token
-        subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+        helpers.save_conf_server(url, token, db_uuid, enterprise_code)
         # Notify the DB, so that the kanban view already shows the IoT Box
         manager.send_alldevices()
         # Restart to checkout the git branch, get a certificate, load the IoT handlers...
-        subprocess.check_call(["sudo", "service", "odoo", "restart"])
+        helpers.odoo_restart(2)
 
     def _refresh_displays(self):
         """Refresh all displays to hide the pairing code"""

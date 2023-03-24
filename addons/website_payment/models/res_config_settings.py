@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
         stripe = self.env.ref('payment.payment_provider_stripe', raise_if_not_found=False)
         for config in self:
             providers = config._get_activated_providers()
-            first_provider = stripe if stripe in providers else providers[0] if providers else providers
+            first_provider = stripe if stripe and stripe in providers else providers[0] if providers else providers
             config.first_provider_label = _('Configure %s', first_provider.name)
             if len(providers) == 1 and providers == paypal:
                 config.providers_state = 'paypal_only'

@@ -22,21 +22,39 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
             useListener('validate-order', () => this.validateOrder(false));
+            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
             NumberBuffer.use(this._getNumberBufferConfig);
             useErrorHandlers();
             this.payment_interface = null;
             this.error = false;
-            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
+        }
+
+        showMaxValueError() {
+            this.showPopup('ErrorPopup', {
+                title: this.env._t('Maximum value reached'),
+                body: this.env._t('The amount cannot be higher than the due amount if you don\'t have a cash payment method configured.')
+            });
         }
         get _getNumberBufferConfig() {
-            return {
+            let config = {
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
                 nonKeyboardInputEvent: 'input-from-numpad',
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
+            };
+            // Check if pos has a cash payment method
+            const hasCashPaymentMethod = this.payment_methods_from_config.some(
+                (method) => method.type === 'cash'
+            );
+
+            if (!hasCashPaymentMethod) {
+                config['maxValue'] = this.currentOrder.get_due();
+                config['maxValueReached'] = this.showMaxValueError.bind(this);
             }
+
+            return config;
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -211,9 +229,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     }
                 }
             } catch (error) {
-                hasError = true;
-
-                if (error.code == 700)
+                if (error.code == 700 || error.code == 701)
                     this.error = true;
 
                 if ('code' in error) {

@@ -18,6 +18,15 @@ const ShareWidget = publicWidget.Widget.extend({
 
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        // TODO adapt in master. Ugly way here to fix existing s_share snippets
+        // before entering edit mode.
+        this.el.classList.add('o_no_link_popover');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -63,7 +72,7 @@ const ShareWidget = publicWidget.Widget.extend({
                     // parameter, merging everything together, e.g of output:
                     // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
                     // For more details, see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/
-                    return a + title + url + c;
+                    return `${a + title}%20${url + c}`;
                 }
                 return a + title + c;
             })

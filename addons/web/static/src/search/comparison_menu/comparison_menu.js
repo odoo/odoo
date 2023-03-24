@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { FACET_ICONS } from "../utils/misc";
 import { useBus } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ComparisonMenu extends Component {
     setup() {
@@ -30,6 +30,5 @@ export class ComparisonMenu extends Component {
         this.env.searchModel.toggleSearchItem(itemId);
     }
 }
-
 ComparisonMenu.template = "web.ComparisonMenu";
-ComparisonMenu.components = { Dropdown, DropdownItem };
+ComparisonMenu.components = { Dropdown, DropdownItem: SearchDropdownItem };

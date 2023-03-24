@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Ahmed Aly <ahmed.aly@datenpol.at>, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,8 @@ msgstr "%(empl_name)s von %(check_in)s bis %(check_out)s"
 #, python-format
 msgid ": Your user should be linked to an employee to use attendance."
 msgstr ""
+": Ihr Benutzer muss mit einem Mitarbeiter verknüpft sein, um die Anwesenheit"
+" nutzen zu können."
 
 #. module: hr_attendance
 #. openerp-web
@@ -209,7 +212,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
 msgid "Attendance Mode"
-msgstr ""
+msgstr "Anwesenheitsmodus"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
@@ -253,7 +256,7 @@ msgstr "Verfügbar"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
 msgid "Back Camera"
-msgstr ""
+msgstr "Hintere Kamera"
 
 #. module: hr_attendance
 #. openerp-web
@@ -286,7 +289,7 @@ msgid ""
 "checked out since %(datetime)s"
 msgstr ""
 "Es kann kein neuer Anwesenheitsdatensatz für %(empl_name)s angelegt werden. "
-"Der Mitarbeiter ist seit %(datetime)s nicht ausgecheckt"
+"Der Mitarbeiter ist seit %(datetime)s nicht abgemeldet"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -297,7 +300,7 @@ msgid ""
 "already checked in on %(datetime)s"
 msgstr ""
 "Es kann kein neuer Anwesenheitsdatensatz für %(empl_name)s angelegt werden. "
-"Der Mitarbeiter ist seit %(datetime)s eingecheckt"
+"Der Mitarbeiter ist seit %(datetime)s angemeldet"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -316,7 +319,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Check IN"
-msgstr ""
+msgstr "Anmelden"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -326,7 +329,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In"
-msgstr "Einchecken"
+msgstr "Anmelden"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
@@ -338,7 +341,7 @@ msgstr "An- und Abmeldung"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Check OUT"
-msgstr ""
+msgstr "Abmelden"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -346,12 +349,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out"
-msgstr "Auschecken"
+msgstr "Abmelden"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out in Kiosk Mode"
-msgstr ""
+msgstr "An-/Abmeldung im Kiosk-Modus"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -794,7 +797,7 @@ msgstr "Meine Anwesenheit"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr "Nicht ausgecheckt"
+msgstr "Nicht abgemeldet"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -941,8 +944,7 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
-"Der Benutzer muss diese PIN eingeben, um manuell ein- und auschecken zu "
-"können."
+"Der Benutzer muss diese PIN eingeben, um manuell an- und abmelden zu können."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -995,6 +997,8 @@ msgstr "Überstunden gesamt:"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
 msgstr ""
+"Verwenden Sie zum Anmelden PIN-Codes (die im Profil des Mitarbeiters "
+"definiert sind)."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users

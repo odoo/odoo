@@ -3,16 +3,16 @@
 # 	* web_unsplash
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-12-15 12:45+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,18 +31,24 @@ msgid "Access Key"
 msgstr "访问秘钥"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_app_id
 #, python-format
 msgid "Application ID"
 msgstr "应用程序ID"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Apply"
 msgstr "应用"
+
+#. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_ir_attachment
+msgid "Attachment"
+msgstr "附件"
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
@@ -50,54 +56,56 @@ msgid "Config Settings"
 msgstr "配置设置"
 
 #. module: web_unsplash
+#. odoo-python
 #: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash URL!"
 msgstr "错误: 未知 Unsplash URL!"
 
 #. module: web_unsplash
+#. odoo-python
 #: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash notify URL!"
 msgstr "错误: 未知 Unsplash 通知URL!"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Get an Access key"
 msgstr "获得一个访问密钥"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your access key here"
 msgstr "在此粘贴您的访问密钥"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your application ID here"
 msgstr "将您的应用ID粘贴至此处"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Photos (via Unsplash)"
 msgstr "照片（通过Unsplash）"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your Unsplash access key and application ID."
 msgstr "请检查您的 Unsplash 访问密钥及应用ID。"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
@@ -109,51 +117,51 @@ msgid "Qweb Field Image"
 msgstr "Qweb 图像字段"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Search is temporarily unavailable"
 msgstr "搜索功能暂时不可用"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Setup Unsplash to access royalty free photos."
 msgstr "设置Unsplash以获取免版税照片。"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Something went wrong"
 msgstr "出了问题"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
 " a better account."
-msgstr "超过最大搜索次数。请在一小时内重试，或扩展到一个更高级的账户。"
+msgstr "超过最大搜索计数。请在一小时内重试，或扩展到一个更高级的账户。"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Unauthorized Key"
 msgstr "未认证密钥"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Uploading %s '%s' images."
 msgstr "上传%s'%s'图像。"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Uploading '%s' image."
@@ -165,21 +173,21 @@ msgid "User"
 msgstr "用户"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "and paste"
 msgstr "并粘贴"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "and paste it here:"
 msgstr "并将其粘贴在这里:"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "here:"

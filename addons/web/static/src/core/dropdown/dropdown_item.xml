@@ -7,10 +7,12 @@
       t-att-href="props.href"
       class="dropdown-item"
       t-att-class="props.class"
+      role="menuitem"
       t-on-click.stop="onClick"
       t-att-title="props.title"
       t-att-data-hotkey="props.hotkey"
       t-att="dataAttributes"
+      tabindex="0"
     >
       <t t-slot="default" />
     </t>

@@ -66,6 +66,10 @@ QUnit.module("Fields", (hooks) => {
                                 ["partner", "Partner"],
                             ],
                         },
+                        reference_char: {
+                            string: "Reference Field (Char)",
+                            type: "char",
+                        },
                         model_id: { string: "Model", type: "many2one", relation: "ir.model" },
                     },
                     records: [
@@ -499,6 +503,42 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("computed reference field changed by onchange to 'False,0' value", async function (assert) {
+        assert.expect(1);
+
+        serverData.models.partner.onchanges = {
+            bar(obj) {
+                if (!obj.bar) {
+                    obj.reference_char = "False,0";
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="reference_char" widget="reference"/>
+                </form>`,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        bar: false,
+                        reference_char: "False,0",
+                    });
+                }
+            },
+        });
+
+        // trigger the onchange to set a value for the reference field
+        await click(target, ".o_field_boolean input");
+
+        // save
+        await clickSave(target);
+    });
+
     QUnit.test("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);
 
@@ -804,6 +844,36 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("Reference field with default value in list view", async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree string="Test" editable="top">
+                    <field name="reference"/>
+                    <field name="display_name"/>
+                </tree>`,
+            mockRPC: (route, { method, args }) => {
+                if (method === "onchange") {
+                    return {
+                        value: {reference: "partner,2"},
+                    };
+                } else if (method === "create") {
+                    assert.strictEqual(args.length, 1);
+                    assert.strictEqual(args[0].reference, "partner,2");
+                }
+            },
+        });
+
+        await click(target, '.o_list_button_add');
+        await click(target, '.o_list_char[name="display_name"] input');
+        await editInput(target, '.o_list_char[name="display_name"] input', "Blabla");
+        await click(target, '.o_list_button_save');
+    });
 
     QUnit.test(
         "ReferenceField with model_field option (tree list in form view)",

@@ -5,8 +5,8 @@ import io
 import base64
 
 from PIL import Image
+from werkzeug.urls import url_quote
 
-from odoo.http import content_disposition
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -91,3 +91,45 @@ class TestImage(HttpCase):
         res = self.url_open('/web/image/%s/0x0/custom.png?download=true' % att.id)
         res.raise_for_status()
         self.assertEqual(res.headers['Content-Disposition'], 'attachment; filename=custom.png')
+
+    def test_04_web_content_filename_secure(self):
+        """This test makes sure the Content-Disposition header matches the given filename"""
+
+        att = self.env['ir.attachment'].create({
+            'datas': b'R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=',
+            'name': """fô☺o-l'éb \n a"!r".gif""",
+            'public': True,
+            'mimetype': 'image/gif'
+        })
+
+        res = self.url_open(f'/web/image/{att.id}')
+        expected_ufilename = url_quote(att.name.replace('\n', '_').replace('\r', '_'))
+        self.assertEqual(res.headers['Content-Disposition'], r"""inline; filename="foo-l'eb _ a\"!r\".gif"; filename*=UTF-8''""" + expected_ufilename)
+        res.raise_for_status()
+
+        res = self.url_open(f'/web/image/{att.id}/custom_invalid_name\nis-ok.gif')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=custom_invalid_name_is-ok.gif')
+        res.raise_for_status()
+
+        res = self.url_open(f'/web/image/{att.id}/\r\n')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=__.gif')
+        res.raise_for_status()
+
+        res = self.url_open(f'/web/image/{att.id}/你好')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=.gif; filename*=UTF-8\'\'%E4%BD%A0%E5%A5%BD.gif')
+        res.raise_for_status()
+
+        res = self.url_open(f'/web/image/{att.id}/%E9%9D%A2%E5%9B%BE.gif')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=.gif; filename*=UTF-8\'\'%E9%9D%A2%E5%9B%BE.gif')
+        res.raise_for_status()
+
+        res = self.url_open(f'/web/image/{att.id}/hindi_नमस्ते.gif')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=hindi_.gif; filename*=UTF-8\'\'hindi_%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87.gif')
+        res.raise_for_status()
+        res = self.url_open(f'/web/image/{att.id}/arabic_مرحبا.gif')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=arabic_.gif; filename*=UTF-8\'\'arabic_%D9%85%D8%B1%D8%AD%D8%A8%D8%A7.gif')
+        res.raise_for_status()
+
+        res = self.url_open(f'/web/image/{att.id}/4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp')
+        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp')
+        res.raise_for_status()

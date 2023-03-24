@@ -51,7 +51,7 @@
             -->
             <div class="o_web_sign_signature_group position-relative mt-3 border" style="overflow: hidden;">
                 <div class="card-header">
-                    <div class="row g-0">
+                    <div class="row g-0 flex-nowrap">
                         <div class="col-auto">
                             <a role="button" href="#" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ widget.signMode === 'auto' ? 'active': '' }}">
                                 Auto
@@ -67,25 +67,25 @@
                                 Load
                             </a>
                         </div>
-                        <div t-attf-class="o_web_sign_draw_clear col-auto ms-auto {{ widget.signMode !== 'draw' ? 'd-none' : '' }}">
-                            <a role="button" href="#" class="btn btn-link">
-                                Clear
-                            </a>
+                        <div class="pushend col-auto ms-auto"/>
+                        <div t-attf-class="o_web_sign_draw_clear col-auto {{ widget.signMode !== 'draw' ? 'd-none' : '' }}">
+                            <a role="button" href="#" class="btn btn-link fa fa-trash"/>
                         </div>
-                        <div t-attf-class="o_web_sign_auto_select_style col-auto ms-auto {{ widget.signMode !== 'auto' ? 'd-none' : '' }}">
-                            <a role="button" href="#" class="btn btn-link">
-                                Style
-                            </a>
+                        <div t-attf-class="o_web_sign_auto_select_style col-auto {{ widget.signMode !== 'auto' ? 'd-none' : '' }}">
+                            <a role="button" href="#" class="btn btn-link fa fa-font"/>
                         </div>
                         <div t-attf-class="o_web_sign_load_file col-auto {{ widget.signMode !== 'load' ? 'd-none' : '' }}">
-                            <input type="file" role="button" name="files[]" class="btn btn-link py-0"/>
+                            <button type="button" id="loadFileXml" onclick="document.getElementById('file').click();"
+                            class="btn btn-link fa fa-upload" />
+                            <input type="file" role="button" id="file" name="files[]" class="d-none"/>
                         </div>
                     </div>
                 </div>
 
-                <div class="o_signature_stroke position-absolute"/>
-
-                <div class="o_web_sign_signature p-0 bg-transparent position-relative"/>
+                <div class="o_web_sign_signature_container">
+                    <div class="o_signature_stroke position-absolute"/>
+                    <div class="o_web_sign_signature p-0 bg-transparent position-relative"/>
+                </div>
 
                 <div t-attf-class="o_web_sign_load_invalid card-footer d-none">
                     <div class="alert alert-danger mb-0" role="alert">

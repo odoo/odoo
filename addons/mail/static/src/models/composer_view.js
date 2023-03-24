@@ -223,7 +223,16 @@ registerModel({
         /**
          * Called when clicking on "expand" button.
          */
-        onClickFullComposer() {
+        async onClickFullComposer() {
+            if (this.chatter && this.chatter.isTemporary) {
+                const chatter = this.chatter;
+                const saved = await this.chatter.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+                chatter.composerView.openFullComposer();
+                return;
+            }
             this.openFullComposer();
         },
         /**
@@ -269,6 +278,9 @@ registerModel({
         onFocusinTextarea() {
             if (!this.exists()) {
                 return;
+            }
+            if (!this.messaging.emojiRegistry.isLoaded && !this.messaging.emojiRegistry.isLoading) {
+                this.messaging.emojiRegistry.loadEmojiData();
             }
             this.update({ isFocused: true });
         },
@@ -510,6 +522,7 @@ registerModel({
 
             const action = {
                 type: 'ir.actions.act_window',
+                name: this.composer.isLog ? this.env._t('Log note') : this.env._t('Compose Email'),
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
                 views: [[false, 'form']],
@@ -573,8 +586,8 @@ registerModel({
                 const message = messaging.models['Message'].insert(
                     messaging.models['Message'].convertData(messageData)
                 );
-                if (this.messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
-                    this.messaging.rpc({
+                if (messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
+                    messaging.rpc({
                         route: `/mail/link_preview`,
                         params: {
                             message_id: message.id
@@ -639,6 +652,15 @@ registerModel({
          * currently uploading or if there is no text content and no attachments.
          */
         async sendMessage() {
+            if (this.chatter && this.chatter.isTemporary) {
+                const chatter = this.chatter;
+                const saved = await this.chatter.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+                chatter.composerView.sendMessage();
+                return;
+            }
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
                     this.messaging.notify({

@@ -547,6 +547,33 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.standard_price, 1.01)
 
+    def test_rounding_svl_3(self):
+        self._make_in_move(self.product1, 1000, unit_cost=0.17)
+        self._make_in_move(self.product1, 800, unit_cost=0.23)
+
+        self.assertEqual(self.product1.standard_price, 0.20)
+
+        self._make_out_move(self.product1, 1000, create_picking=True)
+        self._make_out_move(self.product1, 800, create_picking=True)
+
+        self.assertEqual(self.product1.value_svl, 0)
+
+    def test_rounding_svl_4(self):
+        """
+        The first 2 In moves result in a rounded standard_price at 3.4943, which is rounded at 3.49.
+        This test ensures that no rounding error is generated with small out quantities.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 2, unit_cost=4.63)
+        self._make_in_move(self.product1, 5, unit_cost=3.04)
+        self.assertEqual(self.product1.standard_price, 3.49)
+
+        for _ in range(70):
+            self._make_out_move(self.product1, 0.1)
+
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.value_svl, 0)
+
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
@@ -891,6 +918,11 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
             'property_stock_journal': cls.stock_journal.id,
         })
+        cls.env.company.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+        })
 
     def test_standard_manual_to_auto_1(self):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
@@ -903,7 +935,12 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.write({
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+        })
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
@@ -987,7 +1024,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
+class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -1068,38 +1105,6 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
             'property_stock_journal': cls.company_data['default_journal_misc'].id,
         })
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
-        """ Helper to create and validate a receipt move.
-        """
-        unit_cost = unit_cost or product.standard_price
-        loc_dest = loc_dest or self.stock_location
-        pick_type = pick_type or self.picking_type_in
-        in_move = self.env['stock.move'].create({
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': loc_dest.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'price_unit': unit_cost,
-            'picking_type_id': pick_type.id,
-        })
-
-        if create_picking:
-            picking = self.env['stock.picking'].create({
-                'picking_type_id': in_move.picking_type_id.id,
-                'location_id': in_move.location_id.id,
-                'location_dest_id': in_move.location_dest_id.id,
-            })
-            in_move.write({'picking_id': picking.id})
-
-        in_move._action_confirm()
-        in_move._action_assign()
-        in_move.move_line_ids.qty_done = quantity
-        in_move._action_done()
-
-        return in_move.with_context(svl=True)
-
     def test_avco_and_credit_note(self):
         """
         When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
@@ -1139,3 +1144,29 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
         self.assertEqual(len(anglo_lines), 2)
         self.assertEqual(abs(anglo_lines[0].balance), 10)
         self.assertEqual(abs(anglo_lines[1].balance), 10)
+
+    def test_return_delivery_storno(self):
+        """ When using STORNO accounting, reverse accounting moves should have negative values for credit/debit.
+        """
+        self.env.company.account_storno = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        self._make_in_move(self.product1, 10, unit_cost=10)
+        out_move = self._make_out_move(self.product1, 10, create_picking=True)
+        return_move = self._make_return(out_move, 10)
+
+        valuation_line = out_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
+        stock_out_line = out_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertEqual(valuation_line.credit, 100)
+        self.assertEqual(valuation_line.debit, 0)
+        self.assertEqual(stock_out_line.credit, 0)
+        self.assertEqual(stock_out_line.debit, 100)
+
+        valuation_line = return_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
+        stock_out_line = return_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertEqual(valuation_line.credit, -100)
+        self.assertEqual(valuation_line.debit, 0)
+        self.assertEqual(stock_out_line.credit, 0)
+        self.assertEqual(stock_out_line.debit, -100)

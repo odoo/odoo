@@ -25,6 +25,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.scrolledPoint = 0;
         this.hasScrolled = false;
         this.closeOpenedMenus = false;
+        this.scrollHeightTooShort = false;
     },
     /**
      * @override
@@ -168,6 +169,33 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
         this.$main.css('padding-top', this.fixedHeader ? this.headerHeight : '');
     },
+    /**
+     * Checks if the size of the header will decrease by adding the
+     * 'o_header_is_scrolled' class. If so, we do not add this class if the
+     * remaining scroll height is not enough to stay above 'this.scrolledPoint'
+     * after the transition, otherwise it causes the scroll position to move up
+     * again below 'this.scrolledPoint' and trigger an infinite loop.
+     *
+     * @todo header effects should be improved in the future to not ever change
+     * the page scroll-height during their animation. The code would probably be
+     * simpler but also prevent having weird scroll "jumps" during animations
+     * (= depending on the logo height after/before scroll, a scroll step (one
+     * mousewheel event for example) can be bigger than other ones).
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _scrollHeightTooShort() {
+        const scrollEl = $().getScrollingElement()[0];
+        const remainingScroll = (scrollEl.scrollHeight - scrollEl.clientHeight) - this.scrolledPoint;
+        const clonedHeader = this.el.cloneNode(true);
+        scrollEl.append(clonedHeader);
+        clonedHeader.classList.add('o_header_is_scrolled', 'o_header_affixed', 'o_header_no_transition');
+        const endHeaderHeight = clonedHeader.offsetHeight;
+        clonedHeader.remove();
+        const heightDiff = this.headerHeight - endHeaderHeight;
+        return heightDiff > 0 ? remainingScroll <= heightDiff : false;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -194,9 +222,12 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // Indicates the page is scrolled, the logo size is changed.
         const headerIsScrolled = (scroll > this.scrolledPoint);
         if (this.headerIsScrolled !== headerIsScrolled) {
-            this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
-            this.$el.trigger('odoo-transitionstart');
-            this.headerIsScrolled = headerIsScrolled;
+            this.scrollHeightTooShort = headerIsScrolled && this._scrollHeightTooShort();
+            if (!this.scrollHeightTooShort) {
+                this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
+                this.$el.trigger('odoo-transitionstart');
+                this.headerIsScrolled = headerIsScrolled;
+            }
         }
 
         if (this.closeOpenedMenus) {
@@ -237,6 +268,13 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         this.headerHeight = this.$el.outerHeight();
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$el.css('transform', '');
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -251,14 +289,14 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     /**
      * Called when the window is scrolled
      *
-     * @private
+     * @override
      * @param {integer} scroll
      */
     _updateHeaderOnScroll: function (scroll) {
         this._super(...arguments);
 
         const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
-        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap);
+        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap) && !this.scrollHeightTooShort;
         const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
         const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
 
@@ -445,7 +483,10 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
  * Note: this works well with the affixMenu... by chance (menuDirection is
  * called after alphabetically).
  *
- * @todo check bootstrap v4: maybe handled automatically now ?
+ * @todo @deprecated For the moment, dynamic positioning of dropdown elements is
+ * explicitly disabled by Bootstrap on dropdowns that are in the navbar. In
+ * master, we will patch the BS dropdown to allow this and remove the following
+ * widget.
  */
 publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     selector: 'header .navbar .nav',
@@ -458,7 +499,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'end' : 'start';
         return this._super.apply(this, arguments);
     },
 
@@ -468,7 +509,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {string} alignment - either 'left' or 'right'
+     * @param {string} alignment - either 'start' or 'end'
      * @param {integer} liOffset
      * @param {integer} liWidth
      * @param {integer} menuWidth
@@ -476,7 +517,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'left') {
+        if (alignment === 'start') {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -493,19 +534,19 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @private
      */
     _onDropdownShow: function (ev) {
-        var $li = $(ev.target);
-        var $menu = $li.children('.dropdown-menu');
-        var liOffset = $li.offset().left;
-        var liWidth = $li.outerWidth();
+        const $dropdown = $(ev.target).closest('.nav-item.dropdown');
+        var $menu = $dropdown.children('.dropdown-menu');
+        var liOffset = $dropdown.offset().left;
+        var liWidth = $dropdown.outerWidth();
         var menuWidth = $menu.outerWidth();
         var pageWidth = $('#wrapwrap').outerWidth();
 
         $menu.removeClass('dropdown-menu-start dropdown-menu-end');
 
         var alignment = this.defaultAlignment;
-        if ($li.nextAll(':visible').length === 0) {
+        if ($dropdown.nextAll(':visible').length === 0) {
             // The dropdown is the last menu item, open to the left
-            alignment = 'right';
+            alignment = 'end';
         }
 
         // If can't open in the current direction because it would overflow the
@@ -513,7 +554,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         // same, change back the direction.
         for (var i = 0; i < 2; i++) {
             if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, pageWidth)) {
-                alignment = (alignment === 'left' ? 'right' : 'left');
+                alignment = (alignment === 'start' ? 'end' : 'start');
             }
         }
 
@@ -597,9 +638,45 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
 
 publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        // This is a fix in stable to move the language switcher in the navbar
+        // when the "off-canvas" mobile menu is enabled. Without this the
+        // language switcher is inaccessible in the "off-canvas" mobile menu.
+        // TODO: Remove this in master and make the adaptations only in the XML
+        // templates.
+        this.languageSelectorMustBeMoved = false;
+        // If mobile menu is "off-canvas".
+        if (this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+            this.navbarEl = this.$target[0].querySelector('#top_menu');
+            this.languageSelectorEl = this.$target[0].querySelectorAll('#top_menu_collapse .js_language_selector');
+            // As there are 2 language selectors in 'template_header_vertical',
+            // we have to do this to be sure to move the last of the 2 (the one
+            // displayed on mobile).
+            this.languageSelectorEl = this.languageSelectorEl[this.languageSelectorEl.length - 1];
+            this.languageSelectorMustBeMoved = this.languageSelectorEl
+                && !this.navbarEl.contains(this.languageSelectorEl);
+            // Specific case with the "hamburger full" header template where
+            // there is the same bug with the call to action.
+            if (this.$target[0].querySelector('.o_header_hamburger_full_toggler')) {
+                const callToActionEl = this.$target[0].querySelector('.oe_structure_solo');
+                if (callToActionEl) {
+                    this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+                    callToActionEl.classList.add('nav-item');
+                    this.navbarEl.append(callToActionEl);
+                    this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+                }
+            }
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -611,12 +688,24 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
      */
     _onCollapseShow() {
         this.el.classList.add('o_top_menu_collapse_shown');
+        if (this.languageSelectorMustBeMoved) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.languageSelectorEl.classList.add('nav-item');
+            this.navbarEl.append(this.languageSelectorEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
     },
     /**
      * @private
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+        if (this.languageSelectorMustBeMoved) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.languageSelectorEl.classList.remove('nav-item');
+            this.navbarEl.after(this.languageSelectorEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
     },
 });
 

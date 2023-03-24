@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class PriorityField extends Component {
     setup() {
@@ -58,9 +58,9 @@ export class PriorityField extends Component {
     onStarClicked(value) {
         if (this.props.value === value) {
             this.state.index = -1;
-            this.props.update(this.options[0][0]);
+            this.props.update(this.options[0][0], { save: true });
         } else {
-            this.props.update(value);
+            this.props.update(value, { save: true });
         }
     }
 }

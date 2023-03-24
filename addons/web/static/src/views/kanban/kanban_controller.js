@@ -9,7 +9,7 @@ import { useSetupView } from "@web/views/view_hook";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { KanbanRenderer } from "./kanban_renderer";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -25,6 +25,7 @@ export class KanbanController extends Component {
             resModel,
             handleField: archInfo.handleField,
             limit: archInfo.limit || limit,
+            countLimit: archInfo.countLimit,
             onCreate: archInfo.onCreate,
             quickCreateView: archInfo.quickCreateView,
             defaultGroupBy,
@@ -65,6 +66,7 @@ export class KanbanController extends Component {
                         this.model.root.offset = offset;
                         this.model.root.limit = limit;
                         await this.model.root.load();
+                        await this.onUpdatedPager();
                         this.render(true); // FIXME WOWL reactivity
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -97,6 +99,7 @@ export class KanbanController extends Component {
                 additionalContext: root.context,
                 onClose: async () => {
                     await this.model.root.load();
+                    this.model.useSampleModel = false;
                     this.render(true); // FIXME WOWL reactivity
                 },
             };
@@ -118,6 +121,8 @@ export class KanbanController extends Component {
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
+
+    async onUpdatedPager() {}
 }
 
 KanbanController.template = `web.KanbanView`;
@@ -129,6 +134,7 @@ KanbanController.props = {
     forceGlobalClick: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
+    Compiler: { type: Function, optional: true }, // optional in stable for backward compatibility
     Model: Function,
     Renderer: Function,
     buttonTemplate: String,

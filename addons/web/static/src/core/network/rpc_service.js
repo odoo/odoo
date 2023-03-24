@@ -70,12 +70,12 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
             try {
                 params = JSON.parse(request.response);
             } catch (_) {
-                reject(
-                    new HTTPError(
-                        `server responded with invalid JSON response (HTTP${request.status}): ${request.response}`
-                    )
-                );
-                return;
+                // the response isn't json parsable, which probably means that the rpc request could
+                // not be handled by the server, e.g. PoolError('The Connection Pool Is Full')
+                if (!settings.silent) {
+                    bus.trigger("RPC:RESPONSE", data.id);
+                }
+                return reject(new ConnectionLostError());
             }
             const { error: responseError, result: responseResult } = params;
             if (!settings.silent) {
@@ -99,11 +99,20 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify(data));
     });
-    promise.abort = function () {
+    /**
+     * @param {Boolean} rejectError Returns an error if true. Allows you to cancel
+     *                  ignored rpc's in order to unblock the ui and not display an error.
+     */
+    promise.abort = function (rejectError = true) {
         if (request.abort) {
             request.abort();
         }
-        rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+        if (!settings.silent) {
+            bus.trigger("RPC:RESPONSE", data.id);
+        }
+        if (rejectError) {
+            rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+        }
     };
     return promise;
 }

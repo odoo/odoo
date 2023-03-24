@@ -4,7 +4,7 @@
 import re
 from collections import defaultdict
 
-from odoo import models, fields, api, _, osv
+from odoo import models, fields, api, _, osv, Command
 from odoo.exceptions import ValidationError, UserError
 
 FIGURE_TYPE_SELECTION_VALUES = [
@@ -32,7 +32,10 @@ class AccountReport(models.Model):
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
-    only_tax_exigible = fields.Boolean(string="Only Tax Exigible Lines")
+    only_tax_exigible = fields.Boolean(
+        string="Only Tax Exigible Lines",
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id'],
+    )
     availability_condition = fields.Selection(
         string="Availability",
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
@@ -93,13 +96,13 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_analytic = fields.Boolean(
-        string="Filter Analytic",
+        string="Analytic Filter",
         compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'never'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_account_type = fields.Boolean(
         string="Account Types",
@@ -172,8 +175,9 @@ class AccountReport(models.Model):
             default = {}
         default['name'] = self._get_copied_name()
         copied_report = super().copy(default=default)
+        code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(copied_report)
+            line._copy_hierarchy(copied_report, code_mapping=code_mapping)
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
         return copied_report
@@ -293,7 +297,7 @@ class AccountReportLine(models.Model):
         })
 
         # Keep track of old_code -> new_code in a mutable dict
-        if not code_mapping:
+        if code_mapping is None:
             code_mapping = {}
         if self.code:
             code_mapping[self.code] = copied_line.code
@@ -338,10 +342,8 @@ class AccountReportLine(models.Model):
         # create account.report.expression for each report line based on the formula provided to each
         # engine-related field. This makes xmls a bit shorter
         vals_list = []
+        xml_ids = self.expression_ids.filtered(lambda exp: exp.label == 'balance').get_external_id()
         for report_line in self:
-            if report_line.expression_ids:
-                continue
-
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
                 # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
@@ -351,19 +353,49 @@ class AccountReportLine(models.Model):
             elif engine == 'aggregation' and report_line.aggregation_formula:
                 subformula, formula = None, report_line.aggregation_formula
             else:
+                # If we want to replace a formula shortcut with a full-syntax expression, we need to make the formula field falsy
+                # We can't simply remove it from the xml because it won't be updated
+                # If the formula field is falsy, we need to remove the expression that it generated
+                report_line.expression_ids.filtered(lambda exp: exp.engine == engine and exp.label == 'balance' and not xml_ids.get(exp.id)).unlink()
                 continue
 
             vals = {
                 'report_line_id': report_line.id,
                 'label': 'balance',
                 'engine': engine,
-                'formula': formula,
+                'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
-            vals_list.append(vals)
+            if report_line.expression_ids:
+                # expressions already exists, update the first expression with the right engine
+                # since syntactic sugar aren't meant to be used with multiple expressions
+                for expression in report_line.expression_ids:
+                    if expression.label == 'balance':
+                        # If we had a 'balance' expression coming from the xml and are using a formula shortcut on top of it,
+                        # we expect the shortcut to replace the original expression. The full declaration should also
+                        # be removed from the data file, leading to the ORM deleting it automatically.
+                        if xml_ids.get(expression.id):
+                            expression.unlink()
+                            vals_list.append(vals)
+                        else:
+                            expression.write(vals)
+                        break
+            else:
+                # else prepare batch creation
+                vals_list.append(vals)
 
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_child_expressions(self):
+        """
+        We explicitly unlink child expressions.
+        This is necessary even if there is an ondelete='cascade' on it, because
+        the @api.ondelete method _unlink_archive_used_tags is not automatically
+        called if the parent model is deleted.
+        """
+        self.expression_ids.unlink()
 
 
 class AccountReportExpression(models.Model):
@@ -424,10 +456,17 @@ class AccountReportExpression(models.Model):
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
 
+    def _strip_formula(self, vals):
+        if 'formula' in vals and isinstance(vals['formula'], str):
+            vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
+        for vals in vals_list:
+            self._strip_formula(vals)
+
         result = super().create(vals_list)
 
         for expression in result:
@@ -436,8 +475,9 @@ class AccountReportExpression(models.Model):
                 country = expression.report_line_id.report_id.country_id
                 existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
 
-                if not existing_tags:
-                    tag_vals = self._get_tags_create_vals(tag_name, country.id)
+                if len(existing_tags) < 2:
+                    # We can have only one tag in case we archived it and deleted its unused complement sign
+                    tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
                     self.env['account.account.tag'].create(tag_vals)
 
         return result
@@ -445,6 +485,8 @@ class AccountReportExpression(models.Model):
     def write(self, vals):
         if 'formula' not in vals:
             return super().write(vals)
+
+        self._strip_formula(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
@@ -471,6 +513,35 @@ class AccountReportExpression(models.Model):
                         self.env['account.account.tag'].create(tag_vals)
 
         return result
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_archive_used_tags(self):
+        """
+        Manages unlink or archive of tax_tags when account.report.expression are deleted.
+        If a tag is still in use on amls, we archive it.
+        """
+        expressions_tags = self._get_matching_tags()
+        tags_to_archive = self.env['account.account.tag']
+        tags_to_unlink = self.env['account.account.tag']
+        for tag in expressions_tags:
+            other_expression_using_tag = self.env['account.report.expression'].sudo().search([
+                ('engine', '=', 'tax_tags'),
+                ('formula', '=', tag.name[1:]),  # we escape the +/- sign
+                ('report_line_id.report_id.country_id.id', '=', tag.country_id.id),
+                ('id', 'not in', self.ids),
+            ], limit=1)
+            if not other_expression_using_tag:
+                aml_using_tag = self.env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+                if aml_using_tag:
+                    tags_to_archive += tag
+                else:
+                    tags_to_unlink += tag
+
+        if tags_to_archive or tags_to_unlink:
+            rep_lines_with_tag = self.env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', (tags_to_archive + tags_to_unlink).ids)])
+            rep_lines_with_tag.write({'tag_ids': [Command.unlink(tag.id) for tag in tags_to_archive + tags_to_unlink]})
+            tags_to_archive.active = False
+            tags_to_unlink.unlink()
 
     def name_get(self):
         return [(expr.id, f'{expr.report_line_name} [{expr.label}]') for expr in self]
@@ -532,10 +603,15 @@ class AccountReportExpression(models.Model):
             country = tag_expression.report_line_id.report_id.country_id
             or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id))
 
-        return self.env['account.account.tag'].search(osv.expression.OR(or_domains))
+        return self.env['account.account.tag'].with_context(active_test=False).search(osv.expression.OR(or_domains))
 
     @api.model
-    def _get_tags_create_vals(self, tag_name, country_id):
+    def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):
+        """
+        We create the plus and minus tags with tag_name.
+        In case there is an existing_tag (which can happen if we deleted its unused complement sign)
+        we only recreate the missing sign.
+        """
         minus_tag_vals = {
           'name': '-' + tag_name,
           'applicability': 'taxes',
@@ -548,7 +624,12 @@ class AccountReportExpression(models.Model):
           'tax_negate': False,
           'country_id': country_id,
         }
-        return [(minus_tag_vals), (plus_tag_vals)]
+        res = []
+        if not existing_tag or not existing_tag.tax_negate:
+            res.append(minus_tag_vals)
+        if not existing_tag or existing_tag.tax_negate:
+            res.append(plus_tag_vals)
+        return res
 
     def _get_carryover_target_expression(self, options):
         self.ensure_one()
@@ -634,4 +715,4 @@ class AccountReportExternalValue(models.Model):
     def _check_fiscal_position(self):
         for record in self:
             if record.foreign_vat_fiscal_position_id and record.foreign_vat_fiscal_position_id.country_id != record.report_country_id:
-                raise ValidationError(_("The country set on the the foreign VAT fiscal position must match the one set on the report."))
+                raise ValidationError(_("The country set on the foreign VAT fiscal position must match the one set on the report."))

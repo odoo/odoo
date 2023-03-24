@@ -8,7 +8,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { formatSelection } from "../formatters";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class StateSelectionField extends Component {
     setup() {
@@ -25,7 +25,7 @@ export class StateSelectionField extends Component {
                                     this.options.map((value) => ({
                                         name: value[1],
                                         action: () => {
-                                            this.props.update(value[0]);
+                                            this.props.update(value[0], { save: true });
                                         },
                                     })),
                             },

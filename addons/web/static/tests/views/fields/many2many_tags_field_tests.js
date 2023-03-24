@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import {
     click,
+    clickDiscard,
     clickDropdown,
     clickOpenedDropdownItem,
     clickSave,
@@ -18,6 +19,7 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
+import { RPCError } from "@web/core/network/rpc_service";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -103,6 +105,9 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
+        });
     });
 
     QUnit.module("Many2ManyTagsField");
@@ -905,12 +910,10 @@ QUnit.module("Fields", (hooks) => {
             null,
             "new"
         );
-        await selectDropdownItem(target, "timmy", `Create "new"`);
-
+        await clickOpenedDropdownItem(target, "timmy", `Create "new"`);
         assert.containsOnce(target, ".o_field_many2many_tags .badge");
 
         await clickSave(target);
-
         assert.strictEqual(
             target.querySelector(".o_field_many2many_tags").textContent.trim(),
             "new"
@@ -957,6 +960,55 @@ QUnit.module("Fields", (hooks) => {
             "the second element in the list has been selected"
         );
     });
+
+    QUnit.test(
+        "input and remove text without selecting any tag or option",
+        async function (assert) {
+            serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            });
+
+            assert.containsNone(target, ".o_field_many2many_tags .badge");
+            const input = target.querySelector(".o_field_many2many_tags input");
+
+            // enter some text
+            await triggerEvent(input, null, "focus");
+            await click(input);
+            await editInput(input, null, "go");
+            // ensure no selection
+            for (const item of [
+                ...target.querySelectorAll(
+                    ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item"
+                ),
+            ]) {
+                triggerEvent(item, null, "mouseleave");
+            }
+            await triggerEvent(input, null, "blur");
+            // ensure we're not adding any value
+            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".o_field_many2many_tags .badge");
+
+            // remove the added text to test behaviour with falsy value
+            await triggerEvent(input, null, "focus");
+            await click(input);
+            await editInput(input, null, "");
+            for (const item of [
+                ...target.querySelectorAll(
+                    ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item"
+                ),
+            ]) {
+                triggerEvent(item, null, "mouseleave");
+            }
+            await triggerEvent(input, null, "blur");
+            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".o_field_many2many_tags .badge");
+        }
+    );
 
     QUnit.test("Many2ManyTagsField in one2many with display_name", async function (assert) {
         serverData.models.turtle.records[0].partner_ids = [2];
@@ -1428,7 +1480,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    return Promise.reject();
+                    throw new RPCError("Something went wrong");
                 }
                 if (args.method === "create") {
                     assert.deepEqual(args.args[0], {
@@ -1444,7 +1496,7 @@ QUnit.module("Fields", (hooks) => {
         // try to quick create a record
         await triggerEvent(target, ".o_field_many2many_tags input", "focus");
         await editInput(target, ".o_field_many2many_tags input", "new partner");
-        await selectDropdownItem(target, "timmy", `Create "new partner"`);
+        await clickOpenedDropdownItem(target, "timmy", `Create "new partner"`);
 
         // as the quick create failed, a dialog should be open to 'slow create' the record
         assert.containsOnce(target, ".modal .o_form_view");
@@ -1582,9 +1634,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField supports 'create' props to be a Boolean", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1625,9 +1674,6 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
         };
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1656,10 +1702,35 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_tag").innerText, "new tag");
     });
 
+    QUnit.test(
+        "Many2ManyTagsField keep the linked records after discard of the quick create dialog",
+        async (assert) => {
+            serverData.views = {
+                "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" options="{'no_quick_create': 1}"/>
+                </form>`,
+            });
+
+            assert.containsNone(target, ".o_tag");
+            await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            await click(target.querySelector(".modal .o_form_button_save"));
+            assert.containsOnce(target, ".o_tag");
+            await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "tago");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            await clickDiscard(target.querySelector(".modal"));
+            assert.containsOnce(target, ".o_tag");
+        }
+    );
+
     QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1673,9 +1744,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with attribute 'can_create' set to false", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1688,10 +1756,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with arch context in form view", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1724,10 +1788,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with arch context in list view", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
-
         await makeView({
             type: "list",
             resModel: "partner",

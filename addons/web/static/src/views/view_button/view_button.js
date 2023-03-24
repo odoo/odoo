@@ -4,7 +4,7 @@ import { DROPDOWN } from "@web/core/dropdown/dropdown";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const explicitRankClasses = [
     "btn-primary",
@@ -83,6 +83,11 @@ export class ViewButton extends Component {
         if (this.props.tag === "a") {
             ev.preventDefault();
         }
+
+        if (this.props.onClick) {
+            return this.props.onClick();
+        }
+
         this.env.onClickViewButton({
             clickParams: this.clickParams,
             getResParams: () =>
@@ -144,6 +149,7 @@ ViewButton.props = [
     "style?",
     "string?",
     "slots?",
+    "onClick?",
 ];
 ViewButton.defaultProps = {
     tag: "button",

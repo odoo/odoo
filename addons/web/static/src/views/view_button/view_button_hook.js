@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { useEnv, useSubEnv } = owl;
+import { status, useEnv, useSubEnv } from "@odoo/owl";
 
 function disableButtons(el) {
     // WOWL: can we do this non-imperatively?
@@ -86,7 +86,7 @@ export function useViewButtons(model, ref, options = {}) {
                     context: params.context || {}, //LPE FIXME new Context(payload.env.context).eval();
                     buttonContext,
                     onClose: async () => {
-                        if (!closeDialog) {
+                        if (!closeDialog && status(comp) !== "destroyed") {
                             const reload = options.reload || (() => model.root.load());
                             await reload();
                             comp.render(true); // FIXME WOWL reactivity
@@ -128,7 +128,8 @@ export function useViewButtons(model, ref, options = {}) {
 
     function getEl() {
         if (env.inDialog) {
-            return ref.el.closest(".modal");
+            const el = ref.el;
+            return el ? el.closest(".modal") : null;
         } else {
             return ref.el;
         }

@@ -7,7 +7,7 @@ import {
     createTextNode,
     getTag,
 } from "@web/core/utils/xml";
-import { toStringExpression } from "./utils";
+import { toStringExpression, BUTTON_CLICK_PARAMS } from "./utils";
 
 /**
  * @typedef Compiler
@@ -16,26 +16,8 @@ import { toStringExpression } from "./utils";
  * @property {(el: Element, params: Record<string, any>) => Element} fn
  */
 
-const { xml } = owl;
+import { xml } from "@odoo/owl";
 
-const BUTTON_CLICK_PARAMS = [
-    "name",
-    "type",
-    "args",
-    "context",
-    "close",
-    "confirm",
-    "special",
-    "effect",
-    "help",
-    "modifiers",
-    // WOWL SAD: is adding the support for debounce attribute here justified or should we
-    // just override compileButton in kanban compiler to add the debounce?
-    "debounce",
-    // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
-    // This should be refactor someday
-    "noSaveDialog",
-];
 const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "id"];
 const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;
 
@@ -224,6 +206,10 @@ export class ViewCompiler {
         ];
         this.templates = templates;
         this.ctx = { readonly: "props.readonly" };
+
+        this.owlDirectiveRegexesWhitelist = this.constructor.OWL_DIRECTIVE_WHITELIST.map(
+            (d) => new RegExp(d)
+        );
         this.setup();
     }
 
@@ -276,6 +262,7 @@ export class ViewCompiler {
             return createTextNode(node.nodeValue);
         }
 
+        this.validateNode(node);
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
@@ -393,7 +380,7 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileGenericNode(el, params) {
-        const compiled = createElement(el.nodeName);
+        const compiled = createElement(el.nodeName.toLowerCase());
         const metaAttrs = ["modifiers", "attrs", "invisible", "readonly"];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {
@@ -447,7 +434,19 @@ export class ViewCompiler {
     isAlwaysInvisible(invisibleModifer, params) {
         return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
     }
+
+    validateNode(node) {
+        // detect attributes not in whitelist, starting with t-
+        const attributes = Object.values(node.attributes).map((attr) => attr.name);
+        const regexes = this.owlDirectiveRegexesWhitelist;
+        for (const attr of attributes) {
+            if (attr.startsWith("t-") && !regexes.some((regex) => regex.test(attr))) {
+                console.warn(`Forbidden directive ${attr} used in arch`);
+            }
+        }
+    }
 }
+ViewCompiler.OWL_DIRECTIVE_WHITELIST = [];
 
 let templateIds = Object.create(null);
 /**

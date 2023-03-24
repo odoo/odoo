@@ -8,7 +8,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 const placeholder = "/web/static/img/placeholder.png";
 

@@ -360,15 +360,15 @@ class Applicant(models.Model):
             applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from):
+        for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
             applicant.partner_id.email = applicant.email_from
 
     def _inverse_partner_phone(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone and not a.partner_id.phone):
             applicant.partner_id.phone = applicant.partner_phone
 
     def _inverse_partner_mobile(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
             applicant.partner_id.mobile = applicant.partner_mobile
 
     @api.depends('stage_id.hired_stage')
@@ -430,6 +430,8 @@ class Applicant(models.Model):
             interviewers_to_clean = old_interviewers - self.interviewer_ids
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
+        if vals.get('emp_id'):
+            self._update_employee_from_applicant()
         return res
 
     def get_empty_list_help(self, help):
@@ -674,6 +676,10 @@ class Applicant(models.Model):
         dict_act_window = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         dict_act_window['context'] = employee_data
         return dict_act_window
+
+    def _update_employee_from_applicant(self):
+        # This method is to be overriden
+        return
 
     def archive_applicant(self):
         return {

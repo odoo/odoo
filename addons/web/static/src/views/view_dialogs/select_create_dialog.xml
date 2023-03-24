@@ -3,6 +3,13 @@
 
     <t t-name="web.SelectCreateDialog" owl="1">
         <Dialog title="props.title" withBodyPadding="false">
+            <t t-set-slot="header" t-slot-scope="scope">
+                <t t-call="web.Dialog.header">
+                    <t t-set="close" t-value="scope.close"/>
+                    <t t-set="fullscreen" t-value="scope.isFullscreen"/>
+                </t>
+                <button t-if="this.canUnselect" class="btn o_clear_button" t-on-click="() => this.unselect()">Clear</button>
+            </t>
             <View t-props="viewProps" />
             <t t-set-slot="footer">
                 <t t-if="props.multiSelect">
@@ -15,7 +22,7 @@
                     </button>
                 </t>
                 <t t-if="!props.noCreate">
-                    <button class="btn btn-primary o_create_button" data-hotkey="c" t-on-click="createEditRecord">Create</button>
+                    <button class="btn btn-primary o_create_button" data-hotkey="c" t-on-click="createEditRecord">New</button>
                 </t>
                 <button class="btn o_form_button_cancel" t-att-class="(!props.multiSelect &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click="() => this.props.close()">Close</button>
             </t>

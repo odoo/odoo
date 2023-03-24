@@ -3,8 +3,9 @@
 # 	* sales_team
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,11 +31,13 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Beheren\" title=
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"E-mail\" "
+"title=\"E-mail\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-odoo\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-odoo\">Gearchiveerd</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -71,7 +74,7 @@ msgstr "Activiteitssoorten"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr ""
+msgstr "Voeg een teamlid toe"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
@@ -245,7 +248,7 @@ msgstr "Ontwerp"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__email
@@ -289,12 +292,12 @@ msgstr "Volgers (Relaties)"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Group By..."
-msgstr "Groepeer op..."
+msgstr "Groeperen op..."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
@@ -316,7 +319,7 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
-"Indien Waar, kunnen gebruikers tot meerdere verkoopteams behoren. Anders is "
+"Indien True, kunnen gebruikers tot meerdere verkoopteams behoren. Anders is "
 "het lidmaatschap beperkt tot een enkel verkoopteam."
 
 #. module: sales_team
@@ -339,7 +342,7 @@ msgid ""
 "this partner"
 msgstr ""
 "Indien aangevinkt, wordt dit verkoopteam gebruikt voor verkopen en "
-"opdrachten met betrekking tot deze partner"
+"opdrachten met betrekking tot deze relatie"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -347,8 +350,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Als het actief veld is ingesteld als onwaar, kun je het verkoopteam "
-"verbergen zonder het te verwijderen."
+"Als het actief veld is ingesteld als false, kun je het verkoopteam verbergen"
+" zonder het te verwijderen."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -632,7 +635,7 @@ msgstr "Teamleden"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
-msgstr ""
+msgstr "Teamleden zijn verkopers die aan specifieke teams zijn toegewezen."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
@@ -678,14 +681,15 @@ msgstr "Training"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
-"UX: geef gebruikers om niet toe te voegen aan het momenteel gekozen team om "
-"duplicaten te voorkomen"
+"Gebruikerservaring: geef gebruikers om niet toe te voegen aan het momenteel "
+"gekozen team om duplicaten te voorkomen"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr "UX: Beperk tot teambedrijf of alles als er geen bedrijf is"
+msgstr ""
+"Gebruikerservering: Beperk tot teambedrijf of alles als er geen bedrijf is"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -718,8 +722,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
-"Gebruik Tags om je Opportunities te beheren en te volgen (productstructuur, "
-"verkooptype, ...)"
+"Gebruik labels om je verkoopkansen te beheren en te volgen "
+"(productstructuur, verkooptype, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -729,7 +733,7 @@ msgstr "Gebruiker"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr "Bedrijf van Gebruiker"
+msgstr "Bedrijf van gebruiker"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
@@ -774,7 +778,7 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr "bijv. Noord Amerika"
+msgstr "bijv. Noord-Amerika"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form

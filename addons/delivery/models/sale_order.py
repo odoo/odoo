@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
-        return self.amount_total - delivery_cost
+        return self.env['delivery.carrier']._compute_currency(self, self.amount_total - delivery_cost, 'pricelist_to_company')
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
@@ -36,6 +36,11 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.recompute_delivery_price = True
+
+    def _get_update_prices_lines(self):
+        """ Exclude delivery lines from price list recomputation based on product instead of carrier """
+        lines = super()._get_update_prices_lines()
+        return lines.filtered(lambda line: not line.is_delivery)
 
     def _remove_delivery_line(self):
         """Remove delivery products from the sales orders"""

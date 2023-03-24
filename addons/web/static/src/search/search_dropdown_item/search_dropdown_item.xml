@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SearchDropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@role='menuitem']" position="attributes">
+            <attribute name="role">menuitemcheckbox</attribute>
+            <attribute name="t-att-aria-checked">props.checked ? 'true' : 'false'</attribute>
+        </xpath>
+    </t>
+
+</templates>

@@ -38,7 +38,8 @@ export class KanbanCompiler extends ViewCompiler {
                 doNotCopyAttributes: true,
             },
             {
-                selector: ".dropdown-toggle:not(.kanban_ignore_dropdown),.o_kanban_manage_toggle_button",
+                selector:
+                    ".dropdown-toggle:not(.kanban_ignore_dropdown),.o_kanban_manage_toggle_button",
                 fn: this.compileDropdownToggler,
                 doNotCopyAttributes: true,
             },
@@ -87,7 +88,7 @@ export class KanbanCompiler extends ViewCompiler {
             return this.renderDropdown(part);
         }
         dropdown.parts.push(part);
-        if (part !== "menu") {
+        if (part !== "menu" || dropdown.parts.includes("dropdown")) {
             dropdown.shouldInsert = !dropdown.inserted;
             dropdown.inserted = true;
         }
@@ -231,7 +232,9 @@ export class KanbanCompiler extends ViewCompiler {
      */
     compileField(el, params) {
         let compiled;
+        let isSpan = false;
         if (!el.hasAttribute("widget")) {
+            isSpan = true;
             // fields without a specified widget are rendered as simple spans in kanban records
             const fieldName = el.getAttribute("name");
             compiled = createElement("span", { "t-out": `record["${fieldName}"].value` });
@@ -252,7 +255,10 @@ export class KanbanCompiler extends ViewCompiler {
             classNames.push("o_text_bold");
         }
         if (classNames.length > 0) {
-            compiled.setAttribute("class", toStringExpression(classNames.join(" ")));
+            const clsFormatted = isSpan
+                ? classNames.join(" ")
+                : toStringExpression(classNames.join(" "));
+            compiled.setAttribute("class", clsFormatted);
         }
         const attrs = {};
         for (const attr of el.attributes) {
@@ -300,3 +306,20 @@ export class KanbanCompiler extends ViewCompiler {
         return compiled;
     }
 }
+KanbanCompiler.OWL_DIRECTIVE_WHITELIST = [
+    ...ViewCompiler.OWL_DIRECTIVE_WHITELIST,
+    "t-name",
+    "t-esc",
+    "t-out",
+    "t-set",
+    "t-value",
+    "t-if",
+    "t-else",
+    "t-elif",
+    "t-foreach",
+    "t-as",
+    "t-key",
+    "t-att.*",
+    "t-call",
+    "t-translation",
+];

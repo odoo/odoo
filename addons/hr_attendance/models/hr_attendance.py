@@ -163,7 +163,7 @@ class HrAttendance(models.Model):
                 start, stop, emp.resource_id
             )[emp.resource_id.id]
             # Substract Global Leaves and Employee's Leaves
-            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(start, stop, emp.resource_id)
+            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(start, stop, emp.resource_id, domain=[])
             expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
 
             # working_times = {date: [(start, stop)]}
@@ -279,13 +279,14 @@ class HrAttendance(models.Model):
 
     def write(self, vals):
         attendances_dates = self._get_attendances_dates()
-        super(HrAttendance, self).write(vals)
+        result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
             # overtime if the attendances have been moved to another day
             for emp, dates in self._get_attendances_dates().items():
                 attendances_dates[emp] |= dates
             self._update_overtime(attendances_dates)
+        return result
 
     def unlink(self):
         attendances_dates = self._get_attendances_dates()

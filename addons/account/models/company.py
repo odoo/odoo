@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 
 
 MONTH_SELECTION = [
@@ -83,12 +84,12 @@ class ResCompany(models.Model):
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
@@ -206,7 +207,8 @@ class ResCompany(models.Model):
     @api.depends('country_id')
     def compute_account_tax_fiscal_country(self):
         for record in self:
-            record.account_fiscal_country_id = record.country_id
+            if not record.account_fiscal_country_id:
+                record.account_fiscal_country_id = record.country_id
 
     @api.depends('account_fiscal_country_id')
     def _compute_account_enabled_tax_country_ids(self):
@@ -316,7 +318,7 @@ class ResCompany(models.Model):
                 error_msg = _('There are still unposted entries in the period you want to lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'tree',
-                    'name': 'Unposted Entries',
+                    'name': _('Unposted Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
@@ -588,6 +590,9 @@ class ResCompany(models.Model):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
+        if not self.env.user.has_group('account.group_account_user'):
+            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+
         def build_move_info(move):
             return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
 
@@ -615,8 +620,11 @@ class ResCompany(models.Model):
                 results_by_journal['results'].append(rslt)
                 continue
 
-            all_moves_count = self.env['account.move'].search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
+            # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
+            # This is required in order to generate consistent hashs.
+            # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
+            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
+            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
                                             ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
             if not moves:
                 rslt.update({
@@ -628,8 +636,13 @@ class ResCompany(models.Model):
             previous_hash = u''
             start_move_info = []
             hash_corrupted = False
+            current_hash_version = 1
             for move in moves:
-                if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
+                computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                    current_hash_version += 1
+                    computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                if move.inalterable_hash != computed_hash:
                     rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})
                     results_by_journal['results'].append(rslt)
                     hash_corrupted = True

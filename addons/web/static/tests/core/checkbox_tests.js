@@ -16,7 +16,7 @@ import {
     nextTick,
 } from "@web/../tests/helpers/utils";
 
-const { Component, useState, xml } = owl;
+import { Component, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let target;

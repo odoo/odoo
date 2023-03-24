@@ -61,7 +61,7 @@
                         </div>
                     </Transition>
                     <t t-if="section.canAddFilter">
-                        <FilterAutoComplete t-props="getAutoCompleteProps(section)" />
+                        <AutoComplete t-props="getAutoCompleteProps(section)" />
                     </t>
                 </div>
             </t>
@@ -71,7 +71,7 @@
     <t t-name="web.CalendarFilterPanel.filter" owl="1">
         <div
             class="o_calendar_filter_item w-100 position-relative mb-2"
-            t-att-class="filter.colorIndex !== null ? 'o_cw_filter_color_' + filter.colorIndex : ''"
+            t-att-class="getFilterColor(filter)"
             t-att-data-value="filter.value"
             t-on-mouseenter="(ev) => this.onFilterMouseEnter(section, filter, ev)"
             t-on-mouseleave="() => this.onFilterMouseLeave(section, filter)"
@@ -141,10 +141,6 @@
                 />
             </div>
         </div>
-    </t>
-
-    <t t-name="web.FilterAutoComplete" owl="1">
-        <AutoComplete value="state.value" sources="sources" autoSelect="true" placeholder="props.placeholder" onSelect.bind="onSelect" onInput.bind="onInput" />
     </t>
 
 </templates>

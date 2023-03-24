@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from types import SimpleNamespace
+from unittest.mock import patch
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.tests.common import TransactionCase, Form, tagged, new_test_user
 from odoo.tools import mute_logger
 
 
@@ -187,6 +189,38 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_user_2.exists(), 'Should have kept the user')
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
+
+    def test_context_get_lang(self):
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', 'in', ['fr_FR', 'es_ES', 'de_DE', 'en_US'])
+        ]).write({'active': True})
+
+        user = new_test_user(self.env, 'jackoneill')
+        user = user.with_user(user)
+        user.lang = 'fr_FR'
+
+        company = user.company_id.partner_id.sudo()
+        company.lang = 'de_DE'
+
+        request = SimpleNamespace()
+        request.best_lang = 'es_ES'
+        request_patch = patch('odoo.addons.base.models.res_users.request', request)
+        self.addCleanup(request_patch.stop)
+        request_patch.start()
+
+        self.assertEqual(user.context_get()['lang'], 'fr_FR')
+        self.env.registry.clear_caches()
+        user.lang = False
+
+        self.assertEqual(user.context_get()['lang'], 'es_ES')
+        self.env.registry.clear_caches()
+        request_patch.stop()
+
+        self.assertEqual(user.context_get()['lang'], 'de_DE')
+        self.env.registry.clear_caches()
+        company.lang = False
+
+        self.assertEqual(user.context_get()['lang'], 'en_US')
 
 
 @tagged('post_install', '-at_install')

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
@@ -29,17 +30,40 @@ class StockForecasted extends Component{
 
         this.context = useState(this.props.action.context);
         this.productId = this.context.active_id;
-        this.resModel = this.context.active_model || this.context.params.active_model || 'product.template';
-        const isTemplate = this.resModel === 'product.template';
-        this.reportModelName = `report.stock.report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
-        this.title = this.props.action.name;
+        this.title = this.props.action.name || _t("Forecasted Report");
+        if(!this.context.active_id){
+            this.context.active_id = this.props.action.params.active_id;
+            this.reloadReport();
+        }
 
         this.docs = useState({});
-        
+        this.warehouses = useState([]);
+
         onWillStart(this._getReportValues);
     }
 
     async _getReportValues(){
+        this.resModel = this.context.active_model || (this.context.params && this.context.params.active_model);
+        if (!this.resModel) {
+            if (this.props.action.res_model) {
+                const actionModel = await this.orm.read('ir.model', [Number(this.props.action.res_model)], ['model']);
+                if (actionModel.length && actionModel[0].model) {
+                    this.resModel = actionModel[0].model
+                }
+            } else if (this.props.action._originalAction) {
+                const originalContextAction = JSON.parse(this.props.action._originalAction).context;
+                if (originalContextAction) {
+                    this.resModel = originalContextAction.active_model
+                }
+            }
+        }
+        const isTemplate = !this.resModel || this.resModel === 'product.template';
+        this.reportModelName = `report.stock.report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
+        this.warehouses.splice(0, this.warehouses.length);
+        this.warehouses.push(...await this.orm.call('report.stock.report_product_product_replenishment', 'get_warehouses', []));
+        if (!this.context.warehouse) {
+            this.updateWarehouse(this.warehouses[0].id);
+        }
         const reportValues = await this.orm.call(
             this.reportModelName, 'get_report_values',
             [],
@@ -77,7 +101,7 @@ class StockForecasted extends Component{
             ['state', '=', 'forecast'],
             ['warehouse_id', '=', this.context.warehouse],
         ];
-        if (this.resModel === 'product.template') {
+        if (this.resModel === undefined || this.resModel === 'product.template') {
             domain.push(['product_tmpl_id', '=', this.productId]);
         } else if (this.resModel === 'product.product') {
             domain.push(['product_id', '=', this.productId]);

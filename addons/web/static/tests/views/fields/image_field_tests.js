@@ -19,6 +19,11 @@ const PRODUCT_IMAGE =
 let serverData;
 let target;
 
+function getUnique(target) {
+    const src = target.dataset.src;
+    return new URL(src).searchParams.get("unique");
+}
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -262,6 +267,91 @@ QUnit.module("Fields", (hooks) => {
             "the image should have the new src"
         );
     });
+
+    QUnit.test(
+        "clicking save manually after uploading new image should change the unique of the image src",
+        async function (assert) {
+            serverData.models.partner.onchanges = { foo: () => {} };
+
+            const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
+            rec.document = "3 kb";
+            rec.__last_update = "2022-08-05 08:37:00"; // 1659688620000
+
+            // 1659692220000, 1659695820000
+            const lastUpdates = ["2022-08-05 09:37:00", "2022-08-05 10:37:00"];
+            let index = 0;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: /* xml */ `
+                    <form>
+                        <field name="foo"/>
+                        <field name="document" widget="image" />
+                    </form>`,
+                mockRPC(_route, { method, args }) {
+                    if (method === "write") {
+                        args[1].__last_update = lastUpdates[index];
+                        args[1].document = "4 kb";
+                        index++;
+                    }
+                },
+            });
+            assert.strictEqual(
+                getUnique(target.querySelector(".o_field_image img")),
+                "1659688620000"
+            );
+
+            await editInput(
+                target,
+                "input[type=file]",
+                new File(
+                    [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+                    "fake_file.png",
+                    { type: "png" }
+                )
+            );
+            assert.strictEqual(
+                target.querySelector("div[name=document] img").dataset.src,
+                `data:image/png;base64,${MY_IMAGE}`
+            );
+
+            await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
+            assert.strictEqual(
+                target.querySelector("div[name=document] img").dataset.src,
+                `data:image/png;base64,${MY_IMAGE}`
+            );
+
+            await clickSave(target);
+            assert.strictEqual(
+                getUnique(target.querySelector(".o_field_image img")),
+                "1659692220000"
+            );
+
+            // Change the image again. After clicking save, it should have the correct new url.
+            await editInput(
+                target,
+                "input[type=file]",
+                new File(
+                    [Uint8Array.from([...atob(PRODUCT_IMAGE)].map((c) => c.charCodeAt(0)))],
+                    "fake_file2.gif",
+                    { type: "png" }
+                )
+            );
+            assert.strictEqual(
+                target.querySelector("div[name=document] img").dataset.src,
+                `data:image/gif;base64,${PRODUCT_IMAGE}`
+            );
+
+            await clickSave(target);
+            assert.strictEqual(
+                getUnique(target.querySelector(".o_field_image img")),
+                "1659695820000"
+            );
+        }
+    );
 
     QUnit.test("ImageField: option accepted_file_extensions", async function (assert) {
         await makeView({
@@ -533,11 +623,6 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-
-        function getUnique(target) {
-            const src = target.dataset.src;
-            return new URL(src).searchParams.get("unique");
-        }
 
         assert.verifySteps(["get_views", "read"]);
         assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");

@@ -40,13 +40,12 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (this.fileInput && this.fileInput.el) {
-                this.fileInput.el.value = '';
-            }
             if (this.chatterOwner && !this.chatterOwner.attachmentBoxView) {
                 this.chatterOwner.openAttachmentBoxView();
             }
             this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
+            // clear at the end because side-effect of emptying `files`
+            this.fileInput.value = '';
         },
         /**
          * @private
@@ -149,14 +148,14 @@ registerModel({
                     }
                 }
             }
+            if (activity && activity.exists()) {
+                await activity.markAsDone({ attachments });
+            }
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
             }
-            if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
+            if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
-            }
-            if (activity && activity.exists()) {
-                activity.markAsDone({ attachments });
             }
         },
     },

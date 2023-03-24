@@ -23,7 +23,7 @@ registerModel({
         async onClickOk() {
             const chatter = this.chatter;
             await this.attachment.remove();
-            if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
+            if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
             }
         },

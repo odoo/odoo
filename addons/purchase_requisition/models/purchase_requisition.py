@@ -107,7 +107,7 @@ class PurchaseRequisition(models.Model):
         # try to set all associated quotations to cancel state
         for requisition in self:
             for requisition_line in requisition.line_ids:
-                requisition_line.supplier_info_ids.unlink()
+                requisition_line.supplier_info_ids.sudo().unlink()
             requisition.purchase_ids.button_cancel()
             for po in requisition.purchase_ids:
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
@@ -147,13 +147,13 @@ class PurchaseRequisition(models.Model):
             raise UserError(_('You have to cancel or validate every RfQ before closing the purchase requisition.'))
         for requisition in self:
             for requisition_line in requisition.line_ids:
-                requisition_line.supplier_info_ids.unlink()
+                requisition_line.supplier_info_ids.sudo().unlink()
         self.write({'state': 'done'})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
-            raise UserError(_('You can only delete draft requisitions.'))
+            raise UserError(_('You can only delete draft or cancelled requisitions.'))
 
     def unlink(self):
         # Draft requisitions could have some requisition lines.
@@ -181,6 +181,10 @@ class PurchaseRequisitionLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # TODO: replace with computes in master
+        for vals in vals_list:
+            if not vals.get('product_uom_id'):
+                vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
         lines = super().create(vals_list)
         for line, vals in zip(lines, vals_list):
             if line.requisition_id.state not in ['draft', 'cancel', 'done'] and line.requisition_id.is_quantity_copy == 'none':
@@ -195,6 +199,9 @@ class PurchaseRequisitionLine(models.Model):
         return lines
 
     def write(self, vals):
+        # TODO: replace with computes in master
+        if vals.get('product_id') and not vals.get('product_uom_id'):
+            vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
             if vals['price_unit'] <= 0.0 and any(
@@ -214,7 +221,7 @@ class PurchaseRequisitionLine(models.Model):
         purchase_requisition = self.requisition_id
         if purchase_requisition.type_id.quantity_copy == 'none' and purchase_requisition.vendor_id:
             # create a supplier_info only in case of blanket order
-            self.env['product.supplierinfo'].create({
+            self.env['product.supplierinfo'].sudo().create({
                 'partner_id': purchase_requisition.vendor_id.id,
                 'product_id': self.product_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,

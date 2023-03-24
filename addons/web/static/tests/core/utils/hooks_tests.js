@@ -14,7 +14,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onMounted, useState, xml } = owl;
+import { Component, onMounted, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {

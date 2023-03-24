@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { loadLanguages } from "@web/core/l10n/translation";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     setup() {
@@ -28,24 +28,23 @@ export class TranslationDialog extends Component {
 
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
-                if (!term.value && !this.props.showSource) {
-                    term.value = term.source;
-                }
-                return {
-                    id: term.id,
-                    lang: term.lang,
+                const termInfo = {
+                    ...term,
                     langName: relatedLanguage[1],
-                    source: term.source,
-                    // we set the translation value coming from the database, except for the language
-                    // the user is currently utilizing. Then we set the translation value coming
-                    // from the value of the field in the form
-                    value:
-                        term.lang === this.user.lang &&
-                        !this.props.showSource &&
-                        !this.props.isComingFromTranslationAlert
-                            ? this.props.userLanguageValue
-                            : term.value || "",
+                    value: term.value || "",
                 };
+                // we set the translation value coming from the database, except for the language
+                // the user is currently utilizing. Then we set the translation value coming
+                // from the value of the field in the form
+                if (
+                    term.lang === this.user.lang &&
+                    !this.props.showSource &&
+                    !this.props.isComingFromTranslationAlert
+                ) {
+                    this.updatedTerms[term.id] = this.props.userLanguageValue;
+                    termInfo.value = this.props.userLanguageValue;
+                }
+                return termInfo;
             });
             this.terms.sort((a, b) => a.langName.localeCompare(b.langName));
         });
@@ -82,9 +81,10 @@ export class TranslationDialog extends Component {
                     if (!translations[term.lang]) {
                         translations[term.lang] = {};
                     }
-                    translations[term.lang][term.source] = updatedTermValue;
+                    const oldTermValue = term.value ? term.value : term.source;
+                    translations[term.lang][oldTermValue] = updatedTermValue || term.source;
                 } else {
-                    translations[term.lang] = updatedTermValue;
+                    translations[term.lang] = updatedTermValue || false;
                 }
             }
         });
@@ -95,19 +95,7 @@ export class TranslationDialog extends Component {
             translations,
         ]);
 
-        // we might have to update the value of the field on the form
-        // view that opened the translation dialog
-        const currentTerm = this.terms.find(
-            (term) => term.lang === this.user.lang && !this.props.showSource
-        );
-        if (
-            currentTerm &&
-            currentTerm.id in this.updatedTerms &&
-            currentTerm.value !== this.updatedTerms[currentTerm.id]
-        ) {
-            this.props.updateField(this.updatedTerms[currentTerm.id]);
-        }
-
+        await this.props.onSave();
         this.props.close();
     }
 }

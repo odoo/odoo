@@ -29,10 +29,17 @@ def CONTENT_MAXAGE():
     return http.STATIC_CACHE_LONG
 
 
+MOMENTJS_LANG_CODES_MAP = {
+    "sr_RS": "sr_cyrl",
+    "sr@latin": "sr"
+}
+
+
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
+        lang = MOMENTJS_LANG_CODES_MAP.get(lang, lang)
         magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
         for code in magic_file_finding:
             try:
@@ -99,7 +106,7 @@ class WebClient(http.Controller):
         translations_per_module, lang_params = request.env["ir.http"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
-            'lang': lang,
+            'lang': lang_params and lang_params["code"],
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,

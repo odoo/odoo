@@ -8,11 +8,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
         assert.expect(6);
 
         const orm = {
-            silent: {
-                call: async (model, method) => {
-                    assert.step(`${method}-${model}`);
-                    return model;
-                },
+            call: async (model, method) => {
+                assert.step(`${method}-${model}`);
+                return model;
             },
         };
 
@@ -33,14 +31,12 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
         assert.expect(6);
 
         const orm = {
-            silent: {
-                call: async (model, method, args) => {
-                    if (method === "display_name_for" && model === "ir.model") {
-                        const [modelName] = args[0];
-                        assert.step(`${modelName}`);
-                        return [{ display_name: modelName, model: modelName }];
-                    }
-                },
+            call: async (model, method, args) => {
+                if (method === "display_name_for" && model === "ir.model") {
+                    const [modelName] = args[0];
+                    assert.step(`${modelName}`);
+                    return [{ display_name: modelName, model: modelName }];
+                }
             },
         };
 
@@ -60,7 +56,7 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
     QUnit.test("Register label correctly memorize labels", function (assert) {
         assert.expect(2);
 
-        const metadataRepository = new MetadataRepository({ silent: {} });
+        const metadataRepository = new MetadataRepository({});
 
         assert.strictEqual(metadataRepository.getLabel("model", "field", "value"), undefined);
         const label = "label";
@@ -70,12 +66,10 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
 
     QUnit.test("Name_get are collected and executed once by clock", async function (assert) {
         const orm = {
-            silent: {
-                call: async (model, method, args) => {
-                    const ids = args[0];
-                    assert.step(`${method}-${model}-[${ids.join(",")}]`);
-                    return ids.map((id) => [id, id.toString()]);
-                },
+            call: async (model, method, args) => {
+                const ids = args[0];
+                assert.step(`${method}-${model}-[${ids.join(",")}]`);
+                return ids.map((id) => [id, id.toString()]);
             },
         };
 
@@ -105,12 +99,10 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
 
     QUnit.test("Name_get to fetch are cleared after being fetched", async function (assert) {
         const orm = {
-            silent: {
-                call: async (model, method, args) => {
-                    const ids = args[0];
-                    assert.step(`${method}-${model}-[${ids.join(",")}]`);
-                    return ids.map((id) => [id, id.toString()]);
-                },
+            call: async (model, method, args) => {
+                const ids = args[0];
+                assert.step(`${method}-${model}-[${ids.join(",")}]`);
+                return ids.map((id) => [id, id.toString()]);
             },
         };
 
@@ -128,18 +120,40 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
     });
 
     QUnit.test(
+        "Assigning a result after triggering the request should not crash",
+        async function (assert) {
+            const orm = {
+                call: async (model, method, args) => {
+                    const ids = args[0];
+                    assert.step(`${method}-${model}-[${ids.join(",")}]`);
+                    return ids.map((id) => [id, id.toString()]);
+                },
+            };
+
+            const metadataRepository = new MetadataRepository(orm);
+
+            assert.throws(() => metadataRepository.getRecordDisplayName("A", 1));
+            assert.verifySteps([]);
+            metadataRepository.setDisplayName("A", 1, "test");
+            assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "test");
+
+            await nextTick();
+            assert.verifySteps(["name_get-A-[1]"]);
+            assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "1");
+        }
+    );
+
+    QUnit.test(
         "Name_get will retry with one id by request in case of failure",
         async function (assert) {
             const orm = {
-                silent: {
-                    call: async (model, method, args) => {
-                        const ids = args[0];
-                        assert.step(`${method}-${model}-[${ids.join(",")}]`);
-                        if (model === "B" && ids.includes(1)) {
-                            throw new Error("Missing");
-                        }
-                        return ids.map((id) => [id, id.toString()]);
-                    },
+                call: async (model, method, args) => {
+                    const ids = args[0];
+                    assert.step(`${method}-${model}-[${ids.join(",")}]`);
+                    if (model === "B" && ids.includes(1)) {
+                        throw new Error("Missing");
+                    }
+                    return ids.map((id) => [id, id.toString()]);
                 },
             };
 

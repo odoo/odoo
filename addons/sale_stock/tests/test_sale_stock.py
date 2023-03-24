@@ -433,7 +433,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
     def test_06_uom(self):
         """ Sell a dozen of products stocked in units. Check that the quantities on the sale order
         lines as well as the delivered quantities are handled in dozen while the moves themselves
-        are handled in units. Edit the ordered quantities, check that the quantites are correctly
+        are handled in units. Edit the ordered quantities, check that the quantities are correctly
         updated on the moves. Edit the ir.config_parameter to propagate the uom of the sale order
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
@@ -1044,14 +1044,23 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         """Create a SO with lines using packaging, check the packaging propagate
         to its move.
         """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_pack_ship'
         product = self.env['product.product'].create({
             'name': 'Product with packaging',
             'type': 'product',
         })
 
-        packaging = self.env['product.packaging'].create({
-            'name': 'box',
+        packOf10 = self.env['product.packaging'].create({
+            'name': 'PackOf10',
             'product_id': product.id,
+            'qty': 10
+        })
+
+        packOf20 = self.env['product.packaging'].create({
+            'name': 'PackOf20',
+            'product_id': product.id,
+            'qty': 20
         })
 
         so = self.env['sale.order'].create({
@@ -1059,13 +1068,32 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'order_line': [
                 (0, 0, {
                     'product_id': product.id,
-                    'product_uom_qty': 1.0,
+                    'product_uom_qty': 10.0,
                     'product_uom': product.uom_id.id,
-                    'product_packaging_id': packaging.id,
+                    'product_packaging_id': packOf10.id,
                 })],
         })
         so.action_confirm()
-        self.assertEqual(so.order_line.move_ids.product_packaging_id, packaging)
+        pick = so.order_line.move_ids
+        pack = pick.move_orig_ids
+        ship = pack.move_orig_ids
+        self.assertEqual(pick.product_packaging_id, packOf10)
+        self.assertEqual(pack.product_packaging_id, packOf10)
+        self.assertEqual(ship.product_packaging_id, packOf10)
+
+        so.order_line[0].write({
+            'product_packaging_id': packOf20.id,
+            'product_uom_qty': 20
+        })
+        self.assertEqual(so.order_line.move_ids.product_packaging_id, packOf20)
+        self.assertEqual(pick.product_packaging_id, packOf20)
+        self.assertEqual(pack.product_packaging_id, packOf20)
+        self.assertEqual(ship.product_packaging_id, packOf20)
+
+        so.order_line[0].write({'product_packaging_id': False})
+        self.assertFalse(pick.product_packaging_id)
+        self.assertFalse(pack.product_packaging_id)
+        self.assertFalse(ship.product_packaging_id)
 
     def test_15_cancel_delivery(self):
         """ Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing
@@ -1206,6 +1234,37 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so.order_line[1].qty_delivered, 1)
         self.assertEqual(so.order_line[1].product_uom.id, uom_km_id)
 
+    def test_multiple_returns(self):
+        # Creates a sale order for 10 products.
+        sale_order = self._get_new_sale_order()
+        # Valids the sale order, then valids the delivery.
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity_done': 10})
+        picking.button_validate()
+
+        # Creates a return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Check that the correct quantity is set on the retrun
+        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        return_wizard.product_return_moves.quantity = 2
+        # Valids the return picking.
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.write({'quantity_done': 2})
+        return_picking.button_validate()
+
+        # Creates a second return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Check that the remaining quantity is set on the retrun
+        self.assertEqual(return_wizard.product_return_moves.quantity, 8)
+
     def test_return_with_mto_and_multisteps(self):
         """
         Suppose a product P and a 3-steps delivery.
@@ -1292,3 +1351,63 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so.order_line.product_uom_qty = 8
         self.assertRecordValues(so.picking_ids, [{'location_id': warehouse.lot_stock_id.id, 'location_dest_id': customer_location.id}])
         self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+
+    def test_packaging_and_qty_decrease(self):
+        packaging = self.env['product.packaging'].create({
+            'name': "Super Packaging",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_uom_qty = 10
+        so = so_form.save()
+        so.action_confirm()
+
+        self.assertEqual(so.order_line.product_packaging_id, packaging)
+
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 8
+
+        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+
+    def test_backorder_and_decrease_sol_qty(self):
+        """
+        2 steps delivery
+        SO with 10 x P
+        Process pickings of 6 x P with backorders
+        Update SO: 7 x P
+        Backorder should be updated: 1 x P
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        stock_location = warehouse.lot_stock_id
+        out_location = warehouse.wh_output_stock_loc_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        so = self._get_new_sale_order()
+        so.action_confirm()
+        pick01, ship01 = so.picking_ids
+
+        pick01.move_line_ids.qty_done = 6
+        pick01._action_done()
+        pick02 = pick01.backorder_ids
+
+        ship01.move_line_ids[0].qty_done = 6
+        ship01._action_done()
+        ship02 = ship01.backorder_ids
+
+        so.order_line.product_uom_qty = 7
+
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('id'), [
+            {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 6.0, 'quantity_done': 6.0, 'state': 'done'},
+            {'location_id': stock_location.id, 'location_dest_id': out_location.id, 'product_uom_qty': 6.0, 'quantity_done': 6.0, 'state': 'done'},
+            {'location_id': stock_location.id, 'location_dest_id': out_location.id, 'product_uom_qty': 1.0, 'quantity_done': 0.0, 'state': 'assigned'},
+            {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 1.0, 'quantity_done': 0.0, 'state': 'waiting'},
+        ])
+        self.assertEqual(ship01.move_ids.move_orig_ids, (pick01 | pick02).move_ids)
+        self.assertEqual(ship02.move_ids.move_orig_ids, (pick01 | pick02).move_ids)

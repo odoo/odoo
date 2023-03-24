@@ -112,7 +112,7 @@ class SurveyQuestion(models.Model):
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True)
-    comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
+    comment_count_as_answer = fields.Boolean('Comment is an answer')
     # question validation
     validation_required = fields.Boolean('Validate entry', compute='_compute_validation_required', readonly=False, store=True)
     validation_email = fields.Boolean('Input must be an email')

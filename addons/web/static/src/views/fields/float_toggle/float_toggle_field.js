@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { formatFloat } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FloatToggleField extends Component {
     // TODO perf issue (because of update round trip)
@@ -48,8 +48,16 @@ FloatToggleField.supportedTypes = ["float"];
 
 FloatToggleField.isEmpty = () => false;
 FloatToggleField.extractProps = ({ attrs, field }) => {
+    let digits;
+    if (attrs.digits) {
+        digits = JSON.parse(attrs.digits);
+    } else if (attrs.options.digits) {
+        digits = attrs.options.digits;
+    } else if (Array.isArray(field.digits)) {
+        digits = field.digits;
+    }
     return {
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
+        digits,
         range: attrs.options.range,
         factor: attrs.options.factor,
         disableReadOnly: attrs.options.force_button || false,

@@ -10,7 +10,7 @@ import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mount, nextTick, patchWithCleanup } from "../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 class FileUploadProgressTestRecord extends FileUploadProgressRecord {}

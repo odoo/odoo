@@ -105,12 +105,15 @@
         <field name="arch" type="xml">
             <form string="Purchase Agreements">
             <field name="company_id" invisible="1"/>
+            <field name="currency_id" invisible="1"/>
             <header>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation"
+                    context="{'default_currency_id': currency_id}"
                     attrs="{'invisible': [('state', '!=', 'open')]}"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
+                    context="{'default_currency_id': currency_id}"
                     attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
                 <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
                 <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
@@ -127,7 +130,7 @@
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>
-                <div class="float-start">
+                <div class="oe_title">
                     <label for="name" class="oe_inline"/>
                     <h1>
                         <field name="name"/>
@@ -174,7 +177,7 @@
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_category_id" invisible="1"/>
-                                    <field name="product_uom_id" />
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="schedule_date"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"

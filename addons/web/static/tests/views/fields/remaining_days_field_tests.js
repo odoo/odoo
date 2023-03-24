@@ -225,6 +225,28 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "10/09/2017");
     });
 
+    QUnit.test(
+        "RemainingDaysField on a date field on a new record in form",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="date" widget="remaining_days" />
+                </form>`,
+            });
+
+            assert.containsOnce(
+                target,
+                ".o_form_editable .o_field_widget[name='date'] .o_datepicker"
+            );
+            await click(target.querySelector(".o_field_widget[name='date'] .o_datepicker input"));
+            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+        }
+    );
+
     QUnit.test("RemainingDaysField in form view (readonly)", async function (assert) {
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [

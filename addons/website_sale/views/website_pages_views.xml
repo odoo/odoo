@@ -78,8 +78,8 @@
     <field name="view_mode">tree,kanban</field>
     <field name="view_id" ref="product_pages_tree_view"/>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'sequence': 2, 'view_id': ref('product_pages_tree_view')}),
-        (0, 0, {'view_mode': 'kanban', 'sequence': 1, 'view_id': ref('product_pages_kanban_view')}),
+        (0, 0, {'view_mode': 'tree', 'sequence': 1, 'view_id': ref('product_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'sequence': 2, 'view_id': ref('product_pages_kanban_view')}),
     ]"/>
     <field name="context">{'create_action': 'website_sale.product_product_action_add'}</field>
 </record>

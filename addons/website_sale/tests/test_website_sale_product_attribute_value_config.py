@@ -2,56 +2,68 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
-class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        # Use the testing environment.
+        cls.computer = cls.computer.with_env(cls.env)
 
     def test_get_combination_info(self):
-        current_website = self.env['website'].get_current_website()
-        pricelist = current_website.get_current_pricelist()
-
-        self.computer = self.computer.with_context(website_id=current_website.id)
-
-        # make sure the pricelist has a 10% discount
-        self.env['product.pricelist.item'].create({
-            'price_discount': 10,
-            'compute_price': 'formula',
-            'pricelist_id': pricelist.id,
+        # Setup pricelist: make sure the pricelist has a 10% discount
+        pricelist = self.env['product.pricelist'].create({
+            'name': "test_get_combination_info",
+            'currency_id': self.currency_data['currency'].id,
+            'discount_policy': 'with_discount',
+            'company_id': self.env.company.id,
+            'item_ids': [Command.create({
+                'price_discount': 10,
+                'compute_price': 'formula',
+            })],
         })
 
+        # Setup website.
+        website = self.env['website'].create({
+            'name': "Test website",
+            'company_id': self.env.company.id,
+            'user_id': self.env.user.id,
+            'pricelist_ids': [Command.set(pricelist.ids)],
+        })
+
+        # Setup product with 15% tax.
+        product_template = self.computer.with_context(website_id=website.id)
+        product_template.write({
+            'taxes_id': [Command.set(self.company_data['default_tax_sale'].ids)],
+            'company_id': self.env.company.id,
+        })
+
+        tax_ratio = 1.15
         discount_rate = 0.9
-
-        # make sure there is a 15% tax on the product
-        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
-        self.computer.taxes_id = tax
-        tax_ratio = (100 + tax.amount) / 100
-
         currency_ratio = 2
-        pricelist.currency_id = self._setup_currency(currency_ratio)
 
-        # ensure pricelist is set to with_discount
-        pricelist.discount_policy = 'with_discount'
-
-        # CASE: B2B setting
-        group_tax_included = self.env.ref('account.group_show_line_subtotals_tax_included').with_context(active_test=False)
-        group_tax_excluded = self.env.ref('account.group_show_line_subtotals_tax_excluded').with_context(active_test=False)
-        group_tax_included.users -= self.env.user
-        group_tax_excluded.users |= self.env.user
-
-        combination_info = self.computer._get_combination_info()
+        # CASE: B2B setting (default)
+        combination_info = product_template._get_combination_info(pricelist=pricelist)
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['price_extra'], 222 * currency_ratio)
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: B2C setting
+        group_tax_included = self.env.ref('account.group_show_line_subtotals_tax_included').with_context(active_test=False)
+        group_tax_excluded = self.env.ref('account.group_show_line_subtotals_tax_excluded').with_context(active_test=False)
         group_tax_excluded.users -= self.env.user
         group_tax_included.users |= self.env.user
 
-        combination_info = self.computer._get_combination_info()
+        combination_info = product_template._get_combination_info(pricelist=pricelist)
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['price_extra'], round(222 * currency_ratio * tax_ratio, 2))
@@ -60,45 +72,51 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         # CASE: pricelist 'without_discount'
         pricelist.discount_policy = 'without_discount'
 
-        # ideally we would need to use compare_amounts everywhere, but this is
-        # the only rounding where it fails without it
-        combination_info = self.computer._get_combination_info()
-        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio), 0)
-        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['list_price'], 2222 * currency_ratio * tax_ratio), 0)
-        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['price_extra'], 222 * currency_ratio * tax_ratio), 0)
+        combination_info = product_template._get_combination_info(pricelist=pricelist)
+        self.assertEqual(combination_info['price'], pricelist.currency_id.round(2222 * discount_rate * currency_ratio * tax_ratio), 0)
+        self.assertEqual(combination_info['list_price'], pricelist.currency_id.round(2222 * currency_ratio * tax_ratio), 0)
+        self.assertEqual(combination_info['price_extra'], pricelist.currency_id.round(222 * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['has_discounted_price'], True)
 
     def test_get_combination_info_with_fpos(self):
-        self.env.user.partner_id.country_id = False
-        current_website = self.env['website'].get_current_website()
-        pricelist = current_website.get_current_pricelist()
-        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
-
-        test_product = self.env['product.template'].create({
+        # Setup product.
+        product = self.env['product.template'].create({
             'name': 'Test Product',
             'list_price': 2000,
-        }).with_context(website_id=current_website.id)
+            'taxes_id': [Command.set(self.company_data['default_tax_sale'].ids)],
+            'company_id': self.env.company.id,
+        })
 
+        # Setup pricelist: make sure the pricelist has a 10% discount
+        pricelist = self.env['product.pricelist'].create({
+            'name': "test_get_combination_info",
+            'company_id': self.env.company.id,
+            'item_ids': [Command.create({
+                'applied_on': "1_product",
+                'base': "list_price",
+                'compute_price': "fixed",
+                'fixed_price': 500,
+                'product_tmpl_id': product.id,
+            })],
+        })
+
+        # Setup website.
+        website = self.env['website'].create({
+            'name': "Test website",
+            'company_id': self.env.company.id,
+            'user_id': self.env.user.id,
+            'pricelist_ids': [Command.set(pricelist.ids)],
+        })
+
+        product = product.with_context(website_id=website.id)
+
+        # Setup product attributes.
         computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': test_product.id,
+            'product_tmpl_id': product.id,
             'attribute_id': self.ssd_attribute.id,
             'value_ids': [(6, 0, [self.ssd_256.id])],
         })
         computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
-        combination = computer_ssd_attribute_lines.product_template_value_ids[0]
-
-        # Add fixed price for pricelist
-        pricelist.item_ids = self.env['product.pricelist.item'].create({
-            'applied_on': "1_product",
-            'base': "list_price",
-            'compute_price': "fixed",
-            'fixed_price': 500,
-            'product_tmpl_id': test_product.id,
-        })
-        # Add 15% tax on product
-        tax15 = self.env['account.tax'].create({'name': "Test tax 15", 'amount': 15})
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0})
-        test_product.taxes_id = tax15
 
         # Enable tax included
         group_tax_included = self.env.ref('account.group_show_line_subtotals_tax_included').with_context(active_test=False)
@@ -106,58 +124,60 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         group_tax_excluded.users -= self.env.user
         group_tax_included.users |= self.env.user
 
-        # Create fiscal position for belgium mapping taxes 15% -> 0%
-        fpos = self.env['account.fiscal.position'].create({
-            'name': 'test',
-            'auto_apply': True,
-            'country_id': self.env.ref('base.be').id,
-        })
-        self.env['account.fiscal.position.tax'].create({
-            'position_id': fpos.id,
-            'tax_src_id': tax15.id,
-            'tax_dest_id': tax0.id,
-        })
-
-        combination_info = test_product._get_combination_info(combination)
+        combination_info = product._get_combination_info(pricelist=pricelist)
         self.assertEqual(combination_info['price'], 575, "500$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 575, "500$ + 15% tax (2)")
         self.assertEqual(combination_info['price_extra'], 230, "200$ + 15% tax")
 
+        # Setup fiscal position 15% => 0%.
+        us_country = self.env.ref('base.us')
+        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0})
+        self.env['account.fiscal.position'].create({
+            'name': "test_get_combination_info_with_fpos",
+            'auto_apply': True,
+            'country_id': us_country.id,
+            'tax_ids': [Command.create({
+                'tax_src_id': self.company_data['default_tax_sale'].id,
+                'tax_dest_id': tax0.id,
+            })],
+        })
+
         # Now with fiscal position, taxes should be mapped
-        self.env.user.partner_id.country_id = self.env.ref('base.be').id
-        combination_info = test_product._get_combination_info(combination)
-        self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0% for BE)")
-        self.assertEqual(combination_info['list_price'], 500, "500% + 0% tax (mapped from fp 15% -> 0% for BE) (2)")
-        self.assertEqual(combination_info['price_extra'], 200, "200% + 0% tax (mapped from fp 15% -> 0% for BE)")
+        self.env.user.partner_id.country_id = us_country
+        combination_info = product._get_combination_info(pricelist=pricelist)
+        self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
+        self.assertEqual(combination_info['list_price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
+        self.assertEqual(combination_info['price_extra'], 200, "200% + 0% tax (mapped from fp 15% -> 0%)")
 
         # Try same flow with tax included
-        tax15.write({'price_include': True})
+        self.company_data['default_tax_sale'].price_include = True
 
         # Reset / Safety check
         self.env.user.partner_id.country_id = None
-        combination_info = test_product._get_combination_info(combination)
+        combination_info = product._get_combination_info(pricelist=pricelist)
         self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 500, "434.78$ + 15% tax (2)")
         self.assertEqual(combination_info['price_extra'], 200, "173.91$ + 15% tax")
 
         # Now with fiscal position, taxes should be mapped
-        self.env.user.partner_id.country_id = self.env.ref('base.be').id
-        combination_info = test_product._get_combination_info(combination)
-        self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
-        self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
-        self.assertEqual(combination_info['price_extra'], 173.91, "173.91$ + 0% tax (mapped from fp 15% -> 0% for BE)")
+        self.env.user.partner_id.country_id = us_country.id
+        combination_info = product._get_combination_info(pricelist=pricelist)
+        self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
+        self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
+        self.assertEqual(combination_info['price_extra'], 173.91, "173.91$ + 0% tax (mapped from fp 15% -> 0%)")
+
 
 @tagged('post_install', '-at_install', 'product_pricelist')
-class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
-        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart
+        # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
         self.env.user.partner_id.country_id = False
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
         # Add 10% tax on product
         tax10 = self.env['account.tax'].create({'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent'})
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'price_include': True, 'amount_type': 'percent'})
+        tax6 = self.env['account.tax'].create({'name': "Test tax 6", 'amount': 6, 'price_include': True, 'amount_type': 'percent'})
 
         test_product = self.env['product.template'].create({
             'name': 'Test Product',
@@ -176,14 +196,14 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
 
         pricelist.discount_policy = 'without_discount'
 
-        # Create fiscal position mapping taxes 10% -> 0%
+        # Create fiscal position mapping taxes 10% -> 6%
         fpos = self.env['account.fiscal.position'].create({
             'name': 'test',
         })
         self.env['account.fiscal.position.tax'].create({
             'position_id': fpos.id,
             'tax_src_id': tax10.id,
-            'tax_dest_id': tax0.id,
+            'tax_dest_id': tax6.id,
         })
         so = self.env['sale.order'].create({
             'partner_id': self.env.user.partner_id.id,
@@ -199,7 +219,7 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
         sol._compute_tax_id()
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=test_product.product_variant_id.id, line_id=sol.id, set_qty=2)
-        self.assertEqual(round(sol.price_total), 100, "100$ with 50% discount + 0% tax (mapped from fp 10% -> 0%)")
+        self.assertEqual(round(sol.price_total), 106, "2 units @ 100$ with 50% discount + 6% tax (mapped from fp 10% -> 6%)")
 
     def test_cart_update_with_fpos_no_variant_product(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product

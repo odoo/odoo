@@ -7,6 +7,10 @@ import {_t} from 'web.core';
 
 let dbSocialValues;
 let dbSocialValuesProm;
+const clearDbSocialValuesCache = () => {
+    dbSocialValuesProm = undefined;
+    dbSocialValues = undefined;
+};
 
 options.registry.SocialMedia = options.Class.extend({
     /**
@@ -38,6 +42,12 @@ options.registry.SocialMedia = options.Class.extend({
      * @override
      */
     async cleanForSave() {
+        // When the snippet is cloned via its parent, the options UI won't be
+        // updated and DB values won't be fetched, the options `cleanForSave`
+        // will then update the website with empty values.
+        if (!dbSocialValues) {
+            return;
+        }
         // Update the DB links.
         let websiteId;
         this.trigger_up('context_get', {
@@ -351,4 +361,5 @@ options.registry.SocialMedia = options.Class.extend({
 
 export default {
     SocialMedia: options.registry.SocialMedia,
+    clearDbSocialValuesCache,
 };

@@ -169,6 +169,25 @@ class One2manyCase(TransactionCase):
         self.assertTrue(model2.exists())
         self.assertEqual(model2.pArTneR_321_id, p1)
 
+    def test_merge_partner_archived(self):
+        partner = self.env['res.partner']
+
+        p1 = partner.create({'name': 'test1'})
+        p2 = partner.create({'name': 'test2'})
+        p3 = partner.create({'name': 'test3', 'active': False})
+        partners_ids = (p1 + p2 + p3)
+
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=partners_ids.ids, active_model='res.partner').create({})
+
+        self.assertEqual(wizard.partner_ids, partners_ids)
+        self.assertEqual(wizard.dst_partner_id, p2)
+
+        wizard.action_merge()
+
+        self.assertFalse(p1.exists())
+        self.assertTrue(p2.exists())
+        self.assertFalse(p3.exists())
+
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
         record0 = self.env['test_new_api.attachment.host'].create({})
@@ -238,6 +257,32 @@ class One2manyCase(TransactionCase):
         })
         a = parent.child_ids[0]
         parent.write({'child_ids': [Command.link(a.id), Command.create({'name': 'B'})]})
+
+    def test_create_with_commands(self):
+        # create lines and warm up caches
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [Command.create({'product': name}) for name in ('set', 'sept')],
+        })
+        line1, line2 = order.line_ids
+
+        # INSERT, UPDATE of line1
+        with self.assertQueryCount(2):
+            self.env['test_new_api.order'].create({
+                'line_ids': [Command.set(line1.ids)],
+            })
+
+        # INSERT order, INSERT thief, UPDATE of line1+line2
+        with self.assertQueryCount(3):
+            order = self.env['test_new_api.order'].create({
+                'line_ids': [Command.set(line1.ids)],
+            })
+            thief = self.env['test_new_api.order'].create({
+                'line_ids': [Command.set((line1 + line2).ids)],
+            })
+
+        # the lines have been stolen by thief
+        self.assertFalse(order.line_ids)
+        self.assertEqual(thief.line_ids, line1 + line2)
 
     def test_recomputation_ends(self):
         """ Regression test for neverending recomputation. """

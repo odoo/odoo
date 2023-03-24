@@ -26,9 +26,10 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { BORDER_WHITE, DEFAULT_BG, COLORS, hexToRGBA } from "@web/views/graph/colors";
+import { getBorderWhite, DEFAULT_BG, getColors, hexToRGBA } from "@web/views/graph/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { patchWithCleanup } from "../helpers/utils";
+import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
@@ -312,6 +313,7 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
 
         target = getFixture();
+        registry.category("services").add("cookie", fakeCookieService);
     });
 
     QUnit.module("GraphView");
@@ -1148,9 +1150,9 @@ QUnit.module("Views", (hooks) => {
             "pointBackgroundColor",
         ];
         const datasets = getChart(graph).data.datasets;
-
+        const colors = getColors();
         for (let i = 0; i < datasets.length; i++) {
-            const expectedColor = COLORS[i];
+            const expectedColor = colors[i];
             expectedDatasets.push({
                 backgroundColor: hexToRGBA(expectedColor, 0.4),
                 borderColor: expectedColor,
@@ -1610,7 +1612,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Total"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label", "stack"], {
             backgroundColor: ["#1f77b4"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [8],
             label: "",
             stack: undefined,
@@ -1635,7 +1637,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
             backgroundColor: ["#1f77b4", "#ff7f0e"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [5, 3],
         });
         checkLegend(assert, graph, ["false", "true"]);
@@ -1660,7 +1662,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Undefined", "black", "red"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
             backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [8, 10, 13],
         });
         checkLegend(assert, graph, ["Undefined", "black", "red"]);
@@ -1701,7 +1703,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["false / xphone", "false / xpad", "true / xphone"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [1, 4, 3],
             label: "",
         });
@@ -1747,13 +1749,13 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: ["#1f77b4"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [6],
                     label: "True group",
                 },
                 {
                     backgroundColor: ["#1f77b4"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [17],
                     label: "False group",
                 },
@@ -1817,13 +1819,13 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [14, 0, 0],
                     label: "True group",
                 },
                 {
                     backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [12, 5, 2],
                     label: "False group",
                 },
@@ -1927,13 +1929,13 @@ QUnit.module("Views", (hooks) => {
                 [
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8", "#ffbb78"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [1, 1, 0, 0],
                         label: "February 2021",
                     },
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8", "#ffbb78"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [1, 1, 1, 1],
                         label: "January 2021",
                     },
@@ -2052,13 +2054,13 @@ QUnit.module("Views", (hooks) => {
                 [
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [14, 0, 0],
                         label: "February 2021",
                     },
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [0, 12, 5],
                         label: "January 2021",
                     },
@@ -2115,7 +2117,7 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: [DEFAULT_BG],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [1],
                     label: null,
                 },
@@ -2152,13 +2154,13 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: ["#1f77b4"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [1],
                     label: "True group",
                 },
                 {
                     backgroundColor: ["#1f77b4", DEFAULT_BG],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [undefined, 1],
                     label: "False group",
                 },
@@ -2189,7 +2191,7 @@ QUnit.module("Views", (hooks) => {
                 { bar: true, revenue: 2 },
                 { bar: false, revenue: -3 },
             ];
-            await makeView({
+            const graph = await makeView({
                 serverData,
                 type: "graph",
                 resModel: "foo",
@@ -2200,12 +2202,15 @@ QUnit.module("Views", (hooks) => {
                     </graph>
                 `,
             });
-            assert.containsOnce(target, ".o_view_nocontent");
-            assert.strictEqual(
-                target.querySelector(".o_view_nocontent").innerText.replace(/[\s\n]/g, " "),
-                `Invalid data  Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results`
-            );
-            assert.containsNone(target, ".o_graph_canvas_container");
+            assert.containsNone(target, ".o_view_nocontent");
+            assert.containsOnce(target, ".o_graph_canvas_container");
+            checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label", "stack"], {
+                backgroundColor: ["#1f77b4"],
+                borderColor: getBorderWhite(),
+                data: [2],
+                label: "",
+                stack: undefined,
+            });
         }
     );
 
@@ -2475,24 +2480,34 @@ QUnit.module("Views", (hooks) => {
                 graph_mode: "bar",
                 graph_measure: "__count",
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "bar",
                 graph_measure: "foo",
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
+                graph_cumulated: false,
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
+                graph_cumulated: false,
                 graph_groupbys: ["product_id", "color_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: ["product_id", "color_id"],
             },
         ];
@@ -4081,4 +4096,30 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
     });
+
+    QUnit.test(
+        "no class 'o_view_sample_data' when real data are presented",
+        async function (assert) {
+            serverData.models.foo.records = [];
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph sample="1">
+                        <field name="date"/>
+                    </graph>
+                `,
+            });
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await selectMode(target, "line");
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Revenue");
+            assert.containsNone(target, ".o_graph_view .o_view_sample_data");
+            assert.notOk(getChart(graph).data.datasets.length);
+        }
+    );
 });

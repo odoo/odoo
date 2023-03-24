@@ -29,5 +29,27 @@ patch(ProjectRightSidePanel.prototype, '@sale_project/components/project_right_s
 
     formatValue(value, unit) {
         return unit === 'Hours' ? formatFloatTime(value) : formatFloat(value);
-    }
+    },
+
+    //---------------------------------------------------------------------
+    // Handlers
+    //---------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Object} params
+     */
+    async onSaleItemActionClick(params) {
+        if (params.resId && params.type !== 'object') {
+            const action = await this.actionService.loadAction(params.name, this.context);
+            this.actionService.doAction({
+                ...action,
+                res_id: params.resId,
+                views: [[false, 'form']]
+            });
+        } else {
+            this.onProjectActionClick(params);
+        }
+    },
+
 });

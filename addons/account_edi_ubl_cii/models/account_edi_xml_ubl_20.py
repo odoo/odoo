@@ -370,6 +370,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.commercial_partner_id
 
+        # OrderReference/SalesOrderID (sales_order_id) is optional
+        sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
+                         and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+        # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
+        order_reference = invoice.ref or invoice.name if sales_order_id else invoice.ref
+
         vals = {
             'builder': self,
             'invoice': invoice,
@@ -395,7 +401,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
                 'note_vals': [html2plaintext(invoice.narration)] if invoice.narration else [],
-                'order_reference': invoice.invoice_origin,
+                'order_reference': order_reference,
+                'sales_order_id': sales_order_id,
                 'accounting_supplier_party_vals': {
                     'party_vals': self._get_partner_party_vals(supplier, role='supplier'),
                 },
@@ -448,7 +455,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         vals = self._export_invoice_vals(invoice)
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
-        return etree.tostring(cleanup_xml_node(xml_content)), set(errors)
+        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>\n" + etree.tostring(cleanup_xml_node(xml_content))
+        return xml_content, set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT
@@ -464,12 +472,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         partner = self._import_retrieve_info_from_map(
             tree,
-            self._import_retrieve_partner_map(journal),
+            self._import_retrieve_partner_map(self.env.company, journal.type),
         )
         if partner:
             invoice.partner_id = partner
         else:
-            logs.append(_("Could not retrieve the vendor."))
+            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.move_type in ('out_invoice', 'out_refund') else _("vendor")))
 
         # ==== currency_id ====
 
@@ -486,11 +494,34 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option "
                               "and activate the currency ?", currency_code_node.text))
 
+        # ==== invoice_date ====
+
+        invoice_date_node = tree.find('./{*}IssueDate')
+        if invoice_date_node is not None and invoice_date_node.text:
+            invoice.invoice_date = invoice_date_node.text
+
+        # ==== invoice_date_due ====
+
+        for xpath in ('./{*}DueDate', './/{*}PaymentDueDate'):
+            invoice_date_due_node = tree.find(xpath)
+            if invoice_date_due_node is not None and invoice_date_due_node.text:
+                invoice.invoice_date_due = invoice_date_due_node.text
+                break
+
         # ==== Reference ====
 
         ref_node = tree.find('./{*}ID')
         if ref_node is not None:
-            invoice.ref = ref_node.text
+            if invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+                invoice.name = ref_node.text
+            else:
+                invoice.ref = ref_node.text
+
+        # ==== Invoice origin ====
+
+        invoice_origin_node = tree.find('./{*}OrderReference/{*}ID')
+        if invoice_origin_node is not None:
+            invoice.invoice_origin = invoice_origin_node.text
 
         # === Note/narration ====
 
@@ -500,7 +531,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             narration += note_node.text + "\n"
 
         payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
-        if payment_terms_node is not None:
+        if payment_terms_node is not None and payment_terms_node.text:
             narration += payment_terms_node.text + "\n"
 
         invoice.narration = narration
@@ -510,20 +541,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         payment_reference_node = tree.find('./{*}PaymentMeans/{*}PaymentID')
         if payment_reference_node is not None:
             invoice.payment_reference = payment_reference_node.text
-
-        # ==== invoice_date ====
-
-        invoice_date_node = tree.find('./{*}IssueDate')
-        if invoice_date_node is not None:
-            invoice.invoice_date = invoice_date_node.text
-
-        # ==== invoice_date_due ====
-
-        for xpath in ('./{*}DueDate', './/{*}PaymentDueDate'):
-            invoice_date_due_node = tree.find(xpath)
-            if invoice_date_due_node is not None:
-                invoice.invoice_date_due = invoice_date_due_node.text
-                break
 
         # ==== invoice_incoterm_id ====
 
@@ -586,33 +603,36 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
         self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
 
-        if not invoice_line.product_uom_id:
-            logs.append(
-                _("Could not retrieve the unit of measure for line with label '%s'. Did you install the inventory "
-                  "app and enabled the 'Units of Measure' option ?", invoice_line.name))
-
         # Taxes
-        taxes = self.env['account.tax']
-
+        inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
+        # retrieve tax nodes
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
         if not tax_nodes:
             for elem in tree.findall('.//{*}TaxTotal'):
                 tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}Percent')
+        return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line, inv_line_vals, logs)
 
-        for tax_node in tax_nodes:
-            tax = self.env['account.tax'].search([
-                ('company_id', '=', journal.company_id.id),
-                ('amount', '=', float(tax_node.text)),
-                ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', journal.type),
-            ], limit=1)
-            if tax:
-                taxes += tax
-            else:
-                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line.name))
-
-        invoice_line.tax_ids = taxes
-        return logs
+    def _correct_invoice_tax_amount(self, tree, invoice):
+        """ The tax total may have been modified for rounding purpose, if so we should use the imported tax and not
+         the computed one """
+        # For each tax in our tax total, get the amount as well as the total in the xml.
+        for elem in tree.findall('.//{*}TaxTotal/{*}TaxSubtotal'):
+            percentage = elem.find('.//{*}TaxCategory/{*}Percent')
+            amount = elem.find('.//{*}TaxAmount')
+            if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
+                tax_percent = float(percentage.text)
+                # Compare the result with our tax total on the invoice, and apply correction if needed.
+                # First look for taxes matching the percentage in the xml.
+                taxes = invoice.line_ids.tax_line_id.filtered(lambda tax: tax.amount == tax_percent)
+                # If we found taxes with the correct amount, look for a tax line using it, and correct it as needed.
+                if taxes:
+                    tax_total = float(amount.text)
+                    tax_line = invoice.line_ids.filtered(lambda line: line.tax_line_id in taxes)[:1]
+                    if tax_line:
+                        sign = -1 if invoice.is_inbound(include_receipts=True) else 1
+                        tax_line_amount = abs(tax_line.amount_currency)
+                        if abs(tax_total - tax_line_amount) <= 0.05:
+                            tax_line.amount_currency = tax_total * sign
 
     # -------------------------------------------------------------------------
     # IMPORT : helpers
@@ -633,23 +653,24 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             return ('in_refund', 'out_refund'), 1
         return None, None
 
-    def _import_retrieve_partner_map(self, company):
+    def _import_retrieve_partner_map(self, company, move_type='purchase'):
+        role = "Customer" if move_type == 'sale' else "Supplier"
 
         def with_vat(tree, extra_domain):
-            vat_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}CompanyID')
+            vat_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}CompanyID')
             vat = None if vat_node is None else vat_node.text
             return self.env['account.edi.format']._retrieve_partner_with_vat(vat, extra_domain)
 
         def with_phone_mail(tree, extra_domain):
-            phone_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}Telephone')
-            mail_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}ElectronicMail')
+            phone_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Telephone')
+            mail_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}ElectronicMail')
 
             phone = None if phone_node is None else phone_node.text
             mail = None if mail_node is None else mail_node.text
             return self.env['account.edi.format']._retrieve_partner_with_phone_mail(phone, mail, extra_domain)
 
         def with_name(tree, extra_domain):
-            name_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}Name')
+            name_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Name')
             name = None if name_node is None else name_node.text
             return self.env['account.edi.format']._retrieve_partner_with_name(name, extra_domain)
 

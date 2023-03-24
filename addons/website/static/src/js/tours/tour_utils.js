@@ -17,6 +17,7 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
     return {
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
+        auto: true,
         run: function () {
             const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
             if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
@@ -171,9 +172,9 @@ function clickOnElement(elementName, selector) {
  * @param {*} position
  */
 function clickOnSnippet(snippet, position = "bottom") {
-    const snippetClass = snippet.id || snippet;
+    const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
     return {
-        trigger: `iframe #wrapwrap .${snippetClass}`,
+        trigger: `iframe ${trigger}`,
         extra_trigger: "body.editor_has_snippets",
         content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
@@ -327,6 +328,7 @@ function registerWebsitePreviewTour(name, options, steps) {
             content: "Wait for the edit mode to be started",
             trigger: '.o_website_preview.editor_enable.editor_has_snippets',
             timeout: 30000,
+            auto: true,
             run: () => {}, // It's a check
         });
     } else {

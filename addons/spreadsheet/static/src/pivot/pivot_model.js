@@ -5,6 +5,7 @@ import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { computeReportMeasures } from "@web/views/utils";
+import { session } from "@web/session";
 
 import { FORMATS } from "../helpers/constants";
 
@@ -17,6 +18,8 @@ const { toString, toNumber, toBoolean } = spreadsheet.helpers;
 
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
+ * @typedef {import("@spreadsheet/pivot/pivot_table").Row} Row
+ * @typedef {import("@spreadsheet/pivot/pivot_table").Column} Column
  *
  * @typedef {Object} PivotMetaData
  * @property {Array<string>} colGroupBys
@@ -59,7 +62,7 @@ function parseGroupField(allFields, groupFieldString) {
 }
 
 const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
-const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
+export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
 
 function isNotSupported(fieldType) {
     return UNSUPPORTED_FIELD_TYPES.includes(fieldType);
@@ -162,7 +165,7 @@ export class SpreadsheetPivotModel extends PivotModel {
             const { field } = this.parseGroupField(fieldName);
             return this._isCol(field);
         } catch (_) {
-            false;
+            return false;
         }
     }
 
@@ -412,6 +415,12 @@ export class SpreadsheetPivotModel extends PivotModel {
                             group.values[i],
                             group.labels[i]
                         );
+                    } else {
+                        metadataRepository.setDisplayName(
+                            field.relation,
+                            group.values[i],
+                            group.labels[i]
+                        );
                     }
                 }
             }
@@ -440,23 +449,39 @@ export class SpreadsheetPivotModel extends PivotModel {
      */
     _getGroupValues(group, groupBys) {
         return groupBys.map((groupBy) => {
-            return this._sanitizeValue(group[groupBy], groupBy);
+            const { field, aggregateOperator } = this.parseGroupField(groupBy);
+            if (this._isDateField(field)) {
+                const value = this._getGroupStartingDay(groupBy, group);
+                if (!value) {
+                    return false;
+                }
+                const fOut = FORMATS[aggregateOperator]["out"];
+                // eslint-disable-next-line no-undef
+                const date = moment(value);
+                return date.isValid() ? date.format(fOut) : false;
+            }
+            return this._sanitizeValue(group[groupBy]);
         });
     }
 
     /**
-     * @override
+     * When grouping by a time field, return
+     * the group starting day (local to the timezone)
+     * @param {string} groupBy
+     * @param {object} readGroup
+     * @returns {string | undefined}
      */
-    _sanitizeValue(value, groupBy) {
-        const { aggregateOperator, field } = this.parseGroupField(groupBy);
-        if (this._isDateField(field)) {
-            const fIn = FORMATS[aggregateOperator]["in"];
-            const fOut = FORMATS[aggregateOperator]["out"];
-            // eslint-disable-next-line no-undef
-            const date = moment(value, fIn);
-            return date.isValid() ? date.format(fOut) : false;
+    _getGroupStartingDay(groupBy, readGroup) {
+        if (!readGroup["__range"] || !readGroup["__range"][groupBy]) {
+            return undefined;
         }
-        return super._sanitizeValue(value);
+        const { field } = this.parseGroupField(groupBy);
+        const sqlValue = readGroup["__range"][groupBy].from;
+        if (this.metaData.fields[field.name].type === "date") {
+            return sqlValue;
+        }
+        const userTz = session.user_context.tz || luxon.Settings.defaultZoneName;
+        return luxon.DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
     }
 
     /**
@@ -545,8 +570,10 @@ export class SpreadsheetPivotModel extends PivotModel {
 
     /**
      * Get the row structure
+     * @returns {Row[]}
      */
     _getSpreadsheetRows(tree) {
+        /**@type {Row[]}*/
         let rows = [];
         const group = tree.root;
         const indent = group.labels.length;
@@ -554,7 +581,7 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         rows.push({
             fields: rowGroupBys.slice(0, indent),
-            values: [...group.values],
+            values: group.values.map((val) => val.toString()),
             indent,
         });
 
@@ -568,6 +595,7 @@ export class SpreadsheetPivotModel extends PivotModel {
 
     /**
      * Get the col structure
+     * @returns {Column[][]}
      */
     _getSpreadsheetCols() {
         const colGroupBys = this.metaData.fullColGroupBys;
@@ -585,7 +613,7 @@ export class SpreadsheetPivotModel extends PivotModel {
                 const leafCount = leafCounts[JSON.stringify(tree.root.values)];
                 const cell = {
                     fields: colGroupBys.slice(0, rowIndex),
-                    values: [...group.values],
+                    values: group.values.map((val) => val.toString()),
                     width: leafCount * measureCount,
                 };
                 row.push(cell);

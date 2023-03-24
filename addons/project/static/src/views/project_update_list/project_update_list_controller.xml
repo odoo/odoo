@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectUpdateListView" t-inherit="web.ListView" t-inherit-mode="primary" owl="1">
-        <xpath expr="//Layout" position="inside">
+        <xpath expr="//t[@t-component='props.Renderer']" position="before">
             <ProjectRightSidePanel
                 context="props.context"
                 domain="props.domain"

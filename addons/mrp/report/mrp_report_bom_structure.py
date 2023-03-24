@@ -3,7 +3,7 @@
 import json
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round, format_date
+from odoo.tools import float_compare, float_round, format_date, float_is_zero
 from datetime import timedelta
 
 class ReportBomStructure(models.AbstractModel):
@@ -23,7 +23,10 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _compute_current_production_capacity(self, bom_data):
         # Get the maximum amount producible product of the selected bom given each component's stock levels.
-        stockable_components = filter(lambda c: c['product'].detailed_type == 'product', bom_data.get('components', []))
+        stockable_components = filter(
+            lambda c: c['product'].detailed_type == 'product'
+            and not float_is_zero(c['base_bom_line_qty'], precision_digits=c['uom'].rounding),
+            bom_data.get('components', []))
         producibles = [float_round(comp['quantity_available'] / comp['base_bom_line_qty'], precision_digits=0, rounding_method='DOWN') for comp in stockable_components]
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
@@ -157,7 +160,7 @@ class ReportBomStructure(models.AbstractModel):
 
         bom_key = bom.id
         if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, product, current_quantity, bom)
+            product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, product, current_quantity, bom)
         route_info = product_info[key].get(bom_key, {})
         quantities_info = {}
         if not ignore_stock:
@@ -174,7 +177,7 @@ class ReportBomStructure(models.AbstractModel):
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
             'base_bom_line_qty': bom_line.product_qty if bom_line else False,  # bom_line isn't defined only for the top-level product
-            'name': product.display_name,
+            'name': product.display_name or bom.product_tmpl_id.display_name,
             'uom': bom.product_uom_id if bom else product.uom_id,
             'uom_name': bom.product_uom_id.name if bom else product.uom_id.name,
             'route_type': route_info.get('route_type', ''),
@@ -185,7 +188,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency_id': company.currency_id.id,
             'product': product,
             'product_id': product.id,
-            'link_id': product.id if product.product_variant_count > 1 else product.product_tmpl_id.id,
+            'link_id': (product.id if product.product_variant_count > 1 else product.product_tmpl_id.id) or bom.product_tmpl_id.id,
             'link_model': 'product.product' if product.product_variant_count > 1 else 'product.template',
             'code': bom and bom.display_name or '',
             'prod_cost': prod_cost,
@@ -206,14 +209,14 @@ class ReportBomStructure(models.AbstractModel):
         components = []
         for component_index, line in enumerate(bom.bom_line_ids):
             new_index = f"{index}{component_index}"
-            if line._skip_bom_line(product):
+            if product and line._skip_bom_line(product):
                 continue
             line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
             if line.child_bom_id:
-                component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
-                                               index=new_index, product_info=product_info, ignore_stock=ignore_stock)
+                component = self.with_context(parent_product_id=product.id)._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
+                                                                                          index=new_index, product_info=product_info, ignore_stock=ignore_stock)
             else:
-                component = self._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                component = self.with_context(parent_product_id=product.id)._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
             components.append(component)
             bom_report_line['bom_cost'] += component['bom_cost']
         bom_report_line['components'] = components
@@ -245,9 +248,9 @@ class ReportBomStructure(models.AbstractModel):
         price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
 
-        bom_key = 'no_bom'
+        bom_key = parent_bom.id
         if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
+            product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
         route_info = product_info[key].get(bom_key, {})
 
         quantities_info = {}
@@ -325,7 +328,7 @@ class ReportBomStructure(models.AbstractModel):
                 'currency_id': company.currency_id.id,
                 'name': byproduct.product_id.display_name,
                 'quantity': line_quantity,
-                'uom': byproduct.product_uom_id.name,
+                'uom_name': byproduct.product_uom_id.name,
                 'prod_cost': company.currency_id.round(price),
                 'parent_id': bom.id,
                 'level': level or 0,
@@ -357,7 +360,7 @@ class ReportBomStructure(models.AbstractModel):
                 'link_id': operation.id,
                 'link_model': 'mrp.routing.workcenter',
                 'name': operation.name + ' - ' + operation.workcenter_id.name,
-                'uom': _("Minutes"),
+                'uom_name': _("Minutes"),
                 'quantity': duration_expected,
                 'bom_cost': self.env.company.currency_id.round(total),
                 'currency_id': company.currency_id.id,
@@ -375,7 +378,7 @@ class ReportBomStructure(models.AbstractModel):
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_id
 
         if self.env.context.get('warehouse'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
@@ -456,7 +459,7 @@ class ReportBomStructure(models.AbstractModel):
                     'name': byproduct['name'],
                     'type': 'byproduct',
                     'quantity': byproduct['quantity'],
-                    'uom': byproduct['uom'],
+                    'uom': byproduct['uom_name'],
                     'prod_cost': byproduct['prod_cost'],
                     'bom_cost': byproduct['bom_cost'],
                     'level': level + 1,
@@ -466,11 +469,23 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_resupply_route_info(self, warehouse, product, quantity, bom=False):
-        found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
+        found_rules = []
+        if self._need_special_rules(self.env.context.get('product_info'), self.env.context.get('parent_bom'), self.env.context.get('parent_product_id')):
+            found_rules = self._find_special_rules(product, self.env.context.get('product_info'), self.env.context.get('parent_bom'), self.env.context.get('parent_product_id'))
+        if not found_rules:
+            found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
         return self._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
+
+    @api.model
+    def _need_special_rules(self, product_info, parent_bom=False, parent_product_id=False):
+        return False
+
+    @api.model
+    def _find_special_rules(self, product, product_info, parent_bom=False, parent_product_id=False):
+        return False
 
     @api.model
     def _format_route_info(self, rules, rules_delay, warehouse, product, bom, quantity):

@@ -66,7 +66,7 @@ according to the enabled options.
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                     <i class="fa fa-calendar-o me-2 text-muted"/>
                     <t t-esc="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
-                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="btn border-0 py-1">&#215;</a>
+                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1">&#215;</a>
                 </span>
                 <hr class="mt-2"/>
             </div>
@@ -98,7 +98,7 @@ according to the enabled options.
             <!-- Loop through posts: exclude the first one if already displayed as top banner -->
             <t t-foreach="posts" t-as="blog_post">
                 <!-- Assign 'colWidth': 'col-12' is default for List-View and mobile -->
-                <div t-attf-class="pb-4 col-12 #{colWidth}" t-cache="blog_post,opt_blog_list_view,opt_blog_readable">
+                <div t-attf-class="pb-4 col-12 #{colWidth}" t-cache="blog_post,opt_blog_list_view,opt_blog_readable,active_tag_ids">
                     <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design else ''}" name="blog_post">
                         <!-- List-View Design -->
                         <t t-if="opt_blog_list_view">
@@ -165,7 +165,7 @@ according to the enabled options.
 <template id="post_info">
     <div class="d-flex small flex-wrap mb-1 w-100">
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
-            <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options='{"format": "MMM d, yyyy"}'/>
+            <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
                 <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-esc="len(blog_post.message_ids)"/></b>
                 <b class="text-nowrap ps-2" title="Views"><i class="fa fa-binoculars text-muted me-1"/><t t-esc="blog_post.visits"/></b>

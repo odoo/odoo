@@ -194,12 +194,6 @@ class Orderpoint(models.Model):
             orderpoint_wh_supplier.route_id = route_id[0].id
         return super()._set_default_route_id()
 
-    def _get_orderpoint_procurement_date(self):
-        date = super()._get_orderpoint_procurement_date()
-        if any(rule.action == 'buy' for rule in self.rule_ids):
-            date -= relativedelta(days=self.company_id.po_lead)
-        return date
-
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'
@@ -225,3 +219,20 @@ class StockLot(models.Model):
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def run(self, procurements, raise_user_error=True):
+        wh_by_comp = dict()
+        for procurement in procurements:
+            routes = procurement.values.get('route_ids')
+            if routes and any(r.action == 'buy' for r in routes.rule_ids):
+                company = procurement.company_id
+                if company not in wh_by_comp:
+                    wh_by_comp[company] = self.env['stock.warehouse'].search([('company_id', '=', company.id)])
+                wh = wh_by_comp[company]
+                procurement.values['route_ids'] |= wh.reception_route_id
+        return super().run(procurements, raise_user_error=raise_user_error)

@@ -11,6 +11,7 @@ patch(FormRenderer.prototype, 'mail', {
         return {
             ...this._super(),
             hasAttachmentViewerInArch: this.props.hasAttachmentViewerInArch,
+            saveButtonClicked: this.props.saveButtonClicked,
         };
     },
 });

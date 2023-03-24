@@ -2,7 +2,9 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { DynamicRecordList } from "@web/views/relational_model";
+import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
@@ -16,7 +18,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
-const { Component, onWillStart, useSubEnv, useEffect, useRef } = owl;
+import { Component, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -59,6 +61,7 @@ export class ListController extends Component {
         this.activeActions = this.archInfo.activeActions;
         const fields = this.props.fields;
         const { rootState } = this.props.state || {};
+        const { rawExpand } = this.archInfo;
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
             fields,
@@ -68,8 +71,9 @@ export class ListController extends Component {
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
+            countLimit: this.archInfo.countLimit,
             defaultOrder: this.archInfo.defaultOrder,
-            expand: this.archInfo.expand,
+            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
             rootState,
@@ -97,7 +101,7 @@ export class ListController extends Component {
                 const editedRecord = list.editedRecord;
                 if (editedRecord) {
                     if (!(await list.unselectRecord(true))) {
-                        throw new Error("View can't be saved");
+                        return false;
                     }
                 }
             },
@@ -308,6 +312,15 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
+    get defaultExportList() {
+        return unique(
+            this.props.archInfo.columns
+                .filter((col) => col.type === "field")
+                .map((col) => this.props.fields[col.name])
+                .filter((field) => field.exportable !== false)
+        );
+    }
+
     get display() {
         if (!this.env.isSmall) {
             return this.props.display;
@@ -323,12 +336,16 @@ export class ListController extends Component {
     }
 
     async downloadExport(fields, import_compat, format) {
-        const resIds = await this.getSelectedResIds();
+        let ids = false;
+        if (!this.isDomainSelected) {
+            const resIds = await this.getSelectedResIds();
+            ids = resIds.length > 0 && resIds;
+        }
         const exportedFields = fields.map((field) => ({
             name: field.name || field.id,
             label: field.label || field.string,
             store: field.store,
-            type: field.field_type,
+            type: field.field_type || field.type,
         }));
         if (import_compat) {
             exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
@@ -341,7 +358,7 @@ export class ListController extends Component {
                     domain: this.model.root.domain,
                     fields: exportedFields,
                     groupby: this.model.root.groupBy,
-                    ids: resIds.length > 0 && resIds,
+                    ids,
                     model: this.model.root.resModel,
                 }),
             },
@@ -363,10 +380,9 @@ export class ListController extends Component {
      * @private
      */
     async onExportData() {
-        const resIds = await this.getSelectedResIds();
         const dialogProps = {
-            resIds,
             context: this.props.context,
+            defaultExportList: this.defaultExportList,
             download: this.downloadExport.bind(this),
             getExportedFields: this.getExportedFields.bind(this),
             root: this.model.root,
@@ -379,12 +395,7 @@ export class ListController extends Component {
      * @private
      */
     async onDirectExportData() {
-        const fields = await this.getExportedFields(this.model.root.resModel, true);
-        await this.downloadExport(
-            fields.filter((field) => this.model.root.activeFields[field.id]),
-            false,
-            "xlsx"
-        );
+        await this.downloadExport(this.defaultExportList, false, "xlsx");
     }
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
@@ -431,6 +442,7 @@ export class ListController extends Component {
             confirm: async () => {
                 const total = root.count;
                 const resIds = await this.model.root.deleteRecords();
+                this.model.notify();
                 if (
                     root.isDomainSelected &&
                     resIds.length === session.active_ids_limit &&
@@ -459,7 +471,11 @@ export class ListController extends Component {
         });
     }
 
-    async beforeExecuteActionButton(clickParams) {}
+    async beforeExecuteActionButton(clickParams) {
+        if (clickParams.special !== "cancel" && this.model.root.editedRecord) {
+            return this.model.root.editedRecord.save();
+        }
+    }
 
     async afterExecuteActionButton(clickParams) {}
 }

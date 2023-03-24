@@ -12,16 +12,13 @@ import { formatFloat } from "@web/views/fields/formatters";
  * The widget will be '3.000 / 5.000'.
  */
 
-const { useRef, onPatched, onMounted } = owl;
+const { useRef, onPatched, onMounted, useState } = owl;
 export class MrpShouldConsumeOwl extends FloatField {
     setup() {
         super.setup();
-        const { data, fields } = this.props.record;
-        this.shouldConsumeQty = formatFloat(data.should_consume_qty, {
-            ...fields.should_consume_qty,
-            ...this.nodeOptions,
-        });
-        this.displayShouldConsume = !["done", "draft", "cancel"].includes(data.state);
+        this.fields = this.props.record.fields;
+        this.record = useState(this.props.record);
+        this.displayShouldConsume = !["done", "draft", "cancel"].includes(this.record.data.state);
         this.inputSpanRef = useRef("numpadDecimal");
         onMounted(this._renderPrefix);
         onPatched(this._renderPrefix);
@@ -37,7 +34,14 @@ export class MrpShouldConsumeOwl extends FloatField {
             );
         }
     }
-}
+
+    get shouldConsumeQty() {
+        return formatFloat(this.record.data.should_consume_qty, {
+            ...this.fields.should_consume_qty,
+            ...this.nodeOptions,
+        });
+    }
+} 
 
 MrpShouldConsumeOwl.template = "mrp.ShouldConsume";
 MrpShouldConsumeOwl.displayName = "MRP Should Consume";

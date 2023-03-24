@@ -94,7 +94,12 @@ class SaleOrderLine(models.Model):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
             currency = company.currency_id
-            total_price = sum([booth.price for booth in self.event_booth_pending_ids])
+            product = self.event_booth_pending_ids.booth_category_id.product_id
+            pricelist = product.product_tmpl_id._get_contextual_pricelist()
+            if pricelist.discount_policy == "with_discount":
+                total_price = sum([booth.booth_category_id.price_reduce for booth in self.event_booth_pending_ids])
+            else:
+                total_price = sum([booth.price for booth in self.event_booth_pending_ids])
             return currency._convert(
                 total_price, self.order_id.currency_id,
                 self.order_id.company_id or self.env.company.id,

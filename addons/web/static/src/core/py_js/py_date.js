@@ -489,7 +489,7 @@ export class PyDateTime {
      * @returns {PyDateTime}
      */
     to_utc() {
-        const d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+        const d = new Date(this.year, this.month -1, this.day, this.hour, this.minute, this.second);
         const timedelta = PyTimeDelta.create({ minutes: d.getTimezoneOffset() });
         return this.add(timedelta);
     }

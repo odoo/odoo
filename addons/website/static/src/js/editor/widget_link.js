@@ -5,9 +5,6 @@ var weWidgets = require('wysiwyg.widgets');
 var wUtils = require('website.utils');
 
 weWidgets.LinkTools.include({
-    events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
-        'input input[name="url"]': '_onURLInput',
-    }),
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
         website_url_chosen: '_onAutocompleteClose',
     }),

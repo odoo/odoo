@@ -43,6 +43,15 @@ class AccountPayment(models.Model):
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
     payment_method_line_id = fields.Many2one(index=True)
+    show_check_number = fields.Boolean(compute='_compute_show_check_number')
+
+    @api.depends('payment_method_line_id.code', 'check_number')
+    def _compute_show_check_number(self):
+        for payment in self:
+            payment.show_check_number = (
+                payment.payment_method_line_id.code == 'check_printing'
+                and payment.check_number
+            )
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
@@ -60,7 +69,7 @@ class AccountPayment(models.Model):
               JOIN account_journal journal ON journal.id = move.journal_id,
                    account_payment other_payment
               JOIN account_move other_move ON other_move.id = other_payment.move_id
-             WHERE payment.check_number::INTEGER = other_payment.check_number::INTEGER
+             WHERE payment.check_number::BIGINT = other_payment.check_number::BIGINT
                AND move.journal_id = other_move.journal_id
                AND payment.id != other_payment.id
                AND payment.id IN %(ids)s
@@ -151,7 +160,7 @@ class AccountPayment(models.Model):
                     JOIN account_move move ON movE.id = payment.move_id
                    WHERE journal_id = %(journal_id)s
                    AND payment.check_number IS NOT NULL
-                ORDER BY payment.check_number::INTEGER DESC
+                ORDER BY payment.check_number::BIGINT DESC
                    LIMIT 1
             """, {
                 'journal_id': self.journal_id.id,
@@ -237,7 +246,7 @@ class AccountPayment(models.Model):
         def prepare_vals(invoice, partials):
             number = ' - '.join([invoice.name, invoice.ref] if invoice.ref else [invoice.name])
 
-            if invoice.is_outbound():
+            if invoice.is_outbound() or invoice.move_type == 'in_receipt':
                 invoice_sign = 1
                 partial_field = 'debit_amount_currency'
             else:
@@ -261,7 +270,7 @@ class AccountPayment(models.Model):
         # Decode the reconciliation to keep only invoices.
         term_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
-            .filtered(lambda x: x.is_outbound())
+            .filtered(lambda x: x.is_outbound() or x.move_type == 'in_receipt')
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)
 
         # Group partials by invoices.
@@ -288,7 +297,7 @@ class AccountPayment(models.Model):
         else:
             stub_lines = [prepare_vals(invoice, partials)
                           for invoice, partials in invoice_map.items()
-                          if invoice.move_type == 'in_invoice']
+                          if invoice.move_type in ('in_invoice', 'in_receipt')]
 
         # Crop the stub lines or split them on multiple pages
         if not self.company_id.account_check_printing_multi_stub:

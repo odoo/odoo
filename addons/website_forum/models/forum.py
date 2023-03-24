@@ -337,7 +337,7 @@ class Post(models.Model):
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
     parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)])
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', 'in', self.forum_id.ids)])
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -482,6 +482,7 @@ class Post(models.Model):
             post.karma_unlink = post.forum_id.karma_unlink_own if is_creator else post.forum_id.karma_unlink_all
             post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
             post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
+            post.karma_flag = post.forum_id.karma_flag
 
             post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
             post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer

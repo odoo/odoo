@@ -18,7 +18,7 @@ class TaxGroupComponent extends Component {
         onPatched(() => {
             if (this.state.value === "edit") {
                 const { taxGroup, currency } = this.props;
-                const newVal = formatFloat(taxGroup.tax_group_amount, { digits: currency.digits });
+                const newVal = formatFloat(taxGroup.tax_group_amount, { digits: (currency && currency.digits) });
                 this.inputTax.el.value = newVal;
                 this.inputTax.el.focus(); // Focus the input
             }
@@ -89,7 +89,7 @@ class TaxGroupComponent extends Component {
 }
 
 TaxGroupComponent.props = {
-    currency: {},
+    currency: { optional: true },
     taxGroup: { optional: true },
     onChangeTaxGroup: { optional: true },
     isReadonly: Boolean,
@@ -119,7 +119,7 @@ export class TaxTotalsComponent extends Component {
 
     get currencyId() {
         const recordCurrency = this.props.record.data.currency_id;
-        return recordCurrency ? recordCurrency[0] : session.company_currency_id;
+        return recordCurrency && recordCurrency[0];
     }
 
     get currency() {

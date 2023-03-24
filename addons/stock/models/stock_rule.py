@@ -54,14 +54,14 @@ class StockRule(models.Model):
     group_id = fields.Many2one('procurement.group', 'Fixed Procurement Group')
     action = fields.Selection(
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
-        required=True)
+        required=True, index=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
         domain="[('id', '=?', route_company_id)]")
-    location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
-    location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
-    route_id = fields.Many2one('stock.route', 'Route', required=True, ondelete='cascade')
+    location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True, index=True)
+    location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True, index=True)
+    route_id = fields.Many2one('stock.route', 'Route', required=True, ondelete='cascade', index=True)
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
@@ -88,7 +88,7 @@ class StockRule(models.Model):
     propagate_carrier = fields.Boolean(
         'Propagation of carrier', default=False,
         help="When ticked, carrier of shipment will be propagated.")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True, index=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
         help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
@@ -355,6 +355,9 @@ class StockRule(models.Model):
         :rtype: tuple[int, list[str, str]]
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
+        if global_visibility_days:
+            delay += int(global_visibility_days)
         if self.env.context.get('bypass_delay_description'):
             delay_description = []
         else:
@@ -363,6 +366,8 @@ class StockRule(models.Model):
                 for rule in self
                 if rule.action in ['pull', 'pull_push'] and rule.delay
             ]
+        if global_visibility_days:
+            delay_description.append((_('Global Visibility Days'), _('+ %d day(s)') % int(global_visibility_days)))
         return delay, delay_description
 
 

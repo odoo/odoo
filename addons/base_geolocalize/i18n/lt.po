@@ -3,18 +3,21 @@
 # 	* base_geolocalize
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,27 +26,12 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr "<span class=\"oe_inline\"> ( </span>"
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> : Lat : </span>"
-msgstr "<span> : Plat : </span>"
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> ;  Long:  </span>"
-msgstr "<span> ;  Ilg:  </span>"
-
-#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
 msgid "API"
 msgstr "API"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:104
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
@@ -56,6 +44,16 @@ msgid "API:"
 msgstr ""
 
 #. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute Localization"
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute based on address"
+msgstr ""
+
+#. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigūracijos nustatymai"
@@ -63,7 +61,7 @@ msgstr "Konfigūracijos nustatymai"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
 msgid "Contact"
-msgstr "Kontaktai"
+msgstr "Kontaktas"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
@@ -77,15 +75,14 @@ msgstr "Sukurta"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:156
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr ""
+msgstr "Įvyko klaida su geolokacijos serveriu:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -93,14 +90,14 @@ msgid "Geo Coder"
 msgstr ""
 
 #. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr "Geografinė padėtis"
+
+#. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
 msgstr ""
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geolocate"
-msgstr "Geografinė padėtis"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -116,11 +113,10 @@ msgstr "Geografinės padėties data"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr ""
+msgstr "Google žemėlapio API raktas"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
 msgid "ID"
 msgstr "ID"
 
@@ -131,7 +127,6 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -146,19 +141,45 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
-msgid "Name"
-msgstr "Vardas"
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Lat :"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Partner Assignation"
+msgid "Long:"
+msgstr ""
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
+msgid "Name"
+msgstr "Pavadinimas"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "No match found for %(partner_names)s address(es)."
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignment"
 msgstr "Partnerio priskyrimas"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:69
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh"
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh Localization"
 msgstr ""
 
 #. module: base_geolocalize
@@ -168,7 +189,7 @@ msgid "Tech Name"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:123
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "Unable to geolocate, received the error:\n"
@@ -181,8 +202,19 @@ msgid ""
 msgstr ""
 
 #. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Updated on:"
+msgstr ""
+
+#. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "Warning"
+msgstr "Įspėjimas"

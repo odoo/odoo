@@ -195,11 +195,28 @@ class IrMailServer(models.Model):
 
     def _get_test_email_addresses(self):
         self.ensure_one()
+        email_to = "noreply@odoo.com"
+        if self.from_filter:
+            if "@" in self.from_filter:
+                # All emails will be sent from the same address
+                return self.from_filter, email_to
+            # All emails will be sent from any address in the same domain
+            default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
+            if "@" not in default_from:
+                return f"{default_from}@{self.from_filter}", email_to
+            elif self._match_from_filter(default_from, self.from_filter):
+                # the mail server is configured for a domain
+                # that match the default email address
+                return default_from, email_to
+            # the from_filter is configured for a domain different that the one
+            # of the full email configured in mail.default.from
+            return f"noreply@{self.from_filter}", email_to
+        # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
             raise UserError(_('Please configure an email on the current user to simulate '
                               'sending an email message via this outgoing server'))
-        return email_from, 'noreply@odoo.com'
+        return email_from, email_to
 
     def test_smtp_connection(self):
         for server in self:
@@ -459,8 +476,6 @@ class IrMailServer(models.Model):
         body = body or u''
 
         msg = EmailMessage(policy=email.policy.SMTP)
-        msg.set_charset('utf-8')
-
         if not message_id:
             if object_id:
                 message_id = tools.generate_tracking_message_id(object_id)
@@ -484,9 +499,11 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         else:

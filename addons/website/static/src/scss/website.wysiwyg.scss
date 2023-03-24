@@ -55,17 +55,18 @@ html[data-edit_translations="1"] {
         font-size: 0px;
         content: "."; // Content is mandatory.
     }
-    &.d-md-none::before {
+    &.d-md-none::before, &.d-lg-none::before {
         height: 50px;
         -webkit-mask: url("/website/static/src/img/snippets_options/desktop_invisible.svg") no-repeat 100% 100%;
     }
-    &:not(.d-md-none)::before {
+    &:not(.d-md-none):not(.d-lg-none)::before {
         height: 30px;
         -webkit-mask: url("/website/static/src/img/snippets_options/mobile_invisible.svg") no-repeat 100% 100%;
     }
 }
 
 // SNIPPET PANEL
+// TODO: remove me in master
 $i: 1;
 @each $font-name, $font-config in $o-theme-font-configs {
     we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
@@ -231,29 +232,54 @@ $i: 1;
     border-bottom: none !important;
 }
 
-.pac-container { // google map autosuggestion
+.pac-container { // google map autosuggestion (note: their CSS lib is not used)
     z-index: $zindex-modal-backdrop; // > $o-we-zindex
-    width: $o-we-sidebar-width !important;
+    width: ceil($o-we-sidebar-width * 0.9) !important;
     font-size: $o-we-sidebar-font-size;
     margin-left: -$o-we-sidebar-width/2;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
     border-top: none;
+    border-radius: $o-we-item-border-radius;
+    overflow: hidden;
     background-color: $o-we-sidebar-content-field-dropdown-bg;
     box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
+    margin-top: $o-we-sidebar-content-field-dropdown-spacing;
+    transform: translate(41px);
+
     &:after {
         display: none;
     }
+
     .pac-item {
+        @include o-text-overflow(block);
+        line-height: $o-we-sidebar-content-field-dropdown-item-height;
+        color: $o-we-sidebar-content-field-clickable-color;
+        padding: 0 1em 0 (2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size);
         border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
         border-radius: $o-we-sidebar-content-field-border-radius;
         background-color: $o-we-sidebar-content-field-clickable-bg;
         color: $o-we-sidebar-content-field-clickable-color;
-        &:hover {
+        font-size: $o-we-sidebar-font-size;
+
+        &:hover, &:focus, &.pac-item-selected {
             background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
             cursor: pointer;
         }
-    }
-    .pac-item-query {
-        color: $o-we-sidebar-content-field-clickable-color;
+
+        .pac-icon-marker {
+            position: absolute;
+            margin-left: -1em;
+
+            &::after {
+                content: '\f041';
+                font-family: FontAwesome;
+            }
+        }
+
+        .pac-item-query {
+            margin-right: 0.4em;
+            color: inherit;
+        }
     }
 }
 

@@ -269,14 +269,13 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
     partner_credit_warning = fields.Text(
-        compute='_compute_partner_credit_warning',
-        groups='account.group_account_invoice,account.group_account_readonly')
+        compute='_compute_partner_credit_warning')
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
         # Avoid access error on fiscal position when reading a sale order with company != user.company_ids
         compute_sudo=True)  # used to filter available taxes depending on the fiscal country and position
-    tax_totals = fields.Binary(compute='_compute_tax_totals')
+    tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
 
@@ -401,8 +400,15 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     def _compute_user_id(self):
         for order in self:
-            if not order.user_id:
-                order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or self.env.user
+            if order.partner_id and not (order._origin.id and order.user_id):
+                # Recompute the salesman on partner change
+                #   * if partner is set (is required anyway, so it will be set sooner or later)
+                #   * if the order is not saved or has no salesman already
+                order.user_id = (
+                    order.partner_id.user_id
+                    or order.partner_id.commercial_partner_id.user_id
+                    or (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
+                )
 
     @api.depends('partner_id', 'user_id')
     def _compute_team_id(self):
@@ -425,8 +431,8 @@ class SaleOrder(models.Model):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-            order.amount_total = sum(order_lines.mapped('price_total'))
             order.amount_tax = sum(order_lines.mapped('price_tax'))
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -567,13 +573,13 @@ class SaleOrder(models.Model):
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order, updated_credit)
 
-    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
+    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id,
+                order.currency_id or order.company_id.currency_id,
             )
 
     @api.depends('state')
@@ -706,18 +712,19 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.ensure_one()
+        self.order_line._validate_analytic_distribution()
         lang = self.env.context.get('lang')
         mail_template = self._find_mail_template()
         if mail_template and mail_template.lang:
             lang = mail_template._render_lang(self.ids)[self.id]
         ctx = {
             'default_model': 'sale.order',
-            'default_res_id': self.ids[0],
+            'default_res_id': self.id,
             'default_use_template': bool(mail_template),
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
+            'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
             'model_description': self.with_context(lang=lang).type_name,
@@ -748,9 +755,17 @@ class SaleOrder(models.Model):
             return self._get_confirmation_template()
 
     def _get_confirmation_template(self):
+        """ Get the mail template sent on SO confirmation (or for confirmed SO's).
+
+        :return: `mail.template` record or None if default template wasn't found
+        """
         return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
 
     def action_quotation_sent(self):
+        """ Mark the given draft quotation(s) as sent.
+
+        :raise: UserError if any given SO is not in draft state.
+        """
         if self.filtered(lambda so: so.state != 'draft'):
             raise UserError(_("Only draft orders can be marked as sent directly."))
 
@@ -760,11 +775,21 @@ class SaleOrder(models.Model):
         self.write({'state': 'sent'})
 
     def action_confirm(self):
+        """ Confirm the given quotation(s) and set their confirmation date.
+
+        If the corresponding setting is enabled, also locks the Sale Order.
+
+        :return: True
+        :rtype: bool
+        :raise: UserError if trying to confirm locked or cancelled SO's
+        """
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
             raise UserError(_(
                 "It is not allowed to confirm an order in the following states: %s",
                 ", ".join(self._get_forbidden_state_confirm()),
             ))
+
+        self.order_line._validate_analytic_distribution()
 
         for order in self:
             if order.partner_id in order.message_partner_ids:
@@ -788,6 +813,13 @@ class SaleOrder(models.Model):
         return {'done', 'cancel'}
 
     def _prepare_confirmation_values(self):
+        """ Prepare the sales order confirmation values.
+
+        Note: self can contain multiple records.
+
+        :return: Sales Order confirmation values
+        :rtype: dict
+        """
         return {
             'state': 'sale',
             'date_order': fields.Datetime.now()
@@ -834,9 +866,9 @@ class SaleOrder(models.Model):
         self.write({'state': 'sale'})
 
     def action_cancel(self):
-        """ Cancel SO after showing the cancel wizard when needed. (cfr `_show_cancel_wizard`)
+        """ Cancel SO after showing the cancel wizard when needed. (cfr :meth:`_show_cancel_wizard`)
 
-        For post-cancel operations, please only override `_action_cancel`.
+        For post-cancel operations, please only override :meth:`_action_cancel`.
 
         note: self.ensure_one() if the wizard is shown.
         """
@@ -876,6 +908,11 @@ class SaleOrder(models.Model):
         return self.write({'state': 'cancel'})
 
     def _show_cancel_wizard(self):
+        """ Decide whether the sale.order.cancel wizard should be shown to cancel specified orders.
+
+        :return: True if there is any non-draft order in the given orders
+        :rtype: bool
+        """
         if self.env.context.get('disable_cancel_warning'):
             return False
         return any(so.state != 'draft' for so in self)
@@ -913,7 +950,7 @@ class SaleOrder(models.Model):
             ))
 
     def _recompute_prices(self):
-        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
         lines_to_recompute._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
@@ -990,13 +1027,16 @@ class SaleOrder(models.Model):
         return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
-            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
-            "(top-right of your screen) and follow instructions.\n"
+            "- You should deliver your products before invoicing them.\n"
             "- You should modify the invoicing policy of your product: Open the product, go to the "
             "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
             "quantities\". For Services, you should modify the Service Invoicing Policy to "
             "'Prepaid'."
         )
+
+    def _get_update_prices_lines(self):
+        """ Hook to exclude specific lines which should not be updated based on price list recomputation """
+        return self.order_line.filtered(lambda line: not line.display_type)
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
@@ -1026,12 +1066,15 @@ class SaleOrder(models.Model):
         return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
 
     def _create_invoices(self, grouped=False, final=False, date=None):
-        """
-        Create the invoice associated to the SO.
-        :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
-                        (partner_invoice_id, currency)
-        :param final: if True, refunds will be generated if necessary
-        :returns: list of created invoices
+        """ Create invoice(s) for the given Sales Order(s).
+
+        :param bool grouped: if True, invoices are grouped by SO id.
+            If False, invoices are grouped by keys returned by :meth:`_get_invoice_grouping_keys`
+        :param bool final: if True, refunds will be generated if necessary
+        :param date: unused parameter
+        :returns: created invoices
+        :rtype: `account.move` recordset
+        :raises: UserError if one of the orders has no invoiceable lines.
         """
         if not self.env['account.move'].check_access_rights('create', False):
             try:
@@ -1044,7 +1087,7 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
-            order = order.with_company(order.company_id)
+            order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
@@ -1213,14 +1256,14 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        subtitles = [render_context['record'].name]
-        if self.validity_date:
-            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-                          ))
-        else:
-            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        lang_code = render_context.get('lang')
+        subtitles = [
+            render_context['record'].name,
+            format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
+        ]
+        if self.validity_date and self.state in ['draft', 'sent']:
+            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
+            subtitles.append(_("Expires on %(date)s", date=formatted_date))
         render_context['subtitles'] = subtitles
         return render_context
 
@@ -1288,7 +1331,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return {
             'description': self.name,
-            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
+            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.invoice_line_ids.sale_line_ids.order_id == self).mapped('amount_total')),
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'amount_max': self.amount_total,
@@ -1361,56 +1404,64 @@ class SaleOrder(models.Model):
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
     def _prepare_analytic_account_data(self, prefix=None):
-        """
-        Prepare method for analytic account data
+        """ Prepare SO analytic account creation values.
 
-        :param prefix: The prefix of the to-be-created analytic account name
-        :type prefix: string
-        :return: dictionary of value for new analytic account creation
+        :param str prefix: The prefix of the to-be-created analytic account name
+        :return: `account.analytic.account` creation values
+        :rtype: dict
         """
+        self.ensure_one()
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
-        plan = self.env['account.analytic.plan'].search(['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], limit=1)
+        plan = self.env['account.analytic.plan'].sudo().search([
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)
+        ], limit=1)
         if not plan:
-            plan = self.env['account.analytic.plan'].create({
+            plan = self.env['account.analytic.plan'].sudo().create({
                 'name': 'Default',
-                'company_id': self.company_id.id
+                'company_id': self.company_id.id,
             })
         return {
             'name': name,
             'code': self.client_order_ref,
             'company_id': self.company_id.id,
             'plan_id': plan.id,
-            'partner_id': self.partner_id.id
+            'partner_id': self.partner_id.id,
         }
 
     def _create_analytic_account(self, prefix=None):
+        """ Create a new analytic account for the given orders.
+
+        :param str prefix: if specified, the account name will be '<prefix>: <so_reference>'.
+            If not, the account name will be the Sales Order reference.
+        :return: None
+        """
         for order in self:
             analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
             order.analytic_account_id = analytic
 
-    @api.model
     def _prepare_down_payment_section_line(self, **optional_values):
-        """
-        Prepare the dict of values to create a new down payment section for a sales order line.
+        """ Prepare the values to create a new down payment section.
 
-        :param optional_values: any parameter that should be added to the returned down payment section
+        :param dict optional_values: any parameter that should be added to the returned down payment section
+        :return: `account.move.line` creation values
+        :rtype: dict
         """
+        self.ensure_one()
         context = {'lang': self.partner_id.lang}
         down_payments_section_line = {
             'display_type': 'line_section',
-            'name': _('Down Payments'),
+            'name': _("Down Payments"),
             'product_id': False,
             'product_uom_id': False,
             'quantity': 0,
             'discount': 0,
             'price_unit': 0,
-            'account_id': False
+            'account_id': False,
+            **optional_values
         }
         del context
-        if optional_values:
-            down_payments_section_line.update(optional_values)
         return down_payments_section_line
 
     #=== HOOKS ===#

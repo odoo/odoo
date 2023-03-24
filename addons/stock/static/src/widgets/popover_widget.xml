@@ -7,6 +7,7 @@
 
     <div t-name="stock.popoverContent" owl="1" class="m-3">
         <h6 t-out="props.title"/>
-        <t t-out="props.msg"/>
+        <t t-if="props.popoverTemplate" t-call="{{props.popoverTemplate}}" />
+        <t t-else="" t-out="props.msg"/>
     </div>
 </templates>

@@ -83,7 +83,13 @@ class SaleOrderLine(models.Model):
         domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_template_id = fields.Many2one(
         string="Product Template",
-        related='product_id.product_tmpl_id',
+        comodel_name='product.template',
+        compute='_compute_product_template_id',
+        readonly=False,
+        search='_search_product_template_id',
+        # previously related='product_id.product_tmpl_id'
+        # not anymore since the field must be considered editable for product configurator logic
+        # without modifying the related product_id when updated.
         domain=[('sale_ok', '=', True)])
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
@@ -123,7 +129,8 @@ class SaleOrderLine(models.Model):
         string="Taxes",
         compute='_compute_tax_id',
         store=True, readonly=False, precompute=True,
-        context={'active_test': False})
+        context={'active_test': False},
+        check_company=True)
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -142,6 +149,8 @@ class SaleOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False, precompute=True)
 
+    # The price_reduce field should not be used for amounts computations
+    # because of its digits precision. It will be removed in next version.
     price_reduce = fields.Float(
         string="Price Reduce",
         compute='_compute_price_reduce',
@@ -258,6 +267,14 @@ class SaleOrderLine(models.Model):
     #=== COMPUTE METHODS ===#
 
     @api.depends('product_id')
+    def _compute_product_template_id(self):
+        for line in self:
+            line.product_template_id = line.product_id.product_tmpl_id
+
+    def _search_product_template_id(self, operator, value):
+        return [('product_id.product_tmpl_id', operator, value)]
+
+    @api.depends('product_id')
     def _compute_custom_attribute_values(self):
         for line in self:
             if not line.product_id:
@@ -290,8 +307,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-
-            name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+            if not line.order_partner_id.is_public:
+                line = line.with_context(lang=line.order_partner_id.lang)
+            name = line._get_sale_order_line_multiline_description_sale()
             if line.is_downpayment and not line.display_type:
                 context = {'lang': line.order_partner_id.lang}
                 dp_state = line._get_downpayment_state()
@@ -603,8 +621,6 @@ class SaleOrderLine(models.Model):
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax,
             })
-            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
-                line.tax_id.invalidate_recordset(['invoice_repartition_line_ids'])
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):
@@ -625,7 +641,7 @@ class SaleOrderLine(models.Model):
             # Find biggest suitable packaging
             if line.product_id and line.product_uom_qty and line.product_uom:
                 line.product_packaging_id = line.product_id.packaging_ids.filtered(
-                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
+                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom) or line.product_packaging_id
 
     @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
@@ -645,7 +661,7 @@ class SaleOrderLine(models.Model):
     def _compute_customer_lead(self):
         self.customer_lead = 0.0
 
-    @api.depends('state', 'is_expense')
+    @api.depends('is_expense')
     def _compute_qty_delivered_method(self):
         """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
                 - consu + expense_policy : analytic (sum of analytic unit_amount)
@@ -983,17 +999,33 @@ class SaleOrderLine(models.Model):
         protected_fields = self._get_protected_fields()
         if 'done' in self.mapped('state') and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
-            fields = self.env['ir.model.fields'].search([
+
+            if 'name' in protected_fields_modified and all(self.mapped('is_downpayment')):
+                protected_fields_modified.remove('name')
+
+            fields = self.env['ir.model.fields'].sudo().search([
                 ('name', 'in', protected_fields_modified), ('model', '=', self._name)
             ])
-            raise UserError(
-                _('It is forbidden to modify the following fields in a locked order:\n%s')
-                % '\n'.join(fields.mapped('field_description'))
-            )
+            if fields:
+                raise UserError(
+                    _('It is forbidden to modify the following fields in a locked order:\n%s')
+                    % '\n'.join(fields.mapped('field_description'))
+                )
 
-        return super().write(values)
+        result = super().write(values)
+
+        # Don't recompute the package_id if we are setting the quantity of the items and the quantity of packages
+        if 'product_uom_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
+            self.env.remove_to_compute(self._fields['product_packaging_id'], self)
+
+        return result
 
     def _get_protected_fields(self):
+        """ Give the fields that should not be modified on a locked SO.
+
+        :returns: list of field names
+        :rtype: list
+        """
         return [
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
             'tax_id', 'analytic_distribution'
@@ -1018,21 +1050,26 @@ class SaleOrderLine(models.Model):
             order.message_post(body=msg)
 
     def _check_line_unlink(self):
-        """
-        Check whether a line can be deleted or not.
+        """ Check whether given lines can be deleted or not.
 
-        Lines cannot be deleted if the order is confirmed; downpayment
-        lines who have not yet been invoiced bypass that exception.
-        Also, allow deleting UX lines (notes/sections).
-        :rtype: recordset sale.order.line
-        :returns: set of lines that cannot be deleted
+        * Lines cannot be deleted if the order is confirmed.
+        * Down payment lines who have not yet been invoiced bypass that exception.
+        * Sections and Notes can always be deleted.
+
+        :returns: Sales Order Lines that cannot be deleted
+        :rtype: `sale.order.line` recordset
         """
-        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment) and not line.display_type)
+        return self.filtered(
+            lambda line:
+                line.state in ('sale', 'done')
+                and (line.invoice_lines or not line.is_downpayment)
+                and not line.display_type
+        )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
         if self._check_line_unlink():
-            raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
+            raise UserError(_("You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0."))
 
     #=== BUSINESS METHODS ===#
 
@@ -1043,6 +1080,9 @@ class SaleOrderLine(models.Model):
         else:
             order_date = fields.Datetime.now()
         return order_date + timedelta(days=self.customer_lead or 0.0)
+
+    def compute_uom_qty(self, new_qty, stock_move, rounding=True):
+        return self.product_uom._compute_quantity(new_qty, stock_move.product_uom, rounding)
 
     def _get_invoice_line_sequence(self, new=0, old=0):
         """
@@ -1073,17 +1113,17 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [Command.set(self.tax_id.ids)],
-            'analytic_distribution': self.analytic_distribution,
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
         }
         analytic_account_id = self.order_id.analytic_account_id.id
+        if self.analytic_distribution and not self.display_type:
+            res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
-            res['analytic_distribution'] = res['analytic_distribution'] or {}
-            if self.analytic_distribution:
-                res['analytic_distribution'][analytic_account_id] = self.analytic_distribution.get(analytic_account_id, 0) + 100
+            if 'analytic_distribution' in res:
+                res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:
-                res['analytic_distribution'][analytic_account_id] = 100
+                res['analytic_distribution'] = {analytic_account_id: 100}
         if optional_values:
             res.update(optional_values)
         if self.display_type:
@@ -1096,6 +1136,14 @@ class SaleOrderLine(models.Model):
         be used in move/po creation.
         """
         return {}
+
+    def _validate_analytic_distribution(self):
+        for line in self.filtered(lambda l: not l.display_type and l.state in ['draft', 'sent']):
+            line._validate_distribution(**{
+                'product': line.product_id.id,
+                'business_domain': 'sale_order',
+                'company_id': line.company_id.id,
+            })
 
     #=== CORE METHODS OVERRIDES ===#
 

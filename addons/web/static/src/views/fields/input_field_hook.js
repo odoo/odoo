@@ -3,7 +3,7 @@
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-const { useComponent, useEffect, useRef, useEnv } = owl;
+import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -32,6 +32,14 @@ export function useInputField(params) {
      * Not changed in case of invalid field value.
      */
     let lastSetValue = null;
+
+    /**
+     * Track the fact that there is a change sent to the model that hasn't been acknowledged yet
+     * (e.g. because the onchange is still pending). This is necessary if we must do an urgent save,
+     * as we have to re-send that change for the write that will be done directly.
+     * FIXME: this could/should be handled by the model itself, when it will be rewritten
+     */
+    let pendingUpdate = false;
 
     /**
      * When a user types, we need to set the field as dirty.
@@ -64,7 +72,10 @@ export function useInputField(params) {
             }
 
             if (!isInvalid) {
-                component.props.update(val);
+                pendingUpdate = true;
+                Promise.resolve(component.props.update(val)).then(() => {
+                    pendingUpdate = false;
+                });
                 lastSetValue = ev.target.value;
             }
 
@@ -103,7 +114,9 @@ export function useInputField(params) {
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
-        const isInvalid = component.props.record ? component.props.record.isInvalid(component.props.name) : false;
+        const isInvalid = component.props.record
+            ? component.props.record.isInvalid(component.props.name)
+            : false;
         if (inputRef.el && !isDirty && !isInvalid) {
             inputRef.el.value = params.getValue();
             lastSetValue = inputRef.el.value;
@@ -124,7 +137,7 @@ export function useInputField(params) {
         }
 
         isDirty = inputRef.el.value !== lastSetValue;
-        if (isDirty || urgent) {
+        if (isDirty || (urgent && pendingUpdate)) {
             let isInvalid = false;
             isDirty = false;
             let val = inputRef.el.value;
@@ -145,7 +158,7 @@ export function useInputField(params) {
                 return;
             }
 
-            if (val !== component.props.value) {
+            if ((val || false) !== (component.props.value || false)) {
                 await component.props.update(val);
                 lastSetValue = inputRef.el.value;
                 if (component.props.setDirty) {

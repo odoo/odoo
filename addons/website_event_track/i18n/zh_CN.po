@@ -4,8 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +102,7 @@ msgstr "<b>歌手简历</b>。"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "<b>Speaker Profile</b>"
-msgstr "<b>歌手简介</b>"
+msgstr "<b>歌手资料</b>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -154,12 +156,12 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>未发布"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
+msgstr "<i class=\"fa fa-bell me-2 text-muted\"/> 最喜欢的讲座"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -172,11 +174,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-arrow-right\"/>\n"
 "                        Write one."
 msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                    写一个"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-block ml-2\">&amp;bull。</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -230,7 +234,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>结果"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -284,10 +288,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"跟踪的看板状态表示影响跟踪的特殊情况：\n"
+"专题的看板状态表示影响专题的特殊情况：\n"
 " * 灰色为默认情况\n"
-" * 红色表示此跟踪的进程正受到阻止\n"
-" * 绿色表示跟踪将进入下一阶段"
+" * 红色表示此专题的进程正受到阻止\n"
+" * 绿色表示专题将进入下一阶段"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
@@ -317,7 +321,7 @@ msgstr "活动状态"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -430,7 +434,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件数量"
+msgstr "附件计数"
 
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
@@ -636,7 +640,7 @@ msgstr "配置设置"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr "确认{{对象.名称}}的情况"
+msgstr "确认 {{ object.name }}"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -765,7 +769,7 @@ msgstr "定义标签，解释看板状态管理。"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "定义地点在“议程”页上出现的顺序"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -776,8 +780,8 @@ msgid ""
 "            solving an event track."
 msgstr ""
 "定义在事件中使用的步骤，从创建轨道到关闭轨道。\n"
-"            轨迹的创建，直到轨迹的关闭。\n"
-"            您将使用这些阶段来跟踪事件轨迹的进展。\n"
+"            专题的创建，直到专题的关闭。\n"
+"            您将使用这些阶段来专题事件专题的进展。\n"
 "            解决一个事件轨道。"
 
 #. module: website_event_track
@@ -905,7 +909,7 @@ msgstr "活动地点"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "活动网页"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
@@ -923,7 +927,7 @@ msgstr "活动模板"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
-msgstr "活动专场"
+msgstr "活动专题"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
@@ -969,7 +973,7 @@ msgstr "活动总结"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "事件:专题确认"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
@@ -999,12 +1003,12 @@ msgstr "收藏"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks..."
-msgstr "筛选音乐"
+msgstr "筛选专题"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr ""
+msgstr "按标签筛选"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -1210,7 +1214,7 @@ msgstr "如果选中，相关轨道将在前端可见。"
 msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
-msgstr "如果在跟踪到达这一步时，设置发送EMail给客户。"
+msgstr "如果在专题到达这一步时，设置发送EMail给客户。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
@@ -1358,7 +1362,7 @@ msgstr "提醒是否开启"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
 msgid "Is Track Done"
-msgstr "歌曲完成了吗？"
+msgstr "专题完成了吗？"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
@@ -1368,7 +1372,7 @@ msgstr "专题是在线的吗？"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
 msgid "Is Track Soon"
-msgstr "音乐马上到来"
+msgstr "专题马上到来"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
@@ -1561,7 +1565,7 @@ msgstr "制作一个中心标尺"
 msgid ""
 "Manage from here the places where you organize your tracks (e.g. Rooms, "
 "Channels, ...)."
-msgstr "从这里管理您组织音乐的地方（如房间、频道...）。"
+msgstr "从这里管理您组织专题的地方（如房间、频道...）。"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1601,7 +1605,7 @@ msgstr "专题开始前几分钟"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
 msgid "Minutes compare to track start"
-msgstr "分钟，与音乐开始相比较"
+msgstr "分钟，与专题开始相比较"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1626,7 +1630,7 @@ msgstr "我公司的全球展示"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Tracks"
-msgstr "我的歌曲"
+msgstr "我的专题"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
@@ -1915,7 +1919,7 @@ msgstr "已拒绝"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
 msgid "Relative time compared to track start (seconds)"
-msgstr "与音乐开始相比的相对时间（秒）"
+msgstr "与专题开始相比的相对时间（秒）"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
@@ -1961,13 +1965,13 @@ msgstr "SEO优化"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "短信发送错误"
+msgstr "短信息发送错误"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "Schedule some tracks to get started"
-msgstr "安排一些音乐来开始"
+msgstr "安排一些专题来开始"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
@@ -1986,7 +1990,7 @@ msgstr "选择类别"
 msgid ""
 "Sent to speakers whose track proposal is accepted (set the template on the "
 "right stage)"
-msgstr ""
+msgstr "发送给被接受曲目建议的演讲者(在正确的舞台上设置模板)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -2018,7 +2022,7 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Showcase Tracks"
-msgstr "展示音乐"
+msgstr "展示专题"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2083,7 +2087,7 @@ msgstr "阶段名称"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "从现在开始"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -2253,7 +2257,7 @@ msgstr "这个字段持有事件的渐进式网络应用程序名称。"
 msgid ""
 "This page hasn't been saved for offline reading yet.<br/>Please check your "
 "network connection."
-msgstr "这个页面还没有被保存为离线阅读。<br/>，请检查您的网络连接。"
+msgstr "这个网页还没有被保存为离线阅读。<br/>，请检查您的网络连接。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
@@ -2270,7 +2274,7 @@ msgstr "该步骤已完成，单击设置为暂停或进行中。"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "This track does not have a description."
-msgstr ""
+msgstr "这首专题没有描述。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2315,22 +2319,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr "音乐"
+msgstr "专题"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr "音乐/访客链接"
+msgstr "专题/访客链接"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr "音乐暂停"
+msgstr "专题暂停"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr "专题数量"
+msgstr "专题计数"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
@@ -2340,7 +2344,7 @@ msgstr "专题日期"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
 msgid "Track End Date"
-msgstr "音乐结束日期"
+msgstr "专题结束日期"
 
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
@@ -2350,12 +2354,12 @@ msgstr "专题地点"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Track Proposals Menu Item"
-msgstr "跟踪方案菜单项目"
+msgstr "专题方案菜单项目"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr "音乐已就绪"
+msgstr "专题已就绪"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
@@ -2367,7 +2371,7 @@ msgstr "下一阶段就绪"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
 msgid "Track Stage"
-msgstr "音乐阶段"
+msgstr "专题阶段"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
@@ -2380,7 +2384,7 @@ msgstr "专题阶段"
 #: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
 #: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
 msgid "Track Tag Categories"
-msgstr "音乐标签类别"
+msgstr "专题标签类别"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
@@ -2392,7 +2396,7 @@ msgstr "专题标签类别"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
 msgid "Track Tags"
-msgstr "专场标签"
+msgstr "专题标签"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
@@ -2402,7 +2406,7 @@ msgstr "专题标签类别"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
 msgid "Track Visitor"
-msgstr "音乐访问者"
+msgstr "专题访问者"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
@@ -2412,19 +2416,19 @@ msgstr "音乐访问者"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Track Visitors"
-msgstr "跟踪访问者"
+msgstr "专题访问者"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
 "Track Visitors store statistics on your events, including how many times "
 "tracks have been wishlisted."
-msgstr "音乐访客存储您的事件的统计数据，包括音乐被列入愿望清单的次数。"
+msgstr "专题访客存储您的事件的统计数据，包括专题被列入愿望清单的次数。"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
-msgstr "音乐暂停"
+msgstr "专题暂停"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__duration
@@ -2439,17 +2443,17 @@ msgstr "持续时间（小时）"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
 #: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
 msgid "Tracks"
-msgstr "音乐"
+msgstr "专题"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Tracks Menu Item"
-msgstr "音乐菜单项目"
+msgstr "专题菜单项目"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
 msgid "Tracks Proposals on Website"
-msgstr "跟踪关于网站的建议"
+msgstr "专题关于网站的建议"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
@@ -2457,13 +2461,13 @@ msgstr "跟踪关于网站的建议"
 msgid ""
 "Tracks define your event schedule. They can be talks, workshops or any "
 "similar activity."
-msgstr "音乐定义了您的活动日程。它们可以是讲座、研讨会或任何类似的活动。"
+msgstr "专题定义了您的活动日程。它们可以是讲座、研讨会或任何类似的活动。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
 msgid "Tracks on Website"
-msgstr "在网站上跟踪"
+msgstr "在网站上专题"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
@@ -2541,13 +2545,13 @@ msgstr "来自客户的声音"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
 msgid "Wait for visitors to add this track to their list of favorites"
-msgstr "等待访客将这一音乐添加到他们的最爱列表中"
+msgstr "等待访客将这一专题添加到他们的最爱列表中"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We did not find any track matching your"
-msgstr "我们没有找到任何与您相匹配的音乐"
+msgstr "我们没有找到任何与您相匹配的专题"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2698,7 +2702,7 @@ msgstr "木工：我是如何开始的!"
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "You cannot access this page."
-msgstr "无法访问此页面。"
+msgstr "无法访问此网页。"
 
 #. module: website_event_track
 #. openerp-web
@@ -2717,7 +2721,7 @@ msgstr "您已经离线了!"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "几秒钟"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2727,13 +2731,13 @@ msgstr "之前"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "如。“无名氏出生在……”"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "如。“这次演讲的主题是……”"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form

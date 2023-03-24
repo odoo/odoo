@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { getCookie } from "web.utils.cookies";
-
 const COLORS_BRIGHT = [
     "#1f77b4",
     "#ff7f0e",
@@ -48,20 +46,25 @@ const COLORS_DARK = [
     "#10efed", // Dashboards Secondary
 ];
 
-export const COLORS = getCookie("color_scheme") === "dark" ? COLORS_DARK : COLORS_BRIGHT;
+export function getColors(colorScheme) {
+    return colorScheme === "dark" ? COLORS_DARK : COLORS_BRIGHT;
+}
 
 /**
  * @param {number} index
+ * @param {string} colorScheme
  * @returns {string}
  */
-export function getColor(index) {
-    return COLORS[index % COLORS.length];
+export function getColor(index, colorScheme) {
+    const colors = getColors(colorScheme);
+    return colors[index % colors.length];
 }
 
 export const DEFAULT_BG = "#d3d3d3";
 
-export const BORDER_WHITE =
-    getCookie("color_scheme") === "dark" ? "rgba(0, 0, 0, 0.6)" : "rgba(255,255,255,0.6)";
+export function getBorderWhite(colorScheme) {
+    return colorScheme === "dark" ? "rgba(0, 0, 0, 0.6)" : "rgba(255,255,255,0.6)";
+}
 
 const RGB_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
 

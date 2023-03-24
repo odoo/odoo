@@ -27,6 +27,10 @@
     .o_form_statusbar {
         margin-bottom: 0;
 
+        .o_statusbar_buttons {
+            flex-grow: 1;
+        }
+
         .o_statusbar_status {
             border-left: solid $o-gray-300 1px;
         }
@@ -76,6 +80,8 @@
             width: auto!important;
             max-width: calc(100vw - 300px);
         }
+    }
+    .o_mass_mailing_subject {
         .fa-star {
             color: $o-main-favorite-color;
         }
@@ -204,15 +210,6 @@
         bottom: 55px;
     }
 }
-.o_white_body {
-    background-color: white;
-}
-
-.o_mass_mailing_unsubscribed {
-    margin-left: 20px;
-    color: #005326;
-    font-size: 90%;
-}
 
 
 .o_mailing_contact_import_list {
@@ -224,5 +221,6 @@
 
     iframe {
         width: 100%;
+        min-height: 55vh;
     }
 }

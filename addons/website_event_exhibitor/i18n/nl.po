@@ -6,7 +6,7 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgid ""
 "                By Level"
 msgstr ""
 "<i class=\"fa fa-folder-open\"/>\n"
-"                op niveau"
+"                Per niveau"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -63,6 +63,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-arrow-right\"/>\n"
 "                    Write one."
 msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                    Schrijf er één."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -76,7 +78,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<small class=\"badge text-bg-danger\">Unpublished</small>"
-msgstr ""
+msgstr "<small class=\"badge text-bg-danger\">Niet gepubliceerd</small>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
@@ -86,7 +88,7 @@ msgstr "<span class=\"btn border-0 py-1\">×</span>"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<span class=\"h5 m-3\">Other exhibitors</span>"
-msgstr ""
+msgstr "<span class=\"h5 m-3\">Andere exposanten</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -217,7 +219,7 @@ msgstr "Kan publiceren"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__chat_room_id
 msgid "Chat Room"
-msgstr "Chat room"
+msgstr "Chatroom"
 
 #. module: website_event_exhibitor
 #. openerp-web
@@ -256,13 +258,13 @@ msgstr "Land"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__country_flag_url
 msgid "Country Flag"
-msgstr "Vlag van land"
+msgstr "Nationale vlag"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_action
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_action_from_event
 msgid "Create a Sponsor / Exhibitor"
-msgstr "Maak een sponsor/exposant"
+msgstr "Een sponsor/exposant maken"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
@@ -287,7 +289,7 @@ msgstr "Gemaakt op"
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Customer Relationship Management"
-msgstr "Relatiebeheer"
+msgstr "Klantrelatiebeheer"
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
@@ -346,6 +348,8 @@ msgstr "Weergavenaam"
 msgid ""
 "Display exhibitors on website, in the footer of every page of the event."
 msgstr ""
+"Toon de exposanten op de website in de voettekst van elke pagina van het "
+"evenement."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -383,7 +387,7 @@ msgstr "Evenementpagina"
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_event_sponsor
 msgid "Event Sponsor"
-msgstr "Evenement sponsor"
+msgstr "Evenementsponsor"
 
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_event_sponsor_type
@@ -401,7 +405,7 @@ msgstr "Evenementsponsorniveaus"
 #: model:ir.actions.act_window,name:website_event_exhibitor.event_sponsor_action_from_event
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 msgid "Event Sponsors"
-msgstr "Evenement sponsors"
+msgstr "Evenementsponsors"
 
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_event_type
@@ -439,7 +443,7 @@ msgstr "Volgers"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_type_icon
@@ -449,7 +453,7 @@ msgstr "Lettertype geweldig pictogram b.v. fa-taken"
 #. module: website_event_exhibitor
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__sponsor
 msgid "Footer Logo Only"
-msgstr ""
+msgstr "Alleen voettekstlogo"
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type3
@@ -618,12 +622,12 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__write_date
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__write_date
 msgid "Last Updated on"
-msgstr "Laatst geupdate op"
+msgstr "Laatst bijgewerkt op"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_last_activity
 msgid "Last activity"
-msgstr "Laatste Activiteit"
+msgstr "Laatste activiteit"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
@@ -661,12 +665,12 @@ msgstr "Materiaalmanagement"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_max_capacity
 msgid "Max capacity"
-msgstr "maximum capaciteit"
+msgstr "Maximum capaciteit"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__room_max_participant_reached
 msgid "Maximum number of participant reached in the room at the same time"
-msgstr "Maximaal aantal deelnemers tegelijk in de kamer bereikt"
+msgstr "Maximaal aantal deelnemers tegelijk in de room bereikt"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__menu_type
@@ -697,7 +701,7 @@ msgstr "Meer info"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mijn activiteitsdeadline"
+msgstr "Mijn activiteit deadline"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_name
@@ -707,7 +711,7 @@ msgstr "Naam"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenkalender Evenement"
+msgstr "Volgende activiteit Kalender Evenement"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_date_deadline
@@ -722,7 +726,7 @@ msgstr "Samenvatting van volgende activiteit"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_type_id
 msgid "Next Activity Type"
-msgstr "Volgende activiteitstype"
+msgstr "Type volgende activiteit"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor_type__display_ribbon_style__no_ribbon
@@ -787,9 +791,9 @@ msgid ""
 "                installed IT software into account. That is why Idealis\n"
 "                Consulting delivers excellence in HR and SC Management."
 msgstr ""
-"Onze experts bedenken, bedenken en ontwikkelen oplossingen die bij \n"
+"Onze experts creëren, bedenken en ontwikkelen oplossingen die bij \n"
 "je zakelijke eisen passen. Ze bouwen een nieuwe technische\n"
-"omgeving voor je bedrijf, maar ze houden rekening met de al\n"
+"omgeving voor je bedrijf, maar ze houden rekening met de reeds\n"
 "geïnstalleerde IT-software. Daarom is Idealis\n"
 "Consulting excellentie in HR en SC Management."
 
@@ -802,7 +806,7 @@ msgstr "Aantal deelnemers"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_id
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Partner"
-msgstr "Partner"
+msgstr "Relatie"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_max_participant_reached
@@ -840,7 +844,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "Register"
-msgstr "Registreer"
+msgstr "Registreren"
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
@@ -863,12 +867,12 @@ msgstr "Lint stijl"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_is_full
 msgid "Room Is Full"
-msgstr "Kamer is vol"
+msgstr "Room is vol"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_name
 msgid "Room Name"
-msgstr "Kamer naam"
+msgstr "Room naam"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_has_sms_error
@@ -989,7 +993,7 @@ msgstr "Sponsorship"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sponsor_type_id
 msgid "Sponsorship Level"
-msgstr ""
+msgstr "Sponsorniveau"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_state
@@ -1000,7 +1004,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Status op basis van activiteiten\n"
-"Achterstallig: vervaldatum is al verstreken\n"
+"Achterstallig: Vervaldatum is al verstreken\n"
 "Vandaag: Activiteitsdatum is vandaag\n"
 "Gepland: Toekomstige activiteiten."
 
@@ -1031,7 +1035,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "The sponsor website description is missing."
-msgstr ""
+msgstr "De beschrijving van de website van de sponsor ontbreekt."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_date_tz
@@ -1041,7 +1045,7 @@ msgstr "Tijdzone"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
 msgid "Top Bar Filter"
-msgstr ""
+msgstr "Bovenste balk filter"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_exception_decoration
@@ -1061,7 +1065,7 @@ msgstr "Zichtbaar op huidige website"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "We did not find any exhibitor matching your"
-msgstr "Wij hebben geen exposant gevonden die bij je past"
+msgstr "Wij hebben geen exposant gevonden die voldoen aan je"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -1072,12 +1076,12 @@ msgstr "Website"
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_website_event_menu
 msgid "Website Event Menu"
-msgstr "Website event menu"
+msgstr "Website evenement menu"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_message_ids
 msgid "Website Messages"
-msgstr "Website-berichten"
+msgstr "Berichten website"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_url
@@ -1106,7 +1110,7 @@ msgstr "een paar seconden"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "e.g. \"Openwood specializes in home decoration...\""
-msgstr ""
+msgstr "bijv. \"Openwood is gespecialiseerd in woondecoratie...\""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -1155,7 +1159,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "search."
-msgstr "zoek."
+msgstr "zoekopdracht."
 
 #. module: website_event_exhibitor
 #. openerp-web

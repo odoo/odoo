@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 
 class MrpImmediateProductionLine(models.TransientModel):
@@ -60,14 +60,8 @@ class MrpImmediateProduction(models.TransientModel):
             production._set_qty_producing()
             for move in production.move_raw_ids.filtered(lambda m: m.state not in ['done', 'cancel']):
                 rounding = move.product_uom.rounding
-                for move_line in move.move_line_ids:
-                    if move_line.reserved_uom_qty:
-                        move_line.qty_done = min(move_line.reserved_uom_qty, move_line.move_id.should_consume_qty)
-                    if float_compare(move.quantity_done, move.should_consume_qty, precision_rounding=rounding) >= 0:
-                        break
-                if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) == 1:
-                    if move.has_tracking in ('serial', 'lot'):
-                        error_msg += "\n  - %s" % move.product_id.display_name
+                if move.has_tracking in ('serial', 'lot') and float_is_zero(move.quantity_done, precision_rounding=rounding):
+                    error_msg += "\n  - %s" % move.product_id.display_name
 
             if error_msg:
                 error_msg = _('You need to supply Lot/Serial Number for products:') + error_msg
@@ -77,5 +71,8 @@ class MrpImmediateProduction(models.TransientModel):
         if productions_to_validate:
             productions_to_validate = self.env['mrp.production'].browse(productions_to_validate)
             productions_to_validate = productions_to_validate - productions_not_to_do
+            consumption_issues = productions_to_validate._get_consumption_issues()
+            if consumption_issues:
+                return productions_to_validate._action_generate_consumption_wizard(consumption_issues)
             return productions_to_validate.with_context(skip_immediate=True).button_mark_done()
         return True

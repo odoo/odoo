@@ -8,6 +8,7 @@ from odoo.tools import html_escape
 from odoo.exceptions import RedirectWarning
 
 from lxml import etree
+from struct import error as StructError
 import base64
 import io
 import logging
@@ -241,7 +242,7 @@ class AccountEdiFormat(models.Model):
         try:
             for xml_name, content in pdf_reader.getAttachments():
                 to_process.extend(self._decode_xml(xml_name, content))
-        except NotImplementedError as e:
+        except (NotImplementedError, StructError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
 
         # Process the pdf itself.
@@ -291,7 +292,7 @@ class AccountEdiFormat(models.Model):
         is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
         if 'pdf' in attachment.mimetype:
             to_process.extend(self._decode_pdf(attachment.name, content))
-        elif 'xml' in attachment.mimetype or is_text_plain_xml:
+        elif attachment.mimetype.endswith('/xml') or is_text_plain_xml:
             to_process.extend(self._decode_xml(attachment.name, content))
         else:
             to_process.extend(self._decode_binary(attachment.name, content))
@@ -324,7 +325,7 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
-                    return res
+                    return res._link_invoice_origin_to_purchase_orders(timeout=4)
         return self.env['account.move']
 
     def _update_invoice_from_attachment(self, attachment, invoice):
@@ -338,9 +339,9 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format.with_context(default_move_type=invoice.move_type).with_company(invoice.company_id)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                        res = edi_format.with_company(invoice.company_id)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
                     elif file_data['type'] == 'pdf':
-                        res = edi_format.with_context(default_move_type=invoice.move_type).with_company(invoice.company_id)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        res = edi_format.with_company(invoice.company_id)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
                         file_data['pdf_reader'].stream.close()
                     else:  # file_data['type'] == 'binary'
                         res = edi_format._update_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'], invoice)
@@ -351,7 +352,7 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
-                    return res
+                    return res._link_invoice_origin_to_purchase_orders(timeout=4)
         return self.env['account.move']
 
     ####################################################

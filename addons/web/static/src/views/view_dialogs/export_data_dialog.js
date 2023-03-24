@@ -8,7 +8,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable";
 import { useDebounced } from "@web/core/utils/timing";
 
-const { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } = owl;
+import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     async onDelete() {
@@ -27,15 +27,21 @@ class ExportDataItem extends Component {
         });
     }
 
-    async onClick(ev) {
+    async onClick() {
         if (this.props.isFieldExpandable(this.props.field)) {
-            this.subFields = await this.props.onClick(ev);
-            this.state.isExpanded = this.props.isFieldExpanded(this.props.field.name);
+            this.subFields = await this.props.onClick(this.props.field.id);
+            this.state.isExpanded = this.props.isFieldExpanded(this.props.field.id);
+        }
+    }
+
+    onDoubleClick(fieldId) {
+        if (!this.props.isFieldExpandable(this.props.field) && !this.isFieldSelected(fieldId)) {
+            this.props.onAdd(fieldId);
         }
     }
 
     isFieldSelected(current) {
-        return this.props.exportList.find(({ name }) => name === current);
+        return this.props.exportList.find(({ id }) => id === current);
     }
 }
 ExportDataItem.template = "web.ExportDataItem";
@@ -79,7 +85,6 @@ export class ExportDataDialog extends Component {
         this.title = this.env._t("Export Data");
         this.newTemplateText = this.env._t("New template");
         this.removeFieldText = this.env._t("Remove field");
-        this.expandText = this.env._t("Show sub-fields");
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
 
@@ -95,7 +100,7 @@ export class ExportDataDialog extends Component {
                     (e) =>
                         e &&
                         Object.values(this.state.exportList).findIndex(
-                            ({ name }) => name === e.dataset.field_id
+                            ({ id }) => id === e.dataset.field_id
                         )
                 );
                 let target;
@@ -104,20 +109,20 @@ export class ExportDataDialog extends Component {
                 } else {
                     target = next ? indexes[2] : this.state.exportList.length - 1;
                 }
-                this.onDraggingEnd([indexes[0], target]);
+                this.onDraggingEnd(indexes[0], target);
             },
         });
 
         onWillStart(async () => {
             this.availableFormats = await this.rpc("/web/export/formats");
-            this.templates = await this.rpc("/web/dataset/call_kw", {
-                args: [],
-                kwargs: {
+            this.templates = await this.orm.searchRead(
+                "ir.exports",
+                [["resource", "=", this.props.root.resModel]],
+                [],
+                {
                     context: this.props.context,
-                },
-                model: "ir.exports",
-                method: "search_read",
-            });
+                }
+            );
             await this.fetchFields();
         });
 
@@ -155,7 +160,7 @@ export class ExportDataDialog extends Component {
         this.state.search = [];
         this.knownFields = {};
         await this.loadFields();
-        this.setDefaultExportList();
+        await this.setDefaultExportList();
         if (this.searchRef.el) {
             this.searchRef.el.value = "";
         }
@@ -178,8 +183,8 @@ export class ExportDataDialog extends Component {
         return this.expandedFields[id] && !this.expandedFields[id].hidden;
     }
 
-    isFieldExpandable({ field_type, name }) {
-        return ["one2many", "many2one"].includes(field_type) && name.split("/").length < 3;
+    isFieldExpandable({ id }) {
+        return this.knownFields[id].children && id.split("/").length < 3;
     }
 
     async loadExportList(value) {
@@ -220,7 +225,6 @@ export class ExportDataDialog extends Component {
             parentParams
         );
         for (const field of fields) {
-            field.name = field.id;
             field.label = field.string;
             field.parent = parentField;
             if (!this.knownFields[field.id]) {
@@ -233,22 +237,19 @@ export class ExportDataDialog extends Component {
         return fields;
     }
 
-    onDraggingEnd([item, target]) {
+    onDraggingEnd(item, target) {
         this.state.exportList.splice(target, 0, this.state.exportList.splice(item, 1)[0]);
     }
 
-    onAddItemExportList(ev) {
-        const field = ev.target.closest(".o_export_tree_item").dataset.field_id;
-        this.state.exportList.push(this.knownFields[field]);
+    onAddItemExportList(fieldId) {
+        this.state.exportList.push(this.knownFields[fieldId]);
         this.state.search = [];
         this.searchRef.el.value = "";
         this.enterTemplateEdition();
     }
 
-    onRemoveItemExportList(ev) {
-        const item = this.state.exportList.findIndex(
-            ({ name }) => name === ev.target.parentElement.dataset.field_id
-        );
+    onRemoveItemExportList(fieldId) {
+        const item = this.state.exportList.findIndex(({ id }) => id === fieldId);
         this.state.exportList.splice(item, 1);
         this.enterTemplateEdition();
     }
@@ -273,7 +274,7 @@ export class ExportDataDialog extends Component {
                         0,
                         0,
                         {
-                            name: field.name,
+                            name: field.id,
                         },
                     ]),
                     resource: this.props.root.resModel,
@@ -335,27 +336,19 @@ export class ExportDataDialog extends Component {
         );
     }
 
-    async onToggleCompatibleExport(value) {
+    onToggleCompatibleExport(value) {
         this.state.isCompatible = value;
-        await this.fetchFields();
+        this.fetchFields();
     }
 
-    async onToggleExpandField(ev) {
-        const id = ev.target.closest(".o_export_tree_item").dataset.field_id;
-        const fields = await this.loadFields(id);
-        return fields;
+    onToggleExpandField(id) {
+        return this.loadFields(id);
     }
 
-    setDefaultExportList() {
-        if (this.state.isCompatible) {
-            this.state.exportList = this.state.exportList.filter(
-                ({ name }) => this.knownFields[name]
-            );
-        } else {
-            this.state.exportList = Object.values(this.knownFields).filter(
-                ({ name }) => name && this.props.root.activeFields[name]
-            );
-        }
+    async setDefaultExportList() {
+        this.state.exportList = Object.values(this.knownFields).filter(
+            (e) => e.default_export || this.props.defaultExportList.find((i) => i.name === e.id)
+        );
     }
 
     setFormat(ev) {
@@ -367,4 +360,12 @@ export class ExportDataDialog extends Component {
     }
 }
 ExportDataDialog.components = { CheckBox, Dialog, ExportDataItem };
+ExportDataDialog.props = {
+    close: { type: Function },
+    context: { type: Object, optional: true },
+    defaultExportList: { type: Array },
+    download: { type: Function },
+    getExportedFields: { type: Function },
+    root: { type: Object },
+};
 ExportDataDialog.template = "web.ExportDataDialog";

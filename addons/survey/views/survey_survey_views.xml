@@ -73,6 +73,8 @@
                                     <field name="question_type" />
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
+                                    <field name="suggested_answer_ids" invisible="1"/>
+                                    <field name="matrix_row_ids" invisible="1"/>
                                     <field name="survey_id" invisible="1"/>
                                     <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count"
@@ -122,13 +124,15 @@
                                     <div class="o_checkbox_optional_field">
                                         <field name="certification" nolabel="1"/>
                                         <div attrs="{'invisible': [('certification', '=', False)]}" class="w-100">
-                                            <field name="certification_report_layout" class="w-50"/>
+                                            <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
                                             <button name="action_survey_preview_certification_template"
                                                 string="Preview" type="object"
                                                 icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
                                         </div>
                                     </div> 
-                                    <field name="certification_mail_template_id" attrs="{'invisible': [('certification', '=', False)]}"/>
+                                    <field name="certification_mail_template_id"
+                                        placeholder="Pick a Template..."
+                                        attrs="{'invisible': [('certification', '=', False)]}"/>
                                     <label for="certification_give_badge"
                                            attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}"/>
                                     <div class="float-start o_checkbox_optional_field"
@@ -136,6 +140,7 @@
                                         <field name="certification_give_badge"/>
                                         <div attrs="{'invisible': [('certification_give_badge', '=', False)]}">
                                             <field name="certification_badge_id"
+                                                placeholder="Pick a Badge..."
                                                 attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)], 'required': [('certification_give_badge', '=', True)]}"
                                                 domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
                                                 context="{'default_name': title,
@@ -144,6 +149,7 @@
                                                         'default_level': None,
                                                         'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
                                             <field name="certification_badge_id_dummy" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '=', False)]}"
+                                                placeholder="Pick a Badge..."
                                                 options="{'no_create': True}"
                                                 context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
                                         </div>
@@ -259,7 +265,7 @@
                                    type="object"
                                    name="action_survey_user_input_certified"
                                    class="fw-bold">
-                                    <field name="success_ratio" widget="progressbar"/>
+                                    <field name="success_ratio" widget="progressbar" class="d-block"/>
                                     <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>

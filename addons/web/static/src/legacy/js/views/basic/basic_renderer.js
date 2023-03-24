@@ -20,12 +20,12 @@ const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
 const WidgetWrapper = require("web.WidgetWrapper");
 
-const { Component } = owl;
+const { Component } = require("@odoo/owl");
 
 var qweb = core.qweb;
 const _t = core._t;
 
-const { status } = owl;
+const { status } = require("@odoo/owl");
 
 var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {
@@ -47,11 +47,19 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // and on which field it is set.
         this.handleField = null;
         this.viewEditable = params.viewEditable;
+
+        // There an issue with bootstrap 5.1 (probably fixed in 5.2). A reference
+        // to some nodes with attached tooltips are kept and can never be garbage collected.
+        // We thus manually dispose them at destroy.
+        this.jQueryNodesWithTooltip = [];
     },
     /**
      * @override
      */
     destroy: function () {
+        for (const $node of this.jQueryNodesWithTooltip) {
+            $node.tooltip("dispose");
+        }
         this._super.apply(this, arguments);
         WidgetAdapterMixin.destroy.call(this);
     },
@@ -315,6 +323,8 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // widget's $el
         $node = $node.length ? $node : widget.$el;
         $node.tooltip(this._getTooltipOptions(widget));
+
+        this.jQueryNodesWithTooltip.push($node);
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The
@@ -789,6 +799,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // associated to new widget)
         var self = this;
         def.then(function () {
+            if(!widget.$el){
+                return;
+            }
             // when the caller of renderFieldWidget uses something like
             // this.renderFieldWidget(...).addClass(...), the class is added on
             // the temporary div and not on the actual element that will be

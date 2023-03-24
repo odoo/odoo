@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-const { onMounted, onPatched, onWillStart, onWillUnmount, useComponent, useRef } = owl;
+import { onMounted, onPatched, onWillStart, onWillUnmount, useComponent, useRef } from "@odoo/owl";
 
 export function useCalendarPopover(component) {
     const owner = useComponent();

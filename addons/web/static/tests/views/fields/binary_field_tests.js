@@ -144,7 +144,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("BinaryField is correctly rendered", async function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         async function send(data) {
             assert.ok(data instanceof FormData);
@@ -204,6 +204,22 @@ QUnit.module("Fields", (hooks) => {
             "coucou.txt",
             "the filename field should have the file name as value"
         );
+
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(target.querySelector(".fa-download"));
+        await prom;
 
         await click(target.querySelector(".o_field_binary .o_clear_file_button"));
 
@@ -397,6 +413,63 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_data_row .o_data_cell").textContent,
             "93.43 Bytes"
+        );
+    });
+
+    QUnit.test("Binary field for new record has no download button", async function (assert) {
+        serverData.models.partner.fields.document.default = BINARY_FILE;
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                </form>
+            `,
+        });
+        assert.containsNone(target, "button.fa-download");
+    });
+
+    QUnit.test("BinaryField filename is updated when using the pager", async function (assert) {
+        serverData.models.partner.records.push(
+            {
+                id: 1,
+                document: "abc",
+                foo: "abc.txt",
+            },
+            {
+                id: 2,
+                document: "def",
+                foo: "def.txt",
+            }
+        );
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                    <field name="foo"/>
+                </form>
+            `,
+            resIds: [1, 2],
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value,
+            "abc.txt",
+            'displayed value should be "abc.txt"'
+        );
+
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value,
+            "def.txt",
+            'displayed value should be changed to "def.txt"'
         );
     });
 });

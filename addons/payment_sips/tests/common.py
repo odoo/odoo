@@ -27,6 +27,8 @@ class SipsCommon(PaymentCommon):
                     f'|guaranteeIndicator=Y|cardCSCResultCode=4D|panExpiryDate=202201'
                     f'|paymentMeanBrand=VISA|paymentMeanType=CARD|customerIpAddress=111.11.111.11'
                     f'|maskedPan=4100##########00|returnContext={{"reference": "{cls.reference}"}}'
+                    f'|scoreValue=-3.0|scoreColor=GREEN|scoreInfo=A3;N;N#SC;N;TRANS=3:2;CUMUL=4500:250000'
+                    f'|scoreProfile=25_BUSINESS_SCORE_PRE_AUTHORISATION|scoreThreshold=-7;-5'
                     f'|holderAuthentRelegation=N|holderAuthentStatus=3D_SUCCESS'
                     f'|tokenPan=dp528b9xwknujmkw|transactionOrigin=INTERNET|paymentPattern=ONE_SHOT'
                     f'|customerMobilePhone=null|mandateAuthentMethod=null|mandateUsage=null'
@@ -37,6 +39,6 @@ class SipsCommon(PaymentCommon):
                     f'|holderAuthentMethod=NOT_SPECIFIED',
             'Encode': '',
             'InterfaceVersion': 'HP_2.4',
-            'Seal': '8a4c1f8b268832600a7bf40ddaa5d487f07d61dea81b8119ab8bab3c8a0861f3',
+            'Seal': 'eb2a499e1abd07f0d9361418f109d940d6cb7bcbaf6ef9385c28651956c96514',
             'locale': 'en',
         }

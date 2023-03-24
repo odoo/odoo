@@ -27,9 +27,10 @@ from difflib import get_close_matches
 from hashlib import sha256
 
 from .tools import (
-    float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
+    float_repr, float_round, float_compare, float_is_zero, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
     image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
+    html_normalize, html_sanitize,
 )
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -235,6 +236,10 @@ class Field(MetaField('DummyField', (object,), {})):
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
 
+    :param bool recursive: whether the field has recursive dependencies (the field
+        ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
+        must be explicit to guarantee that recomputation is correct
+
     :param str inverse: name of a method that inverses the field (optional)
 
     :param str search: name of a method that implement search on the field (optional)
@@ -302,6 +307,7 @@ class Field(MetaField('DummyField', (object,), {})):
     prefetch = True                     # the prefetch group (False means no group)
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
+    exportable = True
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
@@ -794,7 +800,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 if not (field is self and not index):
                     yield tuple(field_seq)
 
-                if field.type in ('one2many', 'many2many'):
+                if field.type == 'one2many':
                     for inv_field in Model.pool.field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
 
@@ -836,6 +842,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
+    _description_exportable = property(attrgetter('exportable'))
 
     def _description_depends(self, env):
         return env.registry.field_depends[self]
@@ -1158,7 +1165,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1560,17 +1567,21 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        currency_field = self.get_currency_field(record)
-        if values and currency_field in values:
-            field = record._fields[currency_field]
-            currency = field.convert_to_cache(values[currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+        currency_field_name = self.get_currency_field(record)
+        currency_field = record._fields[currency_field_name]
+        if values and currency_field_name in values:
+            dummy = record.new({currency_field_name: values[currency_field_name]})
+            currency = dummy[currency_field_name]
+        elif values and currency_field.related and currency_field.related.split('.')[0] in values:
+            related_field_name = currency_field.related.split('.')[0]
+            dummy = record.new({related_field_name: values[related_field_name]})
+            currency = dummy[currency_field_name]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field_name]
             currency = currency.with_env(record.env)
 
         value = float(value or 0.0)
@@ -1719,8 +1730,12 @@ class _String(Field):
 
         for lang, to_lang_value in to_lang_values.items():
             to_lang_terms = self.get_trans_terms(to_lang_value)
-            for from_lang_term, to_lang_term in zip(from_lang_terms, to_lang_terms):
-                dictionary[from_lang_term].update({lang: to_lang_term})
+            if len(from_lang_terms) != len(to_lang_terms):
+                for from_lang_term in from_lang_terms:
+                    dictionary[from_lang_term][lang] = from_lang_term
+            else:
+                for from_lang_term, to_lang_term in zip(from_lang_terms, to_lang_terms):
+                    dictionary[from_lang_term][lang] = to_lang_term
         return dictionary
 
     def _get_stored_translations(self, record):
@@ -1784,14 +1799,17 @@ class _String(Field):
                 continue
             from_lang_value = old_translations.get(lang, old_translations.get('en_US'))
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
-            text2term = {self.get_text_content(term): term for term in new_terms}
+            text2terms = defaultdict(list)
+            for term in new_terms:
+                text2terms[self.get_text_content(term)].append(term)
 
             for old_term in list(translation_dictionary.keys()):
                 if old_term not in new_terms:
                     old_term_text = self.get_text_content(old_term)
-                    matches = get_close_matches(old_term_text, text2term, 1, 0.9)
+                    matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
-                        translation_dictionary[text2term[matches[0]]] = translation_dictionary.pop(old_term)
+                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                        translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
@@ -1968,21 +1986,25 @@ class Html(_String):
 
             original_value = record[self.name]
             if original_value:
-                initial_value_sanitized = html_sanitize(original_value, **sanitize_vals)
+                # Note that sanitize also normalize
+                original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
+                original_value_normalized = html_normalize(original_value)
 
-                def get_parsed(val):
-                    return etree.tostring(html.fromstring(val))
-
-                # could have been emptied by the sanitizer
                 if (
-                    not initial_value_sanitized
-                    or get_parsed(original_value) != get_parsed(initial_value_sanitized)
+                    not original_value_sanitized  # sanitizer could empty it
+                    or original_value_normalized != original_value_sanitized
                 ):
                     # The field contains element(s) that would be removed if
                     # sanitized. It means that someone who was part of a group
                     # allowing to bypass the sanitation saved that field
                     # previously.
-                    raise UserError(_("Someone with escalated rights previously modified this field (%s %s), you are therefore not able to modify it yourself.", record._description, self.string))
+                    raise UserError(_(
+                        "The field value you're saving (%s %s) includes content that is "
+                        "restricted for security reasons. It is possible that someone "
+                        "with higher privileges previously modified it, and you are therefore "
+                        "not able to modify it yourself while preserving the content.",
+                        record._description, self.string,
+                    ))
 
         return html_sanitize(value, **sanitize_vals)
 
@@ -2415,7 +2437,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -2999,9 +3021,8 @@ class Many2one(_Relational):
         return value.display_name
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records
@@ -3168,6 +3189,11 @@ class Json(Field):
         if not value:
             return None
         return PsycopgJson(value)
+
+    def convert_to_export(self, value, record):
+        if not value:
+            return ''
+        return json.dumps(value)
 
 
 class Properties(Field):
@@ -4340,14 +4366,14 @@ class One2many(_RelationalMulti):
         model = records_commands_list[0][0].browse()
         comodel = model.env[self.comodel_name].with_context(**self.context)
 
-        ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
+        ids = OrderedSet(rid for recs, cs in records_commands_list for rid in recs.ids)
         records = records_commands_list[0][0].browse(ids)
 
         if self.store:
             inverse = self.inverse_name
-            to_create = []                  # line vals to create
-            to_delete = []                  # line ids to delete
-            to_link = defaultdict(set)      # {record: line_ids}
+            to_create = []                      # line vals to create
+            to_delete = []                      # line ids to delete
+            to_link = defaultdict(OrderedSet)   # {record: line_ids}
             allow_full_delete = not create
 
             def unlink(lines):
@@ -4391,9 +4417,15 @@ class One2many(_RelationalMulti):
                         to_link[recs[-1]].add(command[1])
                         allow_full_delete = False
                     elif command[0] in (Command.CLEAR, Command.SET):
-                        # do not try to delete anything in creation mode if nothing has been created before
                         line_ids = command[2] if command[0] == Command.SET else []
-                        if not allow_full_delete and not line_ids:
+                        if not allow_full_delete:
+                            # do not try to delete anything in creation mode if nothing has been created before
+                            if line_ids:
+                                # equivalent to Command.LINK
+                                if line_ids.__class__ is int:
+                                    line_ids = [line_ids]
+                                to_link[recs[-1]].update(line_ids)
+                                allow_full_delete = False
                             continue
                         flush()
                         # assign the given lines to the last record only
@@ -4788,6 +4820,9 @@ class Many2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(new_relation[record.id]))
 
+        # determine the corecords for which the relation has changed
+        modified_corecord_ids = set()
+
         # process pairs to add (beware of duplicates)
         pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
         if pairs:
@@ -4801,6 +4836,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 domain = invf.get_domain_list(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
@@ -4821,6 +4857,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
 
             if self.store:
                 # express pairs as the union of cartesian products:
@@ -4848,6 +4885,16 @@ class Many2many(_RelationalMulti):
                         cache.set(corecord, invf, ids1)
                     except KeyError:
                         pass
+
+        if modified_corecord_ids:
+            # trigger the recomputation of fields that depend on the inverse
+            # fields of self on the modified corecords
+            corecords = comodel.browse(modified_corecord_ids)
+            corecords.modified([
+                invf.name
+                for invf in model.pool.field_inverses[self]
+                if invf.model_name == self.comodel_name
+            ])
 
         return records.filtered(
             lambda record: new_relation[record.id] != old_relation[record.id]
@@ -4908,6 +4955,9 @@ class Many2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(new_relation[record.id]))
 
+        # determine the corecords for which the relation has changed
+        modified_corecord_ids = set()
+
         # process pairs to add (beware of duplicates)
         pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
         if pairs:
@@ -4915,6 +4965,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 domain = invf.get_domain_list(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
@@ -4936,6 +4987,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse([y])
@@ -4945,6 +4997,16 @@ class Many2many(_RelationalMulti):
                         cache.set(corecord, invf, ids1)
                     except KeyError:
                         pass
+
+        if modified_corecord_ids:
+            # trigger the recomputation of fields that depend on the inverse
+            # fields of self on the modified corecords
+            corecords = comodel.browse(modified_corecord_ids)
+            corecords.modified([
+                invf.name
+                for invf in model.pool.field_inverses[self]
+                if invf.model_name == self.comodel_name
+            ])
 
         return records.filtered(
             lambda record: new_relation[record.id] != old_relation[record.id]

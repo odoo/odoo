@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { nextTick } from "@web/../tests/helpers/utils";
-import { ServerData } from "@spreadsheet/data_sources/server_data";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
+import BatchEndpoint, { Request, ServerData } from "@spreadsheet/data_sources/server_data";
 
 QUnit.module("spreadsheet server data", {}, () => {
     QUnit.test("simple synchronous get", async (assert) => {
@@ -278,5 +278,29 @@ QUnit.module("spreadsheet server data", {}, () => {
         assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
         assert.deepEqual(serverData.batch.get("partner", "get_something", 5), 5);
         assert.verifySteps([]);
+    });
+
+    QUnit.test("Call the correct callback after a batch result", async (assert) => {
+        const orm = {
+            call: async (model, method, args) => {
+                if (args[0].includes(5)) {
+                    throw new Error("error while fetching data");
+                }
+                return args[0];
+            },
+        };
+        const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", {
+            whenDataIsFetched: () => {},
+            successCallback: () => assert.step("success-callback"),
+            failureCallback: () => assert.step("failure-callback"),
+        });
+        const request = new Request("partner", "get_something", [4]);
+        const request2 = new Request("partner", "get_something", [5]);
+        batchEndpoint.call(request);
+        batchEndpoint.call(request2);
+        assert.verifySteps([]);
+        await nextTick();
+        console.log("Passe");
+        assert.verifySteps(["success-callback", "failure-callback"]);
     });
 });

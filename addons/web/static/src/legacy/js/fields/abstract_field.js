@@ -429,8 +429,12 @@ var AbstractField = Widget.extend({
      * @returns {string}
      */
     _formatValue: function (value, formatType) {
+        formatType = formatType || this.formatType;
+        if (!formatType) {
+            throw new Error(`Missing format type for '${this.name}' value from the '${this.model}' model`);
+        }
         var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
-        return field_utils.format[formatType || this.formatType](value, this.field, options);
+        return field_utils.format[formatType](value, this.field, options);
     },
     /**
      * Returns the className corresponding to a given decoration. A

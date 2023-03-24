@@ -13,7 +13,7 @@ from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
@@ -225,7 +225,7 @@ class ResourceCalendar(models.Model):
     def _compute_attendance_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
-            calendar.write({
+            calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
                 'hours_per_day': company_calendar.hours_per_day,
                 'tz': company_calendar.tz,
@@ -236,7 +236,7 @@ class ResourceCalendar(models.Model):
     @api.depends('company_id')
     def _compute_global_leave_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
-            calendar.write({
+            calendar.update({
                 'global_leave_ids': [(5, 0, 0)] + [
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
@@ -300,6 +300,9 @@ class ResourceCalendar(models.Model):
         self.hours_per_day = self._compute_hours_per_day(attendances)
 
     def switch_calendar_type(self):
+        if self == self.env.company.resource_calendar_id:
+            raise UserError(_('Impossible to switch calendar type for the default company schedule.'))
+
         if not self.two_weeks_calendar:
             self.attendance_ids.unlink()
             self.attendance_ids = [
@@ -1078,7 +1081,7 @@ class ResourceResource(models.Model):
         resource_work_intervals = defaultdict(Intervals)
         calendar_work_intervals = dict()
 
-        resource_calendar_validity_intervals = self._get_calendars_validity_within_period(start, end)
+        resource_calendar_validity_intervals = self.sudo()._get_calendars_validity_within_period(start, end)
         for resource in self:
             # For each resource, retrieve its calendar and their validity intervals
             for calendar in resource_calendar_validity_intervals[resource.id]:
@@ -1123,7 +1126,7 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
         default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', '=', company_id)]", index=True)
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', 'in', [company_id, False])]", check_company=True, index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
@@ -1135,7 +1138,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.depends('calendar_id')
     def _compute_company_id(self):
         for leave in self:
-            leave.company_id = leave.calendar_id.company_id or self.env.company
+            leave.company_id = leave.calendar_id.company_id or leave.company_id or self.env.company
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

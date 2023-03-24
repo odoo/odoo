@@ -6,7 +6,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class Many2ManyBinaryField extends Component {
     setup() {

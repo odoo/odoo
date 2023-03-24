@@ -65,9 +65,9 @@ class Project(models.Model):
     @api.model
     def _search_is_internal_project(self, operator, value):
         if not isinstance(value, bool):
-            raise ValueError('Invalid value: %s' % (value))
+            raise ValueError(_('Invalid value: %s', value))
         if operator not in ['=', '!=']:
-            raise ValueError('Invalid operator: %s' % (operator))
+            raise ValueError(_('Invalid operator: %s', operator))
 
         query = """
             SELECT C.internal_project_id
@@ -117,9 +117,9 @@ class Project(models.Model):
             SELECT P.id
               FROM project_project P
          LEFT JOIN project_task T ON P.id = T.project_id
-             WHERE T.planned_hours IS NOT NULL
+             WHERE p.allocated_hours != 0 AND p.allow_timesheets
           GROUP BY P.id
-            HAVING SUM(T.remaining_hours) < 0
+            HAVING P.allocated_hours - SUM(T.effective_hours) < 0
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'
@@ -154,10 +154,10 @@ class Project(models.Model):
             # Timesheets may be stored in a different unit of measure, so first
             # we convert all of them to the reference unit
             # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = sum([
-                unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
-                for product_uom_id, unit_amount in timesheet_time_dict[project.id]
-            ], 0.0)
+            total_time = 0.0
+            for product_uom_id, unit_amount in timesheet_time_dict[project.id]:
+                factor = uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
+                total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
             # Now convert to the proper unit of measure set in the settings
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
@@ -300,7 +300,7 @@ class Task(models.Model):
 
     def _search_remaining_hours_percentage(self, operator, value):
         if operator not in OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+            raise NotImplementedError(_('This operator %s is not supported in this search method.', operator))
         query = f"""
             SELECT id
               FROM {self._table}

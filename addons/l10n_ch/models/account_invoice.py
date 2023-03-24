@@ -256,7 +256,7 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'partner_bank_id', 'payment_reference')
     def _compute_l10n_ch_isr_needs_fixing(self):
         for inv in self:
-            if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code == "CH":
+            if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code in ('CH', 'LI'):
                 partner_bank = inv.partner_bank_id
                 needs_isr_ref = partner_bank.l10n_ch_qr_iban or partner_bank._is_isr_issuer()
                 if needs_isr_ref and not inv._has_isr_ref():
@@ -310,6 +310,9 @@ class AccountMove(models.Model):
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
         self.ensure_one()
+        # l10n_ch_isr_number is not always computed at this stage, and could change value when the invoice is posted.
+        # We manually compute here it to avoid this conflict.
+        self._compute_l10n_ch_isr_number()
         return self.l10n_ch_isr_number
 
     def _get_invoice_reference_ch_partner(self):

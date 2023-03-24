@@ -22,9 +22,20 @@ function loadAnchors(url, body) {
             resolve();
         }
     }).then(function (response) {
-        return _.map($(response).find('[id][data-anchor=true]'), function (el) {
+        const anchors = _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });
+        // Always suggest the top and the bottom of the page as internal link
+        // anchor even if the header and the footer are not in the DOM. Indeed,
+        // the "scrollTo" function handles the scroll towards those elements
+        // even when they are not in the DOM.
+        if (!anchors.includes('#top')) {
+            anchors.unshift('#top');
+        }
+        if (!anchors.includes('#bottom')) {
+            anchors.push('#bottom');
+        }
+        return anchors;
     }).catch(error => {
         console.debug(error);
         return [];
@@ -239,6 +250,28 @@ function websiteDomain(self) {
     return ['|', ['website_id', '=', false], ['website_id', '=', websiteID]];
 }
 
+/**
+ * Checks if the 2 given URLs are the same, to prevent redirecting uselessly
+ * from one to another.
+ * It will consider naked URL and `www` URL as the same URL.
+ * It will consider `https` URL `http` URL as the same URL.
+ *
+ * @param {string} url1
+ * @param {string} url2
+ * @returns {Boolean}
+ */
+function isHTTPSorNakedDomainRedirection(url1, url2) {
+    try {
+        url1 = new URL(url1).host;
+        url2 = new URL(url2).host;
+    } catch {
+        // Incorrect URL, `false` URL..
+        return false;
+    }
+    return url1 === url2 ||
+           url1.replace(/^www\./, '') === url2.replace(/^www\./, '');
+}
+
 function sendRequest(route, params) {
     function _addInput(form, name, value) {
         let param = document.createElement('input');
@@ -389,6 +422,7 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
+    isHTTPSorNakedDomainRedirection: isHTTPSorNakedDomainRedirection,
     svgToPNG: svgToPNG,
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,

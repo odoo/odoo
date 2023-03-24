@@ -2,7 +2,7 @@
 
 import { escapeRegExp } from "@web/core/utils/strings";
 
-const { Component, useState, useChildSubEnv } = owl;
+import { Component, useState, useChildSubEnv } from "@odoo/owl";
 
 export class Setting extends Component {
     setup() {

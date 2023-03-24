@@ -49,7 +49,7 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']
-        lines_stock = self.filtered(lambda l: l.qty_received_method == 'stock_moves' and l.move_ids)
+        lines_stock = self.filtered(lambda l: l.qty_received_method == 'stock_moves' and l.move_ids and l.state != 'cancel')
         product_by_company = defaultdict(OrderedSet)
         for line in lines_stock:
             product_by_company[line.company_id].add(line.product_id.id)

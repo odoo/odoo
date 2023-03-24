@@ -4,7 +4,7 @@ import { useService } from '@web/core/utils/hooks';
 import { throttle } from '@web/core/utils/timing';
 import { qweb } from 'web.core';
 
-const { Component, useState, useRef, onMounted, onWillStart } = owl;
+import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
 class VideoOption extends Component {}
 VideoOption.template = 'web_editor.VideoOption';
@@ -155,10 +155,12 @@ export class VideoSelector extends Component {
         if (!src) {
             this.state.errorMessage = this.env._t("The provided url is not valid");
         } else if (!platform) {
-            this.env._t("The provided url does not reference any supported video");
+            this.state.errorMessage =
+                this.env._t("The provided url does not reference any supported video");
         } else {
             this.state.errorMessage = '';
         }
+        this.props.errorMessages(this.state.errorMessage);
 
         const newOptions = [];
         if (platform && platform !== this.state.platform) {

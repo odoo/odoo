@@ -65,20 +65,20 @@
                             <td t-if="data['show_availabilities']"/>
                             <td t-if="data['show_lead_times']"/>
                             <td/>
-                            <td class="text-end" t-esc="data['cost_share'] * data['bom_cost'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <td class="text-end" t-esc="data['bom_cost'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                             <td class="text-end" t-esc="data['prod_cost']/data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </tr>
                         <t t-if="data['show_costs'] and data['byproducts']" t-foreach="data['byproducts']" t-as="byproduct">
                             <tr>
                                 <td name="td_mrp_bom_byproducts_f" class="text-end" t-esc="byproduct['name']"/>
                                 <td class="text-end"><strong>Unit Cost</strong></td>
-                                <td class="text-start" groups="uom.group_uom" t-esc="byproduct['uom']"/>
+                                <td class="text-start" groups="uom.group_uom" t-esc="byproduct['uom_name']"/>
                                 <td t-if="data['show_availabilities']"/>
                                 <td t-if="data['show_availabilities']"/>
                                 <td t-if="data['show_availabilities']"/>
                                 <td t-if="data['show_lead_times']"/>
                                 <td/>
-                                <td class="text-end" t-esc="byproduct['cost_share'] * data['bom_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                <td class="text-end" t-esc="byproduct['bom_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 <td class="text-end" t-esc="byproduct['prod_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                             </tr>
                         </t>

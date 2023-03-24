@@ -75,6 +75,7 @@
 
     <template id="user_dropdown" name="Portal User Dropdown">
         <t t-nocache="Each user is different regardless of the page visited."
+           t-nocache-_avatar="_avatar"
            t-nocache-_icon="_icon"
            t-nocache-_icon_class="_icon_class"
            t-nocache-_user_name="_user_name"
@@ -353,6 +354,11 @@
         </div>
     </template>
 
+    <!--
+    TODO adapt in master: remove the use of the "title" variable in this
+    template (or rename the variable). Using it at controller level actually
+    also controls the browser tab title, which makes no sense.
+    -->
     <template id="portal_contact" name="Contact">
         <div class="o_portal_contact_details mb-5">
             <h4><t t-if="title" t-esc="title"/><t t-else="">Your contact</t></h4>

@@ -3,7 +3,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { NameAndSignature } from "./name_and_signature";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class SignatureDialog extends Component {
     setup() {

@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 export class ModelSelector extends Component {
     setup() {
@@ -85,6 +85,7 @@ ModelSelector.template = "web.ModelSelector";
 ModelSelector.components = { AutoComplete };
 ModelSelector.props = {
     onModelSelected: Function,
+    id: { type: String, optional: true },
     value: { type: String, optional: true },
     // list of models technical name, if not set
     // we will fetch all models we have access to

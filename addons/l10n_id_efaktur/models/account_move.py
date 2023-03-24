@@ -61,14 +61,14 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
 
-    @api.constrains('l10n_id_kode_transaksi', 'line_ids')
+    @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
-        for move in self.filtered(lambda m: m.l10n_id_kode_transaksi != '08'):
+        for move in self.filtered(lambda m: m.l10n_id_need_kode_transaksi and m.l10n_id_kode_transaksi != '08'):
             if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product') \
                     and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
                 raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
-        for move in self.filtered(lambda m: m.l10n_id_kode_transaksi == '08'):
+        for move in self.filtered(lambda m: m.l10n_id_need_kode_transaksi and m.l10n_id_kode_transaksi == '08'):
             if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
                 raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
@@ -153,7 +153,8 @@ class AccountMove(models.Model):
             else:
                 number_ref = str(move.name) + " " + nik
 
-            street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
+            shipping_partner = move.partner_shipping_id
+            street = ', '.join([x for x in (shipping_partner.street, shipping_partner.street2) if x])
 
             invoice_npwp = '000000000000000'
             if move.partner_id.vat and len(move.partner_id.vat) >= 12:
@@ -171,14 +172,14 @@ class AccountMove(models.Model):
             eTax['TANGGAL_FAKTUR'] = '{0}/{1}/{2}'.format(move.invoice_date.day, move.invoice_date.month, move.invoice_date.year)
             eTax['NPWP'] = invoice_npwp
             eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
-            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
+            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else shipping_partner.l10n_id_tax_address or street
             eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
             eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0))
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
-            lines = move.line_ids.filtered(lambda x: x.is_downpayment and x.price_unit < 0 and not x.display_type)
+            lines = move.line_ids.filtered(lambda x: x.move_id._is_downpayment() and x.price_unit < 0 and x.display_type == 'product')
             eTax['FG_UANG_MUKA'] = 0
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))

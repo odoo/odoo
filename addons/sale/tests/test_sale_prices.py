@@ -96,36 +96,16 @@ class TestSalePrices(SaleCommon):
     def test_pricelist_dates(self):
         """ Verify the order date is correctly provided to the pricelist API"""
         today = fields.Datetime.today()
+        tomorrow = today + timedelta(days=1)
+
         pricelist_rule = self._create_discount_pricelist_rule(
             date_start=today - timedelta(hours=1),
             date_end=today + timedelta(hours=23),
         )
-        self.empty_order.date_order = today
-        order_line = self.env['sale.order.line'].create({
-            'order_id': self.empty_order.id,
-            'product_id': self.product.id,
-        })
-
-        self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
-        self.assertEqual(
-            order_line.price_unit,
-            self.product.lst_price * (1 - self.discount / 100.0))
-        self.assertEqual(order_line.discount, 0.0)
-
-        tomorrow = today + timedelta(days=1)
-        self.empty_order.date_order = tomorrow
-        order_line = self.env['sale.order.line'].create({
-            'order_id': self.empty_order.id,
-            'product_id': self.product.id,
-        })
-
-        self.assertFalse(order_line.pricelist_item_id)
-        self.assertEqual(order_line.price_unit, self.product.lst_price)
-        self.assertEqual(order_line.discount, 0.0)
-
-        self.empty_order.date_order = False
 
         with freeze_time(today):
+            # Create an order today, add line today, rule active today works
+            self.empty_order.date_order = today
             order_line = self.env['sale.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
@@ -137,21 +117,45 @@ class TestSalePrices(SaleCommon):
                 self.product.lst_price * (1 - self.discount / 100.0))
             self.assertEqual(order_line.discount, 0.0)
 
-        with freeze_time(tomorrow):
+            # Create an order tomorrow, add line today, rule active today doesn't work
+            self.empty_order.date_order = tomorrow
             order_line = self.env['sale.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
             })
 
             self.assertFalse(order_line.pricelist_item_id)
-            self.assertEqual(
-                order_line.price_unit,
-                self.product.lst_price)
+            self.assertEqual(order_line.price_unit, self.product.lst_price)
             self.assertEqual(order_line.discount, 0.0)
 
+        with freeze_time(tomorrow):
+            # Create an order tomorrow, add line tomorrow, rule active today doesn't work
+            self.empty_order.date_order = tomorrow
+            order_line = self.env['sale.order.line'].create({
+                'order_id': self.empty_order.id,
+                'product_id': self.product.id,
+            })
+
+            self.assertFalse(order_line.pricelist_item_id)
+            self.assertEqual(order_line.price_unit, self.product.lst_price)
+            self.assertEqual(order_line.discount, 0.0)
+
+            # Create an order today, add line tomorrow, rule active today works
+            self.empty_order.date_order = today
+            order_line = self.env['sale.order.line'].create({
+                'order_id': self.empty_order.id,
+                'product_id': self.product.id,
+            })
+
+            self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
             self.assertEqual(
-                self.empty_order.amount_untaxed,
-                self.product.lst_price * 3.8)
+                order_line.price_unit,
+                self.product.lst_price * (1 - self.discount / 100.0))
+            self.assertEqual(order_line.discount, 0.0)
+
+        self.assertEqual(
+            self.empty_order.amount_untaxed,
+            self.product.lst_price * 3.8)  # Discount of 10% on 2 of the 4 sol
 
     def test_pricelist_product_context(self):
         """ Verify that the product attributes extra prices are correctly considered """
@@ -213,24 +217,25 @@ class TestSalePrices(SaleCommon):
             'name': 'Test Pricelist (EUR)',
             'currency_id': other_currency.id,
         })
-        self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
-            'rate': 1.0,
-            'currency_id': self.env.company.currency_id.id,
-            'company_id': self.env.company.id,
-        })
-        order_in_other_currency = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'pricelist_id': pricelist_in_other_curr.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product.id,
-                    'product_uom': self.uom_dozen.id,
-                    'product_uom_qty': 2.0,
-                }),
-            ]
-        })
-        self.assertEqual(order_in_other_currency.amount_total, 480.0)
+        with freeze_time('2022-08-19'):
+            self.env['res.currency.rate'].create({
+                'name': fields.Date.today(),
+                'rate': 1.0,
+                'currency_id': self.env.company.currency_id.id,
+                'company_id': self.env.company.id,
+            })
+            order_in_other_currency = self.env['sale.order'].create({
+                'partner_id': self.partner.id,
+                'pricelist_id': pricelist_in_other_curr.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product.id,
+                        'product_uom': self.uom_dozen.id,
+                        'product_uom_qty': 2.0,
+                    }),
+                ]
+            })
+            self.assertEqual(order_in_other_currency.amount_total, 480.0)
 
     def test_negative_discounts(self):
         """aka surcharges"""

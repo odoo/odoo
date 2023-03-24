@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tcs_1_us_206c_1_alfhc" model="account.tax.template">
+        <field name="name">TCS @1% u/s 206C(1): Alcoholic Liquor for human consumption
+    </field>
+        <field name="description">TCS @1% u/s 206C(1): Alcoholic Liquor for human consumption
+    </field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_alfhc_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_alfhc_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_alfhc" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Alcoholic Liquor for human consumption
+</field>
+        <field name="description">TCS @5% u/s 206C(1): Alcoholic Liquor for human consumption
+</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_alfhc_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_alfhc_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_tl" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Tendu leaves</field>
+        <field name="description">TCS @5% u/s 206C(1): Tendu leaves</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_tl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_tl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_2_5_us_206c_1_touafl" model="account.tax.template">
+        <field name="name">TCS @2.5% u/s 206C(1): Timber obtained under a forest lease</field>
+        <field name="description">TCS @2.5% u/s 206C(1): Timber obtained under a forest lease</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_touafl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_touafl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_touafl" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Timber obtained under a forest lease</field>
+        <field name="description">TCS @5% u/s 206C(1): Timber obtained under a forest lease</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_touafl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_touafl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_2_5_us_206c_1_tobamotuafl" model="account.tax.template">
+        <field name="name">TCS @2.5% u/s 206C(1): Timber obtained by any mode other than under a forest lease</field>
+        <field name="description">TCS @2.5% u/s 206C(1): Timber obtained by any mode other than under a forest lease</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_tobaotuafl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_tobaotuafl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_tobamotuafl" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Timber obtained by any mode other than under a forest lease</field>
+        <field name="description">TCS @5% u/s 206C(1): Timber obtained by any mode other than under a forest lease</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_tobaotuafl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_tobaotuafl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_2_5_us_206c_1_aofpnbtotl" model="account.tax.template">
+        <field name="name">TCS @2.5% u/s 206C(1): Any other forest produce not being timber or tendu leaves</field>
+        <field name="description">TCS @2.5% u/s 206C(1): Any other forest produce not being timber or tendu leaves</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_aofpnbtotl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_aofpnbtotl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_aofpnbtotl" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Any other forest produce not being timber or tendu leaves</field>
+        <field name="description">TCS @5% u/s 206C(1): Any other forest produce not being timber or tendu leaves</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_aofpnbtotl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_aofpnbtotl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_1_us_206c_1_s" model="account.tax.template">
+        <field name="name">TCS @1% u/s 206C(1): Scrap</field>
+        <field name="description">TCS @1% u/s 206C(1): Scrap</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_s_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_s_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_s" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Scrap</field>
+        <field name="description">TCS @5% u/s 206C(1): Scrap</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_s_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_s_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_1_us_206c_1_mbcoloio" model="account.tax.template">
+        <field name="name">TCS @1% u/s 206C(1): Minrals, being coal or lignite or iron ore</field>
+        <field name="description">TCS @1% u/s 206C(1): Minrals, being coal or lignite or iron ore</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_mbcoloio_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_mbcoloio_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1_mbcoloio" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1): Minrals, being coal or lignite or iron ore</field>
+        <field name="description">TCS @5% u/s 206C(1): Minrals, being coal or lignite or iron ore</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1_mbcoloio_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1_mbcoloio_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_2_us_206c_1c_pl" model="account.tax.template">
+        <field name="name">TCS @2% u/s 206C(1C): Parking lot</field>
+        <field name="description">TCS @2% u/s 206C(1C): Parking lot</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_pl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_pl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1c_pl" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1C): Parking lot</field>
+        <field name="description">TCS @5% u/s 206C(1C): Parking lot</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_pl_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_pl_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_2_us_206c_1c_tp" model="account.tax.template">
+        <field name="name">TCS @2% u/s 206C(1C): Toll plaza</field>
+        <field name="description">TCS @2% u/s 206C(1C): Toll plaza</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_tp_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_tp_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1c_tp" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1C): Toll plaza</field>
+        <field name="description">TCS @5% u/s 206C(1C): Toll plaza</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_tp_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_tp_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_2_us_206c_1c_maq" model="account.tax.template">
+        <field name="name">TCS @2% u/s 206C(1C): Mining and quarrying</field>
+        <field name="description">TCS @2% u/s 206C(1C): Mining and quarrying</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_maq_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_maq_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1c_maq" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1C): Mining and quarrying</field>
+        <field name="description">TCS @5% u/s 206C(1C): Mining and quarrying</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_maq_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1c_maq_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_1_us_206c_1f_mv" model="account.tax.template">
+        <field name="name">TCS @1% u/s 206C(1F): Motor Vehicle</field>
+        <field name="description">TCS @1% u/s 206C(1F): Motor Vehicle</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1f_mv_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1f_mv_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1f_mv" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1F): Motor Vehicle</field>
+        <field name="description">TCS @5% u/s 206C(1F): Motor Vehicle</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1f_mv_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1f_mv_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1g_som" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1G): Sum of money (above 7 lakhs) for remittance out of India</field>
+        <field name="description">TCS @5% u/s 206C(1G): Sum of money (above 7 lakhs) for remittance out of India</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1g_som_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1g_som_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_5_us_206c_1g_soaotpp" model="account.tax.template">
+        <field name="name">TCS @5% u/s 206C(1G): Seller of an overseas tour program package</field>
+        <field name="description">TCS @5% u/s 206C(1G): Seller of an overseas tour program package</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1g_soaotpp_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1g_soaotpp_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_0_1_us_206c_1h_sog" model="account.tax.template">
+        <field name="name">TCS @0.1% u/s 206C(1H): Sale of Goods</field>
+        <field name="description">TCS @0.1% u/s 206C(1H): Sale of Goods</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.1</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1h_sog_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1h_sog_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tcs_1_us_206c_1h_sog" model="account.tax.template">
+        <field name="name">TCS @1% u/s 206C(1H): Sale of Goods</field>
+        <field name="description">TCS @1% u/s 206C(1H): Sale of Goods</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="tax_scope">consu</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tcs_group"/>
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'plus_report_expression_ids': [ref('tcs_report_line_section_206c_1h_sog_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('p11245'),
+                'minus_report_expression_ids': [ref('tcs_report_line_section_206c_1h_sog_tag')],
+            }),
+        ]"/>
+    </record>
+</odoo>

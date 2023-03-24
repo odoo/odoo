@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_rating
+# 	* portal_rating
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Miku Laitinen <miku.laitinen@gmail.com>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Antti Oksman <antti.oksman@web-veistamo.fi>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,134 +25,254 @@ msgstr ""
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:24
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Add Review"
+msgstr "Lisää arvostelu"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Average"
 msgstr "Keskinkertainen"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:34
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Close"
+msgstr "Sulje"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
+#, python-format
+msgid "Comment"
+msgstr "Kommentti"
+
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_id
+msgid "Commented by"
+msgstr "Kommentoi"
+
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_datetime
+msgid "Commented on"
+msgstr "Kommentoitu"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Poista"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Details"
 msgstr "Tiedot"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:69
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Five stars on five"
+msgid "Edit"
+msgstr "Muokkaa"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Edit Review"
 msgstr ""
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:68
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
-msgid "Four stars on five"
+msgid "Empty star"
 msgstr ""
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:13
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+#, python-format
+msgid "Full star"
+msgstr ""
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
-msgstr ""
+msgstr "Puolikas tähti"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:43
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I don't like it"
-msgstr ""
+msgstr "En pidä siitä"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:42
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I hate it"
-msgstr ""
+msgstr "Vihaan sitä"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:45
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I like it"
-msgstr ""
+msgstr "Pidän siitä"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:46
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
-msgstr ""
+msgstr "Todella pidän siitä"
 
-#. module: website_rating
+#. module: portal_rating
+#: code:addons/portal_rating/controllers/portal_rating.py:0
+#, python-format
+msgid "Invalid rating"
+msgstr "Virheellinen luokitus"
+
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:44
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "It's okay"
-msgstr ""
+msgstr "Tämä OK"
 
-#. module: website_rating
-#: model:ir.model,name:website_rating.model_mail_message
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "Lataa..."
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_mail_message
 msgid "Message"
 msgstr "Viesti"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:10
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
-msgid "One star"
-msgstr ""
+msgid "Modify your review"
+msgstr "Muokkaa arvostelua"
 
-#. module: website_rating
+#. module: portal_rating
+#: code:addons/portal_rating/models/rating_rating.py:0
+#, python-format
+msgid "Only the publisher of the website can change the rating comment"
+msgstr "Vain verkkosivuston julkaisija voi muuttaa arvostelun kommenttia"
+
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:65
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "One star on five"
-msgstr ""
+msgid "Post comment"
+msgstr "Kommetoi"
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
-msgid "Published"
-msgstr "Julkaistu"
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Published on"
+msgstr "Julkastu"
 
-#. module: website_rating
-#: model:ir.model,name:website_rating.model_rating_rating
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_comment
+msgid "Publisher comment"
+msgstr "Julkasijan kommentti"
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_rating_rating
 msgid "Rating"
 msgstr "Arvostelu"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:52
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
-msgid "Remove selection"
+msgid "Remove Selection"
+msgstr "Poista valinta"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Review"
+msgstr "Tarkasta"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"The rating is required. Please make sure to select one before sending your "
+"review."
 msgstr ""
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:67
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Three stars on five"
-msgstr ""
+msgid "Update comment"
+msgstr "Päivitä kommenttia"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:66
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
-msgid "Two stars on five"
-msgstr ""
+msgid "Write a review"
+msgstr "Kirjoita arvostelu"
 
-#. module: website_rating
-#: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
-msgid "Visible on the website as a comment"
-msgstr "Näkyvillä verkkosivustolla kommenttina"
-
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:40
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "Write your comment"
+msgstr "Kirjoita kommenttisi"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "avatar"
+msgstr "avatar"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "stars"
-msgstr ""
+msgstr "tähdet"

@@ -102,11 +102,25 @@
                 <field name="children_ids">
                     <record id="tax_report_vat_payable" model="account.report.line">
                         <field name="name">8. Tax payable (5. minus 7. (if 5. is greater than 7.))</field>
-                        <field name="aggregation_formula">OUTPUTTAX_TAX.balance - INPUTTAX_TAX if (OUTPUTTAX_TAX &gt; INPUTTAX_TAX) else 0.balance</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_payable_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">OUTPUTTAX_TAX.balance - INPUTTAX_TAX.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                        </field>
                     </record>
                     <record id="tax_report_vat_excess" model="account.report.line">
                         <field name="name">9. Excess tax payable (7. minus 5. (if 5. is less than 7.))</field>
-                        <field name="aggregation_formula">INPUTTAX_TAX.balance - OUTPUTTAX_TAX if (INPUTTAX_TAX &gt; OUTPUTTAX_TAX) else 0.balance</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_excess_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">INPUTTAX_TAX.balance - OUTPUTTAX_TAX.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                        </field>
                     </record>
                     <record id="tax_report_vat_payment_last_period" model="account.report.line">
                         <field name="name">10. Excess tax payment carried forward from last period</field>

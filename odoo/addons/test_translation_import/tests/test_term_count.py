@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from contextlib import closing
 import base64
 import io
 
-import odoo
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import _, _lt, TranslationFileReader, TranslationModuleReader
+from odoo.tools.translate import TranslationModuleReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -18,8 +16,6 @@ class TestImport(common.TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         # Tip: code translations don't need to be imported explicitly
-        # odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
-
         model = self.env['test.translation.import.model1']
         self.assertEqual(
             model.with_context(lang='fr_FR').get_code_translation(),
@@ -28,7 +24,7 @@ class TestImport(common.TransactionCase):
 
     def test_import_model_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
 
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
         self.assertEqual(
@@ -38,7 +34,7 @@ class TestImport(common.TransactionCase):
 
     def test_import_model_term_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
 
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
         self.assertEqual(
@@ -54,11 +50,11 @@ class TestImport(common.TransactionCase):
         self.assertEqual(menu.name, 'Test translation model1')
         # install french and change translation content
         self.env['res.lang']._activate_lang('fr_FR')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Test translation import in french")
         menu.with_context(lang='fr_FR').name = "Nouveau nom"
         # reload with overwrite
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False, overwrite=True)
+        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'], overwrite=True)
 
         self.assertEqual(menu.name, "Test translation model1")
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom")
@@ -66,10 +62,7 @@ class TestImport(common.TransactionCase):
     def test_lang_with_base(self):
         self.env['res.lang']._activate_lang('fr_BE')
         self.env['res.lang']._activate_lang('fr_CA')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_BE', verbose=False)
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_BE.po', 'fr_BE', verbose=False, overwrite=True)
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_CA', verbose=False)
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_CA.po', 'fr_CA', verbose=False, overwrite=True)
+        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_BE', 'fr_CA'], overwrite=True)
 
         # language override base language
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
@@ -232,7 +225,6 @@ class TestTranslationFlow(common.TransactionCase):
 
     def test_export_import(self):
         """ Ensure export+import gives the same result as loading a language """
-        # load language and generate missing terms to create missing empty terms
         self.env["base.language.install"].create({
             'overwrite': True,
             'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
@@ -245,9 +237,51 @@ class TestTranslationFlow(common.TransactionCase):
             'modules': [Command.set([module.id])]
         })
         export.act_getfile()
-        po_file = export.data
-        self.assertIsNotNone(po_file)
+        po_file_data = export.data
+        self.assertIsNotNone(po_file_data)
 
+        # test code translations
+        new_code_translations = CodeTranslations()
+        # a hack to load code translations for new_code_translations
+        with io.BytesIO(base64.b64decode(po_file_data)) as po_file:
+            po_file.name = 'fr_FR.po'
+
+            def filter_func_for_python(row):
+                return row.get('value') and (
+                        PYTHON_TRANSLATION_COMMENT in row['comments']
+                        or JAVASCRIPT_TRANSLATION_COMMENT not in row['comments'])
+            new_code_translations.python_translations[('test_translation_import', 'fr_FR')] = \
+                CodeTranslations._read_code_translations_file(po_file, filter_func_for_python)
+
+            def filter_func_for_javascript(row):
+                return row.get('value') and (
+                        JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
+                        or WEB_TRANSLATION_COMMENT in row['comments'])
+            new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = {
+                "messages": [
+                    {"id": src, "string": value}
+                    for src, value in CodeTranslations._read_code_translations_file(
+                        po_file, filter_func_for_javascript).items()
+                ]
+            }
+
+        old_python = code_translations.get_python_translations('test_translation_import', 'fr_FR')
+        new_python = new_code_translations.get_python_translations('test_translation_import', 'fr_FR')
+        self.assertEqual(old_python, new_python, 'python code translations are not exported/imported correctly')
+
+        old_web = code_translations.get_web_translations('test_translation_import', 'fr_FR')
+        new_web = new_code_translations.get_web_translations('test_translation_import', 'fr_FR')
+        self.assertEqual(old_web, new_web, 'web client code translations are not exported/imported correctly')
+
+        self.assertNotIn('text node', new_python, 'web client only translations should not be stored as python translations')
+        self.assertFalse(
+            any(
+                tran['id'] == 'Code Lazy, English'
+                for tran in new_web['messages']
+            ), 'Python only translations should not be stored as webclient translations'
+        )
+
+        # test model and model terms translations
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
         record.invalidate_recordset()
         self.assertEqual(

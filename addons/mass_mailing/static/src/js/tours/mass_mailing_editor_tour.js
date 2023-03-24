@@ -13,8 +13,6 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
     }, {
         trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
     }, {
-        trigger: 'li.ui-menu-item',
-    }, {
         trigger: 'div[name="contact_list_ids"] .ui-state-active'
     }, {
         content: 'choose the theme "empty" to edit the mailing with snippets',
@@ -29,6 +27,10 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         run: function (actions) {
             actions.drag_and_drop('[name="body_arch"] iframe .o_editable', this.$anchor);
         }
+    }, {
+        content: 'wait for the snippet menu to finish the drop process',
+        trigger: '[name="body_arch"] iframe #email_designer_header_elements:not(:has(.o_we_already_dragging))',
+        run: () => {}
     }, {
         content: 'verify that the title was inserted properly in the editor',
         trigger: '[name="body_arch"] iframe .o_editable h1',

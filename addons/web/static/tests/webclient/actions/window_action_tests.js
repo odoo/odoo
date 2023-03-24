@@ -24,10 +24,10 @@ import { errorService } from "../../../src/core/errors/error_service";
 import { RPCError } from "@web/core/network/rpc_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { makeFakeUserService, fakeCookieService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 
-const { onMounted } = owl;
+import { onMounted } from "@odoo/owl";
 let serverData;
 let target;
 const serviceRegistry = registry.category("services");
@@ -580,6 +580,64 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_data_row", 5);
     });
 
+    QUnit.test("A new form view can be reloaded after a failed one", async function (assert) {
+        assert.expect(5);
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, 3);
+        await cpHelpers.switchView(target, "list");
+        assert.containsOnce(target, ".o_list_view", "The list view should be displayed");
+
+        // Click on the first record
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
+        );
+        await legacyExtraNextTick();
+        assert.containsOnce(target, ".o_form_view", "The form view should be displayed");
+
+        // Delete the current record
+        await testUtils.controlPanel.toggleActionMenu(target);
+        await testUtils.dom.click(
+            Array.from(document.querySelectorAll(".o_menu_item")).find(
+                (e) => e.textContent === "Delete"
+            )
+        );
+        await legacyExtraNextTick();
+        assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
+        await testUtils.dom.click(target.querySelector(".modal-footer button.btn-primary"));
+        await legacyExtraNextTick();
+
+        // The form view is automatically switched to the next record
+        // Go back to the previous (now deleted) record
+        webClient.env.bus.trigger("test:hashchange", {
+            model: "partner",
+            id: 1,
+            action: 3,
+            view_type: "form",
+        });
+        await legacyExtraNextTick();
+
+        // Go back to the list view
+        webClient.env.bus.trigger("test:hashchange", {
+            model: "partner",
+            action: 3,
+            view_type: "list",
+        });
+        await legacyExtraNextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(target, ".o_list_view", "should still display the list view");
+
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
+        );
+        await legacyExtraNextTick();
+        assert.containsOnce(
+            target,
+            ".o_form_view",
+            "The form view should still load after a previous failed update | reload"
+        );
+    });
+
     QUnit.test("there is no flickering when switching between views", async function (assert) {
         assert.expect(20);
         let def;
@@ -1122,6 +1180,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("restore previous view state when switching back", async function (assert) {
         assert.expect(5);
+        registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.unshift([false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });
@@ -1182,6 +1241,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("view switcher is properly highlighted in graph view", async function (assert) {
         assert.expect(4);
+        registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.splice(1, 1, [false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });
@@ -1894,6 +1954,67 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "action with res_id, load another id on current action, do new action, restore previous",
+        async (assert) => {
+            serverData.actions[999] = {
+                id: 999,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                res_id: 1,
+                views: [[44, "form"]],
+            };
+            serverData.views["partner,44,form"] =
+                '<form><field name="m2o" open_target="current"/></form>';
+            const mockRPC = async (route, { method }) => {
+                if (method === "get_formview_action") {
+                    return Promise.resolve({ ...serverData.actions[999], res_id: 3 });
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 999, { props: { resIds: [1, 2] } });
+            assert.containsOnce(target, ".o_form_view .o_form_editable");
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "First record"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_pager_counter").textContent,
+                "1 / 2"
+            );
+
+            // load another id on current action (through pager)
+            await click(target.querySelector(".o_pager_next"));
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "Second record"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_pager_counter").textContent,
+                "2 / 2"
+            );
+
+            // push another action in the breadcrumb
+            await click(target, ".o_field_many2one .o_external_button");
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "Second recordThird record"
+            );
+
+            // restore previous action through breadcrumb
+            await click(target.querySelector(".o_control_panel .breadcrumb a"));
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "Second record"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_pager_counter").textContent,
+                "2 / 2"
+            );
+        }
+    );
+
     QUnit.test("open a record, come back, and create a new record", async function (assert) {
         assert.expect(7);
         const webClient = await createWebClient({ serverData });
@@ -2380,12 +2501,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.strictEqual(target.querySelector(".o_view_nocontent").innerText, "Hello");
-        assert.containsNone(target, "table");
+        assert.containsOnce(target, "table");
 
         await doAction(webClient, 4);
         assert.containsOnce(target, ".o_list_view");
         assert.containsNone(target, ".o_view_nocontent");
-        assert.containsOnce(target, "table");
     });
 
     QUnit.test("process context.form_view_initial_mode", async function (assert) {
@@ -2445,5 +2565,148 @@ QUnit.module("ActionManager", (hooks) => {
             views: [[false, "tree"]],
         });
         assert.containsOnce(target, ".o_list_view");
+    });
+
+    QUnit.test("sample server: populate groups", async function (assert) {
+        serverData.models.partner.records = [];
+        serverData.models.partner.fields.write_date = {
+            string: "Write Date",
+            type: "date",
+            store: true,
+            sortable: true,
+        };
+        serverData.views = {
+            "partner,false,kanban": `
+                <kanban sample="1" default_group_by="write_date:month">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="display_name"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            "partner,false,pivot": `
+                <pivot sample="1">
+                    <field name="write_date" type="row"/>
+                </pivot>
+            `,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(_, args) {
+                if (args.method === "web_read_group") {
+                    return {
+                        groups: [
+                            {
+                                date_count: 0,
+                                "write_date:month": "December 2022",
+                                __range: {
+                                    "write_date:month": {
+                                        from: "2022-12-01",
+                                        to: "2023-01-01",
+                                    },
+                                },
+                                __domain: [
+                                    ["write_date", ">=", "2022-12-01"],
+                                    ["write_date", "<", "2023-01-01"],
+                                ],
+                            },
+                        ],
+                        length: 1,
+                    };
+                }
+            },
+        });
+        await doAction(webClient, {
+            res_id: 1,
+            type: "ir.actions.act_window",
+            target: "current",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "pivot"],
+            ],
+        });
+
+        assert.containsOnce(target, ".o_kanban_view .o_view_sample_data");
+        assert.strictEqual(target.querySelector(".o_column_title").innerText, "December 2022");
+
+        await cpHelpers.switchView(target, "pivot");
+
+        assert.containsOnce(target, ".o_pivot_view .o_view_sample_data");
+    });
+
+    QUnit.test("click on breadcrumb of a deleted record", async function (assert) {
+        serviceRegistry.add("error", errorService);
+        // In tests we catch unhandledrejection of promises rejected with something that isn't an
+        // error (see tests/qunit.js). In this scenario, with the legacy basic_model, the promise
+        // is rejected with undefined, so without the following lines, we can't reproduce the issue,
+        // which was that the error handlers were executed in a wrong order, and one of them crashed.
+        const windowUnhandledReject = window.onunhandledrejection;
+        window.onunhandledrejection = null;
+        registerCleanup(() => {
+            window.onunhandledrejection = windowUnhandledReject;
+        });
+
+        const handler = (ev) => {
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
+        serverData.views["partner,false,form"] = `
+            <form>
+                <button type="action" name="3" string="Open Action 3" class="my_btn"/>
+            </form>`;
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+
+        await click(target.querySelector(".my_btn"));
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "Partners",
+            "First record",
+            "Partners",
+            "First record",
+        ]);
+
+        // open action menu and delete
+        await cpHelpers.toggleActionMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Delete");
+        assert.containsOnce(target, ".o_dialog");
+
+        // confirm
+        await click(target.querySelector(".o_dialog .modal-footer .btn-primary"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "Partners",
+            "First record",
+            "Partners",
+            "Second record",
+        ]);
+
+        // click on "First record" in breadcrumbs, which doesn't exist anymore
+        await click(target.querySelectorAll(".breadcrumb-item a")[1]);
+        await nextTick();
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "Partners",
+            "First record",
+            "Partners",
+            "Second record",
+        ]);
     });
 });

@@ -5,18 +5,18 @@
 # Translators:
 # Irina Fedulova <istartlin@gmail.com>, 2022
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
-# ILMIR <karamov@it-projects.info>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Martin Trigaux, 2022
+# ILMIR <karamov@it-projects.info>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2022-12-15 12:45+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,18 +35,24 @@ msgid "Access Key"
 msgstr "Ключ доступа"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_app_id
 #, python-format
 msgid "Application ID"
 msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Apply"
 msgstr "Применить"
+
+#. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_ir_attachment
+msgid "Attachment"
+msgstr "Вложение"
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
@@ -54,54 +60,56 @@ msgid "Config Settings"
 msgstr "Конфигурационные настройки"
 
 #. module: web_unsplash
+#. odoo-python
 #: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash URL!"
 msgstr "ОШИБКА: Неизвестное Unsplash URL!"
 
 #. module: web_unsplash
+#. odoo-python
 #: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash notify URL!"
 msgstr "ОШИБКА: Неизвестное сообщение Unsplash URL!"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Get an Access key"
 msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your access key here"
 msgstr "Вставьте ваш ключ доступа здесь"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your application ID here"
 msgstr "Вставьте ваш ID приложения здесь"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Photos (via Unsplash)"
 msgstr "Фото (из Unsplash)"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your Unsplash access key and application ID."
 msgstr "Проверьте ключ доступа и ID программы Unsplash."
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
@@ -113,28 +121,28 @@ msgid "Qweb Field Image"
 msgstr "Поле с изображением"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Search is temporarily unavailable"
 msgstr "Поиск временно недоступен"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Setup Unsplash to access royalty free photos."
 msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Something went wrong"
 msgstr "Что-то пошло не так"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid ""
@@ -145,21 +153,21 @@ msgstr ""
 "расширьте свой аккаунт."
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Unauthorized Key"
 msgstr "Незарегистрированный ключ"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Uploading %s '%s' images."
 msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Uploading '%s' image."
@@ -171,21 +179,21 @@ msgid "User"
 msgstr "Пользователь"
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "and paste"
 msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "and paste it here:"
 msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
+#. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "here:"

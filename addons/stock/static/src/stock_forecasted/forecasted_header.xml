@@ -5,14 +5,14 @@
             <div class="o_product_name">
                 <h3>
                     <t t-if="props.docs.product_templates">
-                        <t t-foreach="props.docs.product_templates" t-as="product_template" t-key='product_template'>
+                        <t t-foreach="props.docs.product_templates" t-as="product_template" t-key='product_template.id'>
                             <a href="#"
                             t-on-click.prevent="() => this.props.openView('product.template', 'form', product_template.id)"
                             t-out="product_template.display_name"/>
                         </t>
                     </t>
                     <t t-elif="props.docs.product_variants">
-                        <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant">
+                        <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
                             <a href="#"
                             t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)"
                             t-out="product_variant.display_name"/>
@@ -21,7 +21,7 @@
                 </h3>
                 <h6 t-if="props.docs.product_templates and props.docs.product_variants and props.docs.product_templates.length != props.docs.product_variants.length"
                     name="product_variants">
-                    <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant">
+                    <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
                         <a href="#"
                         t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)">
                             [<t t-out="product_variant.combination_name"/>]

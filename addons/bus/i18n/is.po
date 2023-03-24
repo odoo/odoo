@@ -1,19 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * bus
-# 
-# Translators:
-# Martin Trigaux, 2018
-# Birgir Steinarsson <biggboss83@gmail.com>, 2018
-# Bjorn Ingvarsson <boi@exigo.is>, 2018
+# 	* bus
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Bjorn Ingvarsson <boi@exigo.is>, 2018\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,19 +16,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
-msgid "A user can only have one IM status."
-msgstr ""
-
-#. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
-msgstr "farvegur"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
@@ -44,29 +33,34 @@ msgstr ""
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
 msgid "Contact"
-msgstr "Tengiliður"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "Búið til af"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "Stofnað þann"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
-msgstr "Nafn"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
-msgstr "Auðkenni"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__status
@@ -79,7 +73,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
 msgid "Last Modified on"
-msgstr "Síðast breytt þann"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -94,26 +88,51 @@ msgstr ""
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "Síðast uppfært af"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "Síðast uppfært þann"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
-msgstr "Skilaboð"
+msgstr ""
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
-msgstr "Ótengt"
+msgstr ""
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
+msgstr ""
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "Refresh"
+msgstr ""
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+msgid "User"
 msgstr ""
 
 #. module: bus
@@ -122,13 +141,11 @@ msgid "User Presence"
 msgstr ""
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_users
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
-msgstr "Notendur"
+msgstr ""
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:41
-#, python-format
-msgid "bus.Bus not available in test mode"
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
 msgstr ""

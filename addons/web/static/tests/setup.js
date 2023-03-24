@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import core, { _t } from "web.core";
+import { _t } from "web.core";
+import LegacyBus from "web.Bus";
 import session from "web.session";
 import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
@@ -17,24 +18,9 @@ import { loadLanguages } from "@web/core/l10n/translation";
 transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
-const { App, whenReady } = owl;
+import { App, whenReady } from "@odoo/owl";
 
 const { prepareRegistriesWithCleanup } = utils;
-
-patch(App.prototype, "TestOwlApp", {
-    destroy() {
-        if (!this.destroyed) {
-            this._super(...arguments);
-            this.destroyed = true;
-        }
-    },
-    addTemplate(name) {
-        registerCleanup(() => {
-            delete this.constructor.sharedTemplates[name];
-        });
-        return this._super(...arguments);
-    },
-});
 
 function stringifyObjectValues(obj, properties) {
     let res = "";
@@ -108,6 +94,23 @@ function makeMockLocation(hasListeners = () => true) {
             }
             target[p] = value;
             return true;
+        },
+    });
+}
+
+function patchOwlApp() {
+    patchWithCleanup(App.prototype, {
+        destroy() {
+            if (!this.destroyed) {
+                this._super(...arguments);
+                this.destroyed = true;
+            }
+        },
+        addTemplate(name) {
+            registerCleanup(() => {
+                delete this.constructor.sharedTemplates[name];
+            });
+            return this._super(...arguments);
         },
     });
 }
@@ -210,16 +213,14 @@ function patchBodyAddEventListener() {
     });
 }
 
-function patchLegacyCoreBus() {
+function patchLegacyBus() {
     // patch core.bus.on to automatically remove listners bound on the legacy bus
     // during a test (e.g. during the deployment of a service)
-    const originalOn = core.bus.on.bind(core.bus);
-    const originalOff = core.bus.off.bind(core.bus);
-    patchWithCleanup(core.bus, {
+    patchWithCleanup(LegacyBus.prototype, {
         on() {
-            originalOn(...arguments);
+            this._super(...arguments);
             registerCleanup(() => {
-                originalOff(...arguments);
+                this.off(...arguments);
             });
         },
     });
@@ -351,6 +352,27 @@ patch(assets, "TestAssetsLoadXML", {
 });
 
 export async function setupTests() {
+    // uncomment to debug memory leaks in qunit suite
+    // let memoryBeforeModule;
+    // QUnit.moduleStart(({ tests }) => {
+    //     if (tests.length) {
+    //         window.gc();
+    //         memoryBeforeModule = window.performance.memory.usedJSHeapSize;
+    //     }
+    // });
+    // QUnit.moduleDone(({ name }) => {
+    //     if (memoryBeforeModule) {
+    //         window.gc();
+    //         const afterGc = window.performance.memory.usedJSHeapSize;
+    //         console.log(
+    //             `MEMINFO - After suite "${name}" - after gc: ${afterGc} delta: ${
+    //                 afterGc - memoryBeforeModule
+    //             }`
+    //         );
+    //         memoryBeforeModule = null;
+    //     }
+    // });
+
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
         prepareRegistriesWithCleanup();
@@ -359,9 +381,10 @@ export async function setupTests() {
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
         patchBodyAddEventListener();
-        patchLegacyCoreBus();
+        patchLegacyBus();
         patchOdoo();
         patchSessionInfo();
+        patchOwlApp();
     });
 
     await Promise.all([whenReady(), legacyProm]);

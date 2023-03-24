@@ -67,7 +67,7 @@ class ResCompany(models.Model):
             # take any existing product or create one
             product = self.env['product.product'].search([], limit=1)
             if len(product) == 0:
-                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.png')
+                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.jpg')
                 product = self.env['product.product'].create({
                     'name': _('Sample Product'),
                     'active': False,

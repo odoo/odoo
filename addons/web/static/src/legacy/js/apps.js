@@ -152,8 +152,8 @@ var Apps = AbstractAction.extend({
                     route: '/web/action/load',
                     params: {action_id: self.failback_action_id},
                 }).then(function(action) {
-                    return self.do_action(action);
-                }).then(reject, reject);
+                    return self.do_action(action, {clear_breadcrumbs: true});
+                }).then(resolve, reject);
             });
         });
     }

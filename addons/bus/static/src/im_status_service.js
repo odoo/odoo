@@ -33,8 +33,10 @@ export const imStatusService = {
             UPDATE_BUS_PRESENCE_DELAY
         );
 
-        // wait for im_status model/ids to be registered before starting.
-        browser.setTimeout(throttledUpdateBusPresence, 250);
+        bus_service.addEventListener('connect', () => {
+            // wait for im_status model/ids to be registered before starting.
+            browser.setTimeout(throttledUpdateBusPresence, 250);
+        });
         multi_tab.bus.addEventListener('become_main_tab', throttledUpdateBusPresence);
         bus_service.addEventListener('reconnect', throttledUpdateBusPresence);
         multi_tab.bus.addEventListener('no_longer_main_tab', () => clearTimeout(updateBusPresenceTimeout));

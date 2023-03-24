@@ -666,6 +666,14 @@
                     <filter name="no_rating" string="No Rating" domain="['|', ('rating_active', '=', False), ('rating_avg', '=', 0)]" groups="project.group_project_rating"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter invisible="1" string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Customer" name="Partner" context="{'group_by': 'partner_id'}"/>
@@ -680,7 +688,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1">
+                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="sequence, name, id">
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -790,6 +798,7 @@
                     on_create="project.open_create_project"
                     action="action_view_tasks" type="object"
                     sample="1"
+                    default_order="sequence, name, id"
                 >
                     <field name="display_name"/>
                     <field name="partner_id"/>
@@ -832,7 +841,7 @@
                                                     <i t-if="record.date.raw_value and record.date_start.raw_value" class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow"/>
                                                     <field name="date"/>
                                                 </div>
-                                                <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
+                                                <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted text-truncate" t-att-title="record.alias_id.value">
                                                     <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
                                                 </div>
                                                 <div t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="text-muted" groups="project.group_project_rating">
@@ -856,7 +865,7 @@
                                                 <div role="menuitem">
                                                     <a name="action_view_tasks" type="object">Tasks</a>
                                                 </div>
-                                                <div role="menuitem" groups="project.group_project_milestone">
+                                                <div role="menuitem" groups="project.group_project_milestone" t-if="record.allow_milestones.raw_value">
                                                     <a name="action_get_list_view" type="object">Milestones</a>
                                                 </div>
                                             </div>
@@ -1140,9 +1149,9 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pe-0">
                         <h1 class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
+                            <div class="d-flex w-100">
                                 <field name="priority" widget="priority" class="me-3"/>
-                                <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
+                                <field name="name" class="o_task_name text-truncate w-100 w-md-75 pe-2" placeholder="Task Title..."/>
                             </div>
                             <field name="kanban_state" widget="state_selection" class=""/>
                         </h1>
@@ -1179,14 +1188,14 @@
                         </group>
                     </group>
                     <field attrs="{'invisible': [('project_id', '=', False)]}"
-                        name="task_properties" nolabel="1" columns="2"/>
+                        name="task_properties" nolabel="1" columns="2" hideKanbanOption="1"/>
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Task description..."/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
-                                   context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
+                                   context="{'search_view_ref' : 'project.view_task_search_form_extended', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
                                    widget="many2many"
                                    domain="['!', ('id', 'parent_of', id)]">
@@ -1526,11 +1535,28 @@
             </field>
         </record>
 
+        <!--
+            The below view is invalid since `multi_edit="1"` has been set on the tree
+            https://github.com/odoo/odoo/commit/972e097dbe7cdc7afdae722391692f9b3bf063b8#diff-db3b2f2e90f34ffef22194c3eac5a34b17af9b9a0a644d77da9e80738963931eL859
+            because `activity_type_id` uses in his domain a field `res_model`
+            which is not available in the view and not even in the model.
+            It has not been detected because:
+            - this view is unused / impossible to reach since Odoo 12.0,
+              and therefore nobody tried to edit the many2one field `activity_type_id` which would trigger the issue
+            - the field domains were not validated because `multi_edit="1"` tree views were not considered as editable,
+              and therefore their field domains were not validated in the views validation, as they should have been.
+            This view has been removed in master as it was no longer used,
+            through https://github.com/odoo/odoo/pull/103702.
+            We cannot remove it in 16.0 because it would require an upgrade script.
+            Hence we just remove the multi_edit="1" so the view is not validated
+            and the domain is not used in the web client.
+        -->
         <record id="project_task_view_tree_activity" model="ir.ui.view">
             <field name="name">project.task.tree.activity</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline" multi_edit="1">
+                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                    <field name="company_id" invisible="1"/>
                     <field name="is_closed"/>
                     <field name="name"/>
                     <field name="project_id" options="{'no_open': 1}"/>

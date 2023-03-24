@@ -5,6 +5,7 @@ import base64
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
+from itertools import product
 from markupsafe import escape
 from unittest.mock import patch
 
@@ -19,7 +20,6 @@ from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
-from odoo.tools.translate import code_translations
 
 
 class TestMessagePostCommon(TestMailCommon, TestRecipients):
@@ -238,25 +238,14 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                               (False, False),
                               ('mail.thread', False),
                               ('mail.thread', self.test_record.id)):
-            msg_vals.update({
-                'model': model,
-                'res_id': res_id,
-            })
-            # note that msg_vals wins over record on which method is called
-            notify_msg_vals = dict(msg_vals, **link_vals)
-            classify_res = self.test_record._notify_get_recipients_classify(
-                pdata, 'Test', msg_vals=notify_msg_vals)
-            # find back information for partner
-            partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-            emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
-            # check there is no access button
-            self.assertFalse(partner_info['has_button_access'])
-            self.assertFalse(emp_info['has_button_access'])
-
-            # test on falsy records (False model cannot be browsed, skipped)
-            if model:
-                record_falsy = self.env[model].browse(res_id)
-                classify_res = record_falsy._notify_get_recipients_classify(
+            with self.subTest(model=model, res_id=res_id):
+                msg_vals.update({
+                    'model': model,
+                    'res_id': res_id,
+                })
+                # note that msg_vals wins over record on which method is called
+                notify_msg_vals = dict(msg_vals, **link_vals)
+                classify_res = self.test_record._notify_get_recipients_classify(
                     pdata, 'Test', msg_vals=notify_msg_vals)
                 # find back information for partner
                 partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
@@ -264,6 +253,18 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
+
+                # test on falsy records (False model cannot be browsed, skipped)
+                if model:
+                    record_falsy = self.env[model].browse(res_id)
+                    classify_res = record_falsy._notify_get_recipients_classify(
+                        pdata, 'Test', msg_vals=notify_msg_vals)
+                    # find back information for partner
+                    partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
+                    emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                    # check there is no access button
+                    self.assertFalse(partner_info['has_button_access'])
+                    self.assertFalse(emp_info['has_button_access'])
 
 
 @tagged('mail_post', 'mail_notify')
@@ -294,6 +295,10 @@ class TestMessageNotify(TestMessagePostCommon):
             }
         )
         self.assertNotIn(new_notification, self.test_record.message_ids)
+
+        # notified_partner_ids should be empty after copying the message
+        copy = new_notification.copy()
+        self.assertFalse(copy.notified_partner_ids)
 
         admin_mails = [mail for mail in self._mails if self.partner_admin.name in mail.get('email_to')[0]]
         self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
@@ -507,7 +512,8 @@ class TestMessageLog(TestMessagePostCommon):
 @tagged('mail_post')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
-    def test_initial_values(self):
+    def test_assert_initial_values(self):
+        """ Be sure of what we are testing """
         self.assertFalse(self.test_record.message_ids)
         self.assertFalse(self.test_record.message_follower_ids)
         self.assertFalse(self.test_record.message_partner_ids)
@@ -578,7 +584,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 partner_ids=self.partner_portal.ids,
             )
 
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
     def test_message_post_defaults(self):
         """ Test default values when posting a classic message. """
@@ -610,6 +616,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         )
 
     @users('employee')
+    @mute_logger('odoo.models.unlink')
     def test_message_post_inactive_follower(self):
         """ Test posting with inactive followers does not notify them (e.g. odoobot) """
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
@@ -773,7 +780,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             ('List2', b'My second attachment'),
         ]
         _attachment_records = self.env['ir.attachment'].create(
-            self._generate_attachments_data(3, res_id=0, res_model='mail.compose.message')
+            self._generate_attachments_data(3, 'mail.compose.message', 0)
         )
         _attachment_records[1].write({'mimetype': 'image/png'})  # to test message_main_attachment heuristic
 
@@ -815,6 +822,51 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                          ('AttFileName_02.txt', b'AttContent_02', 'text/plain'),
                         ]
         )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
+    def test_message_post_w_attachments_filtering(self):
+        """
+        Test the message_main_attachment heuristics with an emphasis on the XML/PDF types.
+        -> we don't want XML files to be set as message_main_attachment
+        """
+        xml_attachment, pdf_attachment = ('List1', b'My xml attachment'), ('List2', b'My pdf attachment')
+
+        xml_attachment_data, pdf_attachment_data = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+        xml_attachment_data.write({'mimetype': 'application/xml'})
+        pdf_attachment_data.write({'mimetype': 'application/pdf'})
+
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        self.assertFalse(test_record.message_main_attachment_id)
+
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=xml_attachment,
+                attachment_ids=xml_attachment_data.ids,
+                body='Post XML',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        self.assertFalse(test_record.message_main_attachment_id,
+                         'MailThread: main attachment should not be set with an XML')
+
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=pdf_attachment,
+                attachment_ids=pdf_attachment_data.ids,
+                body='Post PDF',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        self.assertEqual(test_record.message_main_attachment_id, pdf_attachment_data,
+                         'MailThread: main attachment should be set to application/pdf')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_multiline_subject(self):
@@ -964,25 +1016,28 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             10,
         )
 
+        cls._attachments = cls._generate_attachments_data(2, 'mail.template', 0)
+        cls.email_1 = 'test1@example.com'
+        cls.email_2 = 'test2@example.com'
+        cls.test_template = cls._create_template('mail.test.ticket', {
+            'attachment_ids': [(0, 0, attach_vals) for attach_vals in cls._attachments],
+            'auto_delete': True,
+            # After the HTML sanitizer, it will become "<p>Body for: <t t-out="object.name" /><a href="">link</a></p>"
+            'body_html': 'Body for: <t t-out="object.name" /><script>test</script><a href="javascript:alert(1)">link</a>',
+            'email_cc': cls.partner_1.email,
+            'email_to': f'{cls.email_1}, {cls.email_2}',
+            'partner_to': '{{ object.customer_id.id }},%s' % cls.partner_2.id,
+        })
+        cls.test_template.attachment_ids.write({'res_id': cls.test_template.id})
+        # Force the attachments of the template to be in the natural order.
+        cls.test_template.invalidate_recordset(['attachment_ids'])
+
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_mail_with_template(self):
         """ Test sending mass mail on documents based on a template """
-        _attachments = self._generate_attachments_data(count=2, res_id=0, res_model='mail.template')
-        email_1 = 'test1@example.com'
-        email_2 = 'test2@example.com'
-        template = self._create_template('mail.test.ticket', {
-            'attachment_ids': [(0, 0, attach_vals) for attach_vals in _attachments],
-            'auto_delete': True,
-            # After the HTML sanitizer, it will become "<p>Body for: <t t-out="object.name" /><a href="">link</a></p>"
-            'body_html': 'Body for: <t t-out="object.name" /><script>test</script><a href="javascript:alert(1)">link</a>',
-            'email_cc': self.partner_1.email,
-            'email_to': f'{email_1}, {email_2}',
-            'partner_to': '{{ object.customer_id.id }},%s' % self.partner_2.id,
-        })
-        template.attachment_ids.write({'res_id': template.id})
-
         test_records = self.test_records.with_env(self.env)
+        template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
             _new_mails, _new_messages = test_records.with_user(self.user_employee).message_post_with_template(
                 template.id,
@@ -990,7 +1045,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             )
 
         # created partners from inline email addresses
-        new_partners = self.env['res.partner'].search([('email', 'in', (email_1, email_2))])
+        new_partners = self.env['res.partner'].search([('email', 'in', (self.email_1, self.email_2))])
         self.assertEqual(len(new_partners), 2,
                          'Post with template: should have created partners based on template emails')
 
@@ -1006,7 +1061,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                         ('AttFileName_01.txt', b'AttContent_01', 'text/plain'),
                     ],
                     'subject': f'About {test_record.name}',
-                    'body_content': test_record.name,
+                    'body_content': f'Body for: {test_record.name}',
                 },
                 fields_values={
                     'auto_delete': True,
@@ -1015,7 +1070,6 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'message_type': 'email',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
-                    'to_delete': True,
                     'subtype_id': self.env['mail.message.subtype'],
                     'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
@@ -1031,13 +1085,13 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             test_record.message_subscribe(test_record.customer_id.ids)
 
         with self.mock_mail_gateway():
-            res_messages = test_records.message_post_with_view(
+            new_messages = test_records.message_post_with_view(
                 'test_mail.mail_template_simple_test',
                 values={'partner': self.user_employee.partner_id},
                 composition_mode='mass_mail',
                 subject='About mass mailing',
             )
-        self.assertEqual(len(res_messages), 0)
+        self.assertEqual(len(new_messages), 0)
         self.assertEqual(len(self._new_mails), 10)
 
         # sent emails (mass mail mode)
@@ -1057,7 +1111,6 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'recipient_ids': test_record.customer_id,
-                    'to_delete': False,
                     'subtype_id': self.env['mail.message.subtype'],
                     'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
@@ -1068,36 +1121,66 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_post_with_template(self):
         """ Test posting on a document based on a template content """
-        _attachments = self._generate_attachments_data(count=2, res_id=0, res_model='mail.template')
-        email_1 = 'test1@example.com'
-        email_2 = 'test2@example.com'
-        template = self._create_template('mail.test.ticket', {
-            'attachment_ids': [(0, 0, attach_vals) for attach_vals in _attachments],
-            'auto_delete': True,
-            'email_cc': self.partner_1.email,
-            'email_to': f'{email_1}, {email_2}',
-            'partner_to': '{{ object.customer_id.id }},%s' % self.partner_2.id,
-        })
-        template.attachment_ids.write({'res_id': template.id})
-        # Force the attachments of the template to be in the natural order.
-        self.email_template.invalidate_recordset(['attachment_ids'])
-
         test_record = self.test_records.with_env(self.env)[0]
         test_record.message_subscribe(test_record.customer_id.ids)
+        test_template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
             _new_mail, new_message = test_record.with_user(self.user_employee).message_post_with_template(
-                self.email_template.id,
-                composition_mode='comment'
+                test_template.id,
+                composition_mode='comment',
+                message_type='comment',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )
 
         # created partners from inline email addresses
-        new_partners = self.env['res.partner'].search([('email', 'in', [email_1, email_2])])
+        new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
         self.assertEqual(len(new_partners), 2,
                          'Post with template: should have created partners based on template emails')
 
         # check notifications have been sent
         self.assertMailNotifications(new_message, [{
-            'content': f'<p>Hello {test_record.name}</p>',
+            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
+            'message_type': 'comment',
+            'notif': [
+                {'partner': self.partner_1, 'type': 'email'},
+                {'partner': self.partner_2, 'type': 'email'},
+                {'partner': new_partners[0], 'type': 'email'},
+                {'partner': new_partners[1], 'type': 'email'},
+                {'partner': test_record.customer_id, 'type': 'email'},
+            ],
+            'subtype': 'mail.mt_comment',
+        }])
+        self.assertMessageFields(
+            new_message,
+            {'author_id': self.partner_employee,
+             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+             'is_internal': False,
+             'model': test_record._name,
+             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+             'res_id': test_record.id,
+            }
+        )
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail')
+    def test_message_post_with_template_defaults(self):
+        """ Test default values, notably subtype being a comment """
+        test_record = self.test_records.with_env(self.env)[0]
+        test_record.message_subscribe(test_record.customer_id.ids)
+        test_template = self.test_template.with_env(self.env)
+        with self.mock_mail_gateway():
+            _new_mail, new_message = test_record.with_user(self.user_employee).message_post_with_template(
+                test_template.id,
+            )
+
+        # created partners from inline email addresses
+        new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
+        self.assertEqual(len(new_partners), 2,
+                         'Post with template: should have created partners based on template emails')
+
+        # check notifications have been sent
+        self.assertMailNotifications(new_message, [{
+            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
             'message_type': 'notification',
             'notif': [
                 {'partner': self.partner_1, 'type': 'email'},
@@ -1129,7 +1212,45 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         with self.mock_mail_gateway():
             new_message = test_record.message_post_with_view(
                 'test_mail.mail_template_simple_test',
-                values={'partner': self.user_employee.partner_id}
+                message_type='comment',
+                values={'partner': self.user_employee.partner_id},
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            )
+
+        # check notifications have been sent
+        self.assertMailNotifications(new_message, [{
+            'content': f'<p>Hello {self.user_employee.partner_id.name}, this comes from {test_record.name}.</p>',
+            'message_type': 'comment',
+            'notif': [
+                {'partner': test_record.customer_id, 'type': 'email'},
+            ],
+            'subtype': 'mail.mt_comment',
+        }])
+        self.assertMessageFields(
+            new_message,
+            {'author_id': self.partner_employee,
+             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+             'is_internal': False,
+             'message_type': 'comment',
+             'model': test_record._name,
+             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+             'res_id': test_record.id,
+            }
+        )
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_message_post_with_view_defaults(self):
+        """ Test posting on documents based on a view, check default values """
+        test_record = self.test_records.with_env(self.env)[0]
+        test_record.message_subscribe(test_record.customer_id.ids)
+
+        # defaults is a note, take into account specified recipients
+        with self.mock_mail_gateway():
+            new_message = test_record.message_post_with_view(
+                'test_mail.mail_template_simple_test',
+                values={'partner': self.user_employee.partner_id},
+                partner_ids=test_record.customer_id.ids,
             )
 
         # check notifications have been sent
@@ -1209,9 +1330,107 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
 
         cls.partner_2.write({'lang': 'es_ES'})
 
+    def test_assert_initial_values(self):
+        """ Be sure of what we are testing """
+        self.assertEqual(self.partner_1.lang, 'en_US')
+        self.assertEqual(self.partner_2.lang, 'es_ES')
+
+        self.assertEqual(self.test_records[0].lang, 'es_ES')
+        self.assertEqual(self.test_records[0].customer_id.lang, False)
+        self.assertEqual(self.test_records[1].lang, False)
+        self.assertEqual(self.test_records[1].customer_id.lang, 'es_ES')
+
+        self.assertFalse(self.test_records[0].message_follower_ids)
+        self.assertFalse(self.test_records[1].message_follower_ids)
+
+        self.assertEqual(self.user_employee.lang, 'en_US')
+
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_composer_lang_template(self):
+    def test_composer_lang_template_comment(self):
+        """ When posting in comment mode, content is rendered using the lang
+        field of template. Notification layout lang is partly coming from
+        template, partly from environment (to be improved). """
+        test_record = self.test_records[0].with_user(self.env.user)
+        test_template = self.test_template.with_user(self.env.user)
+
+        for partner, exp_content_lang, exp_notif_lang in zip(
+            (self.env['res.partner'], self.partner_1, self.partner_2),
+            ('es_ES', 'en_US', 'es_ES'),  # content: coming from template definition
+            ('en_US', 'en_US', 'es_ES'),  # layout: coming from customer
+        ):
+            with self.subTest(
+                partner=partner,
+                exp_content_lang=exp_content_lang,
+                exp_notif_lang=exp_notif_lang
+            ):
+                test_record.write({'customer_id': partner.id})
+                with self.mock_mail_gateway():
+                    test_record.message_post_with_template(
+                        test_template.id,
+                        email_layout_xmlid='mail.test_layout',
+                        message_type='comment',
+                        subtype_id=self.env.ref('mail.mt_comment').id,
+                    )
+
+                if partner:
+                    customer = partner
+                else:
+                    customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
+                    self.assertTrue(customer, 'Template usage should have created a contact based on record email')
+                self.assertEqual(customer.lang, exp_notif_lang)
+
+                customer_email = self._find_sent_mail_wemail(customer.email_formatted)
+                self.assertTrue(customer_email)
+                body = customer_email['body']
+                # check content: depends on object.lang / object.customer_id.lang
+                if exp_content_lang == 'en_US':
+                    self.assertIn(f'EnglishBody for {test_record.name}', body,
+                                  'Body based on template should be translated')
+                else:
+                    self.assertIn(f'SpanishBody for {test_record.name}', body,
+                                  'Body based on template should be translated')
+                # check subject
+                if exp_content_lang == 'en_US':
+                    self.assertEqual(f'EnglishSubject for {test_record.name}', customer_email['subject'],
+                                     'Subject based on template should be translated')
+                else:
+                    self.assertEqual(f'SpanishSubject for {test_record.name}', customer_email['subject'],
+                                     'Subject based on template should be translated')
+                # check notification layout content: currently partly translated
+                # based only on template definition
+                if exp_content_lang == 'en_US':
+                    self.assertNotIn('Spanish Layout para', body, 'Layout translation failed')
+                    self.assertIn('English Layout for Lang Chatter Model', body,
+                                  'Layout / model translation failed')
+                    self.assertNotIn('Spanish Model Description', body, 'Model translation failed')
+                    # check notification layout strings
+                    self.assertNotIn('SpanishView Spanish Model Description', body,
+                                     '"View document" translation failed')
+                    self.assertIn(f'View {test_record._description}', body,
+                                  '"View document" translation failed')
+                    self.assertNotIn('SpanishButtonTitle', body,
+                                     'Groups-based action names translation failed')
+                    self.assertIn('NotificationButtonTitle', body,
+                                  'Groups-based action names translation failed')
+                else:
+                    self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
+                    self.assertNotIn('English Layout for', body)
+                    self.assertIn('Spanish Layout para Spanish Model Description', body, 'Model name should be translated')
+                    # check notification layout strings
+                    self.assertIn('View Lang Chatter Model', body,
+                                  'Fixme: "View document" should be translated')
+                    # self.assertIn('SpanishView Spanish Model Description', body,
+                    #               '"View document" should be translated')
+                    # self.assertNotIn(f'View {test_record._description}', body,
+                    #                  '"View document" should be translated')
+                    # self.assertIn('SpanishButtonTitle', body,
+                    #               'Groups-based action names should be translated')
+                    self.assertIn('NotificationButtonTitle', body, 'Fixme: Groups-based action names should be translated')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_composer_lang_template_mass(self):
         test_records = self.test_records.with_user(self.env.user)
         test_template = self.test_template.with_user(self.env.user)
 
@@ -1219,7 +1438,7 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             test_records.message_post_with_template(
                 test_template.id,
                 composition_mode='mass_mail',
-                # email_layout_xmlid='mail.test_layout',  Not supported
+                email_layout_xmlid='mail.test_layout',
                 message_type='comment',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
@@ -1232,21 +1451,19 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             self.assertTrue(customer_email)
             body = customer_email['body']
             # check content
-            # self.assertIn('SpanishBody for %s' % record.name, body, 'Body based on template should be translated')
-            self.assertIn('EnglishBody for %s' % record.name, body, 'Fixme: this should be translated')
+            # self.assertIn(f'SpanishBody for {record.name}', body,
+            #               'Body based on template should be translated')
+            self.assertIn(f'EnglishBody for {record.name}', body,
+                          'Fixme: Body based on template should be translated')
             # check subject
-            # self.assertEqual('SpanishSubject for %s' % record.name, customer_email['subject'], 'Subject based on template should be translated')
-            self.assertEqual('EnglishSubject for %s' % record.name, customer_email['subject'], 'Fixme: this should be translated')
+            # self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
+            #                  'Subject based on template should be translated')
+            self.assertEqual(f'EnglishSubject for {record.name}', customer_email['subject'],
+                             'Fixme: Subject based on template should be translated')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_layout_email_lang_context(self):
-        # hack into code translations:
-        code_translations.python_translations[('test_mail', 'es_ES')] = {'TestStuff': 'TestSpanishStuff'}
-        self.addCleanup(code_translations.python_translations.pop, ('test_mail', 'es_ES'))
-        code_translations.python_translations[('mail', 'es_ES')] = {'View %s': 'SpanishView %s'}
-        self.addCleanup(code_translations.python_translations.pop, ('mail', 'es_ES'))
-
         test_records = self.test_records.with_user(self.env.user).with_context(lang='es_ES')
         test_records[1].message_subscribe(self.partner_2.ids)
 
@@ -1262,20 +1479,26 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         customer_email = self._find_sent_mail_wemail(self.partner_2.email_formatted)
         self.assertTrue(customer_email)
         body = customer_email['body']
-        # check notification layout translation
-        self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
-        self.assertNotIn('English Layout for', body)
-        self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
-        self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
-        self.assertNotIn('View %s' % test_records[1]._description, body)
-        self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
-        self.assertNotIn('TestStuff', body)
         # check content
-        self.assertIn('Hello', body, 'Body of posted message should be present')
+        self.assertIn('<p>Hello</p>', body, 'Body of posted message should be present')
+        # check notification layout content
+        self.assertIn('Spanish Layout para', body,
+                      'Layout content should be translated')
+        self.assertNotIn('English Layout for', body)
+        self.assertIn('Spanish Layout para Spanish Model Description', body,
+                      'Model name should be translated')
+        # check notification layout strings
+        self.assertIn('SpanishView Spanish Model Description', body,
+                      '"View document" should be translated')
+        self.assertNotIn(f'View {test_records[1]._description}', body)
+        self.assertIn('SpanishButtonTitle', body, 'Groups-based action names should be translated')
+        self.assertNotIn('NotificationButtonTitle', body)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_layout_email_lang_template(self):
+        """ Test language support when posting in batch using a template.
+        Content and layout are is translated based on template definition. """
         test_records = self.test_records.with_user(self.env.user)
         test_template = self.test_template.with_user(self.env.user)
 
@@ -1294,16 +1517,118 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         for record, customer in zip(test_records, record0_customer + self.partner_2):
             customer_email = self._find_sent_mail_wemail(customer.email_formatted)
             self.assertTrue(customer_email)
+
+            # body and layouting are translated partly based on template. Bits
+            # of layout are not translated due to lang not being correctly
+            # propagate everywhere we need it
             body = customer_email['body']
-            # check notification layout translation
-            self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
-            self.assertNotIn('English Layout for', body)
-            self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
-            # self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
-            self.assertIn('View %s' % test_records[1]._description, body, 'Fixme: this should be translated')
-            # self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
-            self.assertIn('TestStuff', body, 'Fixme: groups-based action names should be translated')
             # check content
-            self.assertIn('SpanishBody for %s' % record.name, body, 'Body based on template should be translated')
+            self.assertIn(f'SpanishBody for {record.name}', body,
+                          'Body based on template should be translated')
             # check subject
-            self.assertEqual('SpanishSubject for %s' % record.name, customer_email['subject'], 'Subject based on template should be translated')
+            self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
+                             'Subject based on template should be translated')
+            # check notification layout translation
+            self.assertIn('Spanish Layout para', body,
+                          'Layout content should be translated')
+            self.assertNotIn('English Layout for', body)
+            self.assertIn('Spanish Layout para Spanish Model Description', body,
+                          'Model name should be translated')
+            # self.assertIn('SpanishView Spanish Model Description', body,
+            #               '"View document" should be translated')
+            self.assertIn(f'View {test_records[1]._description}', body,
+                          'Fixme: "View document" should be translated')
+            # self.assertIn('NotificationButtonTitle', body,
+            #               'Groups-based action names should be translated')
+            self.assertIn('NotificationButtonTitle', body,
+                          'Fixme: groups-based action names should be translated')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_multi_lang_recipients(self):
+        """ Test posting on a document in a multilang environment. Currently
+        current user's lang determines completely language used for notification
+        layout notably, when no template is involved.
+
+        Lang layout for this test (to better check various configuration and
+        check which lang wins the final output, if any)
+
+          * current users: various between en and es;
+          * partner1: es
+          * partner2: en
+        """
+        test_records = self.test_records.with_env(self.env)
+        test_records.message_subscribe(partner_ids=(self.partner_1 + self.partner_2).ids)
+
+        for employee_lang, email_layout_xmlid in product(
+            ('en_US', 'es_ES'),
+            (False, 'mail.test_layout'),
+        ):
+            with self.subTest(employee_lang=employee_lang, email_layout_xmlid=email_layout_xmlid):
+                self.user_employee.write({
+                    'lang': employee_lang,
+                })
+                for record in test_records:
+                    with self.mock_mail_gateway(mail_unlink_sent=False), \
+                         self.mock_mail_app():
+                        record.message_post(
+                            body='<p>Hi there</p>',
+                            email_layout_xmlid=email_layout_xmlid,
+                            message_type='comment',
+                            subject='TeDeum',
+                            subtype_xmlid='mail.mt_comment',
+                        )
+                        message = record.message_ids[0]
+                        self.assertEqual(
+                            message.notified_partner_ids, self.partner_1 + self.partner_2
+                        )
+
+                        # check created mail.mail and outgoing emails. One email
+                        # is generated for 'partner_1' and 'partner_2' (same email
+                        # as same configuration (aka all customers)).
+                        _mail = self.assertMailMail(
+                            self.partner_1 + self.partner_2, 'sent',
+                            mail_message=message,
+                            author=self.partner_employee,
+                            email_values={
+                                'body_content': '<p>Hi there</p>',
+                                'email_from': self.partner_employee.email_formatted,
+                                'subject': 'TeDeum',
+                            },
+                           )
+
+                        # Low-level checks on outgoing email for the recipient to
+                        # check layouting and language. Note that standard layout
+                        # is not tested against translations, only the custom one
+                        # to ease translations checks.
+                        for partner in self.partner_1 + self.partner_2:
+                            email = self._find_sent_email(
+                                self.partner_employee.email_formatted,
+                                [partner.email_formatted]
+                            )
+                            self.assertTrue(bool(email), 'Email not found, check recipients')
+
+                            exp_layout_content_en = 'English Layout for Lang Chatter Model'
+                            exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
+                            exp_button_en = 'View Lang Chatter Model'
+                            exp_button_es = 'SpanishView Spanish Model Description'
+                            exp_action_en = 'NotificationButtonTitle'
+                            exp_action_es = 'SpanishButtonTitle'
+                            if email_layout_xmlid:
+                                if employee_lang == 'es_ES':
+                                    self.assertIn(exp_layout_content_es, email['body'])
+                                    self.assertIn(exp_button_es, email['body'])
+                                    self.assertIn(exp_action_es, email['body'])
+                                else:
+                                    self.assertIn(exp_layout_content_en, email['body'])
+                                    self.assertIn(exp_button_en, email['body'])
+                                    self.assertIn(exp_action_en, email['body'])
+                            else:
+                                # check default layouting applies
+                                if employee_lang == 'es_ES':
+                                    self.assertIn('html lang="es_ES"', email['body'])
+                                elif employee_lang:
+                                    self.assertIn('html lang="en_US"', email['body'])
+                                else:
+                                    # if lang is False -> nothing in header, strange
+                                    self.assertNotIn('html lang', email['body'])

@@ -98,7 +98,8 @@ class AccountInvoiceReport(models.Model):
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
                 -line.balance * currency_table.rate                         AS price_subtotal,
-                line.price_total,
+                line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
+                                                                            AS price_total,
                 -COALESCE(
                    -- Average line price
                    (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
@@ -145,7 +146,7 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
         qr_code_urls = {}
         for invoice in docs:
             if invoice.display_qr_code:
-                new_code_url = invoice._generate_qr_code()
+                new_code_url = invoice._generate_qr_code(silent_errors=data['report_type'] == 'html')
                 if new_code_url:
                     qr_code_urls[invoice.id] = new_code_url
 

@@ -27,7 +27,7 @@
             <field name="arch" type="xml">
                 <search string="Account groups">
                     <field name="name"
-                           filter_domain="['|', ('code_prefix_start', '=like', str(self) + '%'), ('name', 'ilike', self)]"
+                           filter_domain="['|', ('code_prefix_start', '=like', self + '%'), ('name', 'ilike', self)]"
                            string="Account group"/>
                 </search>
             </field>

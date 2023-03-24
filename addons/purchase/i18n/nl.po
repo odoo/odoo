@@ -3,16 +3,17 @@
 # 	* purchase
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +44,14 @@ msgid "# of Lines"
 msgstr "# Regels"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s verschuldigd %(date)s"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -56,12 +59,14 @@ msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
 msgstr "%(product)s van %(original_receipt_date)s naar %(new_receipt_date)s"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
 msgstr "%s heeft bevestigd dat de ontvangst zal plaatsvinden op %s."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
@@ -539,6 +544,7 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>Je bestelreferentie:</strong>"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
@@ -568,10 +574,10 @@ msgid ""
 "that is a multiple of the number of units per package."
 msgstr ""
 "Mogelijkheid om een pakkettype te selecteren in inkooporders en een "
-"hoeveelheid te forceren die een veelvoud is van het aantal eenheden per "
-"pakket."
+"hoeveelheid te forceren die een veelvoud is van het aantal stuks per pakket."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Accept"
@@ -644,7 +650,7 @@ msgid "Add several variants to the purchase order from a grid"
 msgstr "Voeg meerdere varianten toe aan de inkooporder vanuit een matrix"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
@@ -656,38 +662,39 @@ msgid "Administrator"
 msgstr "Beheerder"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
 msgstr "Alle"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
-msgstr "Alle concept-offerteaanvragen"
+msgstr "Alle concept offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
-msgstr "Alle Late Offerteaanvragen"
+msgstr "Alle late offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
 msgstr "Alle offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
-msgstr "Alle Wachtende Offerteaanvragen"
+msgstr "Alle wachtende offerteaanvragen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -744,14 +751,14 @@ msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr "Kostenplaatsdistributie Opgeslagen Char"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Toepassingen van kostenplaatsplan"
+msgstr "Toepassingen van kostenplaatsplannen"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "Analytische nauwkeurigheid"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -828,7 +835,7 @@ msgid "Average Days to Purchase"
 msgstr "Gem. aantal dagen tot inkoop"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value"
@@ -857,7 +864,7 @@ msgstr "Gefactureerd"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
-msgstr "Gefactureerde aantal"
+msgstr "Aantal gefactureerd"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -915,6 +922,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
@@ -928,6 +936,7 @@ msgid "Cancelled Purchase Order #"
 msgstr "Geannuleerde inkooporder #"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
@@ -964,6 +973,7 @@ msgid "Company Currency"
 msgstr "Bedrijfsvaluta"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -981,6 +991,7 @@ msgid "Configuration"
 msgstr "Configuratie"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Confirm"
@@ -994,7 +1005,7 @@ msgstr "Bevestig order"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Confirm Receipt Date"
-msgstr "Bevestig de ontvangstdatum"
+msgstr "Bevestig ontvangstdatum"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -1002,7 +1013,7 @@ msgid "Confirm purchase orders in one step"
 msgstr "Bevestig inkooporders in één stap"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
@@ -1055,7 +1066,7 @@ msgstr "Landcode"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
-msgstr "Factuur aanmaken"
+msgstr "Maak factuur"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -1114,6 +1125,7 @@ msgid "Date Calendar Start"
 msgstr "Datum kalenderstart"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -1126,7 +1138,7 @@ msgid "Date:"
 msgstr "Datum:"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Days"
@@ -1228,7 +1240,7 @@ msgstr "Downloaden"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
-msgstr "Concept Inkoop offerteaanvraag"
+msgstr "Concept offerteaanvraag"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1257,6 +1269,7 @@ msgid "Extended Filters"
 msgstr "Uitgebreide filters"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1287,6 +1300,13 @@ msgstr "Font awesome icoon bijv. fa-tasks"
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
 msgstr "Verboden waarde op niet boekhoudkundige inkooporderregel"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, python-format
+msgid "From %s document"
+msgstr "Van %s document"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1390,12 +1410,14 @@ msgid "If true, the packaging can be used for purchase orders"
 msgstr "Indien waar, kan de verpakking worden gebruikt voor inkooporders"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "Import sjabloon voor producten"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
@@ -1408,7 +1430,7 @@ msgid "Incoterm"
 msgstr "Leveringscondities"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Indicate the product quantity you want to order."
@@ -1470,7 +1492,7 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
@@ -1488,21 +1510,21 @@ msgid "Late RFQs"
 msgstr "Late offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
 msgstr "Doorlooptijd tot inkopen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
 msgstr "Laten we je eerste inkoop offerteaanvraag maken."
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -1534,6 +1556,7 @@ msgid "Lock Confirmed Orders"
 msgstr "Bevestigde orders blokkeren"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
@@ -1623,7 +1646,7 @@ msgstr "Berichten"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
-msgstr "Minimum hoeveelheid"
+msgstr "Minimum bedrag"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
@@ -1642,14 +1665,14 @@ msgid "My Activity Deadline"
 msgstr "Mijn activiteit deadline"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
 msgstr "Mijn concept offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
@@ -1666,20 +1689,21 @@ msgid "My Purchases"
 msgstr "Mijn inkopen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
 msgstr "Mijn offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
 msgstr "Mijn wachtende offerteaanvragen"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Name"
@@ -1691,6 +1715,7 @@ msgid "Name, TIN, Email, or Reference"
 msgstr "Naam, BTW-nr, e-mail, of referentie"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Newest"
@@ -1823,7 +1848,7 @@ msgid "On received quantities"
 msgstr "Op ontvangen hoeveelheden"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid ""
@@ -1958,7 +1983,7 @@ msgstr "Afdrukken"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "Inkoop offerteaanvraag afdrukken"
+msgstr "Offerteaanvraag afdrukken"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
@@ -2072,6 +2097,7 @@ msgid "Purchase History"
 msgstr "Inkoophistorie"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -2086,6 +2112,7 @@ msgid "Purchase Lead Time"
 msgstr "Extra dagen levertijd inkoop"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -2175,6 +2202,8 @@ msgstr ""
 " zijn na bevestigen."
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2184,6 +2213,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Inkooporders"
 
@@ -2223,7 +2253,6 @@ msgstr "Koop producten per veelvoud van eenheid # per verpakking"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 #: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
-#: model:ir.cron,name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr "Bestelherinnering"
 
@@ -2255,7 +2284,7 @@ msgid "Purchased"
 msgstr "Ingekocht"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days"
@@ -2290,7 +2319,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
 msgid "Qty Billed"
-msgstr "Gefactureerde aantal"
+msgstr "Aantal gefactureerd"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
@@ -2326,17 +2355,17 @@ msgstr "Hoeveelheid:"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
-msgstr "Inkoop offerteaanvraag"
+msgstr "Offerteaanvraag"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "Offerte goedgekeurd"
+msgstr "Offerteaanvraag goedgekeurd"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "Offerte bevestigd"
+msgstr "Offerteaanvraag bevestigd"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
@@ -2348,12 +2377,12 @@ msgstr "Offerteaanvraag gereed"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
 #: model:mail.message.subtype,name:purchase.mt_rfq_sent
 msgid "RFQ Sent"
-msgstr "Offerte verzonden"
+msgstr "Offerteaanvraag verzonden"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_{{ (object.name or '').replace('/','_') }}"
-msgstr "Inkoopaanvraag_{{ (object.name or '').replace('/','_') }}"
+msgstr "Offerteaanvraag_{{ (object.name or '').replace('/','_') }}"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2361,16 +2390,16 @@ msgid "RFQs"
 msgstr "Offerteaanvragen"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
-msgstr "RFQ's verzonden laatste 7 dagen"
+msgstr "Offerteaanvragen verzonden laatste 7 dagen"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "Offertes en inkopen"
+msgstr "Offerteaanvragen en inkooporders"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
@@ -2485,6 +2514,7 @@ msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2555,7 +2585,7 @@ msgid "Search Reference Document"
 msgstr "Zoek referentiedocument"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
@@ -2582,7 +2612,7 @@ msgid "Security Token"
 msgstr "Veiligheidstoken"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -2611,7 +2641,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr "Verzend inkooporder per e-mail"
+msgstr "Verzend per e-mail"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2629,7 +2659,7 @@ msgid "Send by Email"
 msgstr "Verzenden via e-mail"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -2768,7 +2798,7 @@ msgstr "BTW"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
 msgid "Tax Country"
-msgstr "Btw land"
+msgstr "BTW land"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
@@ -2792,8 +2822,8 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
-"Technisch veld om de beschikbare belastingen te filteren, afhankelijk van "
-"het fiscale land en de fiscale positie."
+"Technisch veld om de beschikbare BTW te filteren, afhankelijk van het "
+"fiscale land en de fiscale positie."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2815,6 +2845,7 @@ msgstr ""
 "Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "The order receipt has been acknowledged by %s."
@@ -2841,6 +2872,7 @@ msgid "There are currently no requests for quotation for your account."
 msgstr "Er zijn momenteel geen offerteaanvragen voor je account."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2886,6 +2918,7 @@ msgid "This note is added to purchase orders."
 msgstr "Deze opmerking wordt toegevoegd aan de inkooporders."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2896,12 +2929,14 @@ msgstr ""
 "%(quantity).2f %(unit)s aan te schaffen."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Deze leveranciersfactuur is aangemaakt van: %s"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: %s"
@@ -2911,8 +2946,7 @@ msgstr "Deze leveranciersfactuur is aangepast van: %s"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
-"Deze leverancier heeft geen inkooporder. Maak een nieuwe inkoop "
-"offerteaanvraag aan"
+"Deze leverancier heeft geen inkooporder. Maak een nieuwe offerteaanvraag aan"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -2939,7 +2973,7 @@ msgid "To Invoice Quantity"
 msgstr "Te factureren hoeveelheid"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "To Send"
@@ -2952,6 +2986,7 @@ msgid "Today Activities"
 msgstr "Activiteiten van vandaag"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
@@ -2992,11 +3027,18 @@ msgid "True if the reminder email is confirmed by the vendor."
 msgstr "'Waar' als de herinneringsmail is bevestigd door de leverancier."
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Type a message..."
+msgstr "Schrijf een bericht..."
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Type van activiteit uitzondering op record."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -3065,6 +3107,7 @@ msgid "UoM"
 msgstr "Maateenheid"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Update Dates"
@@ -3079,6 +3122,17 @@ msgstr "Urgent"
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
 msgstr "Gebruiker"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/report/purchase_report.py:0
+#, python-format
+msgid ""
+"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
+" are seeing this message then it is being accessed incorrectly."
+msgstr ""
+"Waarde: 'avg_days_to_purchase' mag alleen worden gebruikt om een gemiddelde "
+"weer te geven. Als je dit bericht ziet, is het onjuist geopend."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -3144,6 +3198,7 @@ msgstr ""
 "document in Odoo."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "View"
@@ -3155,7 +3210,7 @@ msgid "Volume"
 msgstr "Volume"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Waiting"
@@ -3173,6 +3228,7 @@ msgid "Waiting RFQs"
 msgstr "Offerteaanvragen in afwachting"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
@@ -3181,6 +3237,7 @@ msgid "Warning"
 msgstr "Waarschuwing"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -3254,6 +3311,7 @@ msgstr ""
 "interne referentie."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -3282,6 +3340,7 @@ msgstr ""
 "of het nu een fysiek product, verbruikersartikel of dienst is."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -3308,4 +3367,4 @@ msgstr "dag(en) voor"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Inkooporder (Ref {{ object.name or 'n/b' }})"
+"{{ object.company_id.name }} Inkooporder (Ref {{ object.name or 'nvt' }})"
