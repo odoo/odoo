@@ -168,11 +168,6 @@ class ResUsers(models.Model):
         # prepare reset password signup
         create_mode = bool(self.env.context.get('create_user'))
 
-        # no time limit for initial invitation, only for reset password
-        expiration = False if create_mode else now(days=+1)
-
-        self.mapped('partner_id').signup_prepare(signup_type="reset", expiration=expiration)
-
         # send email to users with their signup url
         template = False
         if create_mode:
@@ -198,6 +193,10 @@ class ResUsers(models.Model):
             email_values['email_to'] = user.email
             # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
+                # no time limit for initial invitation, only for reset password
+                expiration = False if create_mode else now(days=+1)
+                self.mapped('partner_id').signup_prepare(signup_type="reset", expiration=expiration)
+
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
