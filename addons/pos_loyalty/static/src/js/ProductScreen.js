@@ -22,7 +22,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
         const _super = this._super;
         const selectedLine = this.currentOrder.get_selected_orderline();
         if (key === "-") {
-            if (selectedLine.eWalletGiftCardProgram) {
+            if (selectedLine && selectedLine.eWalletGiftCardProgram) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
                 this.notification.add(
