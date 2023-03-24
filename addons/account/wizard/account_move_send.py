@@ -343,7 +343,6 @@ class AccountMoveSend(models.Model):
                     'reply_to_force_new': False,
                 },
             )
-        move.is_move_sent = True
 
     def _send_mails(self, moves):
         subtype = self.env.ref('mail.mt_comment')
@@ -393,6 +392,7 @@ class AccountMoveSend(models.Model):
         # note: Binary is used for security reason
         self.env['ir.attachment'].create(prepared_data['pdf_attachment_values'])
         invoice.invalidate_model(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+        self.env.add_to_compute(invoice._fields['is_move_sent'], invoice)
 
     def _postprocess_document(self, invoice, prepared_data):
         """ Postprocess prepared_data before it gets linked to the record
