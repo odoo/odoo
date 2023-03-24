@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-JD Hendrickson jd@rwx.services https://github.com/noiseunion
+JD Hendrickson jd@mancrates.com <https://github.com/noiseunion>

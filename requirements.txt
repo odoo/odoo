@@ -13,10 +13,12 @@ greenlet==0.4.15 ; python_version == '3.7'
 greenlet==0.4.17 ; python_version > '3.7' and python_version <= '3.9'
 greenlet==1.1.2 ; python_version  > '3.9'  # (Jammy)
 idna==2.8
-Jinja2==2.11.3 # min version = 2.10.1 (Focal - with security backports)
+Jinja2==2.11.3 ; python_version <= '3.9' # min version = 2.10.1 (Focal - with security backports)
+Jinja2==3.1.2 ; python_version > '3.9' # min version = 3.0.0 for MarkupSafe 2.1.2 support
 libsass==0.18.0
 lxml==4.6.5 # min version = 4.5.0 (Focal - with security backports)
-MarkupSafe==1.1.0
+MarkupSafe==1.1.0 ; python_version <= '3.9'
+MarkupSafe==2.1.2 ; python_version > '3.9' # Required for Werkzeug 2.2.x support
 num2words==0.5.6
 ofxparse==0.19; python_version <= '3.9'
 ofxparse==0.21; python_version > '3.9'  # (Jammy)
@@ -42,7 +44,7 @@ requests==2.25.1 # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye =
 urllib3==1.26.5 # indirect / min version = 1.25.8 (Focal with security backports)
 vobject==0.9.6.1
 Werkzeug==0.16.1 ; python_version <= '3.9'
-Werkzeug==2.0.2 ; python_version > '3.9'  # (Jammy)
+Werkzeug==2.2.3 ; python_version > '3.9'  # (Jammy)
 xlrd==1.1.0; python_version < '3.8'
 xlrd==1.2.0; python_version >= '3.8'
 XlsxWriter==1.1.2
