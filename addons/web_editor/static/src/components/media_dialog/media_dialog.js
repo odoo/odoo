@@ -42,6 +42,7 @@ export class MediaDialog extends Component {
 
         this.rpc = useService('rpc');
         this.orm = useService('orm');
+        this.notificationService = useService('notification');
 
         this.tabs = [];
         this.selectedMedia = useState({});
@@ -49,6 +50,7 @@ export class MediaDialog extends Component {
         this.initialIconClasses = [];
 
         this.addTabs();
+        this.errorMessages = {};
 
         this.state = useState({
             activeTab: this.initialActiveTab,
@@ -84,6 +86,7 @@ export class MediaDialog extends Component {
                 selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
                 onAttachmentChange: this.props.onAttachmentChange,
+                errorMessages: (errorMessage) => this.errorMessages[tab.id] = errorMessage,
             },
         });
     }
@@ -143,6 +146,12 @@ export class MediaDialog extends Component {
     }
 
     async save() {
+        if (this.errorMessages[this.state.activeTab]) {
+            this.notificationService.add(this.errorMessages[this.state.activeTab], {
+                type: 'danger',
+            });
+            return;
+        }
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         // TODO In master: clean the save method so it performs the specific
         // adaptation before saving from the active media selector and find a

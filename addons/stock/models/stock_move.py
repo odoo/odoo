@@ -2027,7 +2027,9 @@ Please change the quantity done or the rounding precision of your unit of measur
             if move.state not in ('partially_available', 'assigned'):
                 continue
             for move_line in move.move_line_ids:
-                if move.has_tracking != 'none' and not (move_line.lot_id or move_line.lot_name):
+                if move.has_tracking != 'none' and (
+                    (move.picking_type_id.use_existing_lots and not move_line.lot_id) or
+                    (move.picking_type_id.use_create_lots and not move_line.lot_name)):
                     continue
                 move_line.qty_done = move_line.reserved_uom_qty
 

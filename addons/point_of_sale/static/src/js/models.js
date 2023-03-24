@@ -1343,6 +1343,15 @@ function register_payment_method(use_payment_terminal, ImplementedPaymentInterfa
 
 
 class Product extends PosModel {
+    constructor(obj) {
+        super(obj);
+        this.parent_category_ids = [];
+        let category = this.categ.parent;
+        while (category) {
+            this.parent_category_ids.push(category.id);
+            category = category.parent;
+        }
+    }
     isAllowOnlyOneLot() {
         const productUnit = this.get_unit();
         return this.tracking === 'lot' || !productUnit || !productUnit.is_pos_groupable;
@@ -1357,6 +1366,13 @@ class Product extends PosModel {
             return undefined;
         }
         return this.pos.units_by_id[unit_id];
+    }
+    isPricelistItemUsable(item, date) {
+        return (
+            (!item.categ_id || _.contains(this.parent_category_ids.concat(this.categ.id), item.categ_id[0])) &&
+            (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
+            (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
+        );
     }
     // Port of _get_product_price on product.pricelist.
     //
@@ -1381,18 +1397,12 @@ class Product extends PosModel {
             ));
         }
 
-        var category_ids = [];
-        var category = this.categ;
-        while (category) {
-            category_ids.push(category.id);
-            category = category.parent;
-        }
-
-        var pricelist_items = _.filter(self.applicablePricelistItems[pricelist.id], function (item) {
-            return (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
-                   (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-                   (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
-        });
+        var pricelist_items = _.filter(
+            self.applicablePricelistItems[pricelist.id],
+            function (item) {
+                return self.isPricelistItemUsable(item, date);
+            }
+        );
 
         var price = self.lst_price;
         if (price_extra){
@@ -1816,7 +1826,8 @@ class Orderline extends PosModel {
             price_extra: this.get_price_extra(),
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
-            price_manually_set: this.price_manually_set
+            price_manually_set: this.price_manually_set,
+            refunded_orderline_id: this.refunded_orderline_id,
         };
     }
     //used to create a json of the ticket, to be sent to the printer
@@ -2277,7 +2288,6 @@ class Order extends PosModel {
         this.pos_session_id = this.pos.pos_session.id;
         this.cashier        = this.pos.get_cashier();
         this.finalized      = false; // if true, cannot be modified.
-        this.set_pricelist(this.pos.default_pricelist);
 
         this.partner = null;
 
@@ -2298,6 +2308,7 @@ class Order extends PosModel {
         if (options.json) {
             this.init_from_JSON(options.json);
         } else {
+            this.set_pricelist(this.pos.default_pricelist);
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.access_token = uuidv4();  // unique uuid used to identify the authenticity of the request from the QR code.
             this.uid  = this.generate_unique_id();
@@ -2368,7 +2379,7 @@ class Order extends PosModel {
         } else {
             partner = null;
         }
-        this.set_partner(partner);
+        this.partner = partner;
 
         this.temporary = false;     // FIXME
         this.to_invoice = false;    // FIXME

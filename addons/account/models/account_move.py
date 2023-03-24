@@ -797,7 +797,8 @@ class AccountMove(models.Model):
     def _compute_currency_id(self):
         for invoice in self:
             currency = (
-                invoice.statement_line_id.foreign_currency_id
+                invoice.currency_id
+                or invoice.statement_line_id.foreign_currency_id
                 or invoice.journal_id.currency_id
                 or invoice.journal_id.company_id.currency_id
             )
@@ -824,7 +825,8 @@ class AccountMove(models.Model):
         'line_ids.amount_residual',
         'line_ids.amount_residual_currency',
         'line_ids.payment_id.state',
-        'line_ids.full_reconcile_id')
+        'line_ids.full_reconcile_id',
+        'state')
     def _compute_amount(self):
         for move in self:
             total_untaxed, total_untaxed_currency = 0.0, 0.0

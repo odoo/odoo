@@ -18,7 +18,9 @@ let socialMediaOptions = require('@website/snippets/s_social_media/options')[Sym
  */
 function toggleDropdown($toggles, show) {
     return Promise.all(_.map($toggles, toggle => {
-        const $toggle = $(toggle);
+        // We must select the element via the iframe so that the event handlers
+        // declared on the iframe are triggered.
+        const $toggle = toggle.ownerDocument.defaultView.$(toggle);
         const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
@@ -296,6 +298,26 @@ snippetsEditor.SnippetsMenu.include({
             this.$body.off('.snippets_menu');
         }
         return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        // Clean unstyled translations
+        return this._super(...arguments).then(() => {
+            for (const el of this.options.editable[0].querySelectorAll('.o_translation_without_style')) {
+                el.classList.remove('o_translation_without_style');
+                if (el.dataset.oeTranslationSaveSha) {
+                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
+                    delete el.dataset.oeTranslationSaveSha;
+                }
+            }
+        });
     },
 
     //--------------------------------------------------------------------------

@@ -467,6 +467,65 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
+        "Daterange field keyup should not erase end date [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.models.partner.fields.datetime_end = {
+                string: "Datetime End",
+                type: "datetime",
+            };
+            serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                        <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                    </form>`,
+                resId: 1,
+            });
+
+            // check date display correctly in readonly
+            assert.strictEqual(
+                target.querySelector(".o_field_daterange input").value,
+                "02/08/2017 15:30:00",
+                "the start date should be correctly displayed"
+            );
+            assert.strictEqual(
+                target.querySelectorAll(".o_field_daterange input")[1].value,
+                "03/13/2017 05:30:00",
+                "the end date should be correctly displayed"
+            );
+
+            // reveal the daterangepicker
+            await click(target.querySelector(".o_field_daterange[name='datetime'] input"));
+
+            // the keyup event should not be handled by daterangepicker
+            await triggerEvent(target, ".o_field_daterange[name='datetime'] input", "keyup", {
+                key: "ArrowLeft",
+            });
+
+            const datepickers = document.querySelectorAll(`.daterangepicker`);
+            // TODO: check if the range is correctly displayed in the picker
+            await click(datepickers[1].querySelector(".applyBtn"));
+
+            assert.strictEqual(
+                target.querySelector(".o_field_daterange input").value,
+                "02/08/2017 15:30:00",
+                "the start date should be correctly displayed after onkeyup"
+            );
+
+            assert.strictEqual(
+                target.querySelectorAll(".o_field_daterange input")[1].value,
+                "03/13/2017 05:30:00",
+                "the end date should be correctly displayed after onkeyup"
+            );
+        }
+    );
+
+    QUnit.test(
         "DateRangeField manually input wrong value should show toaster",
         async function (assert) {
             serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
@@ -815,4 +874,157 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        "Render with one visible field: start date [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+            serverData.models.partner.records[0].date_end = "2017-02-08";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                        <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}" invisible="1"/>
+                    </form>`,
+            });
+
+            let fields = target.querySelectorAll(".o_field_daterange");
+            // Check date range picker initialization
+            assert.containsOnce(
+                document.body,
+                ".daterangepicker",
+                "should initialize 1 date range picker"
+            );
+
+            // open the start date
+            await click(fields[0].querySelector("input"));
+            const datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
+            );
+
+            assert.isVisible(datepicker, "date range picker should be opened");
+            assert.strictEqual(
+                datepicker.querySelector(".active.start-date").textContent,
+                "3",
+                "active start date should be '3' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".active.end-date").textContent,
+                "8",
+                "active end date should be '8' in date range picker"
+            );
+
+            // Change date
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.left .available[data-title='r2c4']",
+                "mousedown"
+            );
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.right .available[data-title='r2c0']",
+                "mousedown"
+            );
+            await click(datepicker.querySelector(".applyBtn"));
+
+            // Check date after change
+            assert.isNotVisible(datepicker, "date range picker should be closed");
+            assert.strictEqual(
+                fields[0].querySelector("input").value,
+                "02/16/2017",
+                "the date should be '02/16/2017'"
+            );
+
+            // Save
+            await clickSave(target);
+            fields = target.querySelectorAll(".o_field_daterange");
+
+            // Check date after save
+            assert.strictEqual(
+                fields[0].querySelector("input").value,
+                "02/16/2017",
+                "the start date should be '02/16/2017' after save"
+            );
+        }
+    );
+
+    QUnit.test("Render with one visible field: end date [REQUIRE FOCUS]", async function (assert) {
+        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+        serverData.models.partner.records[0].date_end = "2017-02-08";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                    <form>
+                        <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}" invisible="1"/>
+                        <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+                    </form>`,
+        });
+
+        let fields = target.querySelectorAll(".o_field_daterange");
+        // Check date range picker initialization
+        assert.containsOnce(
+            document.body,
+            ".daterangepicker",
+            "should initialize 1 date range picker"
+        );
+
+        // open the end date
+        await click(fields[0].querySelector("input"));
+        const datepicker = document.querySelector(
+            `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
+        );
+
+        assert.isVisible(datepicker, "date range picker should be opened");
+        assert.strictEqual(
+            datepicker.querySelector(".active.start-date").textContent,
+            "3",
+            "active start date should be '3' in date range picker"
+        );
+        assert.strictEqual(
+            datepicker.querySelector(".active.end-date").textContent,
+            "8",
+            "active end date should be '8' in date range picker"
+        );
+
+        // Change date
+        await triggerEvent(
+            datepicker,
+            ".drp-calendar.left .available[data-title='r2c4']",
+            "mousedown"
+        );
+        await triggerEvent(
+            datepicker,
+            ".drp-calendar.right .available[data-title='r2c0']",
+            "mousedown"
+        );
+        await click(datepicker.querySelector(".applyBtn"));
+
+        // Check date after change
+        assert.isNotVisible(datepicker, "date range picker should be closed");
+        assert.strictEqual(
+            fields[0].querySelector("input").value,
+            "03/12/2017",
+            "the date should be '03/12/2017'"
+        );
+
+        // Save
+        await clickSave(target);
+        fields = target.querySelectorAll(".o_field_daterange");
+
+        // Check date after save
+        assert.strictEqual(
+            fields[0].querySelector("input").value,
+            "03/12/2017",
+            "the end date should be '02/13/2017' after save"
+        );
+    });
 });
