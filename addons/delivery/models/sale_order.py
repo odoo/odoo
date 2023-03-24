@@ -61,6 +61,10 @@ class SaleOrder(models.Model):
 
         for order in self:
             order.carrier_id = carrier.id
+            if order.state in ('sale', 'done'):
+                pending_deliveries = order.picking_ids.filtered(
+                    lambda p: p.state not in ('done', 'cancel') and not any(m.origin_returned_move_id for m in p.move_ids))
+                pending_deliveries.carrier_id = carrier.id
             order._create_delivery_line(carrier, amount)
         return True
 
