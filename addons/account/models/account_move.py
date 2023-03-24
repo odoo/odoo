@@ -127,6 +127,7 @@ class AccountMove(models.Model):
             ('in_refund', 'Vendor Credit Note'),
             ('out_receipt', 'Sales Receipt'),
             ('in_receipt', 'Purchase Receipt'),
+            ('locked_history', 'Locked History'),
         ],
         string='Type',
         required=True,
@@ -1889,7 +1890,7 @@ class AccountMove(models.Model):
     def _check_fiscalyear_lock_date(self):
         for move in self:
             lock_date = move.company_id._get_user_fiscal_lock_date()
-            if move.date <= lock_date:
+            if not self._context.get('force_delete') and move.date <= lock_date:
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s.", format_date(self.env, lock_date))
                 else:
@@ -3414,6 +3415,7 @@ class AccountMove(models.Model):
                 'out_receipt': _('Draft Sales Receipt'),
                 'in_receipt': _('Draft Purchase Receipt'),
                 'entry': _('Draft Entry'),
+                'locked_history': 'Locked History',
             }[self.move_type]
             name += ' '
         if not self.name or self.name == '/':

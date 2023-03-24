@@ -889,6 +889,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'cash',
                 'show_on_dashboard': True,
             },
+            "history": {
+                'name': 'History',
+                'type': 'hidden',
+                'code': 'HIST',
+                'show_on_dashboard': False,
+            },
         }
 
     @template(model='account.reconcile.model')

@@ -80,6 +80,7 @@ class AccountJournal(models.Model):
             ('cash', 'Cash'),
             ('bank', 'Bank'),
             ('general', 'Miscellaneous'),
+            ('hidden', 'Hidden'),
         ], required=True,
         help="Select 'Sale' for customer invoices journals.\n"\
         "Select 'Purchase' for vendor bills journals.\n"\
