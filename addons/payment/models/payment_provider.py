@@ -202,6 +202,7 @@ class PaymentProvider(models.Model):
     show_auth_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     show_done_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     show_cancel_msg = fields.Boolean(compute='_compute_view_configuration_fields')
+    require_currency = fields.Boolean(compute='_compute_view_configuration_fields')
 
     #=== COMPUTE METHODS ===#
 
@@ -254,6 +255,7 @@ class PaymentProvider(models.Model):
         - `show_auth_msg`: Whether the `auth_msg` field should be shown.
         - `show_done_msg`: Whether the `done_msg` field should be shown.
         - `show_cancel_msg`: Whether the `cancel_msg` field should be shown.
+        - `require_currency`: Whether the `available_currency_ids` field shoud be required.
 
         For a provider to hide specific elements of the form view, it must override this method and
         set the related view configuration fields to `False` on the appropriate `payment.provider`
@@ -271,6 +273,7 @@ class PaymentProvider(models.Model):
             'show_auth_msg': True,
             'show_done_msg': True,
             'show_cancel_msg': True,
+            'require_currency': False,
         })
 
     @api.depends('code')
