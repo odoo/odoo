@@ -124,6 +124,12 @@ QUnit.module("Views", (hooks) => {
                             relation: "res_currency",
                             default: 1,
                         },
+                        currency_test: {
+                            string: "Currency",
+                            type: "many2one",
+                            relation: "res_currency",
+                            default: 1,
+                        },
                         company_currency_id: {
                             string: "Company Currency",
                             type: "many2one",
@@ -3592,9 +3598,99 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelectorAll("tfoot td")[1].textContent,
-            "2000.000",
-            "aggregates monetary use digits attribute if available"
+            "—",
+            "aggregates monetary should never work if no currency field is present"
         );
+    });
+
+    QUnit.test("aggregates monetary (same currency)", async function (assert) {
+        serverData.models.foo.records[0].currency_id = 1;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "$\u00a01200.00",
+            "$\u00a0500.00",
+            "$\u00a0300.00",
+            "$\u00a00.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.00");
+    });
+
+    QUnit.test("aggregates monetary (different currencies)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "1200.00\u00a0€",
+            "$\u00a0500.00",
+            "$\u00a0300.00",
+            "$\u00a00.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "—");
+    });
+
+    QUnit.test("aggregates monetary (currency field not in view)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum" options="{'currency_field': 'currency_test'}"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "1200.00",
+            "500.00",
+            "300.00",
+            "0.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "—");
+    });
+
+    QUnit.test("aggregates monetary (currency field in view)", async function (assert) {
+        serverData.models.foo.fields.amount.currency_field = "currency_test";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum"/>
+                    <field name="currency_test"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "$\u00a01200.00",
+            "$\u00a0500.00",
+            "$\u00a0300.00",
+            "$\u00a00.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.00");
     });
 
     QUnit.test(
@@ -3622,6 +3718,11 @@ QUnit.module("Views", (hooks) => {
                 target.querySelectorAll('.o_data_row td[name="amount_currency"]')[0].textContent,
                 "$\u00a01100.00",
                 "field should be formatted based on company_currency_id"
+            );
+            assert.strictEqual(
+                target.querySelectorAll("tfoot td")[1].textContent,
+                "—",
+                "aggregates monetary should never work if different currencies are used"
             );
         }
     );

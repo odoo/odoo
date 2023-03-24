@@ -30,6 +30,7 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 const formatters = registry.category("formatters");
 
@@ -604,6 +605,33 @@ export class ListRenderer extends Component {
             if (type !== "integer" && type !== "float" && type !== "monetary") {
                 continue;
             }
+            let currencyId;
+            if (type === "monetary") {
+                const currencyField =
+                    this.props.list.activeFields[column.name].options.currency_field ||
+                    this.fields[column.name].currency_field ||
+                    "currency_id";
+                if (!(currencyField in this.props.list.activeFields)) {
+                    aggregates[fieldName] = {
+                        help: _t("No currency provided"),
+                        value: "—",
+                    };
+                    continue;
+                }
+                currencyId = values[0][currencyField]?.[0];
+                if (currencyId) {
+                    const sameCurrency = values.every(
+                        (value) => currencyId === value[currencyField][0]
+                    );
+                    if (!sameCurrency) {
+                        aggregates[fieldName] = {
+                            help: _t("Different currencies cannot be aggregated"),
+                            value: "—",
+                        };
+                        continue;
+                    }
+                }
+            }
             const { attrs, widget } = column;
             const func =
                 (attrs.sum && "sum") ||
@@ -628,6 +656,9 @@ export class ListRenderer extends Component {
                     digits: attrs.digits ? JSON.parse(attrs.digits) : undefined,
                     escape: true,
                 };
+                if (currencyId) {
+                    formatOptions.currencyId = currencyId;
+                }
                 aggregates[fieldName] = {
                     help: attrs[func],
                     value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
