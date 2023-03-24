@@ -81,6 +81,7 @@
                   editable="bottom"
                   multi_edit="1"
                   js_class="todo_list">
+                <field name="state" widget="todo_done_checkmark" nolabel="1" options="{'hide_label': 1}"/>
                 <field name="name"/>
                 <field name="user_ids" optional="show" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -118,6 +119,7 @@
                            widget="statusbar"
                            options="{'clickable': '1', 'fold_field': 'fold'}"/>
                     <field name="active" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </header>
                 <sheet class="o_todo_form_sheet_bg">
                     <widget name="web_ribbon" class="todo_archived" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
