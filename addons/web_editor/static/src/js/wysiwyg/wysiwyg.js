@@ -1769,14 +1769,14 @@ const Wysiwyg = Widget.extend({
         }
         const coloredElements = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
 
-        const coloredTds = coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
+        const coloredTds = coloredElements && coloredElements.length && coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
         if (coloredTds.length) {
             const propName = eventName === 'foreColor' ? 'color' : 'background-color';
             for (const td of coloredTds) {
                 // Make it important so it has priority over selection color.
                 td.style.setProperty(propName, td.style[propName], previewMode ? 'important' : '');
             }
-        } else if (!this.lastMediaClicked) {
+        } else if (!this.lastMediaClicked && coloredElements && coloredElements.length) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = coloredElements[0];
