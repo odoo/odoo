@@ -282,7 +282,11 @@
                 </div>
                 <group name="sale_header">
                     <group name="partner_details">
-                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
+                        <field name="partner_id" 
+                               widget="res_partner_many2one" 
+                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" 
+                               options="{'always_reload': True}" 
+                               placeholder="Type to find a customer..."/>
                         <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
                         <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
                     </group>
@@ -479,7 +483,9 @@
                                         'no_open': True,
                                     }"
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                    widget="sol_product_many2one"/>
+                                    widget="sol_product_many2one"
+                                    placeholder="Type to find a product..."
+                                    />
                                 <field name="name" widget="section_and_note_text" optional="show"/>
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                            optional="hide"
