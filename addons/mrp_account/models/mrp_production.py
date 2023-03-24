@@ -1,53 +1,60 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from ast import literal_eval
 
 from odoo import api, fields, models, _
-from odoo.tools import float_is_zero, float_round
+from odoo.tools import float_round
 
 
 class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+    _name = 'mrp.production'
+    _inherit = ['mrp.production', 'analytic.mixin']
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
-    analytic_account_id = fields.Many2one(
-        'account.analytic.account', 'Analytic Account', copy=True,
-        help="Analytic account in which cost and revenue entries will take\
-        place for financial management of the manufacturing order.",
-        compute='_compute_analytic_account_id', store=True, readonly=False)
+    analytic_account_ids = fields.Many2many('account.analytic.account', compute='_compute_analytic_account_ids', store=True)
 
     def _compute_show_valuation(self):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
 
-    @api.depends('bom_id')
-    def _compute_analytic_account_id(self):
-        if self.bom_id.analytic_account_id:
-            self.analytic_account_id = self.bom_id.analytic_account_id
+    @api.depends('bom_id', 'product_id')
+    def _compute_analytic_distribution(self):
+        for record in self:
+            if record.bom_id.analytic_distribution:
+                record.analytic_distribution = record.bom_id.analytic_distribution
+            else:
+                record.analytic_distribution = record.env['account.analytic.distribution.model']._get_distribution({
+                    "product_id": record.product_id.id,
+                    "product_categ_id": record.product_id.categ_id.id,
+                    "company_id": record.company_id.id,
+                })
+
+    @api.depends('analytic_distribution')
+    def _compute_analytic_account_ids(self):
+        for record in self:
+            record.analytic_account_ids = list(
+                map(int, record.analytic_distribution.keys())) if record.analytic_distribution else []
+
+    @api.constrains('analytic_distribution')
+    def _check_analytic(self):
+        for record in self:
+            params = {'business_domain': 'manufacturing_order', 'company_id': record.company_id.id}
+            if record.product_id:
+                params['product'] = record.product_id.id
+            record.with_context({'validate_analytic': True})._validate_distribution(**params)
 
     def write(self, vals):
-        origin_analytic_account = {production: production.analytic_account_id for production in self}
         res = super().write(vals)
         for production in self:
             if vals.get('name'):
-                production.move_raw_ids.analytic_account_line_id.ref = production.display_name
+                production.move_raw_ids.analytic_account_line_ids.ref = production.display_name
                 for workorder in production.workorder_ids:
-                    workorder.mo_analytic_account_line_id.ref = production.display_name
-                    workorder.mo_analytic_account_line_id.name = _("[WC] %s", workorder.display_name)
-            if 'analytic_account_id' in vals and production.state != 'draft':
-                if vals['analytic_account_id'] and origin_analytic_account[production]:
-                    # Link the account analytic lines to the new AA
-                    production.move_raw_ids.analytic_account_line_id.write({'account_id': vals['analytic_account_id']})
-                    production.workorder_ids.mo_analytic_account_line_id.write({'account_id': vals['analytic_account_id']})
-                elif vals['analytic_account_id'] and not origin_analytic_account[production]:
-                    # Create the account analytic lines if no AA is set in the MO
-                    production.move_raw_ids._account_analytic_entry_move()
-                    production.workorder_ids._create_or_update_analytic_entry()
-                else:
-                    production.move_raw_ids.analytic_account_line_id.unlink()
-                    production.workorder_ids.mo_analytic_account_line_id.unlink()
+                    workorder.mo_analytic_account_line_ids.ref = production.display_name
+                    workorder.mo_analytic_account_line_ids.name = _("[WC] %s", workorder.display_name)
+            if 'analytic_distribution' in vals and production.state != 'draft':
+                production.move_raw_ids._account_analytic_entry_move()
+                production.workorder_ids._create_or_update_analytic_entry()
         return res
 
     def action_view_stock_valuation_layers(self):
@@ -60,15 +67,14 @@ class MrpProduction(models.Model):
         context['search_default_group_by_product_id'] = False
         return dict(action, domain=domain, context=context)
 
-    def action_view_analytic_account(self):
+    def action_view_analytic_accounts(self):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
             "res_model": "account.analytic.account",
-            'res_id': self.analytic_account_id.id,
-            "context": {"create": False},
-            "name": _("Analytic Account"),
-            'view_mode': 'form',
+            'domain': [('id', 'in', self.analytic_account_ids.ids)],
+            "name": _("Analytic Accounts"),
+            'view_mode': 'tree,form',
         }
 
     def _cal_price(self, consumed_moves):

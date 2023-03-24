@@ -29,7 +29,7 @@ class AnalyticMixin(models.AbstractModel):
                     FROM information_schema.tables
                     WHERE table_name=%s '''
         self.env.cr.execute(query, [self._table])
-        if self.env.cr.dictfetchone():
+        if self.env.cr.dictfetchone() and self._fields['analytic_distribution'].store:
             query = f"""
                 CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_gin_index
                                         ON {self._table} USING gin(analytic_distribution);

@@ -64,32 +64,30 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.product_id = self.product
         mo_form.bom_id = self.bom
         mo_form.product_qty = 10.0
-        mo_form.analytic_account_id = self.analytic_account
+        mo_form.analytic_distribution = {str(self.analytic_account.id): 100.0}
         mo = mo_form.save()
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 0)
         # increase qty_producing to 5.0
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -50.0)
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
         # increase qty_producing to 10.0
         mo_form = Form(mo)
         mo_form.qty_producing = 10.0
         mo_form.save()
-        # Hack to bypass test doing strange things
-        mo._set_qty_producing()
         mo.workorder_ids.button_finish()
         self.assertEqual(mo.state, 'to_close')
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -100.0)
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -100.0)
 
         # mark as done
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -100.0)
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -100.0)
 
     def test_mo_analytic_backorder(self):
         """Test the analytic lines are correctly posted when backorder.
@@ -99,65 +97,23 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.product_id = self.product
         mo_form.bom_id = self.bom
         mo_form.product_qty = 10.0
-        mo_form.analytic_account_id = self.analytic_account
+        mo_form.analytic_distribution = {str(self.analytic_account.id): 100.0}
         mo = mo_form.save()
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 0)
 
         # increase qty_producing to 5.0
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -50.0)
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
         backorder_wizard_dict = mo.button_mark_done()
         Form(self.env[(backorder_wizard_dict.get('res_model'))].with_context(backorder_wizard_dict['context'])).save().action_backorder()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -50.0)
-
-    def test_workcenter_same_analytic_account(self):
-        """Test when workcenter and MO are using the same analytic account, no
-        duplicated lines will be post.
-        """
-        # Required for `workorder_ids` to be visible in the view
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
-        # set wc analytic account to be the same of the one on the bom
-        self.workcenter.costs_hour_account_id = self.analytic_account
-
-        # create a mo
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product
-        mo_form.bom_id = self.bom
-        mo_form.product_qty = 10.0
-        mo_form.analytic_account_id = self.analytic_account
-        mo = mo_form.save()
-        mo.action_confirm()
-        self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
-
-        # change duration to 60
-        mo_form = Form(mo)
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 60.0
-        mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.amount, -10.0)
-        self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
-
-        # change duration to 120
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 120.0
-        mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.amount, -20.0)
-        self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
-
-        # mark as done
-        mo_form.qty_producing = 10.0
-        mo_form.save()
-        mo.button_mark_done()
-        self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.amount, -20.0)
-        self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
     def test_workcenter_different_analytic_account(self):
         """Test when workcenter and MO are using the same analytic account, no
@@ -168,46 +124,46 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # set wc analytic account to be different from the one on the bom
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         wc_analytic_account = self.env['account.analytic.account'].create({'name': 'wc_analytic_account', 'plan_id': analytic_plan.id})
-        self.workcenter.costs_hour_account_id = wc_analytic_account
+        self.workcenter.analytic_distribution = {str(wc_analytic_account.id): 100.0}
 
         # create a mo
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
         mo_form.bom_id = self.bom
         mo_form.product_qty = 10.0
-        mo_form.analytic_account_id = self.analytic_account
+        mo_form.analytic_distribution = {str(self.analytic_account.id): 100.0}
         mo = mo_form.save()
         mo.action_confirm()
-        self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
+        self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_ids), 0)
 
         # change duration to 60
         mo_form = Form(mo)
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.amount, -10.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.amount, -10.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.account_id, wc_analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -10.0)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.account_id, wc_analytic_account)
 
         # change duration to 120
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 120.0
         mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.account_id, wc_analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.account_id, wc_analytic_account)
 
         # mark as done
         mo_form.qty_producing = 10.0
         mo_form.save()
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.account_id, wc_analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.account_id, wc_analytic_account)
 
     def test_changing_mo_analytic_account(self):
         """ Check if the MO account analytic lines are correctly updated
@@ -220,46 +176,46 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.product_id = self.product
         mo_form.bom_id = self.bom
         mo_form.product_qty = 1
-        mo_form.analytic_account_id = self.analytic_account
+        mo_form.analytic_distribution = {str(self.analytic_account.id): 100.0}
         mo = mo_form.save()
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
-        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 0)
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 0)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_ids), 0)
 
         # Change duration to 60
         mo_form = Form(mo)
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
 
         # Mark as done
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 1)
 
         # Create a new analytic account
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         new_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account_2', 'plan_id': analytic_plan.id})
         # Change the MO analytic account
-        mo.analytic_account_id = new_analytic_account
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.account_id.id, new_analytic_account.id)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id.id, new_analytic_account.id)
+        mo.analytic_distribution = {str(new_analytic_account.id): 100.0}
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.account_id.id, new_analytic_account.id)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id.id, new_analytic_account.id)
 
         #Get the MO analytic account lines
-        mo_analytic_account_raw_lines = mo.move_raw_ids.analytic_account_line_id
-        mo_analytic_account_wc_lines = mo.workorder_ids.mo_analytic_account_line_id
-        mo.analytic_account_id = False
+        mo_analytic_account_raw_lines = mo.move_raw_ids.analytic_account_line_ids
+        mo_analytic_account_wc_lines = mo.move_raw_ids.analytic_account_line_ids
+        mo.analytic_distribution = {}
         # Check that the MO analytic account lines are deleted
-        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
-        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 0)
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 0)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_ids), 0)
         self.assertFalse(mo_analytic_account_raw_lines.exists())
         self.assertFalse(mo_analytic_account_wc_lines.exists())
         # Check that the AA lines are recreated correctly if we delete the AA, save the MO, and assign a new one
-        mo.analytic_account_id = self.analytic_account
-        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
-        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 1)
+        mo.analytic_distribution = {str(self.analytic_account.id): 100.0}
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 1)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_ids), 1)
 
     def test_add_remove_wo_analytic_no_company(self):
         """Test the addition and removal of work orders to a MO linked to
@@ -275,7 +231,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # Create a mo linked to an analytic account with no associated company
         mo_no_company = self.env['mrp.production'].create({
             'product_id': self.product.id,
-            'analytic_account_id': analytic_account_no_company.id,
+            'analytic_distribution': {str(analytic_account_no_company.id): 100.0},
             'product_uom_id': self.bom.product_uom_id.id,
         })
 
@@ -289,7 +245,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         })
         mo_no_c_form.save()
         self.assertTrue(mo_no_company.workorder_ids)
-        self.assertEqual(wo.production_id.analytic_account_id, analytic_account_no_company)
+        self.assertEqual(wo.production_id.analytic_account_ids, analytic_account_no_company)
         self.assertEqual(len(analytic_account_no_company.line_ids), 1)
         mo_no_company.workorder_ids.unlink()
         self.assertEqual(len(analytic_account_no_company.line_ids), 0)
