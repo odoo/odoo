@@ -58,6 +58,11 @@ export class Group extends DataPoint {
         this.isFolded = !this.isFolded;
     }
 
+    async deleteRecords(records) {
+        await this.list.deleteRecords(records);
+        this.count = this.count - records.length;
+    }
+
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------

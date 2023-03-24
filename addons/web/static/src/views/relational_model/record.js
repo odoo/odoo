@@ -309,7 +309,7 @@ export class Record extends DataPoint {
         let record;
         if (resId) {
             params.resId = resId;
-            record = await this.model.keepLast.add(this.model.loadRecord(params));
+            record = await this.model.keepLast.add(this.model._loadRecord(params));
             this._values = this._parseServerValues(record);
             this._changes = {};
         } else {

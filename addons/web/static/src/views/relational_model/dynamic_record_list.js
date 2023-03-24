@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { DynamicList } from "./dynamic_list";
-import { getFieldsSpec } from "./utils";
 
 export class DynamicRecordList extends DynamicList {
     setup(params) {
@@ -17,7 +16,6 @@ export class DynamicRecordList extends DynamicList {
                     data: r,
                 })
         );
-        this.hasLimitedCount = false;
         this._updateCount(params.data);
     }
 
@@ -37,38 +35,63 @@ export class DynamicRecordList extends DynamicList {
         return this.count;
     }
 
+    load(params = {}) {
+        const limit = params.limit === undefined ? this.limit : params.limit;
+        const offset = params.offset === undefined ? this.offset : params.offset;
+        return this.model.mutex.exec(() => this._load(offset, limit));
+    }
+
+    deleteRecords(records) {
+        return this.model.mutex.exec(async () => {
+            const unlinked = await this.model.orm.unlink(
+                this.resModel,
+                records.map((r) => r.resId),
+                {
+                    context: this.context,
+                }
+            );
+            if (!unlinked) {
+                return false;
+            }
+            return this._removeRecords(records);
+        });
+    }
+
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
 
+    _removeRecords(records) {
+        const _records = this.records.filter((r) => !records.includes(r));
+        if (this.offset && !_records.length) {
+            const offset = Math.max(this.offset - this.limit, 0);
+            return this._load(offset, this.limit);
+        }
+        this.records = _records;
+        this._updateCount(this.records);
+    }
+
     _updateCount(data) {
         const length = data.length;
-        if (length === this.constructor.WEB_SEARCH_READ_COUNT_LIMIT + 1) {
+        if (length >= this.model.countLimit + 1) {
             this.hasLimitedCount = true;
-            this.count = length - 1;
+            this.count = this.model.countLimit;
         } else {
             this.hasLimitedCount = false;
             this.count = length;
         }
     }
 
-    async _load() {
-        const fieldSpec = getFieldsSpec(this.activeFields, this.fields);
-        console.log("Unity field spec", fieldSpec);
-        const kwargs = {
-            fields: fieldSpec,
+    async _load(offset, limit) {
+        const response = await this.model._loadUngroupedList({
+            activeFields: this.activeFields,
+            context: this.context,
             domain: this.domain,
-            offset: this.offset,
-            limit: this.limit,
-            context: { bin_size: true, ...this.context },
-        };
-        const response = await this.model.orm.call(
-            this.resModel,
-            "web_search_read_unity",
-            [],
-            kwargs
-        );
-        console.log("Unity response", response);
+            fields: this.fields,
+            limit,
+            offset,
+            resModel: this.resModel,
+        });
         this.records = response.records.map(
             (r) =>
                 new this.model.constructor.Record(this.model, {
@@ -76,11 +99,12 @@ export class DynamicRecordList extends DynamicList {
                     fields: this.fields,
                     resModel: this.resModel,
                     context: this.context,
-                    resIds: response[0].records.map((r) => r.id),
+                    resIds: response.records.map((r) => r.id),
                     data: r,
                 })
         );
+        this.offset = offset;
+        this.limit = limit;
         this._updateCount(response);
     }
 }
-DynamicRecordList.WEB_SEARCH_READ_COUNT_LIMIT = 10000; // FIXME: move

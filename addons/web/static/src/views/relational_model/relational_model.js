@@ -59,6 +59,8 @@ export class RelationalModel extends Model {
         this.mutex = markRaw(new Mutex());
 
         this.rootParams = markRaw(params);
+
+        this.countLimit = params.countLimit || this.constructor.WEB_SEARCH_READ_COUNT_LIMIT;
     }
 
     // -------------------------------------------------------------------------
@@ -100,7 +102,7 @@ export class RelationalModel extends Model {
         // }
         let data;
         if (this.rootParams.values) {
-            data = [this.rootParams.values];
+            data = this.rootParams.values;
             delete this.rootParams.values;
         } else {
             data = await this.keepLast.add(this._loadData(this.rootParams));
@@ -122,7 +124,6 @@ export class RelationalModel extends Model {
             data,
         };
         if (params.viewMode === "form") {
-            rootParams.data = rootParams.data[0];
             return new this.constructor.Record(this, {
                 ...rootParams,
                 mode: params.mode,
@@ -156,27 +157,11 @@ export class RelationalModel extends Model {
             // FIXME: this *might* be handled by unity at some point
             return this._loadGroupedList(params);
         }
-        const fieldSpec = getFieldsSpec(params.activeFields, params.fields);
-        console.log("Unity field spec", fieldSpec);
-        const context = { bin_size: true, ...params.context };
-        let response;
         if (params.viewMode === "form") {
-            response = await this.orm.call(params.resModel, "web_read_unity", [[params.resId]], {
-                fields: fieldSpec,
-                context,
-            });
+            return this._loadRecord(params);
         } else {
-            const kwargs = {
-                fields: fieldSpec,
-                domain: params.domain,
-                offset: params.offset,
-                limit: params.limit,
-                context,
-            };
-            response = await this.orm.call(params.resModel, "web_search_read_unity", [], kwargs);
+            return this._loadUngroupedList(params);
         }
-        console.log("Unity response", response);
-        return response;
     }
 
     async _loadGroupedList(params) {
@@ -234,7 +219,7 @@ export class RelationalModel extends Model {
                 }
             }
         }
-        return [record];
+        return record;
     }
 
     async _onchange({ resModel, spec, resIds, changes, fieldNames, context }) {
@@ -258,13 +243,44 @@ export class RelationalModel extends Model {
         return response.value;
     }
 
-    async loadRecord({ resModel, resId, activeFields, fields, context }) {
+    async _loadRecord({ resModel, resId, activeFields, fields, context }) {
+        const fieldSpec = getFieldsSpec(activeFields, fields);
+        console.log("Unity field spec", fieldSpec);
         const kwargs = {
             context: { bin_size: true, ...context },
             fields: getFieldsSpec(activeFields, fields),
         };
         const records = await this.orm.call(resModel, "web_read_unity", [[resId]], kwargs);
+        console.log("Unity response", records);
         return records[0];
+    }
+
+    async _loadUngroupedList({
+        activeFields,
+        context,
+        domain,
+        fields,
+        limit,
+        offset = 0,
+        resModel,
+    }) {
+        const fieldSpec = getFieldsSpec(activeFields, fields);
+        console.log("Unity field spec", fieldSpec);
+        const countLimit = Math.max(this.countLimit, offset + limit);
+        const kwargs = {
+            fields: fieldSpec,
+            domain: domain,
+            offset: offset,
+            limit: limit,
+            context: { bin_size: true, ...context },
+        };
+        if (countLimit !== Number.MAX_SAFE_INTEGER) {
+            kwargs.count_limit = countLimit + 1;
+        }
+        const response = await this.orm.call(resModel, "web_search_read_unity", [], kwargs);
+        this.countLimit = countLimit;
+        console.log("Unity response", response);
+        return response;
     }
 
     async loadNewRecord(params) {
@@ -286,3 +302,4 @@ RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;
 RelationalModel.DynamicGroupList = DynamicGroupList;
 RelationalModel.StaticList = StaticList;
+RelationalModel.WEB_SEARCH_READ_COUNT_LIMIT = 10000;

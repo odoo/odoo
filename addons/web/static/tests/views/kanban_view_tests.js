@@ -39,7 +39,7 @@ import { session } from "@web/session";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { DynamicRecordList } from "@web/views/relational_model/dynamic_record_list";
+import { RelationalModel } from "@web/views/relational_model/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, onWillRender, xml } from "@odoo/owl";
@@ -1152,7 +1152,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("pager, ungrouped, with count limit reached", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        patchWithCleanup(RelationalModel, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
 
         await makeView({
             type: "kanban",
@@ -1183,8 +1183,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["search_count"]);
     });
 
-    QUnit.tttt("pager, ungrouped, with count limit reached, click next", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+    QUnit.test("pager, ungrouped, with count limit reached, click next", async (assert) => {
+        patchWithCleanup(RelationalModel, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
 
         await makeView({
             type: "kanban",
@@ -1215,8 +1215,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_search_read_unity"]);
     });
 
-    QUnit.tttt("pager, ungrouped, with count limit reached, click next (2)", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+    QUnit.test("pager, ungrouped, with count limit reached, click next (2)", async (assert) => {
+        patchWithCleanup(RelationalModel, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
         serverData.models.partner.records.push({ id: 5, foo: "xxx" });
 
         await makeView({
@@ -1254,8 +1254,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_search_read_unity"]);
     });
 
-    QUnit.tttt("pager, ungrouped, with count limit reached, click previous", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+    QUnit.test("pager, ungrouped, with count limit reached, click previous", async (assert) => {
+        patchWithCleanup(RelationalModel, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
         serverData.models.partner.records.push({ id: 5, foo: "xxx" });
 
         await makeView({
@@ -1287,8 +1287,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["search_count", "web_search_read_unity"]);
     });
 
-    QUnit.tttt("pager, ungrouped, with count limit reached, edit pager", async (assert) => {
-        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+    QUnit.test("pager, ungrouped, with count limit reached, edit pager", async (assert) => {
+        patchWithCleanup(RelationalModel, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
         serverData.models.partner.records.push({ id: 5, foo: "xxx" });
 
         await makeView({
@@ -1328,7 +1328,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_search_read_unity"]);
     });
 
-    QUnit.tttt("count_limit attrs set in arch", async (assert) => {
+    QUnit.test("count_limit attrs set in arch", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1358,7 +1358,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["search_count"]);
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "pager, ungrouped, deleting all records from last page should move to previous page",
         async (assert) => {
             patchDialog((_cls, props) => {
@@ -1399,7 +1399,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.tttt("pager, update calls onUpdatedPager before the render", async (assert) => {
+    QUnit.test("pager, update calls onUpdatedPager before the render", async (assert) => {
         assert.expect(8);
 
         class TestKanbanController extends KanbanController {
@@ -1443,7 +1443,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["render", "next page", "onUpdatedPager", "render"]);
     });
 
-    QUnit.tttt("click on a button type='delete' to delete a record in a column", async (assert) => {
+    QUnit.test("click on a button type='delete' to delete a record in a column", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1473,7 +1473,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(column, ".o_kanban_load_more");
     });
 
-    QUnit.tttt("kanban with an action id as on_create attrs", async (assert) => {
+    QUnit.test("kanban with an action id as on_create attrs", async (assert) => {
         const actionService = {
             start() {
                 return {
@@ -1517,7 +1517,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.tttt("grouped kanban with quick_create attrs set to false", async (assert) => {
+    QUnit.test("grouped kanban with quick_create attrs set to false", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
