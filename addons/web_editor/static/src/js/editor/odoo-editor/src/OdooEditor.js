@@ -1868,6 +1868,19 @@ export class OdooEditor extends EventTarget {
                 range.setEnd(commonAncestorContainer, nodeSize(commonAncestorContainer));
             }
         }
+        let insertedZws;
+        if (sel && !sel.isCollapsed && !range.startOffset && !range.startContainer.previousSibling) {
+            // Insert a zero-width space before the selection if the selection
+            // is non-collapsed and at the beginning of its parent, so said
+            // parent will have content after extraction. This ensures that the
+            // parent will not be removed by "tricking" `range.extractContents`.
+            // Eg, <h1><font>[...]</font></h1> will preserve the styles of the
+            // <font> node. If it remains empty, it will be cleaned up later by
+            // the sanitizer.
+            const zws = document.createTextNode('\u200B');
+            range.startContainer.before(zws);
+            insertedZws = zws;
+        }
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
@@ -1939,6 +1952,14 @@ export class OdooEditor extends EventTarget {
                 restore();
                 break;
             }
+        }
+        if (insertedZws) {
+            // Remove the zero-width space (zws) that was added to preserve the
+            // parent styles, then call `fillEmpty` to properly add a flagged
+            // zws if still needed.
+            const el = closestElement(insertedZws);
+            insertedZws.remove();
+            el && fillEmpty(el);
         }
         next = range.endContainer && rightLeafOnlyNotBlockPath(range.endContainer).next().value;
         if (
@@ -3533,13 +3554,18 @@ export class OdooEditor extends EventTarget {
             // Move selection if next character is zero-width space
             if (nextCharacter === '\u200B') {
                 focusOffset += 1;
-                while (focusNode && (!focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable)) {
-                    focusNode = nextLeaf(focusNode);
+                let newFocusNode = focusNode;
+                while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
+                    newFocusNode = nextLeaf(newFocusNode);
                     focusOffset = 0;
                 }
-                const startContainer = ev.shiftKey ? selection.anchorNode : focusNode;
+                if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
+                    newFocusNode = focusNode; // Do not move selection to next block.
+                    focusOffset = nodeSize(focusNode);
+                }
+                const startContainer = ev.shiftKey ? selection.anchorNode : newFocusNode;
                 const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
+                setSelection(startContainer, startOffset, newFocusNode, focusOffset);
             }
         }
     }

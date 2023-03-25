@@ -172,6 +172,19 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     PaymentScreen.check.remainingIs('0.0');
     PaymentScreen.check.changeIs('0.0');
 
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
+
+    ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.00');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.pressNumpad('2');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('1.0');
+
     Tour.register('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui' }, getSteps());
 
     startSteps();

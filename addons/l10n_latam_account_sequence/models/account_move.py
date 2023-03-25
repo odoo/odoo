@@ -21,7 +21,7 @@ class AccountMove(models.Model):
             # Fixup the account.move names like "sequence (N)" removing the "(N)" part
             self.env.cr.execute("""
             UPDATE account_move SET name = SUBSTRING(account_move.name, 1, strpos(account_move.name::varchar, ' ('::varchar) -1 )
-             WHERE l10n_latam_document_type_id IS NOT NULL AND account_move.name LIKE '%(%)'
+             WHERE l10n_latam_document_type_id IS NOT NULL AND account_move.name LIKE '% (%)'
                AND move_type IN ('in_invoice', 'in_refund', 'in_receipt');""")
 
             # Make all values of `name` different (naming them `name (1)`, `name (2)`...) so that we can add the following UNIQUE INDEX

@@ -1003,11 +1003,16 @@ X[]
                     contentAfter: '<div>a<p>b[]e</p>f</div>',
                 });
             });
-            it('should delete empty nodes ', async () => {
+            it('should not delete single remaining empty inline', async () => {
                 // Forward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><font>[abcdef]</font></h1>',
                     stepFunction: deleteForward,
+                    // The flagged 200B is there to preserve the font so if we
+                    // write now, we still write in the font element's style.
+                    contentAfterEdit: '<h1><font data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
+                    // The flagged 200B is removed by the sanitizer if its
+                    // parent remains empty.
                     contentAfter: '<h1>[]<br></h1>',
                 });
             });
@@ -3384,9 +3389,16 @@ X[]
                 });
             });
             describe('POC extra tests', () => {
-                it('should duplicate an empty h1', async () => {
+                it('should insert a paragraph after an empty h1', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<h1>[]<br></h1>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<h1><br></h1><p>[]<br></p>',
+                    });
+                });
+                it('should insert a paragraph after an empty h1 with styles and a zero-width space', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
                         stepFunction: insertParagraphBreak,
                         contentAfter: '<h1><br></h1><p>[]<br></p>',
                     });
@@ -5471,6 +5483,24 @@ X[]
                     },
                     contentAfter: '<p>ab<span>\u200B[]</span>cd</p>',
                     // Final state: '<p>ab<span>\u200B</span>c[]d</p>'
+                });
+            });
+            it('should move past a zws (collapsed at the end of a block)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]<span>\u200B</span></p><p>cd</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight'});
+                    },
+                    contentAfter: '<p>ab<span>\u200B[]</span></p><p>cd</p>',
+                    // Final state: '<p>ab<span>\u200B</span></p><p>[]cd</p>'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<span>[]\u200B</span></p><p>cd</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight'});
+                    },
+                    contentAfter: '<p>ab<span>\u200B[]</span></p><p>cd</p>',
+                    // Final state: '<p>ab<span>\u200B</span></p><p>[]cd</p>'
                 });
             });
             it('should select a zws', async () => {
