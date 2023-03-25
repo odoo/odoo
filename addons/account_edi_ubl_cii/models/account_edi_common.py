@@ -111,6 +111,16 @@ class AccountEdiCommon(models.AbstractModel):
     # TAXES
     # -------------------------------------------------------------------------
 
+    def _validate_taxes(self, invoice):
+        """ Validate the structure of the tax repartition lines (invalid structure could lead to unexpected results)
+        """
+        for tax in invoice.invoice_line_ids.tax_ids:
+            try:
+                tax._validate_repartition_lines()
+            except ValidationError as e:
+                error_msg = _("Tax '%s' is invalid: %s", tax.name, e.args[0])  # args[0] gives the error message
+                raise ValidationError(error_msg)
+
     def _get_tax_unece_codes(self, invoice, tax):
         """
         Source: doc of Peppol (but the CEF norm is also used by factur-x, yet not detailed)
