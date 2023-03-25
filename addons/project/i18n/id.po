@@ -401,6 +401,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Yth <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Dengan bahagia kami kabarkan bahwa Anda telah menyelesaikkan project \"<strong t-out=\"object.name or ''\">Renovasi</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Anda menerima email ini karena project Anda telah dimasukkan ke tahap <b t-out=\"object.stage_id.name or ''\">Selesai</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -868,6 +878,12 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
+"Akun analitik di mana tugas dan timesheet-nya terhubung. Lacak biaya Lacak "
+"biaya dan pendapatan dari tugas Anda dengan menyetel akun analitik-nya pada "
+"dokumen Anda yang terkait contohnya sales order, faktur, purchase order, "
+"tagihan vendor, pengeluaran dsb.). Secara default, akun analitik project ini"
+" sudah disetel. Namun, akun tersebut dapat dirubah untuk setiap tugas secara"
+" individu bila diperlukan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project

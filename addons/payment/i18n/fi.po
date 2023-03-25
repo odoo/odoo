@@ -860,6 +860,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Testitilassa väärennetty maksu käsitellään testimaksuliittymän kautta.\n"
+"Tätä tilaa suositellaan palveluntarjoajan perustamisen yhteydessä."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -1252,7 +1254,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Maksutunnisteet"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1453,7 +1455,7 @@ msgstr "Hyvitykset"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Palautusten määrä"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1884,7 +1886,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Tuettu maksupalautustyyppi"
 
 #. module: payment
 #. odoo-javascript
@@ -2248,3 +2250,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Maksupalveluntarjoaja on ensin poistettava käytöstä, ennen kuin sen päiväkirja voidaan poistaa.\n"
+"Linkitetyt palveluntarjoajat: %s"

@@ -1438,6 +1438,7 @@ msgstr "Se creará de forma automática un segundo pago en el diario destino."
 #, python-format
 msgid "A statement should only contain lines from the same journal."
 msgstr ""
+"Un estado de cuenta bancario solo debe contener líneas del mismo diario."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -14791,6 +14792,7 @@ msgstr ""
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
+"El balance en ejecución (%s) no coincide con el balance final especificado."
 
 #. module: account
 #. odoo-python
@@ -14800,6 +14802,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"El balance inicial no coincide con el balance final del estado de cuenta "
+"bancario anterior, o falta un estado de cuenta anterior."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -15658,6 +15662,8 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+"No se puede crear un estado de cuenta debido a que faltan transacciones. Tal"
+" vez quiera volver a ordenar las transacciones antes de continuar."
 
 #. module: account
 #. odoo-python

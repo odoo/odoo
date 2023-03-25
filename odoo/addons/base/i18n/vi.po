@@ -6,8 +6,8 @@
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Thi Huong Nguyen, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1210,7 +1210,7 @@ msgstr ""
 "\n"
 "        Xác định nhật ký bán hàng mặc định trên kho,\n"
 "        giúp chọn đúng nhật ký bán hàng trên đơn bán hàng khi\n"
-"        bạn thay đổi nhà kho.\n"
+"        bạn thay đổi kho hàng.\n"
 "        hữu ích khi bạn thiết lập nhiều đơn vị GSTIN.\n"
 "    "
 
@@ -1985,7 +1985,7 @@ msgid ""
 "    Adds workcenters to Quality Control\n"
 msgstr ""
 "\n"
-"    Thêm trung tâm làm việc vào Kiểm soát Chất lượng\n"
+"    Thêm khu vực sản xuất vào Kiểm soát Chất lượng\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -3666,7 +3666,7 @@ msgstr ""
 "\n"
 "* Báo cáo cơ cấu chi phí\n"
 "\n"
-"Ngoài ra, cho phép tính toán giá thành của sản phẩm dựa trên Hoá đơn Nguyên vật liệu, sử dụng chi phí của các bộ phận và hoạt động của xưởng sản xuất.\n"
+"Ngoài ra, cho phép tính toán giá thành của sản phẩm dựa trên Hoá đơn Nguyên vật liệu, sử dụng chi phí của các bộ phận và hoạt động của khu vực sản xuất.\n"
 "Một nút đã được thêm vào sản phẩm cùng với một hành động trong chế độ xem danh sách của sản phẩm.\n"
 "Nếu tính năng định giá tồn kho tự động đang hoạt động, các bút toán kế toán cần thiết sẽ được tạo.\n"
 "\n"
@@ -6567,7 +6567,7 @@ msgstr ""
 "* Bảo trì phòng ngừa và khắc phục\n"
 "* Xác định các giai đoạn khác nhau cho các yêu cầu bảo trì của bạn\n"
 "* Lập kế hoạch yêu cầu bảo trì (đồng thời là phòng ngừa định kỳ)\n"
-"* Trang thiết bị liên quan đến trung tâm làm việc\n"
+"* Trang thiết bị liên quan đến khu vực sản xuất\n"
 "* MTBF, MTTR, ...\n"
 
 #. module: base
@@ -7058,7 +7058,7 @@ msgstr ""
 "===============================\n"
 "\n"
 "Một tài nguyên đại diện cho một yếu tố nào đó có thể được lên lịch (một nhà phát triển của một nhiệm\n"
-"vụ hoặc một xưởng sản xuất của các lệnh sản xuất). Module này quản lý một lịch tài nguyên \n"
+"vụ hoặc một khu vực sản xuất của các lệnh sản xuất). Module này quản lý một lịch tài nguyên \n"
 "được liên kết với mọi tài nguyên. Nó cũng quản lý nghỉ phép của mọi tài nguyên.\n"
 "    "
 
@@ -14902,7 +14902,7 @@ msgstr "Mã vạch %s"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_gs1_nomenclature
 msgid "Barcode - GS1 Nomenclature"
-msgstr "Mã vạch - Quy tắc GS1"
+msgstr "Mã vạch - Phép đặt tên GS1"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_product_expiry
@@ -17696,7 +17696,7 @@ msgstr "Cơ sở dữ liệu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__db_datas
 msgid "Database Data"
-msgstr "Dữ liệu của Cơ sở dữ liệu"
+msgstr "Dữ liệu trong cơ sở dữ liệu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_id
@@ -19159,7 +19159,7 @@ msgid ""
 "* Cost Structure report (mrp_account)"
 msgstr ""
 "Mở rộng Enterprise cho Sản xuất\n"
-"* Lập kế hoạch lệnh làm việc. Kiểm tra kế hoạch theo chế độ xem Gantt được nhóm theo đơn đặt hàng sản xuất/xưởng sản xuất\n"
+"* Lập kế hoạch lệnh làm việc. Kiểm tra kế hoạch theo chế độ xem Gantt được nhóm theo đơn đặt hàng sản xuất/khu vực sản xuất\n"
 "* Báo cáo truy xuất nguồn gốc\n"
 "* Báo cáo Cấu trúc Chi phí (mrp_account)"
 
@@ -34109,6 +34109,8 @@ msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
 msgstr ""
+"The path to the main report file (depending on Report Type) or empty if the "
+"content is in another field"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
