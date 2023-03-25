@@ -1404,7 +1404,7 @@ class PosSession(models.Model):
             'name': _('Cash register'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.line',
-            'view_mode': 'tree',
+            'view_mode': 'tree,kanban',
             'domain': [('id', 'in', self.statement_line_ids.ids)],
         }
 
