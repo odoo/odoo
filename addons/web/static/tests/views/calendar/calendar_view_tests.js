@@ -2652,6 +2652,41 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
     });
 
+    QUnit.test("dynamic filters with selection fields", async (assert) => {
+        serverData.models.event.fields.selection = {
+            name: "selection",
+            string: "Ambiance",
+            type: "selection",
+            selection: [
+                ["desert", "Desert"],
+                ["forest", "Forest"],
+            ],
+        };
+
+        serverData.models.event.records[0].selection = "forest";
+        serverData.models.event.records[1].selection = "desert";
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: /* xml */ `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="selection" filters="1" />
+                </calendar>
+            `,
+        });
+
+        const section = findFilterPanelSection(target, "selection");
+        assert.deepEqual(section.querySelector(".o_cw_filter_label").textContent, "Ambiance");
+        assert.deepEqual(
+            [...section.querySelectorAll(".o_calendar_filter_item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["Forest", "Desert", "Undefined"]
+        );
+    });
+
     QUnit.test("Colors: cycling through available colors", async (assert) => {
         serverData.models.filter_partner.records = Array.from({ length: 56 }, (_, i) => ({
             id: i + 1,
