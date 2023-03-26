@@ -344,7 +344,7 @@ msgstr "회계"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr "청구서 생성에 사용되는 회계 분개장"
+msgstr "청구서 생성에 사용되는 회계 전표"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
@@ -518,7 +518,7 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"회계 응용 프로그램을 사용하는 경우 사용 가능한 모든 가격리스트는 회사와 동일한 통화로 또는 이 POS에 설정된 판매 분개장과 같아야 "
+"회계 응용 프로그램을 사용하는 경우 사용 가능한 모든 가격리스트는 회사와 동일한 통화로 또는 이 POS에 설정된 판매 전표와 같아야 "
 "합니다."
 
 #. module: point_of_sale
@@ -528,7 +528,7 @@ msgstr ""
 msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr "모든 결제 방법은 판매 분개장과 동일하거나 회사 통화로 설정해야 합니다."
+msgstr "모든 결제 방법은 판매 전표와 동일하거나 회사 통화로 설정해야 합니다."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -968,7 +968,7 @@ msgstr "현금 입출금"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
 msgid "Cash Journal"
-msgstr "현금 분개 항목"
+msgstr "현금 전표"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
@@ -2675,7 +2675,7 @@ msgstr "청구서"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_invoice_journal_id
 msgid "Invoice Journal"
-msgstr "청구서 분개장"
+msgstr "청구서 전표"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2789,18 +2789,18 @@ msgstr "JS 시험"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__journal_id
 msgid "Journal"
-msgstr "분개장"
+msgstr "전표"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
-msgstr "분개"
+msgstr "전표입력"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
 msgid "Journal Item"
-msgstr "분개 항목"
+msgstr "전표 항목"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2808,7 +2808,7 @@ msgstr "분개 항목"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Journal Items"
-msgstr "분개 항목"
+msgstr "전표 항목"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -4814,7 +4814,7 @@ msgstr "영수증 프린터"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr "이 분개장에 터미널로 결제를 기록하십시오."
+msgstr "이 전표에 터미널로 결제를 기록하십시오."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
@@ -5102,7 +5102,7 @@ msgstr "판매 세부 사항"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
 msgid "Sales Journal"
-msgstr "판매 분개 항목"
+msgstr "매출 전표"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5334,7 +5334,7 @@ msgstr "세션 ID"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr "세션 분개 기입 항목"
+msgstr "세션 전표입력"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5946,7 +5946,7 @@ msgstr "왼쪽이 비어있는 경우 자동 감지되는 하드웨어 프록시
 msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr "청구서 분개는 판매 분개 또는 회사 통화와 같은 통화로 설정해야 합니다."
+msgstr "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화로 설정해야 합니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6826,7 +6826,7 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
 msgstr ""
-"세션을 닫을 때마다 청구되지 않은 모든 주문에 대해 다음 회계 분개에 하나의 항목이 생성됩니다. 송장은 회계에 별도로 기록됩니다."
+"세션을 닫을 때마다 청구되지 않은 모든 주문에 대해 다음 회계 전표에 하나의 항목이 생성됩니다. 청구서는 회계에 별도로 기록됩니다."
 
 #. module: point_of_sale
 #. odoo-javascript

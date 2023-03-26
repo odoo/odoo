@@ -320,7 +320,7 @@ msgstr ""
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">商品</span></td>\n"
+"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">製品</span></td>\n"
 "                <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">数量</span></td>\n"
 "                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
@@ -835,14 +835,14 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"在庫可能品は在庫管理対象の商品です。在庫アプリのインストールが必要です。\n"
-"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではない商品です。\n"
-"サービス品は物理的なモノが存在しない無形の商品です。"
+"在庫可能品は在庫管理対象の製品です。在庫アプリのインストールが必要です。\n"
+"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではない製品です。\n"
+"サービス品は物理的なモノが存在しない無形の製品です。"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr "商品または取引先に警告設定可(販売)"
+msgstr "製品または取引先に警告設定可(販売)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -949,7 +949,7 @@ msgstr "メモ追加"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr "商品追加"
+msgstr "製品追加"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1143,7 +1143,7 @@ msgstr "本文編集可"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr "商品を編集できます"
+msgstr "製品を編集できます"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -1209,7 +1209,7 @@ msgstr "見積の確認方法を選択"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr "ここをクリックして見積に商品やサービスを追加してください。"
+msgstr "ここをクリックして見積に製品やサービスを追加してください。"
 
 #. module: sale
 #. odoo-javascript
@@ -1363,7 +1363,7 @@ msgstr "顧客請求書を作成しましょう。"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
-msgstr "商品新規作成"
+msgstr "製品新規作成"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1564,7 +1564,7 @@ msgstr "デフォルト見積有効期間(日)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for payment advances"
-msgstr "先払いで使用されるデフォルト商品"
+msgstr "先払いで使用されるデフォルト製品"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1627,7 +1627,7 @@ msgstr "デポジット"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "頭金商品"
+msgstr "頭金製品"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -1725,7 +1725,7 @@ msgstr "前受金(固定)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "前受金商品"
+msgstr "前受金製品"
 
 #. module: sale
 #. odoo-python
@@ -1944,7 +1944,7 @@ msgstr "オンライン決済が確認され次第、請求書を自動生成"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr "商品や顧客に注文用の警告を設定"
+msgstr "製品や顧客に注文用の警告を設定"
 
 #. module: sale
 #. odoo-javascript
@@ -2059,7 +2059,7 @@ msgstr "Amazon注文インポートおよび運送同期"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "商品テンプレートをインポート"
+msgstr "製品テンプレートをインポート"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3019,28 +3019,28 @@ msgstr "見積送状"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
-msgstr "商品"
+msgstr "製品"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute
 msgid "Product Attribute"
-msgstr "商品属性"
+msgstr "製品属性"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "商品属性カスタム値"
+msgstr "製品属性カスタム値"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr "商品カタログ"
+msgstr "製品カタログ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr "商品カテゴリ"
+msgstr "製品カテゴリ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
@@ -3050,12 +3050,12 @@ msgstr "製品包装"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
 msgid "Product Template"
-msgstr "商品テンプレート"
+msgstr "製品テンプレート"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
 msgid "Product Type"
-msgstr "商品タイプ"
+msgstr "製品タイプ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
@@ -3066,19 +3066,19 @@ msgstr "製品Uom読み取り専用"
 #: model:ir.model,name:sale.model_product_product
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 msgid "Product Variant"
-msgstr "商品バリアント"
+msgstr "製品バリアント"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "商品バリアント"
+msgstr "製品バリアント"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr "商品価格は価格表 %s に従って再計算されました。"
+msgstr "製品価格は価格表 %s に従って再計算されました。"
 
 #. module: sale
 #. odoo-python
@@ -3090,7 +3090,7 @@ msgstr "財政状態%sに基づいて、製品の税金は再計算されまし�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "前受金用商品"
+msgstr "前受金用製品"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3099,7 +3099,7 @@ msgstr "前受金用商品"
 #: model:ir.ui.menu,name:sale.product_menu_catalog
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Products"
-msgstr "商品"
+msgstr "製品"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3638,7 +3638,7 @@ msgstr "サンプル注文明細"
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
-msgstr "サンプル商品"
+msgstr "サンプル製品"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3659,7 +3659,7 @@ msgstr "セクション"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "セクション名 (例 商品、サービス)"
+msgstr "セクション名 (例 製品、サービス)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -3693,12 +3693,12 @@ msgstr "複数の異なる単位での販売/購買"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr "荷姿あたりのユニット数の倍数で商品を販売"
+msgstr "荷姿あたりのユニット数の倍数で製品を販売"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "属性（サイズ、色など）を使用して商品のバリエーションを販売"
+msgstr "属性（サイズ、色など）を使用して製品のバリエーションを販売"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3708,7 +3708,7 @@ msgstr "見積送状を送付"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr "請求書検証の際に商品に関するEメールを送信"
+msgstr "請求書検証の際に製品に関するEメールを送信"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3766,7 +3766,7 @@ msgstr "見積にデフォルトの有効期間を設定"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "商品毎に複数の価格や自動割引などを設定"
+msgstr "製品毎に複数の価格や自動割引などを設定"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -3880,7 +3880,7 @@ msgstr "参照元"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr "商品別Eメール"
+msgstr "製品別Eメール"
 
 #. module: sale
 #. odoo-python
@@ -4595,7 +4595,7 @@ msgstr "販売注文にて警告"
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
-msgstr "この商品の販売時に警告"
+msgstr "この製品の販売時に警告"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -4662,7 +4662,7 @@ msgstr "ここで、受注に表示される通信タイプを設定できます
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
-msgstr "商品の種類は、すでに販売注文で使用されているため、変更することができません。"
+msgstr "製品の種類は、すでに販売注文で使用されているため、変更することができません。"
 
 #. module: sale
 #. odoo-python
@@ -4678,7 +4678,7 @@ msgstr "受注明細のタイプを変更することはできません。代わ
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
-msgstr "販売または購買するもの(在庫品、消耗品、サービス品等)は、商品として登録する必要があります。"
+msgstr "販売または購買するもの(在庫品、消耗品、サービス品等)は、製品として登録する必要があります。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

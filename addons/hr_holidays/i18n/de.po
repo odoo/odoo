@@ -7,6 +7,7 @@
 # Martin Trigaux, 2023
 # Niklas Korz, 2023
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +86,7 @@ msgstr "%(employee_name)s - Von %(date_from)s Bis %(date_to)s - %(state)s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(holiday_name)s has been refused."
-msgstr ""
+msgstr "%(holiday_name)s wurde abgelehnt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -94,6 +95,8 @@ msgstr ""
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
+"%(leave_name)s wurde mit folgender Rechtfertigung storniert: <br/> "
+"%(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -107,7 +110,7 @@ msgstr "%(leave_type)s: %(duration).2f Tage (%(start)s)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s: %(duration).2f hours on %(date)s"
-msgstr ""
+msgstr "%(leave_type)s: %(duration).2f Stunden am %(date)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -128,14 +131,14 @@ msgstr "%(person)s an %(leave_type)s: %(duration).2f Stunden am %(date)s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s: %(duration).2f days (%(start)s)"
-msgstr ""
+msgstr "%(person)s: %(duration).2f Tage (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s: %(duration).2f hours on %(date)s"
-msgstr ""
+msgstr "%(person)s: %(duration).2f Stunden am %(date)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -565,7 +568,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_form
 msgid "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"To\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"To\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -620,6 +623,8 @@ msgid ""
 "<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
 "define\" title=\"On Time Off\"/>"
 msgstr ""
+"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"On Time Off\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -937,6 +942,8 @@ msgstr "Grund hinzufügen"
 #, python-format
 msgid "Add some description for the people that will validate it"
 msgstr ""
+"Fügen Sie eine Beschreibung für die Personen hinzu, diesen Antrag "
+"akzeptieren werden."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value_type
@@ -3019,7 +3026,7 @@ msgstr "Abgelehnt"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Refused Time Off"
-msgstr ""
+msgstr "Abgelehnte Abwesenheit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -3882,7 +3889,7 @@ msgstr "Abwesenheitsanalyse nach Mitarbeiter und Abwesenheitstyp"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Time off Taken"
-msgstr ""
+msgstr "Genommener Urlaub"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -3971,7 +3978,7 @@ msgstr "Zur Genehmigung"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "To Approve or Approved Allocations"
-msgstr ""
+msgstr "Zu genehmigende oder genehmigte Zuweisungen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4209,7 +4216,7 @@ msgstr "Wöchentlich"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
 msgid "Worked Time"
-msgstr ""
+msgstr "Gearbeitete Zeit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__resource_calendar_id
@@ -4254,7 +4261,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You are not allowed to request a time off on a Stress Day."
-msgstr ""
+msgstr "Sie dürfen keinen Urlaubsantrag für Belastungstage nehmen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4274,6 +4281,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Sie können für denselben Mitarbeiter nicht zwei freie Tage festlegen, die sich am selben Tag überschneiden.\n"
+"Bestehende Abwesenheit:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4284,6 +4294,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Sie können für dieselben Mitarbeiter nicht zwei freie Tage festlegen, die sich am selben Tag überschneiden.\n"
+"Bestehende Abwesenheit:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4294,6 +4307,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Sie können nicht zwei freie Tage festlegen, die sich am selben Tag überschneiden.\n"
+"Bestehende Abwesenheit:\n"
+"%s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4308,6 +4324,8 @@ msgstr "Sie können keine Rückstellung in der Vergangenheit bilden."
 msgid ""
 "You can select the period you need to take off, from start date to end date"
 msgstr ""
+"Sie können den Zeitraum auswählen, den Sie freinehmen möchten, vom Start- "
+"bis zum Enddatum"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4322,6 +4340,8 @@ msgstr "Sie können Abwesenheiten nicht manuell archivieren/dearchivieren."
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
 msgstr ""
+"Sie können einen Urlaub, der mehreren Mitarbeitern zugeordnet ist, nicht "
+"löschen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4400,6 +4420,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
+"Sie müssen entweder Abwesenheitsbeauftragter oder- manager sein, um diesen "
+"Antrag zu genehmigen."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4606,7 +4628,7 @@ msgstr "Reihenfolge"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "taken"
-msgstr ""
+msgstr "genommen"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary

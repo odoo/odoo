@@ -95,6 +95,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Die Menge, die für das Produkt „%s“ angegeben wurde, entspricht nicht der Rundungsgenauigkeit, die für die Maßeinheit „%s“ definiert wurde.\n"
+"Bitte ändern Sie die angegebene Menge oder die Rundungsgenauigkeit Ihrer Mengeneinheit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -464,6 +467,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                    <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Min.:</span>\n"
+"                                    <span class=\"o_stat_text\">Max.:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -712,8 +717,8 @@ msgstr "<strong>Wo möchten Sie diese Produkte versenden ?</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
 msgstr ""
-"Sind Sie sich sicher, dass Sie diesen Vorgang bestätigen möchten? Dies kann "
-"zu Inkonsistenzen in Ihrem Bestand führen."
+"? Sind Sie sich sicher, dass Sie diesen Vorgang bestätigen möchten? Dies "
+"kann zu Inkonsistenzen in Ihrem Bestand führen."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -733,6 +738,7 @@ msgstr ""
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
 msgstr ""
+"Für dieses Produkt existiert bereits eine Auffüllregel an diesem Standort."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -920,7 +926,7 @@ msgstr "Alle Lieferungen"
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #, python-format
 msgid "All Warehouses"
-msgstr ""
+msgstr "Alle Lagerhäuser"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__one
@@ -1654,7 +1660,7 @@ msgstr "Versandkosten für FedEx berechnen und versenden"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "Versandkosten für Sendcloud berechnen und versenden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2878,7 +2884,7 @@ msgstr "Exp"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "Erw. %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -3003,7 +3009,7 @@ msgstr "Beschreibung Prognose"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Forecast Report"
-msgstr ""
+msgstr "Prognosebericht"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__virtual_available
@@ -4403,7 +4409,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr ""
+msgstr "Los/SN:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -5633,12 +5639,12 @@ msgstr "Verpackungshöhe"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__packaging_length
 msgid "Packaging Length"
-msgstr ""
+msgstr "Paketlänge"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
 msgid "Packaging Width"
-msgstr ""
+msgstr "Paketbreite"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
@@ -5761,7 +5767,7 @@ msgstr "Geplanter Transfer"
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Planning Issue"
-msgstr ""
+msgstr "Problem bei der Planung"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6009,7 +6015,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
 msgid "Product Labels"
-msgstr ""
+msgstr "Produktbezeichnungen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -7274,6 +7280,8 @@ msgstr ""
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
 msgstr ""
+"Versand an Kunden, wenn Aufträge geliefert werden, wenn diese Einstellung "
+"aktiviert ist"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -7501,7 +7509,7 @@ msgstr ""
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
-msgstr ""
+msgstr "Versand: Per E-Mail senden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code

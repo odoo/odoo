@@ -265,6 +265,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Weisen Sie regelmäßig Leads basierend auf Regeln zu</span><br/>\n"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    Alle Verkaufsteams werden diese Einstellung standardmäßig verwenden, sofern\n"
+"                                    nicht anders angegeben.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -440,7 +445,7 @@ msgstr "Alias-Name"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Alias-Status"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
@@ -451,6 +456,7 @@ msgstr "Alias-Domäne"
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
 msgstr ""
+"Alias-Status, der bei der letzten empfangenen Nachricht festgestellt wurde."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -605,7 +611,7 @@ msgstr "Automatisierte Wahrscheinlichkeit"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_max
 msgid "Average Leads Capacity (on 30 days)"
-msgstr ""
+msgstr "Durchschnittliche Lead-Kapazität (auf 30 Tage)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -1701,6 +1707,8 @@ msgstr "Interne Notizen"
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
 msgstr ""
+"Intervalltypen zwischen den einzelnen Cron-Läufen (z. B. alle 2 Tage oder "
+"alle 2 Stunden)"
 
 #. module: crm
 #. odoo-python
@@ -2310,7 +2318,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr "Multi Teams"
+msgstr "Mehrere Teams"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -2917,7 +2925,7 @@ msgstr "Anzahl potenzieller doppelter Leads"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Voraussichtliche Lead-Bewertung"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels

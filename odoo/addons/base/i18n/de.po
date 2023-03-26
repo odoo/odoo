@@ -3309,7 +3309,7 @@ msgid ""
 msgstr ""
 "\n"
 "=========================================\n"
-"Mit diesem Modul können Sie durch das Menü Berichtswesen / Finanzen / Finanz-Tests eine manuelle Prüfung der Plausibilität Ihrer Finanzbuchhaltung durchführen und nach möglichen Ungereimtheiten suchen.  \n"
+"Mit diesem Modul können Sie durch das Menü Berichtswesen / Buchhaltung / Finanz-Tests eine manuelle Prüfung der Plausibilität Ihrer Finanzbuchhaltung durchführen und nach möglichen Ungereimtheiten suchen.  \n"
 "\n"
 "Sie können eine Abfrage schreiben, um Plausibilitätsprüfungen zu erstellen und erhalten das Ergebnis der Prüfung\n"
 "im PDF-Format, auf die Sie über das o.a. Menü zugreifen können. Dort wählen Sie dann den Test aus und drucken den Bericht durch Klick auf den Button 'Drucken' im Kopfbereich.\n"
@@ -6436,7 +6436,7 @@ msgstr ""
 "Modul zum Import von CSV-Bankauszügen.\n"
 "======================================\n"
 "\n"
-"Dieses Modul ermöglicht Ihnen den Import von CSV-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Finanzen\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
+"Dieses Modul ermöglicht Ihnen den Import von CSV-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
 "\n"
 "Wichtiger Hinweis\n"
 "---------------------------------------------\n"
@@ -6461,7 +6461,7 @@ msgstr ""
 "Modul zum Import von OFX-Bankauszügen.\n"
 "=======================================\n"
 "\n"
-"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren OFX-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Finanzen\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
+"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren OFX-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
 "\n"
 "Bankauszüge, die eine Untermenge der OFX-Informationen enthalten, können generiert werden (nur bei Transaktionspositionen, die für die Erstellung von Finanzbuchhaltungs-Dateien erforderlich sind)."
 
@@ -6484,7 +6484,7 @@ msgstr ""
 "Modul zum Import von QIF-Bankauszügen.\n"
 "======================================\n"
 "\n"
-"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren QIF-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Finanzen\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
+"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren QIF-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
 "\n"
 "Wichtiger Hinweis\n"
 "---------------------------------------------\n"
@@ -10490,6 +10490,10 @@ msgid ""
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code' \\n\n"
+"env['res.partner'].create({'name': partner_name})\n"
+"</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -10607,7 +10611,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -10615,6 +10619,8 @@ msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
+"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11634,7 +11640,7 @@ msgstr "Inhaber der Bankverbindung, wenn dieser nicht der Kunde ist"
 #: model:ir.module.module,shortdesc:base.module_account_accountant
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Accounting"
-msgstr "Finanzen"
+msgstr "Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
@@ -12686,17 +12692,20 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_aps
 msgid "An Amazon payment provider covering the MENA region."
-msgstr ""
+msgstr "Ein Amazon-Zahlungsanbieter, der die MENA-Region abdeckt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "An American payment provider for online payments all over the world."
 msgstr ""
+"Ein amerikanischer Zahlungsanbieter für Online-Zahlungen in der ganzen Welt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "An Irish-American payment provider covering the US and many others."
 msgstr ""
+"Ein irisch-amerkanischer Zahlungsanbieter, der die USA und viele andere "
+"Länder abdeckt."
 
 #. module: base
 #. odoo-python
@@ -12763,11 +12772,13 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_payment_asiapay
 msgid "An payment provider based in Hong Kong covering most Asian countries."
 msgstr ""
+"Ein Zahlungsanbieter mit Sitz in Hongkong, der die meisten asiatischen "
+"Länder abdeckt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "An payment provider covering the US, Australia, and Canada."
-msgstr ""
+msgstr "Ein Zahlungsanbieter, der die USA, Australien und Kanada abdeckt."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -12810,7 +12821,7 @@ msgstr "Anguilla"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Another user already has this barcode"
-msgstr ""
+msgstr "Ein anderer Benutzer hat diesen Barcode bereits"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -12963,7 +12974,7 @@ msgstr "Zu exportierende Apps"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Apps to Uninstall"
-msgstr ""
+msgstr "Apps zu deinstallieren"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade__module_info
@@ -13276,7 +13287,7 @@ msgstr "Authentifizieren mit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication_info
 msgid "Authentication Info"
-msgstr ""
+msgstr "Authentisierungsinfo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -13402,7 +13413,7 @@ msgstr "Avatax"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_sale
 msgid "Avatax for SO"
-msgstr ""
+msgstr "Avatax für Verkaufsaufträge"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_sale_subscription
@@ -16557,7 +16568,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Decimalized number"
-msgstr ""
+msgstr "Dezimalzahl"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -17194,7 +17205,7 @@ msgstr "Dokumente - Produkt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sale
 msgid "Documents - Project - Sale"
-msgstr ""
+msgstr "Dokumente - Projekte - Verkauf"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
@@ -17231,7 +17242,7 @@ msgstr "Dokumente Spreadsheet"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Documents to Delete"
-msgstr ""
+msgstr "Zu löschende Dokumente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
@@ -17328,8 +17339,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to access "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Aufgrund von Sicherheitsbestimmungen ist es Ihnen nicht gestattet "
-"'%(document_kind)s'(%(document_model)s) Datensätze einzusehen."
+"Aufgrund von Sicherheitsbestimmungen ist es Ihnen nicht gestattet, "
+"Datensätze für „%(document_kind)s“(%(document_model)s) einzusehen."
 
 #. module: base
 #. odoo-python
@@ -17339,8 +17350,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to create "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Aufgrund von Sicherheitseinschränkungen sind Sie nicht berechtigt "
-"%(document_kind)s' (%(document_model)s) Datensätze zu erstellen."
+"Aufgrund von Sicherheitsbestimmungen ist es Ihnen nicht gestattet, "
+"Datensätze für %(document_kind)s' (%(document_model)s) zu erstellen."
 
 #. module: base
 #. odoo-python
@@ -17350,8 +17361,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to delete "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Aufgrund von Sicherheitsbeschränkungen dürfen Sie '%(document_kind)s' "
-"(%(document_model)s) Einträge nicht löschen."
+"Aufgrund von Sicherheitsbestimmungen ist es Ihnen nicht gestattet, "
+"Datensätze für „%(document_kind)s“ (%(document_model)s) zu löschen."
 
 #. module: base
 #. odoo-python
@@ -17361,8 +17372,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to modify "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Aufgrund von Sicherheitsbeschränkungen dürfen Sie '%(document_kind)s' "
-"(%(document_model)s) Einträge nicht löschen."
+"Aufgrund von Sicherheitsbestimmungen ist es Ihnen nicht gestattet, "
+"Datensätze für '%(document_kind)s' (%(document_model)s) zu löschen."
 
 #. module: base
 #. odoo-python
@@ -17711,7 +17722,7 @@ msgstr "Mitarbeiter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr
 msgid "Employees - Mexico"
-msgstr ""
+msgstr "Mitarbeiter - Mexiko"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_hr_account
@@ -31315,12 +31326,12 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_documents
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_documents
 msgid "Spreadsheet Documents"
-msgstr ""
+msgstr "Tabellenkalkulationsdokumente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard
 msgid "Spreadsheet dashboard"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_edition
@@ -31330,86 +31341,86 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_crm
 msgid "Spreadsheet dashboard for CRM"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_account
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_account_accountant
 msgid "Spreadsheet dashboard for accounting"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_website_sale_slides
 msgid "Spreadsheet dashboard for eLearning"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für E-Learning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_event_sale
 msgid "Spreadsheet dashboard for events"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Veranstaltungen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_expense
 msgid "Spreadsheet dashboard for expenses"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Spesenabrechnung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_helpdesk
 msgid "Spreadsheet dashboard for helpdesk"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Kundendienst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_contract
 msgid "Spreadsheet dashboard for human resources"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Personalwesen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_im_livechat
 msgid "Spreadsheet dashboard for live chat"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Livechat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_mrp_account
 msgid "Spreadsheet dashboard for manufacturing"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Fertigung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_pos_hr
 msgid "Spreadsheet dashboard for point of sale"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Kassensystem"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_purchase
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_purchase_stock
 msgid "Spreadsheet dashboard for purchases"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Einkäufe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_referral
 msgid "Spreadsheet dashboard for recruitment"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Personalbeschaffung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_renting
 msgid "Spreadsheet dashboard for rental"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Vermietung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale
 msgid "Spreadsheet dashboard for sales"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Verkäufe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_stock
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_stock_account
 msgid "Spreadsheet dashboard for stock"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Lager"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_timesheet
 msgid "Spreadsheet dashboard for time sheets"
-msgstr ""
+msgstr "Tabellenkalkulationsdashboard für Zeiterfassung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql

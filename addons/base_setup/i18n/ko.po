@@ -35,6 +35,12 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"                                        활성 사용자\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                        활성 사용자\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -47,6 +53,13 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                        회사\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                        회사\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -58,6 +71,12 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                            언어\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                            언어\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -521,4 +540,4 @@ msgstr "주소록을 게시하면 시스템이 일치하는 회사 목록을 제
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"

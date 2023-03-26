@@ -185,6 +185,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        In der Anlage erhalten Sie einen Kaufauftrag <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            mit der Referenz: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        über den Betrag von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 $</span>\n"
+"        von <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            Die Lieferung wird am <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span> erwartet.\n"
+"            <br/><br/>\n"
+"            Könnten Sie den Eingang dieses Kaufauftrags bitte bestätigen?\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -212,6 +238,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        In der Anlage erhalten Sie eine Angebotsanfrage <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            mit der Referenz: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Sollten Sie hierzu Fragen haben, kommen Sie gerne auf uns zu..\n"
+"        <br/><br/>\n"
+"        Mit freundlichen Grüßen\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -680,7 +728,7 @@ msgstr "Kostenstellen Distribution"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Anwendbarkeit des Analyseplans"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
@@ -2172,17 +2220,17 @@ msgstr ""
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
 msgid "Purchase: Purchase Order"
-msgstr ""
+msgstr "Einkauf: Kaufauftrag"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
 msgid "Purchase: Request For Quotation"
-msgstr ""
+msgstr "Einkauf: Angebotsanfrage"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
 msgid "Purchase: Vendor Reminder"
-msgstr ""
+msgstr "Einkauf: Erinnerung an Lieferanten"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2587,18 +2635,20 @@ msgstr "Senden Sie die Angebotsanfrage an Ihren Lieferanten."
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
 msgid "Sent manually to vendor to request a quotation"
-msgstr ""
+msgstr "Manueller Versand an Lieferanten, um ein Preisangebot anzufordern"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_done
 msgid "Sent to vendor with the purchase order in attachment"
-msgstr ""
+msgstr "Versand an Lieferanten mit dem Kaufauftrag im Anhang"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_reminder
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
 msgstr ""
+"Versand an Lieferanten vor der erwarteten Ankunft aug Grundlage der "
+"Einstellungen für Kaufaufträge"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
