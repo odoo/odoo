@@ -83,7 +83,7 @@ class PartnerCategory(models.Model):
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
     parent_path = fields.Char(index=True)
-    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
+    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
