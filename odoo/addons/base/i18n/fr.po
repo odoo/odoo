@@ -5,7 +5,7 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
 # Christophe Klopfert, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -4595,7 +4595,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Créez des notes de crédit à partir des tickets d'assistance\n"
+"Créez des avoirs à partir des tickets d'assistance\n"
 "    "
 
 #. module: base
@@ -6061,7 +6061,7 @@ msgstr ""
 "Dans de nombreux pays, une note de débit est utilisée pour augmenter le montant d'une facture existante \n"
 "ou dans certains cas spécifiques pour annuler une note de crédit. \n"
 "C'est comme une facture ordinaire, mais nous devons garder la trace du lien avec la facture originale.  \n"
-"L'assistant utilisé est similaire à celui de la note de crédit.\n"
+"L'assistant utilisé est similaire à celui de l'avoir.\n"
 "    "
 
 #. module: base
@@ -10776,7 +10776,7 @@ msgid ""
 msgstr ""
 "Module de synchronisation de documents entre plusieurs entreprises. Par exemple, cela permet de créer automatiquement une commande client lorsqu'une commande fournisseur est validée avec une autre entreprise fournisseur du système, et inversement.\n"
 "\n"
-"    Les documents pris en charge sont les factures/notes de crédit.\n"
+"    Les documents pris en charge sont les factures/avoirs.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase_stock
@@ -11637,14 +11637,14 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2Many commands namespace"
-msgstr "<code>Commande</code> : espace de nom de commande x2Many"
+msgstr "<code>Command</code> : espace de nom de commande x2Many"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
-"<code>Erreur utilisateur</code> : Avertissement Exception à utiliser avec "
+"<code>UserError</code> : Avertissement Exception à utiliser avec "
 "<code>raise</code>"
 
 #. module: base
@@ -11681,16 +11681,16 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
-"<code>modèle</code>: Modèle Odoo de l'enregistrement sur lequel l'action est"
-" déclenchée ; est un jeu d'enregistrements void"
+"<code>model</code>: Modèle Odoo de l'enregistrement sur lequel l'action est "
+"déclenchée ; est un jeu d'enregistrements void"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
-"<code>enregistrement</code> : enregistrement sur lequel l'action est "
-"déclenchée ; peut être void"
+"<code>record</code> : enregistrement sur lequel l'action est déclenchée ; "
+"peut être void"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11698,9 +11698,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
-"<code>enregistrements</code>: jeu d'enregistrements de tous les "
-"enregistrements sur lesquels l'action est déclenchée en mode multi ; peut "
-"être void"
+"<code>records</code>: jeu d'enregistrements de tous les enregistrements sur "
+"lesquels l'action est déclenchée en mode multi ; peut être void"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -11720,8 +11719,8 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
-"<code>heure</code>, <code>datetime</code>, <code>dateutil</code>, "
-"<code>fuseau horaire</code>: bibliothèques Python utiles"
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: bibliothèques Python utiles"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -15574,7 +15573,7 @@ msgstr "Live Chat CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
 msgid "CRM Mail Plugin"
-msgstr "CRM Mail Plugin"
+msgstr "Plugin de messagerie CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
@@ -20832,7 +20831,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_google_gmail
 msgid "Gmail support for incoming / outgoing mail servers"
 msgstr ""
-"Prise en charge de Gmail pour les serveurs de messagerie entrant / sortant"
+"Prise en charge de Gmail pour les serveurs de messagerie entrants / sortants"
 
 #. module: base
 #. odoo-python
@@ -21228,7 +21227,7 @@ msgstr "Assistance Connaissances"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_mail_plugin
 msgid "Helpdesk Mail Plugin"
-msgstr "Assistance Mail Plugin"
+msgstr "Plugin de messagerie Assistance"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_helpdesk
@@ -23996,7 +23995,7 @@ msgstr "Mail Mobile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_plugin
 msgid "Mail Plugin"
-msgstr "Mail Plugin"
+msgstr "Plugin de messagerie"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
@@ -28658,7 +28657,7 @@ msgstr "Serveur de messagerie sortant"
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_list
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Servers"
-msgstr "Serveurs de messagerie sortant"
+msgstr "Serveurs de messagerie sortants"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
@@ -29783,7 +29782,7 @@ msgstr "Projet Assistance"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
 msgid "Project Mail Plugin"
-msgstr "Projet Mail Plugin"
+msgstr "Plugin de messagerie Projet"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -37183,7 +37182,7 @@ msgid ""
 "You cannot archive these Outgoing Mail Servers (%s) because they are still used in the following case(s):\n"
 "%s"
 msgstr ""
-"Vous ne pouvez pas archiver ces serveurs de messagerie sortant (%s) car ils sont encore utilisés dans le(s) cas suivant(s) :\n"
+"Vous ne pouvez pas archiver ces serveurs de messagerie sortants (%s) car ils sont encore utilisés dans le(s) cas suivant(s) :\n"
 "%s"
 
 #. module: base
