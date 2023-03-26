@@ -158,13 +158,13 @@ msgstr "%s (pembulatan)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr ""
+msgstr "%s - %s; %s Ditagih, %s Diteirma masing-masing %s"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr ""
+msgstr "%s - %s; %s Difaktur, %s Dikirim masing-masing pada %s"
 
 #. module: account
 #: code:addons/account/models/product.py:0
@@ -478,6 +478,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) dari <strong>%s</strong> akan ditransfer ke "
+"<strong>{account_target_name}</strong> dengan {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -486,6 +488,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from {link}, "
 "<strong>%(account_source_name)s</strong></li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) dari {link}, "
+"<strong>%(account_source_name)s</strong></li>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -695,6 +699,7 @@ msgstr "<span class=\"o_form_label\">Mata Uang Utama </span>"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Post Exchange difference entries in:</span>"
 msgstr ""
+"<span class=\"o_form_label\">Entri untuk Post Exchange difference di:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -711,6 +716,8 @@ msgid ""
 "<span class=\"o_form_label\">The following default accounts are used with "
 "certain features.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Akun default berikut digunakan dengan fitur-"
+"fitur tertentu.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -1037,7 +1044,7 @@ msgstr "<strong>Perusahaan:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Tanggal Nota Kredit:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1073,7 +1080,7 @@ msgstr "<strong>Urutkan Entri Jurnal Menurut:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Incoterm: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1127,6 +1134,8 @@ msgid ""
 "<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
+"<strong>Mata uang ini sudah digunakan untuk membuat entri akuntansi.</strong> <br/>\n"
+"                        Merubah faktor pembulatannya sekarang tidak akan merubah pembulatan yang dibuat pada entri-entri sebelumnya; sehingga mungkin membuat ketidaksamaan dengan entri-entri baru."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1219,6 +1228,8 @@ msgstr ""
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
+"Line di perpindahan ini menggunakan akun yang sudah diberhentikan, Anda "
+"tidak dapat menggunakannya."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -1233,6 +1244,8 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
+"Payment tolernace ditetapkan sebagai persentase harus selalu berada di "
+"antara 0 dan 100"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -1240,6 +1253,7 @@ msgstr ""
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
 msgstr ""
+"Payment tolernace yang ditetapkan sebagai jumlah harus selalu di atas 0"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1278,6 +1292,9 @@ msgid ""
 "A tax should only use tags from its country. You should use another tax and "
 "a fiscal position if you wish to uses the tags from foreign tax reports."
 msgstr ""
+"Pajak hanya menggunakan tag dari negaranya. Anda harus menggunakan tax dan "
+"posisi fiskal lain bila Anda ingin menggunakan tag dari laporan pajak luar "
+"negeri."
 
 #. module: account
 #: code:addons/account/models/res_users.py:0
@@ -1336,6 +1353,8 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
+"Akun %s tidak mengizinkan rekonsiliasi. Pertama ubah dulu konfigurasi dari "
+"akun ini agar rekonsiliasi bisa dilakukan."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1379,7 +1398,7 @@ msgstr "Grup Akun"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
-msgstr ""
+msgstr "Kelompok Akun dengan perincian yang sama tidak boleh tumpang tindih"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1608,7 +1627,7 @@ msgstr "Account on which to post the tax amount"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr ""
+msgstr "Awalan akun akan menentukan kelompok akun."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -1618,7 +1637,7 @@ msgstr "Account report with payment lines"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr ""
+msgstr "Laporan akun tanpa baris per baris pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1644,7 +1663,7 @@ msgstr "Akun untuk digunakan sebagai gantinya"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "Akun tujuan transfer"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
@@ -1794,7 +1813,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued %s entry as of %s"
-msgstr ""
+msgstr "Entri %s diakrual sejak %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -1916,6 +1935,8 @@ msgid ""
 "Activity will be automatically scheduled on payment due date, improving "
 "collection process."
 msgstr ""
+"Aktivitas akan secara otomatis dijadwalkan pada jatuh tempo pembayaran, "
+"sehingga proses pengumpulan lebih baik."
 
 #. module: account
 #. openerp-web
@@ -1951,6 +1972,8 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with"
 " their mobile banking application."
 msgstr ""
+"Tambahkan kode-QR ke faktur-faktur Anda supaya pelanggan dapat membayar "
+"langsung dengan aplikasi mobile banking mereka."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -4231,7 +4254,7 @@ msgstr "Buat Entri Jurnal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Create Manually"
-msgstr ""
+msgstr "Buat secara Manual"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14731,7 +14754,7 @@ msgstr "Jumlah total yang harus Anda bayar pada pemasok ini."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
-msgstr ""
+msgstr "Total dalam Mata Uang"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_in_currency_signed
