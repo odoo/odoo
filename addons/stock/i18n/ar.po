@@ -38,8 +38,8 @@
 # Farid Fox, 2022
 # Mohamed Sallam, 2022
 # Samer Ali, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -47,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3124,6 +3124,8 @@ msgstr "Invalid domain right operand %s"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"تهيئة القاعدة غير الصحيحة. تتسبب القاعدة التالية في حدوث حلقة لا نهاية لها: "
+"%s "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -5135,6 +5137,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"يتم حذف الكميات تلقائياً عندما يكون ذلك مناسباً. إذا كان لابد من حذفها "
+"يدوياً، يرجى طلب ذلك من مدير المخزون. "
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6934,6 +6938,7 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"لا يمكن تغيير شركة المنتج طالما أنه توجد كميات منه منتمية إلى شركة أخرى. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8058,7 +8063,7 @@ msgstr "لا يمنكك إلغاء حجز حركة مخزون فى الحالة 
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
+msgstr "لا يمكنك تغيير حركة مخزون ملغاة. قم بإنشاء بند جديد عوضاً عن ذلك. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
