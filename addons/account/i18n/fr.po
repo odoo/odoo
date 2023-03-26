@@ -328,10 +328,10 @@ msgstr ""
 "        <br/><br/>\n"
 "        Voici votre\n"
 "        <t t-if=\"object.name\">\n"
-"            note de crédit <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            avoir <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            note de crédit\n"
+"            avoir\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (référence : <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
@@ -531,8 +531,8 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Envoyer un message</b>"
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configurer le serveur "
-"d'emails"
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configurer les serveurs"
+" de messagerie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -570,8 +570,8 @@ msgid ""
 msgstr ""
 "<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Facture</span>\n"
 "                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Factures</span>\n"
-"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Note de crédit</span>\n"
-"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Notes de crédit</span>"
+"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Avoir</span>\n"
+"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Avoirs</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -4488,7 +4488,7 @@ msgstr "Créer une facture fournisseur"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "Créer une note de crédit vendeur"
+msgstr "Créer un avoir fournisseur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4715,12 +4715,12 @@ msgstr "Avoir"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "Note de crédit créée"
+msgstr "Avoir créé"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr "Devise de la note de crédit"
+msgstr "Devise de l'avoir"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4751,7 +4751,7 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"Avoir_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'brouillon' and '_draft' or '' }}"
 
 #. module: account
@@ -7616,7 +7616,7 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"La répartition des factures et des notes de crédit doit correspondre (mêmes "
+"La répartition des factures et des avoirs doit correspondre (mêmes "
 "pourcentages, dans le même ordre)."
 
 #. module: account
@@ -7870,7 +7870,7 @@ msgid ""
 " entry. You should create the credit note manually instead."
 msgstr ""
 "Il semble que les taxes aient été modifiées depuis la création de l'écriture"
-" de journal. Vous devriez plutôt créer la note de crédit manuellement."
+" de journal. Vous devriez plutôt créer l'avoir manuellement."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13471,8 +13471,8 @@ msgstr ""
 msgid ""
 "Technical field used to determine label 'invoice' or 'credit note' in view"
 msgstr ""
-"Champ technique utilisé pour déterminer l'étiquette 'facture' ou 'note de "
-"crédit' dans l'affichage"
+"Champ technique utilisé pour déterminer l'étiquette 'facture' ou 'avoir' "
+"dans l'affichage"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -14458,7 +14458,7 @@ msgstr ""
 "L'ordre dans lequel les lignes de répartition sont affichées et appariées. "
 "Pour que les remboursements fonctionnent correctement, les lignes de "
 "répartition des factures doivent être disposées dans le même ordre que les "
-"lignes de répartition des notes de crédit auxquelles elles correspondent."
+"lignes de répartition des avoirs auxquels elles correspondent."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__tax_report_id
@@ -16893,7 +16893,7 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas valider une facture avec un montant total négatif. Vous "
 "devriez plutôt créer un avoir. Utilisez le menu Action pour le transformer "
-"en une note de crédit ou un remboursement."
+"en un avoir ou un remboursement."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -17135,8 +17135,7 @@ msgstr "par exemple : INV"
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
 msgstr ""
-"pour ce client. Vous pouvez les allouer pour marquer cette note de crédit "
-"comme payée."
+"pour ce client. Vous pouvez les allouer pour marquer cet avoir comme payé."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17157,8 +17156,8 @@ msgstr ""
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
 msgstr ""
-"pour ce fournisseur. Vous pouvez les allouer pour marquer cette note de "
-"crédit comme payée."
+"pour ce fournisseur. Vous pouvez les allouer pour marquer cet avoir comme "
+"payé."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -17365,8 +17364,7 @@ msgstr "{{ (object.name or '').replace('/','-') }}"
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Note de crédit (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Avoir (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice

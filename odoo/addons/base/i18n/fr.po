@@ -3,11 +3,11 @@
 # 	* base
 # 
 # Translators:
-# Martin Trigaux, 2022
 # xmo_odoo, 2022
 # Thomas Charpentier, 2022
 # laje_odoo, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -3972,7 +3972,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Créer des notes de crédit à partir des tickets d'Assistance\n"
+"Créer des avoirs à partir des tickets d'Assistance\n"
 "    "
 
 #. module: base
@@ -5355,9 +5355,9 @@ msgid ""
 msgstr ""
 "\n"
 "Dans de nombreux pays, une note de débit est utilisée pour augmenter le montant d'une facture existante \n"
-"ou dans certains cas spécifiques pour annuler une note de crédit. \n"
+"ou dans certains cas spécifiques pour annuler un avoir. \n"
 "C'est comme une facture ordinaire, mais nous devons garder la trace du lien avec la facture originale.  \n"
-"L'assistant utilisé est similaire à celui de la note de crédit.\n"
+"L'assistant utilisé est similaire à celui de l'avoir.\n"
 "    "
 
 #. module: base
@@ -10341,14 +10341,18 @@ msgid ""
 "partner_name = record.name + '_code'\n"
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
-msgstr "<code style=\"white-space: pre-wrap\"/>"
+msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env['res.partner'].create({'name': partner_name})\n"
+"</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
-"<code>Erreur utiliser</code>:Avertissement Exception à utiliser avec "
+"<code>UserError</code> : Avertissement Exception à utiliser avec "
 "<code>raise</code>"
 
 #. module: base
@@ -10367,7 +10371,7 @@ msgstr "<code>dateutil</code> (module Python)"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
 msgstr ""
-"<code>env</code>: Environnement Odoo dans lequel l'action est déclenchée"
+"<code>env</code> : Environnement Odoo dans lequel l'action est déclenchée"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -10375,7 +10379,7 @@ msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
-"<code>journal(message, level='info')</code>:fonction de journalisation pour "
+"<code>log(message, level='info')</code>:fonction de journalisation pour "
 "enregistrer des informations de débogage dans le tableau "
 "<code>ir.logging</code>"
 
@@ -10384,20 +10388,26 @@ msgstr ""
 msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
-msgstr "<code/>"
+msgstr ""
+"<code>model</code>: Modèle Odoo de l'enregistrement sur lequel l'action est "
+"déclenchée ; est un jeu d'enregistrements void"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
-msgstr "<code/>"
+msgstr ""
+"<code>record</code> : enregistrement sur lequel l'action est déclenchée ; "
+"peut être void"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
-msgstr "<code/>"
+msgstr ""
+"<code>records</code>: jeu d'enregistrements de tous les enregistrements sur "
+"lesquels l'action est déclenchée en mode multi ; peut être void"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -10416,7 +10426,9 @@ msgstr "<code>time</code> (module Python)"
 msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
-msgstr "<code/><code/><code/><code/>"
+msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: bibliothèques Python utiles"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -13857,7 +13869,7 @@ msgstr "Live Chat CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
 msgid "CRM Mail Plugin"
-msgstr "CRM Mail Plugin"
+msgstr "Plugin de messagerie CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
@@ -18879,7 +18891,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_google_gmail
 msgid "Gmail support for incoming / outgoing mail servers"
 msgstr ""
-"Prise en charge de Gmail pour les serveurs de courrier entrant / sortant"
+"Prise en charge de Gmail pour les serveurs de messagerie entrants / sortants"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -19238,7 +19250,7 @@ msgstr "Rapports Assistance Services sur Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_mail_plugin
 msgid "Helpdesk Mail Plugin"
-msgstr "Plugin Email Assitance"
+msgstr "Plugin de messagerie Assistance"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_helpdesk
@@ -21948,7 +21960,7 @@ msgstr "Mail Mobile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_plugin
 msgid "Mail Plugin"
-msgstr "Plugin email"
+msgstr "Plugin de messagerie"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
@@ -26661,7 +26673,7 @@ msgstr "Serveur de courriel sortant"
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_list
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Servers"
-msgstr "Serveurs de courriel sortant"
+msgstr "Serveurs de messagerie sortants"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
@@ -26671,7 +26683,7 @@ msgstr "Calendrier Outlook"
 #. module: base
 #: model:ir.module.module,description:base.module_microsoft_outlook
 msgid "Outlook support for outgoing mail servers"
-msgstr "Prise en charge d'Outlook pour les serveurs de courrier sortant"
+msgstr "Prise en charge d'Outlook pour les serveurs de messagerie sortants"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -27675,7 +27687,7 @@ msgstr "Notes de frais du projet"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
 msgid "Project Mail Plugin"
-msgstr "Projet Mail Plugin"
+msgstr "Plugin de messagerie Projet"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
