@@ -354,6 +354,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) dari <strong>%s</strong> akan ditransfer ke "
+"<strong>{account_target_name}</strong> dengan {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -362,6 +364,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from {link}, "
 "<strong>%(account_source_name)s</strong></li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) dari {link}, "
+"<strong>%(account_source_name)s</strong></li>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -778,7 +782,7 @@ msgstr "<strong>Perusahaan:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Tanggal Nota Kredit:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -818,7 +822,7 @@ msgstr "<strong>Urutkan Entri Jurnal Menurut:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Incoterm: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -891,6 +895,8 @@ msgid ""
 "<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
+"<strong>Mata uang ini sudah digunakan untuk membuat entri akuntansi.</strong> <br/>\n"
+"                        Merubah faktor pembulatannya sekarang tidak akan merubah pembulatan yang dibuat pada entri-entri sebelumnya; sehingga mungkin membuat ketidaksamaan dengan entri-entri baru."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -981,6 +987,8 @@ msgstr ""
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
+"Line di perpindahan ini menggunakan akun yang sudah diberhentikan, Anda "
+"tidak dapat menggunakannya."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -1069,6 +1077,8 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
+"Akun %s tidak mengizinkan rekonsiliasi. Pertama ubah dulu konfigurasi dari "
+"akun ini agar rekonsiliasi bisa dilakukan."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1112,7 +1122,7 @@ msgstr "Grup Akun"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
-msgstr ""
+msgstr "Kelompok Akun dengan perincian yang sama tidak boleh tumpang tindih"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1344,7 +1354,7 @@ msgstr "Account report with payment lines"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr ""
+msgstr "Laporan akun tanpa baris per baris pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1370,7 +1380,7 @@ msgstr "Akun untuk digunakan sebagai gantinya"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "Akun tujuan transfer"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
@@ -1602,6 +1612,8 @@ msgid ""
 "Activity will be automatically scheduled on payment due date, improving "
 "collection process."
 msgstr ""
+"Aktivitas akan secara otomatis dijadwalkan pada jatuh tempo pembayaran, "
+"sehingga proses pengumpulan lebih baik."
 
 #. module: account
 #. openerp-web
@@ -1633,6 +1645,8 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with"
 " their mobile banking application."
 msgstr ""
+"Tambahkan kode-QR ke faktur-faktur Anda supaya pelanggan dapat membayar "
+"langsung dengan aplikasi mobile banking mereka."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
