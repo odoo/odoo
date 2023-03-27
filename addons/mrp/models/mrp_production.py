@@ -1761,7 +1761,16 @@ class MrpProduction(models.Model):
 
             # Adapt duration
             for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+                ratio = 1
+                if not production.bom_id:
+                    ratio = workorder.production_id.product_qty / initial_qty
+                workorder.duration_expected = workorder._get_duration_expected(ratio=ratio)
+            # productions without bom, changing the quantity will not change the duration
+            # a manual calculation is needed
+            if not production.bom_id:
+                ratio = production.product_qty / initial_qty
+                for workorder in production.workorder_ids:
+                    workorder.duration_expected = workorder._get_duration_expected(ratio=ratio)
 
             # Adapt quantities produced
             for workorder in production.workorder_ids:
@@ -2056,30 +2065,45 @@ class MrpProduction(models.Model):
         else:
             user_id = self.env.user
 
-        origs = self._prepare_merge_orig_links()
-        dests = {}
-        for move in self.move_finished_ids:
-            dests.setdefault(move.byproduct_id.id, []).extend(move.move_dest_ids.ids)
+        if self[0].bom_id:
+            origs = self._prepare_merge_orig_links()
+            dests = {}
+            for move in self.move_finished_ids:
+                dests.setdefault(move.byproduct_id.id, []).extend(move.move_dest_ids.ids)
 
-        production = self.env['mrp.production'].with_context(default_picking_type_id=self.picking_type_id.id).create({
-            'product_id': product_id.id,
-            'bom_id': bom_id.id,
-            'picking_type_id': self.picking_type_id.id,
-            'product_qty': sum(production.product_uom_qty for production in self),
-            'product_uom_id': product_id.uom_id.id,
-            'user_id': user_id.id,
-            'origin': ",".join(sorted([production.name for production in self])),
-        })
+            production = self.env['mrp.production'].with_context(default_picking_type_id=self.picking_type_id.id).create({
+                'product_id': product_id.id,
+                'bom_id': bom_id.id,
+                'picking_type_id': self.picking_type_id.id,
+                'product_qty': sum(production.product_uom_qty for production in self),
+                'product_uom_id': product_id.uom_id.id,
+                'user_id': user_id.id,
+                'origin': ",".join(sorted([production.name for production in self])),
+            })
 
-        for move in production.move_raw_ids:
-            for field, vals in origs[move.bom_line_id.id].items():
-                move[field] = vals
+            for move in production.move_raw_ids:
+                for field, vals in origs[move.bom_line_id.id].items():
+                    move[field] = vals
 
-        for move in production.move_finished_ids:
-            move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
+            for move in production.move_finished_ids:
+                move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
+        else:
+            production = self.env['mrp.production'].with_context(default_picking_type_id=self.picking_type_id.id).create({
+                'product_id': self.product_id.id,
+                'picking_type_id': self.picking_type_id.id,
+                'product_qty': sum(production.product_uom_qty for production in self),
+                'product_uom_id': self.product_id.uom_id.id,
+                'user_id': user_id.id,
+                'origin': ",".join(sorted([production.name for production in self])),
+                'move_raw_ids': [
+                    Command.create(vals) for vals in self._prepare_merge_move_raw_vals()
+                ],
+                'move_finished_ids': [
+                    Command.create(vals) for vals in self._prepare_merge_move_finished_vals()
+                ],
+            })
 
         self.move_dest_ids.created_production_id = production.id
-
         self.procurement_group_id.stock_move_ids.group_id = production.procurement_group_id
 
         if 'confirmed' in self.mapped('state'):
@@ -2100,6 +2124,30 @@ class MrpProduction(models.Model):
             'view_mode': 'form',
             'res_id': production.id,
         }
+
+    def _prepare_merge_move_raw_vals(self):
+        origs = self._prepare_merge_orig_links('product')
+        vals_dict = {}
+        for move in self.move_raw_ids:
+            if move.product_id not in vals_dict:
+                vals_dict[move.product_id] = move.copy_data(
+                    default={'move_orig_ids': origs[move.product_id.id].get('move_orig_ids')})[0]
+            else:
+                vals_dict[move.product_id]['product_uom_qty'] += move.product_uom_qty
+        return list(vals_dict.values())
+
+    def _prepare_merge_move_finished_vals(self):
+        dests = {}
+        vals_dict = {}
+        for move in self.move_finished_ids:
+            dests.setdefault(move.product_id.id, []).extend(move.move_dest_ids.ids)
+            if move.product_id not in vals_dict:
+                vals_dict[move.product_id] = move.copy_data()[0]
+            else:
+                vals_dict[move.product_id]['product_uom_qty'] += move.product_uom_qty
+        for vals in vals_dict.values():
+            vals['move_dest_ids'] = [Command.set(dests[vals['product_id']])]
+        return list(vals_dict.values())
 
     def _has_workorders(self):
         return self.workorder_ids
@@ -2210,8 +2258,6 @@ class MrpProduction(models.Model):
         ope_str = merge and _('merged') or _('split')
         if any(production.state not in ('draft', 'confirmed') for production in self):
             raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
-        if any(not production.bom_id for production in self):
-            raise UserError(_("Only manufacturing orders with a Bill of Materials can be %s.", ope_str))
         if split:
             return True
 
@@ -2220,23 +2266,29 @@ class MrpProduction(models.Model):
         products = set([(production.product_id, production.bom_id) for production in self])
         if len(products) > 1:
             raise UserError(_('You can only merge manufacturing orders of identical products with same BoM.'))
-        additional_raw_ids = self.mapped("move_raw_ids").filtered(lambda move: not move.bom_line_id)
-        additional_byproduct_ids = self.mapped('move_byproduct_ids').filtered(lambda move: not move.byproduct_id)
-        if additional_raw_ids or additional_byproduct_ids:
-            raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         if len(set(self.mapped('state'))) > 1:
             raise UserError(_("You can only merge manufacturing with the same state."))
-        if len(set(self.mapped('picking_type_id'))) > 1:
+        if len(self.picking_type_id) > 1:
             raise UserError(_('You can only merge manufacturing with the same operation type'))
+        additional_workorder_ids = self.workorder_ids.filtered(lambda workorder: not workorder.operation_id)
+        if additional_workorder_ids:
+            raise UserError(_("You can only merge manufacturing orders with no additional workorders."))
+        additional_raw_ids = self.move_raw_ids.filtered(lambda move: not move.bom_line_id)
+        additional_byproduct_ids = self.move_byproduct_ids.filtered(lambda move: not move.byproduct_id)
+        if self.bom_id and (additional_raw_ids or additional_byproduct_ids):
+            raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         # TODO explode and check no quantity has been edited
         return True
 
-    def _prepare_merge_orig_links(self):
+    def _prepare_merge_orig_links(self, merged_by='bom_line'):
         origs = defaultdict(dict)
         for move in self.move_raw_ids:
             if not move.move_orig_ids:
                 continue
-            origs[move.bom_line_id.id].setdefault('move_orig_ids', set()).update(move.move_orig_ids.ids)
+            if merged_by == 'bom_line':
+                origs[move.bom_line_id.id].setdefault('move_orig_ids', set()).update(move.move_orig_ids.ids)
+            elif merged_by == 'product':
+                origs[move.product_id.id].setdefault('move_orig_ids', set()).update(move.move_orig_ids.ids)
         for vals in origs.values():
             if not vals.get('move_orig_ids'):
                 continue
