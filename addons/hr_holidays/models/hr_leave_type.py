@@ -101,7 +101,6 @@ class HolidaysType(models.Model):
     accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
 
-
     @api.model
     def _search_valid(self, operator, value):
         """ Returns leave_type ids for which a valid allocation exists
@@ -133,7 +132,6 @@ class HolidaysType(models.Model):
         self._cr.execute(query, (employee_id or None, date_to, date_from))
 
         return [('id', new_operator, [x['holiday_status_id'] for x in self._cr.dictfetchall()])]
-
 
     @api.depends('requires_allocation')
     def _compute_valid(self):
