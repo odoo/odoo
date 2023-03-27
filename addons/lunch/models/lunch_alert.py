@@ -152,16 +152,18 @@ class LunchAlert(models.Model):
         return alerts
 
     def write(self, values):
-        super().write(values)
+        res = super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
             self._sync_cron()
+        return res
 
     def unlink(self):
         crons = self.cron_id.sudo()
         server_actions = crons.ir_actions_server_id
-        super().unlink()
+        res = super().unlink()
         crons.unlink()
         server_actions.unlink()
+        return res
 
     def _notify_chat(self):
         # Called daily by cron

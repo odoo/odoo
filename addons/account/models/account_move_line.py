@@ -1484,7 +1484,7 @@ class AccountMoveLine(models.Model):
 
     def unlink(self):
         if not self:
-            return
+            return True
 
         # Check the lines are not reconciled (partially or not).
         self._check_reconciliation()

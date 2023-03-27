@@ -14,8 +14,8 @@ class SMSTemplate(models.Model):
 
     @api.model
     def default_get(self, fields):
-        res = super(SMSTemplate, self).default_get(fields)
-        if not fields or 'model_id' in fields and not res.get('model_id') and res.get('model'):
+        res = super().default_get(fields)
+        if 'model_id' in fields and not res.get('model_id') and res.get('model'):
             res['model_id'] = self.env['ir.model']._get(res['model']).id
         return res
 
