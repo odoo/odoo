@@ -328,8 +328,6 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                         order.selected_paymentline.set_credit_card_name();
 
                         this.numberBuffer.reset();
-                        order.trigger("change", order); // needed so that export_to_JSON gets triggered
-                        self.render();
 
                         if (response.message === "PARTIAL AP") {
                             def.resolve({
@@ -412,7 +410,6 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     remove_paymentline_by_ref(line) {
         this.env.pos.get_order().remove_paymentline(line);
         this.numberBuffer.reset();
-        this.render();
     },
     do_reversal(line, is_voidsale, old_deferred, retry_nr) {
         var def = old_deferred || new $.Deferred();
@@ -527,8 +524,6 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         const res = this._super(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {
             order.selected_paymentline.mercury_swipe_pending = true;
-            order.trigger("change", order);
-            this.render();
         }
     },
 });
