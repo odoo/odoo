@@ -374,11 +374,13 @@ export class WebsitePreview extends Component {
                     },
                     reloadIframe: false,
                 });
-            } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
-                ev.preventDefault();
-                browser.location.assign(href);
-            } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
-                this.websiteService.websiteRootInstance = undefined;
+            } else if (href && target !== '_blank' && !isEditing) {
+                if (this._isTopWindowURL(linkEl)) {
+                    ev.preventDefault();
+                    this.router.redirect(href);
+                } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
+                    this.websiteService.websiteRootInstance = undefined;
+                }
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {
