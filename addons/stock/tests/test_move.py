@@ -5976,6 +5976,15 @@ class StockMove(TransactionCase):
         })
         self.assertEqual(move.product_uom, self.product.uom_id)
         self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'uom_id': uom_kg.id,
+            'uom_po_id': uom_kg.id
+        })
+        move.product_id = product1
+        self.assertEqual(move.product_uom, product1.uom_id)
 
     def test_move_line_compute_locations(self):
         stock_location = self.env['stock.location'].create({
