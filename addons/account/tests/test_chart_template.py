@@ -139,6 +139,48 @@ class TestChartTemplate(TransactionCase):
             {'name': 'Tax name 4'},
         ])
 
+    def test_update_taxes_existing_template_update(self):
+        """ When a template is close enough from the corresponding existing tax we want to update
+        that tax with the template values.
+        """
+        self.tax_template_1.invoice_repartition_line_ids.tag_ids.name += " [DUP]"
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', self.tax_template_1.name),
+        ])
+        # Check that tax was not recreated
+        self.assertEqual(len(tax), 1)
+        # Check that tags have been updated
+        self.assertEqual(tax.invoice_repartition_line_ids.tag_ids.name, self.tax_template_1.invoice_repartition_line_ids.tag_ids.name)
+
+    def test_update_taxes_existing_template_recreation(self):
+        """ When a template is too different from the corresponding existing tax we want to recreate
+        a new taxes from template.
+        """
+        # We increment the amount so the template gets slightly different from the
+        # corresponding tax and triggers recreation
+        old_tax_name = self.tax_template_1.name
+        old_tax_amount = self.tax_template_1.amount
+        self.tax_template_1.name = "Tax name 1 modified"
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        # Check that old tax has not been changed
+        old_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', old_tax_name),
+        ], limit=1)
+        self.assertEqual(old_tax[0].amount, old_tax_amount)
+
+        # Check that new tax has been recreated
+        tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', self.tax_template_1.name),
+        ], limit=1)
+        self.assertEqual(tax[0].amount, self.tax_template_1.amount)
+
     def test_update_taxes_remove_fiscal_position_from_tax(self):
         """ Tests that when we remove the tax from the fiscal position mapping it is not
         recreated after update of taxes.
@@ -166,3 +208,23 @@ class TestChartTemplate(TransactionCase):
             {'name': f"[old] {self.tax_template_1.name}", 'amount': old_amount},
             {'name': f"{self.tax_template_1.name}", 'amount': self.tax_template_1.amount},
         ])
+
+    def test_update_taxes_multi_company(self):
+        """ In a multi-company environment all companies should be correctly updated."""
+        company_2 = self.env['res.company'].create({
+            'name': 'TestCompany2',
+            'country_id': self.env.ref('base.us').id,
+            'account_fiscal_country_id': self.env.ref('base.us').id,
+        })
+        self.chart_template.try_loading(company=company_2)
+
+        # triggers recreation of taxes related to template 1
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        taxes_from_template_1 = self.env['account.tax'].search([
+            ('name', 'like', f"%{self.tax_template_1.name}"),
+            ('company_id', 'in', [self.company.id, company_2.id]),
+        ])
+        # we should have 4 records: 2 companies * (1 original tax + 1 recreated tax)
+        self.assertEqual(len(taxes_from_template_1), 4)
