@@ -391,10 +391,44 @@
     <record id="payment_provider_transfer" model="payment.provider">
         <field name="name">Wire Transfer</field>
         <field name="sequence">30</field>
+        <field name="image_128" type="base64" file="payment_custom/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_custom"/>
+    </record>
+
+    <record id="payment_provider_xendit" model="payment.provider">
+        <field name="name">Xendit</field>
         <field name="image_128"
                type="base64"
-               file="payment_custom/static/description/icon.png"/>
-        <field name="module_id" ref="base.module_payment_custom"/>
+               file="payment_xendit/static/description/icon.png"
+        />
+        <field name="module_id" ref="base.module_payment_xendit"/>
+        <!-- See https://docs.xendit.co/payment-link/payment-channels for payment methods. -->
+        <field name="payment_method_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_method_7eleven'),
+                   ref('payment.payment_method_akulaku'),
+                   ref('payment.payment_method_bank_bca'),
+                   ref('payment.payment_method_bank_permata'),
+                   ref('payment.payment_method_billease'),
+                   ref('payment.payment_method_bni'),
+                   ref('payment.payment_method_bri'),
+                   ref('payment.payment_method_bsi'),
+                   ref('payment.payment_method_card'),
+                   ref('payment.payment_method_cashalo'),
+                   ref('payment.payment_method_cebuana'),
+                   ref('payment.payment_method_cimb_niaga'),
+                   ref('payment.payment_method_dana'),
+                   ref('payment.payment_method_gcash'),
+                   ref('payment.payment_method_grabpay'),
+                   ref('payment.payment_method_jeniuspay'),
+                   ref('payment.payment_method_kredivo'),
+                   ref('payment.payment_method_linkaja'),
+                   ref('payment.payment_method_mandiri'),
+                   ref('payment.payment_method_maya'),
+                   ref('payment.payment_method_ovo'),
+                   ref('payment.payment_method_qris'),
+                   ref('payment.payment_method_shopeepay'),
+               ])]"/>
     </record>
 
 </odoo>
