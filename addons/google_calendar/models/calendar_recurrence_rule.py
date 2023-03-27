@@ -118,7 +118,7 @@ class RecurrenceRule(models.Model):
                 self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
 
         # Update the recurrence values
-        old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
+        old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields, load=None)[0]
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id

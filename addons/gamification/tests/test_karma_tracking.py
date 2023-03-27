@@ -204,7 +204,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
             'login': 'dummy', 'email': 'dummy@example.com',
         })
         with self.assertRaises(exceptions.AccessError):
-            user.read(['karma_tracking_ids'])
+            user.read(['karma_tracking_ids'], load=None)
 
         user._add_karma(38, source=self.test_user_2)
         self.assertEqual(user.karma, 70)
