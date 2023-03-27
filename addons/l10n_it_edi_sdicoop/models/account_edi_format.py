@@ -37,14 +37,7 @@ class AccountEdiFormat(models.Model):
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
             proxy_acks = []
-            retrigger = False
             for id_transaction, fattura in res.items():
-
-                # The server has a maximum number of documents it can send at a time
-                # If that maximum is reached, then we search for more
-                # by re-triggering the download cron, avoiding the timeout.
-                current_num, max_num = fattura.get('current_num', 0), fattura.get('max_num', 0)
-                retrigger = retrigger or current_num == max_num > 0
 
                 if self.env['ir.attachment'].search([('name', '=', fattura['filename']), ('res_model', '=', 'account.move')], limit=1):
                     # name should be unique, the invoice already exists
@@ -87,9 +80,6 @@ class AccountEdiFormat(models.Model):
                                             params={'transaction_ids': proxy_acks})
                 except AccountEdiProxyError as e:
                     _logger.error('Error while receiving file from SdiCoop: %s', e)
-
-            if retrigger:
-                self.env.ref('l10n_it_edi.ir_cron_receive_fattura_pa_invoice')._trigger()
 
     # -------------------------------------------------------------------------
     # Export
