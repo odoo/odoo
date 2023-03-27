@@ -24,7 +24,9 @@
 
     .o_field_widget {
       @include media-breakpoint-up(md) {
-          width: 50%;
+         &:not(.o_field_boolean) {
+            width: 50%;
+         }
       }
        flex: 0 0 auto;
 
