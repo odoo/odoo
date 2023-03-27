@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class EventTypeMail(models.Model):
@@ -66,8 +67,11 @@ class EventMailScheduler(models.Model):
         super().set_template_ref_model()
         mail_model = self.env['sms.template']
         if self.notification_type == 'sms':
-            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
-            self.template_ref = "{},{}".format('sms.template', record.id) if record else False
+            template = mail_model.search([('model', '=', 'event.registration')], limit=1)
+            if template:
+                self.template_ref = "{},{}".format('sms.template', template.id)
+            else:
+                raise UserError(_("There is no template data relevant to the notification type."))
 
 
 class EventMailRegistration(models.Model):
