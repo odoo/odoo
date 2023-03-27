@@ -3,23 +3,19 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
-from collections import defaultdict
-import logging
-
-from datetime import datetime, time
+from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.translate import _
+from odoo.exceptions import AccessError, UserError
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
 from odoo.osv import expression
 
 
-_logger = logging.getLogger(__name__)
+MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
 
 class HolidaysAllocation(models.Model):
     """ Allocation Requests Access specifications: similar to leave requests """
@@ -75,11 +71,10 @@ class HolidaysAllocation(models.Model):
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
-        readonly=False,
-        help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
+        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
-        help="If Accrual Allocation: Number of hours allocated in addition to the ones you will get via the accrual' system.")
+        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     # details
@@ -91,7 +86,11 @@ class HolidaysAllocation(models.Model):
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
-    type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
+    type_request_unit = fields.Selection([
+        ('hour', 'Hours'),
+        ('half_day', 'Half Day'),
+        ('day', 'Day'),
+    ], compute="_compute_type_request_unit")
     # mode
     holiday_type = fields.Selection([
         ('employee', 'By Employee'),
@@ -117,12 +116,12 @@ class HolidaysAllocation(models.Model):
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False)
     # accrual configuration
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True, default=fields.Date.context_today)
-    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
-    allocation_type = fields.Selection(
-        [
-            ('regular', 'Regular Allocation'),
-            ('accrual', 'Accrual Allocation')
-        ], string="Allocation Type", default="regular", required=True, readonly=False)
+    nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
+    already_accrued = fields.Boolean()
+    allocation_type = fields.Selection([
+        ('regular', 'Regular Allocation'),
+        ('accrual', 'Accrual Allocation')
+    ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
@@ -221,7 +220,6 @@ class HolidaysAllocation(models.Model):
                 allocation_calendar = allocation.employee_id.sudo().resource_calendar_id
 
             allocation.number_of_hours_display = allocation.number_of_days * (allocation_calendar.hours_per_day or HOURS_PER_DAY)
-
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -336,37 +334,42 @@ class HolidaysAllocation(models.Model):
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
 
-    def _end_of_year_accrual(self):
-        # to override in payroll
-        today = fields.Date.today()
-        last_day_last_year = today + relativedelta(years=-1, month=12, day=31)
-        first_day_this_year = today + relativedelta(month=1, day=1)
+    @api.depends("allocation_type", "holiday_status_id", "accrual_plan_id")
+    def _compute_type_request_unit(self):
         for allocation in self:
-            current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
-            if not current_level:
-                continue
-            # lastcall has two cases:
-            # 1. The period was fully ran until the last day of last year
-            # 2. The period was not fully ran until the last day of last year
-            # For case 2, we need to prorata the number of days so need to check if the lastcall within the current level period
-            lastcall = current_level._get_previous_date(last_day_last_year) if allocation.lastcall < current_level._get_previous_date(last_day_last_year) else allocation.lastcall
-            nextcall = current_level._get_next_date(last_day_last_year)
-            if current_level.action_with_unused_accruals == 'lost':
-                # Allocations are lost but number_of_days should not be lower than leaves_taken
-                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
-            elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
-                # Make sure the period was ran until the last day of last year
-                if allocation.nextcall:
-                    allocation.nextcall = first_day_this_year
-                # date_to should be first day of this year so the prorata amount is computed correctly
-                allocation._process_accrual_plans(first_day_this_year, True)
-                number_of_days = min(allocation.number_of_days - allocation.leaves_taken, current_level.postpone_max_days) + allocation.leaves_taken
-                allocation.write({'number_of_days': number_of_days, 'lastcall': lastcall, 'nextcall': nextcall})
+            if allocation.allocation_type == "accrual" and allocation.accrual_plan_id:
+                allocation.type_request_unit = allocation.accrual_plan_id.added_value_type
+            elif allocation.allocation_type == "regular":
+                allocation.type_request_unit = allocation.holiday_status_id.request_unit
+            else:
+                allocation.type_request_unit = "day"
+
+    def _get_carryover_date(self, date_from):
+        self.ensure_one()
+        carryover_time = self.accrual_plan_id.carryover_date
+        accrual_plan = self.accrual_plan_id
+        carryover_date = False
+        if carryover_time == 'year_start':
+            carryover_date = date(date_from.year, 1, 1)
+        elif carryover_time == 'allocation':
+            carryover_date = date(date_from.year, self.date_from.month, self.date_from.day)
+        else:
+            carryover_date = date(date_from.year, MONTHS_TO_INTEGER[accrual_plan.carryover_month], accrual_plan.carryover_day)
+        if date_from > carryover_date:
+            carryover_date += relativedelta(years=1)
+        return carryover_date
+
+    def _add_days_to_allocation(self, current_level, current_level_maximum_leave, leaves_taken, period_start, period_end):
+        days_to_add = self._process_accrual_plan_level(
+            current_level, period_start, self.lastcall, period_end, self.nextcall)
+        self.number_of_days += days_to_add
+        if current_level.cap_accrued_time:
+            self.number_of_days = min(self.number_of_days, current_level_maximum_leave + leaves_taken)
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
         Returns a pair (accrual_plan_level, idx) where accrual_plan_level is the level for the given date
-         and idx is the index for the plan in the ordered set of levels
+        and idx is the index for the plan in the ordered set of levels
         """
         self.ensure_one()
         if not self.accrual_plan_id.level_ids:
@@ -398,14 +401,15 @@ class HolidaysAllocation(models.Model):
         Returns the added days for that level
         """
         self.ensure_one()
-        if level.is_based_on_worked_time:
-            start_dt = datetime.combine(start_date, datetime.min.time())
-            end_dt = datetime.combine(end_date, datetime.min.time())
+        if level.accrual_plan_id.is_based_on_worked_time:
+            datetime_min_time = datetime.min.time()
+            start_dt = datetime.combine(start_date, datetime_min_time)
+            end_dt = datetime.combine(end_date, datetime_min_time)
             worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
                 [self.employee_id.id]['hours']
             if start_period != start_date or end_period != end_date:
-                start_dt = datetime.combine(start_period, datetime.min.time())
-                end_dt = datetime.combine(end_period, datetime.min.time())
+                start_dt = datetime.combine(start_period, datetime_min_time)
+                end_dt = datetime.combine(end_period, datetime_min_time)
                 planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
                     [self.employee_id.id]['hours']
             else:
@@ -417,10 +421,10 @@ class HolidaysAllocation(models.Model):
         else:
             added_value = level.added_value
         # Convert time in hours to time in days in case the level is encoded in hours
-        if level.added_value_type == 'hours':
+        if level.added_value_type == 'hour':
             added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
         period_prorata = 1
-        if (start_period != start_date or end_period != end_date) and not level.is_based_on_worked_time:
+        if (start_period != start_date or end_period != end_date) and not level.accrual_plan_id.is_based_on_worked_time:
             period_days = (end_period - start_period)
             call_days = (end_date - start_date)
             period_prorata = min(1, call_days / period_days) if period_days else 1
@@ -438,83 +442,94 @@ class HolidaysAllocation(models.Model):
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
                 continue
+            # "cache" leaves taken, as it gets recomputed every time allocation.number_of_days is assigned to. Without this,
+            # every loop will take 1+ second. It can be removed if computes don't chain in a way to always reassign accrual plan
+            # even if the value doesn't change. This is the best performance atm.
+            first_level = level_ids[0]
+            first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
+            leaves_taken = allocation.leaves_taken if first_level.added_value_type == "day" else allocation.leaves_taken / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
-                first_level = level_ids[0]
-                first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
+                # Accrual plan is not configured properly or has not started
                 if date_to < first_level_start_date:
-                    # Accrual plan is not configured properly or has not started
                     continue
                 allocation.lastcall = max(allocation.lastcall, first_level_start_date)
                 allocation.nextcall = first_level._get_next_date(allocation.lastcall)
+                # adjust nextcall for carryover
+                carryover_date = allocation._get_carryover_date(allocation.nextcall)
+                allocation.nextcall = min(carryover_date, allocation.nextcall)
+                # adjust nextcall for level_transition
                 if len(level_ids) > 1:
                     second_level_start_date = allocation.date_from + get_timedelta(level_ids[1].start_count, level_ids[1].start_type)
                     allocation.nextcall = min(second_level_start_date, allocation.nextcall)
                 allocation._message_log(body=first_allocation)
-            days_added_per_level = defaultdict(lambda: 0)
+            (current_level, current_level_idx) = (False, 0)
+            current_level_maximum_leave = 0.0
+            # all subsequent runs, at every loop:
+            # get current level and normal period boundaries, then set nextcall, adjusted for level transition and carryover
+            # add days, trimmed if there is a maximum_leave
             while allocation.nextcall <= date_to:
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
                 if not current_level:
                     break
-                current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "days" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                if current_level.cap_accrued_time:
+                    current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
                 # this will always return lastcall except possibly on the first call
                 # this is used to prorate the first number of days given to the employee
                 period_start = current_level._get_previous_date(allocation.lastcall)
                 period_end = current_level._get_next_date(allocation.lastcall)
-                # Also prorate this accrual in the event that we are passing from one level to another
+                # There are 2 cases where nextcall could be closer than the normal period:
+                # 1. Passing from one level to another, if mode is set to 'immediately'
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
                     next_level = level_ids[current_level_idx + 1]
                     current_level_last_date = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     if allocation.nextcall != current_level_last_date:
                         nextcall = min(nextcall, current_level_last_date)
-                # We have to check for end of year actions if it is within our period
-                #  since we can create retroactive allocations.
-                if allocation.lastcall.year < allocation.nextcall.year and\
-                    current_level.action_with_unused_accruals == 'postponed' and\
-                    current_level.postpone_max_days > 0:
-                    # Compute number of days kept
-                    allocation_days = allocation.number_of_days - allocation.leaves_taken
-                    allowed_to_keep = max(0, current_level.postpone_max_days - allocation_days)
-                    number_of_days = min(allocation_days, current_level.postpone_max_days)
-                    allocation.number_of_days = number_of_days + allocation.leaves_taken
-                    total_gained_days = sum(days_added_per_level.values())
-                    days_added_per_level.clear()
-                    days_added_per_level[current_level] = min(total_gained_days, allowed_to_keep)
-                gained_days = allocation._process_accrual_plan_level(
-                    current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
-                days_added_per_level[current_level] += gained_days
-                if current_level_maximum_leave > 0 and sum(days_added_per_level.values()) > current_level_maximum_leave:
-                    days_added_per_level[current_level] -= sum(days_added_per_level.values()) - current_level_maximum_leave
+                # 2. On carry-over date
+                carryover_date = allocation._get_carryover_date(allocation.nextcall)
+                if allocation.nextcall < carryover_date < nextcall:
+                    nextcall = min(nextcall, carryover_date)
+                if not allocation.already_accrued:
+                    allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, period_end)
+                # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
+                if allocation.nextcall == carryover_date:
+                    if current_level.action_with_unused_accruals in ['lost', 'maximum']:
+                        allocation_days = allocation.number_of_days + leaves_taken
+                        allocation_max_days = current_level.postpone_max_days + leaves_taken
+                        allocation.number_of_days = min(allocation_days, allocation_max_days)
 
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
+                allocation.already_accrued = False
                 if force_period and allocation.nextcall > date_to:
                     allocation.nextcall = date_to
                     force_period = False
 
-            if days_added_per_level:
-                number_of_days_to_add = allocation.number_of_days + sum(days_added_per_level.values())
-                max_allocation_days = current_level_maximum_leave + (allocation.leaves_taken if allocation.type_request_unit != "hour" else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY))
-                # Let's assume the limit of the last level is the correct one
-                allocation.number_of_days = min(number_of_days_to_add, max_allocation_days) if current_level_maximum_leave > 0 else number_of_days_to_add
+            # if plan.accrued_gain_time == 'start', process next period and set flag 'already_accrued', this will skip adding days
+            # once, preventing double allocation.
+            if allocation.accrual_plan_id.accrued_gain_time == 'start':
+                # check that we are at the start of a period, not on a carry-over or level transition date
+                current_level = current_level or allocation.accrual_plan_id.level_ids[0]
+                period_start = current_level._get_previous_date(allocation.lastcall)
+                if allocation.lastcall != period_start:
+                    continue
+                if current_level.cap_accrued_time:
+                    current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, allocation.lastcall, allocation.nextcall)
+                allocation.already_accrued = True
 
     @api.model
     def _update_accrual(self):
         """
-            Method called by the cron task in order to increment the number_of_days when
-            necessary.
+        Method called by the cron task in order to increment the number_of_days when
+        necessary.
         """
-        # Get the current date to determine the start and end of the accrual period
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
-        this_year_first_day = (today + relativedelta(day=1, month=1)).date()
-        end_of_year_allocations = self.search(
-        [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
-            '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()), ('lastcall', '<', this_year_first_day)])
-        end_of_year_allocations._end_of_year_accrual()
-        end_of_year_allocations.flush_model()
-        allocations = self.search(
-        [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
+        allocations = self.search([
+            ('allocation_type', '=', 'accrual'), ('state', '=', 'validate'),
+            ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
@@ -756,6 +771,22 @@ class HolidaysAllocation(models.Model):
             self.number_of_days = 0.0
         elif not self.number_of_days_display:
             self.number_of_days = 1.0
+
+    # Allows user to simulate how many days an accrual plan would give from a certain start date.
+    # it uses the actual computation function but resets values of lastcall, nextcall and nbr of days
+    # before every run, as if it was run from date_from, after an optional change in the allocation value
+    # the user can simply confirm and validate the allocation. The record is in correct state for the next
+    # call of the cron job.
+    @api.onchange('date_from', 'accrual_plan_id')
+    def _onchange_date_from(self):
+        now = date.today()
+        if self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
+           or not self.employee_id or not (not self.date_to or self.date_to > now):
+            return
+        self.lastcall = self.date_from
+        self.nextcall = False
+        self.number_of_days_display = 0.0
+        self._process_accrual_plans()
 
     # ------------------------------------------------------------
     # Activity methods
