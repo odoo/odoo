@@ -205,7 +205,7 @@
                                     context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </div>
                             <label for="product_qty" string="Quantity"/>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row align-items-center">
                                 <field name="qty_producing" class="w-auto" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': [('state', '=', 'draft')]}"/>
                                 <span attrs="{'invisible': [('state', '=', 'draft')]}">/</span>
                                 <field name="product_qty" class="oe_inline text-start" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', 'not in', ('draft', 'done'))]}"/>
