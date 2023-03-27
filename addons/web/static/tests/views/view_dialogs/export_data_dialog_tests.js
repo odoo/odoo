@@ -1079,4 +1079,44 @@ QUnit.module("ViewDialogs", (hooks) => {
             );
         }
     );
+
+    QUnit.test("Export dialog: search subfields", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        const firstField = target.querySelector(
+            ".o_left_field_panel .o_export_tree_item:first-child"
+        );
+        await click(firstField);
+
+        // show then hide content for the 'partner_ids' field.
+        // this will load subfields and make them available to search
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await editInput(target, ".o_export_search_input", "company");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+            "subfield that was known has been found and is displayed"
+        );
+    });
 });
