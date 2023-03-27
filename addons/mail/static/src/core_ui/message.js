@@ -91,6 +91,8 @@ export class Message extends Component {
         this.rpc = useService("rpc");
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         /** @type {import("@mail/core/message_service").MessageService} */
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
@@ -160,7 +162,10 @@ export class Message extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.threadService.avatarUrl(this.message.author, this.props.message.originThread);
+        return this.avatarService.getAvatarUrl({
+            persona: this.message.author,
+            thread: this.props.message.originThread,
+        });
     }
 
     get message() {

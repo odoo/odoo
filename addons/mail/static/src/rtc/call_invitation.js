@@ -9,6 +9,8 @@ export class CallInvitation extends Component {
 
     setup() {
         this.threadService = useService("mail.thread");
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         this.rtc = useService("mail.rtc");
     }
 

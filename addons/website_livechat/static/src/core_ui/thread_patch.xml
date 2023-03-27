@@ -6,7 +6,7 @@
             <div t-if="visitor and !env.inChatWindow" class="o-website_livechat-VisitorBanner py-4 px-2 d-flex border-bottom">
                 <div class="o-website_livechat-VisitorBanner-sidebar me-2 d-flex justify-content-center">
                     <div class="o-website_livechat-VisitorBanner-avatar mx-1 position-relative">
-                        <img class="w-100 h-100 rounded-circle" t-att-src="threadService.avatarUrl(visitor, props.thread)" alt="Avatar"/>
+                        <img class="w-100 h-100 rounded-circle" t-att-src="avatarService.getAvatarUrl({persona:visitor, thread:props.thread})" alt="Avatar"/>
                         <ImStatus t-if="visitor.isConnected" persona="visitor" className="'bottom-0 end-0 position-absolute'"/>
                     </div>
                 </div>

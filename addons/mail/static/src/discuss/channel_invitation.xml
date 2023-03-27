@@ -14,7 +14,7 @@
                             <div class="d-flex align-items-center p-2">
                                 <div class="o-mail-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-100">
                                     <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
-                                         t-att-src="threadService.avatarUrl(selectablePartner, props.thread)"/>
+                                         t-att-src="avatarService.getAvatarUrl({persona: selectablePartner, thread: props.thread})"/>
                                     <ImStatus className="'position-absolute bottom-0 end-0'" persona="selectablePartner"/>
                                 </div>
                             </div>

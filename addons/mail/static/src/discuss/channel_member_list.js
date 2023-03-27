@@ -14,6 +14,8 @@ export class ChannelMemberList extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         onWillStart(() => this.threadService.fetchChannelMembers(this.props.thread));
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread.channelMembers.length === 0) {

@@ -15,8 +15,8 @@ export class MessageInReply extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.user = useService("user");
-        /** @type {import('@mail/core/thread_service').ThreadService} */
-        this.threadService = useService("mail.thread");
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
     }
 
     get authorAvatarUrl() {
@@ -26,6 +26,9 @@ export class MessageInReply extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.threadService.avatarUrl(this.message.author, this.props.message.originThread);
+        return this.avatarService.getAvatarUrl({
+            persona: this.message.author,
+            thread: this.props.message.originThread,
+        });
     }
 }

@@ -37,6 +37,7 @@ import { notificationPermissionService } from "@mail/core/notification_permissio
 import { session } from "@web/session";
 import { channelMemberService } from "@mail/core/channel_member_service";
 import { contextService } from "@mail/web/discuss/context_service";
+import { avatarService } from "@mail/core/avatar_service";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -127,6 +128,7 @@ export const setupManager = {
             "mail.activity": activityService,
             "mail.attachment": attachmentService,
             "mail.thread": threadService,
+            "mail.avatar": avatarService,
             "mail.message": messageService,
             "mail.chat_window": chatWindowService,
             "mail.messaging": messagingService,

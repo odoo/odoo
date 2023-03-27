@@ -30,6 +30,8 @@ export class MessagingMenu extends Component {
         this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import('@mail/core/thread_service').ThreadService} */
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         this.action = useService("action");
         this.state = useState({
             addingChat: false,
@@ -94,7 +96,7 @@ export class MessagingMenu extends Component {
         return {
             body: _t("Enable desktop notifications to chat"),
             displayName: sprintf(_t("%s has a request"), this.store.partnerRoot.name),
-            iconSrc: this.threadService.avatarUrl(this.store.partnerRoot),
+            iconSrc: this.avatarService.getAvatarUrl({ persona: this.store.partnerRoot }),
             partner: this.store.partnerRoot,
             isLast:
                 this.displayedPreviews.length === 0 && this.store.notificationGroups.length === 0,

@@ -705,6 +705,7 @@ export const messagingService = {
         "mail.attachment",
         "mail.sound_effects",
         "mail.user_settings",
+        "mail.avatar",
         "mail.thread",
         "mail.message",
         "mail.persona",

@@ -50,6 +50,8 @@ export class Discuss extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         this.messageService = useState(useService("mail.message"));
         this.personaService = useService("mail.persona");
         this.rtc = useRtc();

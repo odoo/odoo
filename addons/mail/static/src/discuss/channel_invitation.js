@@ -17,6 +17,8 @@ export class ChannelInvitation extends Component {
         this.store = useStore();
         this.notification = useService("notification");
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         this.personaService = useService("mail.persona");
         this.inputRef = useRef("input");
         this.searchStr = "";

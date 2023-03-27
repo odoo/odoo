@@ -25,6 +25,8 @@ export class CallParticipantCard extends Component {
         this.rtc = useRtc();
         this.store = useStore();
         this.threadService = useService("mail.thread");
+        /** @type {import("@mail/core/avatar_service").AvatarService} */
+        this.avatarService = useService("mail.avatar");
         onMounted(() => {
             if (!this.rtcSession) {
                 return;

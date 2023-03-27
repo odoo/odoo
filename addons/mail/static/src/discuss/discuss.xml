@@ -41,7 +41,7 @@
                         <i class="fa fa-lg fa-gear text-700"/>
                     </button>
                     <div t-if="props.public and !store.isSmall" class="d-flex align-items-center">
-                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.avatarUrl(store.self, thread)"/>
+                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="avatarService.getAvatarUrl({persona:store.self, thread:thread})"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
                             <t t-if="store.user" t-esc="store.user.name"/>
                             <t t-else="">

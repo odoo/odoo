@@ -12,8 +12,6 @@ import { assignDefined, createLocalId, onChange } from "../utils/misc";
 import { Composer } from "../composer/composer_model";
 import { prettifyMessageContent } from "../utils/format";
 import { registry } from "@web/core/registry";
-import { url } from "@web/core/utils/urls";
-import { DEFAULT_AVATAR } from "@mail/core/persona_service";
 import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
 import { browser } from "@web/core/browser/browser";
 
@@ -875,41 +873,6 @@ export class ThreadService {
             end: 0,
             direction: "none",
         });
-    }
-
-    /**
-     * @param {import('@mail/core/persona_model').Persona} persona
-     * @param {import("@mail/core/thread_model").Thread} [thread]
-     */
-    avatarUrl(persona, thread) {
-        if (!persona) {
-            return DEFAULT_AVATAR;
-        }
-        if (thread?.model === "mail.channel") {
-            if (persona.type === "partner") {
-                return url(`/mail/channel/${thread.id}/partner/${persona.id}/avatar_128`);
-            }
-            if (persona.type === "guest") {
-                return url(`/mail/channel/${thread.id}/guest/${persona.id}/avatar_128`);
-            }
-        }
-        if (persona.type === "partner" && persona?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.id,
-                model: "res.partner",
-            });
-            return avatar;
-        }
-        if (persona.user?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.user.id,
-                model: "res.users",
-            });
-            return avatar;
-        }
-        return DEFAULT_AVATAR;
     }
 }
 

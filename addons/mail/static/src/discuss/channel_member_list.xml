@@ -29,7 +29,7 @@
         <div class="o-mail-ChannelMember d-flex align-items-center mx-2 p-2 bg-light" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="() => this.openChatAvatar(member)">
             <div class="o-bg-inherit o-mail-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
                 <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
-                     t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
+                     t-att-src="avatarService.getAvatarUrl({persona:member.persona, thread:props.thread})"/>
                 <ImStatus className="'position-absolute bottom-0 end-0'" persona="member.persona"/>
             </div>
             <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
