@@ -30,6 +30,9 @@ import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/v
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { RelationalModel } from "@web/views/relational_model";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { rpcService } from "@web/core/network/rpc_service";
 
 let serverData;
 let target;
@@ -13055,4 +13058,80 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(target, ".o_data_row", 2);
     });
+
+    QUnit.test("test relational_model one2many field formatted correctly", async function (assert) {
+        assert.expect(1);
+
+        const serverData = {
+            models: {
+                turlututu: {
+                    fields: {
+                        foo: {
+                            name: "foo",
+                            type: "int",
+                            onChange: "1",
+                        },
+                        line_ids: {
+                            name: "line_ids",
+                            type: "one2many",
+                            relatedFields: {
+                                date: {
+                                    name: "date",
+                                    type: "date",
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        };
+
+        registry.category("services").add("rpc", rpcService);
+        const env = await makeTestEnv({
+            serverData,
+            mockRPC(route, { args, method }) {
+                if (method === "onchange") {
+                    return {
+                        value: {
+                            line_ids: [[0, 0, {date: "2020-01-01"}]],
+                        },
+                    };
+                }
+            },
+        });
+
+        const model = new RelationalModel(
+            env,
+            {
+                resModel: "turlututu",
+                fields: serverData.models.turlututu.fields,
+                viewMode: "form",
+                rootType: "record",
+                activeFields: serverData.models.turlututu.fields,
+            },
+            env.services,
+        );
+
+        await model.load({
+            mode: "edit",
+            values: {
+                id: 0,
+                name: "turlututu",
+                display_name: "turlututu",
+                write_date: false,
+                foo: 0,
+                line_ids: [],
+            },
+        });
+
+        await model.root.update({
+            foo: 1,
+        });
+
+        // The one2many orm commands should be parsed correctly and then, the date value is now a Datetime
+        // and not no longer a string.
+        const record = model.root.data.line_ids.records[0];
+        assert.strictEqual(typeof(record.data.date), "object");
+    });
+
 });

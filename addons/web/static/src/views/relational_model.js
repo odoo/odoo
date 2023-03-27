@@ -326,6 +326,18 @@ class DataPoint {
                       }))
                     : [];
             }
+            case "one2many": {
+                const commands = [];
+                for (const command of value) {
+                    const code = command[0];
+                    if(code === CREATE){
+                        commands.push([code, command[1], this._cache[field.name]._parseServerValues(command[2])]);
+                    }else{
+                        commands.push(command);
+                    }
+                }
+                return commands;
+            }
         }
         return value;
     }
@@ -1305,7 +1317,7 @@ export class Record extends DataPoint {
             activeField &&
             !this._isInvisible(fieldName) &&
             value &&
-            (!value[1] || activeField.options.always_reload)
+            (!value[1] || (activeField.options || {}).always_reload)
         ) {
             const context = this._getFieldContext(fieldName);
             const result = await this.model.orm.nameGet(relation, [value[0]], { context });
