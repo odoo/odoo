@@ -1008,9 +1008,12 @@ class StockMove(models.Model):
         for group, moves in grouped_moves:
             moves = self.env['stock.move'].concat(*list(moves))
             new_picking = False
-            # Could pass the arguments contained in group but they are the same
-            # for each move that why moves[0] is acceptable
-            picking = moves[0]._search_picking_for_assignation()
+            if self.env.context.get('skip_exist_picking'):
+                picking = False
+            else:
+                # Could pass the arguments contained in group but they are the same
+                # for each move that why moves[0] is acceptable
+                picking = moves[0]._search_picking_for_assignation()
             if picking:
                 # If a picking is found, we'll append `move` to its move list and thus its
                 # `partner_id` and `ref` field will refer to multiple records. In this
