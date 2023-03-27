@@ -209,18 +209,21 @@ class AccountTax(models.Model):
     @api.model
     def default_get(self, fields_list):
         # company_id is added so that we are sure to fetch a default value from it to use in repartition lines, below
-        rslt = super(AccountTax, self).default_get(fields_list + ['company_id'])
+        if 'company_id' not in fields_list and not {
+            'refund_repartition_line_ids',
+            'invoice_repartition_line_ids',
+        }.isdisjoint(fields_list):
+            fields_list += ['company_id']
+        rslt = super().default_get(fields_list)
 
-        company_id = rslt.get('company_id')
-
-        repartition = rslt.setdefault('repartition_line_ids', [])
-        if 'repartition_line_ids' in fields_list and not repartition:
-            repartition.extend([
+        if 'repartition_line_ids' in fields_list and 'repartition_line_ids' not in rslt:
+            company_id = rslt.get('company_id')
+            rslt['repartition_line_ids'] = [
                 Command.create({'document_type': 'invoice', 'repartition_type': 'base', 'tag_ids': [], 'company_id': company_id}),
                 Command.create({'document_type': 'invoice', 'repartition_type': 'tax', 'tag_ids': [], 'company_id': company_id}),
                 Command.create({'document_type': 'refund', 'repartition_type': 'base', 'tag_ids': [], 'company_id': company_id}),
                 Command.create({'document_type': 'refund', 'repartition_type': 'tax', 'tag_ids': [], 'company_id': company_id}),
-            ])
+            ]
 
         return rslt
 

@@ -16,7 +16,7 @@ class Lead2OpportunityPartner(models.TransientModel):
         to ease window action definitions, and be backward compatible. """
         result = super(Lead2OpportunityPartner, self).default_get(fields)
 
-        if not result.get('lead_id') and self.env.context.get('active_id'):
+        if 'lead_id' in fields and not result.get('lead_id') and self.env.context.get('active_id'):
             result['lead_id'] = self.env.context.get('active_id')
 
         if result.get('lead_id'):

@@ -41,11 +41,13 @@ class PhoneBlackList(models.Model):
             to_create.append(dict(value, number=sanitized))
 
         """ To avoid crash during import due to unique email, return the existing records if any """
-        sql = '''SELECT number, id FROM phone_blacklist WHERE number = ANY(%s)'''
-        numbers = [v['number'] for v in to_create]
-        self._cr.execute(sql, (numbers,))
-        bl_entries = dict(self._cr.fetchall())
-        to_create = [v for v in to_create if v['number'] not in bl_entries]
+        bl_entries = {}
+        if to_create:
+            sql = '''SELECT number, id FROM phone_blacklist WHERE number = ANY(%s)'''
+            numbers = [v['number'] for v in to_create]
+            self._cr.execute(sql, (numbers,))
+            bl_entries = dict(self._cr.fetchall())
+            to_create = [v for v in to_create if v['number'] not in bl_entries]
 
         results = super(PhoneBlackList, self).create(to_create)
         return self.env['phone.blacklist'].browse(bl_entries.values()) | results

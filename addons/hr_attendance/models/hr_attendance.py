@@ -306,8 +306,9 @@ class HrAttendance(models.Model):
 
     def unlink(self):
         attendances_dates = self._get_attendances_dates()
-        super(HrAttendance, self).unlink()
+        res = super().unlink()
         self._update_overtime(attendances_dates)
+        return res
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

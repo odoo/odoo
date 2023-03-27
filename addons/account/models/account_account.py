@@ -871,10 +871,10 @@ class AccountGroup(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res_ids = super(AccountGroup, self).create([self._sanitize_vals(vals) for vals in vals_list])
-        res_ids._adapt_accounts_for_account_groups()
-        res_ids._adapt_parent_account_group()
-        return res_ids
+        groups = super().create([self._sanitize_vals(vals) for vals in vals_list])
+        groups._adapt_accounts_for_account_groups()
+        groups._adapt_parent_account_group()
+        return groups
 
     def write(self, vals):
         res = super(AccountGroup, self).write(self._sanitize_vals(vals))
@@ -890,7 +890,7 @@ class AccountGroup(models.Model):
 
             children_ids = self.env['account.group'].search([('parent_id', '=', record.id)])
             children_ids.write({'parent_id': record.parent_id.id})
-        super(AccountGroup, self).unlink()
+        return super().unlink()
 
     def _adapt_accounts_for_account_groups(self, account_ids=None):
         """Ensure consistency between accounts and account groups.
@@ -903,7 +903,7 @@ class AccountGroup(models.Model):
             return
         company_ids = account_ids.company_id.ids if account_ids else self.company_id.ids
         account_ids = account_ids.ids if account_ids else []
-        if not company_ids and account_ids is None:
+        if not company_ids and not account_ids:
             return
         self.flush_model()
         self.env['account.account'].flush_model(['code'])

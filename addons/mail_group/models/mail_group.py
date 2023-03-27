@@ -38,8 +38,8 @@ class MailGroup(models.Model):
 
     @api.model
     def default_get(self, fields):
-        res = super(MailGroup, self).default_get(fields)
-        if not res.get('alias_contact') and (not fields or 'alias_contact' in fields):
+        res = super().default_get(fields)
+        if 'alias_contact' in fields and not res.get('alias_contact'):
             res['alias_contact'] = 'everyone' if res.get('access_mode') == 'public' else 'followers'
         return res
 

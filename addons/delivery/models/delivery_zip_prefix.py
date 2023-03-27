@@ -20,7 +20,8 @@ class DeliveryZipPrefix(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        vals['name'] = vals['name'].upper()
+        if 'name' in vals:
+            vals['name'] = vals['name'].upper()
         return super().write(vals)
 
     _sql_constraints = [

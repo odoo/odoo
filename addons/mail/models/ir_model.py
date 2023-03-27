@@ -20,6 +20,9 @@ class IrModel(models.Model):
     )
 
     def unlink(self):
+        if not self:
+            return True
+
         # Delete followers, messages and attachments for models that will be unlinked.
         models = tuple(self.mapped('model'))
         model_ids = tuple(self.ids)

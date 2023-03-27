@@ -927,6 +927,9 @@ class IrModelFields(models.Model):
         return res
 
     def write(self, vals):
+        if not self:
+            return True
+
         # if set, *one* column can be renamed here
         column_rename = None
 
@@ -1404,6 +1407,9 @@ class IrModelSelection(models.Model):
         return recs
 
     def write(self, vals):
+        if not self:
+            return True
+
         if (
             not self.env.user._is_admin() and
             any(record.field_id.state != 'manual' for record in self)

@@ -346,7 +346,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             The attribute 'group' may contain several xml ids, separated by commas.
 
         *   For a selection field like 'group_XXX' composed of 2 string values ('0' and '1'),
-            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group', 
+            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group',
             depending on the field's value.
             By default 'group' is the group Employee.  Groups are given by their xml id.
             The attribute 'group' may contain several xml ids, separated by commas.
@@ -354,8 +354,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
-        *   For a selection field like 'module_XXX' composed of 2 string values ('0' and '1'), 
-            ``execute`` triggers the immediate installation of the module named 'XXX' 
+        *   For a selection field like 'module_XXX' composed of 2 string values ('0' and '1'),
+            ``execute`` triggers the immediate installation of the module named 'XXX'
             if the field has the value ``'1'``.
 
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
@@ -466,11 +466,13 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
     @api.model
     def default_get(self, fields):
+        res = super().default_get(fields)
+        if not fields:
+            return res
+
         IrDefault = self.env['ir.default']
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
         classified = self._get_classified_fields(fields)
-
-        res = super(ResConfigSettings, self).default_get(fields)
 
         # defaults: take the corresponding default value they set
         for name, model, field in classified['default']:

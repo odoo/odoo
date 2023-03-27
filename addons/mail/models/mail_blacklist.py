@@ -36,11 +36,14 @@ class MailBlackList(models.Model):
             new_values.append(new_value)
 
         """ To avoid crash during import due to unique email, return the existing records if any """
-        sql = '''SELECT email, id FROM mail_blacklist WHERE email = ANY(%s)'''
-        emails = [v['email'] for v in new_values]
-        self._cr.execute(sql, (emails,))
-        bl_entries = dict(self._cr.fetchall())
-        to_create = [v for v in new_values if v['email'] not in bl_entries]
+        to_create = []
+        bl_entries = {}
+        if new_values:
+            sql = '''SELECT email, id FROM mail_blacklist WHERE email = ANY(%s)'''
+            emails = [v['email'] for v in new_values]
+            self._cr.execute(sql, (emails,))
+            bl_entries = dict(self._cr.fetchall())
+            to_create = [v for v in new_values if v['email'] not in bl_entries]
 
         # TODO DBE Fixme : reorder ids according to incoming ids.
         results = super(MailBlackList, self).create(to_create)

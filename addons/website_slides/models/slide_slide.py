@@ -673,7 +673,7 @@ class Slide(models.Model):
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
-        super(Slide, self).unlink()
+        return super().unlink()
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too

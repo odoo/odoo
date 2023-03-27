@@ -28,4 +28,4 @@ class IrConfigParameter(models.Model):
         if pls_emptied:
             self.env.flush_all()
             self.env.registry.setup_models(self.env.cr)
-        return pls_emptied
+        return result
