@@ -243,10 +243,28 @@
     <record id="payment_provider_transfer" model="payment.provider">
         <field name="name">Wire Transfer</field>
         <field name="sequence">30</field>
-        <field name="image_128"
-               type="base64"
-               file="payment_custom/static/description/icon.png"/>
+        <field name="image_128" type="base64" file="payment_custom/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_custom"/>
     </record>
+
+    <record id="payment_provider_xendit" model="payment.provider">
+        <field name="name">Xendit</field>
+        <field name="display_as">Xendit</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_xendit/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_xendit"/>
+        <!--
+            See https://developers.xendit.co/api-reference/#create-invoice for API method
+        -->
+        <field name="payment_method_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_method_mastercard'),
+                   ref('payment.payment_method_visa'),
+                   ref('payment.payment_method_jcb'),
+                   ref('payment.payment_method_american_express'),
+               ])]"/>
+    </record>
+
 
 </odoo>
