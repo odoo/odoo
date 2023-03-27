@@ -429,10 +429,8 @@ export class OdooEditor extends EventTarget {
                     this.historyRevertUntil(this._powerboxBeforeStepIndex);
                     this.historyStep(true);
                     this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-                    setTimeout(() => {
-                        ensureFocus(this.editable);
-                        getDeepRange(this.editable, { select: true });
-                    });
+                    ensureFocus(this.editable);
+                    getDeepRange(this.editable, { select: true });
                 }
             },
             afterCommand: () => {
