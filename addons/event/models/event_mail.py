@@ -5,12 +5,13 @@ import logging
 import random
 import threading
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
+from odoo.exceptions import UserError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -84,8 +85,12 @@ class EventMailScheduler(models.Model):
     def set_template_ref_model(self):
         mail_model = self.env['mail.template']
         if self.notification_type == 'mail':
-            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
-            self.template_ref = "{},{}".format('mail.template', record.id) if record else False
+            template = mail_model.search([('model', '=', 'event.registration')], limit=1)
+            if template:
+                self.template_ref = "{},{}".format('mail.template', template.id)
+            else:
+                raise UserError(
+                    _("There is no template data relevant to the notification type."))
 
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
