@@ -2374,6 +2374,8 @@ export function enforceWhitespace(el, offset, direction, rule) {
             } else if (!isWhitespace(node)) {
                 break;
             }
+        } else {
+            break;
         }
     }
 
