@@ -31,12 +31,14 @@ export class ReferenceField extends Component {
         this.currentValue = this.getValue(this.props);
 
         onWillUpdateProps((nextProps) => {
+            const nextRelation = this.getRelation(nextProps);
             if (
                 valuesEqual(this.currentValue || {}, this.getValue(nextProps) || {}) &&
                 this.state.resModel &&
-                this.getRelation(nextProps) !== this.state.resModel
+                nextRelation !== this.state.resModel
             ) {
                 nextProps.record.update({ [this.props.name]: false });
+                this.state.resModel = nextRelation;
             }
             this.currentValue = this.getValue(this.props);
         });
