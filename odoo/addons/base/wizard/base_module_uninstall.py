@@ -21,7 +21,7 @@ class BaseModuleUninstall(models.TransientModel):
 
     def _get_modules(self):
         """ Return all the modules impacted by self. """
-        return self.module_id.downstream_dependencies(self.module_id)
+        return self.module_id.downstream_dependencies() | self.module_id
 
     @api.depends('module_id', 'show_all')
     def _compute_module_ids(self):

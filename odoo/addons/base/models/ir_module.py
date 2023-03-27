@@ -501,8 +501,7 @@ class Module(models.Model):
         orphans.unlink()
 
     @api.returns('self')
-    def downstream_dependencies(self, known_deps=None,
-                                exclude_states=('uninstalled', 'uninstallable', 'to remove')):
+    def downstream_dependencies(self, exclude_states=('installed', 'uninstallable', 'to remove')):
         """ Return the modules that directly or indirectly depend on the modules
         in `self`, and that satisfy the `exclude_states` filter.
         """
@@ -510,47 +509,66 @@ class Module(models.Model):
             return self
         self.flush_model(['name', 'state'])
         self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
-        known_deps = known_deps or self.browse()
-        query = """ SELECT DISTINCT m.id
-                    FROM ir_module_module_dependency d
-                    JOIN ir_module_module m ON (d.module_id=m.id)
-                    WHERE
-                        d.name IN (SELECT name from ir_module_module where id in %s) AND
-                        m.state NOT IN %s AND
-                        m.id NOT IN %s """
-        self._cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
-        new_deps = self.browse([row[0] for row in self._cr.fetchall()])
-        missing_mods = new_deps - known_deps
-        known_deps |= new_deps
-        if missing_mods:
-            known_deps |= missing_mods.downstream_dependencies(known_deps, exclude_states)
-        return known_deps
+
+        query = """
+            WITH RECURSIVE module_dependent AS (
+                SELECT md.id mod_id, d.module_id dependent_id
+                FROM ir_module_module_dependency d
+                JOIN ir_module_module md
+                ON d.name = md.name
+                JOIN ir_module_module mm
+                ON mm.id = d.module_id
+                AND mm.state NOT IN %s
+            ), indirect_dependents AS (
+                SELECT md.dependent_id
+                FROM module_dependent md
+                WHERE md.mod_id IN %s
+
+                UNION
+
+                SELECT md.dependent_id
+                FROM module_dependent md
+                JOIN indirect_dependents d
+                ON d.dependent_id = md.mod_id
+            )
+            SELECT dependent_id FROM indirect_dependents;
+        """
+        self._cr.execute(query, (tuple(exclude_states), tuple(self.ids)))
+        return self.browse([row[0] for row in self._cr.fetchall()])
 
     @api.returns('self')
-    def upstream_dependencies(self, known_deps=None,
-                              exclude_states=('installed', 'uninstallable', 'to remove')):
-        """ Return the dependency tree of modules of the modules in `self`, and
-        that satisfy the `exclude_states` filter.
+    def upstream_dependencies(self, exclude_states=('uninstalled', 'uninstallable', 'to remove')):
+        """ Return the modules that directly or indirectly depend on the modules
+        in `self`, and that satisfy the `exclude_states` filter.
         """
         if not self:
             return self
         self.flush_model(['name', 'state'])
         self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
-        known_deps = known_deps or self.browse()
-        query = """ SELECT DISTINCT m.id
-                    FROM ir_module_module_dependency d
-                    JOIN ir_module_module m ON (d.module_id=m.id)
-                    WHERE
-                        m.name IN (SELECT name from ir_module_module_dependency where module_id in %s) AND
-                        m.state NOT IN %s AND
-                        m.id NOT IN %s """
-        self._cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
-        new_deps = self.browse([row[0] for row in self._cr.fetchall()])
-        missing_mods = new_deps - known_deps
-        known_deps |= new_deps
-        if missing_mods:
-            known_deps |= missing_mods.upstream_dependencies(known_deps, exclude_states)
-        return known_deps
+
+        query = """
+            WITH RECURSIVE module_depend AS (
+                SELECT d.module_id mod_id, m.id depend_id
+                FROM ir_module_module_dependency d
+                JOIN ir_module_module m
+                ON d.name = m.name
+                AND m.state NOT IN %s
+            ), indirect_depends AS (
+                SELECT md.depend_id
+                FROM module_depend md
+                WHERE md.mod_id IN %s
+
+                UNION
+
+                SELECT md.depend_id
+                FROM module_depend md
+                JOIN indirect_depends d
+                ON d.depend_id = md.mod_id
+            )
+            SELECT depend_id FROM indirect_depends;
+        """
+        self._cr.execute(query, (tuple(exclude_states), tuple(self.ids)))
+        return self.browse([row[0] for row in self._cr.fetchall()])
 
     def next(self):
         """
