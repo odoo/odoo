@@ -70,7 +70,7 @@
                 <field name="can_approve" invisible="1"/>
                 <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
                 <header>
-                    <button string="Confirm" name="action_confirm" invisible="state != 'draft'" type="object" class="oe_highlight"/>
+                    <button string="Confirm" name="action_confirm" invisible="state != 'draft' and 'allocation_type' != 'accrual' and not employee_id" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                 </header>
                 <sheet>
@@ -101,19 +101,18 @@
                                 <field name="date_to" widget="date" nolabel="1" placeholder="No Limit"  readonly="1"  invisible="allocation_type == 'regular' and state not in ('draft', 'confirm')"/>
                                 <div id="no_limit_label" class="oe_read_only" invisible="not id or date_to or state not in ('draft', 'confirm')">No limit</div>
                             </div>
-
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
-                                <label for="number_of_days_display" string="Amount"
+                                <label for="number_of_days_display" string="Allocation"
                                     readonly="allocation_type == 'accrual' and state not in ('draft', 'confirm')"/>
                             </div>
                             <div name="duration_display">
                                 <field name="number_of_days_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit == 'hour'"
-                                    readonly="type_request_unit == 'hour' or state not in ('draft', 'confirm') or allocation_type == 'accrual'"/>
+                                    readonly="state not in ('draft', 'confirm')"/>
                                 <field name="number_of_hours_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit != 'hour'"
-                                    readonly="type_request_unit != 'hour' or state not in ('draft', 'confirm') or allocation_type == 'accrual'"/>
+                                    readonly="state not in ('draft', 'confirm')"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
