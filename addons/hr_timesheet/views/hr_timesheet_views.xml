@@ -5,13 +5,14 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Activities" sample="1">
-                    <field name="date"/>
-                    <field name="employee_id" invisible="1"/>
-                    <field name="project_id" required="1" options="{'no_create_edit': True, 'no_open': 1}"/>
-                    <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}"/>
-                    <field name="name" optional="show" required="0"/>
-                    <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"/>
+                <tree editable="bottom" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
+                    <field name="readonly_timesheet" invisible="1"/>
+                    <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="employee_id" invisible="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="project_id" required="1" options="{'no_create_edit': True, 'no_open': 1}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="name" optional="show" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="company_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
@@ -120,15 +121,18 @@
                     <sheet string="Analytic Entry">
                         <group>
                             <group>
-                                <field name="project_id" required="1"/>
-                                <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}"/>
-                                <field name="name"/>
+                                <field name="readonly_timesheet" invisible="1"/>
+                                <field name="project_id" required="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}"
+                                    attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                <field name="name" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </group>
                             <group>
-                                <field name="date"/>
+                                <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                 <field name="amount" invisible="1"/>
-                                <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
+                                <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"
+                                    attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                             </group>
@@ -146,7 +150,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
-                    <field name="employee_id" required="1" context="{'active_test': True}"/>
+                    <field name="employee_id" required="1" context="{'active_test': True}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="user_id" invisible="1"/>
                 </xpath>
             </field>
