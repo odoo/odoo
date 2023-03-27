@@ -249,4 +249,14 @@
         <field name="module_id" ref="base.module_payment_custom"/>
     </record>
 
+    <record id="payment_provider_xendit" model="payment.provider">
+        <field name="name">Xendit</field>
+        <field name="display_as">Xendit</field>
+        <field name="module_id" ref="base.module_payment_xendit"/>
+        <!--
+            See https://developers.xendit.co/api-reference/#create-invoice
+        -->
+    </record>
+
+
 </odoo>
