@@ -613,6 +613,9 @@ class Users(models.Model):
             added_groups = default_user.groups_id - old_groups
             if added_groups:
                 internal_users = self.env.ref('base.group_user').users - default_user
+                demo_user = self.env.ref('base.user_demo', raise_if_not_found=False)
+                if demo_user:
+                    internal_users = internal_users - demo_user
                 internal_users.write({'groups_id': [Command.link(gid) for gid in added_groups.ids]})
 
         if 'company_id' in values:
