@@ -38,7 +38,7 @@ class Contract(models.Model):
         'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
+    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     notes = fields.Html('Notes')
     state = fields.Selection([
@@ -324,4 +324,12 @@ class Contract(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.hr_contract_history_view_form_action')
         action['res_id'] = self.employee_id.id
+        return action
+
+    def action_open_contract_list(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.action_hr_contract')
+        action.update({'domain': [('employee_id', '=', self.employee_id.id)],
+                      'views':  [[False, 'list'], [False, 'kanban'], [False, 'activity'], [False, 'form']],
+                       'context': {'default_employee_id': self.employee_id.id}})
         return action
