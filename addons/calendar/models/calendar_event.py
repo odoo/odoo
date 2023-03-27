@@ -119,9 +119,8 @@ class Meeting(models.Model):
          ('busy', 'Busy')], 'Show as', default='busy', required=True,
         help="If the time is shown as 'busy', this event will be visible to other people with either the full \
         information or simply 'busy' written depending on its privacy. Use this option to let other people know \
-        that you are unavailable during that period of time. \n If the time is shown as 'free', this event won't \
-        be visible to other people at all. Use this option to let other people know that you are available during \
-        that period of time.")
+        that you are unavailable during that period of time. \n If the event is shown as 'free', other users know \
+        that you are available during that period of time.")
     is_highlighted = fields.Boolean(
         compute='_compute_is_highlighted', string='Is the Event Highlighted')
     is_organizer_alone = fields.Boolean(compute='_compute_is_organizer_alone', string="Is the Organizer Alone",
