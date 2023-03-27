@@ -7,6 +7,7 @@ from base64 import b64decode
 import io
 import win32print
 import ghostscript
+import PyPDF2
 
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.driver import Driver
@@ -103,17 +104,23 @@ class PrinterDriver(Driver):
     def print_report(self, data):
         helpers.write_file('document.pdf', data, 'wb')
         file_name = helpers.path_file('document.pdf')
-        printer = self.device_name
+        with file_name.open('rb') as f:
+            try:
+                # Try to load info from the file to check if it is a valid PDF file
+                doc = PyPDF2.PdfFileReader(f)
+                printer = self.device_name
 
-        args = [
-            "-dPrinted", "-dBATCH", "-dNOSAFER", "-dNOPAUSE", "-dNOPROMPT"
-            "-q",
-            "-sDEVICE#mswinpr2",
-            f'-sOutputFile#%printer%{printer}',
-            f'{file_name}'
-            ]
+                args = [
+                    "-dPrinted", "-dBATCH", "-dNOSAFER", "-dNOPAUSE", "-dNOPROMPT"
+                    "-q",
+                    "-sDEVICE#mswinpr2",
+                    f'-sOutputFile#%printer%{printer}',
+                    f'{file_name}'
+                    ]
 
-        ghostscript.Ghostscript(*args)
+                ghostscript.Ghostscript(*args)
+            except:
+                self.print_raw(data)
 
     def print_receipt(self, data):
         receipt = b64decode(data['receipt'])
