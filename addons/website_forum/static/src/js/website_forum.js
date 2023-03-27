@@ -45,7 +45,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
             window.location.origin,
-            escape(window.location.href)
+            encodeURIComponent(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
 
