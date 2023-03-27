@@ -199,16 +199,18 @@ class LunchSupplier(models.Model):
                 topping_values.update({'topping_category': 3})
         if values.get('company_id'):
             self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
-        super().write(values)
+        res = super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
             self._sync_cron()
+        return res
 
     def unlink(self):
         crons = self.cron_id.sudo()
         server_actions = crons.ir_actions_server_id
-        super().unlink()
+        res = super().unlink()
         crons.unlink()
         server_actions.unlink()
+        return res
 
     def toggle_active(self):
         """ Archiving related lunch product """

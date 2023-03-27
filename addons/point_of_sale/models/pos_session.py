@@ -198,9 +198,10 @@ class PosSession(models.Model):
             # installation we do the minimal configuration. Impossible to do in
             # the .xml files as the CoA is not yet installed.
             pos_config = self.env['pos.config'].browse(config_id)
-            ctx = dict(self.env.context, company_id=pos_config.company_id.id)
 
-            pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+            pos_name = self.env['ir.sequence'].with_context(
+                company_id=pos_config.company_id.id
+            ).next_by_code('pos.session')
             if vals.get('name'):
                 pos_name += ' ' + vals['name']
 
@@ -213,9 +214,9 @@ class PosSession(models.Model):
             })
 
         if self.user_has_groups('point_of_sale.group_pos_user'):
-            sessions = super(PosSession, self.with_context(ctx).sudo()).create(vals_list)
+            sessions = super(PosSession, self.sudo()).create(vals_list)
         else:
-            sessions = super(PosSession, self.with_context(ctx)).create(vals_list)
+            sessions = super().create(vals_list)
         sessions.action_pos_session_open()
         return sessions
 

@@ -398,6 +398,8 @@ class ir_cron(models.Model):
                           the lock aquired by foreign keys when they
                           reference this row.
         """
+        if not self:
+            return
         row_level_lock = "UPDATE" if lockfk else "NO KEY UPDATE"
         try:
             self._cr.execute(f"""
