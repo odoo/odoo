@@ -6758,6 +6758,13 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     onBuilt() {
         this._patchShape(this.$target[0]);
+        // Flip classes should no longer be used but are still present in some
+        // theme snippets.
+        if (this.$target[0].querySelector('.o_we_flip_x, .o_we_flip_y')) {
+            this._handlePreviewState(false, () => {
+                return {flip: this._getShapeData().flip};
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -6773,18 +6780,6 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             return this._rerenderXML();
         }
         return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    onBuilt() {
-        // Flip classes should no longer be used but are still present in some
-        // theme snippets.
-        if (this.$target[0].querySelector('.o_we_flip_x, .o_we_flip_y')) {
-            this._handlePreviewState(false, () => {
-                return {flip: this._getShapeData().flip};
-            });
-        }
     },
 
     //--------------------------------------------------------------------------
