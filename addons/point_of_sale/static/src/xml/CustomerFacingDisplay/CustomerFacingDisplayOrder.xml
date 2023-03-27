@@ -75,15 +75,15 @@
                                         <div t-esc="orderline.get_full_product_name()"/>
                                     </li>
                                     <!-- we show the specific discount applied to this item -->
-                                    <li class="info">
-                                        <t t-if="orderline.get_discount_str() !== '0'">
+                                    <t t-if="orderline.get_discount_str() !== '0'">
+                                        <li class="info">
                                             <em>
                                             With a
                                                 <t t-esc="orderline.get_discount_str()" />%
                                             discount
                                             </em>
-                                        </t>
-                                    </li>
+                                        </li>
+                                    </t>
                                 </ul>
                             <div t-esc="orderline.get_quantity_str()"/>
                             <div t-esc="pos.format_currency(orderline.get_display_price())"/>
