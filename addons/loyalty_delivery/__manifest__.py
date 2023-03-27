@@ -7,7 +7,6 @@
     'version': '1.0',
     'depends': ['loyalty', 'delivery'],
     'data': [
-        'data/loyalty_delivery_data.xml',
         'views/loyalty_reward_views.xml',
     ],
     'installable': True,
