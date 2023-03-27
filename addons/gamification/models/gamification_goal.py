@@ -302,7 +302,7 @@ class Goal(models.Model):
         """
         if self.definition_id.action_id:
             # open a the action linked to the goal
-            action = self.definition_id.action_id.read()[0]
+            action = self.definition_id.action_id.read(load=None)[0]
 
             if self.definition_id.res_id_field:
                 current_user = self.env.user.with_user(self.env.user)

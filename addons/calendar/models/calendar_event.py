@@ -964,26 +964,27 @@ class Meeting(models.Model):
         base_event = self.recurrence_id.base_event_id
         if not base_event:
             raise UserError(_("You can't update a recurrence without base event."))
-        [base_time_values] = self.recurrence_id.base_event_id.read(['start', 'stop', 'allday'])
+        self.recurrence_id.base_event_id.fetch(['start', 'stop', 'allday'])
+        base_event_id = self.recurrence_id.base_event_id
         update_dict = {}
         start_update = fields.Datetime.to_datetime(time_values.get('start'))
         stop_update = fields.Datetime.to_datetime(time_values.get('stop'))
         # Convert the base_event_id hours according to new values: time shift
         if start_update or stop_update:
             if start_update:
-                start = base_time_values['start'] + (start_update - self.start)
-                stop = base_time_values['stop'] + (start_update - self.start)
-                start_date = base_time_values['start'].date() + (start_update.date() - self.start.date())
-                stop_date = base_time_values['stop'].date() + (start_update.date() - self.start.date())
+                start = base_event_id.start + (start_update - self.start)
+                stop = base_event_id.stop + (start_update - self.start)
+                start_date = base_event_id.start.date() + (start_update.date() - self.start.date())
+                stop_date = base_event_id.stop.date() + (start_update.date() - self.start.date())
                 update_dict.update({'start': start, 'start_date': start_date, 'stop': stop, 'stop_date': stop_date})
             if stop_update:
                 if not start_update:
                     # Apply the same shift for start
-                    start = base_time_values['start'] + (stop_update - self.stop)
-                    start_date = base_time_values['start_date'] + (stop_update.date() - self.stop.date())
+                    start = base_event_id.start + (stop_update - self.stop)
+                    start_date = base_event_id.start_date + (stop_update.date() - self.stop.date())
                     update_dict.update({'start': start, 'start_date': start_date})
-                stop = base_time_values['stop'] + (stop_update - self.stop)
-                stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())
+                stop = base_event_id.stop + (stop_update - self.stop)
+                stop_date = base_event_id.stop.date() + (stop_update.date() - self.stop.date())
                 update_dict.update({'stop': stop, 'stop_date': stop_date})
 
         time_values.update(update_dict)
