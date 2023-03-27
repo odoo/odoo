@@ -599,6 +599,12 @@ class AccountMove(models.Model):
                                  ON account_move(name, journal_id)
                               WHERE (state = 'posted' AND name != '/')
             """)
+        if not index_exists(self.env.cr, 'account_move_sequence_index3'):
+            # Used for gap detection in list views
+            self.env.cr.execute("""
+                CREATE INDEX account_move_sequence_index3
+                          ON account_move (journal_id, sequence_prefix desc, (sequence_number+1) desc)
+            """)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
