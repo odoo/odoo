@@ -3104,7 +3104,7 @@ class BaseModel(metaclass=MetaModel):
 
         # TODO VSC: should only prefetch the fields for the records respecting the limit
         # TODO VSC: for x2many reentry in this function, the prefetch should have already fetched
-        self.browse(self._prefetch_ids).fetch(specification.keys())
+        # self.browse(self._prefetch_ids).fetch(specification.keys())
         records = []
 
         if offset is not None and offset > 0:
@@ -3141,6 +3141,8 @@ class BaseModel(metaclass=MetaModel):
                                 else:
                                     # specification for more fields other than display_name on the many2one like
                                     # 'many2one_id': {'fields':{'id':{}, 'write_date':{}}}
+                                    # TODO VSC: should we call read recursively instead of _read_main to have the fetch working correctly
+                                    # and will call the overrides correctly (co-author juc)
                                     vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
                             else:
                                 # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
