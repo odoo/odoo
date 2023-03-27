@@ -1802,6 +1802,15 @@ export class OdooEditor extends EventTarget {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+    _toggleDomListeners(setActive) {
+        for (const [element, eventName, boundCallback] of this._domListeners) {
+            if (setActive) {
+                element.addEventListener(eventName, boundCallback);
+            } else {
+                element.removeEventListener(eventName, boundCallback);
+            }
+        }
+    }
 
     _removeDomListener() {
         for (const [element, eventName, boundCallback] of this._domListeners) {
