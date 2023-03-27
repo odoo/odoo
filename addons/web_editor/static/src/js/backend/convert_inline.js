@@ -610,20 +610,6 @@ async function toInline($editable, cssRules, $iframe) {
 
     await flattenBackgroundImages(editable);
 
-    // Fix outlook image rendering bug (this change will be kept in both
-    // fields).
-    for (const attributeName of ['width', 'height']) {
-        const images = editable.querySelectorAll('img');
-        for (const image of images) {
-            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
-            if (!value) {
-                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
-            }
-            image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, value + 'px');
-        };
-    };
-
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -639,6 +625,19 @@ async function toInline($editable, cssRules, $iframe) {
     responsiveToStaticForOutlook(editable);
     enforceTablesResponsivity(editable);
     formatTables($editable);
+    // Fix outlook image rendering bug (this change will be kept in both
+    // fields).
+    for (const attributeName of ['width', 'height']) {
+        const images = editable.querySelectorAll('img');
+        for (const image of images) {
+            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
+            if (!value) {
+                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
+            }
+            image.setAttribute(attributeName, value);
+            image.style.setProperty(attributeName, value + 'px');
+        };
+    };
     enforceImagesResponsivity(editable);
 
     // Remove contenteditable attributes
@@ -672,10 +671,11 @@ async function flattenBackgroundImages(editable) {
             const iframe = document.createElement('iframe');
             const style = getComputedStyle(backgroundImage);
             const clonedBackground = backgroundImage.cloneNode(true);
-            clonedBackground.style.height = style['height'];
-            clonedBackground.style.width = style['width'];
+            clonedBackground.style.height = clonedBackground.style.height || '100%';
+            clonedBackground.style.width = clonedBackground.style.width || '100%';
             iframe.style.height = style['height'];
             iframe.style.width = style['width'];
+            iframe.style.padding = 0;
             iframe.srcdoc = editable.ownerDocument.head.outerHTML + clonedBackground.outerHTML;
             const iframePromise = new Promise(resolve => iframe.addEventListener('load', resolve));
             backgroundImage.after(iframe);
@@ -685,10 +685,12 @@ async function flattenBackgroundImages(editable) {
             const canvas = await html2canvas(iframe.contentDocument.body.firstElementChild, { scale: 1 });
             const image = document.createElement('img');
             image.setAttribute('src', canvas.toDataURL('png'));
-            image.setAttribute('width', canvas.getAttribute('width'));
-            image.setAttribute('height', canvas.getAttribute('height'));
             image.style.setProperty('margin', 0);
             image.style.setProperty('display', 'block'); // Ensure no added vertical space.
+            image.style.height = '100%';
+            image.style.width = '100%';
+            image.setAttribute('width', '100%');
+            image.setAttribute('height', '100%');
             // Clean up the original element.
             backgroundImage.replaceChildren(...descendants(backgroundImage).filter(node => node.nodeType === Node.COMMENT_NODE));
             backgroundImage.style.setProperty('padding', 0);
