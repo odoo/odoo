@@ -419,4 +419,29 @@
         <field name="module_id" ref="base.module_payment_custom"/>
     </record>
 
+    <record id="payment_provider_xendit" model="payment.provider">
+        <field name="name">Xendit</field>
+        <field name="image_128" type="base64" file="payment_xendit/static/description/icon.png" />
+        <field name="module_id" ref="base.module_payment_xendit"/>
+        <!--
+            See https://developers.xendit.co/api-reference/#create-invoice
+        -->
+        <field name="payment_method_ids"
+        eval="[Command.set([
+                  ref('payment.payment_method_card'),
+                  ref('payment.payment_method_dana'),
+                  ref('payment.payment_method_gopay'),
+                  ref('payment.payment_method_linkaja'),
+                  ref('payment.payment_method_ovo'),
+                  ref('payment.payment_method_bni'),
+                  ref('payment.payment_method_mandiri'),
+                  ref('payment.payment_method_maybank'),
+                  ref('payment.payment_method_cimb_niaga'),
+                  ref('payment.payment_method_bsi'),
+                  ref('payment.payment_method_qris'),
+              ])]"
+     />
+    </record>
+
+
 </odoo>

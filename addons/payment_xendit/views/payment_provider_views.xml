@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form_xendit" model="ir.ui.view">
+        <field name="name">Xendit Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="xendit_credentials" invisible="code != 'xendit'">
+                    <field name="xendit_api_key"
+                           string="Xendit API Key"
+                           required="code == 'xendit' and state != 'disabled'"/>
+                    <field name="xendit_webhook_token"
+                           string="Xendit Callback Token"
+                           required="code == 'xendit' and state != 'disabled'"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>
