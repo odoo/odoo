@@ -65,7 +65,7 @@ TicketScreen.do.selectOrder("-0001");
 ProductScreen.check.isShown();
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod("Cash");
-PaymentScreen.do.pressNumpad("2 0");
+PaymentScreen.do.enterPaymentLineAmount("Cash", "20");
 PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.validateButtonIsHighlighted(true);
 PaymentScreen.do.clickValidate();

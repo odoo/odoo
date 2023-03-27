@@ -14,7 +14,15 @@ import { EditBar } from "./edit_bar";
 import { Table } from "./table";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onPatched, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onPatched,
+    onMounted,
+    onWillUnmount,
+    useRef,
+    useState,
+    onWillStart,
+} from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 export class FloorScreen extends Component {
@@ -37,13 +45,14 @@ export class FloorScreen extends Component {
             isColorPicker: false,
         });
         const ui = useState(useService("ui"));
-        this.pos.globalState.floorPlanStyle ||= ui.isSmall ? "kanban" : "default";
+        this.pos.globalState.floorPlanStyle = ui.isSmall ? "kanban" : "default";
         this.floorMapRef = useRef("floor-map-ref");
         this.addFloorRef = useRef("add-floor-ref");
         this.map = useRef("map");
         onPatched(this.onPatched);
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
+        onWillStart(this.onWillStart);
     }
     onPatched() {
         this.floorMapRef.el.style.background = this.state.floorBackground;
@@ -54,6 +63,10 @@ export class FloorScreen extends Component {
             this.addFloorRef.el.style.display = "initial";
         }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
+    }
+    async onWillStart() {
+        await this.pos.globalState.unsetTable();
+        await this._tableLongpolling();
     }
     onMounted() {
         this.pos.openCashControl();
@@ -66,7 +79,7 @@ export class FloorScreen extends Component {
         }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
         // call _tableLongpolling once then set interval of 5sec.
-        this._tableLongpolling();
+
         this.tableLongpolling = setInterval(this._tableLongpolling.bind(this), 5000);
     }
     onWillUnmount() {
@@ -254,9 +267,11 @@ export class FloorScreen extends Component {
         if (globalState.isEditMode) {
             return;
         }
-        const result = await this.orm.call("pos.config", "get_tables_order_count", [
-            globalState.config.id,
-        ]);
+        const result = await this.orm.call(
+            "pos.config",
+            "get_tables_order_count_and_printing_changes",
+            [globalState.config.id]
+        );
         for (const table of result) {
             if (!(table.id in globalState.tables_by_id)) {
                 //We enter this condition if, after loading our PoS, a table is deleted on a PoS and not on another.
@@ -278,8 +293,10 @@ export class FloorScreen extends Component {
                     (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
                     // do not count the orders that are already finalized
                     !o.finalized
-            ).length;
-            table_obj.order_count = table.orders + unsynced_orders;
+            );
+            table_obj.order_count = table.orders + unsynced_orders.length;
+            table_obj.changes_count = table.changes;
+            table_obj.skip_changes = table.skip_changes;
         }
     }
     get activeFloor() {

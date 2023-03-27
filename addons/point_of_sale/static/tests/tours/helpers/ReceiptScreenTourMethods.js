@@ -8,6 +8,12 @@ class Do {
             {
                 content: "go to next screen",
                 trigger: ".receipt-screen .button.next.highlight[name='done']",
+                mobile: false,
+            },
+            {
+                content: "go to next screen",
+                trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
+                mobile: true,
             },
         ];
     }

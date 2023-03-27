@@ -10,6 +10,7 @@ import { SaleDetailsButton } from "@point_of_sale/js/ChromeWidgets/SaleDetailsBu
 import { SyncNotification } from "@point_of_sale/js/ChromeWidgets/SyncNotification";
 import { CashMovePopup } from "./cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
+import { BackButton } from "@point_of_sale/app/navbar/BackButton";
 import { Component, useState, useExternalListener } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/js/Popups/ClosePosPopup";
 
@@ -22,6 +23,7 @@ export class Navbar extends Component {
         ProxyStatus,
         SaleDetailsButton,
         SyncNotification,
+        BackButton,
     };
     static props = {
         showCashMoveButton: Boolean,
@@ -100,5 +102,9 @@ export class Navbar extends Component {
     async closeSession() {
         const info = await this.pos.globalState.getClosePosInfo();
         this.popup.add(ClosePosPopup, { info, keepBehind: true });
+    }
+
+    showBackButton() {
+        return this.pos.showBackButton() && this.ui.isSmall;
     }
 }

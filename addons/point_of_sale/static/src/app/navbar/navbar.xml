@@ -4,10 +4,11 @@
     <t t-name="point_of_sale.Navbar" owl="1">
         <div class="pos-topheader">
             <div t-if="pos.tempScreen" class="block-top-header" />
-            <div class="pos-branding">
-                <img t-if="!ui.isSmall" class="pos-logo" t-on-click="() => debug.toggleWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+            <div t-if="!ui.isSmall" class="pos-branding">
+                <img class="pos-logo" t-on-click="() => debug.toggleWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
             </div>
             <div class="pos-rightheader">
+                <BackButton t-if="showBackButton()"/>
                 <div class="status-buttons">
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>

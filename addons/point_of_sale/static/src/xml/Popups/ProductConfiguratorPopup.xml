@@ -1,39 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductConfiguratorPopup" owl="1">
-            <div class="popup popup-text popup-med product-configurator-popup">
-                <header class="title">
-                    <t t-esc="props.product.display_name" />
-                </header>
-
-                <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
-                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
-                        <div class="attribute_name" t-esc="attribute.name"/>
-                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
-                        <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
-                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
-                    </div>
-                </main>
-
-                <footer class="footer footer-flex">
-                    <div class="button highlight confirm" t-on-click="confirm">
-                        Add
-                    </div>
-                    <div class="button cancel" t-on-click="cancel">
-                        Cancel
-                    </div>
-                </footer>
-            </div>
-    </t>
-
     <t t-name="RadioProductAttribute" owl="1">
         <div class="configurator_radio" t-ref="root">
             <div class="table">
                 <t t-foreach="values" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell">
                         <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
-                                   t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
+                                t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
                         <span t-esc="value.name"/>
                         <label t-att-name="value.name" t-attf-for="{{ attribute.id }}_{{ value.id }}"/>
                     </div>
@@ -86,4 +60,71 @@
         </div>
     </t>
 
+    <t t-name="ProductConfiguratorPopup" owl="1">
+        <t t-if="!ui.isSmall">
+            <div class="popup popup-text popup-med product-configurator-popup">
+                <header class="title">
+                    <t t-esc="props.product.display_name" />
+                </header>
+    
+                <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
+                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
+                        <div class="attribute_name" t-esc="attribute.name"/>
+                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
+                        <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
+                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                    </div>
+                </main>
+    
+                <footer class="footer footer-flex">
+                    <div class="button highlight confirm" t-on-click="confirm">
+                        Add
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="popup mobile popup-text popup-med product-configurator-popup">
+                <main class="body mobile product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
+                    <div class="product-img">
+                        <img t-att-src="imageUrl" t-att-alt="props.product.display_name" />
+                        <div class="product-info">
+                            <span><t t-esc="props.product.display_name" ></t></span>
+                            <span><t t-esc="unitPrice" ></t></span>
+                        </div>
+                        
+                    </div>
+                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
+                        <div class="attribute_name" t-esc="attribute.name"/>
+                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
+                        <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
+                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                    </div>
+                </main>
+    
+                <footer class="footer footer-flex mobile">
+                    <div class="quantity-selector">
+                        <button t-on-click="addOneQuantity">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                        <span class="quantity"><t t-esc="state.quantity"></t></span>
+                        <button t-on-click="removeOneQuantity">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="confirm-line">
+                        <div class="button highlight confirm" t-on-click="confirm">
+                            Add
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            Cancel
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </t>
+    </t>
 </templates>

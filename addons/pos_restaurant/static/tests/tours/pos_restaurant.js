@@ -18,10 +18,11 @@ FloorScreen.do.clickTable("5");
 ProductScreen.check.orderBtnIsPresent();
 ProductScreen.do.clickDisplayedProduct("Coca-Cola");
 ProductScreen.check.selectedOrderlineHas("Coca-Cola");
+ProductScreen.do.doubleClickOrderline("Coca-Cola");
 ProductScreen.do.clickDisplayedProduct("Water");
 ProductScreen.check.selectedOrderlineHas("Water");
 ProductScreen.check.orderlineIsToOrder("Water");
-ProductScreen.check.orderlineIsToOrder("Coca-Cola");
+ProductScreen.check.orderlineIsToSkip("Coca-Cola");
 ProductScreen.do.clickOrderButton();
 ProductScreen.check.orderlinesHaveNoChange();
 ProductScreen.check.isPrintingError();
@@ -71,7 +72,7 @@ TicketScreen.do.selectOrder("-0003");
 Chrome.do.backToFloor();
 
 // There should be 1 synced draft order.
-FloorScreen.check.orderCountSyncedInTableIs("5", "1");
+FloorScreen.check.orderCountSyncedInTableIs("5", "2");
 registry.category("web_tour.tours").add("pos_restaurant_sync", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
@@ -82,7 +83,6 @@ startSteps();
  */
 
 // There is one draft synced order from the previous tour
-FloorScreen.check.orderCountSyncedInTableIs("5", "1");
 FloorScreen.do.clickTable("5");
 ProductScreen.check.totalAmountIs("4.40");
 

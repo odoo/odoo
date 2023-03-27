@@ -14,17 +14,7 @@ class DoExt extends Do {
     }
 }
 
-class Check {
-    backToFloorTextIs(floor, table) {
-        return [
-            {
-                content: `back to floor text is '${floor} ( ${table} )'`,
-                trigger: `.floor-button span:contains("${floor}") ~ .table-name:contains("(${table})")`,
-                run: () => {},
-            },
-        ];
-    }
-}
+class Check {}
 
 class Execute {}
 

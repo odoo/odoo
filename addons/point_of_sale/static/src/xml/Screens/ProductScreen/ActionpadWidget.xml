@@ -3,6 +3,9 @@
 
     <t t-name="ActionpadWidget" owl="1">
         <div class="actionpad">
+            <button class="button mobile-more-button" t-if="ui.isSmall" t-on-click="props.onClickMore">
+                <span>More...</span>
+            </button>
             <button class="button set-partner" t-att-class="{'decentered': isLongName}"
                     t-on-click="() => this.pos.selectPartner()">
                 <t t-if="!ui.isSmall"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
@@ -18,10 +21,6 @@
                     <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 </div>
                 <t t-esc="props.actionName" />
-            </button>
-            <button t-if="ui.isSmall" class="button back-button" t-on-click="props.onSwitchPane">
-                <i class="fa fa-angle-double-left"/>
-                Back
             </button>
         </div>
     </t>

@@ -27,16 +27,40 @@ class Do {
             return {
                 content: `'${key}' pressed in numpad`,
                 trigger,
+                mobile: false,
             };
         }
         return keys.split(" ").map(generateStep);
+    }
+    enterValue(keys) {
+        const numpadKeys = keys.split('').join(' ');
+        return [
+            ...this.pressNumpad(numpadKeys),
+            ...this.fillPopupValue(keys)
+        ];
+    }
+    fillPopupValue(keys) {
+        return [
+            {
+                content: `'${keys}' inputed in the number popup`,
+                trigger: ".popup .value",
+                run: `text ${keys}`,
+                mobile: true,
+            },
+        ];
     }
     clickConfirm() {
         return [
             {
                 content: "click confirm button",
                 trigger: ".popup-number .footer .confirm",
+                mobile: false,
             },
+            {
+                content: "click confirm button",
+                trigger: ".popup .footer .confirm",
+                mobile: true,
+            }
         ];
     }
 }
@@ -46,7 +70,7 @@ class Check {
         return [
             {
                 content: "number popup is shown",
-                trigger: ".modal-dialog .popup-number",
+                trigger: ".modal-dialog .popup .value",
                 run: () => {},
             },
         ];
@@ -55,13 +79,15 @@ class Check {
         return [
             {
                 content: "number input element check",
-                trigger: ".modal-dialog .popup-number .popup-input",
+                trigger: ".modal-dialog .popup-number",
                 run: () => {},
+                mobile: false,
             },
             {
                 content: `input shown is '${val}'`,
-                trigger: `.modal-dialog .popup-number .popup-input:contains("${val}")`,
+                trigger: `.modal-dialog .popup .value:contains("${val}")`,
                 run: () => {},
+                mobile: false,
             },
         ];
     }

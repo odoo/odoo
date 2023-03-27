@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="NumberPopup" owl="1">
-        <div class="popup popup-number" t-att-class="{ 'popup-password': props.isPassword }">
+        <div class="popup popup-number" t-att-class="{ 'popup-password': props.isPassword }" t-if="!isMobile()">
             <header class="title drag-handle">
                 <span><t t-esc="props.title"/></span>
                 <span t-if="props.subtitle" class="subtitle"><t t-esc="props.subtitle"/></span>
@@ -59,6 +59,22 @@
                             (<t t-esc="props.getInputBufferReminder(state.buffer)" />)
                         </span>
                     </div>
+                </div>
+                <div class="button cancel" t-on-mousedown.prevent="cancel">
+                    <t t-esc="props.cancelText" />
+                </div>
+            </footer>
+        </div>
+        <div class="popup" t-att-class="{ 'popup-password': props.isPassword }" t-else="">
+            <header class="title drag-handle">
+                <t t-esc="props.title" />
+            </header>
+            <main>
+                <input type="text" t-model="state.payload" t-ref="input" class="value payment-input-number" inputmode="decimal">
+            </main>
+            <footer class="footer centered">
+                <div class="button confirm highlight" t-on-mousedown.prevent="confirm">
+                    <t t-esc="props.confirmText" />
                 </div>
                 <div class="button cancel" t-on-mousedown.prevent="cancel">
                     <t t-esc="props.cancelText" />

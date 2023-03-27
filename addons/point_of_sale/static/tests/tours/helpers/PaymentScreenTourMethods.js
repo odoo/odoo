@@ -17,11 +17,20 @@ class Do {
      * @param {String} name payment method
      * @param {String} amount
      */
-    clickPaymentlineDelButton(name, amount) {
+    clickPaymentlineDelButton(name, amount, mobile=false) {
+        if (mobile) {
+            return [
+                {
+                    content: `delete ${name} paymentline with ${amount} amount`,
+                    trigger: `.paymentlines .paymentline .payment-infos:contains("${name}") ~ .delete-button`,
+                    mobile: true,
+                },
+            ];
+        }
         return [
             {
                 content: `delete ${name} paymentline with ${amount} amount`,
-                trigger: `.paymentlines .paymentline .payment-name:contains("${name}") ~ .delete-button`,
+                trigger: `.paymentlines .paymentline .payment-infos:contains("${name}") ~ .delete-button`,
             },
         ];
     }
@@ -57,7 +66,17 @@ class Do {
     /**
      * Press the numpad in sequence based on the given space-separated keys.
      * Note: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
-     * fast inputs. Fast inputs is the case in tours.
+     * fast inputs. Fast inputs is the case in tours. This method is only for the
+     * desktop environment. The mobile environment doesn't work exactly the same way
+     * so we have to call fillPaymentLineAmountMobile to have the same behaviour.
+     * 
+     * e.g. : 
+     *  PaymentScreen.do.enterPaymentLineAmount("Cash", "70");
+     *  PaymentScreen.check.remainingIs("2.0");
+     *  PaymentScreen.do.pressNumpad("0"); <- desktop: add a 0
+     *  PaymentScreen.do.fillPaymentLineAmountMobile("Cash", "700"); <- mobile: rewrite the amount
+     *  PaymentScreen.check.remainingIs("0.00");
+     *  PaymentScreen.check.changeIs("628.0");
      *
      * @param {String} keys space-separated numpad keys
      */
@@ -76,9 +95,10 @@ class Do {
             return {
                 content: `'${key}' pressed in payment numpad`,
                 trigger,
+                mobile: false,
             };
         }
-        return keys.split(" ").map(generateStep);
+        return keys.split(' ').map(generateStep);
     }
 
     clickBack() {
@@ -95,6 +115,35 @@ class Do {
             {
                 trigger: ".payment-screen .button.js_tip",
             },
+        ];
+    }
+
+    enterPaymentLineAmount(lineName, keys) {
+        const numpadKeys = keys.split('').join(' ');
+        return [
+            ...this.pressNumpad(numpadKeys),
+            ...this.fillPaymentLineAmountMobile(lineName, keys)
+        ];
+    }
+
+    fillPaymentLineAmountMobile(lineName, keys) {
+        return [
+            {
+                content: "click payment line",
+                trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
+                mobile: true,
+            },
+            {
+                content: `'${keys}' inputed in the number popup`,
+                trigger: ".popup .payment-input-number",
+                run: `text ${keys}`,
+                mobile: true,
+            },
+            {
+                content: "click confirm button",
+                trigger: ".popup .footer .confirm",
+                mobile: true,
+            }
         ];
     }
 }

@@ -112,7 +112,7 @@ steps = steps.concat([
     },
     {
         content: "click more button",
-        trigger: ".control-button:contains('More')",
+        trigger: ".mobile-more-button",
         mobile: true,
     },
     {
@@ -138,7 +138,7 @@ steps = steps.concat([
     },
     {
         content: "click more button",
-        trigger: ".control-button:contains('More')",
+        trigger: ".mobile-more-button",
         mobile: true,
     },
     {
@@ -164,7 +164,7 @@ steps = steps.concat([
     },
     {
         content: "click more button",
-        trigger: ".control-button:contains('More')",
+        trigger: ".mobile-more-button",
         mobile: true,
     },
     {
@@ -182,7 +182,7 @@ steps = steps.concat([
     },
     {
         content: "go back to the products",
-        trigger: ".back-button",
+        trigger: ".floor-button",
         mobile: true,
     },
     {
@@ -203,7 +203,7 @@ steps = steps.concat([
     },
     {
         content: "click more button",
-        trigger: ".control-button:contains('More')",
+        trigger: ".mobile-more-button",
         mobile: true,
     },
     {
@@ -233,7 +233,7 @@ steps = steps.concat([
     },
     {
         content: "go back to the products",
-        trigger: ".back-button",
+        trigger: ".floor-button",
         mobile: true,
     },
     {
@@ -284,7 +284,7 @@ steps = steps.concat([
     },
     {
         content: "click more button",
-        trigger: ".control-button:contains('More')",
+        trigger: ".mobile-more-button",
         mobile: true,
     },
     {
@@ -302,7 +302,7 @@ steps = steps.concat([
     },
     {
         content: "click more button",
-        trigger: ".control-button:contains('More')",
+        trigger: ".mobile-more-button",
         mobile: true,
     },
     {
