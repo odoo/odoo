@@ -46,13 +46,13 @@ BillScreen.do.clickOk();
 
 // Test GuestButton
 ProductScreen.do.clickGuestButton();
-NumberPopup.do.pressNumpad("1 5");
+NumberPopup.do.enterValue("15");
 NumberPopup.check.inputShownIs("15");
 NumberPopup.do.clickConfirm();
 ProductScreen.check.guestNumberIs("15");
 
 ProductScreen.do.clickGuestButton();
-NumberPopup.do.pressNumpad("5");
+NumberPopup.do.enterValue("5");
 NumberPopup.check.inputShownIs("5");
 NumberPopup.do.clickConfirm();
 ProductScreen.check.guestNumberIs("5");

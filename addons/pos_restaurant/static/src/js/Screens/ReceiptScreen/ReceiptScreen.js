@@ -5,10 +5,6 @@ import { patch } from "@web/core/utils/patch";
 import { onWillUnmount } from "@odoo/owl";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 
-patch(ReceiptScreen, "pos_restaurant.ReceiptScreen", {
-    showBackToFloorButton: true,
-});
-
 patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
     setup() {
         this._super(...arguments);

@@ -367,71 +367,22 @@ td {
     width: 25px;
     border-radius: 50%;
 }
-
-.pos .order-button{
+.pos .order-button.floor-button {
     color: #f0f0f0;
-    display: inline-block;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    height: 46px;
-    padding: 4px 8px;
-    margin: 3px;
-    margin-bottom: 0px;
-    margin-right: 2px;
-    padding-top: 0px;
-    background: #8b8b8b;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    vertical-align: top;
-    line-height: 42px;
-    text-align: center;
-    box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
     cursor: pointer;
-    min-width: 45px;
-}
-
-.pos .order-button.selected{
-    font-weight: 900;
-    background: #EEEEEE;
-    color: rgb(75,75,75);
-    height: 45px;
-    border-bottom: solid 1px rgb(196, 196, 196);
-    box-shadow: none;
-    -webkit-flex-shrink: 0;
-    flex-shrink: 0;
-}
-
-.pos .order-button .order-sequence{
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    font-weight: bold;
     font-size: 16px;
-    font-weight: 800;
-    vertical-align: middle;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow-wrap: anywhere;
+    text-overflow: hidden;
 }
-.pos .order-button.selected .order-sequence{
-    color: white;
-    background: black;
-    display: inline-block;
-    line-height: 24px;
-    min-width: 24px;
-    border-radius: 12px;
-    margin-right: 4px;
-    margin-left: -4px;
-}
-
-.pos .order-button.square{
-    margin-left:1px;
-    background: #5c5c5c;
-    color: rgb(160,160,160);
-    font-size: 18px;
-    line-height: 45px;
-}
-.pos .order-button:not(.square) > .fa {
-    font-size: 16px;
-    vertical-align: middle;
-    margin-right: 4px;
-}
-.pos .order-button .order-sequence{
-    font-size: 16px;
-    font-weight: 800;
+.pos .order-button.floor-button .fa{
+    font-size: 24px;
+    margin-bottom: 3px;
 }
 
 .pos .order-selector {
@@ -481,41 +432,78 @@ td {
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
+.pos .product-reminder {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    background: #F7EFCA;
+    font-size: 12px;
+    font-weight: bold;
+    gap: 9px;
+
+    span {
+        animation: 0.7s anim-lineUp ease-out 1;
+        margin: 9px 0;
+    }
+
+    @keyframes anim-lineUp {
+        0% {
+          opacity: 0;
+          transform: translateY(80%);
+        }
+        20% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(0%);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0%);
+        }
+    }
+}
+
 .pos .switchpane {
     display: flex;
 }
 
-.pos .switchpane .order-info {
-    flex-grow: 1;
-    border-top: 1px solid #ebebeb;
-    padding: 8px 16px;
-    background-color: #FFFFFF;
-    color: $primary;
-}
-.pos .switchpane .order-info h2 {
-    padding: 0px;
-    margin: 3px 0px;
-    font-weight: bold;
-}
-
 .pos .switchpane .btn-switchpane {
+    height: 70px;
+    width: 100%;
     background-color: $primary;
     border-radius: 0px;
     color: #FFFFFF;
     font-size: 15px;
     font-weight: bold;
     flex-grow: 1;
-    flex-basis: 50%;
-    padding-bottom: 20px;
-}
-.pos .switchpane .btn-switchpane h1 {
-    margin-bottom: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: none;
+    
+    h1 {
+        font-size: 20px;
+        margin: 0;
+    }
 }
 
 .pos .switchpane .btn-switchpane.secondary {
     background-color: #FFFFFF;
     color: $primary;
 }
+
+.pos .switchpane .btn-switchpane.validation-button {
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    border-left: solid 1px white;
+}
+
 
 .pos .pane-border {
     border-right: solid 3px $gray-300;
@@ -701,6 +689,13 @@ td {
     padding: 14px;
 }
 
+.pos .actionpad .button.mobile-more-button {
+    padding-left: 40px;
+    padding-right: 40px;
+    border: none;
+    border-bottom: solid 1px #C9CCD2;
+}
+
 .pos .actionpad .button.set-partner{
     padding-left: 40px;
     padding-right: 40px;
@@ -838,7 +833,11 @@ td {
 
 .pos .rightpane-header .categories-header {
     display: flex;
-    margin-right: 48px;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .pos .rightpane-header .breadcrumbs {
@@ -860,6 +859,11 @@ td {
     grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
     padding: 3px;
     gap: 3px;
+}
+@media only screen and (max-width: 768px) {
+    .pos .product-list {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 }
 .pos .product-list-container .product-list-empty p {
     margin: 10px;
@@ -1178,6 +1182,10 @@ td {
     -webkit-line-clamp: 2;
 }
 
+.pos .product .product-name.no-image {
+    -webkit-line-clamp: 9;
+}
+
 /*  ********* The BlockUI Component (frontend)  ********* */
 .o_blockUI {
     position: fixed;
@@ -1301,7 +1309,7 @@ td {
     bottom: 0;
     height: auto;
     width: 100%;
-    padding: map-get($spacers, 5) 0;
+    padding: 48px 0;
 }
 .screen .button.next:not(.highlight) {
     cursor: not-allowed;
@@ -1489,20 +1497,24 @@ td {
     flex-basis: 100%;
     min-height: 60px;
     overflow: auto;
+    align-items: center;
 }
 .paymentline:active {
     background: black;
     border-color: black;
     color: white;
 }
-.paymentline .payment-name {
+.paymentline .payment-infos {
     flex-grow: 1;
     /* make the name of the payment line to be truncated with ellipsis */
     white-space: nowrap;
     text-overflow:ellipsis;
     padding: map-get($spacers, 3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
-.paymentline .payment-amount {
+.paymentline .payment-infos .payment-amount {
     padding: map-get($spacers, 3);
 }
 .paymentline .delete-button {
@@ -1648,7 +1660,8 @@ td {
     }
     .pos .payment-buttons .button {
         max-width: inherit;
-        text-align: center;
+        display: flex;
+        align-items: center;
     }
     .pos .paymentlines-container {
         min-height: auto;
@@ -2566,6 +2579,9 @@ td {
     padding: 16px;
     white-space: pre-line;
 }
+.pos .popup .payment-input-number {
+    text-align: right;
+}
 
 .pos .popup-med .body {
     max-height: 400px;
@@ -2863,6 +2879,97 @@ td {
     bottom: 0.2em;
 }
 
+.pos .modal-dialog .popup.mobile{
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    font-size:20px;
+    font-weight:bold;
+    background-color: #fff;
+    z-index:1200;
+    font-family: 'Lato';
+    font-family: Lato;
+    margin: 0;
+    max-height: none;
+    max-width: none;
+    transform: none;
+    top: auto;
+    left: auto;
+}
+
+.pos .modal-dialog .popup-med.mobile{
+    max-width: 700px;
+    height: calc(100% - 48px);
+}
+
+.pos .popup-med .body.mobile {
+    overflow-y: auto;
+    height: calc(100% - 133px);
+    max-height: none;
+    margin-bottom: 0;
+}
+
+.pos .popup .footer.mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pos .popup .product_configurator_attributes .product-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50%;
+    padding: 10px;
+
+    & img {
+        height: 100%;
+    }
+
+    & .product-info {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+.pos .popup .footer .confirm-line {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+    background: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 5px;
+    
+    div {
+        margin: 0;
+    }
+}
+
+.pos .popup .footer .quantity-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    background: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    width: 100%;
+    border-bottom: 1px solid black;
+
+    button {
+        margin: 5px;
+    }
+}
+
+.pos .popup .footer .quantity-selector .quantity{
+    margin: 0 10px;
+}
 
 /*  ********* The Webkit Scrollbar  ********* */
 

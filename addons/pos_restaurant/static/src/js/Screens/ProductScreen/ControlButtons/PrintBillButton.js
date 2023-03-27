@@ -13,6 +13,9 @@ export class PrintBillButton extends Component {
     }
     _isDisabled() {
         const order = this.pos.globalState.get_order();
+        if (!order) {
+            return false;
+        }
         return order.get_orderlines().length === 0;
     }
     click() {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="BackButton" owl="1">
+        <span
+            class="order-button floor-button"
+            t-on-click="backToFloorScreen"
+        >
+            <i class="fa fa-angle-left" role="img" aria-label="Go Back" title="Go Back" />
+            <span t-if="!ui.isSmall">BACK</span>
+        </span>
+    </t>
+
+</templates>

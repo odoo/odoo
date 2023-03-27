@@ -313,11 +313,6 @@ class NumberBuffer extends EventBus {
         // it should not be in a start the buffer over state anymore.
         this.state.toStartOver = false;
 
-        if (this.config.maxValue && this.state.buffer > this.config.maxValue) {
-            this.state.buffer = this.config.maxValue.toString();
-            this.config.maxValueReached();
-        }
-
         this.trigger("buffer-update", this.state.buffer);
     }
 }

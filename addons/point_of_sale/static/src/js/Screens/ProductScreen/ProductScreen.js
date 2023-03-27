@@ -13,7 +13,7 @@ import { ControlButtonPopup } from "@point_of_sale/js/Popups/ControlButtonPopup"
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState, useRef } from "@odoo/owl";
 import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
 
 import { NumpadWidget } from "./NumpadWidget";
@@ -39,6 +39,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
+        this.reminderRef = useRef("reminder");
         onMounted(this.onMounted);
 
         useBarcodeReader({
@@ -47,10 +48,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             price: this._barcodeProductAction,
             client: this._barcodePartnerAction,
             discount: this._barcodeDiscountAction,
-        });
-
-        this.state = useState({
-            mobile_pane: this.props.mobile_pane || "right",
         });
 
         // Call `resset` when the `onMounted` callback in `numberBuffer.use` is done.
@@ -198,7 +195,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             last_orderline.set_discount(code.value);
         }
     }
-    async _displayAllControlPopup() {
+    async displayAllControlPopup() {
         await this.popup.add(ControlButtonPopup, {
             controlButtons: this.controlButtons,
         });
@@ -233,6 +230,40 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             order.add_orderline(newLine);
         }
     }
+    get selectedOrderlineQuantity() {
+        return this.currentOrder.get_selected_orderline()?.get_quantity_str();
+    }
+    get selectedOrderlineDisplayName() {
+        return this.currentOrder.get_selected_orderline()?.get_full_product_name();
+    }
+    get selectedOrderlineTotal() {
+        return this.env.utils.formatCurrency(
+            this.currentOrder.get_selected_orderline()?.get_display_price()
+        );
+    }
+    /**
+     * This getter is used to restart the animation on the product-reminder.
+     * When the information present on the product-reminder will change,
+     * the key will change and thus a new product-reminder will be created
+     * and the old one will be garbage collected leading to the animation
+     * being retriggered.
+     */
+    get animationKey() {
+        return [
+            this.selectedOrderlineQuantity,
+            this.selectedOrderlineDisplayName,
+            this.selectedOrderlineTotal,
+        ].join(",");
+    }
+    get showProductReminder() {
+        return this.currentOrder.get_selected_orderline() && this.selectedOrderlineQuantity;
+    }
+    primaryPayButton() {
+        return !this.currentOrder.is_empty();
+    }
+    primaryReviewButton() {
+        return !this.primaryPayButton() && !this.currentOrder.is_empty();
+    }
     // FIXME POSREF this is dead code, check if we need the business logic that's left in here
     // If we do it should be in the model.
     async onClickPay() {
@@ -266,7 +297,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.currentOrder.pay();
     }
     switchPane() {
-        this.state.mobile_pane = this.state.mobile_pane === "left" ? "right" : "left";
+        this.pos.globalState.switchPane();
     }
 }
 

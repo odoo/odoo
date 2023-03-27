@@ -57,7 +57,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     },
     get categoryCount() {
         const categories = {};
-        const orderChange = this.currentOrder.getOrderChanges();
+        const orderChange = this.currentOrder.getOrderChanges().orderlines;
         for (const idx in orderChange) {
             const orderline = orderChange[idx];
             const category = this.pos.globalState.db.get_product_by_id(orderline.product_id)

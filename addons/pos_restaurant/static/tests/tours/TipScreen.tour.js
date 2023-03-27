@@ -15,8 +15,8 @@ startSteps();
 
 // Create order that is synced when draft.
 // order 1
-FloorScreen.do.clickTable("2");
 ProductScreen.do.confirmOpeningPopup();
+FloorScreen.do.clickTable("2");
 ProductScreen.exec.addOrderline("Minute Maid", "1", "2");
 ProductScreen.check.totalAmountIs("2.0");
 Chrome.do.backToFloor();
@@ -34,7 +34,7 @@ TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Coca-Cola", "2", "2");
 ProductScreen.check.totalAmountIs("4.0");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("2", "1");
+FloorScreen.check.orderCountSyncedInTableIs("2", "2");
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains("2", "Tipping");
@@ -56,7 +56,7 @@ TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Coca-Cola", "4", "2");
 ProductScreen.check.totalAmountIs("8.0");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("5", "1");
+FloorScreen.check.orderCountSyncedInTableIs("5", "4");
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains("4", "Tipping");
@@ -122,7 +122,7 @@ ProductScreen.check.isShown();
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickTipButton();
 NumberPopup.check.isShown();
-NumberPopup.do.pressNumpad("1");
+NumberPopup.do.enterValue("1");
 NumberPopup.check.inputShownIs("1");
 NumberPopup.do.clickConfirm();
 PaymentScreen.check.emptyPaymentlines("5.0");
@@ -143,4 +143,6 @@ TipScreen.check.isShown();
 TipScreen.do.clickSettle();
 FloorScreen.check.isShown();
 
-registry.category("web_tour.tours").add("PosResTipScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosResTipScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

@@ -12,6 +12,15 @@ class DoExt extends Do {
             },
         ];
     }
+    doubleClickOrderline(name) {
+        return [
+            {
+                content: "first click orderline",
+                trigger: `.order .orderline .product-name:contains("${name}")`,
+                run: "dblclick"
+            },
+        ];
+    }
     clickTransferButton() {
         return [
             {
@@ -90,6 +99,15 @@ class CheckExt extends Check {
             {
                 content: `Line is to order`,
                 trigger: `.order .orderline.has-change .product-name:contains("${name}")`,
+                run: function () {}, // it's a check
+            },
+        ];
+    }
+    orderlineIsToSkip(name) {
+        return [
+            {
+                content: `Line is to order`,
+                trigger: `.order .orderline.skip-change .product-name:contains("${name}")`,
                 run: function () {}, // it's a check
             },
         ];

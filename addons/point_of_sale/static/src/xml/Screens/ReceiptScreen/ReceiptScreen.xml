@@ -40,8 +40,8 @@
                         <OrderReceipt order="currentOrder"/>
                     </div>
                 </div>
-                <div class="validation-buttons">
-                    <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
+                <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
+                <div t-if="!ui.isSmall" class="validation-buttons">
                     <div class="button next validation" t-att-class="{ highlight: !locked }"
                         t-if="!splittedOrder"
                         t-on-click="orderDone" name="done">
@@ -55,6 +55,24 @@
                         <div class="pay-circle">
                             <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                         </div>
+                        Resume Order
+                    </div>
+                    <div t-if="splittedOrder" class="button next validation" t-att-class="{ highlight: !locked }"
+                        t-on-click="continueSplitting" name="resume">
+                        <div class="pay-circle">
+                            <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                        </div>
+                        Continue
+                    </div>
+                </div>
+                <div t-else="" class="switchpane">
+                    <div class="btn-switchpane validation-button" t-att-class="{ highlight: !locked }"
+                        t-if="!splittedOrder"
+                        t-on-click="orderDone" name="done">
+                        New Order
+                    </div>
+                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button" t-att-class="{ highlight: !locked }"
+                        t-on-click="resumeOrder" name="resume">
                         Resume Order
                     </div>
                     <div t-if="splittedOrder" class="button next validation" t-att-class="{ highlight: !locked }"

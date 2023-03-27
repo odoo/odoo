@@ -36,7 +36,7 @@ TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Coca-Cola", "2", "2");
 ProductScreen.check.totalAmountIs("4.0");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("2", "2");
+FloorScreen.check.orderCountSyncedInTableIs("2", "3");
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0003");
@@ -44,7 +44,6 @@ Chrome.do.confirmPopup();
 TicketScreen.do.selectOrder("-0002");
 ProductScreen.check.isShown();
 ProductScreen.check.totalAmountIs("2.0");
-Chrome.check.backToFloorTextIs("Main Floor", "2");
 Chrome.do.backToFloor();
 
 // Make sure that order is deleted properly.
@@ -59,7 +58,6 @@ TicketScreen.do.deleteOrder("-0004");
 Chrome.do.confirmPopup();
 TicketScreen.do.clickDiscard();
 FloorScreen.check.isShown();
-FloorScreen.check.orderCountSyncedInTableIs("5", "0");
 FloorScreen.do.clickTable("5");
 ProductScreen.check.orderIsEmpty();
 

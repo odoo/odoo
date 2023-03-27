@@ -3,10 +3,6 @@
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
 import { patch } from "@web/core/utils/patch";
 
-patch(PaymentScreen, "pos_restaurant.PaymentScreen", {
-    showBackToFloorButton: true,
-});
-
 patch(PaymentScreen.prototype, "pos_restaurant.PaymentScreen", {
     setup() {
         this._super(...arguments);

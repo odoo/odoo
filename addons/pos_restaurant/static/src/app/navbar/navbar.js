@@ -2,9 +2,7 @@
 
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { patch } from "@web/core/utils/patch";
-import { BackToFloorButton } from "./BackToFloorButton";
 
-patch(Navbar.components, "pos_restaurant.Navbar components", { BackToFloorButton });
 patch(Navbar.prototype, "pos_restaurant.Navbar", {
     /**
      * If no table is set to pos, which means the current main screen
@@ -29,5 +27,8 @@ patch(Navbar.prototype, "pos_restaurant.Navbar", {
     },
     toggleEditMode() {
         this.pos.globalState.toggleEditMode();
+    },
+    showBackButton() {
+        return this._super(...arguments) || (this.pos.showBackButton() && this.pos.globalState.config.module_pos_restaurant);
     },
 });

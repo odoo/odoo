@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { PosGlobalState, Order, Orderline, Payment } from "@point_of_sale/js/models";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
@@ -156,8 +157,15 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     getTableOrders(tableId) {
         return this.get_order_list().filter((order) => order.tableId === tableId);
     },
-    unsetTable() {
-        this._syncTableOrdersToServer();
+    async unsetTable() {
+        try {
+            await this._syncTableOrdersToServer();
+        } catch (e) {
+            if (!(e instanceof ConnectionLostError)) {
+                throw e;
+            }
+            Promise.reject(e);
+        }
         this.table = null;
         this.set_order(null);
     },
