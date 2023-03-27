@@ -592,24 +592,6 @@ class TestPerformance(SavepointCaseWithUserDemo):
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(result, expected)
 
-    @users('__system__', 'demo')
-    def test_read_group_without_name_get(self):
-        model = self.env['test_performance.base']
-        expected = self.expected_read_group()
-        # use read_group and check the expected result
-        with self.assertQueryCount(__system__=1, demo=1):
-            self.env.invalidate_all()
-            result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
-            self.assertEqual(len(result), len(expected))
-            for res, exp in zip(result, expected):
-                self.assertEqual(res['__domain'], exp['__domain'])
-                self.assertEqual(res['partner_id'][0], exp['partner_id'][0])
-                self.assertEqual(res['partner_id_count'], exp['partner_id_count'])
-                self.assertEqual(res['value'], exp['value'])
-        # now serialize to json, which should force evaluation
-        with self.assertQueryCount(__system__=1, demo=1):
-            json.dumps(result, default=json_default)
-
 
 @tagged('bacon_and_eggs')
 class TestIrPropertyOptimizations(TransactionCase):

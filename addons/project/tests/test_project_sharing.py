@@ -283,7 +283,7 @@ class TestProjectSharing(TestProjectSharingCommon):
 
         task_read_group = self.env['project.task'].read_group(
             expression.AND([expression.TRUE_DOMAIN, domain]),
-            ['id'],
+            ['id:min'],
             [],
         )
         self.assertEqual(task_read_group[0]['__count'], 1, 'The task should be found with the read_group method containing a truly tuple.')
@@ -291,7 +291,7 @@ class TestProjectSharing(TestProjectSharingCommon):
 
         task_read_group = self.env['project.task'].read_group(
             expression.AND([expression.FALSE_DOMAIN, domain]),
-            ['id'],
+            ['id:min'],
             [],
         )
         self.assertFalse(task_read_group[0]['__count'], 'No result should found with the read_group since the domain is falsy.')
