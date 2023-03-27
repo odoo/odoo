@@ -1682,7 +1682,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             return sprintf(
                 _t("Gift Card: %s\nBalance: %s"),
                 code,
-                this.pos.format_currency(coupon.balance)
+                this.env.utils.formatCurrency(coupon.balance)
             );
         }
         return true;

@@ -9,6 +9,8 @@ import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/js/Popups/CashOpeningPopup";
 import { sprintf } from "@web/core/utils/strings";
+import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 
 export class PosStore extends Reactive {
     hasBigScrollBars = false;
@@ -281,6 +283,13 @@ export class PosStore extends Reactive {
                 }
             },
             false
+        );
+    }
+
+    showBackButton() {
+        return (
+            this.mainScreen.component === PaymentScreen ||
+            (this.mainScreen.component === ProductScreen && this.globalState.mobile_pane == "left")
         );
     }
 }

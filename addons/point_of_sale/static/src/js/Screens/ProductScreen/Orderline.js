@@ -15,7 +15,6 @@ export class Orderline extends Component {
     setup() {
         this.pos = usePos();
     }
-
     selectLine() {
         const line = this.props.line; // the orderline
         if (this.pos.globalState.get_order().selected_orderline.id !== line.id) {

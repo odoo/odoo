@@ -125,6 +125,7 @@ TicketScreen.do.pressNumpad("3");
 // that can be refunded.
 ErrorPopup.do.clickConfirm();
 TicketScreen.do.clickDiscard();
+ProductScreen.do.goBackToMainScreen();
 ProductScreen.check.isShown();
 ProductScreen.check.orderIsEmpty();
 ProductScreen.do.clickRefund();
@@ -133,6 +134,7 @@ TicketScreen.do.clickOrderline("Desk Pad");
 TicketScreen.do.pressNumpad("1");
 TicketScreen.check.toRefundTextContains("To Refund: 1.00");
 TicketScreen.do.confirmRefund();
+ProductScreen.do.goBackToMainScreen();
 ProductScreen.check.isShown();
 ProductScreen.check.selectedOrderlineHas("Desk Pad", "-1.00");
 // Try changing the refund line to positive number.
@@ -151,6 +153,7 @@ ProductScreen.do.clickRefund();
 TicketScreen.do.selectOrder("-0005");
 TicketScreen.check.toRefundTextContains("Refunding 2.00");
 TicketScreen.do.clickDiscard();
+ProductScreen.do.goBackToMainScreen();
 // Pay the refund order.
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod("Bank");

@@ -42,7 +42,8 @@
                                 sendPaymentReverse.bind="sendPaymentReverse"
                                 sendPaymentCancel.bind="sendPaymentCancel"
                                 sendPaymentRequest.bind="sendPaymentRequest"
-                                selectLine.bind="selectPaymentLine"/>
+                                selectLine.bind="selectPaymentLine"
+                                updateSelectedPaymentline.bind="updateSelectedPaymentline"/>
                         </div>
                         <div t-if="!ui.isSmall" class="button next validation" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
                             t-on-click="() => this.validateOrder()">
@@ -52,12 +53,10 @@
                             <span class="next_text">Validate</span>
                         </div>
                     </div>
-                    <div class="center-content">
-                        <t t-if="!ui.isSmall">
-                            <section class="paymentlines-container">
-                                <PaymentScreenStatus order="currentOrder" />
-                            </section>
-                        </t>
+                    <div class="center-content" t-if="!ui.isSmall">
+                        <section class="paymentlines-container">
+                            <PaymentScreenStatus order="currentOrder" />
+                        </section>
 
                         <div class="payment-buttons-container">
                             <section class="payment-numpad">
@@ -110,13 +109,10 @@
                 </div>
                 <t t-if="ui.isSmall">
                     <div class="switchpane">
-                        <button class="btn-switchpane"
+                        <button class="btn-switchpane validation-button"
                             t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
                             t-on-click="() => this.validateOrder()">
-                            <h1>Validate</h1>
-                        </button>
-                        <button class="btn-switchpane secondary" t-on-click="() => pos.showScreen('ProductScreen', {mobile_pane: 'left'})">
-                            <h1>Review</h1>
+                            <span>Validate</span>
                         </button>
                     </div>
                 </t>

@@ -7,19 +7,19 @@
                 <t t-foreach="props.paymentLines" t-as="line" t-key="line.cid">
                     <t t-if="line.selected">
                         <div class="paymentline selected"
-                            t-att-class="selectedLineClass(line)"
-                            t-on-click="() => this.props.selectLine(line.cid)">
-                            <div class="payment-name">
-                                 <t t-esc="line.payment_method.name" />
+                            t-att-class="selectedLineClass(line)">
+                            <div class="payment-infos" t-on-click="() => this.selectLine(line)">
+                                 <span class="payment-name"><t t-esc="line.payment_method.name"/></span>
+                                 <div class="payment-amount">
+                                    <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
+                                            <t t-esc="env.utils.formatCurrency(line.get_amount(), false)" />
+                                    </t>
+                                    <t t-else="">
+                                            <t t-esc="formatLineAmount(line)" />
+                                    </t>
+                                </div>
                             </div>
-                            <div class="payment-amount">
-                                <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
-                                        <t t-esc="env.utils.formatCurrency(line.get_amount(), false)" />
-                                </t>
-                                <t t-else="">
-                                        <t t-esc="formatLineAmount(line)" />
-                                </t>
-                            </div>
+                            
                             <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
                                 <div class="delete-button"
                                     t-on-click="() => this.props.deleteLine(line.cid)"
@@ -102,19 +102,18 @@
                     </t>
                     <t t-else="">
                         <div class="paymentline"
-                            t-att-class="unselectedLineClass(line)"
-                            t-on-click="() => this.props.selectLine(line.cid)">
-                             <div class="payment-name">
+                            t-att-class="unselectedLineClass(line)">
+                             <div class="payment-infos" t-on-click="() => this.selectLine(line)">
                                  <t t-esc="line.payment_method.name" />
+                                 <div class="payment-amount">
+                                    <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
+                                            <t t-esc="env.utils.formatCurrency(line.get_amount(), false)" />
+                                    </t>
+                                    <t t-else="">
+                                            <t t-esc="formatLineAmount(line)" />
+                                    </t>
+                                </div>
                              </div>
-                            <div class="payment-amount">
-                                <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
-                                        <t t-esc="env.utils.formatCurrency(line.get_amount(), false)" />
-                                </t>
-                                <t t-else="">
-                                        <t t-esc="formatLineAmount(line)" />
-                                </t>
-                            </div>
                             <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
                                 <div class="delete-button"
                                     t-on-click="() => this.props.deleteLine(line.cid)"

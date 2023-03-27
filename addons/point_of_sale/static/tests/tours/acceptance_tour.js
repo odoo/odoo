@@ -20,7 +20,7 @@ function add_product_to_order(product_name) {
         },
         {
             content: "go back to the products",
-            trigger: ".back-button",
+            trigger: ".floor-button",
             mobile: true,
         },
     ];
@@ -35,7 +35,7 @@ function set_fiscal_position_on_order(fp_name) {
         },
         {
             content: "click more button",
-            trigger: ".control-button:contains('More')",
+            trigger: ".mobile-more-button",
             mobile: true,
         },
         {
@@ -48,7 +48,7 @@ function set_fiscal_position_on_order(fp_name) {
         },
         {
             content: "click more button",
-            trigger: ".control-button:contains('More')",
+            trigger: ".mobile-more-button",
             mobile: true,
         },
         {
@@ -58,7 +58,7 @@ function set_fiscal_position_on_order(fp_name) {
         },
         {
             content: "go back to the products",
-            trigger: ".back-button",
+            trigger: ".floor-button",
             mobile: true,
         },
     ];
@@ -69,8 +69,37 @@ function press_payment_numpad(val) {
         {
             content: `press ${val} on payment screen numpad`,
             trigger: `.payment-numpad .input-button:contains("${val}"):visible`,
+            mobile: false,
         },
     ];
+}
+
+function fillPaymentLineAmountMobile(lineName, keys) {
+    return [
+        {
+            content: "click payment line",
+            trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
+            mobile: true,
+        },
+        {
+            content: `'${keys}' inputed in the number popup`,
+            trigger: ".popup .payment-input-number",
+            run: `text ${keys}`,
+            mobile: true,
+        },
+        {
+            content: "click confirm button",
+            trigger: ".popup .footer .confirm",
+            mobile: true,
+        }
+    ];
+}
+
+function fillPaymentValue(lineName, val) {
+    return [
+        ...press_payment_numpad(val),
+        ...fillPaymentLineAmountMobile(lineName, val),
+    ]
 }
 
 function press_product_numpad(val) {
@@ -86,7 +115,7 @@ function press_product_numpad(val) {
         },
         {
             content: "go back to the products",
-            trigger: ".back-button",
+            trigger: ".floor-button",
             mobile: true,
         },
     ];
@@ -127,7 +156,7 @@ function selected_orderline_has({ product, price = null, quantity = null }) {
     }
     result.push({
         content: "go back to the products",
-        trigger: ".back-button",
+        trigger: ".floor-button",
         mobile: true,
     });
     return result;
@@ -147,7 +176,7 @@ function verify_order_total(total_str) {
         },
         {
             content: "go back to the products",
-            trigger: ".back-button",
+            trigger: ".floor-button",
             mobile: true,
         },
     ];
@@ -192,6 +221,12 @@ function finish_order() {
         {
             content: "click Next Order",
             trigger: ".receipt-screen .button.next.highlight:visible",
+            mobile: false,
+        },
+        {
+            content: "Click Next Order",
+            trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
+            mobile: true,
         },
         {
             content: "check if we left the receipt screen",
@@ -229,7 +264,7 @@ steps = steps.concat(goto_payment_screen_and_select_payment_method());
             remaining := 0.00
             change := 1.50
     */
-steps = steps.concat(press_payment_numpad("5"));
+steps = steps.concat(fillPaymentValue("Cash", "5"));
 steps = steps.concat(selected_payment_has("Cash", "5.0"));
 steps = steps.concat([
     {
@@ -255,12 +290,12 @@ steps = steps.concat([
 steps = steps.concat([
     {
         content: "pay with cash",
-        trigger: '.paymentmethod:contains("Cash")',
+        trigger: '.paymentmethod:contains("Bank")',
     },
 ]);
-steps = steps.concat(selected_payment_has("Cash", "5.2"));
-steps = steps.concat(press_payment_numpad("6"));
-steps = steps.concat(selected_payment_has("Cash", "6.0"));
+steps = steps.concat(selected_payment_has("Bank", "5.2"));
+steps = steps.concat(fillPaymentValue("Bank", "6"));
+steps = steps.concat(selected_payment_has("Bank", "6.0"));
 steps = steps.concat([
     {
         content: "verify remaining",

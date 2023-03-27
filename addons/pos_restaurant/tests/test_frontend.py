@@ -39,6 +39,13 @@ class TestFrontend(odoo.tests.HttpCase):
             'journal_id': second_cash_journal.id,
         })
 
+        printer = self.env['pos.printer'].create({
+            'name': 'Preparation Printer',
+            'epson_printer_ip': '127.0.0.1',
+            'printer_type': 'epson_epos',
+            'product_categories_ids': [drinks_category.id]
+        })
+
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
             'module_pos_restaurant': True,
@@ -47,6 +54,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'iface_orderline_notes': True,
             'iface_start_categ_id': drinks_category.id,
             'start_category': True,
+            'is_order_printer': True,
             'printer_ids': [(4, printer.id)],
         })
 

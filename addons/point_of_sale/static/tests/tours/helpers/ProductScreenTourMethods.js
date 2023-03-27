@@ -31,7 +31,7 @@ class Do {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -95,7 +95,7 @@ class Do {
             ...keys.split(" ").map(generateStep),
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -148,7 +148,7 @@ class Do {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -163,7 +163,7 @@ class Do {
             },
             {
                 content: "click more button",
-                trigger: ".control-button:contains('More')",
+                trigger: ".mobile-more-button",
                 mobile: true,
             },
             {
@@ -181,7 +181,7 @@ class Do {
             },
             {
                 content: "click more button",
-                trigger: ".control-button:contains('More')",
+                trigger: ".mobile-more-button",
                 mobile: true,
             },
             {
@@ -201,7 +201,7 @@ class Do {
             },
             {
                 content: "click more button",
-                trigger: ".control-button:contains('More')",
+                trigger: ".mobile-more-button",
                 mobile: true,
             },
             { trigger: ".o_pricelist_button" },
@@ -211,7 +211,7 @@ class Do {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -234,7 +234,7 @@ class Do {
             },
             {
                 content: "click more button",
-                trigger: ".control-button:contains('More')",
+                trigger: ".mobile-more-button",
                 mobile: true,
             },
             {
@@ -247,7 +247,7 @@ class Do {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -273,6 +273,15 @@ class Do {
                 trigger: "footer .button:contains('Close Session')",
             },
         ];
+    }
+    goBackToMainScreen() {
+        return [
+            {
+                content: "go back to the products",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
+            },
+        ]
     }
 }
 
@@ -321,7 +330,7 @@ class Check {
         }
         res.push({
             content: "go back to the products",
-            trigger: ".back-button",
+            trigger: ".pos-rightheader .floor-button",
             mobile: true,
         });
         return res;
@@ -340,7 +349,7 @@ class Check {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -369,7 +378,7 @@ class Check {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -388,7 +397,7 @@ class Check {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -442,7 +451,7 @@ class Check {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -461,7 +470,7 @@ class Check {
             },
             {
                 content: "go back to the products",
-                trigger: ".back-button",
+                trigger: ".pos-rightheader .floor-button",
                 mobile: true,
             },
         ];
@@ -537,7 +546,7 @@ class Execute {
         res.push(...TextAreaPopup._do.clickConfirm());
         res.push({
             content: "go back to the products",
-            trigger: ".back-button",
+            trigger: ".pos-rightheader .floor-button",
             mobile: true,
         });
         return res;

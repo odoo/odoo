@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+        <!-- Replace the payment button by the order button -->
+        <xpath expr="//button[hasclass('pay-button')]" position="replace">
+            <button
+                t-if="this.swapButton"
+                class="btn-switchpane"
+                t-on-click="submitOrder"
+                t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}">
+                <!-- add a showOrderButton here (using the computeOrderChange method) -->
+                <h1>Order</h1>
+                <span><t t-esc="total"/></span>
+            </button>
+            <t t-else="">
+                <button class="btn-switchpane" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
+                    <h1>Pay</h1>
+                    <span><t t-esc="total" /></span>
+                </button>
+            </t>
+            
+        </xpath>
+    </t>
+</templates>

@@ -59,15 +59,6 @@ export class PaymentScreen extends Component {
             // Note that the component listens to it.
             triggerAtInput: () => this.updateSelectedPaymentline(),
         };
-        // Check if pos has a cash payment method
-        const hasCashPaymentMethod = this.payment_methods_from_config.some(
-            (method) => method.type === "cash"
-        );
-
-        if (!hasCashPaymentMethod) {
-            config["maxValue"] = this.currentOrder.get_due();
-            config["maxValueReached"] = this.showMaxValueError.bind(this);
-        }
 
         return config;
     }
@@ -109,25 +100,47 @@ export class PaymentScreen extends Component {
             return false;
         }
     }
-    updateSelectedPaymentline() {
+    updateSelectedPaymentline(amount = false) {
         if (this.paymentLines.every((line) => line.paid)) {
             this.currentOrder.add_paymentline(this.payment_methods_from_config[0]);
         }
         if (!this.selectedPaymentLine) {
             return;
         } // do nothing if no selected payment line
+        if (amount === false) {
+            if (this.numberBuffer.get() === null) {
+                amount = null;
+            } else if (this.numberBuffer.get() === "") {
+                amount = 0;
+            } else {
+                amount = this.numberBuffer.getFloat();
+            }
+        }
         // disable changing amount on paymentlines with running or done payments on a payment terminal
         const payment_terminal = this.selectedPaymentLine.payment_method.payment_terminal;
+        const hasCashPaymentMethod = this.payment_methods_from_config.some(
+            (method) => method.type === "cash"
+        );
+        if (
+            !hasCashPaymentMethod &&
+            this.currentOrder.get_due() + this.selectedPaymentLine.amount > 0 &&
+            amount > this.currentOrder.get_due() + this.selectedPaymentLine.amount
+        ) {
+            this.selectedPaymentLine.set_amount(0);
+            this.numberBuffer.set(this.currentOrder.get_due().toString());
+            amount = this.currentOrder.get_due();
+            this.showMaxValueError();
+        }
         if (
             payment_terminal &&
             !["pending", "retry"].includes(this.selectedPaymentLine.get_payment_status())
         ) {
             return;
         }
-        if (this.numberBuffer.get() === null) {
+        if (amount === null) {
             this.deletePaymentLine(this.selectedPaymentLine.cid);
         } else {
-            this.selectedPaymentLine.set_amount(this.numberBuffer.getFloat());
+            this.selectedPaymentLine.set_amount(amount);
         }
     }
     toggleIsToInvoice() {
@@ -146,6 +159,7 @@ export class PaymentScreen extends Component {
             title: tip ? this.env._t("Change Tip") : this.env._t("Add Tip"),
             startingValue: value,
             isInputSelected: true,
+            nbrDecimal: this.pos.globalState.currency.decimal_places,
             inputSuffix: this.pos.globalState.currency.symbol,
         });
 

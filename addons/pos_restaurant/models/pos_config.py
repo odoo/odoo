@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+import json
+from collections import defaultdict
 
 
 class PosConfig(models.Model):
@@ -14,18 +16,36 @@ class PosConfig(models.Model):
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
 
-    def get_tables_order_count(self):
-        """         """
+    def get_tables_order_count_and_printing_changes(self):
         self.ensure_one()
         tables = self.env['restaurant.table'].search([('floor_id.pos_config_ids', '=', self.id)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
         order_stats = self.env['pos.order']._read_group(domain, ['table_id'], ['__count'])
+        linked_orderlines = self.env['pos.order.line'].search([('order_id.state', '=', 'draft'), ('order_id.table_id', 'in', tables.ids)])
         orders_map = {table.id: count for table, count in order_stats}
+        changes_map = defaultdict(lambda: 0)
+        skip_changes_map = defaultdict(lambda: 0)
+
+        for line in linked_orderlines:
+            last_order_preparation_change = json.loads(line.order_id.last_order_preparation_change)
+            prep_change = {}
+            for line_uuid in last_order_preparation_change:
+                prep_change[last_order_preparation_change[line_uuid]['line_uuid']] = last_order_preparation_change[line_uuid]
+            quantity_changed = 0
+            if line.uuid in prep_change:
+                quantity_changed = line.qty - prep_change[line.uuid]['quantity']
+            else:
+                quantity_changed = line.qty
+
+            if line.skip_change:
+                skip_changes_map[line.order_id.table_id.id] += quantity_changed
+            else:
+                changes_map[line.order_id.table_id.id] += quantity_changed
 
         result = []
         for table in tables:
-            result.append({'id': table.id, 'orders': orders_map.get(table.id, 0)})
+            result.append({'id': table.id, 'orders': orders_map.get(table.id, 0), 'changes': changes_map.get(table.id, 0), 'skip_changes': skip_changes_map.get(table.id, 0)})
         return result
 
     def _get_forbidden_change_fields(self):

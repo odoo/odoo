@@ -3,7 +3,9 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/pos_store";
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
+import { TipScreen } from "@pos_restaurant/js/Screens/TipScreen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -65,9 +67,6 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         );
     },
     showScreen(screenName) {
-        if (screenName === "FloorScreen" && this.globalState.table) {
-            this.globalState.unsetTable();
-        }
         this._super(...arguments);
         this.setIdleTimer();
     },
@@ -94,5 +93,13 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             }
         }
         return this._super(...arguments);
+    },
+    showBackButton() {
+        return (
+            this._super(...arguments) ||
+            this.mainScreen.component === TipScreen ||
+            (this.mainScreen.component === ProductScreen &&
+                this.globalState.config.module_pos_restaurant)
+        );
     },
 });

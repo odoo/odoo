@@ -29,6 +29,20 @@ export class Table extends Component {
     get style() {
         const table = this.props.table;
 
+        let background = table.color ? table.color : "rgb(53, 211, 116)";
+        let textColor = "white";
+        let border = "auto";
+        let boxShadow = "0px 3px rgba(0,0,0,0.07)";
+        if (!this.isOccupied()) {
+            background = "transparent";
+            const rgb = table.floor.background_color.substring(4, table.floor.background_color.length-1)
+                .replace(/ /g, '')
+                .split(',');
+            textColor = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2])/255 > 0.5 ? "black" : "white";
+            border = "3px solid " + table.color;
+            boxShadow = "none";
+        }
+
         if (this.pos.globalState.floorPlanStyle == "kanban") {
             const floor = table.floor;
             const index = floor.tables.indexOf(table);
@@ -47,9 +61,12 @@ export class Table extends Component {
                 line-height: ${widthTable}px;
                 top: ${position_v}px;
                 left: ${position_h}px;
+                border: ${border};
                 border-radius: ${table.shape === "round" ? 1000 : 3}px;
-                background: ${table.color || "rgb(53, 211, 116)"};
+                background: ${background};
+                box-shadow: ${boxShadow};
                 font-size: ${widthTable >= 150 ? 32 : 16}px;
+                color: ${textColor};
             `;
         } else {
             return `
@@ -58,9 +75,12 @@ export class Table extends Component {
                 line-height: ${table.height}px;
                 top: ${table.position_v}px;
                 left: ${table.position_h}px;
+                border: ${border};
                 border-radius: ${table.shape === "round" ? 1000 : 3}px;
-                background: ${table.color || "rgb(53, 211, 116)"};
+                background: ${background};
+                box-shadow: ${boxShadow};
                 font-size: ${table.height >= 150 && table.width >= 150 ? 32 : 16}px;
+                color: ${textColor};
             `;
         }
     }
@@ -70,11 +90,13 @@ export class Table extends Component {
     }
     get orderCount() {
         const table = this.props.table;
-        return table.order_count !== undefined
-            ? table.order_count
-            : this.pos.globalState
-                  .getTableOrders(table.id)
-                  .filter((o) => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
+
+        if (table.changes_count > 0) {
+            return table.changes_count;
+        } else if (table.skip_changes > 0) {
+            return table.skip_changes;
+        }
+        return table.order_count;
     }
     get orderCountClass() {
         const countClass = { "order-count": true };
@@ -91,18 +113,14 @@ export class Table extends Component {
         }`;
     }
     _getNotifications() {
-        const orders = this.pos.globalState.getTableOrders(this.props.table.id);
+        const table = this.props.table;
 
-        let hasChangesCount = 0;
-        let hasSkippedCount = 0;
-        for (let i = 0; i < orders.length; i++) {
-            if (orders[i].hasChangesToPrint()) {
-                hasChangesCount++;
-            } else if (orders[i].hasSkippedChanges()) {
-                hasSkippedCount++;
-            }
-        }
+        const hasChangesCount = table.changes_count;
+        const hasSkippedCount = table.skip_changes;
 
         return hasChangesCount ? { printing: true } : hasSkippedCount ? { skipped: true } : {};
+    }
+    isOccupied() {
+        return this.pos.globalState.getCustomerCount(this.props.table.id) > 0 || this.props.table.order_count > 0;
     }
 }
