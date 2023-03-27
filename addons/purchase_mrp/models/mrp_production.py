@@ -46,12 +46,13 @@ class MrpProduction(models.Model):
 
     def _prepare_merge_orig_links(self, merged_by='bom_line'):
         origs = super()._prepare_merge_orig_links(merged_by)
-        if merged_by != 'bom_line':
-            return origs
         for move in self.move_raw_ids:
             if not move.move_orig_ids or not move.created_purchase_line_ids:
                 continue
-            origs[move.bom_line_id.id].setdefault('created_purchase_line_ids', set()).update(move.created_purchase_line_ids.ids)
+            if merged_by == 'bom_line':
+                origs[move.bom_line_id.id].setdefault('created_purchase_line_ids', set()).update(move.created_purchase_line_ids.ids)
+            else:
+                origs[move.product_id.id].setdefault('created_purchase_line_ids', set()).update(move.created_purchase_line_ids.ids)
         for vals in origs.values():
             if not vals.get('created_purchase_line_ids'):
                 continue

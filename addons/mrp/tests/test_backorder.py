@@ -416,6 +416,114 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertTrue(mo1.lot_producing_id.name, lot_1.name)
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids.lot_producing_id), 3)
 
+    def test_split_no_bom(self):
+        """ Test split MO without BOM.
+        """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+        # prepare products
+        (self.product_1 | self.product_2).write({
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        # Change 'Units' rounding to 1 (integer only quantities)
+        self.uom_unit.rounding = 1
+        # Create a mo for 10 products
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'product_qty': 10,
+            'product_uom_id': self.uom_unit.id,
+            'bom_id': False,
+            'move_raw_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_uom_qty': 10,
+                'product_uom': self.uom_unit.id,
+            })],
+            'workorder_ids': [(0, 0, {
+                'name': 'OP1',
+                'product_uom_id': self.uom_unit.id,
+                'workcenter_id': self.workcenter_2.id,
+                'duration_expected': 100,
+            })],
+        })
+        mo.action_confirm()
+        # Split in 3 parts
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 3
+        action = wizard.save().action_split()
+        # Should have 3 mos
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 3)
+        mo1 = mo.procurement_group_id.mrp_production_ids[0]
+        mo2 = mo.procurement_group_id.mrp_production_ids[1]
+        mo3 = mo.procurement_group_id.mrp_production_ids[2]
+        # Check quantities
+        self.assertEqual(mo1.product_qty, 3)
+        self.assertEqual(mo2.product_qty, 3)
+        self.assertEqual(mo3.product_qty, 4)
+        # Check raw moves quantities
+        self.assertEqual(mo1.move_raw_ids.product_qty, 3)
+        self.assertEqual(mo2.move_raw_ids.product_qty, 3)
+        self.assertEqual(mo3.move_raw_ids.product_qty, 4)
+        # Check workorders durations
+        self.assertEqual(mo1.workorder_ids.duration_expected, 30)
+        self.assertEqual(mo2.workorder_ids.duration_expected, 30)
+        self.assertEqual(mo3.workorder_ids.duration_expected, 40)
+
+    def test_merge_no_bom(self):
+        """Test merge MOs without BOM.
+        """
+        # prepare products
+        (self.product_1 | self.product_2 | self.product_3 | self.product_4).write({
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        # Change 'Units' rounding to 1 (integer only quantities)
+        self.uom_unit.rounding = 1
+        # create 2 MOs
+        mo1 = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'product_qty': 1,
+            'product_uom_id': self.uom_unit.id,
+            'bom_id': False,
+            'move_raw_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+            }), (0, 0, {
+                'product_id': self.product_3.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+            })],
+        })
+        mo2 = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'product_qty': 1,
+            'product_uom_id': self.uom_unit.id,
+            'bom_id': False,
+            'move_raw_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+            }), (0, 0, {
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+            })],
+        })
+        mo1.action_confirm()
+        mo2.action_confirm()
+        # Merge them
+        expected_origin = ",".join([mo1.name, mo2.name])
+        action = (mo1 + mo2).action_merge()
+        mo = self.env[action['res_model']].browse(action['res_id'])
+        # Check origin & initial quantity
+        self.assertEqual(mo.origin, expected_origin)
+        self.assertEqual(mo.product_qty, 2)
+        # Check raw moves quantities
+        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == self.product_2).product_qty, 2)
+        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == self.product_3).product_qty, 1)
+        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == self.product_4).product_qty, 1)
+
     def test_reservation_method_w_mo(self):
         """ Create a MO for 2 units, Produce 1 and create a backorder.
         The MO and the backorder should be assigned according to the reservation method

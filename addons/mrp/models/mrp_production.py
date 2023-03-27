@@ -2057,15 +2057,14 @@ class MrpProduction(models.Model):
 
     def action_merge(self):
         self._pre_action_split_merge_hook(merge=True)
-        products = set([(production.product_id, production.bom_id) for production in self])
-        product_id, bom_id = products.pop()
+        product_id, bom_id = self.product_id, self.bom_id
         users = set([production.user_id for production in self])
         if len(users) == 1:
             user_id = users.pop()
         else:
             user_id = self.env.user
 
-        if self[0].bom_id:
+        if bom_id:
             origs = self._prepare_merge_orig_links()
             dests = {}
             for move in self.move_finished_ids:
@@ -2096,10 +2095,10 @@ class MrpProduction(models.Model):
                 'user_id': user_id.id,
                 'origin': ",".join(sorted([production.name for production in self])),
                 'move_raw_ids': [
-                    Command.create(vals) for vals in self._prepare_merge_move_raw_vals()
+                    Command.create(vals) for vals in self._prepare_action_merge_move_raw_vals()
                 ],
                 'move_finished_ids': [
-                    Command.create(vals) for vals in self._prepare_merge_move_finished_vals()
+                    Command.create(vals) for vals in self._prepare_action_merge_move_finished_vals()
                 ],
             })
 
@@ -2125,18 +2124,18 @@ class MrpProduction(models.Model):
             'res_id': production.id,
         }
 
-    def _prepare_merge_move_raw_vals(self):
+    def _prepare_action_merge_move_raw_vals(self):
         origs = self._prepare_merge_orig_links('product')
         vals_dict = {}
         for move in self.move_raw_ids:
             if move.product_id not in vals_dict:
                 vals_dict[move.product_id] = move.copy_data(
-                    default={'move_orig_ids': origs[move.product_id.id].get('move_orig_ids')})[0]
+                    default=origs.get(move.product_id.id, None))[0]
             else:
                 vals_dict[move.product_id]['product_uom_qty'] += move.product_uom_qty
         return list(vals_dict.values())
 
-    def _prepare_merge_move_finished_vals(self):
+    def _prepare_action_merge_move_finished_vals(self):
         dests = {}
         vals_dict = {}
         for move in self.move_finished_ids:
@@ -2273,10 +2272,11 @@ class MrpProduction(models.Model):
         additional_workorder_ids = self.workorder_ids.filtered(lambda workorder: not workorder.operation_id)
         if additional_workorder_ids:
             raise UserError(_("You can only merge manufacturing orders with no additional workorders."))
-        additional_raw_ids = self.move_raw_ids.filtered(lambda move: not move.bom_line_id)
-        additional_byproduct_ids = self.move_byproduct_ids.filtered(lambda move: not move.byproduct_id)
-        if self.bom_id and (additional_raw_ids or additional_byproduct_ids):
-            raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
+        if self.bom_id:
+            additional_raw_ids = self.move_raw_ids.filtered(lambda move: not move.bom_line_id)
+            additional_byproduct_ids = self.move_byproduct_ids.filtered(lambda move: not move.byproduct_id)
+            if additional_raw_ids or additional_byproduct_ids:
+                raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         # TODO explode and check no quantity has been edited
         return True
 
