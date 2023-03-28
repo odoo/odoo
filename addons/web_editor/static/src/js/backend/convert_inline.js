@@ -536,6 +536,12 @@ function enforceTablesResponsivity(editable) {
                 if (td.style.height.includes('%')) {
                     const newHeight = height * parseFloat(td.style.height.replace('%').trim()) / 100;
                     td.style.setProperty('height', newHeight + 'px');
+                    // Spread height down for responsivity
+                    td.style.setProperty('max-height', newHeight + 'px');
+                    wrapper.style.setProperty('max-height', newHeight + 'px');
+                    if (wrapper.childElementCount === 1 && wrapper.firstElementChild.nodeName === 'IMG' && wrapper.firstElementChild.style.height === '100%') {
+                        wrapper.firstElementChild.style.setProperty('max-height', newHeight + 'px');
+                    }
                 }
             }
         }
