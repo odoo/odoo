@@ -25,8 +25,11 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     trigger: "body:not(.o_column_delete)",
     run: function () {},
 }, {
+    content: "Go to tasks",
+    trigger: 'button[data-menu-xmlid="project.menu_project_management"]',
+},{
     content: "Go to my tasks", // My tasks is grouped by personal stage by default
-    trigger: 'a[data-menu-xmlid="project.menu_project_management"]',
+    trigger: 'a[data-menu-xmlid="project.menu_project_management_my_tasks"]',
 }, {
     content: "Check that we can create a new stage",
     trigger: '.o_column_quick_create .o_quick_create_folded'
