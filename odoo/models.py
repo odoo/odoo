@@ -6484,7 +6484,8 @@ class BaseModel(metaclass=MetaModel):
 
         # update snapshot0 with changed values
         for name in names:
-            snapshot0.fetch(name)
+            if name in nametree:
+                snapshot0.fetch(name)
 
         # Determine which field(s) should be triggered an onchange. On the first
         # call, 'names' only contains fields with a default. If 'self' is a new
