@@ -51,7 +51,6 @@ export class Record extends DataPoint {
         this.isDirty = false; // TODO: turn private? askChanges must be called beforehand to ensure the value is correct
         this._invalidFields = new Set();
         this._closeInvalidFieldsNotification = () => {};
-        this._urgentSave = false;
     }
 
     // -------------------------------------------------------------------------
@@ -93,7 +92,7 @@ export class Record extends DataPoint {
     }
 
     async update(changes) {
-        if (this._urgentSave) {
+        if (this.model._urgentSave) {
             return this._update(changes);
         }
         return this.model.mutex.exec(() => this._update(changes));
@@ -172,7 +171,7 @@ export class Record extends DataPoint {
 
     // FIXME: should this be save({ urgent: true }) ?
     urgentSave() {
-        this._urgentSave = true;
+        this.model._urgentSave = true;
         this.model.bus.trigger("WILL_SAVE_URGENTLY");
         this._save({ noReload: true });
         return this.isValid;
@@ -490,7 +489,7 @@ export class Record extends DataPoint {
         const onChangeFields = Object.keys(changes).filter(
             (fieldName) => this.activeFields[fieldName].onChange
         );
-        if (onChangeFields.length && !this._urgentSave) {
+        if (onChangeFields.length && !this.model._urgentSave) {
             let context = this.context;
             if (onChangeFields.length === 1) {
                 const fieldContext = this.activeFields[onChangeFields[0]].context;

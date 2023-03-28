@@ -61,6 +61,8 @@ export class RelationalModel extends Model {
         this.rootParams = markRaw(params);
 
         this.countLimit = params.countLimit || this.constructor.WEB_SEARCH_READ_COUNT_LIMIT;
+
+        this._urgentSave = false;
     }
 
     // -------------------------------------------------------------------------
