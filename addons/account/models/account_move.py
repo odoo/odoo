@@ -5733,6 +5733,7 @@ class AccountMoveLine(models.Model):
             'move_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
             'company_id': distribution.account_id.company_id.id or self.company_id.id or self.env.company.id,
+            'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
 
     @api.model
