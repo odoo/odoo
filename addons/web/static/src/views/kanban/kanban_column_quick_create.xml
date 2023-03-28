@@ -28,7 +28,7 @@
                     <small t-if="!env.isSmall and state.hasInputFocused" class="o_discard_msg text-muted float-end">
                         Esc to discard
                     </small>
-                    <t t-if="props.exampleData and !env.isSmall">
+                    <t t-if="canShowExamples and !env.isSmall">
                         <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
                     </t>
                 </div>
