@@ -77,6 +77,8 @@ class Do {
             },
             {
                 content: "select reward",
+                // There should be description because a program always has a name.
+                extra_trigger: ".selection-item span:nth-child(2)",
                 trigger: `.selection-item:contains("${rewardName}")`,
             },
         ];
@@ -87,16 +89,16 @@ class Do {
     clickDiscountButton() {
         return [
             {
-                content: 'click discount button',
-                trigger: '.js_discount',
+                content: "click discount button",
+                trigger: ".js_discount",
             },
         ];
     }
     clickConfirmButton() {
         return [
             {
-                content: 'click confirm button',
-                trigger: '.button.confirm',
+                content: "click confirm button",
+                trigger: ".button.confirm",
             },
         ];
     }
@@ -176,8 +178,8 @@ class Check {
             {
                 trigger: `.o_notification span:contains("${str}")`,
                 run: function () {},
-            }
-        ]
+            },
+        ];
     }
 }
 

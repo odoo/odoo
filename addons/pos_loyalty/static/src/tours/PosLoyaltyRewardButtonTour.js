@@ -121,6 +121,8 @@ ProductScreen.do.pressNumpad("Backspace");
 ProductScreen.do.pressNumpad("Backspace");
 PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.claimReward("Free Product - [Desk Pad, Monitor Stand]");
+SelectionPopup.check.hasSelectionItem("Monitor Stand");
+SelectionPopup.check.hasSelectionItem("Desk Pad");
 SelectionPopup.do.clickItem("Monitor Stand");
 PosLoyalty.check.isRewardButtonHighlighted(false);
 ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.00", "3.19");
@@ -128,19 +130,23 @@ PosLoyalty.check.hasRewardLine("Free Product", "-3.19", "1.00");
 PosLoyalty.check.orderTotalIs("4.81");
 PosLoyalty.exec.finalizeOrder("Cash", "10");
 
-registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", { test: true, url: "/pos/web", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyFreeProductTour", { test: true, url: "/pos/web", steps: getSteps() });
 startSteps();
 
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 
 ProductScreen.do.clickPartnerButton();
-ProductScreen.do.clickCustomer('AAA Partner');
-ProductScreen.exec.addOrderline('Test Product A', '1');
+ProductScreen.do.clickCustomer("AAA Partner");
+ProductScreen.exec.addOrderline("Test Product A", "1");
 PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.clickRewardButton();
 SelectionPopup.do.clickItem("Free Product - Test Product A");
-PosLoyalty.check.hasRewardLine('Free Product - Test Product A', '-11.50', '1.00');
+PosLoyalty.check.hasRewardLine("Free Product - Test Product A", "-11.50", "1.00");
 PosLoyalty.check.isRewardButtonHighlighted(false);
 
-registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", { test: true, url: "/pos/web", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyFreeProductTour2", { test: true, url: "/pos/web", steps: getSteps() });
