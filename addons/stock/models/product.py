@@ -632,7 +632,7 @@ class ProductTemplate(models.Model):
         'stock.location', "Inventory Location",
         company_dependent=True, check_company=True, domain="[('usage', '=', 'inventory'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory.")
-    sale_delay = fields.Float(
+    sale_delay = fields.Integer(
         'Customer Lead Time', default=0,
         help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.")
     tracking = fields.Selection([
