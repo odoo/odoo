@@ -276,6 +276,6 @@
 
     CustomFilterItem.components = { DatePicker, DateTimePicker, Dropdown };
     CustomFilterItem.props = { fields: Object };
-    CustomFilterItem.template = "web.CustomFilterItem";
+    CustomFilterItem.template = "web.Legacy.CustomFilterItem";
 
     export default CustomFilterItem;

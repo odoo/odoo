@@ -9,10 +9,8 @@ import {
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import {
-    applyFilter,
     applyGroup,
-    editConditionValue,
-    toggleAddCustomFilter,
+    removeFacet,
     toggleAddCustomGroup,
     toggleComparisonMenu,
     toggleFavoriteMenu,
@@ -82,11 +80,7 @@ QUnit.module("Board", (hooks) => {
         };
 
         LegacyFavoriteMenu.registry.add("add-to-board-menu", LegacyAddToBoard, 10);
-        favoriteMenuRegistry.add(
-            "add-to-board",
-            addToBoardItem,
-            { sequence: 10 }
-        );
+        favoriteMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });
         serverData = { models };
         target = getFixture();
     });
@@ -167,7 +161,12 @@ QUnit.module("Board", (hooks) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         serverData.views = {
             "partner,false,list": '<list><field name="foo"/></list>',
-            "partner,false,search": "<search></search>",
+            "partner,false,search": `
+                <search>
+                    <filter name="filter_on_a" string="Filter on a" domain="[['display_name', 'ilike', 'a']]"/>
+                    <filter name="filter_on_b" string="Filter on b" domain="[['display_name', 'ilike', 'b']]"/>
+                </search>
+            `,
         };
 
         const mockRPC = (route, args) => {
@@ -204,9 +203,7 @@ QUnit.module("Board", (hooks) => {
         var filter_count = 0;
         // Add a first filter
         await toggleFilterMenu(target);
-        await toggleAddCustomFilter(target);
-        await editConditionValue(target, 0, "a");
-        await applyFilter(target);
+        await toggleMenuItem(target, "Filter on a");
 
         // Add it to dashboard
         await toggleFavoriteMenu(target);
@@ -214,13 +211,12 @@ QUnit.module("Board", (hooks) => {
         await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
 
         // Remove it
-        await testUtils.dom.click(target.querySelector(".o_facet_remove"));
+        await removeFacet(target);
 
         // Add the second filter
         await toggleFilterMenu(target);
-        await toggleAddCustomFilter(target);
-        await editConditionValue(target, 0, "b");
-        await applyFilter(target);
+        await toggleMenuItem(target, "Filter on b");
+
         // Add it to dashboard
         await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent(
@@ -230,7 +226,7 @@ QUnit.module("Board", (hooks) => {
         await testUtils.dom.click(target.querySelector(".o_add_to_board .dropdown-menu button"));
     });
 
-    QUnit.test("save a action domain to dashboard", async function (assert) {
+    QUnit.test("save an action domain to dashboard", async function (assert) {
         // View domains are to be added to the dashboard domain
         assert.expect(1);
 
@@ -242,7 +238,11 @@ QUnit.module("Board", (hooks) => {
 
         serverData.views = {
             "partner,false,list": '<list><field name="foo"/></list>',
-            "partner,false,search": "<search></search>",
+            "partner,false,search": `
+                <search>
+                    <filter name="filter" string="Filter" domain="[['display_name', 'ilike', 'b']]"/>
+                </search>
+            `,
         };
 
         const mockRPC = (route, args) => {
@@ -264,9 +264,8 @@ QUnit.module("Board", (hooks) => {
 
         // Add a filter
         await toggleFilterMenu(target);
-        await toggleAddCustomFilter(target);
-        await editConditionValue(target, 0, "b");
-        await applyFilter(target);
+        await toggleMenuItem(target, "Filter");
+
         // Add it to dashboard
         await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent(
@@ -282,7 +281,7 @@ QUnit.module("Board", (hooks) => {
 
         serverData.views = {
             "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
-            "partner,false,search": '<search/>',
+            "partner,false,search": "<search/>",
         };
         registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData });
