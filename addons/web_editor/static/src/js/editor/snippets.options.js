@@ -6953,6 +6953,16 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     flipY(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'y');
     },
+    /**
+     * Shows/Hides the shape on mobile.
+     *
+     * @see this.selectClass for params
+     */
+    showOnMobile(previewMode, widgetValue, params) {
+        this._handlePreviewState(previewMode, () => {
+            return {showOnMobile: !this._getShapeData().showOnMobile};
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -6981,6 +6991,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 // Compat: flip classes are no longer used but may be present in client db
                 const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
                 return hasFlipClass || this._getShapeData().flip.includes('y');
+            }
+            case 'showOnMobile': {
+                return this._getShapeData().showOnMobile;
             }
         }
         return this._super(...arguments);
@@ -7102,7 +7115,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         // Updates/removes the shape container as needed and gives it the
         // correct background shape
         const json = target.dataset.oeShapeData;
-        const {shape, colors, flip = [], animated = 'false'} = json ? JSON.parse(json) : {};
+        const {shape, colors, flip = [], animated = 'false', showOnMobile} = json ? JSON.parse(json) : {};
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
             return this._insertShapeContainer(null);
@@ -7135,6 +7148,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             $(shapeContainer).css('background-image', '');
             $(shapeContainer).css('background-position', '');
         }
+        shapeContainer.classList.toggle('o_shape_show_mobile', !!showOnMobile);
         if (previewMode === false) {
             this.prevShapeContainer = shapeContainer.cloneNode(true);
             this.prevShape = target.dataset.oeShapeData;
@@ -7210,6 +7224,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             shape: '',
             colors: this._getDefaultColors($(target)),
             flip: [],
+            showOnMobile: false,
         };
         const json = target.dataset.oeShapeData;
         return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
@@ -7302,12 +7317,23 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             if (!shapeToSelect) {
                 shapeToSelect = possibleShapes[1];
             }
+            // Only show on mobile by default if toggled from mobile view
+            const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+            const isMobileView = this.$target[0].ownerDocument
+                .defaultView.frameElement.clientWidth < mobileViewThreshold;
+            const showOnMobile = isMobileView;
             this.trigger_up('snippet_edition_request', {exec: () => {
                 // options for shape will only be available after _toggleShape() returned
                 this._requestUserValueWidgets('bg_shape_opt')[0].enable();
             }});
             this._createShapeContainer(shapeToSelect);
-            return this._handlePreviewState(false, () => ({shape: shapeToSelect, colors: this._getImplicitColors(shapeToSelect)}));
+            return this._handlePreviewState(false, () => (
+                {
+                    shape: shapeToSelect,
+                    colors: this._getImplicitColors(shapeToSelect),
+                    showOnMobile,
+                }
+            ));
         }
     },
 });
