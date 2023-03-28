@@ -3433,14 +3433,50 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.currency_id, self.currency_data['currency'])
         self.assertRecordValues(move.line_ids, [
             {
+                'display_type': 'product',
+                'currency_id': self.currency_data['currency'].id,
                 'debit': 0.0,
-                'credit': self.currency_data['currency']._convert(750.0, self.company_data['currency'], self.env.company, fields.Date.today()),
+                'credit': 375.0,
             },
             {
-                'debit': self.currency_data['currency']._convert(750.0, self.company_data['currency'], self.env.company, fields.Date.today()),
+                'display_type': 'payment_term',
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 375.0,
                 'credit': 0.0,
             },
         ])
+
+        move.currency_id = self.company_data['currency']
+        with Form(move) as move_form:
+            move_form.currency_id = self.currency_data['currency']
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
+
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            move_form.currency_id = self.currency_data['currency']
+            self.assertEqual(move_form.currency_id, self.currency_data['currency'])
+
+    def test_change_journal_currency(self):
+        second_journal = self.company_data['default_journal_sale'].copy({
+            'currency_id': self.currency_data['currency'].id,
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                    'tax_ids': False,
+                })
+            ],
+        })
+
+        self.assertEqual(move.currency_id, self.company_data['currency'])
+        move.journal_id = second_journal
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
 
     @freeze_time('2019-01-01')
     def test_date_reversal_exchange_move(self):
