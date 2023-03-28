@@ -148,6 +148,30 @@ export class ProgressBarField extends Component {
 export const progressBarField = {
     component: ProgressBarField,
     displayName: _lt("Progress Bar"),
+    supportedOptions: [
+        {
+            label: _lt("Editable"),
+            name: "editable",
+            type: "boolean",
+        },
+        {
+            label: _lt("Edit max value"),
+            name: "edit_max_value",
+            type: "boolean",
+        },
+        {
+            label: _lt("Current value field"),
+            name: "current_value",
+            type: "field",
+            availableTypes: ["integer", "float"],
+        },
+        {
+            label: _lt("Max value field"),
+            name: "max_value",
+            type: "field",
+            availableTypes: ["integer", "float"],
+        },
+    ],
     supportedTypes: ["integer", "float"],
     extractProps: ({ attrs, options }) => ({
         maxValueField: options.max_value,
@@ -156,7 +180,7 @@ export const progressBarField = {
         isCurrentValueEditable: options.editable && !options.edit_max_value,
         isMaxValueEditable: options.editable && options.edit_max_value,
         title: attrs.title,
-        overflowClass: options.overflow_class || 'bg-secondary',
+        overflowClass: options.overflow_class || "bg-secondary",
     }),
 };
 
