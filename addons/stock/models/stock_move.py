@@ -107,11 +107,11 @@ class StockMove(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', index=True, readonly=True,
-        help="* New: When the stock move is created and not yet confirmed.\n"
-             "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
-             "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"
-             "* Available: When products are reserved, it is set to \'Available\'.\n"
-             "* Done: When the shipment is processed, the state is \'Done\'.")
+        help="* New: The stock move is created but not confirmed.\n"
+             "* Waiting Another Move: A linked stock move should be done before this one.\n"
+             "* Waiting Availability: The stock move is confirmed but the product can't be reserved.\n"
+             "* Available: The product of the stock move is reserved.\n"
+             "* Done: The product has been transferred and the transfer has been confirmed.")
 
     # used to record the product cost set by the user during a picking confirmation (when costing
     # method used is 'average price' or 'real'). Value given in company currency and in product uom.
