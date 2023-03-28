@@ -55,6 +55,23 @@ export class FloatField extends Component {
 export const floatField = {
     component: FloatField,
     displayName: _lt("Float"),
+    supportedOptions: [
+        {
+            label: _lt("Digits"),
+            name: "digits",
+            type: "string",
+        },
+        {
+            label: _lt("Type"),
+            name: "type",
+            type: "string",
+        },
+        {
+            label: _lt("Step"),
+            name: "step",
+            type: "number",
+        },
+    ],
     supportedTypes: ["float"],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => {

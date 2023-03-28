@@ -148,6 +148,18 @@ export class DomainField extends Component {
 export const domainField = {
     component: DomainField,
     displayName: _lt("Domain"),
+    supportedOptions: [
+        {
+            label: _lt("Edit in dialog"),
+            name: "in_dialog",
+            type: "boolean",
+        },
+        {
+            label: _lt("Model"),
+            name: "model",
+            type: "string",
+        },
+    ],
     supportedTypes: ["char"],
     isEmpty: () => false,
     extractProps({ options }, dynamicInfo) {

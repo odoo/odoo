@@ -42,6 +42,18 @@ export class IntegerField extends Component {
 export const integerField = {
     component: IntegerField,
     displayName: _lt("Integer"),
+    supportedOptions: [
+        {
+            label: _lt("Type"),
+            name: "type",
+            type: "string",
+        },
+        {
+            label: _lt("Step"),
+            name: "step",
+            type: "number",
+        },
+    ],
     supportedTypes: ["integer"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: ({ attrs, options }) => ({

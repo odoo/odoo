@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import {
     Many2OneAvatarField,
@@ -84,6 +85,14 @@ export const kanbanMany2OneAvatarUserField = {
     ...kanbanMany2OneAvatarField,
     component: KanbanMany2OneAvatarUserField,
     additionalClasses: [...kanbanMany2OneAvatarField.additionalClasses, "o_field_many2one_avatar"],
+    supportedOptions: [
+        ...(kanbanMany2OneAvatarField.supportedOptions || []),
+        {
+            label: _lt("Display avatar name"),
+            name: "display_avatar_name",
+            type: "boolean",
+        },
+    ],
     extractProps({ options }) {
         const props = kanbanMany2OneAvatarField.extractProps(...arguments);
         props.displayAvatarName = options.display_avatar_name || false;

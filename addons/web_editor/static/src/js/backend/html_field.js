@@ -646,6 +646,48 @@ HtmlField.props = {
 export const htmlField = {
     component: HtmlField,
     displayName: _lt("Html"),
+    supportedOptions: [{
+        label: _lt("CSS Edit"),
+        name: "cssEdit",
+        type: "string"
+    }, {
+        label: _lt("Height"),
+        name: "height",
+        type: "string"
+    }, {
+        label: _lt("Min height"),
+        name: "minHeight",
+        type: "string"
+    }, {
+        label: _lt("Max height"),
+        name: "maxHeight",
+        type: "string"
+    }, {
+        label: _lt("Snippets"),
+        name: "snippets",
+        type: "string"
+    }, {
+        label: _lt("No videos"),
+        name: "noVideos",
+        type: "boolean",
+        default: true
+    }, {
+        label: _lt("Resizable"),
+        name: "resizable",
+        type: "boolean",
+    }, {
+        label: _lt("Dynamic placeholder"),
+        name: "dynamic_placeholder",
+        type: "boolean",
+    }, {
+        label: _lt("Collaborative"),
+        name: "collaborative",
+        type: "boolean",
+    }, {
+        label: _lt("Codeview"),
+        name: "codeview",
+        type: "boolean",
+    }],
     supportedTypes: ["html"],
     extractProps({ attrs, options }, dynamicInfo) {
         const wysiwygOptions = {

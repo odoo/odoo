@@ -604,6 +604,11 @@ export const massMailingHtmlField = {
     ...htmlField,
     component: MassMailingHtmlField,
     displayName: _lt("Email"),
+    supportedOptions: [...htmlField.supportedOptions, {
+        label: _lt("Filter templates"),
+        name: "filterTemplates",
+        type: "boolean"
+    }],
     extractProps({ attrs, options }) {
         const props = htmlField.extractProps(...arguments);
         props.filterTemplates = options.filterTemplates;

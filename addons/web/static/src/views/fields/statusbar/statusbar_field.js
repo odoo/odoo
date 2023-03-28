@@ -221,6 +221,18 @@ export class StatusBarField extends Component {
 export const statusBarField = {
     component: StatusBarField,
     displayName: _lt("Status"),
+    supportedOptions: [
+        {
+            label: _lt("Clickable"),
+            name: "clickable",
+            type: "boolean",
+        },
+        {
+            label: _lt("Fold field"),
+            name: "fold_field",
+            type: "string",
+        },
+    ],
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
     legacySpecialData: "_fetchSpecialStatus",
