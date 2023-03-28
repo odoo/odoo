@@ -1,9 +1,7 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { descendants, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
-
-/* global html2canvas */
+import { getAdjacentPreviousSiblings, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
 
 //--------------------------------------------------------------------------
 // Constants
@@ -32,6 +30,7 @@ const TABLE_STYLES = {
     'font-size': 'unset',
     'line-height': 'unset',
 };
+let msos = [];
 
 //--------------------------------------------------------------------------
 // Public
@@ -421,20 +420,23 @@ function classToStyle($editable, cssRules) {
         // Outlook
         if (node.nodeName === 'A' && node.classList.contains('btn') && !node.classList.contains('btn-link') && !node.children.length) {
             writes.push(() => {
-                node.before(document.createComment(`[if mso]>
+                const startMso = document.createComment(`[if mso]>
                     <table align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-radius: 6px; border-collapse: separate !important;">
                         <tbody>
                             <tr>
                                 <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '')}" ${
                                     node.parentElement.style.textAlign === 'center' ? 'align="center" ' : ''
                                 }bgcolor="${rgbToHex(node.style.backgroundColor)}">
-                <![endif]`));
-                node.after(document.createComment(`[if mso]>
+                <![endif]`);
+                const endMso = document.createComment(`[if mso]>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                <![endif]`));
+                <![endif]`);
+                node.before(startMso);
+                node.after(endMso);
+                msos.push(startMso, endMso);
             });
         } else if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
             writes.push(() => { _wrap(node, 'p', 'o_outlook_hack', 'text-align:center;margin:0'); });
@@ -487,7 +489,38 @@ function enforceTablesResponsivity(editable) {
             }
         }
     }
-    // Masonry has crazy nested tables that require some extra treatment.
+}
+/**
+ * Modify the styles of images so they are responsive.
+ *
+ * @param {Element} editable
+ */
+function enforceImagesResponsivity(editable) {
+    // Images with 100% height in cells should preserve that height and the
+    // height of the row should be applied to the cell.
+    for (const image of editable.querySelectorAll('td > img')) {
+        const td = image.parentElement;
+        if (td.childElementCount === 1 && (image.classList.contains('h-100') || _getStylePropertyValue(image, 'height') === '100%')) {
+            td.style.setProperty('height', _getHeight(td.parentElement) + 'px');
+            image.style.setProperty('height', '100%');
+        }
+    }
+    // Remove the height attribute in card images so they can resize
+    // responsively, but leave it for Outlook.
+    for (const image of editable.querySelectorAll('img[width="100%"][height]')) {
+        const mso = document.createComment(`[if mso]>${image.outerHTML}<![endif]`);
+        image.before(mso);
+        image.classList.toggle('mso-hide', true);
+        const notMsoStart = document.createComment('[if !mso]><!');
+        const notMsoEnd = document.createComment('<![endif]');
+        image.before(notMsoStart);
+        image.after(notMsoEnd);
+        image.removeAttribute('height');
+        msos.push(mso, notMsoStart, notMsoEnd);
+    }
+}
+// Masonry has crazy nested tables that require some extra treatment.
+function handleMasonry(editable) {
     const masonryTrs = [...editable.querySelectorAll('.s_masonry_block tr')];
     for (const tr of masonryTrs) {
         const height = _getHeight(tr);
@@ -523,10 +556,17 @@ function enforceTablesResponsivity(editable) {
                 const wrapper = document.createElement('div');
                 wrapper.style.setProperty('display', 'inline-block');
                 wrapper.style.setProperty('width', '100%');
+                const firstNonCommentChild = [...td.childNodes].find(child => child.nodeType !== Node.COMMENT_NODE);
+                let anchor;
+                if (firstNonCommentChild) {
+                    anchor = getAdjacentPreviousSiblings(firstNonCommentChild)
+                        .filter(sib => sib.nodeType !== Node.TEXT_NODE)
+                        .shift();
+                }
                 for (const child of [...td.childNodes].filter(child => child.nodeType !== Node.COMMENT_NODE)) {
                     wrapper.append(child);
                 }
-                td.append(wrapper);
+                anchor ? anchor.after(wrapper) : td.append(wrapper);
                 const centeringSpan = document.createElement('span');
                 centeringSpan.style.setProperty('height', '100%');
                 centeringSpan.style.setProperty('display', 'inline-block');
@@ -548,31 +588,6 @@ function enforceTablesResponsivity(editable) {
     }
 }
 /**
- * Modify the styles of images so they are responsive.
- *
- * @param {Element} editable
- */
-function enforceImagesResponsivity(editable) {
-    // Images with 100% height in cells should preserve that height and the
-    // height of the row should be applied to the cell.
-    for (const image of editable.querySelectorAll('td > img')) {
-        const td = image.parentElement;
-        if (td.childElementCount === 1 && (image.classList.contains('h-100') || _getStylePropertyValue(image, 'height') === '100%')) {
-            td.style.setProperty('height', _getHeight(td.parentElement) + 'px');
-            image.style.setProperty('height', '100%');
-        }
-    }
-    // Remove the height attribute in card images so they can resize
-    // responsively, but leave it for Outlook.
-    for (const image of editable.querySelectorAll('img[width="100%"][height]')) {
-        image.before(document.createComment(`[if mso]>${image.outerHTML}<![endif]`))
-        image.classList.toggle('mso-hide', true);
-        image.before(document.createComment('[if !mso]><!'));
-        image.after(document.createComment('<![endif]'));
-        image.removeAttribute('height');
-    }
-}
-/**
  * Convert the contents of an editable area (as a JQuery element) into content
  * that is widely compatible with email clients. If no CSS Rules are given, they
  * will be computed for the editable element's owner document.
@@ -584,6 +599,7 @@ function enforceImagesResponsivity(editable) {
  * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
 async function toInline($editable, cssRules, $iframe) {
+    msos = [];
     $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
@@ -615,7 +631,6 @@ async function toInline($editable, cssRules, $iframe) {
         }
     }
 
-    await flattenBackgroundImages(editable);
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -628,6 +643,8 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
+    handleMasonry(editable);
+    flattenBackgroundImages(editable);
     responsiveToStaticForOutlook(editable);
     enforceTablesResponsivity(editable);
     formatTables($editable);
@@ -663,52 +680,79 @@ async function toInline($editable, cssRules, $iframe) {
     }
     $editable.addClass('odoo-editor-editable');
 }
+const XMLNS_URN = 'urn:schemas-microsoft-com:vml';
+// We assume background-size: cover, background-repeat: no-repeat and size 100%.
+function backgroundImageToVml(backgroundImage) {
+    const clone = backgroundImage.cloneNode(true);
+    const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
+    const url = backgroundImage.style.backgroundImage.match(/url\("?(.+?)"?\)/)[1];
+    const style = getComputedStyle(backgroundImage);
+    [...clone.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || style.fontSize));
+    const div = document.createElement('div');
+    div.style.fontSize = 0;
+    div.style.height = backgroundImage.style.height || '100%';
+    div.style.width = backgroundImage.style.width || '100%';
+    // ad-hoc fix to preserve some inherited properties without ancestor context:
+    for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
+        div.style[prop] = backgroundImage.style[prop] || style[prop];
+    }
+    div.replaceChildren(...clone.childNodes);
+    const vmlContent = document.createElement('div');
+    vmlContent.append(div);
+    for (const prop of ['background', 'background-image', 'background-repeat', 'background-size']) {
+        clone.style.removeProperty(prop);
+    }
+    clone.style.padding = 0;
+    clone.className = clone.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
+    clone.setAttribute('background', url);
+    clone.setAttribute('valign', 'middle');
+    const vmlStyle = `width:${width*.75}pt;height:${height*.75}pt;`;
+    // : { width: containerWidth }, instead of mso-width-percent
+    return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}
+        <v:rect xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="${vmlStyle}">
+            <v:fill src="${url}" origin="-0.5,-0.5" position="-0.5,-0.5" type="frame" size="1,1" aspect="atleast" color="#000000"/>
+            <v:textbox inset="0,0,0,0">
+                ${vmlContent.outerHTML}
+            </v:textbox>
+        </v:rect>
+        </${clone.nodeName.toLowerCase()}>
+    `;
+    // return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}
+    //     <v:image xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="${vmlStyle}" src="${url}"/>
+    //     <v:rect xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="position:absolute;${vmlStyle}">
+    //         <v:fill type="frame" sizes="${width*.75}pt,${height*.75}pt" aspect="atleast" opacity="0%" color="#000000"/>
+    //         <v:textbox inset="0,0,0,0">${vmlContent.outerHTML}</v:textbox>
+    //     </v:rect>
+    //     </${clone.nodeName.toLowerCase()}>`;
+}
 /**
- * Take all elements with a `background-image` style and convert them, along
- * with their contents, to `png` images. The images are then appended to the
- * original elements stripped of their background images and padding, while all
- * of their children are removed.
+ * Take all elements with a `background-image` style and convert them to `vml`
+ * for Outlook.
  *
  * @param {Element} editable
  */
-async function flattenBackgroundImages(editable) {
-    for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
-        if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
-            const iframe = document.createElement('iframe');
-            const style = getComputedStyle(backgroundImage);
-            const clonedBackground = backgroundImage.cloneNode(true);
-            clonedBackground.style.height = clonedBackground.style.height || '100%';
-            clonedBackground.style.width = clonedBackground.style.width || '100%';
-            // ad-hoc fix to preserve some inherited properties without ancestor context:
-            for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
-                clonedBackground.style[prop] = clonedBackground.style[prop] || style[prop];
-            }
-            iframe.style.height = style['height'];
-            iframe.style.width = style['width'];
-            iframe.style.padding = 0;
-            iframe.srcdoc = editable.ownerDocument.head.outerHTML + clonedBackground.outerHTML;
-            const iframePromise = new Promise(resolve => iframe.addEventListener('load', resolve));
-            backgroundImage.after(iframe);
-            await iframePromise;
-            iframe.contentDocument.body.style.margin = 0;
-
-            const canvas = await html2canvas(iframe.contentDocument.body.firstElementChild, { scale: 1 });
-            const image = document.createElement('img');
-            image.setAttribute('src', canvas.toDataURL('png'));
-            image.style.setProperty('margin', 0);
-            image.style.setProperty('display', 'block'); // Ensure no added vertical space.
-            image.style.height = '100%';
-            image.style.width = '100%';
-            image.setAttribute('width', '100%');
-            image.setAttribute('height', '100%');
-            // Clean up the original element.
-            backgroundImage.replaceChildren(...descendants(backgroundImage).filter(node => node.nodeType === Node.COMMENT_NODE));
-            backgroundImage.style.setProperty('padding', 0);
-            backgroundImage.style.removeProperty('background-image');
-            backgroundImage.prepend(image); // Add the image to the original element.
-            backgroundImage.className = backgroundImage.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
-            iframe.remove();
-        }
+function flattenBackgroundImages(editable) {
+    // for (const mso of msos) {
+    //     const renderedMso = document.createElement('div');
+    //     renderedMso.innerHTML = mso.textContent.replace('[if mso]>', '').replace('<![endif]', '');
+    //     const backgroundImages = [...renderedMso.querySelectorAll('*[style*=background-image]')].reverse();
+    //     for (const backgroundImage of backgroundImages) {
+    //         const vml = backgroundImageToVml(backgroundImage);
+    //         // Replace the original version with the Outlook one.
+    //         backgroundImage.after(document.createTextNode(vml));
+    //         backgroundImage.remove();
+    //     }
+    //     mso.textContent = '[if mso]>' + renderedMso.innerHTML + '<![endif]';
+    // }
+    const backgroundImages = [...editable.querySelectorAll('*[style*=background-image]')].reverse();
+    for (const backgroundImage of backgroundImages) {
+        const vml = backgroundImageToVml(backgroundImage);
+        const mso = document.createComment(`[if mso]>${vml}<![endif]`);
+        // Put the Outlook version after the original one in an mso conditional.
+        backgroundImage.after(mso);
+        msos.push(mso);
+        // Hide the original element for Outlook.
+        backgroundImage.classList.toggle('mso-hide', true);
     }
 }
 /**
@@ -1069,7 +1113,7 @@ function normalizeRem($editable, rootFontSize=16) {
  */
  function responsiveToStaticForOutlook(editable) {
     // Replace the responsive tables with static ones for Outlook
-    for (const td of editable.querySelectorAll('td')) {
+    for (const td of editable.querySelectorAll('td:not(.mso-hide)')) {
         const tdStyle = td.getAttribute('style') || '';
         const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
         const msoWidth = td.style.getPropertyValue('max-width');
@@ -1085,10 +1129,14 @@ function normalizeRem($editable, rootFontSize=16) {
             outlookTd.setAttribute('style', msoStyles);
         }
         // The opening tag of `outlookTd` is for Outlook.
-        td.before(document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`));
+        const mso = document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`)
+        td.before(mso);
         // The opening tag of `td` is for the others.
-        td.before(document.createComment('[if !mso]><!'));
-        td.prepend(document.createComment('<![endif]'));
+        const notMsoStart = document.createComment('[if !mso]><!');
+        const notMsoEnd = document.createComment('<![endif]');
+        td.before(notMsoStart);
+        td.prepend(notMsoEnd);
+        msos.push(mso, notMsoStart, notMsoEnd);
     }
 }
 /**
