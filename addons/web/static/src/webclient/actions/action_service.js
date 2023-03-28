@@ -832,6 +832,9 @@ function makeActionManager(env) {
      * @param {ActionOptions} options
      */
     function _executeActURLAction(action, options) {
+        let url = action.url;
+        if (url && !(url.startsWith('http') || url.startsWith('/')))
+            url = '/' + url;
         if (action.target === "self") {
             let willUnload = false;
             const onUnload = () => {
@@ -839,13 +842,13 @@ function makeActionManager(env) {
             };
             browser.addEventListener("beforeunload", onUnload);
             env.services.ui.block();
-            env.services.router.redirect(action.url);
+            env.services.router.redirect(url);
             browser.removeEventListener("beforeunload", onUnload);
             if (!willUnload) {
                 env.services.ui.unblock();
             }
         } else {
-            const w = browser.open(action.url, "_blank");
+            const w = browser.open(url, "_blank", "noreferrer");
             if (!w || w.closed || typeof w.closed === "undefined") {
                 const msg = env._t(
                     "A popup window has been blocked. You may need to change your " +
