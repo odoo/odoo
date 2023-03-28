@@ -23,5 +23,6 @@ class StockMove(models.Model):
         return res
 
     def _assign_picking_post_process(self, new=False):
-        super(StockMove, self)._assign_picking_post_process(new=new)
-        self.picking_id.action_confirm()
+        super()._assign_picking_post_process(new=new)
+        for picking in self.picking_id:
+            picking._find_auto_batch()
