@@ -338,9 +338,9 @@
                     <field name="lst_price" optional="show" string="Sales Price"/>
                     <field name="standard_price" optional="show"/>
                     <field name="categ_id" optional="hide"/>
-                    <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}" optional="hide"/>
+                    <field name="product_tag_ids" string="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
-                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
+                    <field name="uom_id" string="Unit" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" invisible="1" readonly="1"/>
                     <field name="active" invisible="1"/>
                 </tree>

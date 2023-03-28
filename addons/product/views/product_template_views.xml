@@ -15,7 +15,7 @@
                 <field name="priority" widget="priority" optional="show" nolabel="1"/>
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
-                <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="product_tag_ids" string="Tags" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '!=', 1)]}"/>
                 <field name="company_id" options="{'no_create': True}"
                     groups="base.group_multi_company" optional="hide"/>
@@ -24,7 +24,7 @@
                 <field name="categ_id" optional="hide"/>
                 <field name="detailed_type" optional="hide" readonly="1"/>
                 <field name="type" invisible="1"/>
-                <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
+                <field name="uom_id" string="Unit" readonly="1" optional="show" groups="uom.group_uom"/>
                 <field name="active" invisible="1"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
