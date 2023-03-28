@@ -610,7 +610,6 @@ async function toInline($editable, cssRules, $iframe) {
     }
 
     await flattenBackgroundImages(editable);
-
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -674,6 +673,10 @@ async function flattenBackgroundImages(editable) {
             const clonedBackground = backgroundImage.cloneNode(true);
             clonedBackground.style.height = clonedBackground.style.height || '100%';
             clonedBackground.style.width = clonedBackground.style.width || '100%';
+            // ad-hoc fix to preserve some inherited properties without ancestor context:
+            for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
+                clonedBackground.style[prop] = clonedBackground.style[prop] || style[prop];
+            }
             iframe.style.height = style['height'];
             iframe.style.width = style['width'];
             iframe.style.padding = 0;
