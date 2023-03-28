@@ -56,7 +56,7 @@ class SaleReport(models.Model):
     state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
 
     # sale.order.line fields
-    order_id = fields.Many2one(comodel_name='sale.order', string="Order #", readonly=True)
+    order_reference = fields.Reference(string='Related Order', selection=[('sale.order', 'Sales Order')], group_operator="count_distinct")
 
     categ_id = fields.Many2one(
         comodel_name='product.category', string="Product Category", readonly=True)
@@ -151,7 +151,7 @@ class SaleReport(models.Model):
                 / {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS discount_amount,
-            s.id AS order_id"""
+            concat('sale.order', ',', s.id) AS order_reference"""
 
         additional_fields_info = self._select_additional_fields()
         template = """,
