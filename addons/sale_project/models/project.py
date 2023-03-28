@@ -503,7 +503,7 @@ class Project(models.Model):
         return profitability_items
 
     def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
+        buttons = super(Project, self)._get_stat_buttons(yolo)
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
             buttons.append({
                 'icon': 'dollar',
