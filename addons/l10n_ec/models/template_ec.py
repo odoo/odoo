@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -41,7 +41,7 @@ class AccountChartTemplate(models.AbstractModel):
         """ In case of an Ecuador, we modified the sales journal"""
         return {
             'sale': {
-                'name': "001-001 Facturas de cliente",
+                'name': _("001-001 Customer Invoices"),
                 'l10n_ec_entity': '001',
                 'l10n_ec_emission': '001',
                 'l10n_ec_emission_address_id': self.env.company.partner_id.id,
