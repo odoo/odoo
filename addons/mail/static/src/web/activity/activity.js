@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { Component, useState, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, markup, onMounted, onWillUpdateProps, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { escape, sprintf } from "@web/core/utils/strings";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { browser } from "@web/core/browser/browser";
@@ -49,6 +49,60 @@ export class Activity extends Component {
             this.state.delay = computeDelay(nextProps.data.date_deadline);
         });
         this.attachmentUploader = useAttachmentUploader(this.thread);
+    }
+
+    /**
+     * @returns {string}
+     */
+    get activityInfo() {
+        return markup(
+            sprintf(
+                _t(
+                    `<span class="fw-bolder %(classes)s }}">%(delay)s:</span> %(activity name)s <span class="o-mail-Activity-user">for %(responsible employee)s</span>`
+                ),
+                {
+                    classes: this.delayClass,
+                    delay: this.delayString,
+                    "activity name": `<span class="fw-bolder">${escape(this.displayName)}</span>`,
+                    "responsible employee": escape(this.props.data.user_id[1]),
+                }
+            )
+        );
+    }
+
+    /**
+     * @returns {string}
+     */
+    get delayClass() {
+        if (this.state.delay === 0) {
+            return "text-warning";
+        }
+        if (this.state.delay < 0) {
+            return "text-danger";
+        }
+        return "text-success";
+    }
+
+    /**
+     * @returns {string}
+     */
+    get delayString() {
+        switch (this.state.delay) {
+            case 1:
+                return _t("Tomorrow");
+            case 0:
+                return _t("Today");
+            case -1:
+                return _t("Yesterday");
+        }
+        if (this.state.delay > 0) {
+            return sprintf(_t("Due in %(number of days)s days"), {
+                "number of days": this.state.delay,
+            });
+        }
+        return sprintf(_t("%(number of days)s days overdue"), {
+            "number of days": -this.state.delay,
+        });
     }
 
     get displayName() {
