@@ -57,7 +57,10 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("execute an 'ir.actions.act_url' action with onClose option", async (assert) => {
         setupWebClientRegistries();
         patchWithCleanup(browser, {
-            open: () => assert.step("browser open"),
+            open: (url, target, argument) => {
+                assert.step("browser open");
+                assert.strictEqual(argument, "noreferrer");
+            },
         });
         const env = await makeTestEnv({ serverData });
         const options = {
@@ -65,5 +68,22 @@ QUnit.module("ActionManager", (hooks) => {
         };
         await doAction(env, { type: "ir.actions.act_url" }, options);
         assert.verifySteps(["browser open", "onClose"]);
+    });
+    
+    QUnit.test("execute an 'ir.actions.act_url' action with url javascript:", async (assert) => {
+        assert.expect(2);
+        patchWithCleanup(browser.location, {
+            assign: (url) => {
+                assert.step(url);
+            },
+        });
+        setupWebClientRegistries();
+        const env = await makeTestEnv({ serverData });
+        await doAction(env, {
+            type: "ir.actions.act_url",
+            target: "self",
+            url: "javascript:alert()",
+        });
+        assert.verifySteps(["/javascript:alert()"]);
     });
 });
