@@ -107,7 +107,10 @@ export class StaticList extends DataPoint {
                     break;
                 }
                 case x2ManyCommands.LINK_TO: {
-                    // TODO
+                    // TODO (needs unity + onchange2)
+                    // const record = this._createRecordDatapoint(command[2]);
+                    // this.records.push(record);
+                    // this._commands.push([command[0], command[1]]);
                     break;
                 }
                 case x2ManyCommands.DELETE_ALL: {
@@ -116,7 +119,7 @@ export class StaticList extends DataPoint {
                     break;
                 }
                 case x2ManyCommands.REPLACE_WITH: {
-                    // TODO
+                    // TODO (needs unity + onchange2)
                     break;
                 }
             }
@@ -137,11 +140,13 @@ export class StaticList extends DataPoint {
     }
 
     _getCommands() {
-        if (this._commands.length) {
-            return this._commands.map((c) => {
+        // TODO: encapsulate commands in a class?
+        return this._commands.map((c) => {
+            if (c[2]) {
                 return [c[0], c[1], c[2]._getChanges()];
-            });
-        }
+            }
+            return [c[0], c[1]];
+        });
     }
 }
 StaticList.DEFAULT_LIMIT = 40;

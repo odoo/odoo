@@ -754,7 +754,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.tttt("onchange for embedded one2many in a one2many", async function (assert) {
+    QUnit.test("onchange for embedded one2many in a one2many", async function (assert) {
         serverData.models.turtle.fields.partner_ids.type = "one2many";
         serverData.models.turtle.records[0].partner_ids = [1];
         serverData.models.partner.records[0].turtles = [1];
@@ -762,16 +762,12 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 obj.turtles = [
-                    [5, false, false],
                     [
                         1,
                         1,
                         {
                             turtle_foo: "hop",
-                            partner_ids: [
-                                [5, false, false],
-                                [4, 1, false],
-                            ],
+                            partner_ids: [[4, 1, false]],
                         },
                     ],
                 ];
@@ -904,13 +900,15 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [
-                        [5],
                         [
                             1,
                             2,
                             {
                                 turtle_foo: "hop",
-                                partner_ids: [[5], [4, 2], [4, 4]],
+                                partner_ids: [
+                                    [4, 2],
+                                    [4, 4],
+                                ],
                             },
                         ],
                     ];

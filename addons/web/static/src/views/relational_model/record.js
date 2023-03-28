@@ -215,7 +215,7 @@ export class Record extends DataPoint {
                         data: valueIsCommandList ? [] : value,
                         parent: this,
                         limit,
-                        onChange: () => (this._changes[fieldName] = staticList), // TODO: execute onchange if any
+                        onChange: () => this._update({ [fieldName]: staticList }),
                     });
                 }
                 if (valueIsCommandList) {
@@ -288,7 +288,10 @@ export class Record extends DataPoint {
             } else if (type === "many2one") {
                 result[fieldName] = value ? value[0] : false;
             } else if (type === "one2many" || type === "many2many") {
-                result[fieldName] = value._getCommands();
+                const commands = value._getCommands();
+                if (commands.length) {
+                    result[fieldName] = commands;
+                }
             } else {
                 result[fieldName] = value;
             }
@@ -497,7 +500,7 @@ export class Record extends DataPoint {
             Object.assign(changes, this._applyServerValues(otherChanges, this.data));
         }
         this._applyChanges(changes);
-        this._onChange();
+        await this._onChange();
         // FIXME: should we remove this from model? Only for standalone case
         this.model.bus.trigger("RELATIONAL_MODEL:RECORD_UPDATED", {
             record: this,
