@@ -717,7 +717,9 @@ class MrpProduction(models.Model):
     @api.onchange('bom_id', 'product_id')
     def _onchange_workorder_ids(self):
         if self.bom_id and self.product_id:
-            self._create_workorder()
+            self.workorder_ids = [(5, 0)] + [(0, 0, value) for value in self._get_workorder_values()]
+            for workorder in self.workorder_ids:
+                workorder.duration_expected = workorder._get_duration_expected()
         else:
             self.workorder_ids = False
 
@@ -867,10 +869,16 @@ class MrpProduction(models.Model):
         return action
 
     def _create_workorder(self):
+        values = self._get_workorder_values()
+        self.env['mrp.workorder'].create(values)
+        for workorder in self.workorder_ids:
+            workorder.duration_expected = workorder._get_duration_expected()
+
+    def _get_workorder_values(self):
+        workorders_values = []
         for production in self:
             if not production.bom_id or not production.product_id:
                 continue
-            workorders_values = []
 
             product_qty = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
             exploded_boms, dummy = production.bom_id.explode(production.product_id, product_qty / production.bom_id.product_qty, picking_type=production.bom_id.picking_type_id)
@@ -890,9 +898,7 @@ class MrpProduction(models.Model):
                         'operation_id': operation.id,
                         'state': 'pending',
                     }]
-            production.workorder_ids = [(5, 0)] + [(0, 0, value) for value in workorders_values]
-            for workorder in production.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+        return workorders_values
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
         group_orders = self.procurement_group_id.mrp_production_ids
