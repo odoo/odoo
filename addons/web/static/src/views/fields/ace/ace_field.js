@@ -69,7 +69,14 @@ export class AceField extends Component {
 export const aceField = {
     component: AceField,
     displayName: _lt("Ace Editor"),
-    supportedTypes: ["text"],
+    supportedOptions: [
+        {
+            label: _lt("Mode"),
+            name: "mode",
+            type: "string",
+        },
+    ],
+    supportedTypes: ["text", "html"],
     extractProps: ({ options }) => ({
         mode: options.mode,
     }),
