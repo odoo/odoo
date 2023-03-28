@@ -24,6 +24,7 @@ _logger = logging.getLogger(__name__)
 # Used to find inline images
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
+mso_re = re.compile(r"^\[if mso\]>[\s\S]*<!\[endif\]$")
 
 class MassMailing(models.Model):
     """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
@@ -1324,16 +1325,27 @@ class MassMailing(models.Model):
             return '/web/image/%s?access_token=%s' % (
                 attachment.id, attachment.access_token)
 
-        modified = False
         root = lxml.html.fromstring(body_html)
-        for node in root.iter('img'):
-            match = image_re.match(node.attrib.get('src', ''))
-            if match:
-                mime = match.group(1)  # unsed
-                image = match.group(2).encode()  # base64 image as bytes
+        def _images_to_url(root):
+            modified = False
+            for node in root.iter('img'):
+                match = image_re.match(node.attrib.get('src', ''))
+                if match:
+                    mime = match.group(1)  # unsed
+                    image = match.group(2).encode()  # base64 image as bytes
 
-                node.attrib['src'] = _image_to_url(image)
-                modified = True
+                    node.attrib['src'] = _image_to_url(image)
+                    modified = True
+            return modified
+        modified = _images_to_url(root)
+        # handle the images in mso comments
+        for comment in root.xpath('//comment()'):
+            match = mso_re.match(comment.text)
+            if match:
+                mso = lxml.html.fromstring('<div>' + comment.text.replace('[if mso]>', '').replace('<![endif]', '') + '</div>')
+                mso_modified = _images_to_url(mso)
+                modified = modified or mso_modified
+                comment.text = b'[if mso]>' + lxml.html.tostring(mso)[5:-6] + b'<![endif]'
 
         if modified:
             return lxml.html.tostring(root, encoding='unicode')
