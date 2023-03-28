@@ -71,10 +71,6 @@ class TestBasicFields(BaseImportCase):
         """ Readonly fields should be filtered out"""
         self.assertEqualFields(self.get_fields('char.readonly'), [ID_FIELD])
 
-    def test_readonly_states(self):
-        """ Readonly fields with states should not be filtered out"""
-        self.assertEqualFields(self.get_fields('char.states'), make_field(field_type='char', model_name=base_import_model('char.states')))
-
     def test_readonly_states_noreadonly(self):
         """ Readonly fields with states having nothing to do with
         readonly should still be filtered out"""

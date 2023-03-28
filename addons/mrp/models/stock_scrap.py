@@ -8,17 +8,16 @@ class StockScrap(models.Model):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        states={'done': [('readonly', True)]}, check_company=True)
+        check_company=True)
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order',
-        states={'done': [('readonly', True)]},
         check_company=True) # Not to restrict or prefer quants, but informative
     product_is_kit = fields.Boolean(related='product_id.is_kits')
     product_template = fields.Many2one(related='product_id.product_tmpl_id')
     bom_id = fields.Many2one(
         'mrp.bom', 'Kit',
         domain="[('type', '=', 'phantom'), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_template)]",
-        states={'done': [('readonly', True)]}, check_company=True)
+        check_company=True)
 
     @api.onchange('workorder_id')
     def _onchange_workorder_id(self):

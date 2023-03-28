@@ -22,12 +22,10 @@ class MrpWorkorder(models.Model):
         return workcenters.browse(workcenter_ids)
 
     name = fields.Char(
-        'Work Order', required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        'Work Order', required=True)
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)], 'progress': [('readonly', True)]},
         group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
         string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
@@ -73,17 +71,16 @@ class MrpWorkorder(models.Model):
         'Start',
         compute='_compute_dates',
         inverse='_set_dates',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        readonly=False,
         store=True, copy=False)
     date_finished = fields.Datetime(
         'End',
         compute='_compute_dates',
         inverse='_set_dates',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        readonly=False,
         store=True, copy=False)
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         readonly=False, store=True) # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',

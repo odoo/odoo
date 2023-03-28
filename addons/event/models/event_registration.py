@@ -16,11 +16,9 @@ class EventRegistration(models.Model):
 
     # event
     event_id = fields.Many2one(
-        'event.event', string='Event', required=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+        'event.event', string='Event', required=True)
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Event Ticket', readonly=True, ondelete='restrict',
-        states={'draft': [('readonly', False)]})
+        'event.event.ticket', string='Event Ticket', ondelete='restrict')
     active = fields.Boolean(default=True)
     # utm informations
     utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
@@ -46,7 +44,7 @@ class EventRegistration(models.Model):
     event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
     company_id = fields.Many2one(
         'res.company', string='Company', related='event_id.company_id',
-        store=True, readonly=True, states={'draft': [('readonly', False)]})
+        store=True, readonly=False)
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],

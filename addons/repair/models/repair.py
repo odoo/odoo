@@ -61,8 +61,7 @@ class Repair(models.Model):
     tag_ids = fields.Many2many('repair.tags', string="Tags")
     under_warranty = fields.Boolean(
         'Under Warranty',
-        help='If ticked, the sales price will be set to 0 for all products transferred from the repair order.',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        help='If ticked, the sales price will be set to 0 for all products transferred from the repair order.')
     schedule_date = fields.Datetime("Scheduled Date", default=fields.Datetime.now, index=True, required=True, copy=False)
 
     # Product To Repair
@@ -72,15 +71,14 @@ class Repair(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, check_company=True)
+        check_company=True)
     product_qty = fields.Float(
         'Product Quantity',
-        default=1.0, digits='Product Unit of Measure',
-        readonly=True, states={'draft': [('readonly', False)]})
+        default=1.0, digits='Product Unit of Measure')
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         compute='compute_product_uom', store=True, precompute=True,
-        readonly=True, states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
+        domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',

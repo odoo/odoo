@@ -17,7 +17,7 @@ class PurchaseOrder(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", states=Purchase.READONLY_STATES, compute="_compute_l10n_in_gst_treatment", store=True)
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True)
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
