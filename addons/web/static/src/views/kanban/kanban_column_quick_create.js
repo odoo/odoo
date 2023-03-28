@@ -45,6 +45,10 @@ export class KanbanColumnQuickCreate extends Component {
         useHotkey("escape", () => this.fold());
     }
 
+    get relatedFieldName() {
+        return this.props.groupByField.string;
+    }
+
     fold() {
         this.props.onFoldChange(true);
     }
@@ -78,6 +82,6 @@ KanbanColumnQuickCreate.props = {
     onFoldChange: Function,
     onValidate: Function,
     folded: Boolean,
-    groupByFieldString: String,
+    groupByField: Object,
 };
 KanbanColumnQuickCreate.template = "web.KanbanColumnQuickCreate";
