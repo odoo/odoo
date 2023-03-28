@@ -24,8 +24,8 @@ class AccountMove(models.Model):
 
     l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
     l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment", ondelete="restrict")
-    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
-    l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo")
+    l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
     l10n_it_einvoice_name = fields.Char(compute='_compute_l10n_it_einvoice')
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", compute='_compute_l10n_it_einvoice')
 

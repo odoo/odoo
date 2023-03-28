@@ -99,13 +99,11 @@ class MassMailing(models.Model):
     schedule_type = fields.Selection(
         [('now', 'Send now'), ('scheduled', 'Send on')],
         string='Schedule', default='now',
-        readonly=True, required=True,
-        states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+        readonly=False, required=True)
     schedule_date = fields.Datetime(
         string='Scheduled for',
-        compute='_compute_schedule_date', readonly=True, store=True,
-        copy=True, tracking=True,
-        states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+        compute='_compute_schedule_date', readonly=False, store=True,
+        copy=True, tracking=True)
     calendar_date = fields.Datetime(
         'Calendar Date',
         compute='_compute_calendar_date', store=True,

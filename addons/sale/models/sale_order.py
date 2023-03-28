@@ -12,11 +12,6 @@ from odoo.tools.sql import create_index
 
 from odoo.addons.payment import utils as payment_utils
 
-READONLY_FIELD_STATES = {
-    state: [('readonly', True)]
-    for state in {'sale', 'cancel'}
-}
-
 INVOICE_STATUS = [
     ('upselling', 'Upselling Opportunity'),
     ('invoiced', 'Fully Invoiced'),
@@ -55,9 +50,8 @@ class SaleOrder(models.Model):
 
     name = fields.Char(
         string="Order Reference",
-        required=True, copy=False, readonly=True,
+        required=True, copy=False, readonly=False,
         index='trigram',
-        states={'draft': [('readonly', False)]},
         default=lambda self: _('New'))
 
     company_id = fields.Many2one(
@@ -67,9 +61,8 @@ class SaleOrder(models.Model):
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Customer",
-        required=True, readonly=False, change_default=True, index=True,
+        required=True, change_default=True, index=True,
         tracking=1,
-        states=READONLY_FIELD_STATES,
         domain="[('company_id', 'in', (False, company_id))]")
     state = fields.Selection(
         selection=SALE_ORDER_STATE,
@@ -89,8 +82,7 @@ class SaleOrder(models.Model):
              "this date rather than product lead times.")
     date_order = fields.Datetime(
         string="Order Date",
-        required=True, readonly=False, copy=False,
-        states=READONLY_FIELD_STATES,
+        required=True, copy=False,
         help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
         default=fields.Datetime.now)
     origin = fields.Char(
@@ -105,13 +97,11 @@ class SaleOrder(models.Model):
         string="Online Signature",
         compute='_compute_require_signature',
         store=True, readonly=False, precompute=True,
-        states=READONLY_FIELD_STATES,
         help="Request a online signature and/or payment to the customer in order to confirm orders automatically.")
     require_payment = fields.Boolean(
         string="Online Payment",
         compute='_compute_require_payment',
-        store=True, readonly=False, precompute=True,
-        states=READONLY_FIELD_STATES)
+        store=True, readonly=False, precompute=True)
 
     signature = fields.Image(
         string="Signature",
@@ -124,8 +114,7 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(
         string="Expiration",
         compute='_compute_validity_date',
-        store=True, readonly=False, copy=False, precompute=True,
-        states=READONLY_FIELD_STATES)
+        store=True, readonly=False, copy=False, precompute=True)
 
     # Partner-based computes
     note = fields.Html(
@@ -159,14 +148,12 @@ class SaleOrder(models.Model):
         string="Payment Terms",
         compute='_compute_payment_term_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
-        states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string="Pricelist",
         compute='_compute_pricelist_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
-        states=READONLY_FIELD_STATES,
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If you change the pricelist, only newly added lines will be affected.")
@@ -250,7 +237,6 @@ class SaleOrder(models.Model):
         comodel_name='account.analytic.account',
         string="Analytic Account",
         copy=False, check_company=True,  # Unrequired company
-        states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tag_ids = fields.Many2many(
         comodel_name='crm.tag',

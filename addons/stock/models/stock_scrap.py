@@ -15,45 +15,44 @@ class StockScrap(models.Model):
 
     name = fields.Char(
         'Reference',  default=lambda self: _('New'),
-        copy=False, readonly=True, required=True,
-        states={'done': [('readonly', True)]})
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True, states={'done': [('readonly', True)]})
+        copy=False, required=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
         'product.product', 'Product', domain="[('type', 'in', ['product', 'consu'])]",
-        required=True, states={'done': [('readonly', True)]}, check_company=True)
+        required=True, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
-        required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
+        required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id)]", check_company=True)
+        domain="[('product_id', '=', product_id)]", check_company=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
-        states={'done': [('readonly', True)]}, check_company=True)
-    owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]}, check_company=True)
+        check_company=True)
+    owner_id = fields.Many2one('res.partner', 'Owner', check_company=True)
     move_ids = fields.One2many('stock.move', 'scrap_id')
-    picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, check_company=True)
+    picking_id = fields.Many2one('stock.picking', 'Picking', check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
-        compute='_compute_location_id', store=True, required=True, precompute=True, states={'done': [('readonly', True)]},
+        compute='_compute_location_id', store=True, required=True, precompute=True,
         domain="[('usage', '=', 'internal')]", check_company=True, readonly=False)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location',
-        compute='_compute_scrap_location_id', store=True, required=True, precompute=True, states={'done': [('readonly', True)]},
+        compute='_compute_scrap_location_id', store=True, required=True, precompute=True,
         domain="[('scrap_location', '=', True)]", check_company=True, readonly=False)
     scrap_qty = fields.Float(
-        'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
+        'Quantity', required=True, digits='Product Unit of Measure',
         compute='_compute_scrap_qty', default=0.0, readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
-    should_replenish = fields.Boolean(string='Replenish Scrapped Quantities', states={'done': [('readonly', True)]})
+    should_replenish = fields.Boolean(string='Replenish Scrapped Quantities')
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):

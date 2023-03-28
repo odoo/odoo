@@ -37,8 +37,7 @@ class PosSession(models.Model):
         'res.users', string='Opened By',
         required=True,
         index=True,
-        readonly=True,
-        states={'opening_control': [('readonly', False)]},
+        readonly=False,
         default=lambda self: self.env.uid,
         ondelete='restrict')
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", readonly=False)

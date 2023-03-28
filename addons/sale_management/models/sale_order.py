@@ -7,8 +7,6 @@ from odoo import SUPERUSER_ID, api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import is_html_empty
 
-from odoo.addons.sale.models.sale_order import READONLY_FIELD_STATES
-
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -18,12 +16,10 @@ class SaleOrder(models.Model):
         string="Quotation Template",
         compute='_compute_sale_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
-        states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     sale_order_option_ids = fields.One2many(
         comodel_name='sale.order.option', inverse_name='order_id',
         string="Optional Products Lines",
-        states=READONLY_FIELD_STATES,
         copy=True)
 
     #=== COMPUTE METHODS ===#

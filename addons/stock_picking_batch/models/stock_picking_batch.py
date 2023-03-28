@@ -19,14 +19,13 @@ class StockPickingBatch(models.Model):
         copy=False, required=True, readonly=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True,
-        readonly=True, states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]})
+        readonly=False)
     company_id = fields.Many2one(
         'res.company', string="Company", required=True, readonly=True,
         index=True, default=lambda self: self.env.company)
     picking_ids = fields.One2many(
-        'stock.picking', 'batch_id', string='Transfers', readonly=True,
+        'stock.picking', 'batch_id', string='Transfers', readonly=False,
         domain="[('id', 'in', allowed_picking_ids)]", check_company=True,
-        states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]},
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
         compute='_compute_move_ids',
@@ -42,8 +41,7 @@ class StockPickingBatch(models.Model):
         'stock.move', string="Stock moves", compute='_compute_move_ids')
     move_line_ids = fields.One2many(
         'stock.move.line', string='Stock move lines',
-        compute='_compute_move_ids', inverse='_set_move_line_ids', readonly=True,
-        states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]})
+        compute='_compute_move_ids', inverse='_set_move_line_ids', readonly=False)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In progress'),
@@ -53,12 +51,11 @@ class StockPickingBatch(models.Model):
         copy=False, tracking=True, required=True, readonly=True, index=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', check_company=True, copy=False,
-        readonly=True, index=True, states={'draft': [('readonly', False)]})
+        index=True)
     picking_type_code = fields.Selection(
         related='picking_type_id.code')
     scheduled_date = fields.Datetime(
         'Scheduled Date', copy=False, store=True, readonly=False, compute="_compute_scheduled_date",
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="""Scheduled date for the transfers to be processed.
               - If manually set then scheduled date for all transfers in batch will automatically update to this date.
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date

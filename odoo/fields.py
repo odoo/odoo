@@ -544,7 +544,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).')
 
             if self.states:
-                warnings.warn(f'"states" property on the field "{self}" is no longer used', DeprecationWarning)
+                warnings.warn(f'Since Odoo 17, property {self}.states is no longer supported.')
 
             self._setup_done = True
 
@@ -648,8 +648,6 @@ class Field(MetaField('DummyField', (object,), {})):
         # special cases of inherited fields
         if self.inherited:
             self.inherited_field = field
-            if not self.states:
-                self.states = field.states
             if field.required:
                 self.required = True
             # add modules from delegate and target fields; the first one ensures
@@ -904,9 +902,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def is_editable(self):
         """ Return whether the field can be editable in a view. """
-        return not self.readonly or self.states and any(
-            'readonly' in item for items in self.states.values() for item in items
-        )
+        return not self.readonly
 
     ############################################################################
     #
