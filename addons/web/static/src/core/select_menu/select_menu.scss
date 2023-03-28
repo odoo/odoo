@@ -24,6 +24,20 @@
         }
     }
 
+    .o_select_menu_multi_select {
+        .o_select_active {
+            background: $o-brand-primary;
+            background: linear-gradient(to right, $o-danger 50%, $o-brand-primary 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: background .4s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        .o_select_active:hover {
+            background-position: left bottom;
+        }
+    }
+
     .o_tag {
         margin: 2px;
     }
