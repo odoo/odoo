@@ -260,7 +260,6 @@ export class SearchModel extends EventBus {
         if (config.state) {
             this._importState(config.state);
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
-            this.domainParts = {};
             this.display = this._getDisplay(config.display);
             if (!this.searchPanelInfo.loaded) {
                 return this._reloadSections();
@@ -276,9 +275,6 @@ export class SearchModel extends EventBus {
         this.nextId = 1;
         this.nextGroupId = 1;
         this.nextGroupNumber = 1;
-
-        // ... to rework (API for external domain, groupBy, facet)
-        this.domainParts = {}; // put in state?
 
         const searchDefaults = {};
         const searchPanelDefaults = {};
@@ -636,13 +632,6 @@ export class SearchModel extends EventBus {
             const searchItem = this.searchItems[queryElem.searchItemId];
             return searchItem.groupId !== groupId;
         });
-
-        for (const partName in this.domainParts) {
-            const part = this.domainParts[partName];
-            if (part.groupId === groupId) {
-                this.setDomainParts({ [partName]: null });
-            }
-        }
         this._checkComparisonStatus();
         this._notify();
     }
@@ -675,19 +664,6 @@ export class SearchModel extends EventBus {
         const state = {};
         execute(mapToArray, this, state);
         return state;
-    }
-
-    getDomainPart(partName) {
-        const part = this.domainParts[partName] || null;
-        if (part) {
-            return deepCopy(part);
-        }
-        return part;
-    }
-
-    getDomainParts() {
-        const copy = deepCopy(this.domainParts);
-        return sortBy(Object.values(copy), (part) => part.groupId);
     }
 
     getFullComparison() {
@@ -795,20 +771,6 @@ export class SearchModel extends EventBus {
 
     search() {
         this.trigger("update");
-    }
-
-    setDomainParts(parts) {
-        for (const key in parts) {
-            const val = parts[key];
-
-            if (!val) {
-                delete this.domainParts[key];
-            } else {
-                this.domainParts[key] = val;
-                val.groupId = this.nextGroupId++;
-            }
-        }
-        this._notify();
     }
 
     /**
@@ -1523,9 +1485,6 @@ export class SearchModel extends EventBus {
             domains.push(groupDomain);
         }
 
-        for (const { domain } of this.getDomainParts()) {
-            domains.push(domain);
-        }
         // we need to manage (optional) facets, deactivateGroup, clearQuery,...
 
         if (this.display.searchPanel && withSearchPanel) {
@@ -1607,16 +1566,6 @@ export class SearchModel extends EventBus {
                 facet.icon = FACET_ICONS[type];
             }
             facets.push(facet);
-        }
-
-        for (const { facetLabel, groupId } of this.getDomainParts()) {
-            const type = "filter";
-            facets.push({
-                groupId,
-                type,
-                values: [facetLabel],
-                icon: FACET_ICONS[type],
-            });
         }
 
         return facets;
