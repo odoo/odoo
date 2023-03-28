@@ -76,8 +76,13 @@ export class KanbanColumnQuickCreate extends Component {
             applyExamplesText:
                 this.props.exampleData.applyExamplesText || this.env._t("Use This For My Kanban"),
             applyExamples: (index) => {
-                for (const groupName of this.props.exampleData.examples[index].columns) {
+                const { examples, foldField } = this.props.exampleData;
+                const { columns, foldedColumns = [] } = examples[index];
+                for (const groupName of columns) {
                     this.props.onValidate(groupName);
+                }
+                for (const groupName of foldedColumns) {
+                    this.props.onValidate(groupName, { [foldField]: true }, true);
                 }
             },
         });
