@@ -24,10 +24,8 @@ import {
     triggerScroll,
 } from "@web/../tests/helpers/utils";
 import {
-    applyFilter,
     editSearch,
     getFacetTexts,
-    toggleAddCustomFilter,
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
@@ -593,7 +591,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "partner,false,search": `
                 <search>
-                    <field name="datetime" />
+                    <filter name="filter" string="Filter" domain="[[0, '=', 1]]"/>
                 </search>`,
             "partner,false,list": `
                 <tree>
@@ -629,13 +627,7 @@ QUnit.module("Fields", (hooks) => {
         const modal = target.querySelector(".modal");
 
         await toggleFilterMenu(modal);
-        await toggleAddCustomFilter(modal);
-        assert.strictEqual(
-            modal.querySelector(".o_generator_menu_field").value,
-            "datetime",
-            "datetime field should be selected"
-        );
-        await applyFilter(modal);
+        await toggleMenuItem(modal, "Filter");
 
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
     });

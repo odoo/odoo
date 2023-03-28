@@ -23,8 +23,8 @@
 </t>
 
 <t t-name="web.legacy.FilterMenu" t-inherit="web.FilterMenu" t-inherit-mode="primary" owl="1">
-    <xpath expr="//CustomFilterItem" position="attributes">
-        <attribute name="fields">props.fields</attribute>
+    <xpath expr="//DropdownItem" position="replace">
+        <CustomFilterItem fields="props.fields"/>
     </xpath>
 </t>
 

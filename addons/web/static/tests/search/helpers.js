@@ -198,6 +198,13 @@ export async function toggleFilterMenu(el) {
     await click(findItem(el, `.o_filter_menu button.dropdown-toggle`));
 }
 
+export async function openAdvancedSearchDialog(el) {
+    await click(findItem(el, `.o_filter_menu .dropdown-item:not(.o_menu_item)`));
+}
+
+//////////////////////////////////////////////////////
+// for legacy code
+//////////////////////////////////////////////////////
 export async function toggleAddCustomFilter(el) {
     await mouseEnter(findItem(el, `.o_add_custom_filter_menu .dropdown-toggle`));
 }
@@ -242,6 +249,8 @@ export async function removeCondition(el, index) {
     const condition = findItem(el, `.o_filter_condition`, index);
     await click(findItem(condition, ".o_generator_menu_delete"));
 }
+
+//////////////////////////////////////////////////////
 
 /** Group by menu */
 

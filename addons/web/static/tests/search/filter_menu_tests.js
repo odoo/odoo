@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import { getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    getNodesTextContent,
+    patchDate,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
@@ -8,11 +13,14 @@ import {
     isItemSelected,
     isOptionSelected,
     makeWithSearch,
+    openAdvancedSearchDialog,
     setupControlPanelServiceRegistry,
     toggleFilterMenu,
     toggleMenuItem,
     toggleMenuItemOption,
 } from "./helpers";
+import { registry } from "@web/core/registry";
+import { AdvancedSearchDialog } from "@web/search/filter_menu/advanced_search_dialog";
 
 function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
@@ -57,8 +65,6 @@ QUnit.module("Search", (hooks) => {
     QUnit.module("FilterMenu");
 
     QUnit.test("simple rendering with no filter", async function (assert) {
-        assert.expect(3);
-
         await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -69,7 +75,8 @@ QUnit.module("Search", (hooks) => {
         await toggleFilterMenu(target);
         assert.containsNone(target, ".o_menu_item");
         assert.containsNone(target, ".dropdown-divider");
-        assert.containsOnce(target, ".o_add_custom_filter_menu");
+        assert.containsOnce(target, ".dropdown-item");
+        assert.strictEqual(target.querySelector(".dropdown-item").innerText, "Advanced Search");
     });
 
     QUnit.test("simple rendering with a single filter", async function (assert) {
@@ -91,7 +98,11 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_menu_item[role=menuitemcheckbox]");
         assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "false");
         assert.containsOnce(target, ".dropdown-divider");
-        assert.containsOnce(target, ".o_add_custom_filter_menu");
+        assert.containsOnce(target, ".dropdown-item:not(.o_menu_item)");
+        assert.strictEqual(
+            target.querySelector(".dropdown-item:not(.o_menu_item)").innerText,
+            "Advanced Search"
+        );
     });
 
     QUnit.test('toggle a "simple" filter in filter menu works', async function (assert) {
@@ -583,5 +594,40 @@ QUnit.module("Search", (hooks) => {
         [...menuItemEls].forEach((e, index) => {
             assert.strictEqual(e.innerText.trim(), String(index + 1));
         });
+    });
+
+    QUnit.test("Open 'Advanced Search' dialog", async function (assert) {
+        assert.expect(3);
+        registry.category("services").add(
+            "dialog",
+            {
+                start() {
+                    return {
+                        add: (dialogClass, props) => {
+                            assert.strictEqual(dialogClass, AdvancedSearchDialog);
+                            assert.deepEqual(Object.keys(props), [
+                                "domain",
+                                "onConfirm",
+                                "resModel",
+                                "isDebugMode",
+                            ]);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchMenuTypes: ["filter"],
+        });
+        await toggleFilterMenu(target);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_filter_menu .dropdown-item")),
+            ["Advanced Search"]
+        );
+        await openAdvancedSearchDialog(target);
     });
 });

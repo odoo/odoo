@@ -1,15 +1,14 @@
 /** @odoo-module **/
 
+import { _t } from "../l10n/translation";
+import { Component, useState } from "@odoo/owl";
 import { Dialog } from "../dialog/dialog";
 import { DomainSelector } from "../domain_selector/domain_selector";
-import { _t } from "../l10n/translation";
-
-import { Component, useState } from "@odoo/owl";
 
 export class DomainSelectorDialog extends Component {
     setup() {
         this.state = useState({
-            value: this.props.initialValue,
+            domain: this.props.domain,
         });
     }
 
@@ -24,15 +23,15 @@ export class DomainSelectorDialog extends Component {
             readonly: this.props.readonly,
             isDebugMode: this.props.isDebugMode,
             defaultLeafValue: this.props.defaultLeafValue,
-            value: this.state.value,
-            update: (value) => {
-                this.state.value = value;
+            value: this.state.domain,
+            update: (domain) => {
+                this.state.domain = domain;
             },
         };
     }
 
-    async onSave() {
-        await this.props.onSelected(this.state.value);
+    async onConfirm() {
+        await this.props.onConfirm(this.state.domain);
         this.props.close();
     }
     onDiscard() {
@@ -46,18 +45,17 @@ DomainSelectorDialog.components = {
 };
 DomainSelectorDialog.props = {
     close: Function,
-    className: { type: String, optional: true },
+    onConfirm: Function,
     resModel: String,
-    readonly: { type: Boolean, optional: true },
-    isDebugMode: { type: Boolean, optional: true },
+    className: { type: String, optional: true },
     defaultLeafValue: { type: Array, optional: true },
-    initialValue: { type: String, optional: true },
-    onSelected: { type: Function, optional: true },
+    domain: { type: String, optional: true },
+    isDebugMode: { type: Boolean, optional: true },
+    readonly: { type: Boolean, optional: true },
     text: { type: String, optional: true },
 };
 DomainSelectorDialog.defaultProps = {
-    initialValue: "",
-    onSelected: () => {},
-    readonly: true,
+    domain: "[]",
     isDebugMode: false,
+    readonly: false,
 };

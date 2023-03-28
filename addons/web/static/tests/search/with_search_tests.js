@@ -19,6 +19,8 @@ import {
 } from "./helpers";
 
 import { Component, onWillUpdateProps, onWillStart, useState, xml } from "@odoo/owl";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { notificationService } from "@web/core/notifications/notification_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -56,6 +58,7 @@ QUnit.module("Search", (hooks) => {
             },
         };
         serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("orm", ormService);
         serviceRegistry.add("view", viewService);
         target = getFixture();
@@ -111,7 +114,7 @@ QUnit.module("Search", (hooks) => {
                     });
                     assert.deepEqual(domain, [[0, "=", 1]]);
                     assert.deepEqual(groupBy, ["birthday"]);
-                    assert.deepEqual(orderBy, [{name: "bar", asc: true}]);
+                    assert.deepEqual(orderBy, [{ name: "bar", asc: true }]);
                 }
             }
             TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
@@ -123,7 +126,7 @@ QUnit.module("Search", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { key: "val" },
-                orderBy: [{name: "bar", asc: true}],
+                orderBy: [{ name: "bar", asc: true }],
             });
         }
     );
@@ -241,6 +244,8 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
+            serviceRegistry.add("dialog", dialogService);
+
             class TestComponent extends Component {}
             TestComponent.components = { FilterMenu, GroupByMenu };
             TestComponent.template = xml`
@@ -273,6 +278,8 @@ QUnit.module("Search", (hooks) => {
         "toggle a filter render the underlying component with an updated domain",
         async function (assert) {
             assert.expect(2);
+
+            serviceRegistry.add("dialog", dialogService);
 
             class TestComponent extends Component {
                 setup() {
