@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     l10n_in_reseller_partner_id = fields.Many2one('res.partner',
-        string='Reseller', domain="[('vat', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+        string='Reseller', domain="[('vat', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", readonly=False)
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),
             ('composition', 'Registered Business - Composition'),
@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, compute="_compute_l10n_in_gst_treatment", store=True)
+        ], string="GST Treatment", readonly=False, compute="_compute_l10n_in_gst_treatment", store=True)
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):

@@ -65,7 +65,6 @@ class StockPicking(models.Model):
     batch_id = fields.Many2one(
         'stock.picking.batch', string='Batch Transfer',
         check_company=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Batch associated to this transfer', index=True, copy=False)
 
     @api.model_create_multi

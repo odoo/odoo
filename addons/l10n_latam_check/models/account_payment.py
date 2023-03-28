@@ -13,7 +13,6 @@ class AccountPayment(models.Model):
     l10n_latam_check_id = fields.Many2one(
         comodel_name='account.payment',
         string='Check',
-        readonly=True, states={'draft': [('readonly', False)]},
         copy=False,
         check_company=True,
     )
@@ -40,17 +39,15 @@ class AccountPayment(models.Model):
         comodel_name='res.bank',
         string='Check Bank',
         compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
     )
     l10n_latam_check_issuer_vat = fields.Char(
         string='Check Issuer VAT',
         compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
     )
     l10n_latam_check_payment_date = fields.Date(
         string='Check Cash-In Date',
         help="Date from when you can cash in the check, turn the check into cash",
-        readonly=True, states={'draft': [('readonly', False)]},
+        readonly=False,
     )
 
     # This is a technical field for the view only

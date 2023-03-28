@@ -100,7 +100,6 @@ class AccountMove(models.Model):
         string='Date',
         index=True,
         compute='_compute_date', store=True, required=True, readonly=False, precompute=True,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
         copy=False,
         tracking=True,
     )
@@ -144,7 +143,6 @@ class AccountMove(models.Model):
         string='Journal',
         compute='_compute_journal_id', inverse='_inverse_journal_id', store=True, readonly=False, precompute=True,
         required=True,
-        states={'draft': [('readonly', False)]},
         check_company=True,
         domain="[('id', 'in', suitable_journal_ids)]",
     )
@@ -159,8 +157,6 @@ class AccountMove(models.Model):
         'move_id',
         string='Journal Items',
         copy=True,
-        readonly=True,
-        states={'draft': [('readonly', False)]},
     )
 
     # === Payment fields === #
@@ -266,40 +262,32 @@ class AccountMove(models.Model):
         'move_id',
         string='Invoice lines',
         copy=False,
-        readonly=True,
         domain=[('display_type', 'in', ('product', 'line_section', 'line_note'))],
-        states={'draft': [('readonly', False)]},
     )
 
     # === Date fields === #
     invoice_date = fields.Date(
         string='Invoice/Bill Date',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
         index=True,
         copy=False,
     )
     invoice_date_due = fields.Date(
         string='Due Date',
         compute='_compute_invoice_date_due', store=True, readonly=False,
-        states={'draft': [('readonly', False)]},
         index=True,
         copy=False,
     )
     delivery_date = fields.Date(
         string='Delivery Date',
         copy=False,
-        readonly=True,
         store=True,
         compute='_compute_delivery_date',
-        states={'draft': [('readonly', False)]},
     )
     show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     invoice_payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string='Payment Terms',
         compute='_compute_invoice_payment_term_id', store=True, readonly=False, precompute=True,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
         check_company=True,
     )
     needed_terms = fields.Binary(compute='_compute_needed_terms')
@@ -311,9 +299,8 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one(
         'res.partner',
         string='Partner',
-        readonly=True,
+        readonly=False,
         tracking=True,
-        states={'draft': [('readonly', False)]},
         inverse='_inverse_partner_id',
         check_company=True,
         change_default=True,
@@ -348,7 +335,6 @@ class AccountMove(models.Model):
         string='Fiscal Position',
         check_company=True,
         compute='_compute_fiscal_position_id', store=True, readonly=False, precompute=True,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
         ondelete="restrict",
         help="Fiscal positions are used to adapt taxes and accounts for particular "
              "customers or sales orders/invoices. The default value comes from the customer.",
@@ -402,7 +388,6 @@ class AccountMove(models.Model):
         tracking=True,
         required=True,
         compute='_compute_currency_id', inverse='_inverse_currency_id', store=True, readonly=False, precompute=True,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
     )
 
     # === Amount fields === #
@@ -551,8 +536,6 @@ class AccountMove(models.Model):
     invoice_cash_rounding_id = fields.Many2one(
         comodel_name='account.cash.rounding',
         string='Cash Rounding Method',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
     invoice_pdf_report_id = fields.Many2one(

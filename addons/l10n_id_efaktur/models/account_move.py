@@ -36,7 +36,7 @@ class AccountMove(models.Model):
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
-        readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,
+        readonly=False, copy=False,
         compute="_compute_kode_transaksi", store=True)
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
 

@@ -57,28 +57,25 @@ class HolidaysAllocation(models.Model):
         "\nThe status is 'Refused', when an allocation request is refused by manager." +
         "\nThe status is 'Approved', when an allocation request is approved by manager.")
     date_from = fields.Date('Start Date', index=True, copy=False, default=fields.Date.context_today,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True, required=True)
-    date_to = fields.Date('End Date', copy=False, tracking=True,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
+        tracking=True, required=True)
+    date_to = fields.Date('End Date', copy=False, tracking=True)
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Time Off Type", required=True, readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
         domain=_domain_holiday_status_id,
         default=_default_holiday_status_id)
     employee_id = fields.Many2one(
-        'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
+        'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
-    notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    notes = fields.Text('Reasons', readonly=False)
     # duration
     number_of_days = fields.Float(
         'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        readonly=False,
         help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
@@ -101,27 +98,23 @@ class HolidaysAllocation(models.Model):
         ('company', 'By Company'),
         ('department', 'By Department'),
         ('category', 'By Employee Tag')],
-        string='Allocation Mode', readonly=True, required=True, default='employee',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        string='Allocation Mode', readonly=False, required=True, default='employee',
         help="Allow to create requests in batchs:\n- By Employee: for a specific employee"
              "\n- By Company: all employees of the specified company"
              "\n- By Department: all employees of the specified department"
              "\n- By Employee Tag: all employees of the specific employee group category")
     employee_ids = fields.Many2many(
-        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
+        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False)
     multi_employee = fields.Boolean(
         compute='_compute_from_employee_ids', store=True,
         help='Holds whether this allocation concerns more than 1 employee')
     mode_company_id = fields.Many2one(
-        'res.company', compute='_compute_from_holiday_type', store=True, string='Company Mode', readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
+        'res.company', compute='_compute_from_holiday_type', store=True, string='Company Mode', readonly=False)
     department_id = fields.Many2one(
         'hr.department', compute='_compute_department_id', store=True, string='Department',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        readonly=False)
     category_id = fields.Many2one(
-        'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate': [('readonly', True)]})
+        'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False)
     # accrual configuration
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True, default=fields.Date.context_today)
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
@@ -129,8 +122,7 @@ class HolidaysAllocation(models.Model):
         [
             ('regular', 'Regular Allocation'),
             ('accrual', 'Accrual Allocation')
-        ], string="Allocation Type", default="regular", required=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        ], string="Allocation Type", default="regular", required=True, readonly=False)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')

@@ -37,22 +37,21 @@ class StockLandedCost(models.Model):
         copy=False, readonly=True, tracking=True)
     date = fields.Date(
         'Date', default=fields.Date.context_today,
-        copy=False, required=True, states={'done': [('readonly', True)]}, tracking=True)
+        copy=False, required=True, tracking=True)
     target_model = fields.Selection(
         [('picking', 'Transfers')], string="Apply On",
         required=True, default='picking',
-        copy=False, states={'done': [('readonly', True)]})
+        copy=False)
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
-        copy=False, states={'done': [('readonly', True)]})
+        copy=False)
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
-        copy=True, states={'done': [('readonly', True)]})
+        copy=True)
     valuation_adjustment_lines = fields.One2many(
-        'stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments',
-        states={'done': [('readonly', True)]})
+        'stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments',)
     description = fields.Text(
-        'Item Description', states={'done': [('readonly', True)]})
+        'Item Description')
     amount_total = fields.Monetary(
         'Total', compute='_compute_total_amount',
         store=True, tracking=True)
@@ -66,7 +65,7 @@ class StockLandedCost(models.Model):
         copy=False, readonly=True)
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
-        required=True, states={'done': [('readonly', True)]}, default=lambda self: self._default_account_journal_id())
+        required=True, default=lambda self: self._default_account_journal_id())
     company_id = fields.Many2one('res.company', string="Company",
         related='account_journal_id.company_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
