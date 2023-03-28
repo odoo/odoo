@@ -27,7 +27,7 @@
             <t t-else="">
                 <a
                     t-if="value"
-                    class="o_form_uri"
+                    t-attf-class="o_form_uri #{classFromDecoration}"
                     t-att-href="value ? `#id=${value[0]}&amp;model=${relation}` : '#'"
                     t-on-click.prevent="onClick"
                 >
