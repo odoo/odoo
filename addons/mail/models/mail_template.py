@@ -328,9 +328,9 @@ class MailTemplate(models.Model):
         if find_or_create_partners:
             res_id_to_company = {}
             if self.model and 'company_id' in ModelSudo._fields:
-                for read_record in ModelSudo.browse(res_ids).read(['company_id']):
-                    company_id = read_record['company_id'][0] if read_record['company_id'] else False
-                    res_id_to_company[read_record['id']] = company_id
+                mail_templates_sudo = ModelSudo.browse(res_ids)
+                mail_templates_sudo.fetch(['company_id'])
+                res_id_to_company = {mail_template.id: mail_template.company_id for mail_template in mail_templates_sudo}
 
             all_emails = []
             email_to_res_ids = {}

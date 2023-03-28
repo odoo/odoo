@@ -89,13 +89,9 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_occurrence_values(self, occurrence_from):
         self.ensure_one()
-        fields_to_copy = occurrence_from.read(self._get_recurring_fields_to_copy()).pop()
-        create_values = {
-            field: value[0] if isinstance(value, tuple) else value
-            for field, value in fields_to_copy.items()
-        }
+        create_values = occurrence_from.read(self._get_recurring_fields_to_copy(), load=None)[0]
 
-        fields_to_postpone = occurrence_from.read(self._get_recurring_fields_to_postpone()).pop()
+        fields_to_postpone = occurrence_from.read(self._get_recurring_fields_to_postpone(), load=None)[0]
         fields_to_postpone.pop('id', None)
         create_values.update({
             field: value and value + self._get_recurrence_delta()

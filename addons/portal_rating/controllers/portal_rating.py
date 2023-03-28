@@ -17,4 +17,4 @@ class PortalRating(http.Controller):
             return {'error': _('Invalid rating')}
         rating.write({'publisher_comment': publisher_comment})
         # return to the front-end the created/updated publisher comment
-        return rating.read(['publisher_comment', 'publisher_id', 'publisher_datetime'])[0]
+        return rating._read_format(['publisher_comment', 'publisher_id', 'publisher_datetime'])[0]

@@ -82,16 +82,19 @@ class RecurrenceRule(models.Model):
         on provided `new` values.
         Note: for all day event comparison, hours/minutes are ignored.
         """
+        old = self.base_event_id
+        if not old:
+            return False
+            
+        old.fetch(['start', 'stop', 'allday'])
+        
         def _convert(value, to_convert):
             return value.date() if to_convert else value
-
-        old = self.base_event_id and self.base_event_id.read(['start', 'stop', 'allday'])[0]
-        return old and (
-            old['allday'] != new['allday']
-            or any(
-                _convert(new[f], new['allday']) != _convert(old[f], old['allday'])
-                for f in ('start', 'stop')
-            )
+        
+        return (
+            old.allday != new['allday']
+            or _convert(new['start'], new['allday']) != _convert(old.start, old.allday)
+            or _convert(new['stop'], new['allday']) != _convert(old.stop, old.allday)
         )
 
     def _write_from_microsoft(self, microsoft_event, vals):

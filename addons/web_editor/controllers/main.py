@@ -324,9 +324,14 @@ class Web_Editor(http.Controller):
                 'attachment': False,
                 'original': False,
             }
+
+        attachment.fetch(['id', 'image_src', 'mimetype', 'original_id'])
+        if attachment.original_id:
+            attachment.original_id.fetch(['id', 'image_src', 'mimetype'])
+    
         return {
-            'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+            'attachment': {'id': attachment.id},
+            'original': (attachment.original_id or attachment)._read_format(['id', 'image_src', 'mimetype'])[0],
         }
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):

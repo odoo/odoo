@@ -593,6 +593,7 @@ class MailActivity(models.Model):
         }
 
     def activity_format(self):
+        # TODO VSC: remove this function, this is a read { all, mail_template_ids: {fields: {id:{}, name: {}}} }
         activities = self.read()
         self.mail_template_ids.fetch(['name'])
         for record, activity in zip(self, activities):

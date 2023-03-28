@@ -680,7 +680,7 @@ class Website(Home):
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
         if res_model == 'website.page':
-            fields.extend(['website_indexed', 'website_id'])
+            fields.append('website_indexed')
 
         record = request.env[res_model].browse(res_id)
         res = record.read(fields)[0]

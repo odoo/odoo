@@ -45,13 +45,13 @@ class PosMakePayment(models.TransientModel):
         order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
         currency = order.currency_id
 
-        init_data = self.read()[0]
-        if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
+        self.fetch(['amount', 'payment_name', 'payment_method_id'])
+        if not float_is_zero(self.amount, precision_rounding=currency.rounding):
             order.add_payment({
                 'pos_order_id': order.id,
-                'amount': order._get_rounded_amount(init_data['amount']),
-                'name': init_data['payment_name'],
-                'payment_method_id': init_data['payment_method_id'][0],
+                'amount': order._get_rounded_amount(self.amount),
+                'name': self.payment_name,
+                'payment_method_id': self.payment_method_id,
             })
 
         if order._is_pos_order_paid():

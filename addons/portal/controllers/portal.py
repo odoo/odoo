@@ -341,15 +341,14 @@ class CustomerPortal(Controller):
         # or garbage collected otherwise: see  `_garbage_collect_attachments`.
         attachment = IrAttachment.create({
             'name': name,
-            'datas': base64.b64encode(file.read()),
+            'raw' : file.read(),
             'res_model': 'mail.compose.message',
             'res_id': 0,
             'access_token': access_token,
         })
-        return request.make_response(
-            data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
-            headers=[('Content-Type', 'application/json')]
-        )
+        return request.make_json_response(attachment._read_format([
+            'id', 'name', 'mimetype', 'file_size', 'access_token'
+        ])[0])
 
     @http.route('/portal/attachment/remove', type='json', auth='public')
     def attachment_remove(self, attachment_id, access_token=None):

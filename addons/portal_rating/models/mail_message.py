@@ -20,9 +20,12 @@ class MailMessage(models.Model):
         vals_list = super(MailMessage, self)._message_format(fnames, format_reply=format_reply, legacy=legacy)
 
         if self._context.get('rating_include'):
-            infos = ["id", "publisher_comment", "publisher_id", "publisher_datetime", "message_id"]
-            related_rating = self.env['rating.rating'].sudo().search([('message_id', 'in', self.ids)]).read(infos)
-            mid_rating_tree = dict((rating['message_id'][0], rating) for rating in related_rating)
+            related_rating = self.env['rating.rating'].sudo().search([
+                ('message_id', 'in', self.ids)
+            ]).read([
+                "id", "publisher_comment", "publisher_id", "publisher_datetime", "message_id",
+            ])
+            indexed_related_rating = {rating['message_id'][0]: rating for rating in related_rating}
             for vals in vals_list:
-                vals["rating"] = mid_rating_tree.get(vals['id'], {})
+                vals["rating"] = indexed_related_rating.get(vals['id'], {})
         return vals_list

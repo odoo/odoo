@@ -1603,13 +1603,17 @@ class PosSession(models.Model):
         res = {}
         for key, group in groupby(sorted(product_template_attribute_values, key=key1), key=key2):
             attribute_line_id, attribute = key
-            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
-                       'price_extra': ptav.price_extra} for ptav in list(group)]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
                 'name': attribute.name,
                 'display_type': attribute.display_type,
-                'values': values,
+                'values': [
+                    {
+                        **ptav.product_attribute_value_id._read_format(['name', 'is_custom', 'html_color'])[0],
+                        'price_extra': ptav.price_extra
+                    }
+                    for ptav in list(group)
+                ],
             }
 
         return res

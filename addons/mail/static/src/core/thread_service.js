@@ -310,10 +310,11 @@ export class ThreadService {
                     ["partner_id"],
                     {
                         context: { active_test: false },
+                        load: false,
                     }
                 );
                 if (userData) {
-                    user.partner_id = userData.partner_id[0];
+                    user.partner_id = userData.partner_id;
                 }
             }
             if (!user.partner_id) {

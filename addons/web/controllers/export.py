@@ -362,15 +362,14 @@ class Export(http.Controller):
     @http.route('/web/export/namelist', type='json', auth="user")
     def namelist(self, model, export_id):
         # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
-        export = request.env['ir.exports'].browse([export_id]).read()[0]
-        export_fields_list = request.env['ir.exports.line'].browse(export['export_fields']).read()
+        export = request.env['ir.exports'].browse([export_id])
+        export.export_fields.fetch(['name'])
 
-        fields_data = self.fields_info(
-            model, [f['name'] for f in export_fields_list])
+        fields_data = self.fields_info(model, export.export_fields.mapped('name'))
 
         return [
-            {'name': field['name'], 'label': fields_data[field['name']]}
-            for field in export_fields_list
+            {'name': field.name, 'label': fields_data[field.name]}
+            for field in export.export_fields
         ]
 
     def fields_info(self, model, export_fields):
