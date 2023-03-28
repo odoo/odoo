@@ -66,7 +66,7 @@ class PosOrderReport(models.Model):
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
-                SUM(l.price_subtotal - l.total_cost / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin
+                SUM(l.price_subtotal - COALESCE(l.total_cost,0) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin
         """
 
     def _from(self):
