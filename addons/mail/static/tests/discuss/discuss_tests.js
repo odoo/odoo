@@ -1285,7 +1285,7 @@ QUnit.test(
             {
                 channel_member_ids: [
                     [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: TEST_USER_IDS.partnerRootId }],
+                    [0, 0, { partner_id: TEST_USER_IDS.odoobotId }],
                 ],
                 channel_type: "chat",
             },

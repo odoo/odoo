@@ -957,7 +957,7 @@ class TestDiscussFullPerformance(TransactionCase):
             ],
             'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
-            'partner_root': {
+            'odoobot': {
                 'active': False,
                 'email': 'odoobot@example.com',
                 'id': self.user_root.partner_id.id,

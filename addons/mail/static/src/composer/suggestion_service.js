@@ -189,7 +189,7 @@ class SuggestionService {
         const mainSuggestionList = [];
         const extraSuggestionList = [];
         for (const partner of partners) {
-            if (partner === this.store.partnerRoot) {
+            if (partner === this.store.odoobot) {
                 // ignore archived partners (except OdooBot)
                 continue;
             }

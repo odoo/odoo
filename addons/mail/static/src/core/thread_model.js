@@ -148,7 +148,7 @@ export class Thread {
     get allowCalls() {
         return (
             ["chat", "channel", "group"].includes(this.type) &&
-            this.correspondent !== this._store.partnerRoot
+            this.correspondent !== this._store.odoobot
         );
     }
 

@@ -103,8 +103,8 @@ export class Messaging {
                 channelId: data.channels[0]?.id,
             });
         }
-        this.store.partnerRoot = this.personaService.insert({
-            ...data.partner_root,
+        this.store.odoobot = this.personaService.insert({
+            ...data.odoobot,
             type: "partner",
         });
         for (const channelData of data.channels) {
@@ -489,7 +489,7 @@ export class Messaging {
             res_id: channel.id,
             model: channel.model,
         });
-        if (channel.chatPartnerId !== this.store.partnerRoot?.id) {
+        if (channel.chatPartnerId !== this.store.odoobot?.id) {
             if (!this.presence.isOdooFocused() && channel.isChatChannel) {
                 this.outOfFocusService.notify(message, channel);
             }

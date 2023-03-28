@@ -102,7 +102,7 @@ class MailGuest(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
-        partner_root = self.env.ref('base.partner_root')
+        odoobot = self.env.ref('base.partner_root')
         return {
             'channels': self.channel_ids.channel_info(),
             'companyName': self.env.company.name,
@@ -116,9 +116,9 @@ class MailGuest(models.Model):
             'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
             'menu_id': False,
             'needaction_inbox_counter': False,
-            'partner_root': {
-                'id': partner_root.id,
-                'name': partner_root.name,
+            'odoobot': {
+                'id': odoobot.id,
+                'name': odoobot.name,
             },
             'shortcodes': [],
             'starred_counter': False,

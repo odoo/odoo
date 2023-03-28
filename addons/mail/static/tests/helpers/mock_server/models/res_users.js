@@ -37,9 +37,7 @@ patch(MockServer.prototype, "mail/models/res_users", {
             ),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
-            partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(
-                this.partnerRootId
-            ),
+            odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
             shortcodes: this.pyEnv["mail.shortcode"].searchRead([], {
                 fields: ["source", "substitution"],
             }),

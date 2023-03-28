@@ -75,7 +75,7 @@ export class Store {
      *
      * @type {import("@mail/core/persona_model").Persona}
      */
-    partnerRoot = null;
+    odoobot = null;
     /** @type {Object.<number, import("@mail/core/persona_model").Persona>} */
     personas = {};
 
