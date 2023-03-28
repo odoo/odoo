@@ -8,10 +8,15 @@
                 class="button submit-order"
                 t-att-class="addedClasses"
                 t-on-click="submitOrder">
-                <div class="submit-circle">
-                    <i class="fa fa-cutlery"></i>
+                <div t-att-class ="categoryCount ? 'smaller-display' : 'none'">
+                    <div  t-att-class = "categoryCount ? 'submit-circle-smaller' : 'submit-circle'">
+                            <i class="fa fa-cutlery"></i>
+                    </div>
+                    Order
                 </div>
-                Order
+                <div class = "break-line">
+                    <span t-esc="categoryCount"/>
+                </div>
             </button>
         </xpath>
         <xpath expr="//button[hasclass('validation')]" position="attributes">

@@ -1,6 +1,7 @@
 /** @odoo-module */
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/js/Screens/ProductScreen/ActionpadWidget";
+import { nbsp } from "@web/core/utils/strings";
 /**
  * @props partner
  */
@@ -37,11 +38,34 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
             }
         }
     },
+    hasQuantity(order) {
+        if (!order) {
+            return false;
+        } else {
+            return (
+                order.orderlines.reduce((totalQty, line) => totalQty + line.get_quantity(), 0) > 0
+            );
+        }
+    },
     get highlightPay() {
         return (
             this._super(...arguments) &&
             this.pos.globalState.printers_category_ids_set.size &&
-            !this.currentOrder.hasChangesToPrint()
+            !this.currentOrder.hasChangesToPrint() &&
+            this.hasQuantity(this.currentOrder)
         );
+    },
+    get categoryCount() {
+        const categories = {};
+        for (const orderline of this.currentOrder.printingChanges.new) {
+            const category = this.pos.globalState.db.get_product_by_id(orderline.product_id).pos_categ_id[1];
+            const numProd = orderline.quantity;
+            categories[category] = categories[category] ? categories[category] + numProd : numProd;
+        }
+        let result = "";
+        for (const key in categories) {
+            result = result + categories[key] + nbsp + key + " | ";
+        }
+        return result.slice(0, -2);
     },
 });
