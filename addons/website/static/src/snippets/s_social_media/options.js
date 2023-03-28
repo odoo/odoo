@@ -255,7 +255,7 @@ options.registry.SocialMedia = options.Class.extend({
                 model: 'website',
                 method: 'read',
                 args: [websiteId, ['social_facebook', 'social_twitter', 'social_linkedin',
-                    'social_youtube', 'social_instagram', 'social_github']],
+                    'social_youtube', 'social_instagram', 'social_github', 'social_tiktok']],
             }).then(function (values) {
                 [dbSocialValues] = values;
                 delete dbSocialValues.id;
