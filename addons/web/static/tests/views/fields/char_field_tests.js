@@ -171,7 +171,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "setting a char field to empty string is saved as a false value",
         async function (assert) {
             assert.expect(1);
@@ -983,7 +983,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "input field: set and remove value, then wait for onchange",
         async function (assert) {
             serverData.models.partner.onchanges = {
