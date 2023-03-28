@@ -33,3 +33,6 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_04_mass_mailing_snippets_menu_hide(self):
         self.start_tour("/web", 'mass_mailing_snippets_menu_toolbar', login="demo")
+
+    def test_05_mass_mailing_basic_theme_toolbar(self):
+        self.start_tour('/web', 'mass_mailing_basic_theme_toolbar', login="demo")

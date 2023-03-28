@@ -2,6 +2,7 @@
 
 import logging
 import pprint
+import uuid
 
 from lxml import etree, objectify
 from werkzeug import urls
@@ -83,7 +84,7 @@ class PaymentTransaction(models.Model):
         }
         if self.tokenize:
             rendering_values.update({
-                'ALIAS': payment_utils.singularize_reference_prefix(prefix='ODOO-ALIAS'),
+                'ALIAS': f'ODOO-ALIAS-{uuid.uuid4().hex}',
                 'ALIASUSAGE': _("Storing your payment details is necessary for future use."),
             })
         rendering_values.update({

@@ -1120,6 +1120,7 @@ class SaleOrderLine(models.Model):
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
+            analytic_account_id = str(analytic_account_id)
             if 'analytic_distribution' in res:
                 res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:

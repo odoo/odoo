@@ -7,9 +7,11 @@ import {
     editInput,
     getFixture,
     nextTick,
+    patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
 
 let serverData;
 let target;
@@ -22,18 +24,21 @@ async function closePopover(target) {
 
 async function changeType(target, propertyType) {
     const TYPES_INDEX = {
-        "integer": 3,
-        "float": 4,
-        "datetime": 6,
-        "selection": 7,
-        "tags": 8,
-        "many2one": 9,
-        "many2many": 10,
+        integer: 3,
+        float: 4,
+        datetime: 6,
+        selection: 7,
+        tags: 8,
+        many2one: 9,
+        many2many: 10,
     };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(target, ".o_field_property_definition_type input");
     await nextTick();
-    await click(target, `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`);
+    await click(
+        target,
+        `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`
+    );
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -123,6 +128,26 @@ QUnit.module("Fields", (hooks) => {
                             ],
                             company_id: 37,
                         },
+                        {
+                            id: 3,
+                            display_name: "third partner",
+                            properties: [
+                                {name: "property_1", type: "char"},
+                                {name: "property_2", type: "char", definition_deleted: true},
+                                {name: "property_3", type: "char", definition_changed: true},
+                                {name: "property_4", type: "char"},
+                            ],
+                            company_id: 37,
+                        },
+                        {
+                            id: 4,
+                            display_name: "fourth partner",
+                            properties: [
+                                {name: "property_2", type: "char", definition_deleted: true},
+                                {name: "property_3", type: "char", definition_deleted: true},
+                            ],
+                            company_id: 37,
+                        },
                     ],
                 },
                 company: {
@@ -139,7 +164,7 @@ QUnit.module("Fields", (hooks) => {
                         },
                     ],
                 },
-                'res.users': {
+                "res.users": {
                     fields: {
                         name: {
                             string: "Name",
@@ -150,10 +175,12 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 1,
                             display_name: "Alice",
-                        }, {
+                        },
+                        {
                             id: 2,
                             display_name: "Bob",
-                        }, {
+                        },
+                        {
                             id: 3,
                             display_name: "Eve",
                         },
@@ -163,6 +190,10 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
     });
 
     QUnit.module("PropertiesField");
@@ -541,13 +572,15 @@ QUnit.module("Fields", (hooks) => {
             await editInput(
                 target,
                 ".o_property_field:nth-child(2) .o_field_property_input",
-                newValue,
+                newValue
             );
             // click away
             await click(target, ".o_form_sheet_bg");
-            const input = target.querySelector(".o_property_field:nth-child(2) .o_field_property_input");
+            const input = target.querySelector(
+                ".o_property_field:nth-child(2) .o_field_property_input"
+            );
             assert.strictEqual(input.value, expected);
-        }
+        };
 
         await editValue("2", "2.00");
         await editValue("2.11", "2.11");
@@ -672,10 +705,6 @@ QUnit.module("Fields", (hooks) => {
         const createNewTag = async (selector, text) => {
             await click(target, selector);
             await editInput(target, selector, text);
-            for (let i = 0; i < 50; ++i) {
-                // Wait until the dropdown appears
-                await nextTick();
-            }
             await triggerEvent(target, selector, "keydown", { key: "Enter" });
             await nextTick();
         };
@@ -841,9 +870,6 @@ QUnit.module("Fields", (hooks) => {
         // Quick create a user
         await click(target, ".o_property_field:nth-child(2) .o_property_field_value input");
         await editInput(target, ".o_property_field:nth-child(2) input", "New User");
-        for (let i = 0; i < 50; ++i) {
-            await nextTick();
-        } // wait until the dropdown appears
         await click(target, ".o_property_field:nth-child(2) .o_m2o_dropdown_option_create");
         selectedUser = target.querySelector(
             ".o_property_field:nth-child(2) .o_property_field_value input"
@@ -867,8 +893,12 @@ QUnit.module("Fields", (hooks) => {
                     { model: "res.partner", display_name: "Partner" },
                     { model: "res.users", display_name: "User" },
                 ];
-            } else if (method === "display_name_for" && model === "ir.model" && args[0][0] === "res.users") {
-                return [{"display_name": "User", "model": "res.users"}];
+            } else if (
+                method === "display_name_for" &&
+                model === "ir.model" &&
+                args[0][0] === "res.users"
+            ) {
+                return [{ display_name: "User", model: "res.users" }];
             } else if (method === "name_create" && model === "res.users") {
                 // Add a prefix to check that "name_create"
                 // has been called with the right parameters
@@ -936,9 +966,6 @@ QUnit.module("Fields", (hooks) => {
         // Quick create a user
         await click(target, ".o_property_field:nth-child(2) .o_property_field_value input");
         await editInput(target, ".o_property_field:nth-child(2) input", "New User");
-        for (let i = 0; i < 50; ++i) {
-            await nextTick();
-        } // wait until the dropdown appears
         await click(target, ".o_property_field:nth-child(2) .o_m2o_dropdown_option_create");
         assert.deepEqual(
             getSelectedUsers(),
@@ -1057,8 +1084,8 @@ QUnit.module("Fields", (hooks) => {
                 ];
             } else if (method === "display_name_for" && model === "ir.model") {
                 return [
-                    {"display_name": "User", "model": "res.users"},
-                    {"display_name": "Partner", "model": "res.partner"},
+                    { display_name: "User", model: "res.users" },
+                    { display_name: "Partner", model: "res.partner" },
                 ];
             } else if (method === "search_count") {
                 return 5;
@@ -1131,7 +1158,6 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(propertyName4, propertyName6);
     });
 
-
     /**
      * Check the behavior of the properties field in the kanban view.
      */
@@ -1155,20 +1181,30 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // check second card
-        const property3 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(3) span");
-        assert.notEqual(property3.innerText, "char value 3",
-            "The third property should not be visible in the kanban view");
+        const property3 = target.querySelector(
+            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(3) span"
+        );
+        assert.notEqual(
+            property3.innerText,
+            "char value 3",
+            "The third property should not be visible in the kanban view"
+        );
         assert.equal(property3.innerText, "char value 4");
-        const property1 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(1) span");
+        const property1 = target.querySelector(
+            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(1) span"
+        );
         assert.equal(property1.innerText, "char value");
-        const property2 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(2) span");
+        const property2 = target.querySelector(
+            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(2) span"
+        );
         assert.equal(property2.innerText, "C");
 
         // check first card
-        const items = target.querySelectorAll(".o_kanban_record:nth-child(1) .o_kanban_property_field");
+        const items = target.querySelectorAll(
+            ".o_kanban_record:nth-child(1) .o_kanban_property_field"
+        );
         assert.equal(items.length, 2);
     });
-
 
     /**
      * Test the behavior of the default value. It should be propagated on the property
@@ -1209,19 +1245,118 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         await editInput(target, ".o_field_property_definition_value input", "First Default Value");
         await closePopover(target);
-        const newProperty = field.querySelector(".o_field_properties .o_property_field:nth-child(3)");
-        assert.strictEqual(newProperty.querySelector(".o_property_field_value input").value, "First Default Value");
+        const newProperty = field.querySelector(
+            ".o_field_properties .o_property_field:nth-child(3)"
+        );
+        assert.strictEqual(
+            newProperty.querySelector(".o_property_field_value input").value,
+            "First Default Value"
+        );
 
         // empty the new / existing property value, and re-open the property we created and change the default value
         // it shouldn't be propagated because it's the second time we open the definition
-        const existingProperty = field.querySelector(".o_field_properties .o_property_field:nth-child(1)");
+        const existingProperty = field.querySelector(
+            ".o_field_properties .o_property_field:nth-child(1)"
+        );
         for (const property of [newProperty, existingProperty]) {
             await editInput(property, ".o_property_field_value input", "");
             await click(property, ".o_field_property_open_popover");
             await nextTick();
-            await editInput(target, ".o_field_property_definition_value input", "Second Default Value");
+            await editInput(
+                target,
+                ".o_field_property_definition_value input",
+                "Second Default Value"
+            );
             await closePopover(target);
             assert.strictEqual(property.querySelector(".o_property_field_value input").value, "");
         }
+    });
+
+    /**
+     * Check the behavior of the domain (properies with "definition_deleted" should be ignored).
+     * In that case, some properties start without the flag "definition_deleted".
+     */
+    QUnit.test("properties: form view and falsy domain, properties are not empty", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 3,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="display_name"/>
+                            <field name="properties" widget="properties"/>
+                            <div class="o_test_properties_not_empty" attrs="{'invisible': [('properties', '=', [])]}">
+                                Properties not empty
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+
+        // delete a property, 2 properties left
+        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_delete");
+        await click(target, ".modal-content .btn-primary");
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+
+        // delete a property, 1 property left
+        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_delete");
+        await click(target, ".modal-content .btn-primary");
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+
+        // delete a property, no property left
+        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_delete");
+        await click(target, ".modal-content .btn-primary");
+        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+    });
+
+    /**
+     * Check the behavior of the domain (properties with "definition_deleted" should be ignored).
+     * In that case, all properties start with the flag "definition_deleted".
+     */
+    QUnit.test("properties: form view and falsy domain, properties are empty", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 4,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="display_name"/>
+                            <field name="properties" widget="properties"/>
+                            <div class="o_test_properties_not_empty" attrs="{'invisible': [('properties', '=', [])]}">
+                                Properties not empty
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+
+        // create the first property
+        await click(target, ".o_field_property_add button");
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
     });
 });

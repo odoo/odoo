@@ -5,7 +5,6 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Rita Amboni, 2022
 # Jonathan Quique <jqu@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Marianna Ciofani, 2023
@@ -43,13 +42,6 @@ msgstr "N. di righe"
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
 msgstr "N. ordini di vendita"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "%(amount)s due %(date)s"
-msgstr "%(amount)sdovuto %(date)s"
 
 #. module: sale
 #. odoo-python
@@ -1693,6 +1685,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
 msgstr "Scadenza"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "Expires on %(date)s"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search

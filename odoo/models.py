@@ -67,7 +67,7 @@ from .tools.translate import _, _lt
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.id)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.id)?(\s+(desc|asc))?(\s+(nulls first|nulls last))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -3002,12 +3002,12 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
 
-        installed_lang = set(code for code, _ in self.env['res.lang'].get_installed())
-        missing_languages = set(translations) - installed_lang
-        if missing_languages:
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
+        missing_langs = set(translations) - valid_langs
+        if missing_langs:
             raise UserError(
-                _("The following language is not activated: %(missing_names)s",
-                missing_names=', '.join(missing_languages))
+                _("The following languages are not activated: %(missing_names)s",
+                missing_names=', '.join(missing_langs))
             )
 
         field = self._fields[field_name]
@@ -4725,6 +4725,7 @@ class BaseModel(metaclass=MetaModel):
         if old.id in seen_map[old._name]:
             return
         seen_map[old._name].add(old.id)
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
 
         for name, field in old._fields.items():
             if not field.copy:
@@ -4753,6 +4754,11 @@ class BaseModel(metaclass=MetaModel):
                     continue
                 lang = self.env.lang or 'en_US'
                 old_value_lang = old_translations.pop(lang, old_translations['en_US'])
+                old_translations = {
+                    lang: value
+                    for lang, value in old_translations.items()
+                    if lang in valid_langs
+                }
                 if not old_translations:
                     continue
                 if not callable(field.translate):

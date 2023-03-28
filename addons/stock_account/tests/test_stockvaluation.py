@@ -4003,3 +4003,16 @@ class TestStockValuation(TransactionCase):
         user_report = self.env['report.stock.report_product_product_replenishment'].with_user(self.inventory_user)
         user_report.get_report_values(docids=self.product1.ids, serialize=True)
         user_report.get_report_values(docids=self.product1.ids)
+
+    def test_average_manual_price_change(self):
+        """
+        When doing a Manual Price Change, an SVL is created to update the value_svl.
+        This test check that the value of this SVL is correct and does result in new_std_price * quantity.
+        To do so, we create 2 In moves, which result in a standard price rounded at $5.29, the non-rounded value ≃ 5.2857.
+        Then we update the standard price to $7
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 5, unit_cost=5)
+        self._make_in_move(self.product1, 2, unit_cost=6)
+        self.product1.write({'standard_price': 7})
+        self.assertEqual(self.product1.value_svl, 49)

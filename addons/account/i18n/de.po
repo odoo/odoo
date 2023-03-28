@@ -15,8 +15,8 @@
 # Alexander Bigga, 2023
 # Thomas, 2023
 # Jordan D. (Joda), 2023
-# Larissa Manderfeld, 2023
 # Chris Egal <sodaswed@web.de>, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,6 +258,9 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
+"- Ein neues Feld „Gesamtsumme (inkl. Steuern)“ zur Beschleunigung und "
+"Kontrolle der Erfassung durch automatische Erstellung von Zeilen mit dem "
+"richtigen Konto &amp; den richtigen Steuern."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1425,6 +1428,13 @@ msgstr "Zweite Zahlung wurde erstellt: %s"
 msgid ""
 "A second payment will be created automatically in the destination journal."
 msgstr "Eine zweite Zahlung wird automatisch im Journal erstellt."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
+msgstr ""
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -2706,7 +2716,7 @@ msgstr "Kostenstellen Buchungen"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Anwendbarkeit des Analyseplans"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
@@ -4793,7 +4803,7 @@ msgstr "Währung der Gutschrift"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr ""
+msgstr "Gutschrift: Versand"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -10902,7 +10912,7 @@ msgstr "Zahlungsbedingungen: 30 Tage"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
-msgstr ""
+msgstr "Zahlungsbedingungen: 30 Tage, 2 % Skonto innerhalb von 7 Tagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
@@ -10937,7 +10947,7 @@ msgstr "Zahlungsbedindungen: Sofortige Zahlung"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr ""
+msgstr "Zahlung: Zahlungseingang"
 
 #. module: account
 #. odoo-python
@@ -12538,16 +12548,18 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
+"Manueller Versand an Kunden, wenn in den Zahlungsaktion auf „Zahlungsbeleg "
+"per E-Mail senden“ geklickt wird"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr ""
+msgstr "Versand an Kunden mit der Gutschrift im Anhang"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
 msgid "Sent to customers with their invoices in attachment"
-msgstr ""
+msgstr "Versand an Kunden mit ihren Rechnungen im Anhang"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -14708,6 +14720,22 @@ msgstr ""
 "unterschiedlich, aber Sie haben beide Typen ausgewählt."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr "Die Zeile, die diesen Eintrag erzeugt hat"
@@ -15552,6 +15580,15 @@ msgstr "Typ der Ausnahmeaktivität im Datensatz."
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
 msgstr "HOCH"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
 
 #. module: account
 #. odoo-python

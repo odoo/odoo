@@ -335,13 +335,14 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
         });
 
         QUnit.test("sub widget methods are correctly called", async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
             const MyWidget = Widget.extend({
                 on_attach_callback: function () {
                     assert.step('on_attach_callback');
                 },
                 on_detach_callback: function () {
+                    assert.ok(document.body.contains(this.el));
                     assert.step('on_detach_callback');
                 },
                 destroy: function () {

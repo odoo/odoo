@@ -634,38 +634,7 @@ export class OdooEditor extends EventTarget {
         // -------
 
         if (this.options.toolbar) {
-            this.toolbar = this.options.toolbar;
-            this.bindExecCommand(this.toolbar);
-            // Ensure anchors in the toolbar don't trigger a hash change.
-            const toolbarAnchors = this.toolbar.querySelectorAll('a');
-            toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
-            const tablepickerDropdown = this.toolbar.querySelector('.oe-tablepicker-dropdown');
-            tablepickerDropdown && tablepickerDropdown.append(this.toolbarTablePicker.el);
-            this.toolbarTablePicker.show();
-            const tableDropdownButton = this.toolbar.querySelector('#tableDropdownButton');
-            tableDropdownButton &&
-                tableDropdownButton.addEventListener('click', () => {
-                    this.toolbarTablePicker.reset();
-                });
-            for (const colorLabel of this.toolbar.querySelectorAll('label')) {
-                colorLabel.addEventListener('mousedown', ev => {
-                    // Hack to prevent loss of focus (done by preventDefault) while still opening
-                    // color picker dialog (which is also prevented by preventDefault on chrome,
-                    // except when click detail is 2, which happens on a double-click but isn't
-                    // triggered by a dblclick event)
-                    if (ev.detail < 2) {
-                        ev.preventDefault();
-                        ev.currentTarget.dispatchEvent(new MouseEvent('click', { detail: 2 }));
-                    }
-                });
-                colorLabel.addEventListener('input', ev => {
-                    this.document.execCommand(ev.target.name, false, ev.target.value);
-                    this.updateColorpickerLabels();
-                });
-            }
-            if (this.isMobile) {
-                this.editable.before(this.toolbar);
-            }
+            this.setupToolbar(this.options.toolbar);
         }
         // placeholder hint
         if (editable.textContent === '' && this.options.placeholder) {
@@ -690,6 +659,39 @@ export class OdooEditor extends EventTarget {
         // Remove table UI
         this._rowUi.remove();
         this._columnUi.remove();
+    }
+
+    setupToolbar(toolbar) {
+        this.toolbar = toolbar;
+        this.autohideToolbar = this.options.autohideToolbar;
+        this.bindExecCommand(this.toolbar);
+        // Ensure anchors in the toolbar don't trigger a hash change.
+        const toolbarAnchors = this.toolbar.querySelectorAll('a');
+        toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
+        const tablepickerDropdown = this.toolbar.querySelector('.oe-tablepicker-dropdown');
+        tablepickerDropdown && tablepickerDropdown.append(this.toolbarTablePicker.el);
+        this.toolbarTablePicker.show();
+        const tableDropdownButton = this.toolbar.querySelector('#tableDropdownButton');
+        tableDropdownButton &&
+            tableDropdownButton.addEventListener('click', () => {
+                this.toolbarTablePicker.reset();
+            });
+        for (const colorLabel of this.toolbar.querySelectorAll('label')) {
+            colorLabel.addEventListener('mousedown', ev => {
+                // Hack to prevent loss of focus (done by preventDefault) while still opening
+                // color picker dialog (which is also prevented by preventDefault on chrome,
+                // except when click detail is 2, which happens on a double-click but isn't
+                // triggered by a dblclick event)
+                if (ev.detail < 2) {
+                    ev.preventDefault();
+                    ev.currentTarget.dispatchEvent(new MouseEvent('click', { detail: 2 }));
+                }
+            });
+            colorLabel.addEventListener('input', ev => {
+                this.document.execCommand(ev.target.name, false, ev.target.value);
+                this.updateColorpickerLabels();
+            });
+        }
     }
 
     resetContent(value) {
@@ -1868,6 +1870,19 @@ export class OdooEditor extends EventTarget {
                 range.setEnd(commonAncestorContainer, nodeSize(commonAncestorContainer));
             }
         }
+        let insertedZws;
+        if (sel && !sel.isCollapsed && !range.startOffset && !range.startContainer.previousSibling) {
+            // Insert a zero-width space before the selection if the selection
+            // is non-collapsed and at the beginning of its parent, so said
+            // parent will have content after extraction. This ensures that the
+            // parent will not be removed by "tricking" `range.extractContents`.
+            // Eg, <h1><font>[...]</font></h1> will preserve the styles of the
+            // <font> node. If it remains empty, it will be cleaned up later by
+            // the sanitizer.
+            const zws = document.createTextNode('\u200B');
+            range.startContainer.before(zws);
+            insertedZws = zws;
+        }
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
@@ -1939,6 +1954,14 @@ export class OdooEditor extends EventTarget {
                 restore();
                 break;
             }
+        }
+        if (insertedZws) {
+            // Remove the zero-width space (zws) that was added to preserve the
+            // parent styles, then call `fillEmpty` to properly add a flagged
+            // zws if still needed.
+            const el = closestElement(insertedZws);
+            insertedZws.remove();
+            el && fillEmpty(el);
         }
         next = range.endContainer && rightLeafOnlyNotBlockPath(range.endContainer).next().value;
         if (
@@ -2725,8 +2748,10 @@ export class OdooEditor extends EventTarget {
      * @param {boolean} [show]
      */
     _updateToolbar(show) {
-        if (!this.options.toolbar) return;
-        if (!this.options.autohideToolbar && this.toolbar.style.visibility !== 'visible') {
+        if (!this.toolbar) {
+            return;
+        }
+        if (!this.autohideToolbar && this.toolbar.style.visibility !== 'visible') {
             this.toolbar.style.visibility = 'visible';
         }
 
@@ -2745,7 +2770,7 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
-        if (this.options.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
+        if (this.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
             if (!this.isMobile) {
                 if (show !== undefined) {
                     this.toolbar.style.visibility = show ? 'visible' : 'hidden';
@@ -2877,13 +2902,13 @@ export class OdooEditor extends EventTarget {
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
         redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
-        if (this.options.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
+        if (this.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
             this._positionToolbar();
         }
     }
     updateToolbarPosition() {
         if (
-            this.options.autohideToolbar &&
+            this.autohideToolbar &&
             !this.isMobile &&
             getComputedStyle(this.toolbar).visibility === 'visible'
         ) {
@@ -3533,13 +3558,18 @@ export class OdooEditor extends EventTarget {
             // Move selection if next character is zero-width space
             if (nextCharacter === '\u200B') {
                 focusOffset += 1;
-                while (focusNode && (!focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable)) {
-                    focusNode = nextLeaf(focusNode);
+                let newFocusNode = focusNode;
+                while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
+                    newFocusNode = nextLeaf(newFocusNode);
                     focusOffset = 0;
                 }
-                const startContainer = ev.shiftKey ? selection.anchorNode : focusNode;
+                if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
+                    newFocusNode = focusNode; // Do not move selection to next block.
+                    focusOffset = nodeSize(focusNode);
+                }
+                const startContainer = ev.shiftKey ? selection.anchorNode : newFocusNode;
                 const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
+                setSelection(startContainer, startOffset, newFocusNode, focusOffset);
             }
         }
     }

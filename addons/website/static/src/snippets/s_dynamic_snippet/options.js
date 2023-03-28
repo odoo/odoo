@@ -54,7 +54,6 @@ const dynamicSnippetOptions = options.Class.extend({
         // Default values depend on the templates and filters available.
         // Therefore, they cannot be computed prior the start of the option.
         await this._setOptionsDefaultValues();
-        this._setOptionsDefaultValues();
         // TODO Remove in master: adapt dropped snippet template.
         const classList = [...this.$target[0].classList];
         if (classList.includes('d-none') && !classList.some(className => className.match(/^d-(md|lg)-(?!none)/))) {

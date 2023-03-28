@@ -1256,14 +1256,14 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        subtitles = [render_context['record'].name]
-        if self.validity_date:
-            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-                          ))
-        else:
-            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        lang_code = render_context.get('lang')
+        subtitles = [
+            render_context['record'].name,
+            format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
+        ]
+        if self.validity_date and self.state in ['draft', 'sent']:
+            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
+            subtitles.append(_("Expires on %(date)s", date=formatted_date))
         render_context['subtitles'] = subtitles
         return render_context
 

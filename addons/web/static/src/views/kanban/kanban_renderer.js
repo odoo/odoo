@@ -19,7 +19,7 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
-import { Component, useState, useRef, onWillDestroy } from "@odoo/owl";
+import { Component, useState, useRef, onPatched, onWillPatch, onWillDestroy } from "@odoo/owl";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -145,6 +145,14 @@ export class KanbanRenderer extends Component {
         useHotkey("ArrowDown", ({ area }) => this.focusNextCard(area, "down"), arrowsOptions);
         useHotkey("ArrowLeft", ({ area }) => this.focusNextCard(area, "left"), arrowsOptions);
         useHotkey("ArrowRight", ({ area }) => this.focusNextCard(area, "right"), arrowsOptions);
+
+        let previousScrollTop = 0;
+        onWillPatch(() => {
+            previousScrollTop = rootRef.el.scrollTop;
+        });
+        onPatched(() => {
+            rootRef.el.scrollTop = previousScrollTop;
+        });
     }
 
     // ------------------------------------------------------------------------

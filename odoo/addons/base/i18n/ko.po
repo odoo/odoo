@@ -923,6 +923,9 @@ msgid ""
 "        Base module for Bolivian reports\n"
 "    "
 msgstr ""
+"\n"
+"        볼리비아 보고서용 기본 모듈\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_reports
@@ -4986,6 +4989,12 @@ msgid ""
 "This module add completed courses to resume for employees.\n"
 "        "
 msgstr ""
+"\n"
+"이러닝 및 인사관리 기술\n"
+"============================\n"
+"\n"
+"이 모듈은 직원 이력서에 완료된 과정을 추가합니다.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_40
@@ -7475,6 +7484,41 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"자체 수표 관리\n"
+"---------------------\n"
+"\n"
+"'수표 인쇄 기본' 모듈을 확장하여 수표 관리에 더 많은 기능을 사용할 수 있도록 합니다:\n"
+"\n"
+"* 인쇄는 되지 않으나 사용자가 수동으로 내용을 기입할 수 있는 자체적인 수표 사용 허용\n"
+"* 이연 또는 전자 수표 사용을 허용\n"
+"  * 인쇄 비활성화\n"
+"  * 수표 번호를 사용자가 수동으로 설정\n"
+"* 선일자수표 (지급 지연)에 대해 \"수표 현금 인출일\" 추가\n"
+"* 자체 수표 추적 메뉴 추가\n"
+"\n"
+"제3자 수표 관리\n"
+"-----------------------------\n"
+"\n"
+"새로운 \"제3자 수표 관리\" 메뉴를 추가합니다.\n"
+"\n"
+"2가지 주요 결제 방법이 추가되었습니다:\n"
+"\n"
+"* 새로운 제3자 수표:\n"
+"\n"
+"  * 이 결제 방법을 사용하여 결제할 경우 (청구서 또는 직접 결제 시) 고객으로부터 받은 수표를 나타냅니다\n"
+"\n"
+"* 기존 제3자 수표.\n"
+"\n"
+"  * 이 결제 방법으로 결제하는 경우에 수표 이동을 추적하기 위한 것이며, 예를 들면 다음과 같습니다:\n"
+"\n"
+"    * 수표로 공급업체에 지불\n"
+"    * 수표를 은행에 입금\n"
+"    * 은행에서 수표 회신 (거절)\n"
+"    * 공급업체로부터 수표 회신 (거절 또는 반품)\n"
+"    * 제3자 수표 전표에서 다른 전표로 수표를 이동 (특정 상점에서 다른 상점으로)\n"
+"\n"
+"  * 이러한 작업은 한번에 여러 개의 수표에 대하여 수행이 가능합니다\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -10609,6 +10653,31 @@ msgid ""
 "\n"
 "https://paymentservices.amazon.com/docs/EN/12.html"
 msgstr ""
+"# 아마존 결제 서비스\n"
+"\n"
+"## 구현 상세 정보\n"
+"\n"
+"### 지원 기능\n"
+"\n"
+"- 리디렉션을 통한 결제\n"
+"- 다양한 글로벌 및 로컬 신용 결제\n"
+"  [카드 결제](https://paymentservices.amazon.com/docs/EN/24a.html).\n"
+"- [Webhook](https://paymentservices-reference.payfort.com/docs/api/build/index.html#transaction-feedback)\n"
+"\n"
+"### API 및 게이트웨이\n"
+"\n"
+"당사는 2022년 7월 아마존페이먼트 3가지 서비스 중 [리디렉션](https://paymentservices-reference.payfort.com/docs/api/build/index.html#redirection)\n"
+"요구사항에 가장 부합하는 API와의 통합을 결정하였습니다. 다른 게이트웨이에 대한 자세한 내용은 작업의 개발 노트를 참조하십시오.\n"
+"\n"
+"## 통합 상세 정보\n"
+"\n"
+"작업에 지정된 모듈의 첫번째 버전은 다음과 같으며\n"
+"[2802678](https://www.odoo.com/web#id=2802678&model=project.task) PR odoo/odoo#95860 과 통합되었습니다.\n"
+"`saas-15.5`에서 확인하시기 바랍니다.\n"
+"\n"
+"## 테스트 지침\n"
+"\n"
+"https://paymentservices.amazon.com/docs/EN/12.html"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_asiapay
@@ -14129,7 +14198,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax
 msgid "Avatax"
-msgstr ""
+msgstr "Avatax"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_sale
@@ -15009,12 +15078,12 @@ msgstr "기본적으로 위젯은 필드 정보를 사용합니다."
 #. module: base
 #: model:res.groups,name:base.group_sanitize_override
 msgid "Bypass HTML Field Sanitize"
-msgstr ""
+msgstr "HTML 필드 삭제 우회"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
 msgid "C - MANUFACTURING"
-msgstr ""
+msgstr "C - MANUFACTURING"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__c5e
@@ -15491,7 +15560,7 @@ msgstr "칠레 - 전자 송장"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_boletas
 msgid "Chile - Electronic Receipt"
-msgstr ""
+msgstr "칠레 - 전자 영수증"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -15573,7 +15642,7 @@ msgstr "닫기"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Close the onboarding panel"
-msgstr ""
+msgstr "온보딩 패널 닫기"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -15731,7 +15800,7 @@ msgstr "상업 항목"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commissions
 msgid "Commissions"
-msgstr ""
+msgstr "수수료"
 
 #. module: base
 #: model:res.country,name:base.km
@@ -16526,7 +16595,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_worksheet
 msgid "Create customizable worksheet"
-msgstr ""
+msgstr "편집 가능한 워크시트 생성"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -16963,7 +17032,7 @@ msgstr "키프로스"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz
 msgid "Czech - Accounting"
-msgstr ""
+msgstr "체코 - 회계"
 
 #. module: base
 #: model:res.country,name:base.cz
@@ -16988,27 +17057,27 @@ msgstr "DHL 익스프레스 선적"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
 msgid "DIN 5008"
-msgstr ""
+msgstr "DIN 5008"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_purchase
 msgid "DIN 5008 - Purchase"
-msgstr ""
+msgstr "DIN 5008 - 매입"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_repair
 msgid "DIN 5008 - Repair"
-msgstr ""
+msgstr "DIN 5008 - 수리"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_sale
 msgid "DIN 5008 - Sale"
-msgstr ""
+msgstr "DIN 5008 - 판매"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_stock
 msgid "DIN 5008 - Stock"
-msgstr ""
+msgstr "DIN 5008 - 재고"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -17043,7 +17112,7 @@ msgstr "데이터 정리 (병합)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_recycle
 msgid "Data Recycle"
-msgstr ""
+msgstr "데이터 재사용"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_convert
@@ -17211,7 +17280,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Decimalized number"
-msgstr ""
+msgstr "십진법"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -17302,7 +17371,7 @@ msgstr "정의"
 #: model_terms:ir.ui.view,arch_db:base.view_apikeys
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Delete API key."
-msgstr ""
+msgstr "API 키를 삭제합니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_unlink
@@ -21355,7 +21424,7 @@ msgstr "XML/PDF에서 청구서 가져오기/내보내기"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "UBL/CII 에서 전자 청구서 가져오기/내보내기"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_base_import
@@ -21396,7 +21465,7 @@ msgstr "비활성 사용자"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__include
 msgid "Include"
-msgstr ""
+msgstr "포함 사항"
 
 #. module: base
 #. odoo-python
@@ -21412,7 +21481,7 @@ msgstr "기록상 호환되지 않는 회사 :"
 msgid ""
 "Incorrect Password, try again or click on Forgot Password to reset your "
 "password."
-msgstr ""
+msgstr "잘못된 비밀번호입니다. 다시 시도하시거나 비밀번호 찾기를 클릭하여 비밀번호를 재설정하시기 바랍니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -31887,7 +31956,7 @@ msgstr "타이완 - 회계"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__tajawal
 msgid "Tajawal"
-msgstr ""
+msgstr "타지왈"
 
 #. module: base
 #: model:res.country,name:base.tj
@@ -31993,7 +32062,7 @@ msgstr "기술 가이드"
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Template %r already exists in module %r"
-msgstr ""
+msgstr "%r 서식이 이미 %r 모듈에 존재합니다"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
@@ -32006,7 +32075,7 @@ msgstr "서식명"
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Template name is missing in file %r."
-msgstr ""
+msgstr "%r 파일에 서식 이름이 없습니다. "
 
 #. module: base
 #: model_terms:res.company,sign_terms:base.main_company
@@ -32022,7 +32091,7 @@ msgstr "테스트 - 기본 자동화"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_resource
 msgid "Test - Resource"
-msgstr ""
+msgstr "테스트 - 리소스"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
@@ -32053,7 +32122,7 @@ msgstr "테스트 데이터 정리"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_discuss_full
 msgid "Test Discuss (full)"
-msgstr ""
+msgstr "테스트 연락 (전체)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_discuss_full_enterprise
@@ -32063,7 +32132,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_crm_full
 msgid "Test Full Crm Flow"
-msgstr ""
+msgstr "전체 CRM 흐름 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full
@@ -32078,7 +32147,7 @@ msgstr "전체 온라인학습 진행 테스트"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_http
 msgid "Test HTTP"
-msgstr ""
+msgstr "HTTP 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
@@ -33361,7 +33430,7 @@ msgstr ""
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
-msgstr ""
+msgstr "해당 모듈을 삭제할 수 없습니다: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -33681,7 +33750,7 @@ msgstr "번역하기"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
 msgid "Transportation/Logistics"
-msgstr ""
+msgstr "운송/물류"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__tree
@@ -33700,7 +33769,7 @@ msgstr "트리 하위는 %(tags)s 태그 중 하나만 가질 수 있습니다(%
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
 msgid "Triggered actions"
-msgstr ""
+msgstr "진행된 작업"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -33829,7 +33898,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "U.A.E. - Payroll"
-msgstr ""
+msgstr "아랍에미리트 - 급여"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
@@ -35976,7 +36045,7 @@ msgstr "예 : 주문 수량 업데이트"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "e.g. email@yourcompany.com"
-msgstr ""
+msgstr "예: email@yourcompany.com"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -36158,7 +36227,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
 msgid "l10n_it_stock_ddt"
-msgstr ""
+msgstr "l10n_it_stock_ddt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot_hr
@@ -36175,7 +36244,7 @@ msgstr "many2many"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "many2many 필드를 참조 사항으로 평가할 수 없습니다"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
@@ -36233,7 +36302,7 @@ msgstr "아니오"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "o_onboarding_confetti"
-msgstr ""
+msgstr "o_onboarding_confetti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form

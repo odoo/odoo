@@ -668,7 +668,7 @@ class Applicant(models.Model):
             'default_address_home_id': address_id,
             'default_department_id': self.department_id.id,
             'default_address_id': self.company_id.partner_id.id,
-            'default_work_email': self.department_id.company_id.email,
+            'default_work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
             'default_work_phone': self.department_id.company_id.phone,
             'form_view_initial_mode': 'edit',
             'default_applicant_id': self.ids,

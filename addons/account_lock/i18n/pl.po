@@ -40,18 +40,21 @@ msgstr "Firmy"
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
 msgstr ""
+"Data blokady dla księgowych jest nieodwracalna i nie można jej usunąć."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
+"Nowa data blokady podatkowej musi być ustawiona po poprzedniej dacie "
+"blokady."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "Data blokady podatkowej jest nieodwracalna i nie można jej usunąć."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -60,6 +63,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Nie można zablokować okresu, który jeszcze się nie zakończył. Dlatego data "
+"blokady dla wszystkich użytkowników musi być wcześniejsza (lub równa) niż "
+"ostatni dzień poprzedniego miesiąca."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -68,6 +74,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Nie można zablokować okresu, który jeszcze się nie zakończył. Dlatego data "
+"blokady dla wszystkich użytkowników musi być wcześniejsza (lub równa) niż "
+"ostatni dzień poprzedniego miesiąca."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -77,3 +86,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"Nie można ustawić surowszych ograniczeń dla księgowych niż dla użytkowników."
+" Dlatego data blokady dla wszystkich użytkowników musi być wcześniejsza (lub"
+" równa) niż data blokady dla faktur/rachunków."

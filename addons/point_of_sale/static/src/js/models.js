@@ -1343,6 +1343,15 @@ function register_payment_method(use_payment_terminal, ImplementedPaymentInterfa
 
 
 class Product extends PosModel {
+    constructor(obj) {
+        super(obj);
+        this.parent_category_ids = [];
+        let category = this.categ.parent;
+        while (category) {
+            this.parent_category_ids.push(category.id);
+            category = category.parent;
+        }
+    }
     isAllowOnlyOneLot() {
         const productUnit = this.get_unit();
         return this.tracking === 'lot' || !productUnit || !productUnit.is_pos_groupable;
@@ -1357,6 +1366,13 @@ class Product extends PosModel {
             return undefined;
         }
         return this.pos.units_by_id[unit_id];
+    }
+    isPricelistItemUsable(item, date) {
+        return (
+            (!item.categ_id || _.contains(this.parent_category_ids.concat(this.categ.id), item.categ_id[0])) &&
+            (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
+            (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
+        );
     }
     // Port of _get_product_price on product.pricelist.
     //
@@ -1381,18 +1397,12 @@ class Product extends PosModel {
             ));
         }
 
-        var category_ids = [];
-        var category = this.categ;
-        while (category) {
-            category_ids.push(category.id);
-            category = category.parent;
-        }
-
-        var pricelist_items = _.filter(self.applicablePricelistItems[pricelist.id], function (item) {
-            return (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
-                   (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-                   (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
-        });
+        var pricelist_items = _.filter(
+            self.applicablePricelistItems[pricelist.id],
+            function (item) {
+                return self.isPricelistItemUsable(item, date);
+            }
+        );
 
         var price = self.lst_price;
         if (price_extra){
@@ -1816,7 +1826,8 @@ class Orderline extends PosModel {
             price_extra: this.get_price_extra(),
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
-            price_manually_set: this.price_manually_set
+            price_manually_set: this.price_manually_set,
+            refunded_orderline_id: this.refunded_orderline_id,
         };
     }
     //used to create a json of the ticket, to be sent to the printer
@@ -1844,6 +1855,7 @@ class Orderline extends PosModel {
             product_description_sale: this.get_product().description_sale,
             pack_lot_lines:      this.get_lot_lines(),
             customer_note:      this.get_customer_note(),
+            taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
         };
     }
     generate_wrapped_product_name() {
@@ -1922,14 +1934,14 @@ class Orderline extends PosModel {
         }
     }
     get_taxed_lst_unit_price(){
-        var lst_price = this.get_lst_price();
+        var base_price = this.compute_fixed_price(this.get_base_price());
         if (this.pos.config.iface_tax_included === 'total') {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
             var product_taxes = this.pos.get_taxes_after_fp(taxes_ids);
-            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
+            return this.compute_all(product_taxes, base_price, 1, this.pos.currency.rounding).total_included;
         }
-        return lst_price;
+        return base_price;
     }
     get_price_without_tax(){
         return this.get_all_prices().priceWithoutTax;
@@ -2277,7 +2289,6 @@ class Order extends PosModel {
         this.pos_session_id = this.pos.pos_session.id;
         this.cashier        = this.pos.get_cashier();
         this.finalized      = false; // if true, cannot be modified.
-        this.set_pricelist(this.pos.default_pricelist);
 
         this.partner = null;
 
@@ -2298,6 +2309,7 @@ class Order extends PosModel {
         if (options.json) {
             this.init_from_JSON(options.json);
         } else {
+            this.set_pricelist(this.pos.default_pricelist);
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.access_token = uuidv4();  // unique uuid used to identify the authenticity of the request from the QR code.
             this.uid  = this.generate_unique_id();
@@ -2368,7 +2380,7 @@ class Order extends PosModel {
         } else {
             partner = null;
         }
-        this.set_partner(partner);
+        this.partner = partner;
 
         this.temporary = false;     // FIXME
         this.to_invoice = false;    // FIXME
@@ -3105,8 +3117,8 @@ class Order extends PosModel {
                 var rounding_method = this.pos.cash_rounding[0].rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
-                if(this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0) {
-                    rounding_method = rounding_method.endsWith("UP") ? "DOWN" : "UP";
+                if(rounding_method !== "HALF-UP" && (this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0)) {
+                    rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
                 }
 
                 remaining *= sign;
@@ -3129,6 +3141,9 @@ class Order extends PosModel {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 }
                 else if(rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
+                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                }
+                else if(rounding_method === "HALF-UP" && rounding_applied === this.pos.cash_rounding[0].rounding / -2){
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 return sign * rounding_applied;

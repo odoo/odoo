@@ -9,8 +9,8 @@
 # Martin Trigaux, 2022
 # Ziani Ahmed (Zity), 2022
 # Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1270,7 +1270,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total Rounded</strong>"
-msgstr ""
+msgstr "<strong>إجمالي التقريب</strong> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1416,6 +1416,13 @@ msgstr "تم إنشاء عملية دفع ثانية: %s "
 msgid ""
 "A second payment will be created automatically in the destination journal."
 msgstr "سوف يتم إنشاء دفعة ثانية تلقائياً في اليومية المستهدفة. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
+msgstr "يجب أن يحتوي كشف الحساب على بنود من نفس دفتر اليومية فقط. "
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -13692,6 +13699,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
+"وحدة القياس (UoM) '%s' التي قمت بتحديدها للمنتج '%s'، غير متوافقة مع فئته: "
+"%s. "
 
 #. module: account
 #. odoo-python
@@ -14529,6 +14538,24 @@ msgstr ""
 " البعض من كلا النوعين. "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr "لا يطابق الرصيد الجاري (%s) الرصيد النهائي المحدد. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+"لا يطابق الرصيد الابتدائي الرصيد النهائي في كشف الحساب السابق، أو قد يكون "
+"كشف حساب قديم مفقوداً. "
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr "بند اليومية الذي قام بإنشاء هذا القيد "
@@ -14692,6 +14719,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"حدث خطأ أثناء محاولة إضافة العارضة إلى ملف PDF الأصلي. \n"
+"يرجى التأكد من صلاحية الملف المصدري. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14996,6 +15025,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"يتم استخدام هذا المنتج بالفعل لترحيل قيود اليومية. \n"
+"إذا كنت ترغب في تغيير وحدة القياس، يرجى أرشفة هذا المنتج وإنشاء واحد جديد. "
 
 #. module: account
 #. odoo-python
@@ -15181,7 +15212,7 @@ msgstr "إجمالي المتبقي بالعملة "
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #, python-format
 msgid "Total Rounded"
-msgstr ""
+msgstr "إجمالي ما تم تقريبه "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -15350,6 +15381,17 @@ msgstr "نوع النشاط المستثنى في السجل. "
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
 msgstr "لأعلى"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
+"تعذر إنشاء كشف الحساب نظراً لعدم وجود بعض المعاملات. قد ترغب في إعادة طلب "
+"المعاملات قبل المتابعة. "
 
 #. module: account
 #. odoo-python
@@ -16032,6 +16074,9 @@ msgid ""
 "already posted. If you are absolutely sure you want to modify the opening "
 "balance of your accounts, reset the move to draft."
 msgstr ""
+"لا يمكنك استيراد \"openning_balance\" إذا تم ترحيل الحركة الافتتاحية (%s) "
+"بالفعل. إذا كنت متأكداً تماماً من أنك ترغب في تعديل الرصيد الافتتاحي "
+"لحساباتك، قم بإعادة تعيين الحركة إلى مسودة. "
 
 #. module: account
 #. odoo-python
@@ -16332,7 +16377,7 @@ msgstr "لا يمكنك تغيير عملة الشركة لتواجد عناصر
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
+msgstr "يرجى التواصل مع محاسبك لطباعة نتائج صحة التشفير. "
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16450,6 +16495,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"لا يمكنك تحرير الحقول التالية: %s.\n"
+"القيود التالية مشفرة بالفعل:\n"
+"%s "
 
 #. module: account
 #. odoo-python
