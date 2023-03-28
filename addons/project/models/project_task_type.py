@@ -145,7 +145,3 @@ class ProjectTaskType(models.Model):
             'stage_id': new_stage.id,
         })
         self.unlink()
-
-    @api.autovacuum
-    def _gc_personal_stages(self):
-        self.env['project.task.type'].search([('user_id.active', '=', False)], limit=1000).unlink()
