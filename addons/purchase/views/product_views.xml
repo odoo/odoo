@@ -39,6 +39,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='purchase']" position="attributes">
                     <attribute name="invisible">0</attribute>
+                    <attribute name="groups">purchase.group_purchase_user</attribute>
                 </xpath>
                 <group name="purchase" position="before">
                     <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)], 'readonly': [('product_variant_count','&gt;',1)]}"/>
