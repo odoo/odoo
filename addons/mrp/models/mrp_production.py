@@ -788,38 +788,44 @@ class MrpProduction(models.Model):
                     production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
         return res
 
-    @api.model
-    def create(self, values):
-        # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
-        # into `move_finished_ids` to avoid duplicate and inconsistency.
-        if values.get('move_finished_ids', False):
-            values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values['move_finished_ids']))
-        if values.get('move_byproduct_ids', False):
-            values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
-            del values['move_byproduct_ids']
-        if not values.get('name', False) or values['name'] == _('New'):
-            picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
-            picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
-            if picking_type_id:
-                values['name'] = picking_type_id.sequence_id.next_by_id()
-            else:
-                values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
-        if not values.get('procurement_group_id'):
-            procurement_group_vals = self._prepare_procurement_group_vals(values)
-            values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
-        production = super(MrpProduction, self).create(values)
-        (production.move_raw_ids | production.move_finished_ids).write({
-            'group_id': production.procurement_group_id.id,
-            'origin': production.name
-        })
-        production.move_raw_ids.write({'date': production.date_planned_start})
-        production.move_finished_ids.write({'date': production.date_planned_finished})
-        # Trigger SM & WO creation when importing a file
-        if 'import_file' in self.env.context:
-            production._onchange_move_raw()
-            production._onchange_move_finished()
-            production._onchange_workorder_ids()
-        return production
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
+            # into `move_finished_ids` to avoid duplicate and inconsistency.
+            if values.get('move_finished_ids', False):
+                values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values['move_finished_ids']))
+            if values.get('move_byproduct_ids', False):
+                values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
+                del values['move_byproduct_ids']
+            if not values.get('name', False) or values['name'] == _('New'):
+                picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
+                picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
+                if picking_type_id:
+                    values['name'] = picking_type_id.sequence_id.next_by_id()
+                else:
+                    values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+            if not values.get('procurement_group_id'):
+                procurement_group_vals = self._prepare_procurement_group_vals(values)
+                values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
+        productions = super().create(vals_list)
+        for production in productions:
+            production.move_raw_ids.write({
+                'date': production.date_planned_start,
+                'group_id': production.procurement_group_id.id,
+                'origin': production.name,
+            })
+            production.move_finished_ids.write({
+                'date': production.date_planned_finished,
+                'group_id': production.procurement_group_id.id,
+                'origin': production.name,
+            })
+            # Trigger SM & WO creation when importing a file
+            if 'import_file' in self.env.context:
+                production._onchange_move_raw()
+                production._onchange_move_finished()
+                production._onchange_workorder_ids()
+        return productions
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
@@ -1206,9 +1212,9 @@ class MrpProduction(models.Model):
                         'product_uom_qty': move_finish.product_uom._compute_quantity(move_finish.product_uom_qty, move_finish.product_id.uom_id),
                         'product_uom': move_finish.product_id.uom_id
                     })
-            production.move_raw_ids._adjust_procure_method()
-            (production.move_raw_ids | production.move_finished_ids)._action_confirm(merge=False)
-            production.workorder_ids._action_confirm()
+        self.move_raw_ids._adjust_procure_method()
+        (self.move_raw_ids | self.move_finished_ids)._action_confirm(merge=False)
+        self.workorder_ids._action_confirm()
         # run scheduler for moves forecasted to not have enough in stock
         self.move_raw_ids._trigger_scheduler()
         self.picking_ids.filtered(
