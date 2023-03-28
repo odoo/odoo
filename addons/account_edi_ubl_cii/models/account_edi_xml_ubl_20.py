@@ -517,7 +517,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             narration += note_node.text + "\n"
 
         payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
-        if payment_terms_node is not None:
+        if payment_terms_node is not None and payment_terms_node.text:
             narration += payment_terms_node.text + "\n"
 
         invoice_form.narration = narration
@@ -545,7 +545,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== invoice_incoterm_id ====
 
         incoterm_code_node = tree.find('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
-        if incoterm_code_node is not None:
+        if incoterm_code_node is not None and incoterm_code_node.text:
             incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code_node.text)], limit=1)
             if incoterm:
                 invoice_form.invoice_incoterm_id = incoterm
