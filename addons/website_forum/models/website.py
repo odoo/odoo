@@ -50,7 +50,6 @@ class Website(models.Model):
         websites (to update globally counters, notably when a new forum is
         created). """
         websites = self if self else self.search([])
+        forums_all = self.env['forum.forum'].search([])
         for website in websites:
-            website.forum_count = self.env['forum.forum'].sudo().search_count(
-                website.website_domain()
-            )
+            website.forum_count = len(forums_all.filtered_domain(website.website_domain()))
