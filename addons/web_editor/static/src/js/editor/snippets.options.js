@@ -6850,6 +6850,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 colors: this._getImplicitColors(widgetValue, this._getShapeData().colors),
                 flip: [],
                 animated: params.animated,
+                showOnMobile: false,
             };
         });
     },
@@ -6883,6 +6884,20 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     flipY(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'y');
     },
+    /**
+     * Shows/Hides the shape on mobile.
+     * 
+     * @see this.selectClass for params
+     */
+    showOnMobile(previewMode, widgetValue, params) {
+        this._handlePreviewState(previewMode, () => {
+            const showOnMobile = !this._getShapeData().showOnMobile;
+            const shape = this.$target.find('> .o_we_shape')[0];
+            shape.classList.toggle('o_shape_show_mobile');
+
+            return {showOnMobile};
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -6911,6 +6926,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 // Compat: flip classes are no longer used but may be present in client db
                 const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
                 return hasFlipClass || this._getShapeData().flip.includes('y');
+            }
+            case 'showOnMobile': {
+                return this._getShapeData().showOnMobile;
             }
         }
         return this._super(...arguments);
@@ -7140,6 +7158,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             shape: '',
             colors: this._getDefaultColors($(target)),
             flip: [],
+            showOnMobile: false,
         };
         const json = target.dataset.oeShapeData;
         return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
