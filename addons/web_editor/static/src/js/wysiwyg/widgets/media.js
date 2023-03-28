@@ -554,6 +554,22 @@ var FileWidget = SearchableMediaWidget.extend({
         this.$urlSuccess.toggleClass('d-none', !isURL);
         this.$urlError.toggleClass('d-none', emptyValue || isURL);
     },
+    /**
+     * Removes the displayed deleted attachment's.
+     *
+     * @private
+     * @param {object} attachment
+     * @param {HTMLElement} thumbnailEl
+     */
+    _removeDeletedAttachment(attachment, thumbnailEl) {
+        this.attachments = _.without(this.attachments, attachment);
+        this.attachments.filter(at => at.original_id[0] === attachment.id).forEach(at => delete at.original_id);
+        if (!this.attachments.length) {
+            this._renderThumbnails(); //render the message and image if empty
+        } else {
+            thumbnailEl.closest('.o_existing_attachment_cell').remove();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -651,26 +667,44 @@ var FileWidget = SearchableMediaWidget.extend({
                 var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
                 var id = parseInt($a.data('id'), 10);
                 var attachment = _.findWhere(self.attachments, {id: id});
-                 return self._rpc({
-                    route: '/web_editor/attachment/remove',
+                return self._rpc({
+                    route: '/web_editor/attachment/remove_with_new_check',
                     params: {
                         ids: [id],
                     },
                 }).then(function (prevented) {
                     if (_.isEmpty(prevented)) {
-                        self.attachments = _.without(self.attachments, attachment);
-                        self.attachments.filter(at => at.original_id[0] === attachment.id).forEach(at => delete at.original_id);
-                        if (!self.attachments.length) {
-                            self._renderThumbnails(); //render the message and image if empty
-                        } else {
-                            $a.closest('.o_existing_attachment_cell').remove();
-                        }
+                        self._removeDeletedAttachment(attachment, $a[0]);
                         return;
                     }
-                    self.$errorText.replaceWith(QWeb.render('wysiwyg.widgets.image.existing.error', {
-                        views: prevented[id],
-                        widget: self,
-                    }));
+                    const buttons = [{
+                        text: _t("Delete Anyway"),
+                        classes: 'btn-primary',
+                        close: true,
+                        click: () => {
+                            return self._rpc({
+                                route: '/web_editor/attachment/remove_with_new_check',
+                                params: {
+                                    ids: [id],
+                                    force: true,
+                                },
+                            }).then(() => {
+                                self._removeDeletedAttachment(attachment, $a[0]);
+                            });
+                        },
+                    }, {
+                        text: _t("Cancel"),
+                        close: true,
+                    }];
+                    Dialog.alert(this, undefined, {
+                        title: prevented[id].matches.length || prevented[id].sudoModels.length ?
+                            _t("Attachment is still used") : _t("Delete Attachment"),
+                        $content: QWeb.render('wysiwyg.widgets.image.existing.multierror', {
+                            cause: prevented[id],
+                            widget: self,
+                        }),
+                        buttons: buttons,
+                    });
                 });
             }
         });

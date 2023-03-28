@@ -4,6 +4,7 @@
 from werkzeug.urls import url_quote
 
 from odoo import api, models, fields, tools
+from odoo.addons.web_editor.tools import find_in_html_field
 
 SUPPORTED_IMAGE_MIMETYPES = ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml']
 SUPPORTED_IMAGE_EXTENSIONS = ['.gif', '.jpe', '.jpeg', '.jpg', '.png', '.svg']
@@ -63,3 +64,28 @@ class IrAttachment(models.Model):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()
         return self._read_format(['id', 'name', 'description', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'])[0]
+
+    def _is_used_in_html_field(self):
+        """Returns a model where this attachment is used, or a dict with model names or False."""
+        self.ensure_one()
+        # Keep significant part of attachment url
+        url = self.local_url
+        is_default_local_url = url.startswith('/web/image/%s?' % self.id)
+        if is_default_local_url:
+            url = ('/web/image/%s' if self.image_src else '/web/content/%s') % self.id
+
+        # in-document URLs are html-escaped, a straight search will not
+        # find them
+        url = tools.html_escape(url)
+        likes = [
+            '"%s"' % url,
+            "'%s'" % url,
+        ]
+        if is_default_local_url:
+            likes.extend([
+                '"%s-' % url,
+                "'%s-" % url,
+                '"%s?' % url,
+                "'%s?" % url,
+            ])
+        return find_in_html_field(self.env, likes)
