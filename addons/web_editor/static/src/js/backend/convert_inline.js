@@ -522,6 +522,7 @@ function enforceTablesResponsivity(editable) {
                 // Hack that makes vertical-align possible within an inline-block.
                 const wrapper = document.createElement('div');
                 wrapper.style.setProperty('display', 'inline-block');
+                wrapper.style.setProperty('width', '100%');
                 for (const child of [...td.childNodes].filter(child => child.nodeType !== Node.COMMENT_NODE)) {
                     wrapper.append(child);
                 }
