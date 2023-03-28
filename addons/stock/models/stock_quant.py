@@ -8,7 +8,7 @@ from ast import literal_eval
 from collections import defaultdict
 from psycopg2 import Error
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import check_barcode_encoding, groupby
@@ -121,7 +121,7 @@ class StockQuant(models.Model):
         help="Next date the On Hand Quantity should be counted.")
     last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
-    is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated')
+    is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.")
 
@@ -200,6 +200,11 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.product_id and float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding) and quant.inventory_quantity_set:
                 quant.is_outdated = True
+
+    def _search_is_outdated(self, operator, value):
+        quant_ids = self.search([('inventory_quantity_set', '=', True)])
+        quant_ids = quant_ids.filtered(lambda quant: float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding)).ids
+        return [('id', 'in', quant_ids)]
 
     @api.depends('quantity')
     def _compute_inventory_quantity_auto_apply(self):
@@ -513,6 +518,10 @@ class StockQuant(models.Model):
         self.inventory_quantity = 0
         self.inventory_diff_quantity = 0
         self.inventory_quantity_set = False
+
+    def action_set_inventory_quantity_zero(self):
+        self.filtered(lambda l: not l.inventory_quantity).inventory_quantity = 0
+        self.user_id = self.env.user.id
 
     def action_warning_duplicated_sn(self):
         return {
@@ -1075,13 +1084,17 @@ class StockQuant(models.Model):
         :return: dict with all values needed to create a new `stock.move` with its move line.
         """
         self.ensure_one()
-        if fields.Float.is_zero(qty, 0, precision_rounding=self.product_uom_id.rounding):
+        if self.env.context.get('inventory_name'):
+            name = self.env.context.get('inventory_name')
+        elif fields.Float.is_zero(qty, 0, precision_rounding=self.product_uom_id.rounding):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
+        if self.user_id and self.user_id.id != SUPERUSER_ID:
+            name += f' ({self.user_id.display_name})'
 
         return {
-            'name': self.env.context.get('inventory_name') or name,
+            'name': name,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': qty,
