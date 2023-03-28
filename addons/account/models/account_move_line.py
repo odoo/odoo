@@ -446,7 +446,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.partner_id = line.move_id.partner_id.commercial_partner_id
 
-    @api.depends('move_id.date', 'move_id.currency_id')
+    @api.depends('move_id.currency_id')
     def _compute_currency_id(self):
         for line in self:
             if line.display_type == 'cogs':
