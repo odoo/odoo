@@ -17,6 +17,7 @@ import {
     insertAndSelectZws,
     insertText,
     isBlock,
+    isVisibleEmpty,
     isColorGradient,
     isContentTextNode,
     isSelectionFormat,
@@ -110,7 +111,7 @@ function insert(editor, data, isText = true) {
     }
 
     if (startNode.nodeType === Node.ELEMENT_NODE) {
-        if (selection.anchorOffset === 0) {
+        if (selection.anchorOffset === 0 || isVisibleEmpty(startNode.firstChild)) {
             const textNode = editor.document.createTextNode('');
             startNode.prepend(textNode);
             startNode = textNode;
@@ -497,7 +498,9 @@ export const editorCommands = {
         const end = leftLeafFirstPath(...pos1).next().value;
         const li = new Set();
         for (const node of leftLeafFirstPath(...pos2)) {
-            const cli = closestBlock(node);
+            let cli = closestBlock(node);
+            if(cli && cli.closest("li"))
+                cli = cli.closest("li");
             if (
                 cli &&
                 cli.tagName == 'LI' &&

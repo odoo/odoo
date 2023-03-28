@@ -15,6 +15,8 @@ import {
     closestElement,
     getUrlsInfosInString,
     isVoidElement,
+    isEditorTab,
+    isZWS,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -181,6 +183,30 @@ class Sanitize {
             // Ensure a zero width space is present inside the FA element.
             if (isFontAwesome(node) && node.textContent !== '\u200B') {
                 node.textContent = '\u200B';
+            }
+
+            // Ensure the editor tabs align on a 40px grid.
+            if (isEditorTab(node)) {
+                let tabPreviousSibling = node.previousSibling;
+                while (isZWS(tabPreviousSibling)) {
+                    tabPreviousSibling = tabPreviousSibling.previousSibling;
+                }
+                if (isEditorTab(tabPreviousSibling)) {
+                    node.style.width = '40px';
+                } else {
+                    const editable = closestElement(node, '.odoo-editor-editable');
+                    if (editable && editable.firstElementChild) {
+                        const nodeRect = node.getBoundingClientRect();
+                        const referenceRect = editable.firstElementChild.getBoundingClientRect();
+                        // Values from getBoundingClientRect() are all zeros
+                        // during Editor startup or saving. We cannot
+                        // recalculate the tabs width in thoses cases.
+                        if (nodeRect.width && referenceRect.width) {
+                            const width = (nodeRect.left - referenceRect.left) % 40;
+                            node.style.width = (40 - width) + 'px';
+                        }
+                    }
+                }
             }
 
             // Ensure elements which should not contain any content are tagged

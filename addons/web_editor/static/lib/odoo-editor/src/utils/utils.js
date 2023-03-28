@@ -1253,6 +1253,13 @@ export function isZWS(node) {
         node.textContent === '\u200B'
     );
 }
+export function isEditorTab(node) {
+    return (
+        node &&
+        (node.nodeName === 'SPAN') &&
+        node.classList.contains('oe-tabs')
+    );
+}
 export function isMediaElement(node) {
     return (
         isFontAwesome(node) ||
@@ -1401,7 +1408,8 @@ export function isInPre(node) {
  * Returns whether the given string (or given text node value)
  * has at least one visible character or one non colapsed whitespace characters in it.
  */
-const nonWhitespacesRegex = /[\S\u00A0]/;
+const nonWhitespaces = '\\S\\u00A0\\u0009';
+const nonWhitespacesRegex = new RegExp(`[${nonWhitespaces}]`);
 export function isVisibleStr(value) {
     const str = typeof value === 'string' ? value : value.nodeValue;
     return nonWhitespacesRegex.test(str);
@@ -2314,6 +2322,14 @@ export function rgbToHex(rgb = '') {
             })
             .join('')
     );
+}
+
+export function parseHTML(html) {
+    const fragment = document.createDocumentFragment();
+    const parser = new DOMParser();
+    const parsedDocument = parser.parseFromString(html, 'text/html');
+    fragment.replaceChildren(...parsedDocument.body.childNodes);
+    return fragment;
 }
 
 export function getRangePosition(el, document, options = {}) {
