@@ -55,6 +55,10 @@ export class Many2OneFieldPopover extends Many2OneField {
 
 export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
     static template = "web.KanbanMany2OneAvatarField";
+    static props = {
+        ...Many2OneAvatarField.props,
+        isEditable: { type: Boolean, optional: true },
+    };
     setup() {
         super.setup();
         this.popover = usePopover();
@@ -65,13 +69,15 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
         this.closePopoverFn = null;
     }
     get popoverProps() {
-        return {
+        const props = {
             ...this.props,
             readonly: false,
         };
+        delete props.isEditable;
+        return props;
     }
     openPopover(ev) {
-        if (this.props.readonly) {
+        if (!this.props.isEditable) {
             return;
         }
         if (this.closePopoverFn) {
@@ -93,10 +99,10 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
     }
 
     get canDisplayDelete() {
-        return !this.props.readonly && this.props.record.data[this.props.name] && !isMobileOS();
+        return this.props.isEditable && this.props.record.data[this.props.name] && !isMobileOS();
     }
     async remove(ev) {
-        if (this.props.readonly) {
+        if (!this.props.isEditable) {
             return;
         }
         await this.props.record.update({ [this.props.name]: false });
@@ -110,7 +116,7 @@ export const kanbanMany2OneAvatarField = {
     additionalClasses: ["o_field_many2one_avatar_kanban"],
     extractProps(fieldInfo, dynamicInfo) {
         const props = many2OneField.extractProps(...arguments);
-        props.readonly = dynamicInfo.readonly;
+        props.isEditable = !dynamicInfo.readonly;
         return props;
     },
 };
