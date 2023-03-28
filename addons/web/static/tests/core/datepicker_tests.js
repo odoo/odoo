@@ -1,14 +1,9 @@
 /** @odoo-module **/
 
-import { applyFilter, toggleMenu } from "@web/../tests/search/helpers";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import ActionModel from "web.ActionModel";
-import CustomFilterItem from "web.CustomFilterItem";
-import { createComponent } from "web.test_utils";
-import { editSelect } from "web.test_utils_fields";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
@@ -81,40 +76,43 @@ function useFRLocale() {
 }
 
 var symbolMap = {
-    '1': '૧',
-    '2': '૨',
-    '3': '૩',
-    '4': '૪',
-    '5': '૫',
-    '6': '૬',
-    '7': '૭',
-    '8': '૮',
-    '9': '૯',
-    '0': '૦'
+    1: "૧",
+    2: "૨",
+    3: "૩",
+    4: "૪",
+    5: "૫",
+    6: "૬",
+    7: "૭",
+    8: "૮",
+    9: "૯",
+    0: "૦",
 };
 var numberMap = {
-    '૧': '1',
-    '૨': '2',
-    '૩': '3',
-    '૪': '4',
-    '૫': '5',
-    '૬': '6',
-    '૭': '7',
-    '૮': '8',
-    '૯': '9',
-    '૦': '0'
+    "૧": "1",
+    "૨": "2",
+    "૩": "3",
+    "૪": "4",
+    "૫": "5",
+    "૬": "6",
+    "૭": "7",
+    "૮": "8",
+    "૯": "9",
+    "૦": "0",
 };
 
 function useGULocale() {
     if (!window.moment.locales().includes("gu")) {
         const originalLocale = window.moment.locale();
         window.moment.defineLocale("gu", {
-            months: 'જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર'.split('_'),
-            monthsShort: 'જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.'.split('_'),
+            months: "જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર".split(
+                "_"
+            ),
+            monthsShort:
+                "જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.".split("_"),
             monthsParseExact: true,
             week: {
                 dow: 0, // Sunday is the first day of the week.
-                doy: 6 // The week that contains Jan 1st is the first week of the year.
+                doy: 6, // The week that contains Jan 1st is the first week of the year.
             },
             preparse: function (string) {
                 return string.replace(/[૧૨૩૪૫૬૭૮૯૦]/g, function (match) {
@@ -284,9 +282,9 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await mountPicker(DatePicker, {
             date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", {
-                zone: "utc" ,
+                zone: "utc",
                 locale: useGULocale(),
-                }),
+            }),
             format: "dd MMM, yyyy",
             onDateTimeChanged: (date) => {
                 assert.step("datetime-changed");
@@ -623,48 +621,13 @@ QUnit.module("Components", ({ beforeEach }) => {
             date: DateTime.fromFormat("10/03/2023 13:14:27", "dd/MM/yyyy HH:mm:ss"),
             format: "dd.MM,yyyy",
         });
-        let input = target.querySelector(".o_datepicker_input");
+        const input = target.querySelector(".o_datepicker_input");
 
         assert.strictEqual(input.value, "10.03,2023");
 
         await click(input);
 
         assert.strictEqual(input.value, "10.03,2023");
-    });
-
-    QUnit.test("custom filter date", async function (assert) {
-        assert.expect(3);
-        class MockedSearchModel extends ActionModel {
-            dispatch(method, ...args) {
-                assert.strictEqual(method, "createNewFilters");
-                const preFilters = args[0];
-                const preFilter = preFilters[0];
-                assert.strictEqual(
-                    preFilter.description,
-                    'A date is equal to "05/05/2005"',
-                    "description should be in localized format"
-                );
-                assert.deepEqual(
-                    preFilter.domain,
-                    '[["date_field","=","2005-05-05"]]',
-                    "domain should be in UTC format"
-                );
-            }
-        }
-        const searchModel = new MockedSearchModel();
-        const date_field = { name: "date_field", string: "A date", type: "date", searchable: true };
-        await createComponent(CustomFilterItem, {
-            props: {
-                fields: { date_field },
-            },
-            env: { searchModel },
-        });
-        await toggleMenu(target, "Add Custom Filter");
-        await editSelect(target.querySelector(".o_generator_menu_field"), "date_field");
-        const valueInput = target.querySelector(".o_generator_menu_value .o_input");
-        await click(valueInput);
-        await editSelect(valueInput, "05/05/2005");
-        await applyFilter(target);
     });
 
     QUnit.test("start with no value", async function (assert) {

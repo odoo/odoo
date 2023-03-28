@@ -20,6 +20,7 @@ import { FACET_ICONS } from "./utils/misc";
 import { EventBus, toRaw } from "@odoo/owl";
 const { DateTime } = luxon;
 
+/** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
 /** @typedef {import("../views/relational_model").OrderTerm} OrderTerm */
 
 /**
@@ -414,6 +415,10 @@ export class SearchModel extends EventBus {
         return deepCopy(this._domain);
     }
 
+    get domainEvalContext() {
+        return Object.assign({}, this.globalContext, this.userService.context);
+    }
+
     /**
      * @returns {Comparison}
      */
@@ -534,6 +539,51 @@ export class SearchModel extends EventBus {
         this._notify();
     }
 
+    createAdvancedDomain(domain) {
+        this.blockNotification = true;
+
+        const groups = this._getGroups();
+        const context = this._getContext();
+        for (const group of groups) {
+            const firstSearchItem = this.searchItems[group.activeItems[0].searchItemId];
+            const { type } = firstSearchItem;
+            for (const activeItem of group.activeItems) {
+                if (type === "favorite") {
+                    const activeItemGroupBys = this._getSearchItemGroupBys(activeItem);
+                    for (const activeItemGroupBy of activeItemGroupBys) {
+                        const [fieldName, interval] = activeItemGroupBy.split(":");
+                        this.createNewGroupBy(fieldName, { interval, invisible: true });
+                    }
+                    const index = this.query.length - activeItemGroupBys.length;
+                    this.query = [...this.query.slice(index), ...this.query.slice(0, index)];
+                }
+            }
+            if (
+                [
+                    "comparison",
+                    "field",
+                    "field_property",
+                    "filter",
+                    "dateFilter",
+                    "favorite",
+                ].includes(type)
+            ) {
+                this.deactivateGroup(group.id);
+            }
+        }
+
+        this.blockNotification = false;
+        this.createNewFilters([
+            {
+                description: `${this.env._t("Advanced Search")}`,
+                domain,
+                invisible: true,
+                type: "filter",
+                context,
+            },
+        ]);
+    }
+
     /**
      * Create a new filter of type 'favorite' and activate it.
      * A new group containing only that filter is created.
@@ -594,8 +644,11 @@ export class SearchModel extends EventBus {
      * Create a new filter of type 'groupBy' or 'dateGroupBy' and activate it.
      * It is added to the unique group of groupbys.
      * @param {string} fieldName
+     * @param {Object} [param]
+     * @param {string} [param.interval=DEFAULT_INTERVAL]
+     * @param {boolean} [param.invisible=false]
      */
-    createNewGroupBy(fieldName) {
+    createNewGroupBy(fieldName, { interval, invisible } = {}) {
         const field = this.searchViewFields[fieldName];
         const { string, type: fieldType } = field;
         const firstGroupBy = Object.values(this.searchItems).find((f) => f.type === "groupBy");
@@ -608,9 +661,12 @@ export class SearchModel extends EventBus {
             id: this.nextId,
             custom: true,
         };
+        if (invisible) {
+            preSearchItem.invisible = true;
+        }
         if (["date", "datetime"].includes(fieldType)) {
             this.searchItems[this.nextId] = Object.assign(
-                { type: "dateGroupBy", defaultIntervalId: DEFAULT_INTERVAL },
+                { type: "dateGroupBy", defaultIntervalId: interval || DEFAULT_INTERVAL },
                 preSearchItem
             );
             this.toggleDateGroupBy(this.nextId);
@@ -767,6 +823,22 @@ export class SearchModel extends EventBus {
             sections = sections.filter(predicate);
         }
         return sections.sort((s1, s2) => s1.index - s2.index);
+    }
+
+    /**
+     * @param {DomainRepr} domain
+     * @returns {boolean}
+     */
+    async isValidDomain(domain) {
+        try {
+            domain = new Domain(domain);
+            domain = domain.toList(this.domainEvalContext);
+            await this.orm.silent.searchRead(this.resModel, domain, ["id"], { limit: 1 });
+            // TODO: invent a python method that check domain
+        } catch {
+            return false;
+        }
+        return true;
     }
 
     search() {
@@ -1494,9 +1566,7 @@ export class SearchModel extends EventBus {
         let domain;
         try {
             domain = Domain.and(domains);
-            return params.raw
-                ? domain
-                : domain.toList(Object.assign({}, this.globalContext, this.userService.context));
+            return params.raw ? domain : domain.toList(this.domainEvalContext);
         } catch (error) {
             throw new Error(
                 `${this.env._t("Failed to evaluate the domain")} ${domain.toString()}.\n${
@@ -1854,7 +1924,7 @@ export class SearchModel extends EventBus {
      */
     _getOrderBy() {
         const groups = this._getGroups();
-        let orderBy = [];
+        const orderBy = [];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const { searchItemId } = activeItem;

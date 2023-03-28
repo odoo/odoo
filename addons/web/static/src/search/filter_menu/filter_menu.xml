@@ -45,7 +45,7 @@
             <t t-if="items.length">
                 <div role="separator" class="dropdown-divider"/>
             </t>
-            <CustomFilterItem/>
+            <DropdownItem onSelected.bind="onAdvancedSearchClick" parentClosingMode="'none'">Advanced Search</DropdownItem>
         </Dropdown>
     </t>
 

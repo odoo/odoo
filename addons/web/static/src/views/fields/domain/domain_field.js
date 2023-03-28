@@ -137,10 +137,10 @@ export class DomainField extends Component {
     onEditDialogBtnClick() {
         this.addDialog(DomainSelectorDialog, {
             resModel: this.getResModel(this.props),
-            initialValue: this.props.record.data[this.props.name] || "[]",
+            domain: this.props.record.data[this.props.name] || "[]",
             readonly: this.props.readonly,
             isDebugMode: !!this.env.debug,
-            onSelected: (value) => this.props.record.update({ [this.props.name]: value }),
+            onConfirm: (value) => this.props.record.update({ [this.props.name]: value }),
         });
     }
 }
