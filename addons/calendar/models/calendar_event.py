@@ -6,6 +6,7 @@ import math
 from collections import defaultdict
 from datetime import timedelta
 from itertools import repeat
+from werkzeug.urls import url_parse
 
 import pytz
 import uuid
@@ -377,6 +378,18 @@ class Meeting(models.Model):
             if event.videocall_source == 'discuss':
                 event._set_discuss_videocall_location()
 
+    @api.model
+    def _set_videocall_location(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('videocall_location'):
+                continue
+            url = url_parse(vals['videocall_location'])
+            if url.scheme in ('http', 'https'):
+                continue
+            # relative url to convert to absolute
+            base = url_parse(self.get_base_url())
+            vals['videocall_location'] = url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
+
     @api.depends('videocall_location')
     def _compute_videocall_source(self):
         for event in self:
@@ -441,6 +454,7 @@ class Meeting(models.Model):
                 if user_id:
                     activity_vals['user_id'] = user_id
                 values['activity_ids'] = [(0, 0, activity_vals)]
+        self._set_videocall_location(vals_list)
 
         # Add commands to create attendees from partners (if present) if no attendee command
         # is already given (coming from Google event for example).
@@ -519,6 +533,7 @@ class Meeting(models.Model):
 
         update_alarms = False
         update_time = False
+        self._set_videocall_location([values])
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
             update_alarms = True
