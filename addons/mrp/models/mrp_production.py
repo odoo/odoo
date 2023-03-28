@@ -1440,6 +1440,8 @@ class MrpProduction(models.Model):
         return True
 
     def _action_cancel(self):
+        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+        picking_ids.action_cancel()
         documents_by_production = {}
         for production in self:
             documents = defaultdict(list)
@@ -1460,8 +1462,6 @@ class MrpProduction(models.Model):
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         (finish_moves | raw_moves)._action_cancel()
-        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-        picking_ids.action_cancel()
 
         for production, documents in documents_by_production.items():
             filtered_documents = {}
@@ -2061,6 +2061,7 @@ class MrpProduction(models.Model):
             'product_uom_id': product_id.uom_id.id,
             'user_id': user_id.id,
             'origin': ",".join(sorted([production.name for production in self])),
+            'date_planned_start': max(self._get_default_date_planned_start(), min([production.date_planned_start for production in self]))
         })
 
         for move in production.move_raw_ids:
@@ -2082,6 +2083,12 @@ class MrpProduction(models.Model):
         self.with_context(skip_activity=True)._action_cancel()
         for p in self:
             p._message_log(body=_('This production has been merge in %s', production.display_name))
+
+        for move in production.picking_ids:
+            if move.state in ["confirmed", "assigned"]:
+                move.scheduled_date = production.date_planned_start
+            if move.state == "waiting":
+                move.scheduled_date = production.date_planned_finished
 
         return {
             'type': 'ir.actions.act_window',
