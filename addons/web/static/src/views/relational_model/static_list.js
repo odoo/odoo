@@ -69,7 +69,7 @@ export class StaticList extends DataPoint {
     load({ limit, offset }) {
         limit = limit !== undefined ? limit : this.limit;
         offset = offset !== undefined ? offset : this.offset;
-        this.model.mutex.exec(() => this._load({ limit, offset }));
+        return this.model.mutex.exec(() => this._load({ limit, offset }));
     }
 
     unselectRecord() {
