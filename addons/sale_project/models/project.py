@@ -502,8 +502,8 @@ class Project(models.Model):
         revenues['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
         return profitability_items
 
-    def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons(yolo)
+    def _get_stat_buttons(self, blabla):
+        buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
             buttons.append({
                 'icon': 'dollar',
