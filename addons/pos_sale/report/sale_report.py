@@ -10,17 +10,17 @@ class SaleReport(models.Model):
     @api.model
     def _get_done_states(self):
         done_states = super()._get_done_states()
-        done_states.extend(['paid', 'pos_done', 'invoiced'])
+        done_states.extend(['paid', 'invoiced'])
         return done_states
 
     state = fields.Selection(
         selection_add=[
-            ('pos_draft', 'New'),
             ('paid', 'Paid'),
-            ('pos_done', 'Posted'),
             ('invoiced', 'Invoiced')
         ],
     )
+
+    order_reference = fields.Reference(selection_add=[('pos.order', 'POS Order')])
 
     def _select_pos(self):
         select_ = f"""
@@ -51,7 +51,7 @@ class SaleReport(models.Model):
             count(*) AS nbr,
             pos.name AS name,
             pos.date_order AS date,
-            CASE WHEN pos.state = 'draft' THEN 'pos_draft' WHEN pos.state = 'done' THEN 'pos_done' else pos.state END AS state,
+            pos.state AS state,
             NULL as invoice_status,
             pos.partner_id AS partner_id,
             pos.user_id AS user_id,
@@ -76,7 +76,7 @@ class SaleReport(models.Model):
                 / {self._case_value_or_one('pos.currency_rate')}
                 / {self._case_value_or_one('currency_table.rate')}))
             AS discount_amount,
-            NULL AS order_id"""
+            concat('pos.order', ',', pos.id) AS order_reference"""
 
         additional_fields = self._select_additional_fields()
         additional_fields_info = self._fill_pos_fields(additional_fields)
@@ -126,6 +126,7 @@ class SaleReport(models.Model):
             l.qty,
             t.uom_id,
             t.categ_id,
+            pos.id,
             pos.name,
             pos.date_order,
             pos.partner_id,

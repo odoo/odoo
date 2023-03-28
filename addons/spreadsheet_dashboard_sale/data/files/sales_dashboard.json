@@ -129,7 +129,7 @@
                 },
                 "A32": {
                     "style": 1,
-                    "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"country_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"country_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A33": {
@@ -179,7 +179,7 @@
                 },
                 "A45": {
                     "style": 1,
-                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A46": {
@@ -229,7 +229,7 @@
                 },
                 "A58": {
                     "style": 1,
-                    "content": "[Top Sales Teams](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"team_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"team_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"team_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Sales Teams](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"team_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"team_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"team_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A59": {
@@ -279,7 +279,7 @@
                 },
                 "A71": {
                     "style": 1,
-                    "content": "[Top Sources](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"source_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"source_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"source_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Sources](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"source_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"source_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"source_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A72": {
@@ -519,47 +519,47 @@
                 "C34": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",1)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",1)"
                 },
                 "C35": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",2)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",2)"
                 },
                 "C36": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",3)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",3)"
                 },
                 "C37": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",4)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",4)"
                 },
                 "C38": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",5)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",5)"
                 },
                 "C39": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",6)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",6)"
                 },
                 "C40": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",7)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",7)"
                 },
                 "C41": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",8)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",8)"
                 },
                 "C42": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",9)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",9)"
                 },
                 "C43": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(5,\"order_id\",\"#country_id\",10)"
+                    "content": "=ODOO.PIVOT(5,\"order_reference\",\"#country_id\",10)"
                 },
                 "C45": {
                     "style": 8,
@@ -572,38 +572,38 @@
                 },
                 "C47": {
                     "style": 9,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",1)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",1)"
                 },
                 "C48": {
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",2)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",2)"
                 },
                 "C49": {
                     "style": 9,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",3)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",3)"
                 },
                 "C50": {
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",4)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",4)"
                 },
                 "C51": {
                     "style": 9,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",5)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",5)"
                 },
                 "C52": {
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",6)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",6)"
                 },
                 "C53": {
                     "style": 9,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",7)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",7)"
                 },
                 "C54": {
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",8)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",8)"
                 },
                 "C55": {
                     "style": 9,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",9)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",9)"
                 },
                 "C56": {
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#partner_id\",10)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#partner_id\",10)"
                 },
                 "C58": {
                     "style": 8,
@@ -617,47 +617,47 @@
                 "C60": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",1)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",1)"
                 },
                 "C61": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",2)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",2)"
                 },
                 "C62": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",3)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",3)"
                 },
                 "C63": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",4)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",4)"
                 },
                 "C64": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",5)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",5)"
                 },
                 "C65": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",6)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",6)"
                 },
                 "C66": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",7)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",7)"
                 },
                 "C67": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",8)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",8)"
                 },
                 "C68": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",9)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",9)"
                 },
                 "C69": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(7,\"order_id\",\"#team_id\",10)"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\",\"#team_id\",10)"
                 },
                 "C71": {
                     "style": 8,
@@ -671,47 +671,47 @@
                 "C73": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",1)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",1)"
                 },
                 "C74": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",2)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",2)"
                 },
                 "C75": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",3)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",3)"
                 },
                 "C76": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",4)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",4)"
                 },
                 "C77": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",5)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",5)"
                 },
                 "C78": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",6)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",6)"
                 },
                 "C79": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",7)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",7)"
                 },
                 "C80": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",8)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",8)"
                 },
                 "C81": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",9)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",9)"
                 },
                 "C82": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(9,\"order_id\",\"#source_id\",10)"
+                    "content": "=ODOO.PIVOT(9,\"order_reference\",\"#source_id\",10)"
                 },
                 "D19": {
                     "style": 8,
@@ -988,7 +988,7 @@
                 },
                 "F32": {
                     "style": 1,
-                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_tmpl_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_tmpl_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "F33": {
@@ -1038,7 +1038,7 @@
                 },
                 "F45": {
                     "style": 1,
-                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"categ_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"categ_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "F46": {
@@ -1088,7 +1088,7 @@
                 },
                 "F58": {
                     "style": 1,
-                    "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "F59": {
@@ -1138,7 +1138,7 @@
                 },
                 "F71": {
                     "style": 1,
-                    "content": "[Top Mediums](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"medium_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"medium_id\"],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"medium_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Mediums](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"medium_id\",\"!=\",false],[\"state\",\"not in\",[\"draft\",\"sent\",\"cancel\"]]],\"context\":{\"group_by\":[\"medium_id\"],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"medium_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "F72": {
@@ -1378,47 +1378,47 @@
                 "H34": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",1)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",1)"
                 },
                 "H35": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",2)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",2)"
                 },
                 "H36": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",3)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",3)"
                 },
                 "H37": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",4)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",4)"
                 },
                 "H38": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",5)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",5)"
                 },
                 "H39": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",6)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",6)"
                 },
                 "H40": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",7)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",7)"
                 },
                 "H41": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",8)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",8)"
                 },
                 "H42": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",9)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",9)"
                 },
                 "H43": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"order_id\",\"#product_id\",10)"
+                    "content": "=ODOO.PIVOT(6,\"order_reference\",\"#product_id\",10)"
                 },
                 "H45": {
                     "style": 8,
@@ -1432,47 +1432,47 @@
                 "H47": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",1)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",1)"
                 },
                 "H48": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",2)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",2)"
                 },
                 "H49": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",3)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",3)"
                 },
                 "H50": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",4)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",4)"
                 },
                 "H51": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",5)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",5)"
                 },
                 "H52": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",6)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",6)"
                 },
                 "H53": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",7)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",7)"
                 },
                 "H54": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",8)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",8)"
                 },
                 "H55": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",9)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",9)"
                 },
                 "H56": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"#categ_id\",10)"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"#categ_id\",10)"
                 },
                 "H58": {
                     "style": 8,
@@ -1486,47 +1486,47 @@
                 "H60": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",1)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",1)"
                 },
                 "H61": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",2)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",2)"
                 },
                 "H62": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",3)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",3)"
                 },
                 "H63": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",4)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",4)"
                 },
                 "H64": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",5)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",5)"
                 },
                 "H65": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",6)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",6)"
                 },
                 "H66": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",7)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",7)"
                 },
                 "H67": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",8)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",8)"
                 },
                 "H68": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",9)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",9)"
                 },
                 "H69": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(8,\"order_id\",\"#user_id\",10)"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\",\"#user_id\",10)"
                 },
                 "H71": {
                     "style": 8,
@@ -1540,47 +1540,47 @@
                 "H73": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",1)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",1)"
                 },
                 "H74": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",2)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",2)"
                 },
                 "H75": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",3)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",3)"
                 },
                 "H76": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",4)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",4)"
                 },
                 "H77": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",5)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",5)"
                 },
                 "H78": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",6)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",6)"
                 },
                 "H79": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",7)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",7)"
                 },
                 "H80": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",8)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",8)"
                 },
                 "H81": {
                     "style": 9,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",9)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",9)"
                 },
                 "H82": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(10,\"order_id\",\"#medium_id\",10)"
+                    "content": "=ODOO.PIVOT(10,\"order_reference\",\"#medium_id\",10)"
                 },
                 "I19": {
                     "style": 8,
@@ -2390,7 +2390,7 @@
             "id": "3",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2441,7 +2441,7 @@
             "id": "4",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2492,7 +2492,7 @@
             "id": "5",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2543,7 +2543,7 @@
             "id": "6",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2587,7 +2587,7 @@
             "id": "7",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2631,7 +2631,7 @@
             "id": "8",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2675,7 +2675,7 @@
             "id": "9",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -2719,7 +2719,7 @@
             "id": "10",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"

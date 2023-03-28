@@ -55,7 +55,7 @@
                 },
                 "A18": {
                     "style": 1,
-                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"website_id\",\"!=\",false],[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Online Sales Analysis\"})",
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"website_id\",\"!=\",false],[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Online Sales Analysis\"})",
                     "border": 1
                 },
                 "A19": {
@@ -128,46 +128,46 @@
                 "C20": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",1)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",1)"
                 },
                 "C21": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",2)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",2)"
                 },
                 "C22": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",3)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",3)"
                 },
                 "C23": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",4)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",4)"
                 },
                 "C24": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",5)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",5)"
                 },
                 "C25": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",6)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",6)"
                 },
                 "C26": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",7)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",7)"
                 },
                 "C27": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",8)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",8)"
                 },
                 "C28": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",9)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",9)"
                 },
                 "C29": {
-                    "content": "=ODOO.PIVOT(4,\"order_id\",\"#product_id\",10)"
+                    "content": "=ODOO.PIVOT(4,\"order_reference\",\"#product_id\",10)"
                 },
                 "D19": {
                     "style": 2,
@@ -214,7 +214,7 @@
                 },
                 "F18": {
                     "style": 1,
-                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_id\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "F19": {
@@ -284,43 +284,43 @@
                 "H20": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",1)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",1)"
                 },
                 "H21": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",2)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",2)"
                 },
                 "H22": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",3)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",3)"
                 },
                 "H23": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",4)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",4)"
                 },
                 "H24": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",5)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",5)"
                 },
                 "H25": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",6)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",6)"
                 },
                 "H26": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",7)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",7)"
                 },
                 "H27": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",8)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",8)"
                 },
                 "H28": {
                     "style": 5,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"order_id\",\"#categ_id\",9)"
+                    "content": "=ODOO.PIVOT(1,\"order_reference\",\"#categ_id\",9)"
                 },
                 "I19": {
                     "style": 2,
@@ -626,10 +626,10 @@
                     "content": "=B3+B4"
                 },
                 "B3": {
-                    "content": "=ODOO.PIVOT(7,\"order_id\")"
+                    "content": "=ODOO.PIVOT(7,\"order_reference\")"
                 },
                 "B4": {
-                    "content": "=ODOO.PIVOT(2,\"order_id\",\"is_abandoned_cart\",\"true\")"
+                    "content": "=ODOO.PIVOT(2,\"order_reference\",\"is_abandoned_cart\",\"true\")"
                 },
                 "B5": {
                     "content": "=ODOO.PIVOT(5,\"price_subtotal\")"
@@ -642,10 +642,10 @@
                     "content": "=C3+C4"
                 },
                 "C3": {
-                    "content": "=ODOO.PIVOT(8,\"order_id\")"
+                    "content": "=ODOO.PIVOT(8,\"order_reference\")"
                 },
                 "C4": {
-                    "content": "=ODOO.PIVOT(3,\"order_id\",\"is_abandoned_cart\",\"true\")"
+                    "content": "=ODOO.PIVOT(3,\"order_reference\",\"is_abandoned_cart\",\"true\")"
                 },
                 "C5": {
                     "content": "=ODOO.PIVOT(6,\"price_subtotal\")"
@@ -813,7 +813,7 @@
             "id": "1",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -873,7 +873,7 @@
             "id": "2",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 }
             ],
             "model": "sale.report",
@@ -934,7 +934,7 @@
             "id": "3",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 }
             ],
             "model": "sale.report",
@@ -1002,7 +1002,7 @@
             "id": "4",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 },
                 {
                     "field": "price_subtotal"
@@ -1187,7 +1187,7 @@
             "id": "7",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 }
             ],
             "model": "sale.report",
@@ -1246,7 +1246,7 @@
             "id": "8",
             "measures": [
                 {
-                    "field": "order_id"
+                    "field": "order_reference"
                 }
             ],
             "model": "sale.report",
