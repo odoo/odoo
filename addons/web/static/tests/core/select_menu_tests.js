@@ -566,4 +566,158 @@ QUnit.module("Web Components", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        "When multiSelect is enable, value is an array of values, mutliple choices should display as selected and tags should be displayed",
+        async (assert) => {
+            class Parent extends Component {
+                setup() {
+                    this.state = useState({ value: [] });
+                    this.choices = [
+                        { label: "A", value: "a" },
+                        { label: "B", value: "b" },
+                        { label: "C", value: "c" },
+                    ];
+                }
+
+                onSelect(newValue) {
+                    assert.step(JSON.stringify(newValue));
+                    this.state.value = newValue;
+                }
+            }
+            Parent.components = { SelectMenu };
+            Parent.template = xml`
+                <SelectMenu
+                    multiSelect="true"
+                    value="this.state.value"
+                    choices="this.choices"
+                    onSelect.bind="this.onSelect"
+                    searchable="false"
+                />
+            `;
+
+            await mount(Parent, target, { env });
+            assert.containsNone(
+                target,
+                ".o_select_menu .o_tag_badge_text",
+                "There should be no selected tags."
+            );
+
+            // Select first choice
+            await open();
+            assert.containsNone(
+                target,
+                ".o_select_menu_item.o_select_active",
+                "No choice should be selected."
+            );
+
+            await click(target, ".o_select_menu_item:nth-child(1)");
+            assert.verifySteps([`["a"]`], "Only A should be in the selection list");
+
+            assert.containsN(
+                target,
+                ".o_select_menu .o_tag_badge_text",
+                1,
+                "There should be one tag."
+            );
+            assert.equal(
+                target.querySelector(".o_select_menu .o_tag_badge_text").innerText.toLowerCase(),
+                "a",
+                `The tag's value shoud be "A"`
+            );
+
+            // Select second choice
+            await open();
+            assert.containsOnce(
+                target,
+                ".o_select_menu_item:nth-child(1).o_select_active",
+                "First choice should be selected."
+            );
+
+            await click(target, ".o_select_menu_item:nth-child(2)");
+            assert.verifySteps([`["a","b"]`], "A and B should be in the selection list");
+
+            assert.containsN(
+                target,
+                ".o_select_menu .o_tag_badge_text",
+                2,
+                "There should be two tags."
+            );
+
+            await open();
+            assert.containsN(
+                target,
+                ".o_select_menu_item.o_select_active",
+                2,
+                "Two choices should be selected."
+            );
+        }
+    );
+
+    QUnit.test(
+        "When multiSelect is enable, allow deselecting elements by clicking the selected choices inside the dropdown or by clicking the tags",
+        async (assert) => {
+            class Parent extends Component {
+                setup() {
+                    this.state = useState({ value: ["a", "b"] });
+                    this.choices = [
+                        { label: "A", value: "a" },
+                        { label: "B", value: "b" },
+                        { label: "C", value: "c" },
+                    ];
+                }
+
+                onSelect(newValue) {
+                    assert.step(JSON.stringify(newValue));
+                    this.state.value = newValue;
+                }
+            }
+            Parent.components = { SelectMenu };
+            Parent.template = xml`
+                <SelectMenu
+                    multiSelect="true"
+                    value="this.state.value"
+                    choices="this.choices"
+                    onSelect.bind="this.onSelect"
+                    searchable="false"
+                />
+            `;
+
+            await mount(Parent, target, { env });
+            assert.containsN(
+                target,
+                ".o_select_menu .o_tag_badge_text",
+                2,
+                "There should be two tags."
+            );
+
+            await open();
+            await click(target, ".o_select_menu_item:nth-child(1)");
+            assert.verifySteps([`["b"]`], "Only B should remain in the selection list");
+
+            assert.containsN(
+                target,
+                ".o_select_menu .o_tag_badge_text",
+                1,
+                "There should only be one tag."
+            );
+            assert.equal(
+                target.querySelector(".o_select_menu .o_tag_badge_text").innerText.toLowerCase(),
+                "b",
+                `The tag's value shoud be "B"`
+            );
+
+            await open();
+            assert.containsOnce(
+                target,
+                ".o_select_menu_item.o_select_active",
+                "Only one choice should be selected."
+            );
+
+            await click(target, ".o_tag .o_delete");
+            assert.verifySteps(["[]"], "The selection list should be empty");
+
+            assert.containsNone(target, ".o_select_menu .o_tag", "There should be no tags.");
+        }
+    );
 });

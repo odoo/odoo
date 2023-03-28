@@ -3,9 +3,9 @@
 
     <t t-name="web.SelectMenu" owl="1">
         <Dropdown
-            class="`o_select_menu border w-100 rounded-2 overflow-hidden ${props.class || ''}`"
-            togglerClass="`o_select_menu_toggler d-flex flex-row align-items-center flex-nowrap btn btn-secondary w-100 bg-light ${props.togglerClass || ''}`"
-            menuClass="`o_select_menu_menu${props.searchable ? ' pt-0' : ''}`"
+            class="`o_select_menu border w-auto rounded-2 overflow-hidden ${props.class || ''}`"
+            togglerClass="`o_select_menu_toggler btn btn-secondary w-100 bg-light ${props.togglerClass || ''}`"
+            menuClass="`o_select_menu_menu${props.searchable ? ' pt-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''}`"
             position="'bottom-fit'"
             beforeOpen.bind="filterOptions"
             onOpened.bind="onOpened"
@@ -53,7 +53,7 @@
                 <DropdownItem
                     t-if="!choice.isGroup"
                     onSelected="() => this.onItemSelected(choice.value)"
-                    class="getItemClass(choice)"
+                    class="getItemClass(choice) + ' d-flex align-items-center'"
                 >
                     <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
                     <t t-else="">
