@@ -1696,6 +1696,9 @@ const Wysiwyg = Widget.extend({
                         }
                         // Unstash the mutations now that the color is picked.
                         this.odooEditor.historyUnstash();
+                        if(ev.data.target.classList.contains('o_colorpicker_reset')){
+                            ev.data.color = '';
+                        }
                         this._processAndApplyColor(eventName, ev.data.color);
                         // Deselect tables so the applied color can be seen
                         // without using `!important` (otherwise the selection
