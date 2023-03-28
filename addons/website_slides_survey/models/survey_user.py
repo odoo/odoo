@@ -11,7 +11,8 @@ class SurveyUserInput(models.Model):
     slide_id = fields.Many2one('slide.slide', 'Related course slide',
         help="The related course slide when there is no membership information")
     slide_partner_id = fields.Many2one('slide.slide.partner', 'Subscriber information',
-        help="Slide membership information for the logged in user")
+        help="Slide membership information for the logged in user",
+        index='btree_not_null') # index useful for deletions in comodel
 
     @api.model_create_multi
     def create(self, vals_list):
