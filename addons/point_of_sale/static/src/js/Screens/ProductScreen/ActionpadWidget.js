@@ -22,7 +22,6 @@ export class ActionpadWidget extends Component {
 
     clickPay() {
         const order = this.pos.globalState.get_order();
-
         if (order.orderlines.length) {
             order.pay();
         }

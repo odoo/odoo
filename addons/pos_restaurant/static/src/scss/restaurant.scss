@@ -42,9 +42,40 @@
     border-radius: 30px;
     margin-bottom: 10px;
 }
+
+.pos .submit-order .submit-circle-smaller {
+    display: block;
+    font-size: 13px;
+    line-height: var(--btn-height-size);
+    background: $gray-900;
+    color: white;
+    width: 25px;
+    text-align: center;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    height: 25px;
+    top: 4px;
+    position: relative;
+}
 .pos .submit-order .submit-circle .fa {
     position: relative;
     top: -1px;
+}
+.pos .submit-order .submit-circle-smaller .fa {
+    position: relative;
+    top: -14px;
+}
+.pos .submit-order .smaller-display{
+    gap: 10px; 
+    display: flex; 
+    align-items:center;
+}
+.break-line {
+    box-sizing: border-box;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 .pos .order-button.floor-button {
     display: flex;
