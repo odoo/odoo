@@ -2249,7 +2249,7 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "get_views", // get form view
             "onchange", // quick create
-            "create", // should perform a name_create to create the record
+            "create", // should perform a create to create the record
             "onchange", // reopen the quick create automatically
             "read", // read the created record
         ]);
@@ -4292,7 +4292,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(route, { method, model }) {
-                if (method === "name_create" && model === "product") {
+                if (method === "create" && model === "product") {
                     await prom;
                 }
             },
@@ -5687,7 +5687,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(route, { method }) {
-                if (method === "name_create" || route === "/web/dataset/resequence") {
+                if (method === "create" || route === "/web/dataset/resequence") {
                     assert.step(method || route);
                 }
             },
@@ -5735,7 +5735,7 @@ QUnit.module("Views", (hooks) => {
             "o_column_folded",
             "the created column should not be folded"
         );
-        assert.verifySteps(["name_create", "/web/dataset/resequence"]);
+        assert.verifySteps(["create", "/web/dataset/resequence"]);
 
         // fold and unfold the created column, and check that no RPCs are done (as there are no records)
         const clickColumnAction = await toggleColumnActions(2);
@@ -6124,7 +6124,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.deepEqual(resequencedIDs, [4, 3], "moved column should be resequenced accordingly");
-        assert.verifySteps(["name_create"]);
+        assert.verifySteps(["create"]);
     });
 
     QUnit.test("create a column, delete it and create another one", async (assert) => {
@@ -6549,6 +6549,66 @@ QUnit.module("Views", (hooks) => {
             secondPane.querySelector(".o_kanban_examples_description").innerHTML,
             "A fantastic description.",
             "A formatted description should be displayed."
+        );
+    });
+
+    QUnit.test("quick create column and examples: with folded columns", async (assert) => {
+        serverData.models.partner.records = [];
+        serverData.models.product.fields.folded = { string: "Folded", type: "boolean" };
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        registry.category("kanban_examples").add("test", {
+            allowedGroupBys: ["product_id"],
+            foldField: "folded",
+            examples: [
+                {
+                    name: "A first example",
+                    columns: ["not folded"],
+                    foldedColumns: ["folded"],
+                    description: "A weak description.",
+                },
+            ],
+        });
+
+        const expectedGroups = ['[[{"name":"not folded"}]]', '[[{"folded":true,"name":"folded"}]]'];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban examples="test">
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+            mockRPC(route, args) {
+                if (args?.method === "create") {
+                    assert.step(`${args.method} (model: ${args.model})`);
+                    assert.strictEqual(JSON.stringify(args.args), expectedGroups.shift());
+                }
+            },
+        });
+
+        // the quick create should already be unfolded as there are no records
+        assert.containsOnce(target, ".o_column_quick_create .o_quick_create_unfolded");
+
+        // click to see the examples
+        await click(target, ".o_column_quick_create .o_kanban_examples");
+
+        // apply the examples
+        assert.verifySteps([]);
+        await click(document.body, ".modal .modal-footer .btn.btn-primary");
+        assert.verifySteps(["create (model: product)", "create (model: product)"]);
+
+        // the applied examples should be visible
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsOnce(target, ".o_kanban_group:not(.o_column_folded)");
+        assert.containsOnce(target, ".o_kanban_group.o_column_folded");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group")].map((e) => e.textContent),
+            ["not folded", "folded (0)"]
         );
     });
 

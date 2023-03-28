@@ -9,10 +9,15 @@ import { Component, useRef } from "@odoo/owl";
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 class KanbanExamplesNotebookTemplate extends Component {
+    static defaultProps = {
+        columns: [],
+        foldedColumns: [],
+    };
     setup() {
         this.columns = [];
         const hasBullet = this.props.bullets && this.props.bullets.length;
-        for (const title of this.props.columns) {
+        const allColumns = [...this.props.columns, ...this.props.foldedColumns];
+        for (const title of allColumns) {
             const col = { title, records: [] };
             this.columns.push(col);
             for (let i = 0; i < random(1, 5); i++) {

@@ -51,12 +51,16 @@ export function canQuickCreate(list) {
 }
 
 function validateColumnQuickCreateExamples(data) {
-    const { allowedGroupBys = [], examples = [] } = data;
+    const { allowedGroupBys = [], examples = [], foldField = "" } = data;
     if (!allowedGroupBys.length) {
         throw new Error("The example data must contain an array of allowed groupbys");
     }
     if (!examples.length) {
         throw new Error("The example data must contain an array of examples");
+    }
+    const someHasFoldedColumns = examples.some(({ foldedColumns = [] }) => foldedColumns.length);
+    if (!foldField && someHasFoldedColumns) {
+        throw new Error("The example data must contain a fold field if there are folded columns");
     }
 }
 
