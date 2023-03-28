@@ -122,8 +122,14 @@ const _loadEmoji = memoize(() => getBundle("mail.assets_emoji").then(loadBundle)
  * @returns {import("@mail/emoji_picker/emoji_data")}
  */
 export async function loadEmoji() {
-    await _loadEmoji();
-    return odoo.runtimeImport("@mail/emoji_picker/emoji_data");
+    try {
+        await _loadEmoji();
+        return odoo.runtimeImport("@mail/emoji_picker/emoji_data");
+    } catch (error) {
+        // Could be intentional (tour ended successfully while emoji still loading)
+        console.warn("Failed to load Emojis", error);
+        return { emojis: [], categories: [] };
+    }
 }
 
 export const EMOJI_PER_ROW = 9;
@@ -153,7 +159,7 @@ export class EmojiPicker extends Component {
             this.emojiByCodepoints = Object.fromEntries(
                 this.emojis.map((emoji) => [emoji.codepoints, emoji])
             );
-            this.state.categoryId = this.categories[0].sortId;
+            this.state.categoryId = this.categories[0]?.sortId;
             this.recent = JSON.parse(browser.localStorage.getItem("mail.emoji.frequent") || "{}");
             this.recentCategory = {
                 name: "Frequently used",
@@ -163,6 +169,9 @@ export class EmojiPicker extends Component {
             };
         });
         onMounted(() => {
+            if (this.emojis.length === 0) {
+                return;
+            }
             this.inputRef.el.focus();
             this.highlightActiveCategory();
             if (this.props.storeScroll) {
@@ -170,6 +179,9 @@ export class EmojiPicker extends Component {
             }
         });
         onPatched(() => {
+            if (this.emojis.length === 0) {
+                return;
+            }
             if (this.shouldScrollElem) {
                 this.shouldScrollElem = false;
                 const getElement = () =>
@@ -195,6 +207,9 @@ export class EmojiPicker extends Component {
             () => [this.state.searchStr]
         );
         onWillUnmount(() => {
+            if (this.emojis.length === 0) {
+                return;
+            }
             if (this.props.storeScroll) {
                 this.props.storeScroll.set(this.gridRef.el.scrollTop);
             }
