@@ -397,7 +397,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_many2one input");
     });
 
-    QUnit.tttt("one2many list editable with cell readonly modifier", async function (assert) {
+    QUnit.test("one2many list editable with cell readonly modifier", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records[0].p = [2];
@@ -420,7 +420,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.deepEqual(
-                        args.args[1].p[1][2],
+                        args.args[1].p[0][2],
                         { foo: "ff", qux: 99 },
                         "The right values should be written"
                     );
@@ -462,7 +462,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.tttt("one2many basic properties", async function (assert) {
+    QUnit.test("one2many basic properties", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         await makeView({
             type: "form",
@@ -488,18 +488,13 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "read", "read"]);
-        // assert.containsNone(target, "td.o_list_record_selector");
-        // assert.containsNone(target, ".o_field_x2many_list_row_add");
-        // assert.containsNone(target, "td.o_list_record_remove");
-        // await clickEdit(target);
-
+        assert.verifySteps(["get_views", "web_read_unity"]);
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
         assert.hasAttrValue(target.querySelector(".o_field_x2many_list_row_add"), "colspan", "2");
         assert.containsOnce(target, "td.o_list_record_remove");
     });
 
-    QUnit.tttt("transferring class attributes in one2many sub fields", async function (assert) {
+    QUnit.test("transferring class attributes in one2many sub fields", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -520,7 +515,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, 'td.hey div[name="turtle_foo"] input'); // WOWL to check! hey on input?
     });
 
-    QUnit.tttt("one2many with date and datetime", async function (assert) {
+    QUnit.test("one2many with date and datetime", async function (assert) {
         const originalZone = luxon.Settings.defaultZone;
         luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(120);
         registerCleanup(() => {
@@ -553,7 +548,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelectorAll("td")[1].textContent, "12/12/2016 12:55:05");
     });
 
-    QUnit.tttt("rendering with embedded one2many", async function (assert) {
+    QUnit.test("rendering with embedded one2many", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         await makeView({
             type: "form",

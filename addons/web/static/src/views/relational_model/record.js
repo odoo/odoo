@@ -14,6 +14,7 @@ export class Record extends DataPoint {
         this._parentRecord = params.parentRecord;
         this._onWillSaveRecord = params.onWillSaveRecord || (() => {});
         this._onRecordSaved = params.onRecordSaved || (() => {});
+        this._onChange = params.onChange || (() => {});
 
         this.resId = params.data.id || false;
         this.resIds = params.resIds || [];
@@ -24,13 +25,14 @@ export class Record extends DataPoint {
         }
 
         if (this.resId) {
-            this._values = this._parseServerValues(params.data);
+            this._values = this._applyServerValues(params.data);
             this._changes = {};
         } else {
             this._values = {};
-            this._changes = this._parseServerValues(
-                Object.assign(this._getDefaultValues(), params.data)
-            );
+            this._changes = this._applyServerValues({
+                ...this._getDefaultValues(),
+                ...params.data,
+            });
         }
         this.data = { ...this._values, ...this._changes };
         const parentRecord = this._parentRecord;
@@ -114,7 +116,7 @@ export class Record extends DataPoint {
             } else {
                 this.resId = false;
                 this.isDirty = false;
-                this._changes = this._parseServerValues(this._getDefaultValues());
+                this._changes = this._applyServerValues(this._getDefaultValues());
                 this._values = {};
                 this.data = { ...this._changes };
                 this._setEvalContext();
@@ -152,6 +154,10 @@ export class Record extends DataPoint {
         this._invalidFields.add(fieldName);
     }
 
+    switchMode(mode) {
+        this.isInEdition = mode === "edit";
+    }
+
     toggleSelection(selected) {
         if (typeof selected === "boolean") {
             this.selected = selected;
@@ -175,6 +181,52 @@ export class Record extends DataPoint {
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
+
+    _applyChanges(changes) {
+        Object.assign(this._changes, changes);
+        Object.assign(this.data, changes);
+        this._setEvalContext();
+        this._removeInvalidFields(Object.keys(changes));
+    }
+
+    _applyServerValues(serverValues, currentValues = {}) {
+        const parsedValues = {};
+        if (!serverValues) {
+            return parsedValues;
+        }
+        for (const fieldName in serverValues) {
+            if (!this.activeFields[fieldName]) {
+                continue; // ignore fields not in activeFields
+            }
+            const value = serverValues[fieldName];
+            const field = this.fields[fieldName];
+            if (field.type === "one2many" || field.type === "many2many") {
+                const related = this.activeFields[fieldName].related;
+                let staticList = currentValues[fieldName];
+                let valueIsCommandList = true;
+                if (!staticList) {
+                    // value can be a list of records or a list of commands (new record)
+                    valueIsCommandList = value.length > 0 && Array.isArray(value[0]);
+                    staticList = new this.model.constructor.StaticList(this.model, {
+                        // FIXME: can't do that here, no context... yes, we do, but need to pass rawContext
+                        resModel: field.relation,
+                        activeFields: (related && related.activeFields) || {},
+                        fields: (related && related.fields) || {},
+                        data: valueIsCommandList ? [] : value,
+                        parent: this,
+                        onChange: () => this._changes[fieldName] = staticList, // TODO: execute onchange if any
+                    });
+                }
+                if (valueIsCommandList) {
+                    staticList._applyCommands(value);
+                }
+                parsedValues[fieldName] = staticList;
+            } else {
+                parsedValues[fieldName] = this._parseServerValue(field, value);
+            }
+        }
+        return parsedValues;
+    }
 
     async _askChanges() {
         const proms = [];
@@ -234,6 +286,8 @@ export class Record extends DataPoint {
                 result[fieldName] = value !== "" ? value : false;
             } else if (type === "many2one") {
                 result[fieldName] = value ? value[0] : false;
+            } else if (type === "one2many" || type === "many2many") {
+                result[fieldName] = value._getCommands();
             } else {
                 result[fieldName] = value;
             }
@@ -317,14 +371,12 @@ export class Record extends DataPoint {
         if (resId) {
             params.resId = resId;
             record = await this.model._loadRecord(params);
-            this._values = this._parseServerValues(record);
+            this._values = this._applyServerValues(record);
             this._changes = {};
         } else {
             record = await this.model._loadNewRecord(params);
             this._values = {};
-            this._changes = this._parseServerValues(
-                Object.assign(this._getDefaultValues(), record)
-            );
+            this._changes = this._applyServerValues({ ...this._getDefaultValues(), ...record });
         }
         this.isDirty = false;
         this.data = { ...this._values, ...this._changes };
@@ -441,12 +493,10 @@ export class Record extends DataPoint {
                 spec: getOnChangeSpec(this.activeFields),
                 context,
             });
-            Object.assign(changes, this._parseServerValues(otherChanges));
+            Object.assign(changes, this._applyServerValues(otherChanges, this.data));
         }
-        Object.assign(this._changes, changes);
-        Object.assign(this.data, changes);
-        this._setEvalContext();
-        this._removeInvalidFields(Object.keys(changes));
+        this._applyChanges(changes);
+        this._onChange();
         // FIXME: should we remove this from model? Only for standalone case
         this.model.bus.trigger("RELATIONAL_MODEL:RECORD_UPDATED", {
             record: this,

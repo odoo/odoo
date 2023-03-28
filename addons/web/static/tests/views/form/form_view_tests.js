@@ -3827,7 +3827,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange2"]);
     });
 
-    QUnit.tttt("make default record with non empty one2many", async function (assert) {
+    QUnit.test("make default record with non empty one2many", async function (assert) {
         serverData.models.partner.fields.p.default = [
             [6, 0, []], // replace with zero ids
             [0, 0, { foo: "new foo1", product_id: 41, p: [] }], // create a new value
@@ -6542,7 +6542,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.tttt("unchanged relational data is sent for onchanges", async function (assert) {
+    QUnit.test("unchanged relational data is not sent for onchanges", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[1].p = [4];
@@ -6568,94 +6568,12 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             resId: 2,
             mockRPC(route, args) {
-                if (args.method === "onchange") {
-                    assert.deepEqual(
-                        args.args[1].p,
-                        [[4, 4, false]],
-                        "should send a command for field p even if it hasn't changed"
-                    );
+                if (args.method === "onchange2") {
+                    assert.deepEqual(args.args[1], { foo: "trigger an onchange" });
                 }
             },
         });
         await editInput(target, ".o_field_widget[name=foo] input", "trigger an onchange");
-    });
-
-    QUnit.tttt("onchanges on unknown fields of o2m are ignored", async function (assert) {
-        // many2one fields need to be postprocessed (the onchange returns [id,
-        // display_name]), but if we don't know the field, we can't know it's a
-        // many2one, so it isn't ignored, its value is an array instead of a
-        // dataPoint id, which may cause errors later (e.g. when saving).
-        assert.expect(2);
-
-        serverData.models.partner.records[1].p = [4];
-        serverData.models.partner.onchanges = {
-            foo: function () {},
-        };
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <field name="foo"/>
-                    <field name="int_field"/>
-                    <field name="p">
-                        <tree>
-                            <field name="foo"/>
-                            <field name="bar"/>
-                        </tree>
-                        <form>
-                            <field name="foo"/>
-                            <field name="product_id"/>
-                        </form>
-                    </field>
-                </form>`,
-            resId: 2,
-            mockRPC(route, args) {
-                if (args.method === "onchange") {
-                    return Promise.resolve({
-                        value: {
-                            p: [
-                                [5],
-                                [
-                                    1,
-                                    4,
-                                    {
-                                        foo: "foo changed",
-                                        product_id: [37, "xphone"],
-                                    },
-                                ],
-                            ],
-                        },
-                    });
-                }
-                if (args.method === "write") {
-                    assert.deepEqual(
-                        args.args[1].p,
-                        [
-                            [
-                                1,
-                                4,
-                                {
-                                    foo: "foo changed",
-                                },
-                            ],
-                        ],
-                        "should only write value of known fields"
-                    );
-                }
-            },
-        });
-
-        await editInput(target, ".o_field_widget[name=foo] input", "trigger an onchange");
-
-        assert.strictEqual(
-            target.querySelector(".o_data_row td").textContent,
-            "foo changed",
-            "onchange should have been correctly applied on field in o2m list"
-        );
-
-        await clickSave(target);
     });
 
     QUnit.tttt("onchange value are not discarded on o2m edition", async function (assert) {
@@ -7192,40 +7110,6 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o-form-buttonbox.my_class");
-    });
-
-    QUnit.tttt("one2many default value creation", async function (assert) {
-        assert.expect(1);
-
-        serverData.models.partner.records[0].product_ids = [37];
-        serverData.models.partner.fields.product_ids.default = [
-            [0, 0, { name: "xdroid", partner_type_id: 12 }],
-        ];
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <field name="product_ids" nolabel="1">
-                        <tree editable="top" create="0">
-                            <field name="name" readonly="1"/>
-                        </tree>
-                    </field>
-                </form>`,
-            mockRPC(route, args) {
-                if (args.method === "create") {
-                    const command = args.args[0].product_ids[0];
-                    assert.strictEqual(
-                        command[2].partner_type_id,
-                        12,
-                        "the default partner_type_id should be equal to 12"
-                    );
-                }
-            },
-        });
-        await clickSave(target);
     });
 
     QUnit.tttt("many2manys inside one2manys are saved correctly", async function (assert) {

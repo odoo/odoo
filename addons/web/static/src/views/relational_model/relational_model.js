@@ -201,25 +201,11 @@ export class RelationalModel extends Model {
     }
 
     async _loadNewRecord(params) {
-        const values = await this._onchange({
+        return await this._onchange({
             resModel: params.resModel,
             spec: getOnChangeSpec(params.activeFields),
             context: params.context,
         });
-        const record = {};
-        for (const [fieldName, value] of Object.entries(values)) {
-            switch (params.fields[fieldName].type) {
-                case "one2many":
-                case "many2many": {
-                    record[fieldName] = []; // TODO: process commands... how?
-                    break;
-                }
-                default: {
-                    record[fieldName] = value;
-                }
-            }
-        }
-        return record;
     }
 
     async _onchange({ resModel, spec, resIds, changes, fieldNames, context }) {
@@ -243,6 +229,7 @@ export class RelationalModel extends Model {
         return response.value;
     }
 
+    // TODO: change into _loadRecords?
     async _loadRecord({ resModel, resId, activeFields, fields, context }) {
         const evalContext = {
             ...context,

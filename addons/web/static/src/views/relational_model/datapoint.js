@@ -76,36 +76,12 @@ export class DataPoint {
                 }
                 if (Number.isInteger(value)) {
                     // for always invisible many2ones, unity directly returns the id, not a pair
+                    // FIXME: should return an object with only the id
                     return [value, ""];
                 }
                 return value ? [value.id, value.display_name] : false;
             }
-            case "one2many":
-            case "many2many": {
-                const related = this.activeFields[field.name].related;
-                return new this.model.constructor.StaticList(this.model, {
-                    // FIXME: can't do that here, no context...
-                    resModel: field.relation,
-                    activeFields: (related && related.activeFields) || {},
-                    fields: (related && related.fields) || {},
-                    data: value,
-                    parent: this,
-                });
-            }
         }
         return value;
-    }
-
-    _parseServerValues(values) {
-        const parsedValues = {};
-        if (!values) {
-            return parsedValues;
-        }
-        for (const fieldName in values) {
-            const value = values[fieldName];
-            const field = this.fields[fieldName];
-            parsedValues[fieldName] = this._parseServerValue(field, value);
-        }
-        return parsedValues;
     }
 }
