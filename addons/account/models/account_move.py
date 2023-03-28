@@ -557,6 +557,9 @@ class AccountMove(models.Model):
             ON account_move(journal_id) WHERE to_check = true;
             CREATE INDEX IF NOT EXISTS account_move_payment_idx
             ON account_move(journal_id, state, payment_state, move_type, date);
+            -- Used for gap detection in list views
+            CREATE INDEX IF NOT EXISTS account_move_sequence_index3
+            ON account_move (journal_id, sequence_prefix desc, (sequence_number+1) desc);
         """)
 
     # -------------------------------------------------------------------------
