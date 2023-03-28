@@ -2272,8 +2272,8 @@ export class DynamicGroupList extends DynamicList {
     /**
      * @see {_createGroup}
      */
-    async createGroup(groupName) {
-        await this.model.mutex.exec(() => this._createGroup(groupName));
+    async createGroup(groupName, groupData, isFolded) {
+        await this.model.mutex.exec(() => this._createGroup(groupName, groupData, isFolded));
     }
 
     /**
@@ -2413,27 +2413,27 @@ export class DynamicGroupList extends DynamicList {
 
     /**
      * @param {string} groupName
+     * @param {{ [relatedFieldName: string]: any }} [groupData={}]
+     * @param {boolean} [isFolded=false]
      * @returns {Promise<Group>}
      */
-    async _createGroup(groupName) {
-        const [id, displayName] = await this.model.orm.call(
-            this.groupByField.relation,
-            "name_create",
-            [groupName],
-            { context: this.context }
-        );
+    async _createGroup(groupName, groupData = {}, isFolded = false) {
+        groupData = { ...groupData, name: groupName };
+        const [id] = await this.model.orm.create(this.groupByField.relation, [groupData], {
+            context: this.context,
+        });
         const [lastGroup] = this.groups.slice(-1);
         const group = this.model.createDataPoint("group", {
             ...this.commonGroupParams,
             count: 0,
             value: id,
-            displayName,
+            displayName: groupName,
             aggregates: {},
             groupByField: this.groupByField,
             groupDomain: Domain.and([this.domain, [[this.groupByField.name, "=", id]]]).toList(),
+            isFolded,
             rawContext: this.rawContext,
         });
-        group.isFolded = false;
         this.addGroup(group);
 
         if (lastGroup) {
