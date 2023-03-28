@@ -144,15 +144,21 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         ...Many2ManyTagsAvatarField.components,
         TagsList: KanbanMany2ManyTagsAvatarFieldTagsList,
     };
+    static props = {
+        ...Many2ManyTagsAvatarField.props,
+        isEditable: { type: Boolean, optional: true },
+    };
     itemsVisible = 2;
 
     get popoverProps() {
-        return {
+        const props = {
             ...this.props,
-            readonly: this.props.readonly,
+            readonly: false,
             deleteTag: this.deleteTag.bind(this),
             updateTag: this.updateTag.bind(this),
         };
+        delete props.isEditable;
+        return props;
     }
     async deleteTag(id) {
         super.deleteTag(id);
@@ -178,7 +184,7 @@ export const kanbanMany2ManyTagsAvatarField = {
     component: KanbanMany2ManyTagsAvatarField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = many2ManyTagsAvatarField.extractProps(...arguments);
-        props.readonly = dynamicInfo.readonly;
+        props.isEditable = !dynamicInfo.readonly;
         return props;
     },
 };
