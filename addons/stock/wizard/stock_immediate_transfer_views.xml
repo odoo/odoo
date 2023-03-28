@@ -5,7 +5,8 @@
         <field name="model">stock.immediate.transfer</field>
         <field name="arch" type="xml">
             <form string="Immediate transfer?">
-                <p>You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i> Odoo will process all the quantities.</p>
+                <p>Do you want to validate all <b>reserved</b> quantities?</p>
+                <p>For partial quantities fill in the done column</p>
 
                 <!-- Added to ensure a correct default_get behavior
 
@@ -26,8 +27,8 @@
                 </field>
 
                 <footer>
-                    <button name="process" string="Apply" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    <button name="process" string="Mark All Done" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

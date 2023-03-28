@@ -42,8 +42,8 @@
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0"/>
                 </field>
             </field>
         </record>
@@ -55,11 +55,11 @@
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
                     <field name="show_on_hand_qty_status_button" invisible="1"/>
-                    <field name="qty_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" optional="show" decoration-danger="qty_available &lt; 0"/>
-                    <field name="virtual_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
+                    <field name="qty_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" string="On Hand" optional="show" decoration-danger="qty_available &lt; 0"/>
+                    <field name="virtual_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
                 </field>
                 <field name="default_code" position="after">
-                    <field name="responsible_id" widget="many2one_avatar_user"/>
+                    <field name="responsible_id" widget="many2one_avatar_user" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -274,7 +274,7 @@
                                 name="action_product_forecast_report"
                                 attrs="{'invisible':[('show_forecasted_qty_status_button', '=', False)]}"
                                 context="{'default_product_id': id, 'active_model': 'product.template'}"
-                                class="oe_stat_button" icon="fa-cubes">
+                                class="oe_stat_button" icon="fa-area-chart">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
                                         <field name="virtual_available" widget="statinfo" nolabel="1" class="oe_inline"/>
@@ -385,7 +385,7 @@
                                 name="action_product_tmpl_forecast_report"
                                 attrs="{'invisible':[('show_forecasted_qty_status_button', '=', False)]}"
                                 context="{'default_product_tmpl_id': id}"
-                                class="oe_stat_button" icon="fa-cubes">
+                                class="oe_stat_button" icon="fa-area-chart">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
                                         <field name="virtual_available" widget="statinfo" nolabel="1" class="oe_inline"/>
