@@ -34,6 +34,9 @@ class SaleOrder(models.Model):
         for order in self:
             company_template = order.company_id.sale_order_template_id
             if company_template and order.sale_order_template_id != company_template:
+                if 'website_id' in self._fields and order.website_id:
+                    # don't apply quotation template for order created via eCommerce
+                    continue
                 order.sale_order_template_id = order.company_id.sale_order_template_id.id
 
     @api.depends('partner_id', 'sale_order_template_id')
