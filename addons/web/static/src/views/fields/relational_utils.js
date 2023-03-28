@@ -255,12 +255,21 @@ export class Many2XAutocomplete extends Component {
                     try {
                         await this.props.quickCreate(request, params);
                     } catch (e) {
-                        if (e && e.name === "RPC_ERROR") {
+                        if (
+                            e &&
+                            e.name === "RPC_ERROR" &&
+                            e.exceptionName === "odoo.exceptions.ValidationError"
+                        ) {
                             const context = this.getCreationContext(request);
                             return this.openMany2X({ context });
                         }
                         // Compatibility with legacy code
-                        if (e && e.message && e.message.name === "RPC_ERROR") {
+                        if (
+                            e &&
+                            e.message &&
+                            e.message.name === "RPC_ERROR" &&
+                            e.message.exceptionName === "odoo.exceptions.ValidationError"
+                        ) {
                             // The event.preventDefault() is necessary because we still use the legacy
                             e.event.preventDefault();
                             const context = this.getCreationContext(request);

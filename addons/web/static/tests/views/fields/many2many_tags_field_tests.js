@@ -1480,7 +1480,9 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    throw new RPCError("Something went wrong");
+                    const error = new RPCError("Something went wrong");
+                    error.exceptionName = "odoo.exceptions.ValidationError";
+                    throw error;
                 }
                 if (args.method === "create") {
                     assert.deepEqual(args.args[0], {
