@@ -83,11 +83,11 @@ class MrpBom(models.Model):
     allow_operation_dependencies = fields.Boolean('Operation Dependencies',
         help="Create operation level dependencies that will influence both planning and the status of work orders upon MO confirmation. If this feature is ticked, and nothing is specified, Odoo will assume that all operations can be started simultaneously."
     )
-    produce_delay = fields.Float(
-        'Manufacturing Lead Time', default=0.0,
+    produce_delay = fields.Integer(
+        'Manufacturing Lead Time', default=0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.")
-    days_to_prepare_mo = fields.Float(
-        string="Days to prepare Manufacturing Order", default=0.0,
+    days_to_prepare_mo = fields.Integer(
+        string="Days to prepare Manufacturing Order", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
              "Note that security lead times will also be considered when appropriate.")
 
