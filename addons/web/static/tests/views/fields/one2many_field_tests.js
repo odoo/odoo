@@ -2077,7 +2077,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.tttt("one2many field when using the pager", async function (assert) {
+    QUnit.test("one2many field when using the pager", async function (assert) {
         const ids = [];
         for (let i = 0; i < 45; i++) {
             const id = 10 + i;
@@ -2090,7 +2090,6 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].p = ids.slice(0, 42);
         serverData.models.partner.records[1].p = ids.slice(42);
 
-        let count = 0;
         await makeView({
             type: "form",
             resModel: "partner",
@@ -2109,25 +2108,21 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method !== "get_views") {
-                    count++;
+                if (args.method === "web_read_unity") {
+                    assert.step(`unity read ${args.args[0]}`);
                 }
             },
             resId: 1,
             resIds: [1, 2],
         });
 
-        // we are on record 1, which has 90 related record (first 40 should be
-        // displayed), 2 RPCs (read) should have been done, one on the main record
-        // and one for the O2M
-        assert.strictEqual(count, 2);
+        assert.verifySteps(["unity read 1"]);
         assert.containsN(target, '.o_kanban_record:not(".o_kanban_ghost")', 40);
 
         // move to record 2, which has 3 related records (and shouldn't contain the
-        // related records of record 1 anymore). Two additional RPCs should have
-        // been done
+        // related records of record 1 anymore)
         await click(target.querySelector(".o_form_view .o_control_panel .o_pager_next"));
-        assert.strictEqual(count, 4);
+        assert.verifySteps(["unity read 2"]);
         assert.containsN(
             target,
             '.o_kanban_record:not(".o_kanban_ghost")',
@@ -2138,7 +2133,7 @@ QUnit.module("Fields", (hooks) => {
         // move back to record 1, which should contain again its first 40 related
         // records
         await click(target.querySelector(".o_form_view .o_control_panel .o_pager_previous"));
-        assert.strictEqual(count, 6);
+        assert.verifySteps(["unity read 1"]);
         assert.containsN(
             target,
             '.o_kanban_record:not(".o_kanban_ghost")',
@@ -2149,7 +2144,7 @@ QUnit.module("Fields", (hooks) => {
         // move to the second page of the o2m: 1 RPC should have been done to fetch
         // the 2 subrecords of page 2, and those records should now be displayed
         await click(target.querySelector(".o_x2m_control_panel .o_pager_next"));
-        assert.strictEqual(count, 7, "one RPC should have been done");
+        assert.verifySteps(["unity read 50,51"]);
         assert.containsN(
             target,
             '.o_kanban_record:not(".o_kanban_ghost")',
@@ -2159,7 +2154,7 @@ QUnit.module("Fields", (hooks) => {
 
         // move to record 2 again and check that everything is correctly updated
         await click(target.querySelector(".o_form_view .o_control_panel .o_pager_next"));
-        assert.strictEqual(count, 9);
+        assert.verifySteps(["unity read 2"]);
         assert.containsN(
             target,
             '.o_kanban_record:not(".o_kanban_ghost")',
@@ -2170,9 +2165,9 @@ QUnit.module("Fields", (hooks) => {
         // move back to record 1 and move to page 2 again: all data should have
         // been correctly reloaded
         await click(target.querySelector(".o_form_view .o_control_panel .o_pager_previous"));
-        assert.strictEqual(count, 11);
+        assert.verifySteps(["unity read 1"]);
         await click(target.querySelector(".o_x2m_control_panel .o_pager_next"));
-        assert.strictEqual(count, 12, "one RPC should have been done");
+        assert.verifySteps(["unity read 50,51"]);
         assert.containsN(
             target,
             '.o_kanban_record:not(".o_kanban_ghost")',

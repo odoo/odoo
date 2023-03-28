@@ -158,7 +158,21 @@ export class RelationalModel extends Model {
             return this._loadGroupedList(params);
         }
         if (params.viewMode === "form") {
-            return this._loadRecord(params);
+            const context = {
+                ...params.context,
+                active_id: params.resId,
+                active_ids: [params.resId],
+                active_model: params.resModel,
+                current_company_id: this.company.currentCompany.id,
+            };
+            const records = await this._loadRecords({
+                resModel: params.resModel,
+                activeFields: params.activeFields,
+                fields: params.fields,
+                context,
+                resIds: [params.resId],
+            });
+            return records[0];
         } else {
             return this._loadUngroupedList(params);
         }
@@ -229,23 +243,15 @@ export class RelationalModel extends Model {
         return response.value;
     }
 
-    // TODO: change into _loadRecords?
-    async _loadRecord({ resModel, resId, activeFields, fields, context }) {
-        const evalContext = {
-            ...context,
-            active_id: resId,
-            active_ids: [resId],
-            active_model: resModel,
-            current_company_id: this.company.currentCompany.id,
-        };
+    async _loadRecords({ resModel, resIds, activeFields, fields, context }) {
         const kwargs = {
             context: { bin_size: true, ...context },
-            fields: getFieldsSpec(activeFields, fields, evalContext),
+            fields: getFieldsSpec(activeFields, fields, context),
         };
         console.log("Unity field spec", kwargs.fields);
-        const records = await this.orm.call(resModel, "web_read_unity", [[resId]], kwargs);
+        const records = await this.orm.call(resModel, "web_read_unity", [resIds], kwargs);
         console.log("Unity response", records);
-        return records[0];
+        return records;
     }
 
     async _loadUngroupedList({

@@ -373,8 +373,15 @@ export class Record extends DataPoint {
         };
         let record;
         if (resId) {
-            params.resId = resId;
-            record = await this.model._loadRecord(params);
+            params.resIds = [resId];
+            params.context = {
+                ...params.context,
+                active_id: resId,
+                active_ids: [resId],
+                active_model: this.resModel,
+                current_company_id: this.model.company.currentCompany.id,
+            };
+            [record] = await this.model._loadRecords(params);
             this._values = this._applyServerValues(record);
             this._changes = {};
         } else {

@@ -66,8 +66,17 @@ export class StaticList extends DataPoint {
         return false;
     }
 
+    load({ limit, offset }) {
+        limit = limit !== undefined ? limit : this.limit;
+        offset = offset !== undefined ? offset : this.offset;
+        this.model.mutex.exec(() => this._load({ limit, offset }));
+    }
+
     unselectRecord() {
-        this.editedRecord.switchMode("readonly");
+        if (this.editedRecord) {
+            this.editedRecord.switchMode("readonly");
+        }
+        return true;
     }
 
     // -------------------------------------------------------------------------
@@ -147,6 +156,21 @@ export class StaticList extends DataPoint {
             }
             return [c[0], c[1]];
         });
+    }
+
+    async _load({ limit, offset }) {
+        const resIds = this.resIds.slice(offset, offset + limit);
+        const records = await this.model._loadRecords({
+            activeFields: this.activeFields,
+            context: this.context,
+            fields: this.fields,
+            resIds,
+            resModel: this.resModel,
+        });
+        // FIXME: might need to keep references to the records of previous page (for changes)
+        this.records = records.map((r) => this._createRecordDatapoint(r));
+        this.offset = offset;
+        this.limit = limit;
     }
 }
 StaticList.DEFAULT_LIMIT = 40;
