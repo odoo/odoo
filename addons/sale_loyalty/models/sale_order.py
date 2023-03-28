@@ -66,13 +66,14 @@ class SaleOrder(models.Model):
         # Claiming a reward for that program will require either an automated check or a manual input again.
         reward_coupons = self.order_line.coupon_id
         self.coupon_point_ids.filtered(
-            lambda pe: pe.coupon_id.program_id.applies_on == 'current' and pe.coupon_id not in reward_coupons)\
-            .coupon_id.sudo().unlink()
+            lambda pe: pe.coupon_id.program_id.applies_on == 'current' and pe.coupon_id not in reward_coupons
+        ).coupon_id.sudo().unlink()
         # Add/remove the points to our coupons
         for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
             coupon.points += change
+        res = super().action_confirm()
         self._send_reward_coupon_mail()
-        return super(SaleOrder, self).action_confirm()
+        return res
 
     def _action_cancel(self):
         previously_confirmed = self.filtered(lambda s: s.state in ('sale', 'done'))
