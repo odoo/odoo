@@ -279,7 +279,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("widget many2many_tags_avatar in kanban view", async function (assert) {
-        assert.expect(16);
+        assert.expect(17);
 
         const records = [];
         for (let id = 5; id <= 15; id++) {
@@ -400,6 +400,7 @@ QUnit.module("Fields", (hooks) => {
             "9+",
             "should have 9+ in o_m2m_avatar_empty"
         );
+        assert.containsNone(target, ".o_field_many2many_tags_avatar .o_field_many2many_selection");
 
         // check delete
         const firstTag = target.querySelector(
