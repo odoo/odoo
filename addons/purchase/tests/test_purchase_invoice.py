@@ -576,3 +576,43 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         po_line.write({'product_qty': 4})
         po_line._onchange_quantity()
         self.assertEqual(40.0, po_line.price_unit, "Unit price should be set to 40.0 for 4 quantity")
+
+    def test_onchange_partner_currency(self):
+        """
+        Test that the currency of the Bill is correctly set when the partner is changed
+        as well as the currency of the Bill lines
+        """
+
+        vendor_eur = self.env['res.partner'].create({
+            'name': 'Vendor EUR',
+            'property_purchase_currency_id': self.env.ref('base.EUR').id,
+        })
+        vendor_us = self.env['res.partner'].create({
+            'name': 'Vendor USD',
+            'property_purchase_currency_id': self.env.ref('base.USD').id,
+        })
+        vendor_no_currency = self.env['res.partner'].create({
+            'name': 'Vendor No Currency',
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = vendor_eur
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_order
+            line_form.quantity = 1
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.ref('base.EUR'), "The currency of the Bill should be the same as the currency of the partner")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.EUR'), "The currency of the Bill lines should be the same as the currency of the partner")
+
+        move_form.partner_id = vendor_us
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.ref('base.USD'), "The currency of the Bill should be the same as the currency of the partner")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.USD'), "The currency of the Bill lines should be the same as the currency of the partner")
+
+        move_form.partner_id = vendor_no_currency
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.company.currency_id, "The currency of the Bill should be the same as the currency of the company")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.company.currency_id, "The currency of the Bill lines should be the same as the currency of the company")
