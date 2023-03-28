@@ -157,7 +157,7 @@ export class MediaDialog extends Component {
         // adaptation before saving from the active media selector and find a
         // way to simply close the dialog if the media element remains the same.
         const saveSelectedMedia = selectedMedia.length
-            && (this.state.activeTab !== TABS.ICONS.id || selectedMedia[0].initialIconChanged);
+            && (this.state.activeTab !== TABS.ICONS.id || selectedMedia[0].initialIconChanged || !this.props.media);
         if (saveSelectedMedia) {
             const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm });
             elements.forEach(element => {
