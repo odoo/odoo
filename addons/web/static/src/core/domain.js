@@ -11,7 +11,7 @@ import { toPyValue } from "./py_js/py_utils";
  * @typedef {DomainListRepr | string | Domain} DomainRepr
  */
 
-class InvalidDomainError extends Error {}
+export class InvalidDomainError extends Error {}
 
 /**
  * Javascript representation of an Odoo domain
@@ -135,7 +135,14 @@ export class Domain {
             /** @type {AST} */
             return new Domain(descr.toString());
         } else {
-            const rawAST = typeof descr === "string" ? parseExpr(descr) : toAST(descr);
+            let rawAST;
+            try {
+                rawAST = typeof descr === "string" ? parseExpr(descr) : toAST(descr);
+            } catch (error) {
+                throw new InvalidDomainError(`Invalid domain representation`, {
+                    cause: error,
+                });
+            }
             this.ast = normalizeDomainAST(rawAST);
         }
     }
