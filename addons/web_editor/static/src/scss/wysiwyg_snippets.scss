@@ -1005,7 +1005,10 @@
                     border-right-width: ($o-we-item-spacing - 1px);
                 }
             }
-            &:not(.o_we_so_color_palette) + we-button:not(:hover):not(.o_we_image_shape_remove) {
+            // Special buttons (e.g. remove/position) next to the we-select
+            // should be toned down. Also makes sure that only one button is
+            // targeted, and that should be the last one.
+            &:not(.o_we_so_color_palette) ~ we-button:not(:hover):not(.o_we_image_shape_remove):last-child {
                 background: none;
             }
 
