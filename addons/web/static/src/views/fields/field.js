@@ -154,9 +154,11 @@ export class Field extends Component {
                         };
                     },
                     get domain() {
-                        if (fieldInfo.domain) {
-                            return new Domain(evaluateExpr(fieldInfo.domain, record.evalContext)).toList();
+                        if (!fieldInfo.domain) {
+                            return undefined;
                         }
+                        const evalContext = record.evalContext;
+                        return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                     },
                     readonly: readonlyFromModifiers,
                     get required() {
@@ -271,6 +273,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
                 views[viewType] = {
                     ...archInfo,
+                    limit: archInfo.limit || 40,
                     fields: models[fields[name].relation],
                 };
             }

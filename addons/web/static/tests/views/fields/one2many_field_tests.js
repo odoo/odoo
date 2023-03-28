@@ -577,7 +577,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(firstValue.textContent, "blip");
     });
 
-    QUnit.tttt(
+    QUnit.test(
         "use the limit attribute in arch (in field o2m inline tree view)",
         async function (assert) {
             serverData.models.partner.records[0].turtles = [1, 2, 3];
@@ -662,7 +662,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.tttt("embedded one2many with widget", async function (assert) {
+    QUnit.test("embedded one2many with widget", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         await makeView({
             type: "form",

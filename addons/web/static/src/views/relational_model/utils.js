@@ -49,6 +49,7 @@ export const extractFieldsFromArchInfo = ({ fieldNodes, widgetNodes }, fields) =
                     viewDescr,
                     viewDescr.fields
                 );
+                activeFields[fieldName].limit = viewDescr.limit;
             }
         } else {
             // TODO (see task description for multiple occurrences of fields)
@@ -107,6 +108,7 @@ export const getFieldsSpec = (activeFields, fields, evalContext, parentActiveFie
                 evalContext,
                 activeFields
             );
+            fieldsSpec[fieldName].limit = fieldDescr.limit || 40;
         }
         // M2O
         if (fields[fieldName].type === "many2one" && fieldDescr.invisible !== true) {

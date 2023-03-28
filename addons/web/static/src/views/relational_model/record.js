@@ -201,7 +201,7 @@ export class Record extends DataPoint {
             const value = serverValues[fieldName];
             const field = this.fields[fieldName];
             if (field.type === "one2many" || field.type === "many2many") {
-                const related = this.activeFields[fieldName].related;
+                const { related, limit } = this.activeFields[fieldName];
                 let staticList = currentValues[fieldName];
                 let valueIsCommandList = true;
                 if (!staticList) {
@@ -214,7 +214,8 @@ export class Record extends DataPoint {
                         fields: (related && related.fields) || {},
                         data: valueIsCommandList ? [] : value,
                         parent: this,
-                        onChange: () => this._changes[fieldName] = staticList, // TODO: execute onchange if any
+                        limit,
+                        onChange: () => (this._changes[fieldName] = staticList), // TODO: execute onchange if any
                     });
                 }
                 if (valueIsCommandList) {
