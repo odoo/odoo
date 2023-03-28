@@ -6449,6 +6449,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("quick create column and examples", async (assert) => {
         serviceRegistry.add("dialog", dialogService, { force: true });
         registry.category("kanban_examples").add("test", {
+            allowedGroupBys: ["product_id"],
             examples: [
                 {
                     name: "A first example",
@@ -6555,6 +6556,7 @@ QUnit.module("Views", (hooks) => {
         serviceRegistry.add("dialog", dialogService, { force: true });
         const applyExamplesText = "Use This For My Test";
         registry.category("kanban_examples").add("test", {
+            allowedGroupBys: ["product_id"],
             applyExamplesText: applyExamplesText,
             examples: [
                 {
@@ -6601,6 +6603,7 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             serverData.models.partner.records = [];
             registry.category("kanban_examples").add("test", {
+                allowedGroupBys: ["product_id"],
                 ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
                 examples: [
                     {

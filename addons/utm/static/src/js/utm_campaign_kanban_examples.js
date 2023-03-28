@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 const exampleData = {
     ghostColumns: [_lt('Ideas'), _lt('Design'), _lt('Review'), _lt('Send'), _lt('Done')],
     applyExamplesText: _lt("Use This For My Campaigns"),
+    allowedGroupBys: ['stage_id'],
     examples: [{
         name: _lt('Creative Flow'),
         columns: [_lt('Ideas'), _lt('Design'), _lt('Review'), _lt('Send'), _lt('Done')],
