@@ -126,7 +126,7 @@ export class MessageService {
         const { body, res_id, model } = data;
         const lastMessageId = this.getLastMessageId();
         this.insert({
-            author: this.store.partnerRoot,
+            author: this.store.odoobot,
             body,
             id: lastMessageId + 0.01,
             is_note: true,

@@ -93,9 +93,9 @@ export class MessagingMenu extends Component {
     get notificationRequest() {
         return {
             body: _t("Enable desktop notifications to chat"),
-            displayName: sprintf(_t("%s has a request"), this.store.partnerRoot.name),
-            iconSrc: this.threadService.avatarUrl(this.store.partnerRoot),
-            partner: this.store.partnerRoot,
+            displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
+            iconSrc: this.threadService.avatarUrl(this.store.odoobot),
+            partner: this.store.odoobot,
             isLast:
                 this.displayedPreviews.length === 0 && this.store.notificationGroups.length === 0,
             isShown:

@@ -39,7 +39,7 @@ QUnit.test("no call with odoobot", async (assert) => {
     const channelId = pyEnv["mail.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.partnerRootId }],
+            [0, 0, { partner_id: pyEnv.odoobotId }],
         ],
         channel_type: "chat",
     });

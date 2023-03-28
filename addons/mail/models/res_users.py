@@ -298,7 +298,7 @@ class Users(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
-        partner_root = self.env.ref('base.partner_root')
+        odoobot = self.env.ref('base.partner_root')
         values = {
             'channels': self.partner_id._get_channels_as_member().channel_info(),
             'companyName': self.env.company.name,
@@ -310,7 +310,7 @@ class Users(models.Model):
             'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
-            'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
+            'odoobot': odoobot.sudo().mail_partner_format().get(odoobot),
             'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution']),
             'starred_counter': self.env['mail.message'].search_count([('starred_partner_ids', 'in', self.partner_id.ids)]),
         }
