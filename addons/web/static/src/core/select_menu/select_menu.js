@@ -181,8 +181,16 @@ export class SelectMenu extends Component {
 
     onItemSelected(value) {
         if (this.props.multiSelect) {
-            this.props.onSelect([...this.props.value, value]);
-        } else {
+            const values = [...this.props.value];
+            const valueIndex = values.indexOf(value);
+
+            if (valueIndex !== -1) {
+                values.splice(valueIndex, 1);
+                this.props.onSelect(values);
+            } else {
+                this.props.onSelect([...this.props.value, value]);
+            }
+        } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
         }
     }
