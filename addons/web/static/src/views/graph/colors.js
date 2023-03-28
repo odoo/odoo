@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const COLORS_BRIGHT = [
+export const COLORS_BRIGHT = [
     "#1f77b4",
     "#ff7f0e",
     "#aec7e8",
@@ -23,7 +23,7 @@ const COLORS_BRIGHT = [
     "#a5d8d7", // Dashboards Secondary
 ];
 
-const COLORS_DARK = [
+export const COLORS_DARK = [
     "#00ffff",
     "#ff6347",
     "#00ced1",
