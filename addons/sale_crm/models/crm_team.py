@@ -40,5 +40,5 @@ class CrmTeam(models.Model):
     
     def _extra_sql_conditions(self):
         if self.use_opportunities and self._context.get('in_sales_app'):
-            return "AND state in ('sale', 'done', 'pos_done')"
+            return "AND state in ('sale', 'done')"
         return super(CrmTeam,self)._extra_sql_conditions()

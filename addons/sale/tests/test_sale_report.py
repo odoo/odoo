@@ -54,7 +54,7 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         # the report should show the amount in company currency
         report_line = self.env['sale.report'].sudo().search(
-            [('order_id', '=', eur_order.id)])
+            [('order_reference', '=', f"sale.order,{eur_order.id}")])
         self.assertEqual(report_line.price_total, 20.0)
 
     def test_sale_report_company_currency(self):
@@ -78,5 +78,5 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         # the report should match the amount on the SO
         report_line = self.env['sale.report'].sudo().search(
-            [('order_id', '=', usd_order.id)])
+            [('order_reference', '=', f"sale.order,{usd_order.id}")])
         self.assertEqual(report_line.price_total, 20.0)
