@@ -1055,14 +1055,23 @@ class Cache(object):
         """
         field_cache = self._set_field_cache(records, field)
         if field.translate:
-            lang = records.env.lang or 'en_US'
-            for id_, val in zip(records._ids, values):
-                if val is None:
-                    field_cache.setdefault(id_, None)
-                else:
-                    cache_value = field_cache.setdefault(id_, {})
-                    if cache_value is not None:
-                        cache_value.setdefault(lang, val)
+            if records.env.context.get('prefetch_langs'):
+                langs = {lang for lang, _ in records.env['res.lang'].get_installed()} | {'en_US'}
+                for id_, val in zip(records._ids, values):
+                    if val is None:
+                        field_cache.setdefault(id_, None)
+                    else:
+                        val_all_en = dict.fromkeys(langs, val['en_US'])
+                        field_cache[id_] = {**val_all_en, **val}
+            else:
+                lang = records.env.lang or 'en_US'
+                for id_, val in zip(records._ids, values):
+                    if val is None:
+                        field_cache.setdefault(id_, None)
+                    else:
+                        cache_value = field_cache.setdefault(id_, {})
+                        if cache_value is not None:
+                            cache_value.setdefault(lang, val)
         else:
             for id_, val in zip(records._ids, values):
                 field_cache.setdefault(id_, val)

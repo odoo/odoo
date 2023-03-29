@@ -886,6 +886,7 @@ class Website(models.Model):
         langs = []
         shorts = []
 
+        self_prefetch_langs = self.with_context(prefetch_langs=True)
         for lg in languages:
             lg_codes = lg.code.split('_')
             short = lg_codes[0]
@@ -893,7 +894,7 @@ class Website(models.Model):
             langs.append({
                 'hreflang': ('-'.join(lg_codes)).lower(),
                 'short': short,
-                'href': self._get_canonical_url_localized(lang=lg, canonical_params=canonical_params),
+                'href': self_prefetch_langs._get_canonical_url_localized(lang=lg, canonical_params=canonical_params),
             })
 
         # if there is only one region for a language, use only the language code
@@ -1292,6 +1293,8 @@ class Website(models.Model):
                         args[key] = val = val.with_user(request.uid)
                     if val.env.context.get('lang') != lang.code:
                         args[key] = val = val.with_context(lang=lang.code)
+                    if self.env.context.get('prefetch_langs'):
+                        args[key] = val = val.with_context(prefetch_langs=True)
 
             router = http.root.get_db_router(request.db).bind('')
             path = router.build(rule.endpoint, args)

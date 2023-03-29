@@ -2641,7 +2641,7 @@ class BaseModel(metaclass=MetaModel):
                 extra=extra, extra_params=extra_params,
             )
             return '"%s"."%s"' % (rel_alias, field.column2)
-        elif field.translate:
+        elif field.translate and not self.env.context.get('prefetch_langs'):
             lang = self.env.lang or 'en_US'
             if lang == 'en_US':
                 return f'"{alias}"."{fname}"->>\'en_US\''
