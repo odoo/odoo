@@ -446,11 +446,30 @@ function _download(data, filename, mimetype) {
 /* eslint-enable */
 
 // -----------------------------------------------------------------------------
-// Exported download function
+// Exported download functions
 // -----------------------------------------------------------------------------
 
 /**
- * Download a file
+ * Download data as a file
+ *
+ * @param {Object} data
+ * @param {String} filename
+ * @param {String} mimetype
+ * @returns {Boolean}
+ * 
+ * Note: the actual implementation is certainly unconventional, but sadly
+ * necessary to be able to test code using the download function
+ */
+export function downloadFile(data, filename, mimetype) {
+    return downloadFile._download(data, filename, mimetype)
+}
+downloadFile._download = _download;
+
+/**
+ * Download a file from form or server url
+ * 
+ * This function is meant to call a controller with some data
+ * and download the response.
  *
  * Note: the actual implementation is certainly unconventional, but sadly
  * necessary to be able to test code using the download function
