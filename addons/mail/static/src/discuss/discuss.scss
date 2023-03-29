@@ -24,3 +24,15 @@
 .o-mail-Discuss-threadName {
     max-width: 75%;
 }
+
+.o-mail-Discuss-header button {
+    &:not(.o-isActive):hover {
+        background-color: $gray-300;
+    }
+    &.o-isActive {
+        background-color: $gray-300;
+    }
+    &.o-isActive:hover {
+        background-color: $gray-400;
+    }
+}
