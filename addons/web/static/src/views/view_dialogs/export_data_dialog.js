@@ -197,7 +197,12 @@ export class ExportDataDialog extends Component {
             model: this.props.root.resModel,
             export_id: Number(value),
         });
-        this.state.exportList = fields;
+        this.state.exportList = fields.map(({ label, name }) => {
+            return {
+                string: label,
+                id: name,
+            };
+        });
     }
 
     async loadFields(id) {
