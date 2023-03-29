@@ -26,4 +26,11 @@
             <field name="country_id" ref="base.fr"/>
         </record>
     </data>
+
+    <data noupdate="0">
+        <record id="display_name_in_footer_param" model="ir.config_parameter">
+            <field name="key">account.display_name_in_footer</field>
+            <field name="value" eval="True"/>
+        </record>
+    </data>
 </odoo>
