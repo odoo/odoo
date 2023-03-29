@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.osv import expression
 
 
 FUEL_TYPES = [
@@ -43,6 +44,14 @@ class FleetVehicleModel(models.Model):
     horsepower = fields.Integer()
     horsepower_tax = fields.Float('Horsepower Taxation')
     electric_assistance = fields.Boolean(default=False)
+
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        domain = domain or []
+        if operator != 'ilike' or (name or '').strip():
+            name_domain = ['|', ('name', 'ilike', name), ('brand_id.name', 'ilike', name)]
+            domain = expression.AND([name_domain, domain])
+        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
 
     def name_get(self):
         res = []
