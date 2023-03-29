@@ -67,7 +67,8 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True,
-        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Included taxes')
+        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Included taxes',
+        help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.")
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
