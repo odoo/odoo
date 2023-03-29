@@ -20,14 +20,10 @@ patch(MockServer.prototype, {
                 res_id: id,
                 res_model: model,
             });
-            const attachment = this.getRecords("ir.attachment", [["id", "=", attachmentId]])[0];
-            return {
-                filename: attachment.name,
-                name: attachment.name,
-                id: attachment.id,
-                mimetype: attachment.mimetype,
-                size: attachment.file_size,
-            };
+            if (args.body.get("voice")) {
+                this.mockCreate("discuss.voice.metadata", { attachment_id: attachmentId });
+            }
+            return this._mockIrAttachment_attachmentFormat([attachmentId])[0];
         }
         return super.performRPC(...arguments);
     },

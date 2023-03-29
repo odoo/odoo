@@ -8,6 +8,10 @@ import { registry } from "@web/core/registry";
 
 export class AttachmentService {
     constructor(env, services) {
+        this.setup(env, services);
+    }
+
+    setup(env, services) {
         this.env = env;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
@@ -69,6 +73,9 @@ export class AttachmentService {
      * @param {Attachment} attachment
      */
     remove(attachment) {
+        if (attachment.tmpUrl) {
+            URL.revokeObjectURL(attachment.tmpUrl);
+        }
         delete this.store.attachments[attachment.id];
         if (attachment.originThread) {
             removeFromArrayWithPredicate(

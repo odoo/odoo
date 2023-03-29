@@ -27,6 +27,7 @@ patch(MockServer.prototype, {
                 id: attachment.id,
                 mimetype: attachment.mimetype,
                 name: attachment.name,
+                size: attachment.file_size,
             };
             res["originThread"] = [
                 [
@@ -37,6 +38,12 @@ patch(MockServer.prototype, {
                     },
                 ],
             ];
+            const voice = this.getRecords("discuss.voice.metadata", [
+                ["attachment_id", "=", attachment.id],
+            ])[0];
+            if (voice) {
+                res.voice = true;
+            }
             return res;
         });
     },
