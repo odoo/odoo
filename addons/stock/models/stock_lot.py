@@ -33,6 +33,7 @@ class StockLot(models.Model):
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
+    lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
 
     @api.model
     def generate_lot_names(self, first_lot, count):
@@ -160,7 +161,7 @@ class StockLot(models.Model):
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def action_lot_open_quants(self):
-        self = self.with_context(search_default_lot_id=self.id, create=False)
+        self = self.with_context(search_default_lot_id=self.id, create=False, properties_definition_domain=['id', '=', self.product_id.id])
         if self.user_has_groups('stock.group_stock_manager'):
             self = self.with_context(inventory_mode=True)
         return self.env['stock.quant']._get_quants_action()
