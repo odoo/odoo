@@ -6129,6 +6129,12 @@ registry.ImageTools = ImageHandlerOption.extend({
                     img.dataset.originalMimetype = img.dataset.mimetype;
                     img.dataset.mimetype = 'image/svg+xml';
                 }
+                // When the user selects a shape, we remove the data attributes
+                // that are not compatible with this shape.
+                if (saveData && !this._isTransformableShape()) {
+                    delete img.dataset.shapeFlip;
+                    delete img.dataset.shapeRotate;
+                }
             }
         } else {
             // Re-applying the modifications and deleting the shapes
@@ -6136,6 +6142,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             delete img.dataset.shape;
             delete img.dataset.shapeColors;
             delete img.dataset.fileName;
+            delete img.dataset.shapeFlip;
+            delete img.dataset.shapeRotate;
             if (saveData) {
                 img.dataset.mimetype = img.dataset.originalMimetype;
                 delete img.dataset.originalMimetype;
@@ -6157,6 +6165,38 @@ registry.ImageTools = ImageHandlerOption.extend({
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
         await this._applyShapeAndColors(true, newColors);
         img.classList.add('o_modified_image_to_save');
+    },
+    /**
+     * Flips the image shape horizontally.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeFlipX(previewMode, widgetValue, params) {
+        await this._setImgShapeFlip("x");
+    },
+    /**
+     * Flips the image shape vertically.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeFlipY(previewMode, widgetValue, params) {
+        await this._setImgShapeFlip("y");
+    },
+    /**
+     * Rotates the image shape 90 degrees to the left.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeRotateLeft(previewMode, widgetValue, params) {
+        await this._setImgShapeRotate(-90);
+    },
+    /**
+     * Rotates the image shape 90 degrees to the right.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeRotateRight(previewMode, widgetValue, params) {
+        await this._setImgShapeRotate(90);
     },
 
     //--------------------------------------------------------------------------
@@ -6247,6 +6287,26 @@ registry.ImageTools = ImageHandlerOption.extend({
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
+
+        // Modifies the SVG according to the "flip" or/and "rotate" options.
+        const shapeFlip = img.dataset.shapeFlip || "";
+        const shapeRotate = img.dataset.shapeRotate || 0;
+        if ((shapeFlip || shapeRotate) && this._isTransformableShape()) {
+            let shapeTransformValues = [];
+            if (shapeFlip) { // Possible values => "x", "y", "xy"
+                shapeTransformValues.push(`scale${shapeFlip === "x" ? "X" : shapeFlip === "y" ? "Y" : ""}(-1)`);
+            }
+            if (shapeRotate) { // Possible values => "90", "180", "270"
+                shapeTransformValues.push(`rotate(${shapeRotate}deg)`);
+            }
+            // "transform-origin: center;" does not work on "#filterPath". But
+            // since its dimension is 1px * 1px the following solution works.
+            const transformOrigin = "transform-origin: 0.5px 0.5px;";
+            // Applies the transformation values to the path used to create a
+            // mask over the SVG image.
+            svg.querySelector("#filterPath").setAttribute("style", `transform: ${shapeTransformValues.join(" ")}; ${transformOrigin}`);
+        }
+
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
         // We will store the image in base64 inside the SVG.
         // applyModifications will return a dataURL with the current filters
@@ -6356,6 +6416,10 @@ registry.ImageTools = ImageHandlerOption.extend({
             const img = this._getImg();
             return isImageSupportedForStyle(img) || this._isImageSupportedForProcessing(img);
         }
+        if (["img_shape_transform_flip_x_opt", "img_shape_transform_flip_y_opt",
+            "img_shape_transform_rotate_x_opt", "img_shape_transform_rotate_y_opt"].includes(params.name)) {
+            return this._isTransformableShape();
+        }
         return this._super(...arguments);
     },
     /**
@@ -6388,6 +6452,14 @@ registry.ImageTools = ImageHandlerOption.extend({
             case 'setImgShapeColor': {
                 const img = this._getImg();
                 return (img.dataset.shapeColors && img.dataset.shapeColors.split(';')[parseInt(params.colorId)]) || '';
+            }
+            case 'setImgShapeFlipX': {
+                const imgEl = this._getImg();
+                return imgEl.dataset.shapeFlip?.includes("x") || "";
+            }
+            case 'setImgShapeFlipY': {
+                const imgEl = this._getImg();
+                return imgEl.dataset.shapeFlip?.includes("y") || "";
             }
         }
         return this._super(...arguments);
@@ -6504,6 +6576,8 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete img.dataset.shapeColors;
                 delete img.dataset.fileName;
                 delete img.dataset.originalMimetype;
+                delete img.dataset.shapeFlip;
+                delete img.dataset.shapeRotate;
                 return;
             }
             if (img.dataset.mimetype !== "image/svg+xml") {
@@ -6532,6 +6606,69 @@ registry.ImageTools = ImageHandlerOption.extend({
             return !isGif(this._getImageMimetype(this._getImg()));
         }
         return this._super(...arguments);
+    },
+    /**
+     * Flips the image shape (vertically or/and horizontally).
+     *
+     * @private
+     * @param {string} flipValue image shape flip value
+     */
+    async _setImgShapeFlip(flipValue) {
+        const imgEl = this._getImg();
+        const currentFlipValue = imgEl.dataset.shapeFlip || "";
+        const newFlipValue = currentFlipValue.includes(flipValue)
+            ? currentFlipValue.replace(flipValue, "")
+            : currentFlipValue + flipValue;
+        if (newFlipValue) {
+            imgEl.dataset.shapeFlip = newFlipValue === "yx" ? "xy" : newFlipValue;
+        } else {
+            delete imgEl.dataset.shapeFlip;
+        }
+        await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
+        imgEl.classList.add("o_modified_image_to_save");
+    },
+    /**
+     * Rotates the image shape 90 degrees.
+     *
+     * @private
+     * @param {integer} rotation rotation value
+     */
+    async _setImgShapeRotate(rotation) {
+        const imgEl = this._getImg();
+        const currentRotateValue = parseInt(imgEl.dataset.shapeRotate) || 0;
+        const newRotateValue = (currentRotateValue + rotation + 360) % 360;
+        if (newRotateValue) {
+            imgEl.dataset.shapeRotate = newRotateValue;
+        } else {
+            delete imgEl.dataset.shapeRotate;
+        }
+        await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
+        imgEl.classList.add("o_modified_image_to_save");
+    },
+    /**
+     * Checks if the shape is in the "devices" category.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isDeviceShape() {
+        const imgEl = this._getImg();
+        const shapeName = imgEl.dataset.shape;
+        if (!shapeName) {
+            return false;
+        }
+        const shapeCategory = imgEl.dataset.shape.split("/")[1];
+        return shapeCategory === "devices";
+    },
+    /**
+     * Checks if the shape is transformable.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isTransformableShape() {
+        const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
+        return (shapeImgWidget && !shapeImgWidget.getMethodsParams().noTransform) && !this._isDeviceShape();
     },
 
     //--------------------------------------------------------------------------
