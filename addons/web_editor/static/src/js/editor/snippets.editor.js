@@ -1,8 +1,10 @@
 odoo.define('web_editor.snippet.editor', function (require) {
 'use strict';
 
+const {escape} = require('@odoo/owl');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+const {_t} = require('@web/core/l10n/translation');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 const {Markup, sprintf, confine} = require('web.utils');
@@ -14,8 +16,6 @@ const {getCSSVariableValue} = require('web_editor.utils');
 const gridUtils = require('@web_editor/js/common/grid_layout_utils');
 const QWeb = core.qweb;
 const {closestElement} = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
-
-var _t = core._t;
 
 let cacheSnippetTemplate = {};
 
@@ -125,6 +125,78 @@ var globalSelector = {
     all: () => $(),
     is: () => false,
 };
+
+/**
+ * Maps every snippet name to its translation. It is needed because the "name"
+ * attribute used in the template is not translatable.
+ */
+const snippetThumbnailTitles = new Map([
+    // Structure
+    ["Banner", _t("Banner")],
+    ["Big Boxes", _t("Big Boxes")],
+    ["Carousel", _t("Carousel")],
+    ["Columns", _t("Columns")],
+    ["Cover", _t("Cover")],
+    ["Features", _t("Features")],
+    ["Image Gallery", _t("Image Gallery")],
+    ["Image - Text", _t("Image - Text")],
+    ["Images Wall", _t("Images Wall")],
+    ["Masonry", _t("Masonry")],
+    ["Media List", _t("Media List")],
+    ["Numbers", _t("Numbers")],
+    ["Parallax", _t("Parallax")],
+    ["Picture", _t("Picture")],
+    ["Showcase", _t("Showcase")],
+    ["Text", _t("Text")],
+    ["Text - Image", _t("Text - Image")],
+    ["Title", _t("Title")],
+    // Features
+    ["Comparisons", _t("Comparisons")],
+    ["Team", _t("Team")],
+    ["Call to Action", _t("Call to Action")],
+    ["References", _t("References")],
+    ["Accordion", _t("Accordion")],
+    ["Features Grid", _t("Features Grid")],
+    ["Table of Content", _t("Table of Content")],
+    ["Pricelist", _t("Pricelist")],
+    ["Items", _t("Items")],
+    ["Tabs", _t("Tabs")],
+    ["Timeline", _t("Timeline")],
+    ["Steps", _t("Steps")],
+    ["Quotes", _t("Quotes")],
+    // Dynamic Content
+    ["Countdown", _t("Countdown")],
+    ["Discussion Group", _t("Discussion Group")],
+    ["Donation", _t("Donation")],
+    ["Dynamic Carousel", _t("Dynamic Carousel")],
+    ["Dynamic Snippet", _t("Dynamic Snippet")],
+    ["Embed Code", _t("Embed Code")],
+    ["Events", _t("Events")],
+    ["Facebook", _t("Facebook")],
+    ["Form", _t("Form")],
+    ["Google Map", _t("Google Map")],
+    ["Map", _t("Map")],
+    ["Newsletter Popup", _t("Newsletter Popup")],
+    ["Popup", _t("Popup")],
+    ["Search", _t("Search")],
+    ["Twitter Scroller", _t("Twitter Scroller")],
+    // Inner content
+    ["Add to Cart Button", _t("Add to Cart Button")],
+    ["Alert", _t("Alert")],
+    ["Badge", _t("Badge")],
+    ["Blockquote", _t("Blockquote")],
+    ["Card", _t("Card")],
+    ["Chart", _t("Chart")],
+    ["Donation Button", _t("Donation Button")],
+    ["Newsletter", _t("Newsletter")],
+    ["Progress Bar", _t("Progress Bar")],
+    ["Rating", _t("Rating")],
+    ["Search", _t("Search")],
+    ["Separator", _t("Separator")],
+    ["Share", _t("Share")],
+    ["Social Media", _t("Social Media")],
+    ["Text Highlight", _t("Text Highlight")],
+]);
 
 /**
  * Management of the overlay and option list for a snippet.
@@ -2833,7 +2905,7 @@ var SnippetsMenu = Widget.extend({
             .addClass('oe_snippet')
             .each((i, el) => {
                 const $snippet = $(el);
-                const name = _.escape(el.getAttribute('name'));
+                const name = escape(snippetThumbnailTitles.get(el.getAttribute('name')));
                 const thumbnailSrc = _.escape(el.dataset.oeThumbnail);
                 const $sbody = $snippet.children().addClass('oe_snippet_body');
                 const isCustomSnippet = !!el.closest('#snippet_custom');
@@ -3040,6 +3112,7 @@ var SnippetsMenu = Widget.extend({
             for (const snippetEl of panelEl.querySelectorAll('.oe_snippet')) {
                 const matches = (isPanelTitleMatch
                     || strMatches(snippetEl.getAttribute('name'))
+                    || strMatches(snippetThumbnailTitles.get(snippetEl.getAttribute('name')))
                     || strMatches(snippetEl.dataset.oeKeywords || ''));
                 if (matches) {
                     hasVisibleSnippet = true;
