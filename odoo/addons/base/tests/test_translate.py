@@ -482,6 +482,37 @@ class TestTranslation(TransactionCase):
         category_in = CategoryEs.search([('name', 'in', ['Customers'])])
         self.assertIn(self.customers, category_in, "Search with 'in' should use the English name if the current language translation is not available")
 
+    def test_111_prefetch_langs(self):
+        category_en = self.customers.with_context(lang='en_US')
+
+        self.env.ref('base.lang_nl').active = True
+        category_nl = category_en.with_context(lang='nl_NL')
+        category_nl.name = 'Klanten'
+
+        self.assertTrue(self.env.ref('base.lang_fr').active)
+        category_fr = category_en.with_context(lang='fr_FR')
+
+        self.assertFalse(self.env.ref('base.lang_zh_CN').active)
+        category_zh = category_en.with_context(lang='zh_CN')
+
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        category_fr.with_context(prefetch_langs=True).name
+        category_nl.name
+        category_en.name
+        category_zh.name
+        category_fr.invalidate_recordset()
+
+        with self.assertQueryCount(1):
+            self.assertEqual(category_fr.with_context(prefetch_langs=True).name, 'Clients')
+
+        with self.assertQueryCount(0):
+            self.assertEqual(category_nl.name, 'Klanten')
+            self.assertEqual(category_en.name, 'Customers')
+            self.assertEqual(category_zh.name, 'Customers')
+
+
     # TODO Currently, the unique constraint doesn't work for translatable field
     # def test_111_unique_en(self):
     #     Country = self.env['res.country']
