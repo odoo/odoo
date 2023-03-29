@@ -100,6 +100,7 @@ export class Composer extends Component {
             },
         });
         this.suggestion = this.store.user ? useSuggestion() : undefined;
+        this.markEventHandled = markEventHandled;
         if (this.props.dropzoneRef && this.allowUpload) {
             useDropzone(
                 this.props.dropzoneRef,

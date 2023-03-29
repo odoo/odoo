@@ -41,6 +41,7 @@
                             t-on-input="onInput"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
+                            t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                             t-on-paste="onPaste"
                             t-model="props.composer.textInputContent"
                             t-att-placeholder="placeholder"

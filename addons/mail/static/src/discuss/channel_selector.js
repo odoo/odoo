@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { cleanTerm } from "@mail/utils/format";
-import { createLocalId, isEventHandled } from "@mail/utils/misc";
+import { createLocalId, isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { _t } from "@web/core/l10n/translation";
 
 export class ChannelSelector extends Component {
@@ -30,10 +30,11 @@ export class ChannelSelector extends Component {
         if (this.props.autofocus) {
             onMounted(() => this.inputRef.el.focus());
         }
+        this.markEventHandled = markEventHandled;
     }
 
-    async fetchSuggestions(term) {
-        const cleanedTerm = cleanTerm(term);
+    async fetchSuggestions() {
+        const cleanedTerm = cleanTerm(this.state.value);
         if (cleanedTerm) {
             if (this.props.category.id === "channels") {
                 const domain = [
@@ -77,6 +78,13 @@ export class ChannelSelector extends Component {
                         classList: "o-mail-ChannelSelector-suggestion",
                         label: this.store.self.name,
                         partner: this.store.self,
+                    });
+                }
+                if (suggestions.length === 0) {
+                    suggestions.push({
+                        classList: "o-mail-ChannelSelector-suggestion",
+                        label: _t("No results found"),
+                        unselectable: true,
                     });
                 }
                 return suggestions;
@@ -184,7 +192,7 @@ export class ChannelSelector extends Component {
                 this.props.category.id === "channels"
                     ? "mail.ChannelSelector.channel"
                     : "mail.ChannelSelector.chat",
-            options: this.fetchSuggestions(this.state.value),
+            options: this.fetchSuggestions(),
         };
     }
 }

@@ -13,7 +13,8 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
-import { markEventHandled } from "../utils/misc";
+import { markEventHandled, isEventHandled } from "../utils/misc";
+import { onExternalClick } from "@mail/utils/hooks";
 
 export class NavigableList extends Component {
     static components = { ImStatus };
@@ -41,6 +42,17 @@ export class NavigableList extends Component {
         this.hotkeysToRemove = [];
 
         useExternalListener(window, "keydown", this.onKeydown, true);
+        onExternalClick("root", async (ev) => {
+            // Let event be handled by bubbling handlers first.
+            await new Promise(setTimeout);
+            if (
+                isEventHandled(ev, "composer.onClickTextarea") ||
+                isEventHandled(ev, "channelSelector.onClickInput")
+            ) {
+                return;
+            }
+            this.close();
+        });
         // position and size
         usePosition(() => this.props.anchorRef, {
             popper: "root",
@@ -72,6 +84,9 @@ export class NavigableList extends Component {
     }
 
     open() {
+        if (this.state.isLoading) {
+            return;
+        }
         this.load().then(() => {
             this.state.open = true;
             this.navigate("first");

@@ -127,7 +127,7 @@ QUnit.test("respond to notification prompt (granted)", async (assert) => {
 QUnit.test("Is closed after clicking on new message", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu-new");
+    await click("button:contains(New Message)");
     assert.containsNone($, ".o-mail-MessagingMenu");
 });
 
@@ -582,7 +582,7 @@ QUnit.test("basic rendering", async (assert) => {
     assert.hasClass($('.o-mail-MessagingMenu button:contains("All")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-MessagingMenu button:contains("Chats")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-MessagingMenu button:contains("Channels")'), "fw-bolder");
-    assert.containsOnce($, ".o-mail-MessagingMenu-new");
+    assert.containsOnce($, "button:contains(New Message)");
     assert.containsOnce($, '.o-mail-MessagingMenu:contains("No conversation yet...")');
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.doesNotHaveClass(
