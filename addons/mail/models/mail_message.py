@@ -871,7 +871,7 @@ class Message(models.Model):
                 })]
             else:
                 vals['author_id'] = author
-            reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [('insert-and-replace', [{
