@@ -113,6 +113,7 @@ Finally, to instruct OpenERP to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """
+import collections
 import collections.abc
 import json
 import logging
@@ -143,7 +144,7 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of')
+                  'child_of', 'parent_of', 'any', 'not any')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -170,6 +171,9 @@ TERM_OPERATORS_NEGATION = {
     'not like': 'like',
     'not ilike': 'ilike',
 }
+ANY_NEGATION = {'any': 'not any', 'not any': 'any'}
+ANY_INSELECT = {'any': 'inselect', 'not any': 'not inselect'}
+ANY_IN = {'any': 'in', 'not any': 'not in'}
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
@@ -178,6 +182,7 @@ TRUE_DOMAIN = [TRUE_LEAF]
 FALSE_DOMAIN = [FALSE_LEAF]
 
 _logger = logging.getLogger(__name__)
+_logger_any = _logger.getChild('any')
 
 
 # --------------------------------------------------
@@ -201,7 +206,10 @@ def normalize_domain(domain):
             expected = 1
         if isinstance(token, (list, tuple)):  # domain term
             expected -= 1
-            token = tuple(token)
+            if len(token) == 3 and token[1].lower() == 'any':
+                token = (token[0], 'any', normalize_domain(token[2]))
+            else:
+                token = tuple(token)
         else:
             expected += op_arity.get(token, 0) - 1
         result.append(token)
@@ -330,6 +338,259 @@ def distribute_not(domain):
 
     return result
 
+def anyfy_domain(domain, model):
+    """
+    Return an optimized domain that uses the ``any`` and ``not any``
+    operators to combine compatible relational leaves together.
+    """
+    # pylint: disable=pointless-string-statement
+
+    _logger_any.debug('domain: %s', domain)
+    """
+    domain
+    an example domain with many OR-ed relational leaves
+    [
+      '&',
+        ('field', 'like', '1'),
+        '|', '|', '|', '|',
+            ('field', 'like', '2'),
+            ('rel.rel.field', '=', '1'),
+            ('rel.field', '=', '1'),
+            ('rel.rel.field', '=', '2'),
+            ('rel.field', '=', '2')
+    ]
+    """
+
+
+    def _anyfy(domain, model):
+        """ Convert each relational leaf into its ``any`` equivalent. """
+
+        domain_any = []
+        for leaf in domain:
+            if is_operator(leaf) or is_boolean(leaf):
+                domain_any.append(leaf)
+                continue
+
+            fname, op, value = leaf
+            path = fname.split('.')
+            field = model._fields.get(path[0])
+
+            if not field:
+                raise ValueError("Invalid field %s.%s in leaf %s" % (model._name, path[0], str(leaf)))
+
+            if len(path) == 1 or field.type == 'properties' or not field.store:
+                domain_any.append(leaf)
+                continue
+
+            new_leaf = [(path.pop(), op, value)]
+            while path:
+                new_leaf = [(path.pop(), 'any', new_leaf)]
+            domain_any.append(new_leaf[0])
+
+        return domain_any
+
+    domain_any = _anyfy(domain, model)
+    _logger_any.debug('domain_any: %s', domain_any)
+    """
+    domain with ``any`` operator for relational fields access
+    [
+        '&',
+            ('field', 'like', '1'),
+            '|', '|', '|', '|',
+                ('field', 'like', '2'),
+                ('rel', 'any', [('rel', 'any', [('field', '=', '1')])]),
+                ('rel', 'any', [('field', '=', '1')]),
+                ('rel', 'any', [('rel', 'any', [('field', '=', '2')])]),
+                ('rel', 'any', [('field', '=', '2')])
+    ]
+    """
+
+
+    def _treeify(domain):
+        """
+        Create a nested tree out of a domain.
+        
+        A nested tree is a 2 (NOT) or 3 (AND/OR) elements tuple where
+        the first element is the operator itself and the following
+        elements are the sub-trees.
+
+        When the domain consist of a single leaf, its tree is a
+        2-elements AND: ('&', leaf).
+        """
+        if len(domain) == 1:
+            fname, op, value = domain[0]
+            if op in ('any', 'not any'):
+                value = _treeify(value)
+            return '&', (fname, op, value)
+
+        nested_tree = []
+        for elem in reversed(domain):
+            if elem == NOT_OPERATOR:
+                domain_op = elem
+                sibling = nested_tree.pop()
+                if is_leaf(sibling) and sibling[1] in ANY_NEGATION:
+                    fname, op, value = sibling
+                    nested_tree.append(('&', (fname, ANY_NEGATION[op], value)))
+                else:
+                    nested_tree.append((domain_op, sibling))
+            elif elem in DOMAIN_OPERATORS:
+                domain_op = elem
+                nested_tree.append((domain_op, nested_tree.pop(), nested_tree.pop()))
+            else:
+                fname, op, value = elem
+                if op in ('any', 'not any'):
+                    nested_tree.append((fname, op, _treeify(value)))
+                else:
+                    nested_tree.append(elem)
+
+        assert len(nested_tree) == 1, str(nested_tree)
+        return nested_tree[0]
+    
+    nested_tree = _treeify(domain_any)
+    _logger_any.debug('nested_tree: %s', nested_tree)
+    """
+    the domain as a nested tree
+    ('&',
+        ('field', 'like', '1'),
+        ('|',
+            ('|',
+                ('|',
+                    ('|',
+                        ('field', 'like', '2'),
+                        ('rel', 'any', [('rel', 'any', [('field', '=', '1')])])),
+                    ('rel', 'any', [('field', '=', '1')])),
+                ('rel', 'any', [('rel', 'any', [('field', '=', '2')])])),
+            ('rel', 'any', [('field', '=', '2')])))
+    """
+
+    def _regroup(domain_op, *siblings):
+        """
+        Create a dense tree out of a nested one.
+
+        A dense tree is a 2-elements tuple where the first element is
+        the operator itself and the second element is a list containing
+        both final leaves and intermediates dense subtrees.
+        """
+        dense_siblings = []
+        for child in siblings:
+            if is_tree(child):
+                subdomain_op, *nested_children = child
+                _, dense_children = _regroup(subdomain_op, *nested_children)
+                if domain_op == subdomain_op and domain_op != NOT_OPERATOR:
+                    dense_siblings.extend(dense_children)
+                else:
+                    dense_siblings.append((subdomain_op, dense_children))
+            else:
+                fname, op, value = child
+                if op in ('any', 'not any'):
+                    dense_siblings.append((fname, op, _regroup(*value)))
+                else:
+                    dense_siblings.append(child)
+        return domain_op, dense_siblings
+
+    dense_tree = _regroup(*nested_tree)
+    _logger_any.debug('dense_tree: %s', dense_tree)
+    """
+    domain tree with operator-grouped predicates
+    ('&', [
+        ('field', 'like', '1'),
+        ('|', [
+            ('field', 'like', '2'),
+            ('rel', 'any', [('field', '=', '1')]),
+            ('rel', 'any', [('field', '=', '2')]),
+            ('rel', 'any', [('rel', 'any', [('field', '=', '1')])]),
+            ('rel', 'any', [('rel', 'any', [('field', '=', '2')])])
+        ])
+    ])
+    """
+
+    def _combine_anys(domain_op, siblings, model):
+        """
+        Combine domains of anies targeting the same relation. In the
+        case of a x2many relation, only OR operators are merged.
+        """
+        combinable_anys = collections.defaultdict(list)
+        uncombinable_anys = []
+        others = []
+
+        for sibling in siblings:
+            if is_tree(sibling) or sibling[1] not in ('any', 'not any'):
+                others.append(sibling)
+            else:
+                fname, any_, subtree = sibling
+                field = model._fields[fname]
+                if domain_op == OR_OPERATOR or (
+                        domain_op == AND_OPERATOR and field.type == 'many2one'
+                    ):
+                    combinable_anys[fname, any_].append(subtree)
+                else:
+                    uncombinable_anys.append(((fname, any_), [subtree]))
+
+        combined_siblings = []
+        for (fname, any_), subtrees in [*uncombinable_anys, *combinable_anys.items()]:
+            comodel = model.env[model._fields[fname].comodel_name]
+            combined_siblings.append((fname, any_, _combine_anys(domain_op, subtrees, comodel)))
+        for other in others:
+            if is_tree(other):
+                combined_siblings.append(_combine_anys(*other, model))
+            else:
+                combined_siblings.append(other)
+
+        return domain_op, combined_siblings
+
+    merged_tree = _combine_anys(*dense_tree, model)
+    _logger_any.debug('merged_tree: %s', merged_tree)
+    """
+    domain as tree with op-grouped predicates and merged anys
+    ('&', [
+        ('field', 'like', '1'),
+        ('|', [
+            ('rel', 'any', ('|', [
+                ('rel', 'any', ('|', [
+                    ('field', '=', '1'),
+                    ('field', '=', '2')
+                ])),
+                ('field', '=', '1'),
+                ('field', '=', '2')
+            ])),
+            ('field', 'like', '2')
+        ])
+    ])
+    """
+
+    def _untreeify(domain_op, children):
+        domain = [domain_op] * (len(children) - (0 if domain_op == NOT_OPERATOR else 1))
+        for child in children:
+            if is_leaf(child):
+                fname, op, value = child
+                if op in ('any', 'not any'):
+                    domain.append((fname, op, _untreeify(*value)))
+                else:
+                    domain.append(child)
+            else:
+                domain.extend(_untreeify(*child))
+        return domain
+
+    new_domain = _untreeify(*merged_tree)
+    _logger_any.debug('new_domain: %s\n', new_domain)
+    """
+    [
+        '&',
+            ('field', 'like', '1'),
+            '|',
+                ('rel', 'any', ['|', '|',
+                    ('rel', 'any', ['|',
+                        ('field', '=', '1'),
+                        ('field', '=', '2')
+                    ]),
+                    ('field', '=', '1'),
+                    ('field', '=', '2')
+                ]),
+                ('field', 'like', '2')
+    ]
+    """
+    return new_domain
+
 
 # --------------------------------------------------
 # Generic leaf manipulation
@@ -392,6 +653,14 @@ def is_boolean(element):
     return element == TRUE_LEAF or element == FALSE_LEAF
 
 
+def is_tree(element):
+    return (
+        type(element) is tuple  # ininstance would be useless
+        and len(element) > 1
+        and element[0] in DOMAIN_OPERATORS
+    )
+
+
 def check_leaf(element, internal=False):
     if not is_operator(element) and not is_leaf(element, internal):
         raise ValueError("Invalid leaf %s" % str(element))
@@ -439,7 +708,18 @@ class expression(object):
         self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
-        self.expression = distribute_not(normalize_domain(domain))
+        domain = normalize_domain(domain)
+
+        # keep anyfying the domain until it cannot be anyfied further
+        guard = 5  # merge at most 5 layers of alternating and/or, for each many2ones
+        new_domain = anyfy_domain(domain, model)
+        while guard and new_domain != domain:
+            guard -= 1
+            domain = new_domain
+            new_domain = anyfy_domain(domain, model)
+
+        domain = distribute_not(domain)
+        self.expression = domain
 
         # this object handles all the joins
         self.query = Query(model.env.cr, model._table, model._table_query) if query is None else query
@@ -660,10 +940,7 @@ class expression(object):
             # -> else: crash
             # ----------------------------------------
 
-            if not field:
-                raise ValueError("Invalid field %s.%s in leaf %s" % (model._name, path[0], str(leaf)))
-
-            elif field.inherited:
+            if field.inherited:
                 parent_model = model.env[field.related_field.model_name]
                 parent_fname = model._inherits[parent_model._name]
                 parent_alias = self.query.left_join(
@@ -742,31 +1019,35 @@ class expression(object):
             #    as after transforming the column, it will go through this loop once again
             # ----------------------------------------
 
-            elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
+            elif operator in ('any', 'not any') and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
                 coalias = self.query.left_join(
-                    alias, path[0], comodel._table, 'id', path[0],
+                    alias, left, comodel._table, 'id', left,
                 )
-                push((path[1], operator, right), comodel, coalias)
+                for leaf in right:
+                    push(leaf, comodel, coalias)
 
-            elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
+            elif operator in ('any', 'not any') and field.store and field.type == 'one2many' and field.auto_join:
                 # use a subquery bypassing access rules and business logic
-                domain = [(path[1], operator, right)] + field.get_domain_list(model)
+                domain = right + field.get_domain_list(model)
                 query = comodel.with_context(**field.context)._where_calc(domain)
                 subquery, subparams = query.select('"%s"."%s"' % (comodel._table, field.inverse_name))
-                push(('id', 'inselect', (subquery, subparams)), model, alias, internal=True)
+                push(('id', ANY_INSELECT[operator], (subquery, subparams)), model, alias, internal=True)
 
-            elif len(path) > 1 and field.store and field.auto_join:
+            elif operator in ('any', 'not any') and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
-            elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)])
-                push((path[0], 'in', right_ids), model, alias)
+            elif operator in ('any', 'not any') and field.store and field.type == 'many2one':
+                right_ids = comodel.with_context(active_test=False)._search(right)
+                push((left, ANY_IN[operator], right_ids), model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
-            elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)])
-                push((path[0], 'in', right_ids), model, alias)
+            elif operator in ('any', 'not any') and field.store and field.type in ('many2many', 'one2many'):
+                right_ids = comodel.with_context(**field.context)._search(right)
+                push((left, ANY_IN[operator], right_ids), model, alias)
+
+            elif operator in ('any', 'not any'):
+                raise NotImplementedError('woof woof')
 
             elif not field.store:
                 # Non-stored field should provide an implementation of search.
@@ -785,7 +1066,7 @@ class expression(object):
                     domain = field.determine_domain(model, operator, right)
                     model._flush_search(domain)
 
-                for elem in normalize_domain(domain):
+                for elem in anyfy_domain(normalize_domain(domain), model):
                     push(elem, model, alias, internal=True)
 
             # -------------------------------------------------

@@ -1107,14 +1107,17 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE (("res_partner"."active" = %s) AND (
-                ("res_partner"."name"::text LIKE %s) AND (
+            WHERE (
+                (
+                    ("res_partner"."active" = %s) AND
+                    ("res_partner"."name"::text LIKE %s)
+                ) AND (
                     ("res_partner"."title" = %s) OR (
                         ("res_partner"."ref" != %s) OR
                         "res_partner"."ref" IS NULL
                     )
                 )
-            ))
+            )
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
             Model.search(domain)
@@ -1861,3 +1864,144 @@ class TestMany2many(TransactionCase):
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id', '=', False)], order='id')
+
+
+
+class TestAny(TransactionCase):
+    def assertDomainEqual(self, domain, anyfied_domain, model_name='res.partner'):
+        # keep anyfying the domain until it cannot be anyfied further
+        guard = 5  # merge at most 5 layers of alternating and/or, for each many2ones
+        new_domain = expression.anyfy_domain(domain, self.env[model_name])
+        while guard and new_domain != domain:
+            guard -= 1
+            domain = new_domain
+            new_domain = expression.anyfy_domain(domain, self.env[model_name])
+        return self.assertEqual(new_domain, anyfied_domain, f'\nFor initial domain: {domain}')
+
+    def test_any_01_single_scalar(self):
+        self.assertDomainEqual([
+            ('name', '=', 'Jack')
+        ], [
+            ('name', '=', 'Jack')
+        ])
+
+    def test_any_02_single_m2o(self):
+        self.assertDomainEqual([
+            ('company_id.name', '=', 'SGC'),
+        ], [
+            ('company_id', 'any', [('name', '=', 'SGC')]),
+        ])
+
+    def test_any_03_single_o2m(self):
+        self.assertDomainEqual([
+            ('child_ids.name', '=', 'Jack'),
+        ], [
+            ('child_ids', 'any', [('name', '=', 'Jack')]),
+        ])
+
+    def test_any_04_or_scalar(self):
+        self.assertDomainEqual([
+            '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ], [
+            '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ])
+
+    def test_any_05_or_m2o(self):
+        self.assertDomainEqual([
+            '|', '|',
+                ('company_id.name', '=', 'SGC'),
+                ('company_id.name', '=', 'NID'),
+                ('company_id.name', '=', 'Free Jaffa Nation'),
+        ], [
+            ('company_id', 'any', [
+                '|', '|',
+                    ('name', '=', 'SGC'),
+                    ('name', '=', 'NID'),
+                    ('name', '=', 'Free Jaffa Nation'),
+            ])
+        ])
+
+    def test_any_06_or_o2m(self):
+        self.assertDomainEqual([
+            '|', '|',
+                ('child_ids.name', '=', 'Jack'),
+                ('child_ids.name', '=', 'Sam'),
+                ('child_ids.name', '=', 'Daniel'),
+        ], [
+            ('child_ids', 'any', [
+                '|', '|',
+                    ('name', '=', 'Jack'),
+                    ('name', '=', 'Sam'),
+                    ('name', '=', 'Daniel'),
+            ])
+        ])
+
+    def test_any_07_not_scalar(self):
+        self.assertDomainEqual([
+            '!', ('name', '=', 'Jack')
+        ], [
+            '!', ('name', '=', 'Jack')
+        ])
+
+    def test_any_08_not_m2o(self):
+        self.assertDomainEqual([
+            '!', ('company_id.name', '=', 'SGC')
+        ], [
+            ('company_id', 'not any', [('name', '=', 'SGC')])
+        ])
+
+    def test_any_09_not_o2m(self):
+        self.assertDomainEqual([
+            '!', ('child_ids.name', '=', 'Jack')
+        ], [
+            ('child_ids', 'not any', [('name', '=', 'Jack')])
+        ])
+
+    def test_any_10_not_or_scalar(self):
+        self.assertDomainEqual([
+            '!', '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ], [
+            '!', '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ])
+
+    def test_any_11_not_or_m2o(self):
+        self.assertDomainEqual([
+            '!', '|', '|',
+                ('company_id.name', '=', 'SGC'),
+                ('company_id.name', '=', 'NID'),
+                ('company_id.name', '=', 'Free Jaffa Nation'),
+        ], [
+            ('company_id', 'not any', [
+                '|', '|',
+                    ('name', '=', 'SGC'),
+                    ('name', '=', 'NID'),
+                    ('name', '=', 'Free Jaffa Nation'),
+            ])
+        ])
+
+    def test_any_12_not_or_o2m(self):
+        self.assertDomainEqual([
+            '!', '|', '|',
+                ('child_ids.name', '=', 'Jack'),
+                ('child_ids.name', '=', 'Sam'),
+                ('child_ids.name', '=', 'Daniel'),
+        ], [
+            ('child_ids', 'not any', [
+                '|', '|',
+                    ('name', '=', 'Jack'),
+                    ('name', '=', 'Sam'),
+                    ('name', '=', 'Daniel'),
+            ])
+        ])
