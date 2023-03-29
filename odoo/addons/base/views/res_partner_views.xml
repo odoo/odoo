@@ -481,16 +481,23 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
                                 <t t-if="!record.is_company.raw_value">
-                                    <t t-set="background_image" t-value="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
-                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
+                                    <t t-set="avatar_image" t-value="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                    <div class="o_kanban_image_fill_left d-none d-md-block">
+                                        <img t-attf-src="#{avatar_image}" t-att-alt="record.id.value"/>
                                         <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
                                     </div>
-                                    <div class="o_kanban_image d-md-none" t-attf-style="background-image: url(#{background_image})">
+                                    <div class="o_kanban_image d-md-none d-block">
+                                        <img t-attf-src="#{avatar_image}" t-att-alt="record.id.value"/>
                                         <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
                                     </div>
                                 </t>
                                 <t t-else="">
-                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)})" role="img"/>
+                                    <div class="o_kanban_image_fill_left d-none d-md-block o_kanban_image_full">
+                                        <img t-attf-src="#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
+                                    </div>
+                                    <div class="o_kanban_image d-md-none d-block o_kanban_image_full">
+                                        <img  t-attf-src="#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
+                                    </div>
                                 </t>
                                 <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
                                     <span class="bg-danger">Archived</span>

@@ -235,14 +235,14 @@
                                 <t t-set="placeholder" t-value="'/website_slides/static/src/img/channel-training-default.jpg'"/>
                                 <t t-if="record.image_128.raw_value" t-set="image" t-value="kanban_image('slide.slide', 'image_128', record.id.raw_value, placeholder)"/>
                                 <t t-else="" t-set="image" t-value="'/website_slides/static/src/img/channel-training-default.jpg'"/>
-                                <div class="o_kanban_image_fill_left d-none d-md-block"
-                                    t-attf-style="background-image:url('#{image}')">
+                                <div class="o_kanban_image_fill_left d-none d-md-block">
+                                    <img t-attf-src="#{image}" t-att-alt="record.id.value"/>
                                     <img class="o_kanban_image_inner_pic"
                                         t-att-alt="record.channel_id.value"
                                         t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
                                 </div>
-                                <div class="o_kanban_image rounded-circle d-md-none"
-                                    t-attf-style="background-image:url('#{image}')">
+                                <div class="o_kanban_image d-md-none">
+                                    <img class="rounded-circle" t-attf-src="#{image}" t-att-alt="record.id.value"/>
                                     <img class="o_kanban_image_inner_pic"
                                         t-att-alt="record.channel_id.value"
                                         t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
