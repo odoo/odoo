@@ -11,6 +11,7 @@ import {
     nextTick,
     triggerEvent,
     mockTimeout,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
@@ -413,6 +414,58 @@ QUnit.module("ViewDialogs", (hooks) => {
             ["Foo"]
         );
     });
+
+    QUnit.test(
+        "Export dialog: interacting with export templates in debug",
+        async function (assert) {
+            assert.expect(3);
+
+            patchWithCleanup(odoo, { debug: "1" });
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+                actionMenus: {},
+                mockRPC(route, args) {
+                    if (args.method === "search_read") {
+                        return Promise.resolve([{ id: 1, name: "Activities template" }]);
+                    }
+                    if (route === "/web/export/namelist") {
+                        if (args.export_id === 1) {
+                            return Promise.resolve([{ name: "activity_ids", label: "Activities" }]);
+                        }
+                        return Promise.resolve([]);
+                    }
+                    if (route === "/web/export/formats") {
+                        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                    }
+                    if (route === "/web/export/get_fields") {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                },
+            });
+
+            await openExportDataDialog();
+            assert.strictEqual(
+                target.querySelector(".o_fields_list .o_export_field").textContent,
+                "Foo (foo)"
+            );
+
+            // load a template which contains the activity_ids field
+            await editSelect(target, ".o_exported_lists_select", "1");
+            assert.containsOnce(
+                target,
+                ".o_fields_list .o_export_field",
+                "only one field is present for the selected template"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_fields_list .o_export_field").textContent,
+                "Activities (activity_ids)"
+            );
+        }
+    );
 
     QUnit.test("Export dialog: interacting with available fields", async function (assert) {
         assert.expect(9);
