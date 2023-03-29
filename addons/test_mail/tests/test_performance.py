@@ -401,7 +401,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=48, employee=48):  # tm+com 46/46
+        with self.assertQueryCount(admin=49, employee=49):  # tm+com 46/46
             composer._action_send_mail()
 
         # notifications
@@ -1228,7 +1228,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         """
         messages_all = self.messages_all.with_env(self.env)
 
-        with self.assertQueryCount(employee=24):  # test_mail: 24
+        with self.assertQueryCount(employee=25):  # test_mail: 24
             res = messages_all.message_format()
 
         self.assertEqual(len(res), 2*2)
@@ -1241,7 +1241,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
     def test_message_format_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=21):  # test_mail: 21
+        with self.assertQueryCount(employee=22):  # test_mail: 21
             res = message.message_format()
 
         self.assertEqual(len(res), 1)

@@ -92,7 +92,7 @@
                 <AttachmentList
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
-                    unlinkAttachment="attachmentUploader.unlink"
+                    unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
                     imagesHeight="50"/>
                 <EmojiPicker t-if="ui.isSmall and state.keyboard === KEYBOARD.EMOJI" className="'o-mail-Composer-bottomPicker w-100'" onSelect="(str) => this.addEmoji(str)"/>
             </div>

@@ -126,6 +126,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
             'mail/static/lib/**/*',
+            ('remove', 'mail/static/lib/lame/lame.js'),
             'mail/static/src/js/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/web/**/*',
@@ -160,7 +161,9 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/tests/tours/**/*'),
             ('remove', 'mail/static/tests/helpers/**/*'),
         ],
-
+        'mail.assets_lamejs': [
+            'mail/static/lib/lame/lame.js',
+        ],
         'mail.assets_public': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
@@ -181,7 +184,6 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/js/owl_compatibility.js',
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/utils.js',
-
             'mail/static/src/core/common/**/*',
             # 'mail/static/src/core/public/**/*',
             'mail/static/src/**/common/**/*',

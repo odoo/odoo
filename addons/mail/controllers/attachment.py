@@ -32,14 +32,8 @@ class AttachmentController(http.Controller):
             vals["access_token"] = env["ir.attachment"]._generate_access_token()
         try:
             attachment = env["ir.attachment"].create(vals)
-            attachment._post_add_create()
-            attachmentData = {
-                "filename": ufile.filename,
-                "id": attachment.id,
-                "mimetype": attachment.mimetype,
-                "name": attachment.name,
-                "size": attachment.file_size,
-            }
+            attachment._post_add_create(**kwargs)
+            attachmentData = attachment._attachment_format()[0]
             if attachment.access_token:
                 attachmentData["accessToken"] = attachment.access_token
         except AccessError:
