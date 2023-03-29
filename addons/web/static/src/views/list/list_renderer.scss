@@ -73,7 +73,7 @@
         }
 
         tbody > tr > td:not(.o_list_record_selector) {
-            &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove) {
+            &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove):not(.o_list_record_open_form_view) {
                 @include o-text-overflow(table-cell);
                 &.o_list_text {
                     white-space: pre-wrap;
@@ -148,7 +148,7 @@
             width: 40px !important; // Force to 40px regardless by the font-size
         }
 
-        .o_list_record_remove, .o_handle_cell {
+        .o_list_record_remove, .o_handle_cell, .o_list_record_open_form_view {
             width: 1px;  // to prevent the column to expand
         }
 
@@ -159,12 +159,16 @@
             }
         }
 
-        .o_list_record_remove button {
+        .o_list_record_remove button, .o_list_record_open_form_view button {
             padding: 0px;
             background: none;
             border-style: none;
             display: table-cell;
             cursor: pointer;
+        }
+
+        .o_list_record_remove button, button {
+            padding-top: 5px;
         }
 
         .o_keyboard_navigation {
@@ -259,8 +263,14 @@
             cursor: col-resize;
         }
 
+        .o_list_open_form_view {
+            width: 64px;
+            min-width: 64px
+        }
+
         .o_list_actions_header {
             width: 32px;
+            min-width: 32px
         }
 
         .o_data_row.o_list_no_open {
