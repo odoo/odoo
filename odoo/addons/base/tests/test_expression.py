@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import collections
+import textwrap
 import unittest
+from ast import literal_eval
 from unittest.mock import patch
 
 import psycopg2
@@ -8,7 +11,7 @@ import psycopg2
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Date
 from odoo.models import BaseModel
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import mute_logger
 from odoo.osv import expression
 from odoo import Command
@@ -771,19 +774,19 @@ class TestExpression(SavepointCaseWithUserDemo):
         """ verify that invalid expressions are refused, even for magic fields """
         Country = self.env['res.country']
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, r"^Invalid field res\.country\.does_not_exist in leaf \('does_not_exist', '=', 'foo'\)$"):
             Country.search([('does_not_exist', '=', 'foo')])
 
-        with self.assertRaises(KeyError):
+        with self.assertRaisesRegex(KeyError, r"^'does_not_exist'$"):
             Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, r"^Invalid leaf \('create_date', '>>', 'foo'\)$"):
             Country.search([('create_date', '>>', 'foo')])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, r"^stray % in format '%'$"):
             Country.search([]).filtered_domain([('create_date', '>>', 'foo')])
 
-        with self.assertRaises(psycopg2.DataError):
+        with self.assertRaisesRegex(psycopg2.DataError, r"invalid input syntax"):
             Country.search([('create_date', '=', "1970-01-01'); --")])
 
     def test_active(self):
@@ -1107,14 +1110,17 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE (("res_partner"."active" = %s) AND (
-                ("res_partner"."name"::text LIKE %s) AND (
+            WHERE (
+                (
+                    ("res_partner"."active" = %s) AND
+                    ("res_partner"."name"::text LIKE %s)
+                ) AND (
                     ("res_partner"."title" = %s) OR (
                         ("res_partner"."ref" != %s) OR
                         "res_partner"."ref" IS NULL
                     )
                 )
-            ))
+            )
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
             Model.search(domain)
@@ -1627,16 +1633,16 @@ class TestOne2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE ("res_partner"."id" IN (
-                SELECT "res_partner"."parent_id"
-                FROM "res_partner"
-                WHERE (("res_partner"."id" IN (
-                    SELECT "res_partner_bank"."partner_id"
-                    FROM "res_partner_bank"
-                    WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                )) AND ("res_partner"."active" = %s))
-            ))
-            ORDER BY "res_partner"."display_name", "res_partner"."id"
+            WHERE ("res_partner"."id" IN
+                     (SELECT "res_partner"."parent_id"
+                      FROM "res_partner"
+                      WHERE (("res_partner"."active" = %s) AND ("res_partner"."id" IN
+                                (SELECT "res_partner_bank"."partner_id"
+                                 FROM "res_partner_bank"
+                                 WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)))
+                             )))
+            ORDER BY "res_partner"."display_name",
+                     "res_partner"."id"
         ''']):
             self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
 
@@ -1653,6 +1659,8 @@ class TestOne2many(TransactionCase):
                 SELECT "res_partner"."parent_id"
                 FROM "res_partner"
                 WHERE ((
+                    ("res_partner"."name" != %s) OR "res_partner"."name" IS NULL
+                ) AND (
                     "res_partner"."id" IN (
                         SELECT "res_partner_bank"."partner_id"
                         FROM "res_partner_bank"
@@ -1662,8 +1670,6 @@ class TestOne2many(TransactionCase):
                             "res_partner_bank"."sanitized_acc_number"::text LIKE %s
                         ))
                     )
-                ) AND (
-                    ("res_partner"."name" != %s) OR "res_partner"."name" IS NULL
                 ))
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
@@ -1687,9 +1693,9 @@ class TestOne2many(TransactionCase):
                 LEFT JOIN "res_country" AS "res_partner__state_id__country_id"
                     ON ("res_partner__state_id"."country_id" = "res_partner__state_id__country_id"."id")
                 WHERE ((
-                    "res_partner__state_id__country_id"."code"::text LIKE %s
-                ) AND (
                     "res_partner"."active" = %s
+                ) AND (
+                    "res_partner__state_id__country_id"."code"::text LIKE %s
                 ))
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
@@ -1864,3 +1870,215 @@ class TestMany2many(TransactionCase):
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id', '=', False)], order='id')
+
+
+
+class TestAnyfy(TransactionCase):
+    def _test_combine_anies(self, domain, expected):
+        anyfied_domain = expression.domain_combine_anies(domain, self.env['res.partner'])
+        return self.assertEqual(anyfied_domain, expected,
+                                f'\nFor initial domain: {domain}\nBecame: {anyfied_domain}')
+
+    def test_true_leaf_as_list(self):
+        self._test_combine_anies([
+            [1, '=', 1]
+        ], [
+            (1, '=', 1)
+        ])
+
+    def test_single_field(self):
+        self._test_combine_anies([
+            ('name', '=', 'Jack')
+        ], [
+            ('name', '=', 'Jack')
+        ])
+
+    def test_single_many2one_with_subfield(self):
+        self._test_combine_anies([
+            ('company_id.name', '=', 'SGC'),
+        ], [
+            ('company_id', 'any', [('name', '=', 'SGC')]),
+        ])
+
+    def test_single_one2many_with_subfield(self):
+        self._test_combine_anies([
+            ('child_ids.name', '=', 'Jack'),
+        ], [
+            ('child_ids', 'any', [('name', '=', 'Jack')]),
+        ])
+
+    def test_and_multiple_fields(self):
+        self._test_combine_anies([
+            '&', '&',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ], [
+            '&', '&',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ])
+
+    def test_or_multiple_fields(self):
+        self._test_combine_anies([
+            '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ], [
+            '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ])
+
+    def test_and_multiple_many2one_with_subfield(self):
+        self._test_combine_anies([
+            '&', '&',
+                ('company_id.name', '=', 'SGC'),
+                ('company_id.name', '=', 'NID'),
+                ('company_id.name', '=', 'Free Jaffa Nation'),
+        ], [
+            ('company_id', 'any', [
+                '&', '&',
+                    ('name', '=', 'SGC'),
+                    ('name', '=', 'NID'),
+                    ('name', '=', 'Free Jaffa Nation'),
+            ])
+        ])
+
+    def test_or_multiple_many2one_with_subfield(self):
+        self._test_combine_anies([
+            '|', '|',
+                ('company_id.name', '=', 'SGC'),
+                ('company_id.name', '=', 'NID'),
+                ('company_id.name', '=', 'Free Jaffa Nation'),
+        ], [
+            ('company_id', 'any', [
+                '|', '|',
+                    ('name', '=', 'SGC'),
+                    ('name', '=', 'NID'),
+                    ('name', '=', 'Free Jaffa Nation'),
+            ])
+        ])
+
+    def test_and_multiple_one2many_with_subfield(self):
+        self._test_combine_anies([
+            '&', '&',
+                ('child_ids.name', '=', 'Jack'),
+                ('child_ids.name', '=', 'Sam'),
+                ('child_ids.name', '=', 'Daniel'),
+        ], [
+            '&', '&',
+            ('child_ids', 'any', [('name', '=', 'Jack')]),
+            ('child_ids', 'any', [('name', '=', 'Sam')]),
+            ('child_ids', 'any', [('name', '=', 'Daniel')]),
+        ])
+
+    def test_or_multiple_one2many_with_subfield(self):
+        self._test_combine_anies([
+            '|', '|',
+                ('child_ids.name', '=', 'Jack'),
+                ('child_ids.name', '=', 'Sam'),
+                ('child_ids.name', '=', 'Daniel'),
+        ], [
+            ('child_ids', 'any', [
+                '|', '|',
+                    ('name', '=', 'Jack'),
+                    ('name', '=', 'Sam'),
+                    ('name', '=', 'Daniel'),
+            ])
+        ])
+
+    def test_not_single_field(self):
+        self._test_combine_anies([
+            '!', ('name', '=', 'Jack')
+        ], [
+            ('name', '!=', 'Jack')
+        ])
+
+    def test_not_single_many2one_with_subfield(self):
+        self._test_combine_anies([
+            '!', ('company_id.name', '=', 'SGC')
+        ], [
+            ('company_id', 'not any', [('name', '=', 'SGC')])
+        ])
+
+    def test_not_single_one2many_with_subfield(self):
+        self._test_combine_anies([
+            '!', ('child_ids.name', '=', 'Jack')
+        ], [
+            ('child_ids', 'not any', [('name', '=', 'Jack')])
+        ])
+
+    def test_not_or_multiple_fields(self):
+        self._test_combine_anies([
+            '!', '|', '|',
+                ('name', '=', 'Jack'),
+                ('name', '=', 'Sam'),
+                ('name', '=', 'Daniel'),
+        ], [
+            '&', '&',
+                ('name', '!=', 'Jack'),
+                ('name', '!=', 'Sam'),
+                ('name', '!=', 'Daniel'),
+        ])
+
+    def test_not_and_multiple_many2one_field_with_subfield(self):
+        self._test_combine_anies([
+            '!', '&', '&',
+                ('company_id.name', '=', 'SGC'),
+                ('company_id.name', '=', 'NID'),
+                ('company_id.name', '=', 'Free Jaffa Nation'),
+        ], [
+            ('company_id', 'not any', [
+                '&', '&',
+                    ('name', '=', 'SGC'),
+                    ('name', '=', 'NID'),
+                    ('name', '=', 'Free Jaffa Nation'),
+            ])
+        ])
+
+    def test_not_or_multiple_many2one_field_with_subfield(self):
+        self._test_combine_anies([
+            '!', '|', '|',
+                ('company_id.name', '=', 'SGC'),
+                ('company_id.name', '=', 'NID'),
+                ('company_id.name', '=', 'Free Jaffa Nation'),
+        ], [
+            ('company_id', 'not any', [
+                '|', '|',
+                    ('name', '=', 'SGC'),
+                    ('name', '=', 'NID'),
+                    ('name', '=', 'Free Jaffa Nation'),
+            ])
+        ])
+
+    def test_not_and_multiple_one2many_field_with_subfield(self):
+        self._test_combine_anies([
+            '!', '&', '&',
+                ('child_ids.name', '=', 'Jack'),
+                ('child_ids.name', '=', 'Sam'),
+                ('child_ids.name', '=', 'Daniel'),
+        ], [
+            '|', '|',
+                ('child_ids', 'not any', [('name', '=', 'Jack')]),
+                ('child_ids', 'not any', [('name', '=', 'Sam')]),
+                ('child_ids', 'not any', [('name', '=', 'Daniel')]),
+        ])
+
+    def test_not_or_multiple_one2many_field_with_subfield(self):
+        self._test_combine_anies([
+            '!', '|', '|',
+                ('child_ids.name', '=', 'Jack'),
+                ('child_ids.name', '=', 'Sam'),
+                ('child_ids.name', '=', 'Daniel'),
+        ], [
+            ('child_ids', 'not any', [
+                '|', '|',
+                    ('name', '=', 'Jack'),
+                    ('name', '=', 'Sam'),
+                    ('name', '=', 'Daniel'),
+            ])
+        ])

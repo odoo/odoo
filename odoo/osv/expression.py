@@ -113,6 +113,7 @@ Finally, to instruct OpenERP to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """
+import collections
 import collections.abc
 import json
 import logging
@@ -143,7 +144,7 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of')
+                  'child_of', 'parent_of', 'any', 'not any')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -169,7 +170,11 @@ TERM_OPERATORS_NEGATION = {
     'not in': 'in',
     'not like': 'like',
     'not ilike': 'ilike',
+    'any': 'not any',
+    'not any': 'any',
 }
+ANY_INSELECT = {'any': 'inselect', 'not any': 'not inselect'}
+ANY_IN = {'any': 'in', 'not any': 'not in'}
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
@@ -201,7 +206,10 @@ def normalize_domain(domain):
             expected = 1
         if isinstance(token, (list, tuple)):  # domain term
             expected -= 1
-            token = tuple(token)
+            if len(token) == 3 and token[1] in ('any', 'not any'):
+                token = (token[0], token[1], normalize_domain(token[2]))
+            else:
+                token = tuple(token)
         else:
             expected += op_arity.get(token, 0) - 1
         result.append(token)
@@ -331,6 +339,248 @@ def distribute_not(domain):
     return result
 
 
+def _anyfy_leaves(domain, model):
+    """ Return the domain where all conditions on field sequences have been
+    transformed into 'any' conditions.
+    """
+    result = []
+    for item in domain:
+        if is_operator(item):
+            result.append(item)
+            continue
+
+        left, operator, right = item = tuple(item)
+        if is_boolean(item):
+            result.append(item)
+            continue
+
+        path = left.split('.', 1)
+        field = model._fields.get(path[0])
+        if not field:
+            raise ValueError(f"Invalid field {model._name}.{path[0]} in leaf {item}")
+        if len(path) > 1 and field.relational:  # skip properties
+            subdomain = [(path[1], operator, right)]
+            comodel = model.env[field.comodel_name]
+            result.append((path[0], 'any', _anyfy_leaves(subdomain, comodel)))
+        elif operator in ('any', 'not any'):
+            comodel = model.env[field.comodel_name]
+            result.append((left, operator, _anyfy_leaves(right, comodel)))
+        else:
+            result.append(item)
+
+    return result
+
+
+def _tree_from_domain(domain):
+    """ Return the domain as a tree, with the following structure::
+
+        <tree> ::= ('?', <boolean>)
+                |  ('!', <tree>)
+                |  ('&', <tree>, <tree>, ...)
+                |  ('|', <tree>, <tree>, ...)
+                |  (<comparator>, <fname>, <value>)
+
+    By construction, AND (``&``) and OR (``|``) nodes are n-ary and have at
+    least two children.  Moreover, AND nodes (respectively OR nodes) do not have
+    AND nodes (resp. OR nodes) in their children.
+    """
+    stack = []
+    for item in reversed(domain):
+        if item == '!':
+            stack.append(_tree_not(stack.pop()))
+        elif item == '&':
+            stack.append(_tree_and((stack.pop(), stack.pop())))
+        elif item == '|':
+            stack.append(_tree_or((stack.pop(), stack.pop())))
+        elif item == TRUE_LEAF:
+            stack.append(('?', True))
+        elif item == FALSE_LEAF:
+            stack.append(('?', False))
+        else:
+            lhs, comparator, rhs = item
+            if comparator in ('any', 'not any'):
+                rhs = _tree_from_domain(rhs)
+            stack.append((comparator, lhs, rhs))
+    return _tree_and(reversed(stack))
+
+
+def _tree_not(tree):
+    """ Negate a tree node. """
+    if tree[0] == '?':
+        return ('?', not tree[1])
+    if tree[0] == '!':
+        return tree[1]
+    if tree[0] == '&':
+        return ('|', *(_tree_not(item) for item in tree[1:]))
+    if tree[0] == '|':
+        return ('&', *(_tree_not(item) for item in tree[1:]))
+    if tree[0] in TERM_OPERATORS_NEGATION:
+        return (TERM_OPERATORS_NEGATION[tree[0]], tree[1], tree[2])
+    return ('!', tree)
+
+
+def _tree_and(trees):
+    """ Return the tree given by AND-ing all the given trees. """
+    children = []
+    for tree in trees:
+        if tree == ('?', True):
+            pass
+        elif tree == ('?', False):
+            return tree
+        elif tree[0] == '&':
+            children.extend(tree[1:])
+        else:
+            children.append(tree)
+    if not children:
+        return ('?', True)
+    if len(children) == 1:
+        return children[0]
+    return ('&', *children)
+
+
+def _tree_or(trees):
+    """ Return the tree given by OR-ing all the given trees. """
+    children = []
+    for tree in trees:
+        if tree == ('?', True):
+            return tree
+        elif tree == ('?', False):
+            pass
+        elif tree[0] == '|':
+            children.extend(tree[1:])
+        else:
+            children.append(tree)
+    if not children:
+        return ('?', False)
+    if len(children) == 1:
+        return children[0]
+    return ('|', *children)
+
+
+def _tree_combine_anies(tree, model):
+    """ Return the tree given by recursively merging 'any' and 'not any' nodes,
+    according to the following logical equivalences:
+
+     * (fname ANY dom1) OR (fname ANY dom2) == (fname ANY (dom1 OR dom2))
+
+     * (fname NOT ANY dom1) AND (fname NOT ANY dom2) == (fname NOT ANY (dom1 OR dom2))
+
+    We also merge 'any' and 'not any' nodes according to the following logical
+    equivalences *for many2one fields only*:
+
+     * (fname NOT ANY dom1) OR (fname NOT ANY dom2) == (fname NOT ANY (dom1 AND dom2))
+
+     * (fname ANY dom1) AND (fname ANY dom2) == (fname ANY (dom1 AND dom2))
+
+    """
+
+    # first proceed recursively on subtrees
+    if tree[0] == '!':
+        tree = _tree_not(_tree_combine_anies(tree[1], model))
+    elif tree[0] == '&':
+        temp = [_tree_combine_anies(subtree, model) for subtree in tree[1:]]
+        tree = _tree_and(temp)
+    elif tree[0] == '|':
+        temp = [_tree_combine_anies(subtree, model) for subtree in tree[1:]]
+        tree = _tree_or(temp)
+
+    # proceed recursively on subdomains
+    if tree[0] == 'any':
+        field = model._fields[tree[1]]
+        comodel = model.env[field.comodel_name]
+        return ('any', tree[1], _tree_combine_anies(tree[2], comodel))
+
+    if tree[0] == 'not any':
+        field = model._fields[tree[1]]
+        comodel = model.env[field.comodel_name]
+        return ('not any', tree[1], _tree_combine_anies(tree[2], comodel))
+
+    if tree[0] not in ('&', '|'):
+        return tree
+
+    # tree is either an '&' or an '|' tree; group leaves using 'any' or 'not any'
+    children = []
+    any_children = collections.defaultdict(list)
+    not_any_children = collections.defaultdict(list)
+    for subtree in tree[1:]:
+        if subtree[0] == 'any':
+            any_children[subtree[1]].append(subtree[2])
+        elif subtree[0] == 'not any':
+            not_any_children[subtree[1]].append(subtree[2])
+        else:
+            children.append(subtree)
+
+    if tree[0] == '&':
+        # merge subdomains where possible
+        for fname, subtrees in any_children.items():
+            field = model._fields[fname]
+            comodel = model.env[field.comodel_name]
+            if field.type == 'many2one' and len(subtrees) > 1:
+                # (fname ANY dom1) AND (fname ANY dom2) == (fname ANY (dom1 AND dom2))
+                children.append(('any', fname, _tree_combine_anies(_tree_and(subtrees), comodel)))
+            else:
+                for subtree in subtrees:
+                    children.append(('any', fname, _tree_combine_anies(subtree, comodel)))
+
+        for fname, subtrees in not_any_children.items():
+            # (fname NOT ANY dom1) AND (fname NOT ANY dom2) == (fname NOT ANY (dom1 OR dom2))
+            field = model._fields[fname]
+            comodel = model.env[field.comodel_name]
+            children.append(('not any', fname, _tree_combine_anies(_tree_or(subtrees), comodel)))
+
+        return _tree_and(children)
+
+    else:
+        # merge subdomains where possible
+        for fname, subtrees in any_children.items():
+            # (fname ANY dom1) OR (fname ANY dom2) == (fname ANY (dom1 OR dom2))
+            field = model._fields[fname]
+            comodel = model.env[field.comodel_name]
+            children.append(('any', fname, _tree_combine_anies(_tree_or(subtrees), comodel)))
+
+        for fname, subtrees in not_any_children.items():
+            field = model._fields[fname]
+            comodel = model.env[field.comodel_name]
+            if field.type == 'many2one' and len(subtrees) > 1:
+                # (fname NOT ANY dom1) OR (fname NOT ANY dom2) == (fname NOT ANY (dom1 AND dom2))
+                children.append(('not any', fname, _tree_combine_anies(_tree_and(subtrees), comodel)))
+            else:
+                for subtree in subtrees:
+                    children.append(('not any', fname, _tree_combine_anies(subtree, comodel)))
+
+        return _tree_or(children)
+
+
+def _tree_as_domain(tree):
+    """ Return the domain list represented by the given domain tree. """
+    def _flatten(tree):
+        if tree[0] == '?':
+            yield TRUE_LEAF if tree[1] else FALSE_LEAF
+        elif tree[0] == '!':
+            yield tree[0]
+            yield from _flatten(tree[1])
+        elif tree[0] in ('&', '|'):
+            yield from tree[0] * (len(tree) - 2)
+            for subtree in tree[1:]:
+                yield from _flatten(subtree)
+        elif tree[0] in ('any', 'not any'):
+            yield (tree[1], tree[0], _tree_as_domain(tree[2]))
+        else:
+            yield (tree[1], tree[0], tree[2])
+
+    return list(_flatten(tree))
+
+
+def domain_combine_anies(domain, model):
+    """ Return a domain equivalent to the given one where 'any' and 'not any'
+    conditions have been combined in order to generate less subqueries.
+    """
+    domain_any = _anyfy_leaves(domain, model)
+    tree = _tree_from_domain(domain_any)
+    merged_tree = _tree_combine_anies(tree, model)
+    new_domain = _tree_as_domain(merged_tree)
+    return new_domain
+
 # --------------------------------------------------
 # Generic leaf manipulation
 # --------------------------------------------------
@@ -439,7 +689,7 @@ class expression(object):
         self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
-        self.expression = distribute_not(normalize_domain(domain))
+        self.expression = domain_combine_anies(domain, model)
 
         # this object handles all the joins
         self.query = Query(model.env.cr, model._table, model._table_query) if query is None else query
@@ -660,10 +910,7 @@ class expression(object):
             # -> else: crash
             # ----------------------------------------
 
-            if not field:
-                raise ValueError("Invalid field %s.%s in leaf %s" % (model._name, path[0], str(leaf)))
-
-            elif field.inherited:
+            if field.inherited:
                 parent_model = model.env[field.related_field.model_name]
                 parent_fname = model._inherits[parent_model._name]
                 parent_alias = self.query.left_join(
@@ -742,31 +989,36 @@ class expression(object):
             #    as after transforming the column, it will go through this loop once again
             # ----------------------------------------
 
-            elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
+            elif operator in ('any', 'not any') and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
                 coalias = self.query.left_join(
-                    alias, path[0], comodel._table, 'id', path[0],
+                    alias, left, comodel._table, 'id', left,
                 )
-                push((path[1], operator, right), comodel, coalias)
 
-            elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
+                if operator == 'not any':
+                    right = ['!', *right]
+
+                for leaf in right:
+                    push(leaf, comodel, coalias)
+
+            elif operator in ('any', 'not any') and field.store and field.type == 'one2many' and field.auto_join:
                 # use a subquery bypassing access rules and business logic
-                domain = [(path[1], operator, right)] + field.get_domain_list(model)
+                domain = right + field.get_domain_list(model)
                 query = comodel.with_context(**field.context)._where_calc(domain)
                 subquery, subparams = query.select('"%s"."%s"' % (comodel._table, field.inverse_name))
-                push(('id', 'inselect', (subquery, subparams)), model, alias, internal=True)
+                push(('id', ANY_INSELECT[operator], (subquery, subparams)), model, alias, internal=True)
 
-            elif len(path) > 1 and field.store and field.auto_join:
+            elif operator in ('any', 'not any') and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
-            elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)])
-                push((path[0], 'in', right_ids), model, alias)
+            elif operator in ('any', 'not any') and field.store and field.type == 'many2one':
+                right_ids = comodel.with_context(active_test=False)._search(right)
+                push((left, ANY_IN[operator], right_ids), model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
-            elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)])
-                push((path[0], 'in', right_ids), model, alias)
+            elif operator in ('any', 'not any') and field.store and field.type in ('many2many', 'one2many'):
+                right_ids = comodel.with_context(**field.context)._search(right)
+                push((left, ANY_IN[operator], right_ids), model, alias)
 
             elif not field.store:
                 # Non-stored field should provide an implementation of search.
@@ -785,7 +1037,7 @@ class expression(object):
                     domain = field.determine_domain(model, operator, right)
                     model._flush_search(domain)
 
-                for elem in normalize_domain(domain):
+                for elem in domain_combine_anies(domain, model):
                     push(elem, model, alias, internal=True)
 
             # -------------------------------------------------

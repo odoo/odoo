@@ -128,6 +128,9 @@ class IrActionsReport(models.Model):
             names = self.env['ir.model'].name_search(value, operator=operator)
             ir_model_ids = [n[0] for n in names]
 
+        elif operator in ('any', 'not any'):
+            ir_model_ids = self.env['ir.model']._search(value)
+
         elif isinstance(value, Iterable):
             ir_model_ids = value
 
