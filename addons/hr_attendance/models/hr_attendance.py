@@ -251,7 +251,13 @@ class HrAttendance(models.Model):
                                 pre_work_time += (min(planned_start_dt, local_check_out) - local_check_in).total_seconds() / 3600.0
                             # Interval inside the working hours -> Considered as working time
                             if local_check_in <= planned_end_dt and local_check_out >= planned_start_dt:
-                                work_duration += (min(planned_end_dt, local_check_out) - max(planned_start_dt, local_check_in)).total_seconds() / 3600.0
+                                start_dt = max(planned_start_dt, local_check_in)
+                                stop_dt = min(planned_end_dt, local_check_out)
+                                work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
+                                # remove lunch time from work duration
+                                lunch_intervals = calendar._attendance_intervals_batch(start_dt, stop_dt, emp.resource_id, lunch=True)
+                                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals[emp.resource_id.id])
+
                             # There is an overtime at the end of the day
                             if local_check_out > planned_end_dt:
                                 post_work_time += (local_check_out - max(planned_end_dt, local_check_in)).total_seconds() / 3600.0

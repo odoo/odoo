@@ -28,6 +28,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         cls.other_employee = cls.env['hr.employee'].create({
             'name': 'Yolanda',
             'company_id': cls.company.id,
+            'tz': 'UTC',
         })
         cls.jpn_employee = cls.env['hr.employee'].create({
             'name': 'Sacha',
@@ -119,7 +120,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 4, 7, 0),
-            'check_out': datetime(2021, 1, 4, 16, 0)
+            'check_out': datetime(2021, 1, 4, 17, 0)
         })
         self.assertEqual(self.employee.total_overtime, 12)
 
@@ -127,33 +128,34 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(self.employee.total_overtime, 1)
 
     def test_overtime_change_employee(self):
-        attendance = self.env['hr.attendance'].create({
+        Attendance = self.env['hr.attendance']
+        attendance = Attendance.create({
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 4, 7, 0),
             'check_out': datetime(2021, 1, 4, 18, 0)
         })
-        self.assertEqual(self.employee.total_overtime, 3)
+        self.assertEqual(self.employee.total_overtime, 2)
         self.assertEqual(self.other_employee.total_overtime, 0)
 
         attendance.employee_id = self.other_employee.id
-        self.assertEqual(self.other_employee.total_overtime, 3)
+        self.assertEqual(self.other_employee.total_overtime, 2)
         self.assertEqual(self.employee.total_overtime, 0)
 
     def test_overtime_far_timezones(self):
+        # Since dates have to be stored in utc these are the tokyo timezone times for 7-12 / 13-18 (UTC+9)
         self.env['hr.attendance'].create({
             'employee_id': self.jpn_employee.id,
-            # Since dates have to be stored in utc these are the tokyo timezone times for 7-18 (UTC+9)
             'check_in': datetime(2021, 1, 3, 22, 0),
             'check_out': datetime(2021, 1, 4, 9, 0),
         })
+        # Same but for alaskan times (UTC-10)
         self.env['hr.attendance'].create({
             'employee_id': self.honolulu_employee.id,
-            # Same but for alaskan times (UTC-10)
             'check_in': datetime(2021, 1, 4, 17, 0),
             'check_out': datetime(2021, 1, 5, 4, 0),
         })
-        self.assertEqual(self.jpn_employee.total_overtime, 3)
-        self.assertEqual(self.honolulu_employee.total_overtime, 3)
+        self.assertEqual(self.jpn_employee.total_overtime, 2)
+        self.assertEqual(self.honolulu_employee.total_overtime, 2)
 
     def test_overtime_unclosed(self):
         attendance = self.env['hr.attendance'].create({
@@ -264,3 +266,21 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
         self.assertFalse(overtime, 'Overtime entry should be unlinked since both overtime cancel each other.')
+
+    def test_overtime_lunch(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 17, 0),
+        })
+        self.assertEqual(self.employee.total_overtime, 0, 'There should be no overtime since the employee worked through the lunch period.')
+
+        # check that no overtime is created when employee starts and finishes 1 hour earlier but works through lunch period
+        attendance.check_in = datetime(2021, 1, 4, 7, 0)
+        attendance.check_out = datetime(2021, 1, 4, 16, 0)
+        self.assertEqual(self.employee.total_overtime, 0, 'There should be no overtime since the employee worked through the lunch period.')
+
+        # same but for 1 hour later
+        attendance.check_in = datetime(2021, 1, 4, 9, 0)
+        attendance.check_out = datetime(2021, 1, 4, 18, 0)
+        self.assertEqual(self.employee.total_overtime, 0, 'There should be no overtime since the employee worked through the lunch period.')
