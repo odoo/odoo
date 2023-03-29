@@ -21,7 +21,7 @@ patch(SaleOrderLineProductField.prototype, 'event_booth_sale', {
     },
 
     get isConfigurableLine() {
-        return this._super(...arguments) || Boolean(this.props.record.data.event_booth_category_id);
+        return this._super(...arguments) || this.props.record.data.product_type === 'event_booth';
     },
 
     async _openEventBoothConfigurator(edit) {

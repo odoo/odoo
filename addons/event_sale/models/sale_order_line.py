@@ -103,6 +103,12 @@ class SaleOrderLine(models.Model):
         else:
             return super()._get_sale_order_line_multiline_description_sale()
 
+    def _use_template_name(self):
+        """ We do not want configured description to get rewritten by template default"""
+        if self.event_ticket_id:
+            return False
+        return super()._use_template_name()
+
     def _get_display_price(self):
         if self.event_ticket_id and self.event_id:
             event_ticket = self.event_ticket_id.with_context(
