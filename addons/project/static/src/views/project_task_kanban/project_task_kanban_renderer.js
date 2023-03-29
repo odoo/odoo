@@ -43,8 +43,12 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         }
     }
 
+    isProjectTasksContext() {
+        return this.props.list.context.active_model === "project.project" && this.props.list.context.default_project_id;
+    }
+
     canCreateGroup() {
-        return super.canCreateGroup() && (!this.props.list.isGroupedByStage || this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
+        return (super.canCreateGroup() && this.isProjectTasksContext() && this.props.list.isGroupedByStage) || this.props.list.isGroupedByPersonalStages;
     }
 
     canDeleteGroup(group) {
