@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
-import { archParseBoolean, isNull, isRelational } from "@web/views/utils";
+import { isNull, isRelational } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
@@ -17,38 +17,10 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
-import { Component, onWillDestroy, useRef, useState, onPatched, onWillPatch } from "@odoo/owl";
+import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
-const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
-
-/**
- * @param {Object} groupByField
- * @returns {boolean}
- */
-export function isAllowedDateField(groupByField) {
-    return (
-        ["date", "datetime"].includes(groupByField.type) &&
-        archParseBoolean(groupByField.attrs.allow_group_range_value)
-    );
-}
-
-/**
- * @param {DynamicList} list
- * @returns {boolean}
- */
-export function canQuickCreate(list) {
-    if (list.groups && !list.groups.length) {
-        return false;
-    }
-
-    return (
-        list.groupByField &&
-        (isAllowedDateField(list.groupByField) ||
-            QUICK_CREATE_FIELD_TYPES.includes(list.groupByField.type))
-    );
-}
 
 function validateColumnQuickCreateExamples(data) {
     const { allowedGroupBys = [], examples = [], foldField = "" } = data;
@@ -83,6 +55,7 @@ export class KanbanRenderer extends Component {
         "forceGlobalClick?",
         "noContentHelp?",
         "scrollTop?",
+        "canQuickCreate?",
     ];
     static defaultProps = {
         scrollTop: () => {},
@@ -237,16 +210,12 @@ export class KanbanRenderer extends Component {
         if (!this.canResequenceRecords) {
             return false;
         }
-        if (!this.props.list.groupByField) {
+        const { groupByField } = this.props.list;
+        if (!groupByField) {
             return true;
         }
-        const { groupByField, fields } = this.props.list;
-        const { modifiers, type } = groupByField;
-        return Boolean(
-            !(modifiers && "readonly" in modifiers
-                ? modifiers.readonly
-                : fields[groupByField.name].readonly) &&
-                (isAllowedDateField(groupByField) || MOVABLE_RECORD_TYPES.includes(type))
+        return (
+            !this.props.list.isFieldReadonly(groupByField.name) && this.isMovableField(groupByField)
         );
     }
 
@@ -254,14 +223,11 @@ export class KanbanRenderer extends Component {
         if (!this.props.list.isGrouped) {
             return false;
         }
-        const { groupByField, fields } = this.props.list;
-        const { modifiers, type } = groupByField;
+        const { name, type } = this.props.list.groupByField;
         const { groupsDraggable } = this.props.archInfo;
         return (
             groupsDraggable &&
-            !(modifiers && "readonly" in modifiers
-                ? modifiers.readonly
-                : fields[groupByField.name].readonly) &&
+            !this.props.list.isFieldReadonly(name) &&
             DRAGGABLE_GROUP_TYPES.includes(type)
         );
     }
@@ -390,6 +356,10 @@ export class KanbanRenderer extends Component {
         return this.state.processedIds.includes(id);
     }
 
+    isMovableField(field) {
+        return MOVABLE_RECORD_TYPES.includes(field.type);
+    }
+
     // ------------------------------------------------------------------------
     // Permissions
     // ------------------------------------------------------------------------
@@ -431,7 +401,7 @@ export class KanbanRenderer extends Component {
     }
 
     canQuickCreate() {
-        return this.props.archInfo.activeActions.quickCreate && canQuickCreate(this.props.list);
+        return this.props.canQuickCreate;
     }
 
     // ------------------------------------------------------------------------

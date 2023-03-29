@@ -25,6 +25,10 @@ export class ForecastKanbanRenderer extends CrmKanbanRenderer {
         );
     }
 
+    isMovableField(field) {
+        return super.isMovableField(...arguments) || field.name === "date_deadline";
+    }
+
     async addForecastColumn() {
         const { name, type, granularity } = this.props.list.groupByField;
         this.fillTemporalService
