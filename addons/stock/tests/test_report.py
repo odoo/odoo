@@ -1227,6 +1227,39 @@ class TestReports(TestReportsCommon):
 
         self.assertEqual(all_delivery.move_ids.mapped("forecast_availability"), [3, 3, -3.0, -3.0])
 
+    def test_report_forecast_12_reserved_transit(self):
+        """ Tests the transit feature, in 2 step incoming shipment warehouse, create
+            incoming transfer, validate it, create outgoing transfer and check report to show
+            quantities needed are in transit
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        # Warehouse config.
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.reception_steps = 'two_steps'
+        outgoing = Form(self.env['stock.picking'])
+        outgoing.picking_type_id = self.picking_type_out
+        with outgoing.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 2
+        outgoing = outgoing.save()
+        outgoing.action_confirm()
+        incoming = Form(self.env['stock.picking'])
+        incoming.picking_type_id = self.picking_type_in
+        with incoming.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 2
+        incoming = incoming.save()
+        incoming.action_confirm()
+        incoming.action_set_quantities_to_reservation()
+        incoming.button_validate()
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(bool(lines[0]['move_out']), True)
+        self.assertEqual(lines[0]['in_transit'], True)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
