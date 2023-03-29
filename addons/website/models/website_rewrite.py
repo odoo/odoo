@@ -111,21 +111,31 @@ class WebsiteRewrite(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rewrites = super().create(vals_list)
-        self._invalidate_routing()
+        if set(rewrites.mapped('redirect_type')) & {'308', '404'}:
+            self._invalidate_routing()
         return rewrites
 
     def write(self, vals):
+        need_invalidate = set(self.mapped('redirect_type')) & {'308', '404'}
         res = super(WebsiteRewrite, self).write(vals)
-        self._invalidate_routing()
+        need_invalidate |= set(self.mapped('redirect_type')) & {'308', '404'}
+        if need_invalidate:
+            self._invalidate_routing()
         return res
 
     def unlink(self):
+        need_invalidate = set(self.mapped('redirect_type')) & {'308', '404'}
         res = super(WebsiteRewrite, self).unlink()
-        self._invalidate_routing()
+        if need_invalidate:
+            self._invalidate_routing()
         return res
 
     def _invalidate_routing(self):
-        # call clear_caches on this worker to reload routing table
+        # Call clear_caches on this worker to reload routing table.
+        # Note that only 404 and 308 redirection alter the routing map:
+        # - 404: remove entry from routing map
+        # - 301/302: served as fallback later if path not found in routing map
+        # - 308: add "alias" (`redirect_to`) in routing map
         self.env['ir.http'].clear_caches()
 
     def refresh_routes(self):
