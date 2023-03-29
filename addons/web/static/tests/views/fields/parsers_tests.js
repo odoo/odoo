@@ -7,6 +7,7 @@ import {
     parseInteger,
     parsePercentage,
     parseMonetary,
+    parseNumber,
 } from "@web/views/fields/parsers";
 import { session } from "@web/session";
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
@@ -36,7 +37,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseFloat("1,000.00"), 1000);
         assert.strictEqual(parseFloat("1,000,000.00"), 1000000);
         assert.strictEqual(parseFloat("1,234.567"), 1234.567);
-        expectInvalidNumberError(assert, parseFloat, "1.000.000");
+        assert.strictEqual(parseFloat("1.000.000"), 1000000);
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
         assert.strictEqual(parseFloat("1.234,567"), 1234.567);
@@ -79,13 +80,13 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseInteger("-100"), -100);
         assert.strictEqual(parseInteger("1,000"), 1000);
         assert.strictEqual(parseInteger("1,000,000"), 1000000);
-        expectInvalidNumberError(assert, parseInteger, "1.000.000");
-        expectInvalidNumberError(assert, parseInteger, "1,234.567");
+        assert.strictEqual(parseInteger("1.000.000"), 1000000);
+        assert.strictEqual(parseInteger("1,234.567"), 1234);
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
 
         assert.strictEqual(parseInteger("1.000.000"), 1000000);
-        expectInvalidNumberError(assert, parseInteger, "1.234,567");
+        assert.strictEqual(parseInteger("1.234,567"), 1234);
         // fallback to en localization
         assert.strictEqual(parseInteger("1,000,000"), 1000000);
 
@@ -143,7 +144,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseMonetary("$\u00a01"), 1);
 
         assert.throws(() => parseMonetary("1$\u00a01"));
-        assert.throws(() => parseMonetary("$\u00a012.00\u00a034"));
+        assert.strictEqual(parseMonetary("$\u00a012.00\u00a034"), 12.0034);
 
         // nbsp as thousands separator
         patchWithCleanup(localization, { thousandsSep: "\u00a0", decimalPoint: "," });
@@ -175,5 +176,28 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(parseInteger("1,000,000"), 1000000);
         assert.strictEqual(parseFloat("1,000,000.50"), 1000000.5);
+    });
+
+    QUnit.test("parseNumber", function (assert) {
+        assert.strictEqual(parseNumber("1 234 56"), 123456);
+        assert.strictEqual(parseNumber("1 234.56"), 1234.56);
+        assert.strictEqual(parseNumber("1 234,56"), 1234.56);
+        assert.strictEqual(parseNumber("1.234.56"), 123456);
+        assert.strictEqual(parseNumber("1.234,56"), 1234.56);
+        assert.strictEqual(parseNumber(".56"), 0.56);
+        assert.strictEqual(parseNumber(",56"), 0.56);
+        assert.strictEqual(parseNumber("1,234.56"), 1234.56);
+        assert.strictEqual(parseNumber("123.456"), 123.456);
+        assert.strictEqual(parseNumber("123,456"), 123.456);
+        assert.strictEqual(parseNumber("123 4 5 6"), 123456);
+        assert.strictEqual(parseNumber("12,34,56.78"), 123456.78);
+        assert.strictEqual(parseNumber("0,809"), 0.809);
+        assert.strictEqual(parseNumber("123,456,789"), 123456789);
+        assert.strictEqual(parseNumber("1234."), 1234);
+        assert.strictEqual(parseNumber("123,456."), 123456);
+        assert.strictEqual(parseNumber("123,456.78"), 123456.78);
+        assert.throws(() => parseNumber("12,34.56,78"));
+        assert.throws(() => parseNumber("12.34,56,78"));
+        assert.throws(() => parseNumber("12,34.56.78"));
     });
 });
