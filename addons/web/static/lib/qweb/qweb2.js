@@ -203,7 +203,8 @@ var QWeb2 = {
                       }
                 }
 
-                _.each(Object.keys(old_dict), function(z) {
+
+                Object.keys(old_dict).forEach( z => {
                     old_dict[z] = new_dict[z];
                 });
             } else {

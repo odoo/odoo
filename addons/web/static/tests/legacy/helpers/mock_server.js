@@ -335,18 +335,20 @@ var MockServer = Class.extend({
                 }
                 var defaultValues = {};
                 var stateExceptions = {};
-                _.each(modifiersNames, function (attr) {
+                modifiersNames.forEach( attr => {
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
-                _.each(field.states || {}, function (modifs, state) {
-                    _.each(modifs, function (modif) {
+                Object.keys(field.states || {}).forEach( state=> {
+                    const modifs = field.states[state];
+                    modifs.forEach( modif => {
                         if (defaultValues[modif[0]] !== modif[1]) {
                             stateExceptions[modif[0]].append(state);
                         }
                     });
                 });
-                _.each(defaultValues, function (defaultValue, attr) {
+                Object.keys(defaultValues).forEach( attr => {
+                    const defaultValue = defaultValues[attr];
                     if (stateExceptions[attr].length) {
                         modifiers[attr] = [("state", defaultValue ? "not in" : "in", stateExceptions[attr])];
                     } else {
@@ -375,7 +377,7 @@ var MockServer = Class.extend({
             }
 
             const inListHeader = inTreeView && node.closest('header');
-            _.each(modifiersNames, function (a) {
+            modifiersNames.forEach( a => {
                 var mod = node.getAttribute(a);
                 if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
@@ -388,7 +390,7 @@ var MockServer = Class.extend({
                 }
             });
 
-            _.each(modifiersNames, function (a) {
+            modifiersNames.forEach( a => {
                 if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
                     delete modifiers[a];
                 }
@@ -406,7 +408,8 @@ var MockServer = Class.extend({
         });
 
         let relModel, relFields;
-        _.each(fieldNodes, function (node, name) {
+        Object.keys(fieldNodes).forEach( name => {
+            const node = fieldNodes[name];
             var field = fields[name];
             if (field.type === "many2one" || field.type === "many2many") {
                 var canCreate = node.getAttribute('can_create');
@@ -417,7 +420,7 @@ var MockServer = Class.extend({
             if (field.type === "one2many" || field.type === "many2many") {
                 relModel = field.relation;
                 relatedModels.add(relModel);
-                _.each(node.childNodes, function (childNode) {
+                node.childNodes.forEach( childNode => {
                     if (childNode.tagName) { // skip text nodes
                         relFields = $.extend(true, {}, self.data[relModel].fields);
                         // this is hackhish, but _getView modifies the subview document in place,
@@ -434,7 +437,8 @@ var MockServer = Class.extend({
                 node.setAttribute('on_change', "1");
             }
         });
-        _.each(groupbyNodes, function (node, name) {
+        Object.keys(groupbyNodes).forEach( name => {
+            const node = groupbyNodes[name];
             var field = fields[name];
             if (field.type !== 'many2one') {
                 throw new Error('groupby can only target many2one');
@@ -481,7 +485,7 @@ var MockServer = Class.extend({
         if (active_test && 'active' in this.data[model].fields) {
             // add ['active', '=', true] to the domain if 'active' is not yet present in domain
             var activeInDomain = false;
-            _.each(domain, function (subdomain) {
+            domain.forEach( subdomain => {
                 activeInDomain = activeInDomain || subdomain[0] === 'active';
             });
             if (!activeInDomain) {
@@ -498,7 +502,7 @@ var MockServer = Class.extend({
                     var childIDs = [criterion[2]];
                     while (childIDs.length > oldLength) {
                         oldLength = childIDs.length;
-                        _.each(records, function (r) {
+                        records.forEach( r => {
                             if (childIDs.indexOf(r.parent_id) >= 0) {
                                 childIDs.push(r.id);
                             }
@@ -1208,7 +1212,7 @@ var MockServer = Class.extend({
     _mockGetViews: function (model, kwargs) {
         var self = this;
         var views = {};
-        _.each(kwargs.views, function (view_descr) {
+        kwargs.views.forEach( view_descr => {
             var viewID = view_descr[0] || false;
             var viewType = view_descr[1];
             if (!viewID) {
@@ -1448,7 +1452,7 @@ var MockServer = Class.extend({
         var self = this;
         var fields = this.data[model].fields;
         var aggregatedFields = [];
-        _.each(kwargs.fields, function (field) {
+        kwargs.fields.forEach( field => {
             var split = field.split(":");
             var fieldName = split[0];
             if (kwargs.groupby.indexOf(fieldName) > 0) {
@@ -1705,7 +1709,7 @@ var MockServer = Class.extend({
         var records = this._getRecords(model, domain || []);
 
         var data = {};
-        _.each(records, function (record) {
+        records.foreach( record => {
             var groupByValue = record[groupBy]; // always technical value here
 
             // special case for bool values: rpc call response with capitalized strings
@@ -1719,7 +1723,7 @@ var MockServer = Class.extend({
 
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
-                _.each(progress_bar.colors, function (val, key) {
+                Object.keys(progress_bar.colors).forEach( key => {
                     data[groupByValue][key] = 0;
                 });
             }
@@ -1841,7 +1845,8 @@ var MockServer = Class.extend({
         records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);
         var processedRecords = _.map(records, function (r) {
             var result = {};
-            _.each(_.uniq(fields.concat(['id'])), function (fieldName) {
+            const _unique_fields = _.uniq(fields.concat(['id']))
+            _unique_fields.forEach( fieldName => {
                 var field = self.data[args.model].fields[fieldName];
                 if (field.type === 'many2one') {
                     var related_record = _.findWhere(self.data[field.relation].records, {
@@ -1879,12 +1884,12 @@ var MockServer = Class.extend({
         });
 
         // update value of relationnal fields pointing to the deleted records
-        _.each(this.data, function (d) {
+        this.data.forEach( d => {
             var relatedFields = _.pick(d.fields, function (field) {
                 return field.relation === model;
             });
-            _.each(Object.keys(relatedFields), function (relatedField) {
-                _.each(d.records, function (record) {
+            Object.keys(relatedFields).forEach( (relatedField) => {
+                d.records.forEach( record => {
                     if (Array.isArray(record[relatedField])) {
                         record[relatedField] = _.difference(record[relatedField], ids);
                     } else if (ids.includes(record[relatedField])) {
@@ -1950,7 +1955,7 @@ var MockServer = Class.extend({
      * @returns {boolean} currently, always return 'true'
      */
     _mockWrite: function (model, args) {
-        _.each(args[0], id => {
+        args[0].forEach( id => {
             const originalRecord = this._mockSearchRead(model, [[['id', '=', id]]], {})[0];
             this._writeRecord(model, args[1], id);
             const updatedRecord = this.data[model].records.find(record => record.id === id);
@@ -2122,7 +2127,9 @@ var MockServer = Class.extend({
     _traverse: function (tree, f) {
         var self = this;
         if (f(tree)) {
-            _.each(tree.childNodes, function (c) { self._traverse(c, f); });
+            tree.childNodes.forEach(function (c) {
+                self._traverse(c, f); 
+            })
         }
     },
     /**

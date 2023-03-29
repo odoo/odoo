@@ -633,7 +633,7 @@ function patch(target, props) {
         ownPatchedProps: [],
     };
     if (target.prototype) {
-        _.each(props, function (value, key) {
+        props.forEach( key => {
             if (target.prototype.hasOwnProperty(key)) {
                 patches[patchID].ownPatchedProps.push({
                     key: key,
@@ -645,7 +645,8 @@ function patch(target, props) {
         });
         target.include(props);
     } else {
-        _.each(props, function (value, key) {
+        props.forEach( key => {
+            const value = props[key];
             if (key in target) {
                 var oldValue = target[key];
                 patches[patchID].ownPatchedProps.push({
@@ -684,17 +685,17 @@ function unpatch(target) {
     var patchID = target.__patchID;
     var patch = patches[patchID];
     if (target.prototype) {
-        _.each(patch.ownPatchedProps, function (p) {
+        patch.ownPatchedProps.forEach( p => {
             target.prototype[p.key] = p.initialValue;
         });
-        _.each(patch.otherPatchedProps, function (key) {
+        patch.otherPatchedProps.forEach( key => {
             delete target.prototype[key];
         });
     } else {
-        _.each(patch.ownPatchedProps, function (p) {
+        patch.ownPatchedProps.forEach( p => {
             target[p.key] = p.initialValue;
         });
-        _.each(patch.otherPatchedProps, function (key) {
+        patch.otherPatchedProps.forEach( key => {
             delete target[key];
         });
     }
