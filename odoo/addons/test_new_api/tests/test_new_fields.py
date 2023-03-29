@@ -3799,15 +3799,13 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" IN (
+            WHERE ("test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE ("res_partner"."name"::text LIKE %s)
-            )) AND ("test_new_api_multi"."partner" IN (
-                SELECT "res_partner"."id"
-                FROM "res_partner"
-                WHERE ("res_partner"."phone"::text LIKE %s)
-            )))
+                WHERE (("res_partner"."name"::text LIKE %s)
+                   AND ("res_partner"."phone"::text LIKE %s)
+                )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -3819,15 +3817,13 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" IN (
+            WHERE ("test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE ("res_partner"."name"::text LIKE %s)
-            )) OR ("test_new_api_multi"."partner" IN (
-                SELECT "res_partner"."id"
-                FROM "res_partner"
-                WHERE ("res_partner"."phone"::text LIKE %s)
-            )))
+                WHERE (("res_partner"."name"::text LIKE %s)
+                    OR ("res_partner"."phone"::text LIKE %s)
+                )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -3840,15 +3836,13 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" IN (
+            WHERE ("test_new_api_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name"::text NOT LIKE %s) OR "res_partner"."name" IS NULL)
-            )) OR ("test_new_api_multi"."partner" IN (
-                SELECT "res_partner"."id"
-                FROM "res_partner"
-                WHERE (("res_partner"."phone"::text NOT LIKE %s) OR "res_partner"."phone" IS NULL)
-            )))
+                WHERE (("res_partner"."name"::text LIKE %s)
+                    AND ("res_partner"."phone"::text LIKE %s)
+                )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -3861,15 +3855,13 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" IN (
+            WHERE ("test_new_api_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name"::text NOT LIKE %s) OR "res_partner"."name" IS NULL)
-            )) AND ("test_new_api_multi"."partner" IN (
-                SELECT "res_partner"."id"
-                FROM "res_partner"
-                WHERE (("res_partner"."phone"::text NOT LIKE %s) OR "res_partner"."phone" IS NULL)
-            )))
+                WHERE (("res_partner"."name"::text LIKE %s)
+                    OR ("res_partner"."phone"::text LIKE %s)
+                )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -3905,10 +3897,10 @@ class TestSubqueries(common.TransactionCase):
             LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
                 ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
             WHERE (
-                (("test_new_api_multi__partner"."name"::text NOT LIKE %s)
-                    OR "test_new_api_multi__partner"."name" IS NULL)
-                AND (("test_new_api_multi__partner"."phone"::text NOT LIKE %s)
-                        OR "test_new_api_multi__partner"."phone" IS NULL)
+                NOT ((
+                    ("test_new_api_multi__partner"."name"::text LIKE %s)
+                    OR ("test_new_api_multi__partner"."phone"::text LIKE %s)
+                ))
             )
             ORDER BY "test_new_api_multi"."id"
         """]):
@@ -3922,21 +3914,16 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" IN (
+            WHERE ("test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE ("res_partner"."email"::text LIKE %s)
-            )) AND ((
-                "test_new_api_multi"."partner" IN (
-                    SELECT "res_partner"."id"
-                    FROM "res_partner"
-                    WHERE ("res_partner"."name"::text LIKE %s)
-                )) OR ("test_new_api_multi"."partner" IN (
-                    SELECT "res_partner"."id"
-                    FROM "res_partner"
-                    WHERE ("res_partner"."phone"::text LIKE %s)
+                WHERE (
+                    ("res_partner"."email"::text LIKE %s)
+                    AND (("res_partner"."name"::text LIKE %s)
+                      OR ("res_partner"."phone"::text LIKE %s)
+                    )
                 )
-            )))
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -3955,23 +3942,20 @@ class TestSubqueries(common.TransactionCase):
                     (
                         ({many2one} IN (
                             {subselect} WHERE ("res_partner"."function"::text LIKE %s)
-                        )) OR (
-                            ({many2one} IN (
-                                {subselect} WHERE (("res_partner"."phone"::text NOT LIKE %s) OR "res_partner"."phone" IS NULL)
-                            )) OR ({many2one} IN (
-                                {subselect} WHERE (("res_partner"."mobile"::text NOT LIKE %s) OR "res_partner"."mobile" IS NULL)
-                            ))
-                        )
+                        )) OR ({many2one} NOT IN (
+                            {subselect} WHERE (
+                                ("res_partner"."phone"::text LIKE %s)
+                                AND ("res_partner"."mobile"::text LIKE %s)
+                        )))
                     ) AND ({many2one} IN (
-                        {subselect} WHERE (("res_partner"."website"::text NOT LIKE %s) OR "res_partner"."website" IS NULL)
+                        {subselect} WHERE (
+                            ("res_partner"."name"::text LIKE %s)
+                            OR ("res_partner"."email"::text LIKE %s)
+                        )
                     ))
-                ) AND (
-                    ({many2one} IN (
-                        {subselect} WHERE ("res_partner"."name"::text LIKE %s)
-                    )) OR ({many2one} IN (
-                        {subselect} WHERE ("res_partner"."email"::text LIKE %s)
-                    ))
-                )
+                ) AND ({many2one} NOT IN (
+                    {subselect} WHERE ("res_partner"."website"::text LIKE %s)
+                ))
             )
             ORDER BY "test_new_api_multi"."id"
         """.format(
@@ -4018,17 +4002,13 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."id" IN (
+            WHERE ("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
-                      AND "test_new_api_multi_line"."multi" IS NOT NULL
-            )) OR ("test_new_api_multi"."id" IN (
-                SELECT "test_new_api_multi_line"."multi"
-                FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
-                      AND "test_new_api_multi_line"."multi" IS NOT NULL
-            )))
+                WHERE (("test_new_api_multi_line"."name"::text LIKE %s)
+                    OR ("test_new_api_multi_line"."name"::text LIKE %s)
+                ) AND "test_new_api_multi_line"."multi" IS NOT NULL
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -4045,20 +4025,14 @@ class TestSubqueries(common.TransactionCase):
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
                 WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
-                      AND "test_new_api_multi_line"."multi" IS NOT NULL
-            )) AND ((
-                "test_new_api_multi"."id" IN (
-                    SELECT "test_new_api_multi_line"."multi"
-                    FROM "test_new_api_multi_line"
-                    WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
-                          AND "test_new_api_multi_line"."multi" IS NOT NULL
-                )) OR ("test_new_api_multi"."id" IN (
-                    SELECT "test_new_api_multi_line"."multi"
-                    FROM "test_new_api_multi_line"
-                    WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
-                          AND "test_new_api_multi_line"."multi" IS NOT NULL
-                ))
-            ))
+                   AND "test_new_api_multi_line"."multi" IS NOT NULL)
+            ) AND ("test_new_api_multi"."id" IN (
+                SELECT "test_new_api_multi_line"."multi"
+                FROM "test_new_api_multi_line"
+                WHERE (("test_new_api_multi_line"."name"::text LIKE %s)
+                    OR ("test_new_api_multi_line"."name"::text LIKE %s)
+                ) AND "test_new_api_multi_line"."multi" IS NOT NULL
+            )))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -4102,23 +4076,18 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (EXISTS (
+            WHERE EXISTS (
                 SELECT 1
                 FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
                 WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
                 AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
-                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
-            )) OR EXISTS (
-                SELECT 1
-                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
-                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
-                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
-                    SELECT "test_new_api_multi_tag"."id"
-                    FROM "test_new_api_multi_tag"
-                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
-            )))
+                    WHERE (("test_new_api_multi_tag"."name"::text LIKE %s)
+                        OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    )
+                )
+            )
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -4131,16 +4100,7 @@ class TestSubqueries(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (EXISTS (
-                SELECT 1
-                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
-                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
-                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
-                    SELECT "test_new_api_multi_tag"."id"
-                    FROM "test_new_api_multi_tag"
-                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
-                )
-            ) AND (
+            WHERE (
                 EXISTS (
                     SELECT 1
                     FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
@@ -4150,17 +4110,19 @@ class TestSubqueries(common.TransactionCase):
                         FROM "test_new_api_multi_tag"
                         WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
                     )
-                ) OR EXISTS (
+                ) AND EXISTS (
                     SELECT 1
                     FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
                     WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
                     AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
-                        WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        WHERE (("test_new_api_multi_tag"."name"::text LIKE %s)
+                            OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        )
                     )
                 )
-            ))
+            )
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
