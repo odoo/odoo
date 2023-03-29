@@ -5,11 +5,6 @@
     display: grid;
     grid-template-rows: 34px 35px 1fr;
 
-    &.o-failure {
-        width: 200px;
-        height: 120px;
-    }
-
     .o-mail-Emoji {
         width: 30px;
         font-size: 1.5rem;
@@ -23,12 +18,17 @@
     }
 
     .o-mail-EmojiPicker-empty {
+        font-size: 5rem !important;
         filter: grayscale(0.25);
     }
 
     input:not(:focus) {
-        & + i.oi-search, &::placeholder {
+        &::placeholder {
             opacity: 75%;
+        }
+
+        & + i.oi-search {
+            opacity: 60%;
         }
     }
 }

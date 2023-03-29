@@ -296,25 +296,21 @@ export class EmojiPicker extends Component {
     }
 
     selectCategory(ev) {
-        const id = Number(ev.target.dataset.id);
-        if (!isNaN(id)) {
-            this.state.searchStr = "";
-            this.state.categoryId = id;
-            this.shouldScrollElem = true;
-        }
+        const id = Number(ev.currentTarget.dataset.id);
+        this.state.searchStr = "";
+        this.state.categoryId = id;
+        this.shouldScrollElem = true;
     }
 
     selectEmoji(ev) {
-        const codepoints = ev.target.dataset.codepoints;
-        if (codepoints) {
-            this.props.onSelect(codepoints);
-            this.recent[codepoints] ??= 0;
-            this.recent[codepoints]++;
-            browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
-            this.gridRef.el.scrollTop = 0;
-            this.props.close();
-            this.props.onClose();
-        }
+        const codepoints = ev.currentTarget.dataset.codepoints;
+        this.props.onSelect(codepoints);
+        this.recent[codepoints] ??= 0;
+        this.recent[codepoints]++;
+        browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
+        this.gridRef.el.scrollTop = 0;
+        this.props.close();
+        this.props.onClose();
     }
 
     highlightActiveCategory() {

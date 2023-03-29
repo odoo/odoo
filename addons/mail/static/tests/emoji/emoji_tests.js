@@ -141,3 +141,12 @@ QUnit.test("posting :snowman: in message should impact recent", async (assert) =
         "span:contains(Frequently used) ~ .o-mail-Emoji:contains(☃️) ~ span:contains(Smileys & Emotion)"
     );
 });
+
+QUnit.test("first category should be highlight by default", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    assert.containsOnce($, ".o-mail-EmojiPicker-header .o-mail-Emoji:eq(0).bg-300");
+});
