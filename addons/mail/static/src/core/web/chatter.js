@@ -125,7 +125,7 @@ export class Chatter extends Component {
                             return;
                         }
                     }
-                    files.forEach(this.attachmentUploader.uploadFile);
+                    files.forEach((file) => this.attachmentUploader.uploadFile(file));
                     this.state.isAttachmentBoxOpened = true;
                 }
             },

@@ -33,10 +33,10 @@ class IrAttachment(models.Model):
             except (AccessError, MissingError):
                 raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment.id))
 
-    def _post_add_create(self):
+    def _post_add_create(self, **kwargs):
         """ Overrides behaviour when the attachment is created through the controller
         """
-        super(IrAttachment, self)._post_add_create()
+        super(IrAttachment, self)._post_add_create(**kwargs)
         for record in self:
             record.register_as_main_attachment(force=False)
 
@@ -74,20 +74,18 @@ class IrAttachment(models.Model):
 
     def _attachment_format(self):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
-        return [
-            {
-                'checksum': attachment.checksum,
-                'id': attachment.id,
-                'filename': attachment.name,
-                'name': attachment.name,
-                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                'originThread': [('insert', {
-                    'id': attachment.res_id,
-                    'model': attachment.res_model,
-                })],
-            }
-            for attachment in self
-        ]
+        return [{
+            'checksum': attachment.checksum,
+            'id': attachment.id,
+            'filename': attachment.name,
+            'name': attachment.name,
+            "size": attachment.file_size,
+            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            'originThread': [('insert', {
+                'id': attachment.res_id,
+                'model': attachment.res_model,
+            })],
+        } for attachment in self]
 
     @api.model
     def _get_upload_env(self, thread_model, thread_id):

@@ -3,6 +3,7 @@
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
@@ -23,8 +24,9 @@ import { doAction, getActionManagerServerData } from "@web/../tests/webclient/he
 
 const { afterNextRender } = App;
 
-// load emoji data once, when the test suite starts.
+// load emoji data and lamejs once, when the test suite starts.
 QUnit.begin(loadEmoji);
+QUnit.begin(loadLamejs);
 registryNamesToCloneWithCleanup.push("mock_server_callbacks");
 
 //------------------------------------------------------------------------------

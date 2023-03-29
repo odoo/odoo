@@ -22,7 +22,13 @@ try {
 
 export const browser = {
     addEventListener: window.addEventListener.bind(window),
+    AnalyserNode: window.AnalyserNode,
     Audio: window.Audio,
+    AudioBufferSourceNode: window.AudioBufferSourceNode,
+    AudioContext: window.AudioContext,
+    AudioWorkletNode: window.AudioWorkletNode,
+    GainNode: window.GainNode,
+    MediaStreamAudioSourceNode: window.MediaStreamAudioSourceNode,
     removeEventListener: window.removeEventListener.bind(window),
     setTimeout: window.setTimeout.bind(window),
     clearTimeout: window.clearTimeout.bind(window),

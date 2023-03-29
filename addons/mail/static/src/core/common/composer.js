@@ -487,7 +487,6 @@ export class Composer extends Component {
     }
 
     clear() {
-        this.attachmentUploader?.clear();
         this.threadService.clearComposer(this.props.composer);
     }
 
