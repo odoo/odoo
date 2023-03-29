@@ -40,9 +40,13 @@ class IrActionsReport(models.Model):
     def _render_qweb_pdf(self, res_ids=None, data=None):
         # Overridden so that the print > invoices actions raises an error
         # when trying to print a miscellaneous operation instead of an invoice.
+        # + append context data with the display_name_in_footer parameter
         if self.model == 'account.move' and res_ids:
             invoice_reports = (self.env.ref('account.account_invoices_without_payment'), self.env.ref('account.account_invoices'))
             if self in invoice_reports:
+                if self.env['ir.config_parameter'].sudo().get_param('account.display_name_in_footer'):
+                    data = data and dict(data) or {}
+                    data.update({'display_name_in_footer': True})
                 moves = self.env['account.move'].browse(res_ids)
                 if any(not move.is_invoice(include_receipts=True) for move in moves):
                     raise UserError(_("Only invoices could be printed."))
