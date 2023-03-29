@@ -37,6 +37,7 @@ export async function startWebClient(Webclient) {
     const legacyEnv = await legacySetupProm;
     mapLegacyEnvToWowlEnv(legacyEnv, env);
     const app = new App(Webclient, {
+        name: "Odoo Web Client",
         env,
         templates,
         dev: env.debug,
