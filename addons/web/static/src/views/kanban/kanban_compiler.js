@@ -26,7 +26,8 @@ export class KanbanCompiler extends ViewCompiler {
         this.ctx.readonly = "read_only_mode";
         this.compilers.push(
             { selector: ".oe_kanban_colorpicker", fn: this.compileColorPicker },
-            { selector: "t[t-call]", fn: this.compileTCall }
+            { selector: "t[t-call]", fn: this.compileTCall },
+            { selector: "img", fn: this.compileImage }
         );
     }
 
@@ -95,7 +96,14 @@ export class KanbanCompiler extends ViewCompiler {
 
         return compiled;
     }
-
+    /**
+     * @returns {Element}
+     */
+    compileImage(el) {
+        const element = el.cloneNode(true);
+        element.setAttribute("loading", "lazy");
+        return element;
+    }
     /**
      * @returns {Element}
      */

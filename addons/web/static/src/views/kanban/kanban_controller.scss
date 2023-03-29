@@ -183,9 +183,21 @@
                     position: center;
                     repeat: no-repeat;
                 }
+                > img:not(.o_kanban_image_inner_pic) {
+                    object-fit: cover;
+                    object-position: center;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
 
                 &.o_kanban_image_full {
                     background-size: contain;
+                    > img {
+                        object-fit: contain;
+                    }
                 }
             }
 
@@ -194,6 +206,7 @@
             // Eg. In partners list we use to fill user picture only, keeping the
             // default design for company logos.
             .o_kanban_image {
+                position: relative;
                 margin-right: var(--KanbanRecord-padding-h);
                 flex: 0 0 var(--KanbanRecord__image-width);
                 min-height: var(--KanbanRecord__image-width);
@@ -202,6 +215,15 @@
                     size: cover;
                     repeat: no-repeat;
                     position: center;
+                }
+                > img:not(.o_kanban_image_inner_pic) {
+                    object-fit: cover;
+                    object-position: center;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
                 }
 
                 @include media-breakpoint-down(md) {
