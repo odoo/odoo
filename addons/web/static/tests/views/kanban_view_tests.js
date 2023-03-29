@@ -9538,6 +9538,11 @@ QUnit.module("Views", (hooks) => {
             'img[data-src*="/web/image"][data-src*="&id=1"]'
         );
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
+        assert.strictEqual(
+            imageOnRecord[0].loading,
+            "lazy",
+            "img in kanban view should be lazy loaded"
+        );
     });
 
     QUnit.test("test displaying image (write_date field)", async (assert) => {

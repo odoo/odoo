@@ -163,8 +163,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
-                            <div class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_128', record.id.raw_value)}')"/>
+                            <div class="o_kanban_image_fill_left d-none d-md-block">
+                                <img t-attf-src="#{kanban_image('lunch.product', 'image_128', record.id.raw_value)}" t-att-alt="record.id.value"/>
+                            </div>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
@@ -254,8 +255,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
-                            <div class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image:url('#{kanban_image('lunch.product.category', 'image_128', record.id.raw_value)}')"/>
+                            <div class="o_kanban_image_fill_left d-none d-md-block">
+                                <img t-attf-src="#{kanban_image('lunch.product.category', 'image_128', record.id.raw_value)}" t-att-alt="record.id.value"/>
+                            </div>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
