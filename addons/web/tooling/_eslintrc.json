@@ -1,5 +1,6 @@
 {
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "plugins": ["@odoo/owl"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2022
@@ -10,6 +11,7 @@
     "qunit": true
   },
   "rules": {
+    "@odoo/owl/force-component-props-declaration": 2,
     "prettier/prettier": ["error", {
       "tabWidth": 4,
       "semi": true,

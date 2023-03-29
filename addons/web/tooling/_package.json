@@ -11,16 +11,17 @@
         "format-diff": "echo '{\"extends\": [\"plugin:diff/diff\"]}' | eslint --fix --resolve-plugins-relative-to . -c /dev/stdin '**/*.js'"
     },
     "devDependencies": {
+        "@odoo/eslint-plugin-owl": "^1.0.0",
+        "@odoo/owl": "^2.0.1",
+        "@types/jquery": "^3.5.14",
+        "@types/luxon": "^3.1.0",
+        "@types/qunit": "^2.19.3",
         "eslint": "^8.27.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-diff": "^2.0.1",
         "eslint-plugin-prettier": "^4.2.1",
         "lint-staged": "^13.0.3",
-        "prettier": "^2.7.1",
-        "@types/jquery": "^3.5.14",
-        "@types/luxon": "^3.1.0",
-        "@types/qunit": "^2.19.3",
-        "@odoo/owl": "^2.0.1"
+        "prettier": "^2.7.1"
     },
     "lint-staged": {
         "*.js": [
