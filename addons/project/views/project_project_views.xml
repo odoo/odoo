@@ -105,8 +105,7 @@
                                     </div>
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->
-                                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"
-                                           attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
+                                    <field name="alias_contact" class="oe_inline" string="Accept Emails From" attrs="{'invisible': [('alias_name', '=', False)]}"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
