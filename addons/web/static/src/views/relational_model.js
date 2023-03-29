@@ -2406,7 +2406,7 @@ export class DynamicGroupList extends DynamicList {
     async _loadGroups() {
         const firstGroupByName = this.firstGroupBy.split(":")[0];
         const _orderBy = this.orderBy.filter(
-            (o) => o.name === firstGroupByName || this.fields[o.name].group_operator !== undefined
+            (o) => o.name === firstGroupByName || (this.fieldNames.includes(o.name) && this.fields[o.name].group_operator !== undefined)
         );
         const orderby = orderByToString(_orderBy);
         const { groups, length } = await this.model.orm.webReadGroup(
