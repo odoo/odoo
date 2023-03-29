@@ -570,3 +570,12 @@ class TestTimesheet(TestCommonTimesheet):
         self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
         self.assertEqual(project.total_timesheet_time, 8, "Total timesheet time should be 8 hours")
         self.assertEqual(project.timesheet_encode_uom_id.name, 'Days', "Timesheet encode uom should be 'Days'")
+
+    def test_create_timesheet_with_companyless_analytic_account(self):
+        """ This test ensures that a timesheet can be created on an analytic account whose company_id is set to False"""
+        self.project_customer.analytic_account_id.company_id = False
+        timesheet = self.env['account.analytic.line'].with_user(self.user_employee).create(
+            {'unit_amount': 1.0, 'project_id': self.project_customer.id})
+        self.assertEqual(timesheet.product_uom_id, self.project_customer.company_id.project_time_mode_id,
+                         "The product_uom_id of the timesheet should be equal to the project's company uom "
+                         "if the project's analytic account has no company_id")
