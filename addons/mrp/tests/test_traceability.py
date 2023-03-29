@@ -584,3 +584,25 @@ class TestTraceability(TestMrpCommon):
             {'product_id': self.bom_4.product_id.id, 'lot_id': False, 'qty_done': 1},
             {'product_id': component.id, 'lot_id': serial_number.id, 'qty_done': 1},
         ])
+
+    def test_generate_serial_button(self):
+        """Test if lot "0000001" is manually created, the generate serial button can
+        skip it and create the next one.
+        """
+        mo, _bom, p_final, _p1, _p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
+
+        # generate serial number sn_0 on MO
+        mo.action_generate_serial()
+        sn_0 = mo.lot_producing_id.name
+        # manually create sn_1 (sn_0 + 1)
+        sn_1 = self.env['stock.production.lot'].create({
+            'name': str(int(sn_0) + 1).zfill(7),
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        }).name
+        # generate serial number s_2 on a new MO
+        mo = mo.copy()
+        mo.action_confirm()
+        mo.action_generate_serial()
+        sn_2 = mo.lot_producing_id.name
+        self.assertEqual(sn_2, str(int(sn_1) + 1).zfill(7))

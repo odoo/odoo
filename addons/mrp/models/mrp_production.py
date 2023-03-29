@@ -1130,10 +1130,17 @@ class MrpProduction(models.Model):
 
     def action_generate_serial(self):
         self.ensure_one()
-        self.lot_producing_id = self.env['stock.production.lot'].create({
-            'product_id': self.product_id.id,
-            'company_id': self.company_id.id
-        })
+        # if user manually created lot/SN in form "0000ddd", ir.sequence may give
+        # the same lot/SN and fail the generation. We keep trying and increasing
+        # the sequence until we find a free lot/SN.
+        while not self.lot_producing_id:
+            try:
+                self.lot_producing_id = self.env['stock.production.lot'].create({
+                    'product_id': self.product_id.id,
+                    'company_id': self.company_id.id,
+                })
+            except ValidationError:
+                pass
         if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
             self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
         if self.product_id.tracking == 'serial':
