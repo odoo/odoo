@@ -166,7 +166,7 @@ var Domain = collections.Tree.extend({
             return [];
         } else {
             var arr = [this._data];
-            return arr.concat.apply(arr, _.map(this._children, function (child) {
+            return arr.concat.apply(arr, this._children.map( child => {
                 return child.toArray();
             }));
         }
@@ -391,7 +391,7 @@ var Domain = collections.Tree.extend({
                 case '(number)': return node.value;
                 case '(constant)': return node.value === 'None' ? null : node.value === 'True' ? true : false;
                 case '(':
-                case '[': return _.map(node.first, function (node) {return astToStackValue(node);});
+                case '[': return node.first.map( node => {return astToStackValue(node);});
             }
         }
         function astToStack (node) {

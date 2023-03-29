@@ -40,11 +40,13 @@ function parseAndTransform(htmlString, transformFunction) {
  * @return {string}
  */
 function _parseAndTransform(nodes, transformFunction) {
-    return _.map(nodes, function (node) {
-        return transformFunction(node, function () {
-            return _parseAndTransform(node.childNodes, transformFunction);
-        });
-    }).join("");
+    return nodes
+        .map((node) => {
+            return transformFunction(node, function () {
+                return _parseAndTransform(node.childNodes, transformFunction);
+            });
+        })
+        .join("");
 }
 
 /**
@@ -85,9 +87,12 @@ function linkify(text, attrs) {
     if (attrs.target === "_blank") {
         attrs.rel = "noreferrer noopener";
     }
-    attrs = _.map(attrs, function (value, key) {
-        return key + '="' + _.escape(value) + '"';
-    }).join(" ");
+    attrs = Object.keys(attrs)
+        .map((key) => {
+            const value = attrs[key];
+            return key + '="' + _.escape(value) + '"';
+        })
+        .join(" ");
     let curIndex = 0;
     let result = "";
     let match;

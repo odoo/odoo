@@ -190,11 +190,11 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 
         this._stopWidgets($from);
 
-        var defs = _.map(this._getPublicWidgetsRegistry(options), function (PublicWidget) {
+        var defs = this._getPublicWidgetsRegistry(options).map( PublicWidget => {
             var selector = PublicWidget.prototype.selector || '';
             var $target = dom.cssFind($from, selector, true);
 
-            var defs = _.map($target, function (el) {
+            var defs = $target.map( el => {
                 var widget = new PublicWidget(self, options);
                 self.publicWidgets.push(widget);
                 return widget.attachTo($(el));
@@ -213,7 +213,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      *        of its descendants
      */
     _stopWidgets: function ($from) {
-        var removedWidgets = _.map(this.publicWidgets, function (widget) {
+        var removedWidgets = this.publicWidgets.map( widget => {
             if (!$from
                 || $from.filter(widget.el).length
                 || $from.find(widget.el).length) {

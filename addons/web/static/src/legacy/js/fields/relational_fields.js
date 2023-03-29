@@ -466,7 +466,7 @@ var FieldMany2One = AbstractField.extend({
                 Promise.resolve(prom).then(function (results) {
                     var dynamicFilters;
                     if (results) {
-                        var ids = _.map(results, function (x) {
+                        var ids = results.map( x => {
                             return x[0];
                         });
                         dynamicFilters = [{
@@ -1665,7 +1665,7 @@ var FieldRadio = FieldSelection.extend({
         if (this.field.type === 'selection') {
             this.values = this.field.selection || [];
         } else if (this.field.type === 'many2one') {
-            this.values = _.map(this.record.specialData[this.name], function (val) {
+            this.values = this.record.specialData[this.name].map( val => {
                 return [val.id, val.display_name];
             });
         }

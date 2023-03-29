@@ -1035,7 +1035,7 @@ const utils = {
                 return {
                     tag: node.tagName.toLowerCase(),
                     attrs: attrs,
-                    children: _.compact(_.map(node.childNodes, function (node) {
+                    children: _.compact( node.childNodes.map( node => {
                         return utils.xml_to_json(node, strip_whitespace);
                     })),
                 };

@@ -36,7 +36,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 return;
             }
 
-            var tweets = _.map(data, function (tweet) {
+            var tweets = data.map( tweet => {
                 // Parse tweet date
                 if (_.isEmpty(tweet.created_at)) {
                     tweet.created_at = '';

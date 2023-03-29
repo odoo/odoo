@@ -35,7 +35,7 @@ var SelectBox = publicWidget.Widget.extend({
                 fields: ['id', 'name'],
             },
         }).then(function (result) {
-            self.objects = _.map(result, function (val) {
+            self.objects = result.forEach( val => {
                 return {id: val.id, text: val.name};
             });
         }));

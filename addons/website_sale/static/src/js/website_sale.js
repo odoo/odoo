@@ -372,7 +372,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _setUrlHash: function ($parent) {
         var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
-        var attributeIds = _.map($attributes, function (elem) {
+        var attributeIds = $attributes.map( elem => {
             return $(elem).data('value_id');
         });
         window.location.replace('#attr=' + attributeIds.join(','));

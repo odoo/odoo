@@ -117,7 +117,7 @@ const rpc = {
      * @returns {string}
      */
     _serializeSort: function (orderBy) {
-        return _.map(orderBy, function (order) {
+        return orderBy.map( order => {
             return order.name + (order.asc !== false ? ' ASC' : ' DESC');
         }).join(', ');
     },

@@ -378,10 +378,10 @@ var DomainTree = DomainNode.extend({
     _renderChildrenTo: function ($to) {
         var $div = $("<div/>");
         const children = this.children;
-        return Promise.all(_.map(children, (function (child) {
+        return Promise.all( children.map( child => {
             return child.appendTo($div);
-        }).bind(this))).then((function () {
-            _.each(children, function (child) {
+        }).bind(this)).then((function () {
+            children.forEach( child => {
                 child.$el.appendTo($to); // Forced to do it this way so that the
                                          // children are not misordered
             });

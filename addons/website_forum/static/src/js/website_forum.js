@@ -619,7 +619,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     _onMarkSpamClick: function (ev) {
         var key = this.$('.modal .tab-pane.active').data('key');
         var $inputs = this.$('.modal .tab-pane.active input.form-check-input:checked');
-        var values = _.map($inputs, function (o) {
+        var values = $inputs.map( o => {
             return parseInt(o.value);
         });
         return this._rpc({model: 'forum.post',

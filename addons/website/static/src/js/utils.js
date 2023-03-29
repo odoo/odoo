@@ -22,7 +22,7 @@ function loadAnchors(url, body) {
             resolve();
         }
     }).then(function (response) {
-        const anchors = _.map($(response).find('[id][data-anchor=true]'), function (el) {
+        const anchors = $(response).find('[id][data-anchor=true]').map( el => {
             return '#' + el.id;
         });
         // Always suggest the top and the bottom of the page as internal link
@@ -123,7 +123,7 @@ function autocompleteWithPages(self, $input, options) {
  * @param {jQuery} [$excluded]
  */
 function onceAllImagesLoaded($element, $excluded) {
-    var defs = _.map($element.find('img').addBack('img'), function (img) {
+    var defs = $element.find('img').addBack('img').map( img => {
         if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
             return; // Already loaded
         }

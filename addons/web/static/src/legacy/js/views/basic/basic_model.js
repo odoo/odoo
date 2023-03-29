@@ -371,7 +371,7 @@ var BasicModel = AbstractModel.extend({
      */
     deleteRecords: function (recordIds, modelName) {
         var self = this;
-        var records = _.map(recordIds, function (id) { return self.localData[id]; });
+        var records = recordIds.map( id => { return self.localData[id]; });
         var context = _.extend(records[0].getContext(), session.user_context);
         return this._rpc({
                 model: modelName,
@@ -638,7 +638,7 @@ var BasicModel = AbstractModel.extend({
             aggregateValues: _.extend({}, element.aggregateValues),
             context: _.extend({}, element.context),
             count: element.count,
-            data: _.map(element.data, function (elemID) {
+            data: element.data.map( elemID => {
                 return self.__get(elemID, options);
             }),
             domain: element.domain.slice(0),
@@ -1309,7 +1309,7 @@ var BasicModel = AbstractModel.extend({
     toggleActive: function (recordIDs, parentID) {
         var self = this;
         var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function (recordID) {
+        var resIDs = recordIDs.map( recordID => {
             return self.localData[recordID].res_id;
         });
         return this._rpc({
@@ -2149,7 +2149,7 @@ var BasicModel = AbstractModel.extend({
                 var removedIds = _.difference(list.res_ids, command.ids);
                 var addDef, removedDef, values;
                 if (newIds.length) {
-                    values = _.map(newIds, function (id) {
+                    values = newIds.map( id => {
                         return {id: id};
                     });
                     addDef = this._applyX2ManyChange(record, fieldName, {
@@ -2158,12 +2158,12 @@ var BasicModel = AbstractModel.extend({
                     }, options);
                 }
                 if (removedIds.length) {
-                    var listData = _.map(list.data, function (localId) {
+                    var listData = list.data.map( localId => {
                         return self.localData[localId];
                     });
                     removedDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'DELETE',
-                        ids: _.map(removedIds, function (resID) {
+                        ids: removedIds.map( resID => {
                             if (resID in list._cache) {
                                 return list._cache[resID];
                             }
@@ -2665,7 +2665,7 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchReferenceData: function (datapoints, model, fieldName) {
         var self = this;
-        var ids = _.map(Object.keys(datapoints), function (id) { return parseInt(id); });
+        var ids = Object.keys(datapoints).map( id => { return parseInt(id); });
         // we need one parent for the context (they all have the same)
         var parent = datapoints[ids[0]][0];
         var def = self._rpc({
@@ -2836,7 +2836,7 @@ var BasicModel = AbstractModel.extend({
                 context: list.getContext({withoutRecordData: true}) || {},
             });
         } else {
-            def = Promise.resolve(_.map(ids, function (id) {
+            def = Promise.resolve( ids.map( id => {
                 return {id:id};
             }));
         }
@@ -2862,7 +2862,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var specialFieldNames = [];
         var fieldNames = (options && options.fieldNames) || record.getFieldNames();
-        return Promise.all(_.map(fieldNames, function (name) {
+        return Promise.all( fieldNames.map( name => {
             var viewType = (options && options.viewType) || record.viewType;
             var fieldInfo = record.fieldsInfo[viewType][name] || {};
             let specialData;
@@ -3036,7 +3036,7 @@ var BasicModel = AbstractModel.extend({
                 if (list.parentID && self.isNew(list.parentID)) {
                     // list from a default_get, so fetch display_name for many2one fields
                     var many2ones = self._getMany2OneFieldNames(list);
-                    var defs = _.map(many2ones, function (name) {
+                    var defs = many2ones.map( name => {
                         return self._fetchNameGets(list, name);
                     });
                     return Promise.all(defs);
@@ -4797,7 +4797,7 @@ var BasicModel = AbstractModel.extend({
                 model: list.model,
             });
         } else {
-            def = Promise.resolve(_.map(missingIDs, function (id) {
+            def = Promise.resolve( missingIDs.map( id => {
                 return {id:id};
             }));
         }
@@ -4874,7 +4874,7 @@ var BasicModel = AbstractModel.extend({
             .then(function (result) {
                 var groups = result.groups;
                 list.groupsCount = result.length;
-                var previousGroups = _.map(list.data, function (groupID) {
+                var previousGroups = list.data.map( groupID => {
                     return self.localData[groupID];
                 });
                 list.data = [];
@@ -4974,7 +4974,7 @@ var BasicModel = AbstractModel.extend({
                     if (!options.onlyGroups) {
                         // generate the res_ids of the main list, being the concatenation
                         // of the fetched res_ids in each group
-                        list.res_ids = _.flatten(_.map(groups, function (group) {
+                        list.res_ids = _.flatten( groups.map( group => {
                             return group ? group.res_ids : [];
                         }));
                     }
@@ -5211,8 +5211,8 @@ var BasicModel = AbstractModel.extend({
         return prom.then(function (result) {
             delete list.__data;
             list.count = result.length;
-            var ids = _.pluck(result.records, 'id');
-            var data = _.map(result.records, function (record) {
+            var ids = result.records.map( record => record.id );
+            var data = result.records.map( record => {
                 var dataPoint = self._makeDataPoint({
                     context: list.context,
                     data: record,
@@ -5381,7 +5381,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         if (element.parentID) {
             var parent = this.localData[element.parentID];
-            parent.res_ids =  _.flatten(_.map(parent.data, function (dataPointID) {
+            parent.res_ids =  _.flatten( parent.data.map( dataPointID => {
                 return self.localData[dataPointID].res_ids;
             }));
             this._updateParentResIDs(parent);

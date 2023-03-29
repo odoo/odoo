@@ -317,7 +317,7 @@ var SnippetEditor = Widget.extend({
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible')
             && !this.$target.hasClass('o_snippet_mobile_invisible')
             && !this.$target.hasClass('o_snippet_desktop_invisible'));
-        const proms = _.map(this.styles, option => {
+        const proms = this.styles.map( option => {
             return option.cleanForSave();
         });
         await Promise.all(proms);
@@ -788,7 +788,7 @@ var SnippetEditor = Widget.extend({
         this.$el.data('$optionsSection', $optionsSection);
 
         var i = 0;
-        var defs = _.map(this.templateOptions, val => {
+        var defs = this.templateOptions.map( val => {
             if (!val.selector.is(this.$target)) {
                 return;
             }
@@ -2646,7 +2646,7 @@ var SnippetsMenu = Widget.extend({
      */
     _callForEachChildSnippet: function ($snippet, callback) {
         var self = this;
-        var defs = _.map($snippet.add(globalSelector.all($snippet)), function (el) {
+        var defs = $snippet.add(globalSelector.all($snippet)).map( el => {
             var $snippet = $(el);
             return self._createSnippetEditor($snippet).then(function (editor) {
                 if (editor) {
