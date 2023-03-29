@@ -1197,7 +1197,7 @@ class AccountTax(models.Model):
                 matched_tax_lines = [
                     x
                     for x in tax_lines
-                    if (x['group_tax'] or x['tax_repartition_line'].tax_id).tax_group_id == tax_detail['tax_group']
+                    if x['tax_repartition_line'].tax_id.tax_group_id == tax_detail['tax_group']
                 ]
                 if matched_tax_lines:
                     tax_group_vals['tax_amount'] = sum(x['tax_amount'] for x in matched_tax_lines)
