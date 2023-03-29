@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import textwrap
+
 from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
@@ -132,14 +134,7 @@ class Forum(models.Model):
     @api.depends('description')
     def _compute_teaser(self):
         for forum in self:
-            if forum.description:
-                desc = forum.description.replace('\n', ' ')
-                if len(forum.description) > 180:
-                    forum.teaser = desc[:180] + '...'
-                else:
-                    forum.teaser = forum.description
-            else:
-                forum.teaser = ""
+            forum.teaser = textwrap.shorten(forum.description, width=180, placeholder='...') if forum.description else ""
 
     @api.depends('post_ids')
     def _compute_last_post_id(self):
