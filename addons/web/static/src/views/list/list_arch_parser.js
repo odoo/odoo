@@ -188,6 +188,10 @@ export class ListArchParser extends XMLParser {
                     ? archParseBoolean(node.getAttribute("multi_edit") || "")
                     : false;
 
+                treeAttr.openFormView = treeAttr.editable
+                    ? archParseBoolean(xmlDoc.getAttribute("open_form_view") || "")
+                    : false;
+
                 const limitAttr = node.getAttribute("limit");
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
 

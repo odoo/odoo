@@ -269,7 +269,11 @@ export class ListRenderer extends Component {
                 return {
                     ...getPropertyFieldInfo(propertyField),
                     id: `${column.id}_${propertyField.name}`,
-                    column_invisible: combineModifiers(propertyField.column_invisible, column.column_invisible, 'OR'),
+                    column_invisible: combineModifiers(
+                        propertyField.column_invisible,
+                        column.column_invisible,
+                        "OR"
+                    ),
                     classNames: column.classNames,
                     optional: "hide",
                     type: "field",
@@ -437,6 +441,9 @@ export class ListRenderer extends Component {
         if (this.activeActions.onDelete || this.displayOptionalFields) {
             nbCols++;
         }
+        if (this.props.onOpenFormView) {
+            nbCols++;
+        }
         return nbCols;
     }
 
@@ -571,8 +578,9 @@ export class ListRenderer extends Component {
     get optionalFieldGroups() {
         const propertyGroups = {};
         const optionalFields = [];
-        const optionalColumns = this.allColumns.filter((col) =>
-            col.optional && !this.evalColumnInvisible(col.column_invisible));
+        const optionalColumns = this.allColumns.filter(
+            (col) => col.optional && !this.evalColumnInvisible(col.column_invisible)
+        );
         for (const col of optionalColumns) {
             const optionalField = {
                 label: col.label,
@@ -597,8 +605,9 @@ export class ListRenderer extends Component {
     }
 
     get hasOptionalFields() {
-        return this.allColumns.some((col) =>
-            col.optional && !this.evalColumnInvisible(col.column_invisible));
+        return this.allColumns.some(
+            (col) => col.optional && !this.evalColumnInvisible(col.column_invisible)
+        );
     }
 
     get displayOptionalFields() {
@@ -994,6 +1003,9 @@ export class ListRenderer extends Component {
             }
         }
         if (this.hasSelectors) {
+            colspan++;
+        }
+        if (this.props.onOpenFormView) {
             colspan++;
         }
         return colspan;
@@ -2122,6 +2134,7 @@ ListRenderer.props = [
     "cycleOnTab?",
     "allowSelectors?",
     "editable?",
+    "onOpenFormView?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
     "onOptionalFieldsChanged?",

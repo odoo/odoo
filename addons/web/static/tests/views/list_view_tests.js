@@ -630,6 +630,54 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
     });
 
+    QUnit.test("non-editable list with open_form_view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree open_form_view="1"><field name="foo"/></tree>',
+        });
+        assert.containsNone(
+            target,
+            "td.o_list_record_open_form_view",
+            "button to open form view should not be present on non-editable list"
+        );
+    });
+
+    QUnit.test("editable list with open_form_view not set", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+        assert.containsNone(
+            target,
+            "td.o_list_record_open_form_view",
+            "button to open form view should not be present"
+        );
+    });
+
+    QUnit.test("editable list with open_form_view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree editable="top" open_form_view="1"><field name="foo"/></tree>',
+            selectRecord: (resId, options) => {
+                assert.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
+            },
+        });
+        assert.containsN(
+            target,
+            "td.o_list_record_open_form_view",
+            4,
+            "button to open form view should be present on each rows"
+        );
+        await click(target.querySelector("td.o_list_record_open_form_view"));
+        assert.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
+    });
+
     QUnit.test(
         "export feature in list for users not in base.group_allow_export",
         async function (assert) {
@@ -4774,7 +4822,7 @@ QUnit.module("Views", (hooks) => {
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
-            assert.strictEqual(target.querySelector(".o_list_actions_header").style.width, "32px");
+            assert.strictEqual(target.querySelector(".o_list_actions_header").offsetWidth, 32);
         }
     );
 
