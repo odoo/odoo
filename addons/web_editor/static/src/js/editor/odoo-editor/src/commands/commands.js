@@ -448,6 +448,7 @@ export const editorCommands = {
         } else {
             editor.document.execCommand('unlink');
             setSelection(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
+            editor._updateLink();
         }
     },
 

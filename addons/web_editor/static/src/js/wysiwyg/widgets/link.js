@@ -2,13 +2,17 @@ odoo.define('wysiwyg.widgets.Link', function (require) {
 'use strict';
 
 const core = require('web.core');
-const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 const Widget = require('web.Widget');
 const {isColorGradient} = require('web_editor.utils');
-
-const getDeepRange = OdooEditorLib.getDeepRange;
-const getInSelection = OdooEditorLib.getInSelection;
 const _t = core._t;
+const {
+    getDeepRange,
+    getInSelection,
+    deduceURL,
+    splitURL,
+    joinURL,
+    linkToolsProtocols
+} = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 
 /**
  * Allows to customize link content and style.
@@ -69,7 +73,7 @@ const Link = Widget.extend({
         }
 
         if (this.data.range) {
-            this.$link = this.$link || $(OdooEditorLib.getInSelection(this.editable.ownerDocument, 'a'));
+            this.$link = this.$link || $(getInSelection(this.editable.ownerDocument, 'a'));
             this.linkEl = this.$link[0];
             this.data.iniClassName = this.$link.attr('class') || '';
             this.colorCombinationClass = false;
@@ -92,16 +96,18 @@ const Link = Widget.extend({
             } else {
                 this.data.originalHTML = linkNode.innerHTML;
             }
-            this.data.url = this.$link.attr('href') || '';
+            const [protocol, location] = splitURL(this.$link.attr('href'));
+            if (location) {
+                this.data.url = { protocol, location };
+            }
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
         }
-
         if (!this.data.url) {
-            const urls = this.data.content.match(OdooEditorLib.URL_REGEX_WITH_INFOS);
-            if (urls) {
-                this.data.url = urls[0];
-            }
+            // Deduce protocol and URL from label if valid url.
+            const [protocol, location] = deduceURL(this.data.content, linkToolsProtocols);
+            this.data.url = { protocol, location };
+            this._savedURLInputOnDestroy = !!location;
         }
 
         if (this.linkEl) {
@@ -156,10 +162,10 @@ const Link = Widget.extend({
 
         this._updateOptionsUI();
 
-        if (this.data.url) {
-            var match = /mailto:(.+)/.exec(this.data.url);
-            this.$('input[name="url"]').val(match ? match[1] : this.data.url);
-            this._onURLInput();
+        this.$('input[name="url"]').val(this.data.url.location);
+        this._onURLInput();
+        if (this._savedURLInputOnDestroy) {
+            this._adaptPreview();
             this._savedURLInputOnDestroy = false;
         }
 
@@ -233,7 +239,7 @@ const Link = Widget.extend({
             this.$link.css('border-color', '');
         }
         const attrs = Object.assign({}, this.data.oldAttributes, {
-            href: data.url,
+            href: data.href,
             target: data.isNewWindow ? '_blank' : '',
         });
         if (typeof data.classes === "string") {
@@ -249,6 +255,12 @@ const Link = Widget.extend({
             this.$link[0].removeAttribute('target');
         }
         this._updateLinkContent(this.$link, data);
+        if (this._contentMatchesUrl()) {
+            this.$link.addClass('oe_auto_update_link');
+        } else {
+            this.$link.removeClass('oe_auto_update_link');
+        }
+
     },
     /**
      * Focuses the url input.
@@ -283,18 +295,22 @@ const Link = Widget.extend({
      */
     _adaptPreview: function () {},
     /**
+     * Whether the link's text content matches its URL.
+     *
      * @private
+     * @returns {boolean}
      */
-    _correctLink: function (url) {
-        if (url.indexOf('mailto:') === 0 || url.indexOf('tel:') === 0) {
-            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
-            url = 'mailto:' + url;
-        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
-                    && url[0] !== '#' && url.slice(0, 2) !== '${') {
-            url = 'http://' + url;
+    _contentMatchesUrl: function () {
+        const link = this.$link?.[0];
+        if (!link || !this.data.url.protocol) {
+            return false;
         }
-        return url;
+        // Remove eventual ZWS and leading/trailing spaces.
+        let linkContent = link.innerText.replace(/\u200b/g, '').trim();
+        // Remove eventual leading protocol.
+        linkContent = splitURL(linkContent)[1];
+        const url = this.data.url.location.trim();
+        return linkContent === url;
     },
     /**
      * Abstract method: return true if the URL should be stripped of its domain.
@@ -336,21 +352,22 @@ const Link = Widget.extend({
             (type === 'custom' ? customClasses : '') +
             (type && shapeClasses ? (` ${shapeClasses}`) : '') +
             (type && size ? (' btn-' + size) : '');
-        var isNewWindow = this._isNewWindow(url);
+        let href = joinURL(this.data.url.protocol, this.data.url.location);
+        var isNewWindow = this._isNewWindow(href);
         var doStripDomain = this._doStripDomain();
         if (
-            url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i) ||
-            this._link && this._link.href.includes('mailto:') && !url.includes('mailto:')
+            this.data.url.protocol.startsWith('http') &&
+            href.indexOf(location.origin) === 0 &&
+            doStripDomain
         ) {
-            url = ('mailto:' + url);
-        } else if (url.indexOf(location.origin) === 0 && doStripDomain) {
-            url = url.slice(location.origin.length);
+            href = href.slice(location.origin.length);
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
         return {
             content: content,
-            url: this._correctLink(url),
+            url: this.data.url,
+            href: href,
             classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
             customTextColor: customTextColor,
             customFill: customFill,
@@ -523,7 +540,7 @@ const Link = Widget.extend({
                 }
                 contentWrapperEl.innerText = linkInfos.content;
             } else {
-                $link.text(linkInfos.url);
+                $link.text(linkInfos.url.location);
             }
         }
     },
@@ -560,18 +577,31 @@ const Link = Widget.extend({
      * @private
      */
     __onURLInput: function () {
+        const userInputUrl = this.$('input[name="url"]').val();
+        const [protocol, location] = deduceURL(userInputUrl, linkToolsProtocols, this.data.url.protocol, {
+            allowRelativeUrl: true,
+            trustUserUrl: true,
+        });
+        if (location) {
+            this.data.url = { protocol, location };
+        } else {
+            this.data.url = { protocol: 'http:', location: userInputUrl };
+        }
+        this._savedURLInputOnDestroy = true;
         this._onURLInput(...arguments);
     },
     /**
      * @private
-     */
+    */
     _onURLInput: function () {
-        this._savedURLInputOnDestroy = true;
-        var $linkUrlInput = this.$('#o_link_dialog_url_input');
-        let value = $linkUrlInput.val();
-        let isLink = value.indexOf('@') < 0;
+        const isAbsoluteLink = this.data.url.protocol.startsWith('http');
+        const isLink = isAbsoluteLink || ['/', '#'].includes(this.data.url.location[0]);
+        const linkHref = joinURL(this.data.url.protocol, this.data.url.location);
+        const isSameHost = isAbsoluteLink && linkHref.indexOf(window.location.origin) === 0;
+        // Display/hide 'Open In New Window' checkbox.
         this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
-        this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+        // Display/hide 'Autoconvert To Relative Link' checkbox.
+        this.$('.o_strip_domain').toggleClass('d-none', !isSameHost);
     },
     /**
      * @private

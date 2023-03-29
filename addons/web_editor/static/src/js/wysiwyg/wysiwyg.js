@@ -39,6 +39,8 @@ const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
+const linkToolsProtocols = OdooEditorLib.linkToolsProtocols;
+const defaultProtocols = OdooEditorLib.defaultProtocols;
 
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
@@ -225,6 +227,10 @@ const Wysiwyg = Widget.extend({
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
+            getUpdateLinkOptions: () => ({
+               shouldUnlinkInvalidURL: !this.linkTools,
+               supportedProtocols: this.linkTools ? linkToolsProtocols : defaultProtocols,
+            }),
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {

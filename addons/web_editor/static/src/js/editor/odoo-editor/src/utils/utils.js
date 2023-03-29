@@ -47,14 +47,25 @@ const tldWhitelist = [
     'ug', 'uk', 'um', 'us', 'uy', 'uz', 'va', 'vc', 've', 'vg', 'vi', 'vn',
     'vu', 'wf', 'ws', 'ye', 'yt', 'yu', 'za', 'zm', 'zr', 'zw', 'co\\.uk'];
 
-const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
+const urlRegexBase = `|(?:[-a-zA-Z0-9:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
 const httpRegex = `(?:https?:\\/\\/)`;
 const httpCapturedRegex= `(https?:\\/\\/)`;
 
 export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase}))`, 'gi');
-export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase}))`, 'gi');
+export const URL_REGEX_STRICT = new RegExp(`^(?:(?:${httpCapturedRegex}${urlRegexBase})$`, 'i');
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
+
+const EMAIL_REGEX = /^(mailto:)?[\w-\.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
+const PHONE_REGEX = /^(tel:(?:\/\/)?)?\+?[\d\s.\-()\/]{3,25}$/;
+const linkRegexes = {
+    'http:': URL_REGEX_STRICT,
+    'https:': URL_REGEX_STRICT,
+    'mailto:': EMAIL_REGEX,
+    'tel:': PHONE_REGEX,
+};
+export const defaultProtocols = ['http:', 'mailto:'];
+export const linkToolsProtocols = [...defaultProtocols, 'tel:'];
 
 //------------------------------------------------------------------------------
 // Position and sizes
@@ -1446,26 +1457,6 @@ export function makeContentsInline(node) {
     }
 }
 
-/**
- * Returns an array of url infos for url matched in the given string.
- *
- * @param {String} string
- * @returns {Array}
- */
-export function getUrlsInfosInString(string) {
-    let infos = [],
-        match;
-    while ((match = URL_REGEX_WITH_INFOS.exec(string))) {
-        infos.push({
-            url: match[2] ? match[0] : 'https://' + match[0],
-            label: match[0],
-            index: match.index,
-            length: match[0].length,
-        });
-    }
-    return infos;
-}
-
 // optimize: use the parent Oid to speed up detection
 export function getOuid(node, optimize = false) {
     while (node && !isUnbreakable(node)) {
@@ -2532,6 +2523,106 @@ export const rightLeafOnlyNotBlockNotEditablePath = createDOMPathGenerator(DIREC
     stopFunction: node => isBlock(node) && !isNotEditableNode(node),
 });
 //------------------------------------------------------------------------------
+// URL
+//------------------------------------------------------------------------------
+/**
+ * Given the supported `protocols`, deduce URL from `text`,
+ * in [protocol, resource_location] form.
+ *
+ * @param {string} text
+ * @param {string[]} protocols
+ * @param {string} [currentProtocol]
+ * @param {Object} [options]
+ * @param {boolean} options.allowRelativeUrl
+ * @param {boolean} options.trustUserUrl
+ * @returns {[string, string]} [protocol, location]
+ */
+export function deduceURL(text, protocols, currentProtocol, options = {}) {
+    text = text?.trim();
+    if (!text) {
+        return ['', ''];
+    }
+    // 'http:' leads to 'https:' support and vice-versa
+    let supportedProtocols = new Set(protocols);
+    if (supportedProtocols.has('http:') || supportedProtocols.has('https:')) {
+        supportedProtocols.add('http:').add('https:');
+    }
+    // If text begins with a supported URL protocol, assume it is valid.
+    if (options.trustUserUrl) {
+        const [protocol, location] = splitURL(text);
+        if (supportedProtocols.has(protocol)) {
+            return [protocol, location];
+        }
+    }
+    // Use currentProtocol as a hint to change search order and speed up search.
+    // CurrentProtocol set to 'https' avoids its cohercion to 'http'.
+    if (currentProtocol && supportedProtocols.has(currentProtocol)) {
+        protocols = [currentProtocol, ...protocols.filter(p => p !== currentProtocol)];
+    }
+    // Check if text matches URL of the chosen protocols.
+    for (let protocol of protocols) {
+        const match = linkRegexes[protocol]?.exec(text);
+        if (match) {
+            const location = text.slice(match[1]?.length);
+            // Ensure no http to https conversion and vice-versa.
+            protocol = match[1]?.toLowerCase().replace(/\/\/$/, '') || protocol;
+            return [protocol, location];
+        }
+    }
+    // Allow localhost URLs.
+    // The reason for this is URL_REGEX not recognizing localhost and IPs as valid URLS.
+    // Shouldn't it?
+    if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+        const host = window.location.host.replace(/\./g, '\\.');
+        const regex = new RegExp(`^(https?://)?${host}`,'i')
+        const match = regex.exec(text);
+        if (match) {
+            const location = text.slice(match[1]?.length);
+            const protocol = match[1]?.toLowerCase().replace(/\/\/$/, '') || window.location.protocol;
+            return [protocol, location];
+        }
+    }
+    if (options.allowRelativeUrl && ['/', '#'].includes(text[0])) {
+        return ['', text];
+    }
+    return ['', ''];
+}
+
+/**
+ * Split URL into [protocol, resource_location].
+ *
+ * @param {string} url
+ * @returns {[string, string]}
+ */
+export function splitURL(url) {
+    if (!url) {
+        return ['', ''];
+    }
+    if (url.startsWith('/') || url.startsWith('#')) {
+        return ['', url];
+    }
+    // (protocol:) | optional '//' | (location)
+    const match = /^(?<protocol>\w+?:)(?:\/\/)?(?<location>.+)$/.exec(url);
+    return [match?.groups.protocol || '', match?.groups.location || ''];
+}
+
+/**
+ * Join protocol and resource location into a complete URL.
+ *
+ * @param {string} protocol
+ * @param {string} location
+ * @returns {string}
+ */
+export function joinURL(protocol, location) {
+    protocol ||= '';
+    location ||= '';
+    if (['http:', 'https:', 'tel:'].includes(protocol)) {
+        protocol += '//';
+    }
+    return protocol + location;
+}
+
+//------------------------------------------------------------------------------
 // Miscelaneous
 //------------------------------------------------------------------------------
 export function peek(arr) {
@@ -2554,4 +2645,24 @@ export function cleanZWS(node) {
     [node, ...descendants(node)]
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
+}
+
+/**
+ * Get [Node, offset] for previous text character within same textNode or
+ * adjacent sibling textNode.
+ *
+ * @param {Node} node
+ * @param {number} offset
+ * @returns {[Node|null, number|null]}
+ */
+export function getPreviousChar(node, offset) {
+    --offset;
+    while (offset < 0) {
+        node = node.previousSibling;
+        if (!node || node.nodeType !== Node.TEXT_NODE) {
+            return [null, null]
+        }
+        offset = node.textContent.length - 1;
+    }
+    return [node, offset];
 }

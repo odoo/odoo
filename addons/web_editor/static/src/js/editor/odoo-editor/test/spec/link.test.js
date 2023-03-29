@@ -1,4 +1,4 @@
-import { URL_REGEX, URL_REGEX_WITH_INFOS } from '../../src/OdooEditor.js';
+import { URL_REGEX, URL_REGEX_STRICT } from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     click,
@@ -9,7 +9,8 @@ import {
     insertLineBreak,
     testEditor,
     createLink,
-    undo
+    undo,
+    triggerEvent
 } from '../utils.js';
 
 const convertToLink = createLink;
@@ -19,13 +20,13 @@ const unlink = async function (editor) {
 const testUrlRegex = (url) => {
     it(`should be a link: ${url}`, () => {
         window.chai.assert.exists(url.match(URL_REGEX));
-        window.chai.assert.exists(url.match(URL_REGEX_WITH_INFOS));
+        window.chai.assert.exists(url.match(URL_REGEX_STRICT));
     });
 }
 const testNotUrlRegex = (url) => {
     it(`should NOT be a link: ${url}`, () => {
         window.chai.assert.notExists(url.match(URL_REGEX));
-        window.chai.assert.notExists(url.match(URL_REGEX_WITH_INFOS));
+        window.chai.assert.notExists(url.match(URL_REGEX_STRICT));
     });
 }
 
@@ -197,28 +198,28 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await insertText(editor, 'm');
                     },
-                    contentAfter: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.com" class="oe_auto_update_link">google.com[]</a>b</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="https://gogle.com">go[]gle.com</a>b</p>',
                     stepFunction: async editor => {
                         await insertText(editor, 'o');
                     },
-                    contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.com" class="oe_auto_update_link">goo[]gle.com</a>b</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="https://else.com">go[]gle.com</a>b</p>',
                     stepFunction: async editor => {
                         await insertText(editor, 'o');
                     },
-                    contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.com" class="oe_auto_update_link">goo[]gle.com</a>b</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="https://else.com">http://go[]gle.com</a>b</p>',
                     stepFunction: async editor => {
                         await insertText(editor, 'o');
                     },
-                    contentAfter: '<p>a<a href="http://google.com">http://goo[]gle.com</a>b</p>',
+                    contentAfter: '<p>a<a href="http://google.com" class="oe_auto_update_link">http://goo[]gle.com</a>b</p>',
                 });
             });
             it('should change the url in one step', async () => {
@@ -233,11 +234,20 @@ describe('Link', () => {
             });
             it('should not change the url when the label change', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                    contentBefore: '<p>a<a href="https://google.com">abc[]</a>b</p>',
                     stepFunction: async editor => {
-                        await insertText(editor, 'u');
+                        await insertText(editor, 'd');
                     },
-                    contentAfter: '<p>a<a href="https://google.com">google.comu[]</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.com">abcd[]</a>b</p>',
+                });
+            });
+            it('should unlink when the label changes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="https://google.com" class="oe_auto_update_link">www.google.[]com</a></p>',
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Backspace' });
+                    },
+                    contentAfter: '<p>www.google[]com</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="https://google.com">google.com[]</a></p>',
@@ -256,21 +266,21 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await insertText(editor, 'be');
                     },
-                    contentAfter: '<p>a<a href="https://google.be">google.be[]</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.be" class="oe_auto_update_link">google.be[]</a>b</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="https://gogle.com">[yahoo].com</a>b</p>',
                     stepFunction: async editor => {
                         await insertText(editor, 'google');
                     },
-                    contentAfter: '<p>a<a href="https://google.com">google[].com</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.com" class="oe_auto_update_link">google[].com</a>b</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="https://else.com">go[gle.c]om</a>b</p>',
                     stepFunction: async editor => {
                         await insertText(editor, '.c');
                     },
-                    contentAfter: '<p>a<a href="https://go.com">go.c[]om</a>b</p>',
+                    contentAfter: '<p>a<a href="https://go.com" class="oe_auto_update_link">go.c[]om</a>b</p>',
                 });
             });
             it('should not change the url when the label change', async () => {

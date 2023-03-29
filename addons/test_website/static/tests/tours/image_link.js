@@ -69,7 +69,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has phone URL",
-        trigger: "iframe .o_edit_menu_popover:has(.fa-phone) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
+        trigger: "iframe .o_edit_menu_popover:has(.fa-phone) a.o_we_url_link[href='tel://555-2368']:contains(tel://555-2368)",
         run: () => {}, // check
     }, {
         content: "remove URL",

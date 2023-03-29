@@ -42,6 +42,7 @@ const _DialogLinkWidget = Link.extend({
         }
         this.data.content = data.content;
         this.data.url = data.url;
+        this.data.href = data.href;
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
         var allBtnTypes = /(^|[ ])(btn-secondary|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi;
@@ -71,7 +72,7 @@ const _DialogLinkWidget = Link.extend({
         }
         const attrs = {
             target: '_blank',
-            href: data.url && data.url.length ? data.url : '#',
+            href: data.href && data.href.length ? data.href : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
 

@@ -37,8 +37,14 @@ const {SIZES, MEDIAS_BREAKPOINTS} = require('@web/core/ui/ui_service');
 
 var qweb = core.qweb;
 var _t = core._t;
-const preserveCursor = OdooEditorLib.preserveCursor;
-const descendants = OdooEditorLib.descendants;
+const {
+    preserveCursor,
+    descendants,
+    deduceURL,
+    splitURL,
+    joinURL,
+    linkToolsProtocols,
+} = OdooEditorLib;
 
 /**
  * @param {HTMLElement} el
@@ -5503,13 +5509,12 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             this.$target.trigger('href_changed');
             return;
         }
-        if (!url.startsWith('/') && !url.startsWith('#')
-                && !/^([a-zA-Z]*.):.+$/gm.test(url)) {
-            // We permit every protocol (http:, https:, ftp:, mailto:,...).
-            // If none is explicitly specified, we assume it is a http.
-            url = 'http://' + url;
-        }
-        linkEl.setAttribute('href', url);
+        const [protocol, location] = deduceURL(url, linkToolsProtocols, this.data.url.protocol, {
+            allowRelativeUrl: true,
+            trustUserUrl: true,
+        });
+        this.data.url = { protocol, location };
+        linkEl.setAttribute('href', joinURL(protocol, location));
         this.rerender = true;
         this.$target.trigger('href_changed');
     },
@@ -5560,7 +5565,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             }
             case 'setUrl': {
                 let href = linkEl ? linkEl.getAttribute('href') : '';
-                return href || '';
+                const [protocol, location] = splitURL(href);
+                this.data.url = { protocol, location };
+                return location;
             }
             case 'setNewWindow': {
                 const target = linkEl ? linkEl.getAttribute('target') : '';

@@ -1371,7 +1371,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'http://www.xyz.com');
                     },
-                    contentAfter: '<p>ab<a href="http://www.xyz.com">http://www.xyz.com</a>[]cd</p>',
+                    contentAfter: '<p>ab<a href="http://www.xyz.com" class="oe_auto_update_link">http://www.xyz.com</a>[]cd</p>',
                 });
             });
             it('should paste and transform an URL in a span', async () => {
@@ -1380,7 +1380,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'http://www.xyz.com');
                     },
-                    contentAfter: '<p>a<span>b<a href="http://www.xyz.com">http://www.xyz.com</a>[]c</span>d</p>',
+                    contentAfter: '<p>a<span>b<a href="http://www.xyz.com" class="oe_auto_update_link">http://www.xyz.com</a>[]c</span>d</p>',
                 });
             });
             it('should paste and not transform an URL in a existing link', async () => {
@@ -1405,14 +1405,14 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://www.xyz.xdc');
                     },
-                    contentAfter: '<p>a<a href="https://www.xyz.xdcc">https://www.xyz.xdc[]c</a>d</p>',
+                    contentAfter: '<p>a<a href="https://www.xyz.xdcc" class="oe_auto_update_link">https://www.xyz.xdc[]c</a>d</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="http://existing.com">b[].com</a>d</p>',
                     stepFunction: async editor => {
                         await pasteText(editor, 'oom');
                     },
-                    contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
+                    contentAfter: '<p>a<a href="http://boom.com" class="oe_auto_update_link">boom[].com</a>d</p>',
                 });
             });
             it('should paste and transform URL over the existing url', async () => {
@@ -1421,7 +1421,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://www.xyz.xdc ');
                     },
-                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
+                    contentAfter: '<p>ab<a href="https://www.xyz.xdc" class="oe_auto_update_link">https://www.xyz.xdc</a> []cd</p>',
                 });
             });
         });
@@ -1432,7 +1432,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'http://www.xyz.com');
                     },
-                    contentAfter: '<p>ab<a href="http://www.xyz.com">http://www.xyz.com</a>[]cd</p>',
+                    contentAfter: '<p>ab<a href="http://www.xyz.com" class="oe_auto_update_link">http://www.xyz.com</a>[]cd</p>',
                 });
             });
             it('should paste and transform an URL in a span', async () => {
@@ -1441,7 +1441,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'http://www.xyz.com');
                     },
-                    contentAfter: '<p>a<span>b<a href="http://www.xyz.com">http://www.xyz.com</a>[]c</span>d</p>',
+                    contentAfter: '<p>a<span>b<a href="http://www.xyz.com" class="oe_auto_update_link">http://www.xyz.com</a>[]c</span>d</p>',
                 });
             });
             it('should paste and not transform an URL in a existing link', async () => {

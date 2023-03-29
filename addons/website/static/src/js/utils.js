@@ -16,7 +16,7 @@ function loadAnchors(url, body) {
     return new Promise(function (resolve, reject) {
         if (url === window.location.pathname || url[0] === '#') {
             resolve(body ? body : document.body.outerHTML);
-        } else if (url.length && !url.startsWith("http")) {
+        } else if (url.length && !['http', 'mailto:', 'tel:'].some(protocol => url.startsWith(protocol))) {
             $.get(window.location.origin + url).then(resolve, reject);
         } else { // avoid useless query
             resolve();
