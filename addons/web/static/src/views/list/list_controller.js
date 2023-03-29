@@ -47,6 +47,8 @@ export class ListController extends Component {
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
+        const openFormView = this.props.editable ? this.archInfo.openFormView : false;
+        this.onOpenFormView = openFormView ? this.openRecord.bind(this) : undefined;
         this.activeActions = this.archInfo.activeActions;
         this.editable =
             this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;

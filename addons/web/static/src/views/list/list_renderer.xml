@@ -41,7 +41,8 @@
                             </th>
                             <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
+                        <th t-if="props.onOpenFormView" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view"/>
+                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header">
                             <Dropdown t-if="displayOptionalFields"
                                 class="'o_optional_columns_dropdown text-center border-top-0'"
                                 togglerClass="'btn p-0'"
@@ -87,6 +88,7 @@
                             </td>
                             <td t-else=""/>
                         </t>
+                        <td t-if="props.onOpenFormView"/>
                         <td t-if="displayOptionalFields or activeActions.onDelete" />
                     </tr>
                 </tfoot>
@@ -264,6 +266,20 @@
                         <Widget t-props="column.props" record="record"/>
                     </td>
                 </t>
+            </t>
+
+            <t t-if="props.onOpenFormView">
+                <td class="o_list_record_open_form_view text-center"
+                    t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                    t-on-click.stop="() => props.onOpenFormView(record)"
+                    tabindex="-1"
+                >
+                    <button class="btn btn-link text-end"
+                        name="Open in form view"
+                        aria-label="Open in form view"
+                        tabindex="-1"
+                    >View</button>
+                </td>
             </t>
 
             <t t-set="useUnlink" t-value="'unlink' in activeActions" />

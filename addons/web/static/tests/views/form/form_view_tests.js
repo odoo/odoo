@@ -10295,6 +10295,52 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("Can switch to form view on inline tree", async function (assert) {
+        const id = 2;
+        const actionService = {
+            start() {
+                return {
+                    doAction(action, options) {
+                        assert.step("doAction");
+                        assert.deepEqual(action, {
+                            res_id: id,
+                            res_model: "partner",
+                            type: "ir.actions.act_window",
+                            views: [[false, "form"]],
+                        });
+                        assert.deepEqual(options.props, {
+                            resIds: [id],
+                        });
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        serverData.models.partner.records[0].p = [id];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="top" open_form_view="1">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsOnce(
+            target,
+            "td.o_list_record_open_form_view",
+            "button to open form view should be present"
+        );
+        await click(target.querySelector("td.o_list_record_open_form_view"));
+        assert.verifySteps(["doAction"]);
+    });
+
     QUnit.test("can toggle column in x2many in sub form view", async function (assert) {
         serverData.models.partner.records[2].p = [1, 2];
         serverData.models.partner.fields.foo.sortable = true;

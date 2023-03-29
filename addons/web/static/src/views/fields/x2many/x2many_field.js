@@ -17,6 +17,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { useService } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
 
@@ -123,6 +124,7 @@ export class X2ManyField extends Component {
             ];
             return selectCreate(p);
         };
+        this.action = useService("action");
     }
 
     get activeField() {
@@ -221,7 +223,23 @@ export class X2ManyField extends Component {
                 !this.props.readonly && ("editable" in params ? params.editable : editable);
             this.onAdd(params);
         };
+        const openFormView = props.editable ? archInfo.openFormView : false;
+        props.onOpenFormView = openFormView ? this.switchToForm.bind(this) : undefined;
         return props;
+    }
+
+    switchToForm(record) {
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                res_id: record.resId,
+                res_model: this.list.resModel,
+            },
+            {
+                props: { resIds: this.list.resIds },
+            }
+        );
     }
 
     async onAdd({ context, editable } = {}) {
