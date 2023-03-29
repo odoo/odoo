@@ -843,6 +843,14 @@ class TestComputeOnchange(common.TransactionCase):
         self.assertEqual(form.bar, "foor")
         self.assertEqual(form.baz, "baz")
 
+        form = common.Form(self.env['test_new_api.compute.onchange'].with_context(
+            default_test_new_api_compute_onchange__foo="foo",
+            default_foo="foo 2",  # model based default have priority
+            default_wrong_model__baz="baz",
+        ))
+        self.assertEqual(form.foo, "foo")
+        self.assertFalse(form.baz)
+
     def test_onchange_once(self):
         """ Modifies `foo` field which will trigger an onchange method and
         checks it was triggered only one time. """

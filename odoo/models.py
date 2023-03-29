@@ -1434,7 +1434,14 @@ class BaseModel(metaclass=MetaModel):
 
         for name in fields_list:
             # 1. look up context
-            key = 'default_' + name
+            model_name = self._name.replace(".", "_")
+            key = f'default_{model_name}__{name}'
+            if key not in self._context:
+                key = f'default_{name}'
+            if key in self._context:
+                defaults[name] = self._context[key]
+                continue
+
             if key in self._context:
                 defaults[name] = self._context[key]
                 continue
