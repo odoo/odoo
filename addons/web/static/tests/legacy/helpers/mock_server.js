@@ -1261,7 +1261,7 @@ var MockServer = Class.extend({
             ids = [ids];
         }
         var records = this.data[model].records;
-        var names = _.map(ids, function (id) {
+        var names = ids.map( id => {
             return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, ""];
         });
         return names;
@@ -1308,7 +1308,7 @@ var MockServer = Class.extend({
                 return record.display_name.indexOf(str) !== -1;
             });
         }
-        var result = _.map(records, function (record) {
+        var result = records.map( record => {
             return [record.id, record.display_name];
         });
         return result.slice(0, limit);
@@ -1396,7 +1396,7 @@ var MockServer = Class.extend({
             var record =  _.findWhere(self.data[model].records, {id: id});
             return record ? records.concat(record) : records;
         }, []);
-        var results = _.map(records, function (record) {
+        var results = records.map( record => {
             var result = {};
             for (var i = 0; i < fields.length; i++) {
                 var field = self.data[model].fields[fields[i]];
@@ -1475,7 +1475,7 @@ var MockServer = Class.extend({
             aggregatedFields = _.keys(this.data[model].fields);
         }
 
-        var groupByFieldNames = _.map(groupBy, function (groupByField) {
+        var groupByFieldNames = groupBy.map( groupByField => {
             return groupByField.split(":")[0];
         });
 
@@ -1843,7 +1843,7 @@ var MockServer = Class.extend({
             records = this._sortByField(records, args.model, fieldName, order);
         }
         records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);
-        var processedRecords = _.map(records, function (r) {
+        var processedRecords = records.map( r => {
             var result = {};
             const _unique_fields = _.uniq(fields.concat(['id']))
             _unique_fields.forEach( fieldName => {

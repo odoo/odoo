@@ -8764,7 +8764,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.records[0].partner_ids = [1];
         serverData.models.partner.onchanges = {
             turtles: function (obj) {
-                var res = _.map(obj.turtles, function (command) {
+                var res = obj.turtles.map((command) => {
                     if (command[0] === 1) {
                         // already an UPDATE command: do nothing
                         return command;

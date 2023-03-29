@@ -2234,7 +2234,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var resultID = await model.load(this.params);
             var list = model.get(resultID);
-            assert.deepEqual(_.map(list.data, 'res_id'), [12, 15, 14],
+            assert.deepEqual(list.data.map( x => x['res_id']), [12, 15, 14],
                 "should have kept the order from the server");
             model.destroy();
         });
