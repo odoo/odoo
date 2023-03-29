@@ -205,21 +205,21 @@
                                     context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </div>
                             <label for="product_qty" string="Quantity"/>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row align-items-start">
                                 <field name="qty_producing" class="w-auto" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': [('state', '=', 'draft')]}"/>
                                 <span attrs="{'invisible': [('state', '=', 'draft')]}">/</span>
                                 <field name="product_qty" class="oe_inline text-start" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', 'not in', ('draft', 'done'))]}"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
-                                    context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
+                                    context="{'default_mo_id': id}" class="oe_link oe_inline py-0" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
                                     <field name="product_qty" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline flex-grow-1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <span class='fw-bold'>To Produce</span>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger"/>
+                                <span class='fw-bold text-nowrap'>To Produce</span>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}" class="py-0" />
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger py-0"/>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
