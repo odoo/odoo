@@ -26,7 +26,7 @@ export class MessageListView extends Component {
     }
 
     _willPatch() {
-        if (!this.messageListView.exists()) {
+        if (!this.messageListView.exists() || !this.messageListView.getScrollableElement()) {
             return;
         }
         this._willPatchSnapshot = {
