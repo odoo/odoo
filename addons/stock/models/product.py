@@ -102,6 +102,7 @@ class Product(models.Model):
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
+    lot_properties_definition = fields.PropertiesDefinition('Lot Properties')
 
     @api.depends('product_tmpl_id')
     def _compute_show_qty_status_button(self):

@@ -33,6 +33,7 @@ class StockLot(models.Model):
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
+    lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
 
     @api.model
     def generate_lot_names(self, first_lot, count):
