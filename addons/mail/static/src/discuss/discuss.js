@@ -59,10 +59,10 @@ export class Discuss extends Component {
         this.contentRef = useRef("content");
         this.popover = usePopover();
         this.closePopover = null;
-        this.settingsRef = useRef("settings");
         this.addUsersRef = useRef("addUsers");
         this.state = useState({
             activeMode: this.MODES.NONE,
+            isAddingUsers: false,
         });
         this.orm = useService("orm");
         this.effect = useService("effect");
@@ -104,11 +104,17 @@ export class Discuss extends Component {
             this.closePopover = null;
         } else {
             const el = this.addUsersRef.el;
+            this.state.isAddingUsers = true;
             this.closePopover = this.popover.add(
                 el,
                 ChannelInvitation,
                 { thread: this.thread },
-                { onClose: () => (this.closePopover = null) }
+                {
+                    onClose: () => {
+                        this.state.isAddingUsers = false;
+                        this.closePopover = null;
+                    },
+                }
             );
         }
     }
