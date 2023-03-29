@@ -1876,9 +1876,8 @@ class ChangePasswordUser(models.TransientModel):
 
     def change_password_button(self):
         for line in self:
-            if not line.new_passwd:
-                raise UserError(_("Before clicking on 'Change Password', you have to write a new password."))
-            line.user_id._change_password(line.new_passwd)
+            if line.new_passwd:
+                line.user_id._change_password(line.new_passwd)
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
 
