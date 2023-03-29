@@ -107,11 +107,7 @@ export class Composer extends Component {
         this.ui = useState(useService("ui"));
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.state = useState({
-            autofocus: 0,
-            active: true,
-            keyboard: this.KEYBOARD.NONE,
-        });
+        this.state = useState(this.prepareStateParameters());
         this.selection = useSelection({
             refName: "textarea",
             model: this.props.composer.selection,
@@ -205,6 +201,14 @@ export class Composer extends Component {
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
         });
+    }
+
+    prepareStateParameters() {
+        return {
+            autofocus: 0,
+            active: true,
+            keyboard: this.KEYBOARD.NONE,
+        };
     }
 
     get placeholder() {

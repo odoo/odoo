@@ -48,22 +48,27 @@
             <div class="d-flex flex-grow-1 flex-wrap mt-1 mx-1" t-att-class="{
                 'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }">
+                <!-- Use t-attf-class to set background so it's possible to override it by some conditions in extensions-->
                 <div t-foreach="nonImagesAttachments" t-as="attachment" t-key="attachment.id"
-                    class="o-mail-AttachmentCard d-flex rounded bg-300 mb-1 me-1 mw-100 overflow-auto"
+                    class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
                         'ms-1': isInChatWindowAndIsAlignedRight,
                         'me-1': !isInChatWindowAndIsAlignedRight,
                         'o-viewable': attachment.isViewable,
                         'o-isUploading': attachment.uploading,
-                    }" t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
-                     t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
+                    }"
+                    t-attf-class="bg-300"
+                    t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
+                    t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
                 >
                     <!-- o_image from mimetype.scss -->
-                    <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                    <div class="overflow-auto d-flex justify-content-center flex-column px-1">
-                        <div t-if="attachment.name" class="text-truncate" t-esc="attachment.name"/>
-                        <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
-                    </div>
+                    <t t-ref="display">
+                        <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                        <div class="overflow-auto d-flex justify-content-center flex-column px-1">
+                            <div t-if="attachment.name" class="text-truncate" t-esc="attachment.name"/>
+                            <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
+                        </div>
+                    </t>
                     <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachment.isDeletable and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
@@ -72,13 +77,17 @@
                             <i class="fa fa-check"/>
                         </div>
                         <button t-if="attachment.isDeletable"
-                            class="o-mail-AttachmentCard-unlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0"
+                            class="o-mail-AttachmentCard-unlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0 border-0"
                             t-attf-class="{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base' : 'bg-300' }}"
                             t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove"
                         >
                             <i class="fa fa-trash" role="img" aria-label="Remove"/>
                         </button>
-                        <button t-if="canDownload(attachment)" class="btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0 bg-300" t-on-click.stop="() => this.onClickDownload(attachment)" title="Download">
+                        <!-- Use t-attf-class to set background so it's possible to override it by some conditions in extensions-->
+                        <button t-if="canDownload(attachment)" class="btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0"
+                            t-attf-class="{{ 'bg-300' }}"
+                            t-on-click.stop="() => this.onClickDownload(attachment)" title="Download"
+                        >
                             <i class="fa fa-download" role="img" aria-label="Download"/>
                         </button>
                     </div>

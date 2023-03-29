@@ -40,16 +40,19 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
             const file = new File([dataUrlToBlob(data, type)], name, { type });
             return this.uploadFile(file);
         },
-        async uploadFile(file) {
+        async uploadFile(file, options) {
             const tmpId = nextId--;
             uploadingAttachmentIds.add(tmpId);
             await upload("/mail/attachment/upload", [file], {
                 buildFormData(formData) {
-                    formData.append("thread_id", state.thread.id);
-                    formData.append("tmp_url", URL.createObjectURL(file));
-                    formData.append("thread_model", state.thread.model);
-                    formData.append("is_pending", Boolean(composer));
-                    formData.append("temporary_id", tmpId);
+                    setupAttachment.prepareFormData(
+                        formData,
+                        state,
+                        file,
+                        composer,
+                        tmpId,
+                        options
+                    );
                 },
             }).catch((e) => {
                 if (e.name !== "AbortError") {
@@ -87,16 +90,14 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
         const tmpUrl = upload.data.get("tmp_url");
         const originThread = threadService.insert({ model: threadModel, id: threadId });
         abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
-        const attachment = attachmentService.insert({
-            filename: upload.title,
-            id: tmpId,
-            mimetype: upload.type,
-            name: upload.title,
-            originThread: composer ? undefined : originThread,
-            extension: upload.title.split(".").pop(),
-            uploading: true,
-            tmpUrl,
-        });
+        const attachment = attachmentService.insert(
+            setupAttachment.prepareAttachmentData(
+                upload,
+                tmpId,
+                composer ? undefined : originThread,
+                tmpUrl
+            )
+        );
         if (composer) {
             composer.attachments.push(attachment);
         }
@@ -157,3 +158,27 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
 
     return state;
 }
+
+export const setupAttachment = {
+    prepareFormData(formData, state, file, composer, tmpId, options) {
+        formData.append("thread_id", state.thread.id);
+        formData.append("tmp_url", URL.createObjectURL(file));
+        formData.append("thread_model", state.thread.model);
+        formData.append("is_pending", Boolean(composer));
+        formData.append("temporary_id", tmpId);
+        return formData;
+    },
+    prepareAttachmentData(upload, tmpId, originThread, tmpUrl) {
+        const attachmentData = {
+            filename: upload.title,
+            id: tmpId,
+            mimetype: upload.type,
+            name: upload.title,
+            originThread: originThread,
+            extension: upload.title.split(".").pop(),
+            uploading: true,
+            tmpUrl,
+        };
+        return attachmentData;
+    },
+};

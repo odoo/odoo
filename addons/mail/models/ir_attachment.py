@@ -11,6 +11,10 @@ from odoo.http import request
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
+    def create_uploaded_attachment(self, vals, **kwargs):
+        attachment = self.create(vals)
+        return attachment
+
     def _post_add_create(self):
         """ Overrides behaviour when the attachment is created through the controller
         """
@@ -51,21 +55,22 @@ class IrAttachment(models.Model):
         return self.env.user.partner_id
 
     def _attachment_format(self):
+        return [attachment._prepare_attachment_format(attachment) for attachment in self]
+
+    def _prepare_attachment_format(self, attachment):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
-        return [
-            {
-                'checksum': attachment.checksum,
-                'id': attachment.id,
-                'filename': attachment.name,
-                'name': attachment.name,
-                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                'originThread': [('insert', {
-                    'id': attachment.res_id,
-                    'model': attachment.res_model,
-                })],
-            }
-            for attachment in self
-        ]
+        return {
+            'checksum': attachment.checksum,
+            'id': attachment.id,
+            'filename': attachment.name,
+            'name': attachment.name,
+            "size": attachment.file_size,
+            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            'originThread': [('insert', {
+                'id': attachment.res_id,
+                'model': attachment.res_model,
+            })],
+        }
 
     @api.model
     def _get_upload_env(self, request, thread_model, thread_id):

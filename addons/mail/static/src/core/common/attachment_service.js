@@ -12,7 +12,10 @@ export class AttachmentService {
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.rpc = services["rpc"];
+        this.setup(env, services);
     }
+
+    setup() {} // Empty setup which can be overridden when it's needed
 
     insert(data) {
         if (!("id" in data)) {

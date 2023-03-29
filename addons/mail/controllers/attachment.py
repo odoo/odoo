@@ -31,15 +31,9 @@ class AttachmentController(http.Controller):
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals["access_token"] = env["ir.attachment"]._generate_access_token()
         try:
-            attachment = env["ir.attachment"].create(vals)
+            attachment = env["ir.attachment"].create_uploaded_attachment(vals, **kwargs)
             attachment._post_add_create()
-            attachmentData = {
-                "filename": ufile.filename,
-                "id": attachment.id,
-                "mimetype": attachment.mimetype,
-                "name": attachment.name,
-                "size": attachment.file_size,
-            }
+            attachmentData = attachment._prepare_attachment_format(attachment)
             if attachment.access_token:
                 attachmentData["accessToken"] = attachment.access_token
         except AccessError:

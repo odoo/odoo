@@ -22,7 +22,9 @@ export class SoundEffects {
             undeafen: { defaultVolume: 0.15, path: "/mail/static/src/audio/undeafen_new_01" },
             unmute: { defaultVolume: 0.2, path: "/mail/static/src/audio/unmute_1" },
         };
+        this.setup();
     }
+    setup() {} // Empty setup which can be overridden when it's needed
     /**
      * @param {String} param0 soundEffectName
      * @param {Object} param1

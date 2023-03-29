@@ -27,3 +27,19 @@ class IrAttachment(models.Model):
                 .env
             )
         return super()._get_upload_env(request, thread_model, thread_id)
+
+    def _prepare_attachment_format(self, attachment):
+        attachment_format = super()._prepare_attachment_format(attachment)
+        voice = self.env["discuss.voice.metadata"].sudo().search([("attachment_id", "=", attachment.id)])
+        if voice:
+            attachment_format['duration'] = voice.duration
+        return attachment_format
+
+    def create_uploaded_attachment(self, vals, **kwargs):
+        attachment = super(IrAttachment, self).create_uploaded_attachment(vals)
+        if kwargs.get('duration'):
+            attachment.env["discuss.voice.metadata"].create({
+                "attachment_id": attachment.id,
+                "duration": kwargs['duration'],
+            })
+        return attachment

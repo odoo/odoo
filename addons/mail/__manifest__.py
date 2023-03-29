@@ -185,6 +185,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/utils.js',
 
+            'mail/static/lib/lame/lame.js',
             'mail/static/src/core/common/**/*',
             # 'mail/static/src/core/public/**/*',
             'mail/static/src/**/common/**/*',

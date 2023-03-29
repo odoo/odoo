@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.VoiceRecorder" owl="1">
+        <div class="d-flex align-items-center" t-att-class="{ 'bg-200 rounded': state.recording }">
+            <t t-set="title"><t t-if="!state.recording">Voice Message</t><t t-else="">Stop Recording</t></t>
+            <div class="o-mail-VoiceRecorder-elapsed" t-att-class="state.recording ? 'recording ms-2 me-4' : ''"><t t-if="state.recording" t-esc="state.elapsed"/></div>
+            <button t-att-disabled="state.isActionPending or props.composer.hasVoice" class="border-0 btn rounded-pill fa" t-att-class="!state.recording ? 'fa-microphone btn-light' : 'ms-1 fa-circle text-danger o-mail-VoiceRecorder-dot'" t-att-title="title" t-on-click="onClick"/>
+        </div>
+    </t>
+
+</templates>

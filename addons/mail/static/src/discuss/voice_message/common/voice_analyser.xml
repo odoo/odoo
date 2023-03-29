@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.VoiceAnalyser" owl="1">
+        <div class="o-mail-VoiceAnalyser d-flex align-items-center my-1 position-relative">
+            <t t-set="playOrPause"><t t-if="state.playing">Pause</t><t t-else="">Play</t></t>
+            <button class="border-0 btn rounded-pill fa ms-2 bg-100"
+                t-att-class="state.playing ? 'fa-stop text-danger btn-sm' : 'fa-play btn-light btn-sm'"
+                t-att-title="playOrPause" t-on-click.stop="() => this.soundEffectsService.onClickAnalyser(this)"/>
+            <canvas class="o-mail-VoiceAnalyser-canvas h-100 mx-2" t-ref="canvas"/>
+            <div class="mx-2 text-primary"><t t-esc="state.visualTime"/></div>
+        </div>
+        <audio id="audio" t-ref="audio" t-att-src="props.attachment.defaultSource"/>
+    </t>
+
+</templates>
