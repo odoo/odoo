@@ -179,6 +179,8 @@ export class HtmlField extends Component {
                 powerboxCommands: [
                     {
                         category: this.env._t('Marketing Tools'),
+                        categoryId: 'marketing_tools',
+                        commandId: 'dynamic_placeholder',
                         name: this.env._t('Dynamic Placeholder'),
                         priority: 10,
                         description: this.env._t('Insert personalized content'),

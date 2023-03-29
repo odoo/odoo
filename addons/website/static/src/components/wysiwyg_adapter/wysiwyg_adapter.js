@@ -538,6 +538,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         const commands = [
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'alert',
                 name: this.env._t('Alert'),
                 priority: 100,
                 description: this.env._t('Insert an alert snippet.'),
@@ -549,6 +551,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'rating',
                 name: this.env._t('Rating'),
                 priority: 90,
                 description: this.env._t('Insert a rating snippet.'),
@@ -560,6 +564,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'card',
                 name: this.env._t('Card'),
                 priority: 80,
                 description: this.env._t('Insert a card snippet.'),
@@ -571,6 +577,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'share',
                 name: this.env._t('Share'),
                 priority: 70,
                 description: this.env._t('Insert a share snippet.'),
@@ -582,6 +590,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'text_highlight',
                 name: this.env._t('Text Highlight'),
                 priority: 60,
                 description: this.env._t('Insert a text Highlight snippet.'),
@@ -593,6 +603,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'chart',
                 name: this.env._t('Chart'),
                 priority: 50,
                 description: this.env._t('Insert a chart snippet.'),
@@ -604,6 +616,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'progress_bar',
                 name: this.env._t('Progress Bar'),
                 priority: 40,
                 description: this.env._t('Insert a progress bar snippet.'),
@@ -615,6 +629,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'badge',
                 name: this.env._t('Badge'),
                 priority: 30,
                 description: this.env._t('Insert a badge snippet.'),
@@ -626,6 +642,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'blockquote',
                 name: this.env._t('Blockquote'),
                 priority: 20,
                 description: this.env._t('Insert a blockquote snippet.'),
@@ -637,6 +655,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
             {
                 category: this.env._t('Website'),
+                categoryId: 'website',
+                commandId: 'website_separator',
                 name: this.env._t('Separator'),
                 priority: 10,
                 description: this.env._t('Insert an horizontal separator sippet.'),

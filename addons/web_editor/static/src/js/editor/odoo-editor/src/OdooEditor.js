@@ -454,6 +454,8 @@ export class OdooEditor extends EventTarget {
             commands: [
                 {
                     category: this.options._t('Structure'),
+                    categoryId: 'structure',
+                    commandId: 'bulleted_list',
                     name: this.options._t('Bulleted list'),
                     priority: 110,
                     description: this.options._t('Create a simple bulleted list.'),
@@ -465,6 +467,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Structure'),
+                    categoryId: 'structure',
+                    commandId: 'numbered_list',
                     name: this.options._t('Numbered list'),
                     priority: 100,
                     description: this.options._t('Create a list with numbering.'),
@@ -476,6 +480,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Structure'),
+                    categoryId: 'structure',
+                    commandId: 'checklist',
                     name: this.options._t('Checklist'),
                     priority: 90,
                     description: this.options._t('Track tasks with a checklist.'),
@@ -487,6 +493,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Structure'),
+                    categoryId: 'structure',
+                    commandId: 'table',
                     name: this.options._t('Table'),
                     priority: 80,
                     description: this.options._t('Insert a table.'),
@@ -498,6 +506,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Format'),
+                    categoryId: 'format',
+                    commandId: 'heading_1',
                     name: this.options._t('Heading 1'),
                     priority: 50,
                     description: this.options._t('Big section heading.'),
@@ -509,6 +519,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Format'),
+                    categoryId: 'format',
+                    commandId: 'heading_2',
                     name: this.options._t('Heading 2'),
                     priority: 40,
                     description: this.options._t('Medium section heading.'),
@@ -520,6 +532,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Format'),
+                    categoryId: 'format',
+                    commandId: 'heading_3',
                     name: this.options._t('Heading 3'),
                     priority: 30,
                     description: this.options._t('Small section heading.'),
@@ -531,6 +545,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Format'),
+                    categoryId: 'format',
+                    commandId: 'switch_direction',
                     name: this.options._t('Switch direction'),
                     priority: 20,
                     description: this.options._t('Switch the text\'s direction.'),
@@ -541,6 +557,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Format'),
+                    categoryId: 'format',
+                    commandId: 'text',
                     name: this.options._t('Text'),
                     priority: 10,
                     description: this.options._t('Paragraph block.'),
@@ -552,6 +570,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Widgets'),
+                    categoryId: 'widgets',
+                    commandId: '3_stars',
                     name: this.options._t('3 Stars'),
                     priority: 20,
                     description: this.options._t('Insert a rating over 3 stars.'),
@@ -565,6 +585,8 @@ export class OdooEditor extends EventTarget {
                 },
                 {
                     category: this.options._t('Widgets'),
+                    categoryId: 'widgets',
+                    commandId: '5_stars',
                     name: this.options._t('5 Stars'),
                     priority: 10,
                     description: this.options._t('Insert a rating over 5 stars.'),
@@ -580,6 +602,8 @@ export class OdooEditor extends EventTarget {
                 ...(!this.options.commands || !this.options.commands.find(c =>  c.name === this.options._t('Separator')) ? [
                     {
                         category: this.options._t('Structure'),
+                        categoryId: 'structure',
+                        commandId: 'separator',
                         name: this.options._t('Separator'),
                         priority: 40,
                         description: this.options._t('Insert an horizontal rule separator.'),
@@ -4295,6 +4319,8 @@ export class OdooEditor extends EventTarget {
                     const baseEmbedCommand = [
                         {
                             category: this.options._t('Paste'),
+                            categoryId: 'paste',
+                            commandId: 'paste_as_url',
                             name: this.options._t('Paste as URL'),
                             description: this.options._t('Create an URL.'),
                             fontawesome: 'fa-link',
@@ -4318,6 +4344,8 @@ export class OdooEditor extends EventTarget {
                         },
                         {
                             category: this.options._t('Paste'),
+                            categoryId: 'paste',
+                            commandId: 'paste_as_text',
                             name: this.options._t('Paste as text'),
                             description: this.options._t('Simple text paste.'),
                             fontawesome: 'fa-font',
@@ -4341,6 +4369,8 @@ export class OdooEditor extends EventTarget {
                         this.powerbox.open([
                             {
                                 category: this.options._t('Embed'),
+                                categoryId: 'embed',
+                                commandId: 'embed_image',
                                 name: this.options._t('Embed Image'),
                                 description: this.options._t('Embed the image in the document.'),
                                 fontawesome: 'fa-image',
@@ -4367,6 +4397,8 @@ export class OdooEditor extends EventTarget {
                         this.powerbox.open([
                             {
                                 category: this.options._t('Embed'),
+                                categoryId: 'embed',
+                                commandId: 'embed_youtube_video',
                                 name: this.options._t('Embed Youtube Video'),
                                 description: this.options._t('Embed the youtube video in the document.'),
                                 fontawesome: 'fa-youtube-play',

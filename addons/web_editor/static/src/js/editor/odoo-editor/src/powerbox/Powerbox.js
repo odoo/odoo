@@ -14,6 +14,9 @@ function cycle(num, max) {
 /**
  * interface PowerboxCommand {
  *     category: string;
+ *     categoryId: string; // unique id to reference the category (not
+ *                          // translated, i.e. for filtering)
+ *     commandId: string; // unique id to reference the command
  *     name: string;
  *     priority: number;
  *     description: string;

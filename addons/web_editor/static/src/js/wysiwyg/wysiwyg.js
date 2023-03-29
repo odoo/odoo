@@ -2073,6 +2073,8 @@ const Wysiwyg = Widget.extend({
         const commands = [
             {
                 category: _t('Structure'),
+                categoryId: 'structure',
+                commandId: 'quote',
                 name: _t('Quote'),
                 priority: 30,
                 description: _t('Add a blockquote section.'),
@@ -2084,6 +2086,8 @@ const Wysiwyg = Widget.extend({
             },
             {
                 category: _t('Structure'),
+                categoryId: 'structure',
+                commandId: 'code',
                 name: _t('Code'),
                 priority: 20,
                 description: _t('Add a code section.'),
@@ -2095,6 +2099,8 @@ const Wysiwyg = Widget.extend({
             },
             {
                 category: _t('Basic blocks'),
+                categoryId: 'basic_blocks',
+                commandId: 'signature',
                 name: _t('Signature'),
                 description: _t('Insert your signature.'),
                 fontawesome: 'fa-pencil-square-o',
@@ -2112,6 +2118,8 @@ const Wysiwyg = Widget.extend({
             },
             {
                 category: _t('Structure'),
+                categoryId: 'structure',
+                commandId: '2_columns',
                 name: _t('2 columns'),
                 priority: 13,
                 description: _t('Convert into 2 columns.'),
@@ -2128,6 +2136,8 @@ const Wysiwyg = Widget.extend({
             },
             {
                 category: _t('Structure'),
+                categoryId: 'structure',
+                commandId: '3_columns',
                 name: _t('3 columns'),
                 priority: 12,
                 description: _t('Convert into 3 columns.'),
@@ -2144,6 +2154,8 @@ const Wysiwyg = Widget.extend({
             },
             {
                 category: _t('Structure'),
+                categoryId: 'structure',
+                commandId: '4_columns',
                 name: _t('4 columns'),
                 priority: 11,
                 description: _t('Convert into 4 columns.'),
@@ -2160,6 +2172,8 @@ const Wysiwyg = Widget.extend({
             },
             {
                 category: _t('Structure'),
+                categoryId: 'structure',
+                commandId: 'remove_columns',
                 name: _t('Remove columns'),
                 priority: 10,
                 description: _t('Back to one column.'),
@@ -2180,6 +2194,8 @@ const Wysiwyg = Widget.extend({
             commands.push(
                 {
                     category: _t('Navigation'),
+                    categoryId: 'navigation',
+                    commandId: 'link',
                     name: _t('Link'),
                     priority: 40,
                     description: _t('Add a link.'),
@@ -2190,6 +2206,8 @@ const Wysiwyg = Widget.extend({
                 },
                 {
                     category: _t('Navigation'),
+                    categoryId: 'navigation',
+                    commandId: 'button',
                     name: _t('Button'),
                     priority: 30,
                     description: _t('Add a button.'),
@@ -2210,6 +2228,8 @@ const Wysiwyg = Widget.extend({
         if (editorOptions.allowCommandImage) {
             commands.push({
                 category: _t('Media'),
+                categoryId: 'media',
+                commandId: 'image',
                 name: _t('Image'),
                 priority: 40,
                 description: _t('Insert an image.'),
@@ -2222,6 +2242,8 @@ const Wysiwyg = Widget.extend({
         if (editorOptions.allowCommandVideo) {
             commands.push({
                 category: _t('Media'),
+                categoryId: 'media',
+                commandId: 'video',
                 name: _t('Video'),
                 priority: 30,
                 description: _t('Insert a video.'),
