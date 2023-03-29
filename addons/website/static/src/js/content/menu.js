@@ -244,8 +244,12 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
 
         if (this.closeOpenedMenus) {
-            this.$dropdowns.removeClass('show');
-            this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
+            // TODO master: make this.$dropdowns the .dropdown-toggle directly.
+            for (const dropdownMenuEl of this.$dropdowns) {
+                Dropdown.getOrCreateInstance(
+                    dropdownMenuEl.closest('.dropdown').querySelector('.dropdown-toggle')
+                ).hide();
+            }
         }
     },
     /**
