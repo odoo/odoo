@@ -934,7 +934,7 @@ export class ListRenderer extends Component {
         return {
             offset: list.offset,
             limit: list.limit,
-            total: list.count,
+            total: group.count,
             onUpdate: async ({ offset, limit }) => {
                 await list.load({ limit, offset });
                 this.render(true);
@@ -1654,7 +1654,7 @@ export class ListRenderer extends Component {
     }
 
     showGroupPager(group) {
-        return !group.isFolded && group.list.limit < group.list.count;
+        return !group.isFolded && group.list.limit < group.count;
     }
 
     toggleGroup(group) {
