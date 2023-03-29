@@ -9,6 +9,7 @@
                 <field name="tag_ids"/>
                 <field name="user_id"/>
                 <field name="is_auto_campaign"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="group_stage_id"
                         context="{'group_by': 'stage_id'}"/>
@@ -30,7 +31,9 @@
                 <sheet>
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group id="top-group">
+                        <field name="active" invisible="1"/>
                         <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="name" invisible="1"/>
                         <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
@@ -81,6 +84,7 @@
                 <field name='color'/>
                 <field name='user_id'/>
                 <field name="stage_id"/>
+                <field name='active'/>
                 <templates>
                     <t t-name="kanban-menu">
                         <t t-if="widget.editable">
@@ -89,6 +93,10 @@
                         <t t-if="widget.deletable">
                             <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
+                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                            <t t-if="record.active.raw_value">Archive</t>
+                            <t t-else="">Restore</t>
+                        </a>
                         <div role="separator" class="dropdown-divider"/>
                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                     </t>

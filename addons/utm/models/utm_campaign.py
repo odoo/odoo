@@ -9,6 +9,7 @@ class UtmCampaign(models.Model):
     _description = 'UTM Campaign'
     _rec_name = 'title'
 
+    active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Campaign Identifier', required=True, compute='_compute_name',
                        store=True, readonly=False, precompute=True, translate=False)
     title = fields.Char(string='Campaign Name', required=True, translate=True)
