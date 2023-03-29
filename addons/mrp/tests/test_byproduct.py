@@ -205,3 +205,55 @@ class TestMrpByProduct(common.TransactionCase):
         finished_move_line = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_a).move_line_ids
         self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
         self.assertEqual(finished_move_line.location_dest_id, shelf2_location)
+
+    def test_byproduct_no_reservation(self):
+        """
+        Test that no reservation of tracked byproducts is done
+        in the Virtual locations/Production, as the products being
+        in the location were already consumed in another MO
+        """
+        # Change products tracking to serial number
+        self.product_a.tracking = "serial"
+        self.product_b.tracking = "serial"
+        # Create extra product with BOM where the byproduct is a component
+        product_d = self.env["product.product"].create({
+                "name": "Recycle byproduct",
+                "type": "product",
+        })
+        bom_product_d = self.env["mrp.bom"].create({
+            "product_tmpl_id": product_d.product_tmpl_id.id,
+            "product_qty": 1.0,
+            "type": "normal",
+            "product_uom_id": self.uom_unit_id,
+            "bom_line_ids": [(0, 0, {"product_id": self.product_b.id, "product_uom_id": self.uom_unit_id, "product_qty": 1})],
+        })
+        # Create a serial number for the byproduct to have a stock
+        lot_b1 = self.env["stock.production.lot"].create({
+            "name": "SN000001",
+            "product_id": self.product_b.id,
+            "company_id": self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_b, self.warehouse.lot_stock_id, 1.0, lot_id=lot_b1)
+
+        # Consume the byproduct in stock to build another product
+        mnf_product_d_form = Form(self.env['mrp.production'])
+        mnf_product_d_form.product_id = product_d
+        mnf_product_d_form.bom_id = bom_product_d
+        mnf_product_d_form.product_qty = 1
+        mnf_product_d = mnf_product_d_form.save()
+        mnf_product_d.action_confirm()
+        self.assertEqual(mnf_product_d.move_raw_ids.move_line_ids.lot_id, lot_b1)
+        mnf_product_d.move_raw_ids.quantity_done = mnf_product_d.move_raw_ids.product_uom_qty
+        mnf_product_d.qty_producing = 1
+        mnf_product_d.button_mark_done()
+        self.assertEqual(mnf_product_d.state, "done")
+
+        # Create a manufacturing order that will generate the byproduct
+        mnf_product_a_form = Form(self.env['mrp.production'])
+        mnf_product_a_form.product_id = self.product_a
+        mnf_product_a_form.bom_id = self.bom_byproduct
+        mnf_product_a_form.product_qty = 1
+        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a.action_confirm()
+        self.assertFalse(mnf_product_a.move_byproduct_ids.move_line_ids.lot_id)
+        self.assertFalse(mnf_product_a.move_byproduct_ids.move_line_ids.lot_name)
