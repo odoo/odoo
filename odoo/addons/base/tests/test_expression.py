@@ -1216,6 +1216,9 @@ class TestQueries(TransactionCase):
         # search on both 'name' and 'model'
         self.assertEqual(Model._rec_names_search, ['name', 'model'])
 
+        # warmup
+        Model.name_search('foo')
+
         Model.name_search('partner')
         with self.assertQueries(['''
             SELECT "ir_model"."id"

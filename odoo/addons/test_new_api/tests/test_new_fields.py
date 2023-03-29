@@ -3791,6 +3791,386 @@ def update(model, *fnames):
     )
 
 
+class TestSubqueries(common.TransactionCase):
+    """ Test the subqueries made by search() with relational fields. """
+    maxDiff = None
+
+    def test_and_many2one_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE ("res_partner"."name"::text LIKE %s)
+            )) AND ("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE ("res_partner"."phone"::text LIKE %s)
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                ('partner.name', 'like', 'jack'),
+                ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_or_many2one_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE ("res_partner"."name"::text LIKE %s)
+            )) OR ("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE ("res_partner"."phone"::text LIKE %s)
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '|',
+                    ('partner.name', 'like', 'jack'),
+                    ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_not_and_many2one_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE (("res_partner"."name"::text NOT LIKE %s) OR "res_partner"."name" IS NULL)
+            )) OR ("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE (("res_partner"."phone"::text NOT LIKE %s) OR "res_partner"."phone" IS NULL)
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '!', '&',
+                    ('partner.name', 'like', 'jack'),
+                    ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_not_or_many2one_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE (("res_partner"."name"::text NOT LIKE %s) OR "res_partner"."name" IS NULL)
+            )) AND ("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE (("res_partner"."phone"::text NOT LIKE %s) OR "res_partner"."phone" IS NULL)
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '!', '|',
+                    ('partner.name', 'like', 'jack'),
+                    ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_or_autojoined_many2one_with_subfield(self):
+        self.patch(self.env['test_new_api.multi']._fields['partner'], 'auto_join', True)
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
+                ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
+            WHERE (
+                ("test_new_api_multi__partner"."name"::text LIKE %s)
+                OR ("test_new_api_multi__partner"."phone"::text LIKE %s)
+            )
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '|',
+                    ('partner.name', 'like', 'jack'),
+                    ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_not_or_autojoined_many2one_with_subfield(self):
+        self.patch(self.env['test_new_api.multi']._fields['partner'], 'auto_join', True)
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
+                ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
+            WHERE (
+                (("test_new_api_multi__partner"."name"::text NOT LIKE %s)
+                    OR "test_new_api_multi__partner"."name" IS NULL)
+                AND (("test_new_api_multi__partner"."phone"::text NOT LIKE %s)
+                        OR "test_new_api_multi__partner"."phone" IS NULL)
+            )
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '!', '|',
+                    ('partner.name', 'like', 'jack'),
+                    ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_mixed_and_or_many2one_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."partner" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE ("res_partner"."email"::text LIKE %s)
+            )) AND ((
+                "test_new_api_multi"."partner" IN (
+                    SELECT "res_partner"."id"
+                    FROM "res_partner"
+                    WHERE ("res_partner"."name"::text LIKE %s)
+                )) OR ("test_new_api_multi"."partner" IN (
+                    SELECT "res_partner"."id"
+                    FROM "res_partner"
+                    WHERE ("res_partner"."phone"::text LIKE %s)
+                )
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                ('partner.email', 'like', '@sgc.us'),
+                '|',
+                    ('partner.name', 'like', 'jack'),
+                    ('partner.phone', 'like', '01234'),
+            ])
+
+    def test_mixed_and_or_not_many2one_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (
+                (
+                    (
+                        ({many2one} IN (
+                            {subselect} WHERE ("res_partner"."function"::text LIKE %s)
+                        )) OR (
+                            ({many2one} IN (
+                                {subselect} WHERE (("res_partner"."phone"::text NOT LIKE %s) OR "res_partner"."phone" IS NULL)
+                            )) OR ({many2one} IN (
+                                {subselect} WHERE (("res_partner"."mobile"::text NOT LIKE %s) OR "res_partner"."mobile" IS NULL)
+                            ))
+                        )
+                    ) AND ({many2one} IN (
+                        {subselect} WHERE (("res_partner"."website"::text NOT LIKE %s) OR "res_partner"."website" IS NULL)
+                    ))
+                ) AND (
+                    ({many2one} IN (
+                        {subselect} WHERE ("res_partner"."name"::text LIKE %s)
+                    )) OR ({many2one} IN (
+                        {subselect} WHERE ("res_partner"."email"::text LIKE %s)
+                    ))
+                )
+            )
+            ORDER BY "test_new_api_multi"."id"
+        """.format(
+            many2one='"test_new_api_multi"."partner"',
+            subselect='SELECT "res_partner"."id" FROM "res_partner"',
+        )]):
+            # (function or not (phone and mobile)) and not website and (name or email)
+            self.env['test_new_api.multi'].search([
+                '&', '&',
+                    '|',
+                        ('partner.function', 'like', 'Colonel'),
+                        '!', '&',
+                            ('partner.phone', 'like', '+01'),
+                            ('partner.mobile', 'like', '+01'),
+                    '!', ('partner.website', 'like', 'sgc.us'),
+                    '|',
+                        ('partner.name', 'like', 'jack'),
+                        ('partner.email', 'like', '@sgc.us'),
+            ])
+
+    def test_and_one2many_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."id" IN (
+                SELECT "test_new_api_multi_line"."multi"
+                FROM "test_new_api_multi_line"
+                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                      AND "test_new_api_multi_line"."multi" IS NOT NULL
+            )) AND ("test_new_api_multi"."id" IN (
+                SELECT "test_new_api_multi_line"."multi"
+                FROM "test_new_api_multi_line"
+                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                      AND "test_new_api_multi_line"."multi" IS NOT NULL
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                ('lines.name', 'like', 'x'),
+                ('lines.name', 'like', 'y'),
+            ])
+
+    def test_or_one2many_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."id" IN (
+                SELECT "test_new_api_multi_line"."multi"
+                FROM "test_new_api_multi_line"
+                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                      AND "test_new_api_multi_line"."multi" IS NOT NULL
+            )) OR ("test_new_api_multi"."id" IN (
+                SELECT "test_new_api_multi_line"."multi"
+                FROM "test_new_api_multi_line"
+                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                      AND "test_new_api_multi_line"."multi" IS NOT NULL
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '|',
+                    ('lines.name', 'like', 'x'),
+                    ('lines.name', 'like', 'y'),
+            ])
+
+    def test_mixed_and_or_one2many_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (("test_new_api_multi"."id" IN (
+                SELECT "test_new_api_multi_line"."multi"
+                FROM "test_new_api_multi_line"
+                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                      AND "test_new_api_multi_line"."multi" IS NOT NULL
+            )) AND ((
+                "test_new_api_multi"."id" IN (
+                    SELECT "test_new_api_multi_line"."multi"
+                    FROM "test_new_api_multi_line"
+                    WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                          AND "test_new_api_multi_line"."multi" IS NOT NULL
+                )) OR ("test_new_api_multi"."id" IN (
+                    SELECT "test_new_api_multi_line"."multi"
+                    FROM "test_new_api_multi_line"
+                    WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                          AND "test_new_api_multi_line"."multi" IS NOT NULL
+                ))
+            ))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                ('lines.name', 'like', 'x'),
+                '|',
+                    ('lines.name', 'like', 'y'),
+                    ('lines.name', 'like', 'z'),
+            ])
+
+    def test_and_many2many_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (EXISTS (
+                SELECT 1
+                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                    SELECT "test_new_api_multi_tag"."id"
+                    FROM "test_new_api_multi_tag"
+                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                )
+            ) AND EXISTS (
+                SELECT 1
+                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                    SELECT "test_new_api_multi_tag"."id"
+                    FROM "test_new_api_multi_tag"
+                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                )
+            ))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                ('tags.name', 'like', 'x'),
+                ('tags.name', 'like', 'y'),
+            ])
+
+    def test_or_many2many_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (EXISTS (
+                SELECT 1
+                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                    SELECT "test_new_api_multi_tag"."id"
+                    FROM "test_new_api_multi_tag"
+                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+            )) OR EXISTS (
+                SELECT 1
+                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                    SELECT "test_new_api_multi_tag"."id"
+                    FROM "test_new_api_multi_tag"
+                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+            )))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                '|',
+                    ('tags.name', 'like', 'x'),
+                    ('tags.name', 'like', 'y'),
+            ])
+
+    def test_mixed_and_or_many2many_with_subfield(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_multi"."id"
+            FROM "test_new_api_multi"
+            WHERE (EXISTS (
+                SELECT 1
+                FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                    SELECT "test_new_api_multi_tag"."id"
+                    FROM "test_new_api_multi_tag"
+                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                )
+            ) AND (
+                EXISTS (
+                    SELECT 1
+                    FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                    WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                    AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                        SELECT "test_new_api_multi_tag"."id"
+                        FROM "test_new_api_multi_tag"
+                        WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    )
+                ) OR EXISTS (
+                    SELECT 1
+                    FROM "test_new_api_multi_test_new_api_multi_tag_rel" AS "test_new_api_multi__tags"
+                    WHERE "test_new_api_multi__tags"."test_new_api_multi_id" = "test_new_api_multi"."id"
+                    AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
+                        SELECT "test_new_api_multi_tag"."id"
+                        FROM "test_new_api_multi_tag"
+                        WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    )
+                )
+            ))
+            ORDER BY "test_new_api_multi"."id"
+        """]):
+            self.env['test_new_api.multi'].search([
+                ('tags.name', 'like', 'x'),
+                '|',
+                    ('tags.name', 'like', 'y'),
+                    ('tags.name', 'like', 'z'),
+            ])
+
+
 class TestComputeQueries(common.TransactionCase):
     """ Test the queries made by create() with computed fields. """
 
