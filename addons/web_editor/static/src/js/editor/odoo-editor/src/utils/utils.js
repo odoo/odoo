@@ -491,7 +491,7 @@ export function hasValidSelection(editable) {
  *     positions which are not possible, like the cursor inside an image).
  */
 export function getNormalizedCursorPosition(node, offset, full = true) {
-    if (isVisibleEmpty(node) || !closestElement(node).isContentEditable) {
+    if (isVisibleEmpty(node) || !closestElement(node)?.isContentEditable) {
         // Cannot put cursor inside those elements, put it after instead.
         [node, offset] = rightPos(node);
     }
@@ -523,7 +523,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
             if (leftInlineNode) {
                 leftVisibleEmpty =
                     isVisibleEmpty(leftInlineNode) ||
-                    !closestElement(leftInlineNode).isContentEditable;
+                    !closestElement(leftInlineNode)?.isContentEditable;
                 [node, offset] = leftVisibleEmpty
                     ? rightPos(leftInlineNode)
                     : endPos(leftInlineNode);
@@ -533,7 +533,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
                 if (rightInlineNode) {
                     const rightVisibleEmpty =
                         isVisibleEmpty(rightInlineNode) ||
-                        !closestElement(rightInlineNode).isContentEditable;
+                        !closestElement(rightInlineNode)?.isContentEditable;
                     if (!(leftVisibleEmpty && rightVisibleEmpty)) {
                         [node, offset] = rightVisibleEmpty
                             ? leftPos(rightInlineNode)
