@@ -1068,15 +1068,19 @@ export class StaticList extends DataPoint {
                 this.model.__bm__.notifyChanges(
                     parentID,
                     { [this.__fieldName__]: op },
-                    { notifyChange: false }
+                    { notifyChange: false, viewType: "form" }
                 );
             })
         );
 
         try {
-            await this.model.__bm__.notifyChanges(parentID, {
-                [this.__fieldName__]: lastOperation,
-            });
+            await this.model.__bm__.notifyChanges(
+                parentID,
+                {
+                    [this.__fieldName__]: lastOperation,
+                },
+                { viewType: "form" }
+            );
         } finally {
             if (this.__viewType === "list") {
                 await this.model.__bm__.setSort(this.__bm_handle__, handleField);
