@@ -186,7 +186,7 @@ class StockForecasted(models.AbstractModel):
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
-        def _get_out_move_reserved_data(out, ins, used_reserved_moves):
+        def _get_out_move_reserved_data(out, ins, used_reserved_moves, currents):
             reserved_out = 0
             linked_moves = self.env['stock.move'].browse(out._rollup_move_origs()).filtered(lambda m: m.id not in ins.ids)
             # the move to show when qty is reserved
@@ -203,6 +203,7 @@ class StockForecasted(models.AbstractModel):
                 # add to reserved line data
                 reserved_out += reserved
                 used_reserved_moves[move] += reserved
+                currents[(out.product_id.id, move.location_id.id)] -= reserved
                 if float_compare(reserved_out, out.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
                     break
 
@@ -292,14 +293,16 @@ class StockForecasted(models.AbstractModel):
             # any sublocation qties will be added to the main stock location qty
             if location_id in wh_stock_sub_location_ids:
                 location_id = wh_stock_location.id
-            currents[(qty['product_id'][0], location_id)] += qty['quantity'] - qty['reserved_quantity']
+            currents[(qty['product_id'][0], location_id)] += qty['quantity']
         moves_data = {}
         for _, out_moves in outs_per_product.items():
             # to handle multiple out wtih same in (ex: same pick/pack for 2 outs)
             used_reserved_moves = defaultdict(float)
-            # for all out moves, check for linked moves and remove qty from current stock
+            # for all out moves, check for linked moves and count reserved quantity
             for out in out_moves:
-                moves_data[out] = _get_out_move_reserved_data(out, ins, used_reserved_moves)
+                moves_data[out] = _get_out_move_reserved_data(out, ins, used_reserved_moves, currents)
+            # another loop to remove qty from current stock after reserved is counted for
+            for out in out_moves:
                 data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
                 moves_data[out].update(data)
         lines = []
