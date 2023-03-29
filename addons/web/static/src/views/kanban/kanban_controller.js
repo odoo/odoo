@@ -8,9 +8,11 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
-import { canQuickCreate, KanbanRenderer } from "./kanban_renderer";
+import { KanbanRenderer } from "./kanban_renderer";
 
 import { Component, useRef } from "@odoo/owl";
+
+const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
 // -----------------------------------------------------------------------------
 
@@ -92,9 +94,9 @@ export class KanbanController extends Component {
     }
 
     async createRecord(group) {
-        const { activeActions, onCreate } = this.props.archInfo;
+        const { onCreate } = this.props.archInfo;
         const { root } = this.model;
-        if (activeActions.quickCreate && onCreate === "quick_create" && canQuickCreate(root)) {
+        if (this.canQuickCreate && onCreate === "quick_create") {
             await root.quickCreate(group);
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {
@@ -120,6 +122,20 @@ export class KanbanController extends Component {
         return list.isGrouped ? list.groups.length > 0 || !createGroup : true;
     }
 
+    get canQuickCreate() {
+        const { activeActions } = this.props.archInfo;
+        if (!activeActions.quickCreate) {
+            return false;
+        }
+
+        const list = this.model.root;
+        if (list.groups && !list.groups.length) {
+            return false;
+        }
+
+        return this.isQuickCreateField(list.groupByField);
+    }
+
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
@@ -128,6 +144,10 @@ export class KanbanController extends Component {
 
     scrollTop() {
         this.rootRef.el.querySelector(".o_content").scrollTo({ top: 0 });
+    }
+
+    isQuickCreateField(field) {
+        return field && QUICK_CREATE_FIELD_TYPES.includes(field.type);
     }
 }
 

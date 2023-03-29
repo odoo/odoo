@@ -299,6 +299,20 @@ class DataPoint {
     setup() {}
 
     /**
+     * FIXME: memoize this at some point?
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isFieldReadonly(fieldName) {
+        const activeField = this.activeFields[fieldName];
+        const { readonly } =
+            activeField && activeField.modifiers && "readonly" in activeField.modifiers
+                ? activeField.modifiers
+                : this.fields[fieldName];
+        return evalDomain(readonly, this.evalContext);
+    }
+
+    /**
      * @param {Object} [activeFields={}]
      */
     setActiveFields(activeFields) {
@@ -687,7 +701,7 @@ export class Record extends DataPoint {
                 !allFields &&
                 fieldName in this.activeFields &&
                 !this.activeFields[fieldName].forceSave &&
-                this._isReadonly(fieldName)
+                this.isFieldReadonly(fieldName)
             ) {
                 delete changes[fieldName];
                 continue;
@@ -745,16 +759,6 @@ export class Record extends DataPoint {
         const activeField = this.activeFields[fieldName];
         const { invisible } = activeField.modifiers || {};
         return invisible ? evalDomain(invisible, this.evalContext) : false;
-    }
-
-    /**
-     * FIXME: memoize this at some point?
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    _isReadonly(fieldName) {
-        const { readonly } = this.activeFields[fieldName].modifiers || {};
-        return evalDomain(readonly, this.evalContext);
     }
 
     /**
@@ -1712,7 +1716,7 @@ class DynamicList extends DataPoint {
             if (
                 !Object.keys(changes).filter(
                     (fieldName) =>
-                        record._isReadonly(fieldName) ||
+                        record.isFieldReadonly(fieldName) ||
                         (record._isRequired(fieldName) && !changes[fieldName])
                 ).length
             ) {
