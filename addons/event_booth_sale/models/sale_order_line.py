@@ -90,6 +90,12 @@ class SaleOrderLine(models.Model):
             return self.event_booth_pending_ids._get_booth_multiline_description()
         return super()._get_sale_order_line_multiline_description_sale()
 
+    def _use_template_name(self):
+        """ We do not want configured description to get rewritten by template default"""
+        if self.event_booth_pending_ids:
+            return False
+        return super()._use_template_name()
+
     def _get_display_price(self):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
