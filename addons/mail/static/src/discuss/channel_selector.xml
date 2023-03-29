@@ -9,6 +9,7 @@
             t-att-placeholder="inputPlaceholder"
             t-model="state.value"
             t-ref="input"
+            t-on-click="(ev) => markEventHandled(ev, 'channelSelector.onClickInput')"
             t-on-keydown="onKeydownInput"
             type="text"
         />
