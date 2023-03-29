@@ -1496,7 +1496,7 @@ var MockServer = Class.extend({
                     }
                 }
                 if (type === 'many2one') {
-                    var ids = _.pluck(records, aggregatedFields[i]);
+                    var ids = records.map( record => record[aggregatedFields[i]] );
                     group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }

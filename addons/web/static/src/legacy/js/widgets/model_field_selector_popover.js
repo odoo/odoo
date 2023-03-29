@@ -150,7 +150,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      * @returns {Object}
      */
     getSelectedField: function () {
-        return _.findWhere(this.pages[this.chain.length - 1], {name: _.last(this.chain)});
+        return _.findWhere(this.pages[this.chain.length - 1], {name: this.chain.slice(-1) });
     },
     /**
      * Saves a new field chain (array) and re-render.
@@ -214,7 +214,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      *                   to its name
      /*/
     _getLastPageField: function (name) {
-        return _.findWhere(_.last(this.pages), {
+        return _.findWhere( this.pages.slice(-1) , {
             name: name,
         });
     },
@@ -405,10 +405,10 @@ var ModelFieldSelectorPopover = Widget.extend({
         var title = "";
         if (this.pages.length > 1) {
             var prevField = _.findWhere(this.pages[this.pages.length - 2], {
-                name: (this.chain.length === this.pages.length) ? this.chain[this.chain.length - 2] : _.last(this.chain),
+                name: (this.chain.length === this.pages.length) ? this.chain[this.chain.length - 2] : this.chain.slice(-1),
             });
             if (prevField) {
-                this.titlesNames[_.last(this.chain)] = prevField.string;
+                this.titlesNames[ this.chain.slice(-1) ] = prevField.string;
                 title = prevField.string;
             }
         }
@@ -427,7 +427,7 @@ var ModelFieldSelectorPopover = Widget.extend({
         this._adaptInputVisibility();
 
         // Adapt the popover content
-        var page = _.last(this.pages);
+        var page = this.pages.splice(-1);
         this.$(".o_field_selector_popover_header .o_field_selector_title").text(this._getTitle());
 
         var lines = _.filter(page, this.options.filter);

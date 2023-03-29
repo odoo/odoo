@@ -347,7 +347,7 @@ var BasicModel = AbstractModel.extend({
                     return false;
                 }
                 // 2.2. no drop on new addition on "UPDATE"
-                var lastEntry = _.last(parent._savePoint);
+                var lastEntry = parent._savePoint.slice(-1);
                 if (lastEntry.operation === 'UPDATE' && lastEntry.id === id) {
                     return false;
                 }
