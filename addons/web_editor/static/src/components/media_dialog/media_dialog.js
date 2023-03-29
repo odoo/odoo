@@ -173,6 +173,12 @@ export class MediaDialog extends Component {
                     if (this.props.media.dataset.shapeColors) {
                         element.dataset.shapeColors = this.props.media.dataset.shapeColors;
                     }
+                    if (this.props.media.dataset.shapeFlip) {
+                        element.dataset.shapeFlip = this.props.media.dataset.shapeFlip;
+                    }
+                    if (this.props.media.dataset.shapeRotate) {
+                        element.dataset.shapeRotate = this.props.media.dataset.shapeRotate;
+                    }
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
                     for (const property of TABS[otherTab].Component.mediaSpecificStyles) {

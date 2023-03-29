@@ -6083,6 +6083,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             delete img.dataset.shape;
             delete img.dataset.shapeColors;
             delete img.dataset.fileName;
+            delete img.dataset.shapeFlip;
+            delete img.dataset.shapeRotate;
             if (saveData) {
                 img.dataset.mimetype = img.dataset.originalMimetype;
                 delete img.dataset.originalMimetype;
@@ -6104,6 +6106,38 @@ registry.ImageTools = ImageHandlerOption.extend({
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
         await this._applyShapeAndColors(true, newColors);
         img.classList.add('o_modified_image_to_save');
+    },
+    /**
+     * Flip the image shape horizontally.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeFlipX(previewMode, widgetValue, params) {
+        await this._setImgShapeFlip('x');
+    },
+    /**
+     * Flip the image shape vertically.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeFlipY(previewMode, widgetValue, params) {
+        await this._setImgShapeFlip('y');
+    },
+    /**
+     * Rotate the image shape 90 degrees to the left.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeRotateLeft(previewMode, widgetValue, params) {
+        await this._setImgShapeRotate(-90);
+    },
+    /**
+     * Rotate the image shape 90 degrees to the right.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeRotateRight(previewMode, widgetValue, params) {
+        await this._setImgShapeRotate(90);
     },
 
     //--------------------------------------------------------------------------
@@ -6194,6 +6228,26 @@ registry.ImageTools = ImageHandlerOption.extend({
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
+
+        // Modify the SVG according to the 'flip' or/and 'rotate' options.
+        const shapeFlip = img.dataset.shapeFlip || '';
+        const shapeRotate = img.dataset.shapeRotate || 0;
+        if (shapeFlip || shapeRotate) {
+            let shapeTransformValues = [];
+            if (shapeFlip) { // Possible values => 'x', 'y', 'xy'
+                shapeTransformValues.push(`scale${shapeFlip === "x" ? "X" : shapeFlip === "y" ? "Y" : ""}(-1)`);
+            }
+            if (shapeRotate) { // Possible values => '90', '180', '270'
+                shapeTransformValues.push(`rotate(${shapeRotate}deg)`);
+            }
+            // Curiously, "transform-origin: center;" does not work, and the
+            // only solution that works is to do the following:
+            const transformOrigin = "transform-origin: 0.5px 0.5px;";
+            // Applies the transformation values to the path used to create a
+            // mask over the SVG image.
+            svg.querySelector('#filterPath').setAttribute('style', `transform: ${shapeTransformValues.join(' ')}; ${transformOrigin}`);
+        }
+
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
         // We will store the image in base64 inside the SVG.
         // applyModifications will return a dataURL with the current filters
@@ -6336,6 +6390,14 @@ registry.ImageTools = ImageHandlerOption.extend({
                 const img = this._getImg();
                 return (img.dataset.shapeColors && img.dataset.shapeColors.split(';')[parseInt(params.colorId)]) || '';
             }
+            case 'setImgShapeFlipX': {
+                const img = this._getImg();
+                return (img.dataset.shapeFlip && img.dataset.shapeFlip.includes('x')) || '';
+            }
+            case 'setImgShapeFlipY': {
+                const img = this._getImg();
+                return (img.dataset.shapeFlip && img.dataset.shapeFlip.includes('y')) || '';
+            }
         }
         return this._super(...arguments);
     },
@@ -6449,6 +6511,8 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete img.dataset.shapeColors;
                 delete img.dataset.fileName;
                 delete img.dataset.originalMimetype;
+                delete img.dataset.shapeFlip;
+                delete img.dataset.shapeRotate;
                 return;
             }
             // Image data-mimetype should be changed to SVG since loadImageInfo()
@@ -6474,6 +6538,44 @@ registry.ImageTools = ImageHandlerOption.extend({
             return !isGif(this._getImageMimetype(this._getImg()));
         }
         return this._super(...arguments);
+    },
+    /**
+     * Flip the image shape (vertically or/and horizontally).
+     *
+     * @private
+     * @param {string} flipValue image shape flip value
+     */
+    async _setImgShapeFlip(flipValue) {
+        const img = this._getImg();
+        const currentFlipValue = img.dataset.shapeFlip || '';
+        const newFlipValue = currentFlipValue.includes(flipValue)
+            ? currentFlipValue.replace(flipValue, "")
+            : currentFlipValue + flipValue;
+        if (newFlipValue) {
+            img.dataset.shapeFlip = newFlipValue === 'yx' ? 'xy' : newFlipValue;
+        } else {
+            delete img.dataset.shapeFlip;
+        }
+        await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        img.classList.add('o_modified_image_to_save');
+    },
+    /**
+     * Rotate the image shape 90 degrees.
+     *
+     * @private
+     * @param {integer} rotation rotation value
+     */
+    async _setImgShapeRotate(rotation) {
+        const img = this._getImg();
+        const currentRotateValue = parseInt(img.dataset.shapeRotate) || 0;
+        const newRotateValue = (currentRotateValue + rotation + 360) % 360;
+        if (newRotateValue) {
+            img.dataset.shapeRotate = newRotateValue;
+        } else {
+            delete img.dataset.shapeRotate;
+        }
+        await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        img.classList.add('o_modified_image_to_save');
     },
 
     //--------------------------------------------------------------------------
