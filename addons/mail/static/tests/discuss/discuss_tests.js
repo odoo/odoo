@@ -223,6 +223,31 @@ QUnit.test("can create a group chat conversation", async (assert) => {
     assert.containsNone($, ".o-mail-Message");
 });
 
+QUnit.test("chat search should display no result when no matches found", async (assert) => {
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await insertText(".o-mail-ChannelSelector", "Rainbow Panda");
+    assert.containsOnce($, ".o-mail-ChannelSelector-suggestion:contains(No results found)");
+});
+
+QUnit.test(
+    "chat search should not be visible when clicking outside of the field",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Panda" });
+        pyEnv["res.users"].create({ partner_id: partnerId });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsNone($, ".o-mail-DiscussCategoryItem");
+        await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+        await insertText(".o-mail-ChannelSelector", "Panda");
+        assert.containsOnce($, ".o-mail-ChannelSelector-suggestion");
+        await click(".o-mail-DiscussSidebar");
+        assert.containsNone($, ".o-mail-ChannelSelector-suggestion");
+    }
+);
+
 QUnit.test("Message following a notification should not be squashed", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
