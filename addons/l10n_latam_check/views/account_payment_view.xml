@@ -10,13 +10,6 @@
             <field name="name" position="before">
                 <field name="check_number"/>
             </field>
-
-            <filter name="matched" position="after">
-                <filter name="unmatched"
-                    string="Bank Unmatched"
-                    domain="[('is_matched', '=', False)]"/>
-            </filter>
-
             <field name="journal_id" position="after">
                 <field name="l10n_latam_check_current_journal_id"/>
             </field>
