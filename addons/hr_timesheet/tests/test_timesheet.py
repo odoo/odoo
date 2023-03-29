@@ -527,3 +527,12 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 8.0,
         })
         self.assertEqual(with_user_timesheet.user_id, self.user_employee, 'User Employee is set in timesheet.')
+
+    def test_create_timesheet_with_companyless_analytic_account(self):
+        """ This test ensures that a timesheet can be created on an analytic account whose company_id is set to False"""
+        self.project_customer.analytic_account_id.company_id = False
+        timesheet = self.env['account.analytic.line'].with_user(self.user_employee).create(
+            {'unit_amount': 1.0, 'project_id': self.project_customer.id})
+        self.assertEqual(timesheet.product_uom_id, self.project_customer.company_id.project_time_mode_id,
+                         "The product_uom_id of the timesheet should be equal to the project's company uom "
+                         "if the project's analytic account has no company_id")
