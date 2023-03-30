@@ -14,7 +14,7 @@
 
 
 
-			<xpath expr="//group[@name='sale_total']" position="after" >
+			<xpath expr="//group[@name='sale_total']" position="inside" >
 				<field name="currency_id" invisible="1"/>
 				<field name="invoiced_amount" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="True"/>
 				<field name="amount_due" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="True"/>
