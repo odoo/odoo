@@ -1347,7 +1347,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(_, { args, method }) {
                 assert.step(method);
                 if (method === "create") {
-                    assert.deepEqual(args[0], [{ int_field: 1 }]);
+                    assert.deepEqual(args[0], [{ int_field: 1, foo: false }]);
                 }
             },
         });
