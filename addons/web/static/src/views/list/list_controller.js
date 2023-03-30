@@ -248,7 +248,11 @@ export class ListController extends Component {
     }
 
     getStaticActionMenuItems() {
-        const isM2MGrouped = this.model.root.isM2MGrouped;
+        const list = this.model.root;
+        const isM2MGrouped = list.groupBy.some((groupBy) => {
+            const fieldName = groupBy.split(":")[0];
+            return list.fields[fieldName].type === "many2many";
+        });
         return {
             export: {
                 isAvailable: () => this.isExportEnable,
