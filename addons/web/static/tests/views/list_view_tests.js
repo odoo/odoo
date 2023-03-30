@@ -3335,7 +3335,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
             groupBy: ["date:year"],
-            // keep the actionMenus, it is relevant as it calls isM2MGrouped which crashes if we
+            // keep the actionMenus, it is relevant as it computes isM2MGrouped which crashes if we
             // don't correctly extract the fieldName/granularity from the groupBy
             actionMenus: {},
         });
