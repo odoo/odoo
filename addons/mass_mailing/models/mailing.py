@@ -1011,8 +1011,16 @@ class MassMailing(models.Model):
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
         trace_domain = [('model', '=', self.mailing_model_real)]
+<<<<<<< HEAD
         if self.ab_testing_enabled and self.ab_testing_is_winner_mailing:
             trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
+||||||| parent of 945bf9a60f4 (temp)
+        if self.ab_testing_enabled and self.ab_testing_pc == 100:
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', '=', self._get_ab_testing_siblings_mailings().ids)]])
+=======
+        if self.ab_testing_enabled and self.ab_testing_pc == 100:
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
+>>>>>>> 945bf9a60f4 (temp)
         else:
             trace_domain = expression.AND([trace_domain, [
                 ('res_id', 'in', res_ids),
