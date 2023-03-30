@@ -26,13 +26,15 @@
                     </button>
                 </t>
             </div>
-            <div t-if="props.activity.state !== 'today'" class="d-flex align-items-baseline flex-wrap mx-3">
-                <i class="fa fa-clock-o me-2 text-muted" role="img" aria-label="Deadline" title="Deadline"/>
-                <t t-if="props.activity.user_id[0] and props.activity.user_id[0] !== user.userId">
-                    <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
-                    <small class="mx-1">-</small>
-                </t>
-                <small t-att-title="props.activity.dateDeadline" t-esc="delayLabel"/>
+            <div class="d-flex align-items-center flex-wrap mx-3">
+                <img t-if="props.activity.user_id[0]" class="me-2 rounded-circle" t-att-src="activityAssigneeAvatar" style="max-width: 1.5rem; max-height: 1.5rem;"/>
+                <div class="mt-1">
+                    <t t-if="props.activity.user_id[0]">
+                        <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
+                        <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
+                    </t>
+                    <small t-if="props.activity.state !== 'today'" class="fw-bold" t-att-title="props.activity.dateDeadline" t-esc="delayLabel"/>
+                </div>
             </div>
             <ActivityMarkAsDone t-if="state.hasMarkDoneView" activity="props.activity" close="closeMarkAsDone" onClickDoneAndScheduleNext="props.onClickDoneAndScheduleNext" reload="props.onActivityChanged"/>
             <div t-if="props.activity.mail_template_ids.length > 0" class="mx-3 mt-2">
