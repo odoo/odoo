@@ -164,7 +164,7 @@
                             attachments="message.attachments"
                             unlinkAttachment.bind="onClickAttachmentUnlink"
                             imagesHeight="300"/>
-                        <LinkPreviewList t-if="message.linkPreviews.length > 0" linkPreviews="message.linkPreviews" deletable="deletable"/>
+                        <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature" linkPreviews="message.linkPreviews" deletable="deletable"/>
                         <MessageReactions message="message" t-if="message.reactions.length"/>
                     </div>
                 </div>

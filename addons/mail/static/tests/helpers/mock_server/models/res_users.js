@@ -44,6 +44,7 @@ patch(MockServer.prototype, "mail/models/res_users", {
             starred_counter: this.getRecords("mail.message", [
                 ["starred_partner_ids", "in", user.partner_id],
             ]).length,
+            hasLinkPreviewFeature: true,
         };
     },
     /**
