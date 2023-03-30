@@ -64,7 +64,7 @@ class ProductionLot(models.Model):
     @api.model
     def _get_next_serial(self, company, product):
         """Return the next serial number to be attributed to the product."""
-        if product.tracking == "serial":
+        if product.tracking != "none":
             last_serial = self.env['stock.production.lot'].search(
                 [('company_id', '=', company.id), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
