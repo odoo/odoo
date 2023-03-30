@@ -3,7 +3,7 @@ import { OfflineErrorPopup } from "./Popups/OfflineErrorPopup";
 import { ConfirmPopup } from "./Popups/ConfirmPopup";
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 import { ErrorPopup } from "./Popups/ErrorPopup";
-import { useEnv, onMounted, onPatched, useComponent } from "@odoo/owl";
+import { useEnv, onMounted, onPatched, useComponent, useRef } from "@odoo/owl";
 
 /**
  * Introduce error handlers in the component.
@@ -75,12 +75,15 @@ export function useErrorHandlers() {
     };
 }
 
+/**
+ * Assumes t-ref="root" in the root element of the component that uses this hook.
+ */
 export function useAutoFocusToLast() {
-    const current = useComponent();
+    const root = useRef("root");
     let target = null;
     function autofocus() {
         const prevTarget = target;
-        const allInputs = current.el.querySelectorAll("input");
+        const allInputs = root.el.querySelectorAll("input");
         target = allInputs[allInputs.length - 1];
         if (target && target !== prevTarget) {
             target.focus();
