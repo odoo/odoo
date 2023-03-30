@@ -82,6 +82,8 @@ export class Store {
     registeredImStatusPartners = null;
     ringingThreads = null;
 
+    hasLinkPreviewFeature = true;
+
     // messaging menu
     menu = {
         counter: 0,

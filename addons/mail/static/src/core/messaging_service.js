@@ -126,6 +126,7 @@ export class Messaging {
         (data.shortcodes ?? []).forEach((code) => {
             this.insertCannedResponse(code);
         });
+        this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
         this.isReady.resolve();
         this.store.isMessagingReady = true;
     }

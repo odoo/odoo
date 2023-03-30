@@ -749,7 +749,7 @@ export class ThreadService {
         const message = this.messageService.insert(
             Object.assign(data, { body: markup(data.body) })
         );
-        if (!message.isEmpty) {
+        if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
         if (thread.type !== "chatter") {
