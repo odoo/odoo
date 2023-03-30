@@ -70,7 +70,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         const isSubscriber = data.is_subscriber;
         const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
         const thanksBtnEl = this.el.querySelector('.js_subscribed_btn');
-        const valueInputEl = this.el.querySelector('input.js_subscribe_value');
+        const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email'); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
 
         subscribeBtnEl.disabled = isSubscriber;
         valueInputEl.value = data.value || '';
@@ -96,7 +96,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     _onSubscribeClick: async function () {
         var self = this;
         const inputName = this.$('input').attr('name');
-        const $input = this.$(".js_subscribe_value:visible");
+        const $input = this.$(".js_subscribe_value:visible, .js_subscribe_email:visible"); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
         if (inputName === 'email' && $input.length && !$input.val().match(/.+@.+/)) {
             this.$el.addClass('o_has_error').find('.form-control').addClass('is-invalid');
             return false;
@@ -125,7 +125,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             if (toastType === 'success') {
                 self.$(".js_subscribe_btn").addClass('d-none');
                 self.$(".js_subscribed_btn").removeClass('d-none');
-                self.$('input.js_subscribe_value').prop('disabled', !!result);
+                self.$('input.js_subscribe_value, input.js_subscribe_email').prop('disabled', !!result); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
                 const $popup = self.$el.closest('.o_newsletter_modal');
                 if ($popup.length) {
                     $popup.modal('hide');
