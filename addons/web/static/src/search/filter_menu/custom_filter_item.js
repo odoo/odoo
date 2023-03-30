@@ -92,7 +92,11 @@ function parseField(field, value) {
     }
     const type = field.type === "id" ? "integer" : field.type;
     const parse = parsers.contains(type) ? parsers.get(type) : (v) => v;
-    return parse(value);
+    value = parse(value);
+    if (type === "integer" && value > 2147483647 || value < -2147483647) {
+        value = 0;
+    }
+    return value;
 }
 
 function formatField(field, value) {
