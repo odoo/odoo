@@ -37,6 +37,24 @@ const VALID_AGGREGATE_FUNCTIONS = [
 ];
 let logId = 1;
 
+const DEFAULT_FIELD_VALUES = {
+    char: false,
+    many2one: false,
+    one2many: [],
+    many2many: [],
+    monetary: 0,
+    binary: false,
+    integer: 0,
+    float: 0,
+    boolean: false,
+    date: false,
+    datetime: false,
+    html: false,
+    text: false,
+    selection: false,
+    reference: false,
+};
+
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -730,20 +748,28 @@ export class MockServer {
         const model = this.models[modelName];
         const result = {};
         for (const fieldName of fields) {
+            if (fieldName === "id") {
+                continue;
+            }
+            const field = model.fields[fieldName];
             const key = "default_" + fieldName;
             if (kwargs.context && key in kwargs.context) {
                 result[fieldName] = kwargs.context[key];
                 continue;
             }
-            const field = model.fields[fieldName];
             if ("default" in field) {
                 result[fieldName] = field.default;
                 continue;
+            } else {
+                if (!(field.type in DEFAULT_FIELD_VALUES)) {
+                    throw new Error(`Missing default value for type '${field.type}'`);
+                }
+                result[fieldName] = DEFAULT_FIELD_VALUES[field.type];
             }
         }
         for (const fieldName in result) {
             const field = model.fields[fieldName];
-            if (field.type === "many2one") {
+            if (field.type === "many2one" && result[fieldName]) {
                 const recordExists = this.models[field.relation].records.some(
                     (r) => r.id === result[fieldName]
                 );
@@ -890,7 +916,7 @@ export class MockServer {
         const firstOnChange = !fields.length;
         const onchangeVals = {};
         let defaultVals = undefined;
-        let nullValues;
+        const nullValues = {};
         if (firstOnChange) {
             const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
                 fname = fname.split(".", 1)[0];
@@ -904,9 +930,8 @@ export class MockServer {
             // It is the new semantics: no field in arguments means we are in
             // a default_get + onchange situation
             fields = fieldsFromView;
-            nullValues = {};
             fields
-                .filter((fName) => !Object.keys(defaultVals).includes(fName))
+                .filter((fName) => !Object.keys(defaultVals).includes(fName) && fName !== "id")
                 .forEach((fName) => {
                     nullValues[fName] = false;
                 });
@@ -923,9 +948,11 @@ export class MockServer {
                 });
             }
         });
-        return {
-            value: this.convertToOnChange(modelName, Object.assign({}, defaultVals, onchangeVals)),
-        };
+        const value = this.convertToOnChange(
+            modelName,
+            Object.assign(nullValues, defaultVals, onchangeVals)
+        );
+        return { value };
     }
 
     mockRead(modelName, args) {

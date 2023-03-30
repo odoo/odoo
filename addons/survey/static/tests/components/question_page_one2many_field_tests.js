@@ -30,7 +30,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                     fields: {
                         is_page: { type: "boolean" },
                         title: { type: "char", string: "Title" },
-                        random_questions_count: { type: "number", string: "Question Count" },
+                        random_questions_count: { type: "integer", string: "Question Count" },
                     },
                     records: [
                         {
