@@ -288,7 +288,7 @@
          */
         _getCurrentIndex: function () {
             var slide = this.get('slideEntry');
-            var currentIndex = _.findIndex(this.slideEntries, function (entry) {
+            var currentIndex = this.slideEntries.findIndex( (entry) => {
                 return entry.id === slide.id && entry.isQuiz === slide.isQuiz;
             });
             return currentIndex;

@@ -7,7 +7,7 @@ odoo.define("website_sale_product_configurator.website_sale_tour", function (req
 const { registry } = require("@web/core/registry");
 require('website_sale.tour');
 
-var addCartStepIndex = _.findIndex(registry.category("web_tour.tours").get("shop_buy_product").steps, function (step) {
+var addCartStepIndex = registry.category("web_tour.tours").get("shop_buy_product").steps.findIndex( (step) => {
     return (step.id === 'add_cart_step');
 });
 

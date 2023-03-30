@@ -8,7 +8,7 @@ odoo.define('l10n_ar.account_tour', function(require) {
     account_tour.steps = _.filter(account_tour.steps, step => step.trigger != "input[name=name]");
 
     // Configure the AFIP Responsibility
-    let partner_step_idx = _.findIndex(account_tour.steps, step => step.trigger == 'div[name=partner_id] input');
+    let partner_step_idx = account_tour.steps.findIndex( step => step.trigger == 'div[name=partner_id] input');
     account_tour.steps.splice(partner_step_idx + 2, 0, {
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         trigger: "div[name=l10n_ar_afip_responsibility_type_id] input",
