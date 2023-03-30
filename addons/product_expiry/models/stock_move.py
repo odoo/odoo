@@ -21,3 +21,8 @@ class StockMove(models.Model):
                 move_line_vals = move_line_command[2]
                 move_line_vals['expiration_date'] = date
         return move_lines_commands
+
+    def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
+        if self.product_id.use_expiration_date:
+            return super(StockMove, self.with_context(with_expiration=self.date))._update_reserved_quantity(need, available_quantity, location_id, lot_id, package_id, owner_id, strict)
+        return super()._update_reserved_quantity(need, available_quantity, location_id, lot_id, package_id, owner_id, strict)
