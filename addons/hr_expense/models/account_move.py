@@ -46,10 +46,11 @@ class AccountMove(models.Model):
     def _compute_needed_terms(self):
         # EXTENDS account
         # We want to set the account destination based on the 'payment_mode'.
+        # Also, expense' account moves are expressed in the company currency.
         super()._compute_needed_terms()
         for move in self:
             if move.expense_sheet_id:
-                balance = -sum(move.line_ids.filtered(lambda l: l.display_type != 'payment_term').mapped("amount_currency"))
+                amount_currency = -sum(move.line_ids.filtered(lambda l: l.display_type != 'payment_term').mapped("amount_currency"))
                 move.needed_terms = {
                     frozendict(
                         {
@@ -58,7 +59,8 @@ class AccountMove(models.Model):
                             or fields.Date.context_today(move.expense_sheet_id),
                         }
                     ): {
-                        "balance": balance,
+                        "balance": amount_currency,
+                        "amount_currency": amount_currency,
                         "name": "",
                         "account_id": move.expense_sheet_id._get_expense_account_destination(),
                     }
