@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<templates xml:space="preserve">
+
+    <t t-name="event.mail_template_reference_field" t-inherit="web.ReferenceField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='!props.readonly and !hideModelSelector']" position="after">
+            <t t-elif="getValue()">
+                <div class="d-flex justify-content-center flex-grow-0 flex-shrink-0" style="width: 1.5rem !important; max-width: 1.5rem !important; margin-right: 0.5rem;">
+                    <span class="event_template_reference_mail fa fa-solid fa-envelope" t-if="relation === 'mail.template'"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
