@@ -23,19 +23,19 @@
                 </h4>
                 <p t-esc="description"/>
             </div>
-            <div class="col-sm-2 p-0 text-center text-md-end order-first order-md-last">
-                <img t-attf-src="{{logo}}" alt="Company Logo" style="max-width: 80px;"/>
+            <div t-if="logo" class="col-sm-2 p-0 text-center text-md-end order-first order-md-last">
+                <img t-attf-src="{{logo}}" alt="" style="max-width: 80px;"/>
             </div>
             </div>
             <hr/>
 
             <div class="col-sm-12 row m-0 p-0">
-                <div t-if="company_type" class="my-1 p-0 col-sm-3">
+                <div t-if="company_type" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-building text-primary"/>
                     <b>Company type</b>
                 </div>
                 <div t-if="company_type" class="my-1 col-sm-9" t-esc="company_type" />
-                <div t-if="founded_year" class="my-1 p-0 col-sm-3">
+                <div t-if="founded_year" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-calendar text-primary"/>
                     <b>Founded</b>
                 </div>
@@ -45,7 +45,7 @@
                 <t t-if="industry" t-set="sectors" t-value="sectors + [industry]" />
                 <t t-if="industry_group" t-set="sectors" t-value="sectors + [industry_group]" />
                 <t t-if="sub_industry" t-set="sectors" t-value="sectors + [sub_industry]" />
-                <div t-if="sectors" class="my-1 p-0 col-sm-3">
+                <div t-if="sectors" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-industry text-primary"/>
                     <b>Sectors</b>
                 </div>
@@ -54,19 +54,19 @@
                         <label t-esc="inner_sector" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
-                <div t-if="employees" class="my-1 p-0 col-sm-3">
+                <div t-if="employees" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-users text-primary"/>
                     <b>Employees</b>
                 </div>
                 <div t-if="employees" class="my-1 col-sm-9" t-esc="'%.0f' % employees" />
-                <div t-if="estimated_annual_revenue" class="my-1 p-0 col-sm-3">
+                <div t-if="estimated_annual_revenue" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-money text-primary"/>
                     <b>Estimated revenue</b>
                 </div>
                 <div t-if="estimated_annual_revenue" class="my-1 col-sm-9">
                     <span t-esc="estimated_annual_revenue" /><span> per year</span>
                 </div>
-                <div t-if="phone_numbers" class="my-1 p-0 col-sm-3">
+                <div t-if="phone_numbers" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-phone text-primary"/>
                     <b>Phone</b>
                 </div>
@@ -75,7 +75,7 @@
                         <a t-attf-href="tel:{{phone_number}}" t-esc="phone_number" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
-                <div t-if="email" class="my-1 p-0 col-sm-3">
+                <div t-if="email" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-envelope text-primary"/>
                     <b>Email</b>
                 </div>
@@ -84,12 +84,12 @@
                         <a target="_top" t-attf-href="mailto:{{email_item}}" t-esc="email_item" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
-                <div t-if="timezone" class="my-1 p-0 col-sm-3">
+                <div t-if="timezone" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-globe text-primary"/>
                     <b>Timezone</b>
                 </div>
                 <div t-if="timezone" class="my-1 col-sm-9" t-esc="timezone.replace('_', ' ')" />
-                <div t-if="tech" class="my-1 p-0 col-sm-3">
+                <div t-if="tech" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-cube text-primary"/>
                     <b>Technologies Used</b>
                 </div>
@@ -98,12 +98,18 @@
                         <label t-esc="tech_item.replace('_', ' ').title()" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
-                <div t-if="twitter_bio" class="my-1 p-0 col-sm-3">
+                <div t-if="twitter_bio" class="d-flex my-1 p-0 col-sm-3">
                     <i class="fa fa-fw me-2 fa-twitter text-primary"/>
                     <b>Twitter</b>
                 </div>
                 <div t-if="twitter_bio" class="my-1 col-sm-9">
-                    <div t-if="twitter_followers"><t t-esc="twitter_followers"/> followers</div>
+                    <div class="d-flex gap-2">
+                        <a t-if="twitter" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}">
+                            http://www.twitter.com/<t t-esc="twitter"/>
+                        </a>
+                        <span t-if="twitter"> • </span>
+                        <div t-if="twitter_followers"><t t-esc="twitter_followers"/> followers</div>
+                    </div>
                     <div t-esc="twitter_bio" />
                 </div>
             </div>
