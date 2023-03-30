@@ -95,6 +95,19 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         self.assertTrue(new_invoice)
         self.assert_same_invoice(invoice, new_invoice)
 
+    def _update_invoice_from_file(self, module_name, subfolder, filename, invoice):
+        """ Create an attachment from a file and post it on the invoice
+        """
+        file_path = get_module_resource(module_name, subfolder, filename)
+        with misc.file_open(file_path, 'rb') as file:
+            attachment = self.env['ir.attachment'].create({
+                'name': filename,
+                'datas': base64.encodebytes(file.read()),
+                'res_id': invoice.id,
+                'res_model': 'account.move',
+            })
+            invoice.message_post(attachment_ids=[attachment.id])
+
     def _assert_imported_invoice_from_file(self, subfolder, filename, amount_total, amount_tax, list_line_subtotals,
                                            list_line_price_unit=None, list_line_discount=None, list_line_taxes=None,
                                            move_type='in_invoice', currency_id=None):
@@ -116,16 +129,12 @@ class TestUBLCommon(AccountTestInvoicingCommon):
 
         invoice_count = len(self.env['account.move'].search([]))
 
-        # Import the file to fill the empty invoice
-        file_path = get_module_resource('l10n_account_edi_ubl_cii_tests', subfolder, filename)
-        with misc.file_open(file_path, 'rb') as file:
-            attachment = self.env['ir.attachment'].create({
-                'name': filename,
-                'datas': base64.encodebytes(file.read()),
-                'res_id': invoice.id,
-                'res_model': 'account.move',
-            })
-            invoice.message_post(attachment_ids=[attachment.id])
+        self._update_invoice_from_file(
+            module_name='l10n_account_edi_ubl_cii_tests',
+            subfolder=subfolder,
+            filename=filename,
+            invoice=invoice,
+        )
 
         # Checks
         self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
