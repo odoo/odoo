@@ -3,19 +3,17 @@
 # 	* website_sale_slides
 # 
 # Translators:
-# Kenny Kang <winterrise@gmail.com>, 2019
-# Martin Trigaux, 2019
-# sejun huang <sejun.huang@gmail.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
-# Michael Yeung, 2019
+# Tony Ng, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Michael Yeung, 2019\n"
+"POT-Creation-Date: 2023-03-23 09:17+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,78 +22,263 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar_buy_now_course
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_option_buy_course_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
-msgstr ""
+msgstr "<i class=\"fa fa-bolt\"></i>立即購買"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"></i>添加到購物車"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
+#: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"庫存商品是指在倉庫中受存量管控的產品。 要使用此專案您必須安裝倉庫模組。\n"
+"可消耗商品是指不受庫存量管控的產品。\n"
+"服務是指您提供的非產品類服務業務。"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "About us"
+msgstr "關於我們"
+
+#. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/product_product.py:0
+#, python-format
+msgid "Access to:%s%s"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"As a leading professional services firm,\n"
+"                                we know that success is all about the\n"
+"                                commitment we put on strong services."
+msgstr ""
+"作為一家領先的專業服務公司，\n"
+"                                       我們知道專案成功與否\n"
+"                                       是我們對優質服務的承諾。"
+
+#. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.product_course_channel_5_product_template
+msgid "Basics of Furniture Creation"
+msgstr "家具製作基礎"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Buy Now Button"
+msgstr "即買按鈕"
+
+#. module: website_sale_slides
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
-msgid "Buy the course"
+msgid "Buy the course to validate your answers!"
+msgstr "購買課程來驗證您的答案！"
+
+#. module: website_sale_slides
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
+#, python-format
+msgid "Buy this Course"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
-msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
+#: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
+msgid "Come back once your courses starts selling to report on your revenues."
 msgstr ""
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
-msgid "Course Not Buyable"
+#: model:ir.model,name:website_sale_slides.model_slide_channel
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__detailed_type__course
+msgid "Course"
+msgstr "課程"
+
+#. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.default_product_course_product_template
+msgid "Course Access"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Course Page"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
+msgid "Course Unavailable"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
 msgid "Courses"
-msgstr ""
+msgstr "課程"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__currency_id
 msgid "Currency"
-msgstr "幣別"
+msgstr "貨幣"
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Don't have an account ?"
+#: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
+msgid "DIY Furniture Course"
+msgstr "DIY傢俱課程"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
+msgid "Defines how people can enroll to your Course."
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form_add_inherit_sale_slides
 msgid "Enroll Policy"
+msgstr "註冊策略"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
+msgid "Free Preview"
+msgstr "免費預覽"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
+msgstr ""
+"完善的報價單範本將顯著\n"
+"                                <strong>提高您的成功率。</strong>\n"
+"                                第一部分通常是關於您的公司、\n"
+"                                您的參考資料、您的方法或\n"
+"                                擔保、您的團隊、SLA、條款和條件等"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"If you edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update that quotation only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+"如果您從報價的「預覽」中編輯報價，您將會\n"
+" 僅更新該報價。如果您編輯報價\n"
+" 模板（從配置選單），所有未來的報價將\n"
+" 使用此修改後的模板。"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "Join this Course"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid ""
 "Leaving the course and re-enrolling afterwards means that you'll be charged "
 "again."
+msgstr "離開課程後重新註冊意指您將再次被收費。"
+
+#. module: website_sale_slides
+#: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
+msgid "No sales data yet!"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
 msgid "On payment"
+msgstr "付款時"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "Once your order is paid &amp; confirmed, you will gain access to:"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_product_product
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Our Offer"
+msgstr "我們的報價"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Our Quality"
+msgstr "我們的品質"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Our Service"
+msgstr "我們的服務"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
+msgid "Preview"
+msgstr "預覽"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Price"
+msgstr "價格"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_template
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
 msgid "Product"
 msgstr "商品"
 
 #. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "產品類型"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_product
+msgid "Product Variant"
+msgstr "產品變體"
+
+#. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
 msgid "Product is required for on payment channels."
+msgstr "付款流程需要設置產品"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"Product quality is the foundation we\n"
+"                                stand on; we build it with a relentless\n"
+"                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"產品品質是我們\n"
+"        立足的根本；我們堅持不懈地\n"
+"        專注於產品質地、性能和工藝。"
 
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
@@ -114,70 +297,133 @@ msgid "Sales Order"
 msgstr "銷售訂單"
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Sign Up !"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
-msgstr "打卡-開始"
+msgstr "登入"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
-msgid "Sign in and buy the course to join it and take the quiz!"
+msgid "Sign in and buy the course to take the quiz"
+msgstr "登入並購買課程以參加測驗"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "Start Learning"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_slide_channel
-msgid "Slide Channel"
-msgstr "滑動頻道"
+#: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
+msgid "Taking care of Trees Course"
+msgstr "照顧樹木課程"
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Start Course"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
+msgid "This course cannot be bought because its linked product"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Succeed and gain karma"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
+msgstr "課程費用已完成支付。"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sales</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
+msgstr ""
+"這是一個<strong>報價單範本範例 </strong>。您應該\n"
+"           從<i>銷售</i>\n"
+"           應用自訂它以滿足自己的需求，使用選單：配置/ 報價單範本。"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
+msgid "Total Revenues"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
+msgstr "總收入"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"We always ensure that our products are\n"
+"                                set at a fair price so that you will be\n"
+"                                happy to buy them."
+msgstr ""
+"我們始終確保我們的產品\n"
+"         價格合理，這樣您就會\n"
+"         很樂意購買。"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_website
+msgid "Website"
+msgstr "網站"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+"您可以<strong>設定每個產品描述。</strong>Odoo 將\n"
+"                        使用建議中所有產品的描述\n"
+"                        自動建立一個報價。左邊的內容表\n"
+"                        是根據您描述中使用的樣式\n"
+"                        自動生成的（標題 1、標題 2…）"
+
+#. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/sale_order.py:0
+#, python-format
+msgid "You can only add a course once in your cart."
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "XP"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "You have gained access to the following course(s):"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
 msgid "eLearning Revenues"
-msgstr ""
+msgstr "線上學習收入"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.sale_report_view_graph_slides
 msgid "eLearning Sales Analysis"
+msgstr "電子學習銷售分析"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
+msgid "is not published."
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "step(s)"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "to access resources"
 msgstr ""

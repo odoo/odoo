@@ -3,19 +3,18 @@
 # 	* website_sale_slides
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Martin Trigaux, 2019
-# Osoul <baruni@osoul.ly>, 2019
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2019
-# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Hassan Najm <hassannjm@gmail.com>, 2023
+# Niyas Raphy, 2023
+# Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"POT-Creation-Date: 2023-03-23 09:17+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,36 +23,108 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar_buy_now_course
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_option_buy_course_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
-msgstr ""
+msgstr "<i class=\"fa fa-bolt\"/> اشترِ الآن "
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"/> إضافة إلى عربة التسوق "
+
+#. module: website_sale_slides
+#: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
+#: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"المنتج القابل للتخزين هو المنتج الذي يمكن إدارة مخزونه. يجب أن يكون تطبيق المخزون مثبتاً.\n"
+"المنتج القابل للاستهلاء هو المنتج الذي لا يمكن إدارة مخزونه.\n"
+"الخدمة هي منتج غير مادي تقوم بتقديمه. "
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "About us"
+msgstr "من نحن"
+
+#. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/product_product.py:0
+#, python-format
+msgid "Access to:%s%s"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"As a leading professional services firm,\n"
+"                                we know that success is all about the\n"
+"                                commitment we put on strong services."
+msgstr ""
+"كمؤسسة محترفة ورائدة في تقديم الخدمات،\n"
+"                                ندرك أن مفتاح النجاح هو الالتزام الذي\n"
+"                                نحذو حذوه عند تقديمنا لخدماتنا القوية. "
+
+#. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.product_course_channel_5_product_template
+msgid "Basics of Furniture Creation"
+msgstr "مبادئ صناعة الأثاث "
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Buy Now Button"
+msgstr "شراء الآن زر"
+
+#. module: website_sale_slides
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
-msgid "Buy the course"
+msgid "Buy the course to validate your answers!"
+msgstr "قم بشراء الدورة لتصديق إجاباتك! "
+
+#. module: website_sale_slides
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
+#, python-format
+msgid "Buy this Course"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
-msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
+#: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
+msgid "Come back once your courses starts selling to report on your revenues."
 msgstr ""
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
-msgid "Course Not Buyable"
+#: model:ir.model,name:website_sale_slides.model_slide_channel
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__detailed_type__course
+msgid "Course"
+msgstr "دورة"
+
+#. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.default_product_course_product_template
+msgid "Course Access"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Course Page"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
+msgid "Course Unavailable"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
 msgid "Courses"
-msgstr ""
+msgstr "الدورات"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__currency_id
@@ -61,46 +132,159 @@ msgid "Currency"
 msgstr "العملة"
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Don't have an account ?"
-msgstr ""
+#: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
+msgid "DIY Furniture Course"
+msgstr "دورة الأثاث الذي يمكنك صنعه بنفسك "
+
+#. module: website_sale_slides
+#: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
+msgid "Defines how people can enroll to your Course."
+msgstr "يوضح كيفية تسجيل الأفراد في دورتك. "
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form_add_inherit_sale_slides
 msgid "Enroll Policy"
-msgstr ""
+msgstr "سياسة التسجيل "
 
 #. module: website_sale_slides
-#. openerp-web
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
+msgid "Free Preview"
+msgstr "معاينة مجانية "
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
+msgstr ""
+"سوف يعينك استخدام قوالب مميزة لعروض الأسعار على\n"
+"                                <strong>تعزيز معدل نجاحك</strong>.\n"
+"                                عادةً ما يحتوي القسم الأول على تعريف بشركتك،\n"
+"                                ومراجعك، ومنهجية عملك وضماناتك، وفريقك،\n"
+"                                واتفاقية مستوى الخدمة والشروط والأحكام التي تعمل بناءً عليها، إلخ. "
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"If you edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update that quotation only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+"إذا قمت بتحرير عرض سعر من شاشة المعاينة، ستُطبق تحديثاتك\n"
+"                        على عرض السعر هذا فقط. أما إذا حررت قالب عرض السعر\n"
+"                        (من قائمة الإعدادات)، سيتم استخدام القالب المُعدل في كافة\n"
+"                        عروض الأسعار المستقبلية."
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "Join this Course"
+msgstr "المشاركة في الدورة "
+
+#. module: website_sale_slides
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid ""
 "Leaving the course and re-enrolling afterwards means that you'll be charged "
 "again."
+msgstr "مغادرة الدورة ثم التسجيل مجدداً بعد ذلك يعني أنه عليك الدفع مجدداً. "
+
+#. module: website_sale_slides
+#: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
+msgid "No sales data yet!"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
 msgid "On payment"
+msgstr "عند الدفع "
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "Once your order is paid &amp; confirmed, you will gain access to:"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_product_product
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Our Offer"
+msgstr "عرضنا"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Our Quality"
+msgstr "جودتنا"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Our Service"
+msgstr "خدمتنا"
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
+msgid "Preview"
+msgstr "معاينة"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid "Price"
+msgstr "السعر"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_template
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
 msgid "Product"
 msgstr "المنتج"
 
 #. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "نوع المنتج"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_product
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
 msgid "Product is required for on payment channels."
+msgstr "المنتج مطلوب للقنوات التي تتبع نظام عند الدفع "
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"Product quality is the foundation we\n"
+"                                stand on; we build it with a relentless\n"
+"                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"جودة المنتج هي الأساس الذي نستند عليه؛\n"
+"                                نحن نبني منتجاتنا بتركيز شديد\n"
+"                                على بنيته، وأداءه، وإتقان صنعته."
 
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
 msgid "Revenues"
-msgstr ""
+msgstr "الإيرادات "
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form
@@ -114,70 +298,134 @@ msgid "Sales Order"
 msgstr "أمر البيع"
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Sign Up !"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "تسجيل الدخول"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
-msgid "Sign in and buy the course to join it and take the quiz!"
+msgid "Sign in and buy the course to take the quiz"
+msgstr "قم بتسجيل الدخول وشراء الدورة للخضوع للاختبار القصير "
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "Start Learning"
+msgstr "ابدا بالتعلم"
+
+#. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
+msgid "Taking care of Trees Course"
+msgstr "دورة العناية بالأشجار "
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
+msgid "This course cannot be bought because its linked product"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_slide_channel
-msgid "Slide Channel"
-msgstr "قناة الشريحة"
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Start Course"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "Succeed and gain karma"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
+msgstr "هذه الدورة مدفوعة. "
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sales</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
 msgstr ""
+"هذا <strong>نموذج قالب عرض سعر</strong>. عليك تخصيصه\n"
+"                                من تطبيق <i>المبيعات</i> ليناسب احتياجاتك، \n"
+"                                باستخدام القائمة: تهيئة /\n"
+"                                قوالب عروض الأسعار. "
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
+msgid "Total Revenues"
+msgstr "إجمالي الإيرادات "
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
+msgstr "إجمالي الإيرادات "
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"We always ensure that our products are\n"
+"                                set at a fair price so that you will be\n"
+"                                happy to buy them."
+msgstr ""
+"نحرص دائمًا على عرض منتجاتنا\n"
+"                                بأسعار معقولة\n"
+"                                حتى تسعد بشرائها. "
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_website
+msgid "Website"
+msgstr "الموقع الإلكتروني"
+
+#. module: website_sale_slides
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
+#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_3
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+"يمكنك تعيين <strong>وصف لكل منتج</strong>. سوف يقوم أودو\n"
+"                        تلقائيًا بإنشاء عرض أسعار باستخدام الأوصاف المتوفرة\n"
+"                        للمنتجات في العرض المقدّم. يتم إنشاء جدول المحتويات\n"
+"                        الموجود على اليسار تلقائيًا باستخدام الأنماط التي استخدمتها\n"
+"                        في وصفك (العنوان 1، العنوان 2، ...)"
+
+#. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/sale_order.py:0
+#, python-format
+msgid "You can only add a course once in your cart."
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
-#, python-format
-msgid "XP"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "You have gained access to the following course(s):"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
 msgid "eLearning Revenues"
-msgstr ""
+msgstr "إيرادات التعلم الإلكتروني "
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.sale_report_view_graph_slides
 msgid "eLearning Sales Analysis"
+msgstr "تحليل مبيعات التعلم إلكتروني "
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
+msgid "is not published."
 msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
+msgid "step(s)"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "to access resources"
+msgstr "للوصول إلى الموارد "

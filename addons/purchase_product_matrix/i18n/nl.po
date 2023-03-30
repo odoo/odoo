@@ -3,17 +3,17 @@
 # 	* purchase_product_matrix
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,34 +28,46 @@ msgstr "Kenmerkwaardes"
 
 #. module: purchase_product_matrix
 #. openerp-web
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
+#, python-format
+msgid "Choose Product Variants"
+msgstr "Kies productvarianten"
+
+#. module: purchase_product_matrix
+#. openerp-web
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
+#, python-format
+msgid "Close"
+msgstr "Afsluiten"
+
+#. module: purchase_product_matrix
+#. openerp-web
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#. module: purchase_product_matrix
+#. openerp-web
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
 msgstr "Wijzig configuratie"
 
 #. module: purchase_product_matrix
-#. openerp-web
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
-#, python-format
-msgid "External Link"
-msgstr "Externe link"
-
-#. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
 msgid "Grid"
-msgstr "Grid"
+msgstr "Matrix"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Matrix productsjabloon"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Matrix update"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
@@ -63,6 +75,8 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
+"Indien ingesteld, wordt de matrix van configureerbare producten getoond in "
+"het rapport van deze order."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
@@ -72,7 +86,7 @@ msgstr "Is het product configureerbaar?"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Variantenmatrix afdrukken"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -87,7 +101,7 @@ msgstr "Productsjabloon"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr "Productkenmerkwaarde welke geen variant aanmaakt"
+msgstr "Productkenmerkwaarde dat geen variant aanmaakt"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order
@@ -102,20 +116,24 @@ msgstr "Inkooporderregel"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Technisch veld voor product_matrix functies."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
 msgid ""
 "Technical storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Technische opslag van matrix.\n"
+"Indien grid_update, wordt dit geladen op de inkooporder.\n"
+"Indien niet grid_update stelt het de matrix voor om te openen."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
+"Of de matrixweergave een nieuwe matrix bevat om toe te voegen of niet."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
@@ -124,3 +142,5 @@ msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
 msgstr ""
+"Je kunt de hoeveelheid van een product aanwezig in meerdere "
+"inkooporderregels niet wijzigen."
