@@ -14,5 +14,10 @@
     ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            'event_sms/static/src/template_reference_field/*',
+        ],
+    },
     'license': 'LGPL-3',
 }

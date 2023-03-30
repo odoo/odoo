@@ -88,7 +88,7 @@
                             <field name="event_mail_ids">
                                 <tree string="Communication" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                                    <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                                     <field name="interval_nbr" readonly="interval_unit == 'now'"/>
                                     <field name="interval_unit"/>
                                     <field name="interval_type"/>
