@@ -477,6 +477,7 @@ class Slide(models.Model):
 
         if slide.is_published and not slide.is_category:
             slide._post_publication()
+            slide.channel_id.channel_partner_ids._recompute_completion()
         return slide
 
     def write(self, values):
@@ -494,8 +495,8 @@ class Slide(models.Model):
             self._post_publication()
 
         if 'is_published' in values or 'active' in values:
-            # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._set_completed_callback()
+            # recompute the completion for all partners of the channel
+            self.channel_id.channel_partner_ids._recompute_completion()
 
         return res
 
@@ -515,7 +516,9 @@ class Slide(models.Model):
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
+        channel_partner_ids = self.channel_id.channel_partner_ids
         super(Slide, self).unlink()
+        channel_partner_ids._recompute_completion()
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too
