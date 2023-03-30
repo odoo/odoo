@@ -64,8 +64,13 @@ class TestChannelStatistics(common.SlidesCase):
         channel_publisher._action_add_members(self.user_emp.partner_id)
         channel_emp = self.channel.with_user(self.user_emp)
 
+        members = self.env['slide.channel.partner'].search([('channel_id', '=', self.channel.id)])
+        member_emp = members.filtered(lambda m: m.partner_id == self.user_emp.partner_id)
+        member_publisher = members.filtered(lambda m: m.partner_id == self.user_officer.partner_id)
+
         slides_emp = (self.slide | self.slide_2).with_user(self.user_emp)
         slides_emp.action_set_viewed()
+        self.assertEqual(member_emp.completion, 0)
         self.assertEqual(channel_emp.completion, 0)
 
         slides_emp.action_mark_completed()
@@ -76,17 +81,65 @@ class TestChannelStatistics(common.SlidesCase):
         self.assertFalse(channel_emp.completed)
 
         self.slide_3.with_user(self.user_emp)._action_mark_completed()
+        self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
+        # The following tests should not update the completion for users that has already completed the course
+
         self.slide_3.is_published = False
+        self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
         self.slide_3.is_published = True
         self.slide_3.active = False
+        self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
+
+        # Should update completion when slide is marked as completed
+
+        self.assertEqual(member_publisher.completion, 0)
+        self.assertEqual(channel_publisher.completion, 0)
+        self.slide.with_user(self.user_officer).action_mark_completed()
+        self.assertEqual(member_publisher.completion, 50)
+        self.assertEqual(channel_publisher.completion, 50)
+
+        # Should update completion when slide is (un)archived
+        self.slide_3.active = True
+        self.assertEqual(member_emp.completion, 100)
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertEqual(member_publisher.completion, 33)
+        self.assertEqual(channel_publisher.completion, 33)
+
+        # Should update completion when a new published slide is created
+        self.slide_4 = self.slide_3.copy({'is_published': True})
+        self.assertEqual(member_emp.completion, 100)
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertEqual(member_publisher.completion, 25)
+        self.assertEqual(channel_publisher.completion, 25)
+
+        # Should update completion when slide is (un)published
+        self.slide_4.is_published = False
+        self.assertEqual(member_emp.completion, 100)
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertEqual(member_publisher.completion, 33)
+        self.assertEqual(channel_publisher.completion, 33)
+
+        # Should update completion when slide is marked as uncompleted
+        self.slide.with_user(self.user_emp).action_mark_uncompleted()
+        self.assertEqual(member_emp.completion, 67)
+        self.assertEqual(channel_emp.completion, 67)
+        self.assertEqual(member_publisher.completion, 33)
+        self.assertEqual(channel_publisher.completion, 33)
+
+        # Should update completion when a slide is unlinked
+        self.slide.with_user(self.user_manager).unlink()
+        self.assertEqual(member_emp.completion, 100)
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertEqual(member_publisher.completion, 0)
+        self.assertEqual(channel_publisher.completion, 0)
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics_complete_check_member(self):
