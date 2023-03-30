@@ -50,9 +50,9 @@ QUnit.module("ActionManager", (hooks) => {
             assert.step("on_close");
         }
         await doAction(webClient, 5, { onClose });
-        assert.containsOnce(target, ".o_dialog_container .o_dialog");
-        await click(target.querySelector(".o_dialog_container .o_dialog .modal-header button"));
-        assert.containsNone(target, ".o_dialog_container .o_dialog");
+        assert.containsOnce(target, ".o_dialog");
+        await click(target.querySelector(".o_dialog .modal-header button"));
+        assert.containsNone(target, ".o_dialog");
         assert.verifySteps(["on_close"]);
 
         // execute an 'ir.actions.act_window_close' action

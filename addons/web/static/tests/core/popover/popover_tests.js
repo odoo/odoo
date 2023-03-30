@@ -24,7 +24,7 @@ QUnit.module("Popover", {
 
 QUnit.test("popover can have custom class", async (assert) => {
     await mount(Popover, fixture, {
-        props: { target: popoverTarget, popoverClass: "custom-popover" },
+        props: { target: popoverTarget, class: "custom-popover" },
     });
 
     assert.containsOnce(fixture, ".o_popover.custom-popover");
@@ -32,7 +32,7 @@ QUnit.test("popover can have custom class", async (assert) => {
 
 QUnit.test("popover can have more than one custom class", async (assert) => {
     await mount(Popover, fixture, {
-        props: { target: popoverTarget, popoverClass: "custom-popover popover-custom" },
+        props: { target: popoverTarget, class: "custom-popover popover-custom" },
     });
 
     assert.containsOnce(fixture, ".o_popover.custom-popover.popover-custom");
@@ -130,6 +130,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
                 container,
                 onPositioned: this.onPositioned.bind(this),
                 position: this.props.position,
+                popper: "ref",
             });
         }
     };

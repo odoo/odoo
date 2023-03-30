@@ -11,9 +11,14 @@ import {
 import { ErrorDialog } from "../core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
 
-import { useComponent } from "@odoo/owl";
+import { Component, useComponent, xml } from "@odoo/owl";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
+
+class LegacyDialogContainer extends Component {
+    static template = xml`<div class="o_dialog_container"/>`;
+    static props = [];
+}
 
 /**
  * Returns a service that maps legacy dialogs
@@ -24,9 +29,9 @@ export const wowlServicesSymbol = Symbol("wowlServices");
  */
 export function makeLegacyDialogMappingService(legacyEnv) {
     return {
-        dependencies: ["ui", "hotkey"],
-        start(env) {
-            const { ui, hotkey } = env.services;
+        dependencies: ["ui", "hotkey", "overlay"],
+        start(_, { ui, hotkey, overlay }) {
+            overlay.add(LegacyDialogContainer, {});
 
             function getModalEl(dialog) {
                 return dialog.modalRef ? dialog.modalRef.el : dialog.$modal[0];
@@ -142,7 +147,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
                 params.kwargs.context = Object.assign(
                     {},
                     legacyEnv.session.user_context,
-                    params.kwargs.context,
+                    params.kwargs.context
                 );
             }
             const jsonrpc = wowlEnv.services.rpc(route, params, {

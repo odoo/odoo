@@ -17,27 +17,14 @@ import {
 } from "../../helpers/utils";
 
 import { Component, markup, xml } from "@odoo/owl";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 const serviceRegistry = registry.category("services");
-const mainComponentRegistry = registry.category("main_components");
 
 let target;
 
-class Parent extends Component {
-    setup() {
-        this.EffectContainer = mainComponentRegistry.get("EffectContainer");
-        this.NotificationContainer = mainComponentRegistry.get("NotificationContainer");
-    }
-}
-Parent.template = xml`
-    <div>
-      <t t-component="EffectContainer.Component" t-props="EffectContainer.props" />
-      <t t-component="NotificationContainer.Component" t-props="NotificationContainer.props" />
-    </div>
-  `;
-
 async function makeParent() {
     const env = await makeTestEnv({ serviceRegistry });
-    const parent = await mount(Parent, target, { env });
+    const parent = await mount(MainComponentsContainer, target, { env });
     return parent;
 }
 

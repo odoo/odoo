@@ -106,44 +106,44 @@ export class PropertiesField extends Component {
     }
 
     /**
-     * Return false if we should not close the popover containing the
-     * properties definition based on the event received.
+     * Return true if we should close the popover containing the
+     * properties definition based on the target received.
      *
      * If we edit the datetime, it will open a popover with the date picker
      * component, but this component won't be a child of the current popover.
      * So when we will click on it to select a date, it will close the definition
      * popover. It's the same for other similar components (many2one modal, etc).
      *
-     * @param {event} event
+     * @param {HTMLElement} target
      * @returns {boolean}
      */
-    checkPopoverClose(event) {
+    checkPopoverClose(target) {
         if (document.activeElement.closest(".o_field_property_definition")) {
             // the focus is still on an element of the definition
-            return true;
+            return false;
         }
 
-        if (event.target.closest(".bootstrap-datetimepicker-widget")) {
+        if (target.closest(".bootstrap-datetimepicker-widget")) {
             // selected a datetime, do not close the definition popover
-            return true;
+            return false;
         }
 
-        if (event.target.closest(".modal")) {
+        if (target.closest(".modal")) {
             // close a many2one modal
-            return true;
+            return false;
         }
 
-        if (event.target.closest(".o_tag_popover")) {
+        if (target.closest(".o_tag_popover")) {
             // tag color popover
-            return true;
+            return false;
         }
 
-        if (event.target.closest(".o_field_selector_popover")) {
+        if (target.closest(".o_field_selector_popover")) {
             // domain selector
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -479,7 +479,7 @@ export class PropertiesField extends Component {
                 hideKanbanOption: this.props.hideKanbanOption,
             },
             {
-                preventClose: this.checkPopoverClose,
+                closeOnClickAway: this.checkPopoverClose,
                 popoverClass: "o_property_field_popover",
                 position: "top",
                 onClose: () => {
