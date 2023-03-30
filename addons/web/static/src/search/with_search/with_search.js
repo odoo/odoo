@@ -18,11 +18,15 @@ export class WithSearch extends Component {
         }
 
         const SearchModelClass = this.props.SearchModel || SearchModel;
-        this.searchModel = new SearchModelClass(this.env, {
-            user: useService("user"),
-            orm: useService("orm"),
-            view: useService("view"),
-        });
+        this.searchModel = new SearchModelClass(
+            this.env,
+            {
+                user: useService("user"),
+                orm: useService("orm"),
+                view: useService("view"),
+            },
+            this.props.searchModelArgs
+        );
 
         useSubEnv({ searchModel: this.searchModel });
 
@@ -64,6 +68,7 @@ WithSearch.props = {
     resModel: String,
 
     globalState: { type: Object, optional: true },
+    searchModelArgs: { type: Object, optional: true },
 
     display: { type: Object, optional: true },
 
