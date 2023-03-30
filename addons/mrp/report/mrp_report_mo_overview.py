@@ -5,7 +5,7 @@ import json
 from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.tools import float_compare, format_date, float_is_zero
-from datetime import timedelta
+from datetime import datetime, timedelta
 from math import log10
 
 class ReportMoOverview(models.AbstractModel):
@@ -292,6 +292,12 @@ class ReportMoOverview(models.AbstractModel):
             forecast_line['already_used'] = True
             total_ordered += replenishment['summary']['quantity']
 
+        # Add "In transit" line if necessary
+        in_transit_line = self._add_transit_line(move_raw, forecast, production, level, current_index)
+        if in_transit_line:
+            total_ordered += in_transit_line['summary']['quantity']
+            replenishments.append(in_transit_line)
+
         reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
@@ -304,7 +310,7 @@ class ReportMoOverview(models.AbstractModel):
 
             to_order_line = {'summary': {
                 'level': level + 1,
-                'index': f"{current_index}{len(replenishments) + 1}",
+                'index': f"{current_index}TO",
                 'name': _("To Order"),
                 'model': "to_order",
                 'product_model': product._name,
@@ -326,6 +332,31 @@ class ReportMoOverview(models.AbstractModel):
             replenishments.append(to_order_line)
 
         return replenishments
+
+    def _add_transit_line(self, move_raw, forecast, production, level, current_index):
+        in_transit = next(filter(lambda line: line.get('in_transit') and line.get('document_out') and line['document_out'].get('id') == production.id, forecast), None)
+        if not in_transit:
+            return None
+
+        product = move_raw.product_id
+        currency = (production.company_id or self.env.company).currency_id
+        receipt_date = datetime.strptime(in_transit['delivery_date'], '%m/%d/%Y')
+        return {'summary': {
+            'level': level + 1,
+            'index': f"{current_index}IT",
+            'name': _("In Transit"),
+            'model': "in_transit",
+            'product_model': product._name,
+            'product_id': product.id,
+            'quantity': min(move_raw.product_uom_qty, in_transit['uom_id']._compute_quantity(in_transit['quantity'], move_raw.product_uom)),  # Avoid over-rounding
+            'uom_name': move_raw.product_uom.display_name,
+            'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
+            'mo_cost': self._get_replenishment_cost(product, in_transit['quantity'], in_transit['uom_id'], currency),
+            'product_cost': currency.round(product.standard_price * in_transit['uom_id']._compute_quantity(in_transit['quantity'], product.uom_id)),
+            'receipt': self._check_planned_start(production.date_start, self._format_receipt_date('expected', receipt_date)),
+            'currency_id': currency.id,
+            'currency': currency,
+        }}
 
     def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):
         return currency.round(product.standard_price * uom_id._compute_quantity(quantity, product.uom_id))
