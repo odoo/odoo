@@ -328,7 +328,8 @@ class HolidaysType(models.Model):
                                     leave_unit = 'hours'
                                 if holiday_status_id.requires_allocation != 'no':
                                     for available_allocation in sorted_available_allocations:
-                                        if available_allocation.date_to and available_allocation.date_to < leave.date_from.date():
+                                        if (available_allocation.date_to and available_allocation.date_to < leave.date_from.date()) \
+                                            or (available_allocation.date_from > leave.date_to.date()):
                                             continue
                                         virtual_remaining_leaves = (available_allocation.number_of_days if leave_unit == 'days' else available_allocation.number_of_hours_display) - allocations_days_consumed[employee_id][holiday_status_id][available_allocation]['virtual_leaves_taken']
                                         max_leaves = min(virtual_remaining_leaves, leave_duration)
@@ -367,7 +368,7 @@ class HolidaysType(models.Model):
                     if future_allocation_interval[0].date() > search_date:
                         continue
                     for allocation in future_allocation_interval[2]:
-                        if not allocation.active:
+                        if not allocation.active or allocation.date_from > search_date:
                             continue
                         days_consumed = allocations_days_consumed[employee_id][holiday_status_id][allocation]
                         if future_allocation_interval[1] != fields.datetime.combine(date, time.max) + timedelta(days=5*365):
@@ -447,7 +448,15 @@ class HolidaysType(models.Model):
     def _get_days_request(self):
         self.ensure_one()
         result = self._get_employees_days_per_allocation(self.closest_allocation_to_expire.employee_id.ids)
-        closest_allocation_remaining = result[self.closest_allocation_to_expire.employee_id.id][self][self.closest_allocation_to_expire]['virtual_remaining_leaves']
+        closest_allocation_remaining = 0
+        if self.closest_allocation_to_expire:
+            # Shows the sum of allocation expiring on the same day as the closest to expire
+            employee_allocations = result[self.closest_allocation_to_expire.employee_id.id][self].items()
+            closest_allocation_remaining = sum(
+                res['virtual_remaining_leaves']
+                for alloc, res in employee_allocations
+                if alloc and alloc.date_to == self.closest_allocation_to_expire.date_to
+            )
         return (self.name, {
                 'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
                 'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
@@ -457,7 +466,7 @@ class HolidaysType(models.Model):
                 'leaves_requested': ('%.2f' % (self.max_leaves - self.virtual_remaining_leaves - self.leaves_taken)).rstrip('0').rstrip('.'),
                 'leaves_approved': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
                 'closest_allocation_remaining': ('%.2f' % closest_allocation_remaining).rstrip('0').rstrip('.'),
-                'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to, date_format="MM/dd/yyyy") if self.closest_allocation_to_expire.date_to else False,
+                'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to) if self.closest_allocation_to_expire.date_to else False,
                 'request_unit': self.request_unit,
                 'icon': self.sudo().icon_id.url,
                 }, self.requires_allocation, self.id)

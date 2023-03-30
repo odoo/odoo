@@ -230,8 +230,8 @@
                                     <record id="tax_report_line_82_applied_carryover" model="account.report.expression">
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="date_scope">to_beginning_of_period</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_tax_period</field>
                                     </record>
                                     <record id="tax_report_line_82_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -264,8 +264,8 @@
                                     <record id="tax_report_line_83_applied_carryover" model="account.report.expression">
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="date_scope">to_beginning_of_period</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_tax_period</field>
                                     </record>
                                     <record id="tax_report_line_83_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -320,8 +320,8 @@
                                     <record id="tax_report_line_86_applied_carryover" model="account.report.expression">
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="date_scope">to_beginning_of_period</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_tax_period</field>
                                     </record>
                                     <record id="tax_report_line_86_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -354,8 +354,8 @@
                                     <record id="tax_report_line_87_applied_carryover" model="account.report.expression">
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="date_scope">to_beginning_of_period</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_tax_period</field>
                                     </record>
                                     <record id="tax_report_line_87_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -388,8 +388,8 @@
                                     <record id="tax_report_line_88_applied_carryover" model="account.report.expression">
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="date_scope">to_beginning_of_period</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_tax_period</field>
                                     </record>
                                     <record id="tax_report_line_88_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>

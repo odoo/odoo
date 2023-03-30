@@ -152,10 +152,11 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
             return super()._prepare_invoice_report(pdf_writer, edi_document)
-        if not edi_document.attachment_id:
+        attachment = edi_document.sudo().attachment_id
+        if not attachment:
             return
 
-        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='text/xml')
+        pdf_writer.embed_odoo_attachment(attachment, subtype='text/xml')
         if not pdf_writer.is_pdfa:
             try:
                 pdf_writer.convert_to_pdfa()

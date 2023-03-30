@@ -21,6 +21,7 @@ import {
 import {
     click,
     getFixture,
+    getNodesTextContent,
     legacyExtraNextTick,
     mount,
     nextTick,
@@ -28,7 +29,7 @@ import {
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
-import { editSearchView, editView, setDefaults } from "@web/views/debug_items";
+import { editSearchView, editView, setDefaults, viewMetadata } from "@web/views/debug_items";
 
 import { Component, xml } from "@odoo/owl";
 const { prepareRegistriesWithCleanup } = utils;
@@ -654,5 +655,73 @@ QUnit.module("DebugMenu", (hooks) => {
         await nextTick();
         await click(target.querySelectorAll(".modal .modal-footer button")[1]);
         assert.containsNone(target, ".modal");
+    });
+
+    QUnit.test("view metadata: basic rendering", async (assert) => {
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("viewMetadata", viewMetadata);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 27,
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        };
+        serverData.models.partner.records = [{ id: 27, display_name: "p1" }];
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+            if (args.method === "get_metadata") {
+                return [
+                    {
+                        create_date: "2023-01-26 14:12:10",
+                        create_uid: [4, "Some user"],
+                        id: 27,
+                        noupdate: false,
+                        write_date: "2023-01-26 14:13:31",
+                        write_uid: [6, "Another User"],
+                        xmlid: "abc.partner_16",
+                        xmlids: [{ xmlid: "abc.partner_16", noupdate: false }],
+                    },
+                ];
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        assert.containsOnce(target, ".modal");
+        assert.deepEqual(
+            getNodesTextContent(
+                target.querySelectorAll(".modal-body table tr th, .modal-body table tr td")
+            ),
+            [
+                "ID:",
+                "27",
+                "XML ID:",
+                "abc.partner_16",
+                "No Update:",
+                "false (change)",
+                "Creation User:",
+                "Some user",
+                "Creation Date:",
+                "01/26/2023 15:12:10",
+                "Latest Modification by:",
+                "Another User",
+                "Latest Modification Date:",
+                "01/26/2023 15:13:31",
+            ]
+        );
     });
 });

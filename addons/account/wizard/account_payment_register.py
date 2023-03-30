@@ -20,7 +20,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_communication')
     group_payment = fields.Boolean(string="Group Payments", store=True, readonly=False,
         compute='_compute_group_payment',
-        help="Only one payment will be created by partner (bank), instead of one per billy.")
+        help="Only one payment will be created by partner (bank), instead of one per bill.")
     early_payment_discount_mode = fields.Boolean(compute='_compute_early_payment_discount_mode')
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -267,8 +267,7 @@ class AccountPaymentRegister(models.TransientModel):
             vals = batches[key]
             lines = vals['lines']
             merge = (
-                self.group_payment
-                and batch_key['partner_id'] in partner_unique_inbound
+                batch_key['partner_id'] in partner_unique_inbound
                 and batch_key['partner_id'] in partner_unique_outbound
             )
             if merge:
@@ -426,7 +425,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.partner_bank_id = None
 
-    @api.depends('payment_type', 'journal_id')
+    @api.depends('payment_type', 'journal_id', 'currency_id')
     def _compute_payment_method_line_fields(self):
         for wizard in self:
             if wizard.journal_id:

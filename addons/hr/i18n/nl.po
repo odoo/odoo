@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -761,7 +761,7 @@ msgstr "Basis werknemer"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
 msgid "Can Edit"
-msgstr "Kan wijzigen"
+msgstr "Kan bewerken"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
@@ -1268,7 +1268,7 @@ msgstr "Werknemer aantal"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Editing"
-msgstr "Wijzigen gegevens"
+msgstr "Bewerk gegevens"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -1480,7 +1480,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
@@ -1798,7 +1798,7 @@ msgstr "Functies"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Summary"
-msgstr "Taakoverzicht"
+msgstr "Functieomschrijving"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -2268,7 +2268,7 @@ msgstr ""
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer : Manage all employees"
-msgstr "Functionaris: Beheer alle medewerkers"
+msgstr "Functionaris: Beheer alle werknemers"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
@@ -2342,7 +2342,7 @@ msgstr "Bovenliggende pad"
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
-msgstr "Partner gerelateerde gegevens van de gebruiker"
+msgstr "Relatie gerelateerde gegevens van de gebruiker"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2483,7 +2483,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag versturen\n"
-"-partners: alleen geautoriseerde partners\n"
+"-relaties: alleen geautoriseerde relaties\n"
 "-volgers: allen volgers van een bijbehorend document of volgers van gevolgde kanalen\n"
 
 #. module: hr
@@ -2846,13 +2846,13 @@ msgstr "Sport activiteit"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr "Geboortedatum partner"
+msgstr "Geboortedatum relatie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr "Volledige naam partner"
+msgstr "Volledige naam relatie"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2953,7 +2953,7 @@ msgstr "Technische expertise"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
 msgid "Technical field, bind user to this employee on create"
-msgstr "Technisch veld, bind gebruiker aan deze medewerker bij aanmaken"
+msgstr "Technisch veld, bind gebruiker aan deze werknemer bij aanmaken"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
@@ -3094,7 +3094,7 @@ msgstr "De werkvergunning van %(employee)s verloopt op %(date)s."
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "This employee already has an user."
-msgstr "Deze medewerker heeft al een gebruiker."
+msgstr "Deze werknemer heeft al een gebruiker."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -3207,14 +3207,14 @@ msgstr "Gebruiker"
 #. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
-msgid "User of coach of employee %s is not set."
-msgstr "Gebruiker van coach van werknemer %s is niet ingesteld."
+msgid "The user of %s's coach is not set."
+msgstr "De gebruiker van de coach van %s is niet ingesteld."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
-msgstr "Partner van de gebruiker"
+msgstr "Relatie van de gebruiker"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -3302,7 +3302,7 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
-"Of de medewerker nu lid is van de afdeling van de actieve gebruiker of van "
+"Of de werknemer nu lid is van de afdeling van de actieve gebruiker of van "
 "een onderliggende afdeling."
 
 #. module: hr

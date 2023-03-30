@@ -55,11 +55,13 @@ class TestStockValuation(TransactionCase):
             'type': 'general',
         })
         cls.product1.categ_id.write({
+            'property_valuation': 'real_time',
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
             'property_stock_journal': cls.stock_journal.id,
         })
+        cls.env.ref('base.EUR').active = True
 
     def test_change_unit_cost_average_1(self):
         """ Confirm a purchase order and create the associated receipt, change the unit cost of the
@@ -285,7 +287,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
             'property_stock_journal': cls.stock_journal.id,
-            'property_account_creditor_price_difference_categ': cls.product1.product_tmpl_id.get_product_accounts()['expense']
+            'property_account_creditor_price_difference_categ': cls.product1.product_tmpl_id.get_product_accounts()['expense'],
+            'property_valuation': 'real_time',
         })
 
     def test_change_currency_rate_average_1(self):
@@ -791,14 +794,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         inv.action_post()
 
         move_lines = inv.line_ids
-        self.assertEqual(len(move_lines), 2)
+        self.assertEqual(len(move_lines), 4)
 
         payable_line = move_lines.filtered(lambda l: l.account_id.account_type == 'liability_payable')
 
         self.assertEqual(payable_line.amount_currency, -100.0)
         self.assertAlmostEqual(payable_line.balance, -66.67)
 
-        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account and l.balance > 0)
         self.assertEqual(stock_line.amount_currency, 100.0)
         self.assertAlmostEqual(stock_line.balance, 66.67)
 

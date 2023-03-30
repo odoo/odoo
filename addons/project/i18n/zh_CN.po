@@ -6,17 +6,18 @@
 # liulixia <liu.lixia@elico-corp.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # digitalliuzg8888, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2023
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -642,6 +643,11 @@ msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">子任务</span>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr "<span class=\"o_stat_text\">任务</span>"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr "<span class=\"o_stat_text\">循环执行</span>"
@@ -1081,7 +1087,7 @@ msgstr "为您的任务指派一名负责人"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Assign each new project to this plan"
-msgstr ""
+msgstr "将各新项目分配至此计划"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -2388,6 +2394,7 @@ msgstr "周五"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "未来活动"
@@ -3019,6 +3026,7 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "最近的活动"
@@ -4072,6 +4080,11 @@ msgid "Project Collaborators"
 msgstr "项目合作者"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
+msgstr "项目颜色"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
 msgstr "项目计数"
@@ -4167,14 +4180,9 @@ msgid "Project Visibility"
 msgstr "项目可见性"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
-msgstr "项目颜色"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "项目描述..."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -4887,6 +4895,7 @@ msgid "Show Project on Dashboard"
 msgstr "在仪表板上显示项目"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "显示所有的在今天之前的下一个行动日期的记录"
@@ -5249,7 +5258,7 @@ msgstr "受阻的任务"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task description..."
-msgstr ""
+msgstr "任务描述..."
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
@@ -5380,7 +5389,7 @@ msgstr "当前用户的个人任务阶段。"
 msgid ""
 "The end date should be after the day of the month or the last day of the "
 "month"
-msgstr ""
+msgstr "结束日期应为下月第一天或当月最后一天之后"
 
 #. module: project
 #. odoo-python
@@ -5651,6 +5660,7 @@ msgstr "今天"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "今天的活动"
@@ -5687,7 +5697,7 @@ msgid ""
 "Track the profitability of your projects. Any project, its tasks and "
 "timesheets are linked to an analytic account and any analytic account "
 "belongs to a plan."
-msgstr ""
+msgstr "追踪项目盈利能力。任何项目、其任务和工时单均可链接至解析帐户，任何解析帐户均属于计划。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -6111,14 +6121,14 @@ msgstr "您不能删除包含任务的阶段。 您可以存档它们，也可�
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "您无法阅读任务中的%s字段。"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
-msgstr ""
+msgstr "您不能在任务中写入%s字段。"
 
 #. module: project
 #. odoo-python

@@ -4,9 +4,11 @@ import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services
 import {
     click,
     clickCreate,
+    clickDiscard,
     clickSave,
     editInput,
     getFixture,
+    patchDate,
     patchTimeZone,
     patchWithCleanup,
     triggerEvent,
@@ -740,5 +742,36 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='date'] input").value,
             `08/01/${year}`
         );
+    });
+
+    QUnit.test("DateField: allow to use compute dates (+5d for instance)", async function (assert) {
+        patchDate(2021, 1, 15, 10, 0, 0); // current date : 15 Feb 2021 10:00:00
+        serverData.models.partner.fields.date.default = "2019-09-15";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="date"></field></form>',
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "09/15/2019"); // default date
+
+        // Calculate a new date from current date + 5 days
+        await editInput(target, ".o_field_widget[name=date] input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+
+        // Discard and do it again
+        await clickDiscard(target);
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "09/15/2019"); // default date
+        await editInput(target, ".o_field_widget[name=date] input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+
+        // Save and do it again
+        await clickSave(target);
+        // new computed date (current date + 5 days) is saved
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+        await editInput(target, ".o_field_widget[name=date] input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
     });
 });

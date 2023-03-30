@@ -115,6 +115,22 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             vals['invoice_payment_term_id'] = invoice_payment_term_id.id
         return self.env['account.move'].create(vals)
 
+    def test_setting_tax_separately(self):
+        ''' Test:
+        price_unit | Taxes
+        ------------------
+        100        | 21%
+        Expected:
+        Tax         | Taxes     | Base      | Amount
+        --------------------------------------------
+        21%         | /         | 100       | 21
+        '''
+        invoice = self._create_invoice([(100, self.env['account.tax'])])
+        invoice.invoice_line_ids[0].tax_ids = self.percent_tax_1
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
+            {'name': self.percent_tax_1.name, 'tax_base_amount': 100, 'balance': -21, 'tax_ids': []},
+        ])
+
     def test_one_tax_per_line(self):
         ''' Test:
         price_unit | Taxes

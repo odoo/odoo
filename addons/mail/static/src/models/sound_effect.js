@@ -29,14 +29,17 @@ registerModel({
             this.audio.currentTime = 0;
             this.audio.loop = loop;
             this.audio.volume = volume !== undefined ? volume : this.defaultVolume;
+            this.update({ canPlay: true });
             Promise.resolve(this.audio.play()).catch(e => this._onAudioPlayError(e));
         },
         /**
          * Resets the audio to the start of the track and pauses it.
          */
         stop() {
+            this.update({ canPlay: false });
             if (this.audio) {
                 this.audio.pause();
+                this.audio.loop = false;
                 this.audio.currentTime = 0;
             }
         },
@@ -46,6 +49,10 @@ registerModel({
          */
         _onAudioPlayError(error) {
             if (!this.exists()) {
+                return;
+            }
+            if (!this.canPlay) {
+                this.stop();
                 return;
             }
             this.update({ audioPlayError: error });
@@ -65,6 +72,9 @@ registerModel({
         },
     },
     fields: {
+        canPlay: attr({
+            default: false,
+        }),
         /**
          * HTMLAudioElement
          * Does not require to be mounted on the DOM to operate.

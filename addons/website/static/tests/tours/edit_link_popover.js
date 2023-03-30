@@ -184,5 +184,22 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         extra_trigger: 'iframe html:has(.o_edit_menu_popover)',
         run: function () {}, // it's a check
     },
+    {
+        content: "Ensure that a click on the link popover link opens a new window",
+        trigger: 'iframe .o_edit_menu_popover a.o_we_url_link[target="_blank"]',
+        extra_trigger: 'iframe .o_edit_menu_popover a.o_we_full_url[target="_blank"]',
+        run: function (actions) {
+            this.$anchor[0].addEventListener('click', (ev) => {
+                const originalPreventDefault = ev.preventDefault.bind(ev);
+                ev.preventDefault = () => {
+                    throw new Error(
+                        "The link popover should not be default prevented as to open a new tab"
+                    );
+                };
+                originalPreventDefault(); // We do not want to open a new tab in a tour
+            }, {once: true, capture: true});
+            actions.click();
+        },
+    },
 ]);
 });

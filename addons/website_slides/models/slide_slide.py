@@ -171,7 +171,10 @@ class Slide(models.Model):
     # google
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
     # content - webpage
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of category 'Article'.", translate=True, sanitize_attributes=False, sanitize_form=False)
+    html_content = fields.Html(
+        "HTML Content", translate=True,
+        sanitize_attributes=False, sanitize_form=False, sanitize_overridable=True,
+        help="Custom HTML content for slides of category 'Article'.")
     # content - images
     image_binary_content = fields.Binary('Image Content', related='binary_content', readonly=False) # Used to filter file input to images only
     image_google_url = fields.Char('Image Link', related='url', readonly=False,

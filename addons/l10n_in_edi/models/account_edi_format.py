@@ -272,7 +272,7 @@ class AccountEdiFormat(models.Model):
         if set_vat:
             partner_details.update({
                 "LglNm": partner.commercial_partner_id.name,
-                "GSTIN": partner.vat or "",
+                "GSTIN": partner.vat or "URP",
             })
         else:
             partner_details.update({"Nm": partner.name})

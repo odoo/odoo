@@ -19,7 +19,7 @@ export function useTranslationDialog() {
     const addDialog = useOwnedDialogs();
     const env = useEnv();
 
-    async function openTranslationDialog({ record, fieldName, updateField }) {
+    async function openTranslationDialog({ record, fieldName }) {
         if (!record.resId) {
             let _continue = true;
             await new Promise((resolve) => {
@@ -50,7 +50,10 @@ export function useTranslationDialog() {
             resModel: resModel,
             userLanguageValue: record.data[fieldName] || "",
             isComingFromTranslationAlert: false,
-            updateField,
+            onSave: async () => {
+                await record.load({}, { keepChanges: true });
+                record.model.notify();
+            },
         });
     }
 
@@ -71,13 +74,12 @@ export class TranslationButton extends Component {
     }
 
     onClick() {
-        const { fieldName, record, updateField } = this.props;
-        this.translationDialog({ fieldName, record, updateField });
+        const { fieldName, record } = this.props;
+        this.translationDialog({ fieldName, record });
     }
 }
 TranslationButton.template = "web.TranslationButton";
 TranslationButton.props = {
     fieldName: { type: String },
     record: { type: Object },
-    updateField: { type: Function },
 };

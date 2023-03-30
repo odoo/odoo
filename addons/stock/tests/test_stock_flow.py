@@ -2408,3 +2408,38 @@ class TestStockFlow(TestStockCommon):
         in_stock_picking.button_validate()
 
         self.assertEqual(out_move.move_line_ids.reserved_qty, 1.0, 'The out move should be reserved')
+
+    def test_assign_done_sml_and_validate_it(self):
+        """
+        From the detailed operations wizard, create a SML that has a
+        sub-location as destination location. After its creation, the
+        destination location should not changed. Same when marking the picking
+        as done
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        sub_loc = stock_location.child_ids[0]
+
+        self.productA.tracking = 'lot'
+
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+        receipt = receipt_form.save()
+
+        with Form(receipt.move_ids, view='stock.view_stock_move_nosuggest_operations') as move_form:
+            with move_form.move_line_nosuggest_ids.new() as sml:
+                sml.location_dest_id = sub_loc
+                sml.lot_name = '123'
+                sml.qty_done = 10
+
+        done_sml = receipt.move_ids.move_line_ids.filtered(lambda sml: sml.qty_done > 0)
+        self.assertEqual(done_sml.location_dest_id, sub_loc)
+
+        receipt.button_validate()
+
+        self.assertEqual(receipt.move_ids.move_line_ids.location_dest_id, sub_loc)

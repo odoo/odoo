@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,14 +32,23 @@ msgid ""
 "        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
 "    "
 msgstr ""
+"\n"
+"        Визначає джерело для створення робочих записів\n"
+"\n"
+"Робочий графік: робочі записи будуть створені на основі робочих годин, наведених нижче.\n"
+"Відвідуваність: записи про роботу створюватимуться на основі відвідуваності працівника. (потрібен додаток Відвідування)\n"
+"Планування: записи про роботу будуть створені на основі планування працівника. (потрібен додаток Планування)\n"
+"    "
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid "%s does not have a contract from %s to %s."
 msgstr "%s не має контракту з %s до %s."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid ""
@@ -66,9 +75,12 @@ msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
-"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
+"<span class=\"text-muted\">Warning: Work Entry Regeneration will erase all "
+"manual configuration (work entry type, deferred time off, ...).</span>"
 msgstr ""
+"<span class=\"text-muted\">Попередження: Регенерація робочого запису "
+"видалить усі конфігурації, налаштовані вручну (тип робочого запису, "
+"відкладену відпустку, ...).</span>"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
@@ -127,7 +139,7 @@ msgid "Employees"
 msgstr "Співробітники"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
 #, python-format
 msgid "Everybody's work entries"
@@ -146,7 +158,6 @@ msgstr "Від"
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 #: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
-#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
 msgid "Generate Missing Work Entries"
 msgstr "Створити відсутні робочі записи"
 
@@ -186,6 +197,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -231,8 +243,8 @@ msgstr "Остання дата"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "Офіційні вихідні 2022"
+msgid "Legal Leaves 2023"
+msgstr "Офіційні відпустки 2023"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
@@ -246,7 +258,7 @@ msgid "Regenerate Employee Work Entries"
 msgstr "Створити заново робочі записи співробітника"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -265,6 +277,7 @@ msgid "Sick Time Off"
 msgstr "Лікарняний"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -273,6 +286,7 @@ msgstr ""
 "Вибачте, створення робочих записів зі скасованих контарктів не дозволено."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""

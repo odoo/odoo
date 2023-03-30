@@ -28,7 +28,7 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
-"%(matching_images_count)s images correspondantes ont été trouvés pour "
+"%(matching_images_count)s images correspondantes ont été trouvées pour "
 "%(product_count)s produits."
 
 #. module: product_images
@@ -40,7 +40,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
-"                            Puisque seuls 10 000 produits peuvent être traités par jour, le restant sera\n"
+"                            Puisque seuls 10.000 produits peuvent être traités par jour, le restant sera\n"
 "                            traité demain.\n"
 "                        </span>"
 
@@ -67,7 +67,7 @@ msgstr "Annuler"
 #. module: product_images
 #: model:ir.model,name:product_images.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
@@ -258,9 +258,7 @@ msgstr "Actions déclenchées"
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr ""
-"Indique si une image doit être récupérée pour ce produit. Manipulé par un "
-"cron."
+msgstr "Si une image doit être récupérée pour ce produit. Géré par un cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -271,8 +269,7 @@ msgstr "Vous avez sélectionné"
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Your API Key or your Search Engine ID is incorrect."
-msgstr ""
-"Votre clé API ou votre identifiant de moteur de recherche est incorrect."
+msgstr "Votre clé API ou votre ID de moteur de recherche est incorrect."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form

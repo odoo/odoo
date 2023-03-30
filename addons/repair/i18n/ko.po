@@ -148,7 +148,7 @@ msgstr "<strong>보증 :</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? 이로 인해 재고 현황이 일치하지 않을 수 있습니다."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -1404,6 +1404,12 @@ msgstr "관련 청구서가 승인된 내역이 있는 경우 수리요청서는
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "음수를 입력할 수 없습니다."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot cancel a completed repair order."
+msgstr ""
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0

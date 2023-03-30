@@ -33,6 +33,9 @@ class User(models.Model):
         return bool(self.sudo().microsoft_calendar_rtoken)
 
     def _get_microsoft_calendar_token(self):
+        if not self:
+            return None
+
         self.ensure_one()
         if self.microsoft_calendar_rtoken and not self._is_microsoft_calendar_valid():
             self._refresh_microsoft_calendar_token()

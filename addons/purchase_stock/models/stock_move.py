@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
 
@@ -37,7 +37,7 @@ class StockMove(models.Model):
         received_qty = line.qty_received
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom)
-        if line.qty_invoiced > received_qty:
+        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
             move_layer = line.move_ids.stock_valuation_layer_ids
             invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
             receipt_value = sum(move_layer.mapped('value')) + sum(invoiced_layer.mapped('value'))
@@ -207,4 +207,10 @@ class StockMove(models.Model):
         )
 
     def _get_all_related_aml(self):
-        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids
+        # The back and for between account_move and account_move_line is necessary to catch the
+        # additional lines from a cogs correction
+        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids.filtered(
+            lambda aml: aml.product_id == self.purchase_line_id.product_id)
+
+    def _get_all_related_sm(self, product):
+        return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)

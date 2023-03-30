@@ -375,7 +375,7 @@ export class OptimizeSEODialog extends Component {
         onWillStart(async () => {
             const { metadata: { mainObject, seoObject, path } } = this.website.currentWebsite;
 
-            this.object = mainObject || seoObject;
+            this.object = seoObject || mainObject;
             this.data = await this.rpc('/website/get_seo_data', {
                 'res_id': this.object.id,
                 'res_model': this.object.model,

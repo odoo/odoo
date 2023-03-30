@@ -154,7 +154,7 @@ Wysiwyg.include({
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
                     .write(`<!DOCTYPE html><html${
-                        self.options.iframeHtmlClass ? ` class="${self.options.iframeHtmlClass}"` : ''
+                        self.options.iframeHtmlClass ? ' class="' + self.options.iframeHtmlClass +'"' : ''
                     }>${iframeContent}</html>`);
             });
             self.options.document = self.$iframe[0].contentWindow.document;
@@ -172,6 +172,20 @@ Wysiwyg.include({
             return this.snippetsMenu.appendTo(this.$utilsZone);
         } else {
             return this._super.apply(this, arguments);
+        }
+    },
+
+    /**
+     * Bind the blur event on the iframe so that it would not blur when using
+     * the sidebar.
+     *
+     * @override
+     */
+    _bindOnBlur: function () {
+        if (!this.options.inIframe) {
+            this._super.apply(this, arguments);
+        } else {
+            this.$iframe[0].contentWindow.addEventListener('blur', this._onBlur);
         }
     },
 });

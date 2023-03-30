@@ -93,15 +93,14 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po.order_line.product_qty = product_qty
         sub_mos = receipt._get_subcontract_production()
         self.assertEqual(sum(receipt.move_ids.mapped('product_qty')), product_qty, "Qty of subcontracted product to receive should update (not validated yet)")
-        self.assertEqual(len(sub_mos), 2, "A new subcontracting MO should have been created")
+        self.assertEqual(len(sub_mos), 1, "The subcontracted mo should have been updated")
 
         # check that a neg qty can't proprogate once receipt is done
         for move in receipt.move_ids:
             move.move_line_ids.qty_done = move.product_qty
         receipt.button_validate()
         self.assertEqual(receipt.state, 'done')
-        self.assertEqual(sub_mos[0].state, 'done')
-        self.assertEqual(sub_mos[1].state, 'done')
+        self.assertEqual(sub_mos.state, 'done')
         with self.assertRaises(UserError):
             po.order_line.product_qty = lower_qty
 

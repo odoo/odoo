@@ -11,8 +11,8 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Martin Trigaux, 2022
 # Patrick-Jordan Kiudorv, 2022
-# Jana Jaakson, 2022
 # Leaanika Randmets, 2022
+# Jana Jaakson, 2023
 # Anna, 2023
 # 
 msgid ""
@@ -172,6 +172,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"Kui see on Tõene, esitatakse see küsimus ainult üks kord ja selle väärtus "
+"edastatakse kõigile osalejatele. Kui mitte, küsitakse seda iga broneeringus "
+"osaleja kohta."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
@@ -197,7 +200,7 @@ msgstr "Viimati uuendatud"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr "Kohustuslik vastus"
+msgstr "Kohustuslik väli"
 
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_0_question_0
@@ -222,7 +225,7 @@ msgstr "Meie veebileht"
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_type_data_conference_question_0
 msgid "Participate in Social Event"
-msgstr ""
+msgstr "Osalege sotsiaalmeedia sündmusel"
 
 #. module: website_event_questions
 #: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_2
@@ -247,7 +250,7 @@ msgstr "Küsimuste tüüp"
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
-msgstr ""
+msgstr "Küsimus ei saa kuuluda nii sündmuse kategooriasse kui ka sündmusesse."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -307,7 +310,7 @@ msgstr "Soovituslik vastus"
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr "Teksti sisestamine"
+msgstr "Tekst"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box

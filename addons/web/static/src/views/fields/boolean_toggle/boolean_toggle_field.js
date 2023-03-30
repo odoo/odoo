@@ -8,6 +8,9 @@ export class BooleanToggleField extends BooleanField {
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
     }
+    onChange(newValue) {
+        this.props.update(newValue, { save: true });
+    }
 }
 
 BooleanToggleField.template = "web.BooleanToggleField";

@@ -5,13 +5,14 @@
 # Translators:
 # Bonny Useful <bonny.useful@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Mathieu Walravens, 2023
 # Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
@@ -162,7 +163,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr "Lokasi"
+msgstr "'Lokasi - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -226,6 +227,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -1386,6 +1388,13 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
+"Negara-negara tertentu menetapkan penahanan pada sumber untuk jumlah faktur,"
+" sesuai legislasi internal mereka sendiri. Penahanan pada sumber apapun akan"
+" dibayar oleh kline ke otoritas pajak. Dalam kasus apapun My Company "
+"(Chicago) tidak akan terlibat dalam biaya yang terkait legislasi negara "
+"apapun. Jumlah dalam faktur yang akan oleh karena itu ditujukan ke My "
+"Company (San Chicago) secara penuh dan tidak termasuk biaya apapun terkait "
+"legislasi negara di mana klien berlokasi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3119,6 +3128,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3659,6 +3675,14 @@ msgstr "Domain tidak sah untuk operator%s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Domain tidak sah sebelah kanan operator %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -5259,6 +5283,12 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
+"Faktur-faktur kami dapat dibayar dalam 21 hari kerja, kecuali terdapat "
+"jangka waktu pembayaran lain yang tertera baik pada faktur atau order. Dalam"
+" kasus pembayaran tidak diberikan pada jathu tempo, My Company (Chicago) "
+"memiliki hak untuk meminta pembayaran bunga tetap sejumlah 10% dari jumlah "
+"jatuh tempo. My Company (Chicago) akan diberikan hak untuk menghentikan "
+"layanan apapun tanpa pemberitahuan sebelumnya apabila pembayaran terlambat."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -5868,7 +5898,6 @@ msgstr "Kategori Produk"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Kategori Produk"
@@ -6202,6 +6231,14 @@ msgstr "Kuant"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
@@ -8335,6 +8372,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9462,8 +9508,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Anda hanya dapat menghapus pergerakan dalam status rancangan."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9502,6 +9548,13 @@ msgstr ""
 msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
 
 #. module: stock
@@ -9700,6 +9753,13 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/model/stock_picking.py:0
+#, python-format
+msgid " You might want to update the locations of this transfer's operations "
 msgstr ""
 
 #. module: stock

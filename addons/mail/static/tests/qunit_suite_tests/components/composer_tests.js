@@ -4,6 +4,7 @@ import {
     afterNextRender,
     dragenterFiles,
     dropFiles,
+    insertText,
     nextAnimationFrame,
     pasteFiles,
     start,
@@ -1594,6 +1595,41 @@ QUnit.test('send button on mail.channel should have "Send" as label', async func
         "Send",
         "Send button of mail.channel composer should have 'Send' as label",
     );
+});
+
+QUnit.test("No error when typing timeout occurs after closing the channel", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        im_status: "online",
+        name: "Demo",
+    });
+    const channelId = pyEnv["mail.channel"].create({
+        name: "Gryffindor",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+    });
+    const { advanceTime, click, messaging, openDiscuss } = await start({
+        hasTimeControl: true,
+        discuss: {
+            context: {
+                active_id: channelId,
+            },
+        },
+    });
+    await openDiscuss();
+    await afterNextRender(() => insertText(".o_ComposerTextInput_textarea", "Hello"));
+    await click(".o_DiscussSidebarCategoryItem_commandLeave");
+    const thread = messaging.models["Thread"].findFromIdentifyingData({
+        id: channelId,
+        model: "mail.channel",
+    });
+    const { duration } = messaging.models["Timer"].findFromIdentifyingData({
+        threadAsCurrentPartnerInactiveTypingTimerOwner: thread,
+    });
+    await advanceTime(duration);
+    assert.containsNone(document.body, ".o_DiscussSidebarCategoryItem");
 });
 
 });

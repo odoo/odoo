@@ -5,17 +5,18 @@
 # Translators:
 # Maidu Targama <m.targama@gmail.com>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Martin Aavastik <martin@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Martin Aavastik <martin@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
-# Leaanika Randmets, 2022
+# Jana Jaakson, 2023
+# Leaanika Randmets, 2023
 # Anna, 2023
 # 
 msgid ""
@@ -58,6 +59,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Osta Odoo Enterprise kohe, et hankida rohkem teenusepakkujaid.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -168,6 +172,8 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Tarneviisi kirjeldus, mida kuvatakse müügitellimustel ja kinnistusmeilis. "
+"(nt. juhised)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -235,7 +241,7 @@ msgstr "Põhiosa kaal"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
 msgid "Can Generate Return"
-msgstr ""
+msgstr "Saab luua tagastusi"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -345,7 +351,7 @@ msgstr "Debug logging"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "Müügitellimustel kasutatakse vaikimisi tarneviis."
+msgstr "Müügitellimustel vaikimisi kasutatav tarneviis."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -414,7 +420,7 @@ msgstr "Õnnestunud tarne reiting"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr ""
+msgstr "Tarnekomplekt"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
@@ -489,9 +495,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
-"                to each method."
+"Igal tarnijal (nt, UPS) võib olla mitu tarneviisi (nt.\n"
+"              UPS Express, UPS Standard), millele igale meetodile on \n"
+"               kehtestatud hinnakujundusreeglid."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -529,8 +535,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
-"Selle vormi täitmine lubab teil filtreerida saadetise kohaleviijaid "
-"vastavalt teie kliendi aadressile."
+"Selle vormi täitmine lubab teil filtreerida transpordifirmad vastavalt teie "
+"kliendi aadressile."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -549,7 +555,7 @@ msgstr "Tasuta tarne"
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
-msgstr "Tasuta kohaletoimetus"
+msgstr "Tasuta kohaletoimetamine"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
@@ -598,8 +604,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
-"If the order total amount (shipping excluded) is above or equal to this "
-"value, the customer benefits from a free shipping"
+"Kui tellimuse kogusumma (ilma tarneta) on sellest väärtusest suurem või "
+"sellega võrdne, siis kohaletoimetamine on kliendi jaoks tasuta"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -619,7 +625,7 @@ msgstr "Integratsioonitase"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
 msgid "Invoicing Message"
-msgstr ""
+msgstr "Arveldamise sõnum"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
@@ -667,7 +673,7 @@ msgstr "Viimati uuendatud"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "Kohalik tarne"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -709,7 +715,7 @@ msgstr "Nimi"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "Uued teenusepakkujad"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
@@ -842,7 +848,7 @@ msgstr "Toote kogus"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr "Teenusepakkuja"
+msgstr "Hind"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
@@ -985,6 +991,8 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Tarneviisi informatsioon, mida kuvatakse müügitellimuste allosas ja "
+"kinnistusmeilis. (nt. juhised)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1038,7 +1046,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
-msgstr ""
+msgstr "Poste"
 
 #. module: delivery
 #. odoo-python
@@ -1104,9 +1112,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"These methods allow to automatically compute the delivery price\n"
-"                according to your settings; on the sales order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders)."
+"Need meetodid võimaldavad automaatselt arvutada tarnehinda.\n"
+"               vastavalt teie seadistustele; müügitellimusel (mis põhineb\n"
+"               hinnapakkumisel) või arvel (tarnekorralduste alusel)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1134,7 +1142,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr ""
+msgstr "Pakendi kogukaal."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight

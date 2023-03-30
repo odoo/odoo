@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Niyas Raphy, 2023\n"
 "Language-Team: Malayalam (https://www.transifex.com/odoo/teams/41243/ml/)\n"
@@ -219,6 +219,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -665,7 +666,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
 msgid "Action"
-msgstr ""
+msgstr "ആക്ഷൻ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction
@@ -690,7 +691,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__active
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__active
 msgid "Active"
-msgstr ""
+msgstr "ആക്റ്റീവ്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_ids
@@ -793,7 +794,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr ""
+msgstr "അഡ്മിനിസ്ട്രേറ്റർ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -929,7 +930,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Apply"
-msgstr ""
+msgstr "അപ്ലൈ"
 
 #. module: stock
 #. odoo-javascript
@@ -1036,7 +1037,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__8
 msgid "August"
-msgstr ""
+msgstr "ഓഗസ്റ്റ്"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__auto
@@ -1247,7 +1248,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
-msgstr ""
+msgstr "റദ്ദാക്കുക"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
@@ -1260,7 +1261,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__cancel
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Cancelled"
-msgstr ""
+msgstr "റദ്ദാക്കി"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1305,7 +1306,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Category"
-msgstr ""
+msgstr "കാറ്റഗറി"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__route_from_categ_ids
@@ -1463,12 +1464,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "അടയ്ക്കുക"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
 msgid "Color"
-msgstr ""
+msgstr "കളർ"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_company
@@ -1499,7 +1500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__company_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
-msgstr ""
+msgstr "കമ്പനി"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1555,7 +1556,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
-msgstr ""
+msgstr "കോൺഫിഗറേഷൻ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -1568,7 +1569,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Confirm"
-msgstr ""
+msgstr "സ്ഥിരീകരിക്കുക"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__confirmed
@@ -1625,13 +1626,13 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Content"
-msgstr ""
+msgstr "ഉള്ളടക്കം"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
 msgid "Continue"
-msgstr ""
+msgstr "തുടരുക"
 
 #. module: stock
 #. odoo-javascript
@@ -1826,7 +1827,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ഉണ്ടാക്കിയത്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__create_date
@@ -1935,7 +1936,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer"
-msgstr ""
+msgstr "കസ്റ്റമർ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
@@ -1974,7 +1975,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Date"
-msgstr ""
+msgstr "തീയതി"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -2045,7 +2046,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
 msgid "Days"
-msgstr ""
+msgstr "ദിവസം"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
@@ -2216,7 +2217,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "ഡെലിവറി രീതികൾ"
 
 #. module: stock
 #. odoo-python
@@ -2508,7 +2509,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ഡിസ്പ്ലേ നെയിം"
 
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
@@ -2533,7 +2534,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Documentation"
-msgstr ""
+msgstr "ഡോക്യൂമെന്റഷന് "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
@@ -2653,7 +2654,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "പിശക്"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -2787,7 +2788,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_follower_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ഫോള്ളോവെഴ്‌സ് "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_partner_ids
@@ -3031,6 +3032,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3041,14 +3049,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr ""
+msgstr "ഗ്രൂപ്പ് ബൈ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Group by..."
-msgstr ""
+msgstr "ഗ്രൂപ്പ് ബൈ..."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
@@ -3097,7 +3105,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Height"
-msgstr ""
+msgstr "ഉയരം"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
@@ -3194,7 +3202,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "ഐക്കൺ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_icon
@@ -3387,7 +3395,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "ഇമ്പോർട്ട് "
 
 #. module: stock
 #. odoo-python
@@ -3553,6 +3561,14 @@ msgid "Invalid domain right operand %s"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr ""
@@ -3626,7 +3642,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "ഇൻവെന്ററി ലൊക്കേഷൻസ്"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -3900,7 +3916,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -4000,7 +4016,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
@@ -4017,7 +4033,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
-msgstr ""
+msgstr "ലേറ്റായ ആക്ടിവിറ്റീസ്‌"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -4116,7 +4132,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Location"
-msgstr ""
+msgstr "ലൊക്കേഷൻ"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
@@ -4453,7 +4469,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "സന്ദേശങ്ങൾ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__method
@@ -4601,7 +4617,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_track_line__product_display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__name
 msgid "Name"
-msgstr ""
+msgstr "പേര്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -4822,7 +4838,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__0
 msgid "Normal"
-msgstr ""
+msgstr "നോർമൽ"
 
 #. module: stock
 #. odoo-javascript
@@ -4842,7 +4858,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Note"
-msgstr ""
+msgstr "നോട്ട്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
@@ -5066,7 +5082,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Options"
-msgstr ""
+msgstr "ഓപ്ഷൻസ്"
 
 #. module: stock
 #. odoo-javascript
@@ -5074,7 +5090,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
 msgid "Order"
-msgstr ""
+msgstr "ഓർഡർ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -5206,7 +5222,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Owner"
-msgstr ""
+msgstr "ഓണർ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__restrict_partner_id
@@ -5599,7 +5615,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "പ്രിന്റ് "
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
@@ -5639,7 +5655,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__priority
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sequence
 msgid "Priority"
-msgstr ""
+msgstr "മുൻഗണന"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__delay_alert_date
@@ -5730,7 +5746,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 #, python-format
 msgid "Product"
-msgstr ""
+msgstr "പ്രോഡക്റ്റ്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability
@@ -5755,7 +5771,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr ""
@@ -5858,7 +5873,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template__detailed_type
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_type
 msgid "Product Type"
-msgstr ""
+msgstr "പ്രോഡക്റ്റ് ടൈപ്പ് "
 
 #. module: stock
 #: model:ir.model,name:stock.model_uom_uom
@@ -6056,7 +6071,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control
 msgid "Quality"
-msgstr ""
+msgstr "ക്വാളിറ്റി"
 
 #. module: stock
 #. odoo-python
@@ -6130,7 +6145,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "Quantity"
-msgstr ""
+msgstr "അളവ്"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -6498,7 +6513,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #, python-format
 msgid "Replenishment"
-msgstr ""
+msgstr "റീപ്ളേണിഷ്മെന്റ് "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
@@ -6533,7 +6548,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 msgid "Reporting"
-msgstr ""
+msgstr "റിപ്പോർട്ടിങ്"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
@@ -6859,7 +6874,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr ""
+msgstr "സ്‌ചെടുൾഡ് തീയതി"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -6890,13 +6905,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Scrap"
-msgstr ""
+msgstr "സ്ക്രാപ്പ്"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Scrap Location"
-msgstr ""
+msgstr "സ്ക്രാപ്പ് ലൊക്കേഷൻ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_id
@@ -6906,7 +6921,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr ""
+msgstr "സ്ക്രാപ്പ് ഓർഡറുകൾ"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -6916,7 +6931,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrapped
 msgid "Scrapped"
-msgstr ""
+msgstr "സ്ക്രാപ്പ് ചെയ്തു"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -6938,7 +6953,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr ""
+msgstr "സ്ക്രാപ്പ് തിരയുക"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
@@ -7018,7 +7033,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 #, python-format
 msgid "Sequence"
-msgstr ""
+msgstr "സീക്വൻസ് "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -7162,7 +7177,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 msgid "Settings"
-msgstr ""
+msgstr "സെറ്റിങ്ങ്സ് "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
@@ -7381,7 +7396,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__origin
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Source Document"
-msgstr ""
+msgstr "സോഴ്സ് ഡോക്യുമെന്റ് "
 
 #. module: stock
 #. odoo-python
@@ -7443,7 +7458,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Status"
-msgstr ""
+msgstr "സ്റ്റാറ്റസ്"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_state
@@ -7484,7 +7499,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_move
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 msgid "Stock Move"
-msgstr ""
+msgstr "സ്റ്റോക്ക് മൂവ് "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -8153,6 +8168,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8271,12 +8295,12 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "ഇന്ന്"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
-msgstr ""
+msgstr "ഇന്നത്തെ ആക്ടിവിറ്റീസ്‌"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -8395,7 +8419,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
-msgstr ""
+msgstr "ട്രാൻസ്ഫെർ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__picking_quantity__picking
@@ -8493,7 +8517,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product__type
 #: model:ir.model.fields,field_description:stock.field_product_template__type
 msgid "Type"
-msgstr ""
+msgstr "ടൈപ്പ്"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -8559,7 +8583,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "യൂണിറ്റ് പ്രൈസ് "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_uom_id
@@ -8580,7 +8604,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
-msgstr ""
+msgstr "യൂണിറ്റ് ഓഫ് മെഷർ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
@@ -8595,7 +8619,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 msgid "Units of Measure"
-msgstr ""
+msgstr "യൂണിറ്റ് ഓഫ് മെഷർ"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_uom_menu
@@ -8617,7 +8641,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unlock"
-msgstr ""
+msgstr "അൺലോക്ക്"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -8735,7 +8759,7 @@ msgstr ""
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "User"
-msgstr ""
+msgstr "യൂസർ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__user_id
@@ -8859,7 +8883,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_tree
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Warehouse"
-msgstr ""
+msgstr "വെയർഹൗസ്"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -8945,7 +8969,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__warning
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "താക്കീത്"
 
 #. module: stock
 #. odoo-python
@@ -9257,7 +9281,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
+msgid "You can only delete draft or cancelled moves."
 msgstr ""
 
 #. module: stock
@@ -9297,6 +9321,13 @@ msgstr ""
 msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
 
 #. module: stock
@@ -9616,7 +9647,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
-msgstr ""
+msgstr "ദിവസം"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form

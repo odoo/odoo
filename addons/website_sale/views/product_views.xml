@@ -173,21 +173,21 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
-            <field name="standard_price" position="after">
+            <xpath expr="//group[@name='pricing']" position="inside">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
-                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
-                    <field name="base_unit_count"/>
-                    <field name="base_unit_id" options="{'no_open': True}"/>
-                    <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
-                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
-                    </span>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
+                    <field name="base_unit_count" style="width: 4rem;"/>
+                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                    <div class="d-flex flex-row" attrs="{'invisible': [('base_unit_price','=', 0)]}">
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                    </div>
                 </div>
-            </field>
-            <sheet position="inside">
+            </xpath>
+            <xpath expr="//group[@name='packaging']" position="after">
                 <group name="product_variant_images" string="Extra Variant Media">
                     <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
                 </group>
-            </sheet>
+            </xpath>
         </field>
     </record>
 

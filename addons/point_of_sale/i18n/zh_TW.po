@@ -5,14 +5,16 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -671,7 +673,7 @@ msgstr "已為此POS營業點打開其他銷售營業點。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
-msgstr "已歸檔"
+msgstr "已封存"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -880,6 +882,8 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"通過多種計劃促進您的銷售: 優惠券、促銷、禮品卡、忠誠度。 可以設定具體條件(產品、客戶、最低購買量、期限). 獎勵可以是折扣 (百分比或金額) "
+"或免費產品."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2423,7 +2427,7 @@ msgstr "大於允許量"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "分組依據"
+msgstr "分組方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
@@ -2870,7 +2874,7 @@ msgstr "JS 測試"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__journal_id
 msgid "Journal"
-msgstr "日記帳"
+msgstr "日記賬"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move
@@ -3354,6 +3358,11 @@ msgstr "新營業點"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "報紙架"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一個活動行事曆事件"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4608,7 +4617,7 @@ msgstr "郵政代碼"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__done
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Posted"
-msgstr "已過帳"
+msgstr "已過賬"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4876,7 +4885,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "促銷、優惠券、禮品卡和忠誠度計劃"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5973,7 +5982,7 @@ msgstr "稅制選擇值"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
 msgid "Tax-Excluded Price"
-msgstr "免稅價格"
+msgstr "未連稅價格"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__total
@@ -6767,6 +6776,15 @@ msgstr "記錄的異常活動的類型。"
 
 #. module: point_of_sale
 #. odoo-python
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6926,9 +6944,10 @@ msgstr "UUID"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "稅金:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

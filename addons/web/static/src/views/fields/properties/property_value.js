@@ -13,6 +13,7 @@ import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { PropertyTags } from "./property_tags";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { formatFloat, formatInteger, formatMany2one } from "@web/views/fields/formatters";
+import { parseFloat, parseInteger } from "@web/views/fields/parsers";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -198,9 +199,17 @@ export class PropertyValue extends Component {
         } else if (this.props.type === "date") {
             newValue = newValue && serializeDate(newValue);
         } else if (this.props.type === "integer") {
-            newValue = parseInt(newValue) || 0;
+            try {
+                newValue = parseInteger(newValue) || 0;
+            } catch {
+                newValue = 0;
+            }
         } else if (this.props.type === "float") {
-            newValue = parseFloat(newValue) || 0;
+            try {
+                newValue = parseFloat(newValue) || 0;
+            } catch {
+                newValue = 0;
+            }
         } else if (["many2one", "many2many"].includes(this.props.type)) {
             // {id: 5, name: 'Demo'} => [5, 'Demo']
             newValue =

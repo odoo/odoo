@@ -8,16 +8,16 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
 # Vo Thanh Thuy, 2022
-# Martin Trigaux, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -634,14 +634,8 @@ msgstr "<b>Trượt</b> nút này để thay đổi kích thước cột."
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
-"<br/><br/>\n"
-"                    Ví dụ cho quy tắc:<br/>\n"
-"                    <code class=\"ms-4\">Không được: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Được: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1168,7 +1162,7 @@ msgstr "<span class=\"o_form_label\">Email Marketing</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Livechat</span>"
-msgstr "<span class=\"o_form_label\">Livechat</span>"
+msgstr "<span class=\"o_form_label\">Trò chuyện Trực tiếp</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1377,6 +1371,7 @@ msgstr ""
 "cảnh và các tùy chọn hiển thị mạnh mẽ."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -2119,6 +2114,7 @@ msgid "Autosizing"
 msgstr "Tự động định cỡ"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4229,7 +4225,7 @@ msgstr "Event heading"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 msgid "Events"
-msgstr "Các sự kiện"
+msgstr "Sự kiện"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4276,6 +4272,7 @@ msgid "Extension View"
 msgstr "Giao diện Mở rộng"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5298,6 +5295,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -6305,7 +6303,7 @@ msgstr "Icon nhỏ"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_live_chat
 msgid "Live Chat"
-msgstr "Chat Trực tuyến"
+msgstr "Trò chuyện Trực tiếp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -6539,6 +6537,11 @@ msgstr "Menu sử dụng bản sao của tôi"
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 msgid "Menus"
 msgstr "Trình đơn"
+
+#. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Tính năng gộp đối tác"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -9353,6 +9356,7 @@ msgid "The full URL to access the document through the website."
 msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -9648,6 +9652,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "This translation is not editable."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9860,6 +9871,13 @@ msgstr "Transition"
 #, python-format
 msgid "Translate Attribute"
 msgstr "Thuộc tính dịch"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "Translate header in the text. Menu is generated automatically."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -10724,6 +10742,7 @@ msgid "Website Pages"
 msgstr "Trang Website"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10778,6 +10797,7 @@ msgid "Website URL"
 msgstr "Địa chỉ website"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11040,6 +11060,14 @@ msgstr "Bạn không thể gỡ bỏ trường bắt buộc của bản mẫu."
 #, python-format
 msgid "You can't remove the submit button of the form"
 msgstr "Bạn không thể bỏ nút nộp đơn"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
 
 #. module: website
 #. odoo-python
@@ -11513,7 +11541,7 @@ msgstr "support@openerp.vn"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 msgid "info@yourcompany.example.com"
-msgstr "support@bizapps.vn"
+msgstr "info@yourcompany.example.com"
 
 #. module: website
 #. odoo-javascript

@@ -12,6 +12,7 @@ const TableOfContent = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+        this._stripNavbarStyles();
         await this._super(...arguments);
         this.$scrollingElement = $().getScrollingElement();
         this.previousPosition = -1;
@@ -28,7 +29,7 @@ const TableOfContent = publicWidget.Widget.extend({
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
         }
         this.$target.css('top', '');
-        this.$target.find('.s_table_of_content_navbar').css('top', '');
+        this.$target.find('.s_table_of_content_navbar').css({top: '', maxHeight: ''});
         this._super(...arguments);
     },
 
@@ -36,6 +37,21 @@ const TableOfContent = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _stripNavbarStyles() {
+        // This is needed for styles added on translations when the master text
+        // has no style.
+        for (let el of this.el.querySelectorAll('.s_table_of_content_navbar .table_of_content_link')) {
+            const translationEl = el.querySelector('span[data-oe-translation-state]');
+            if (translationEl) {
+                el = translationEl;
+            }
+            const text = el.textContent; // Get text from el.
+            el.textContent = text; // Replace all of el's content with that text.
+        }
+    },
     /**
      * @private
      */
@@ -51,6 +67,7 @@ const TableOfContent = publicWidget.Widget.extend({
         this.$target.css('top', isHorizontalNavbar ? position : '');
         this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
+        this.$target.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
         if (this.previousPosition !== position) {
             new ScrollSpy(this.$scrollingElement, {
                 target: this.$target.find('.s_table_of_content_navbar'),

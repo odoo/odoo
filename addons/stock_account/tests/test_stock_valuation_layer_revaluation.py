@@ -16,6 +16,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
             'property_account_expense_id': cls.expense_account.id,
         })
         cls.product1.categ_id.write({
+            'property_valuation': 'real_time',
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,

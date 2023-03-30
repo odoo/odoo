@@ -3,6 +3,7 @@
 
 import base64
 import logging
+import operator
 from tempfile import TemporaryFile
 from os.path import splitext
 
@@ -28,22 +29,23 @@ class BaseLanguageImport(models.TransientModel):
                                     "will be overwritten and replaced by those in this file")
 
     def import_lang(self):
-        self.ensure_one()
         Lang = self.env["res.lang"]
-        try:
-            if not Lang._activate_lang(self.code):
-                Lang._create_lang(self.code, lang_name=self.name)
-            with TemporaryFile('wb+') as buf:
-                buf.write(base64.decodebytes(self.data))
-                fileformat = splitext(self.filename)[-1][1:].lower()
-                translation_importer = TranslationImporter(self.env.cr)
-                translation_importer.load(buf, fileformat, self.code)
-                translation_importer.save(overwrite=self.overwrite)
-        except Exception as e:
-            _logger.exception('File unsuccessfully imported, due to format mismatch.')
-            raise UserError(
-                _('File %r not imported due to format mismatch or a malformed file.'
-                  ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
-                (self.filename, tools.ustr(e))
-            )
+        for overwrite, base_lang_imports in tools.groupby(self, operator.itemgetter('overwrite')):
+            translation_importer = TranslationImporter(self.env.cr)
+            for base_lang_import in base_lang_imports:
+                if not Lang._activate_lang(base_lang_import.code):
+                    Lang._create_lang(base_lang_import.code, lang_name=base_lang_import.name)
+                try:
+                    with TemporaryFile('wb+') as buf:
+                        buf.write(base64.decodebytes(base_lang_import.data))
+                        fileformat = splitext(base_lang_import.filename)[-1][1:].lower()
+                        translation_importer.load(buf, fileformat, base_lang_import.code)
+                except Exception as e:
+                    _logger.exception('File unsuccessfully imported, due to format mismatch.')
+                    raise UserError(
+                        _('File %r not imported due to format mismatch or a malformed file.'
+                          ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
+                        (base_lang_import.filename, tools.ustr(e))
+                    )
+            translation_importer.save(overwrite=overwrite)
         return True

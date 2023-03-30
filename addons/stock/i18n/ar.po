@@ -8,16 +8,16 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Niyas Raphy, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Niyas Raphy, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -269,6 +269,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -1849,7 +1850,10 @@ msgid "Count Picking Waiting"
 msgstr "عدد عمليات الانتقاء المنتظرة "
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "ورقة التعداد "
 
@@ -3233,6 +3237,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "يعرض ترتيب التسلسل عند عرض المستودعات. "
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "أيام الظهور العالمي "
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3785,6 +3796,16 @@ msgstr "مشغّل النطاق غير صالح %s "
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Invalid domain right operand %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"تهيئة القاعدة غير الصحيحة. تتسبب القاعدة التالية في حدوث حلقة لا نهاية لها: "
+"%s "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -6019,7 +6040,6 @@ msgstr "فئات المنتجات"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "فئة المنتج"
@@ -6353,6 +6373,16 @@ msgstr "سجل الكميات "
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"يتم حذف الكميات تلقائياً عندما يكون ذلك مناسباً. إذا كان لابد من حذفها "
+"يدوياً، يرجى طلب ذلك من مدير المخزون. "
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
@@ -7403,8 +7433,11 @@ msgstr ""
 "سيتم تغيير الموقع المستهدف لهذه الحركة إلى %s "
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "تعيين "
 
@@ -8527,6 +8560,16 @@ msgstr ""
 "لقد تم استخدام هذا المنتج في حركة مخزون واحدة على الأقل. لا يُنصح بتغيير نوع"
 " المنتج إذ أنه قد يؤدي إلى عدم الاتساق في البيانات. نقتَرح أن تقوم بأرشفة "
 "المنتج وإنشاء منتج جديد عوضاً عنه. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"لا يمكن تغيير شركة المنتج طالما أنه توجد كميات منه منتمية إلى شركة أخرى. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9693,8 +9736,8 @@ msgstr "لا يمكنك إدخال كميات سالبة."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "بإمكانك فقط حذف الحركات في حالة المسودة. "
+msgid "You can only delete draft or cancelled moves."
+msgstr "يمكنك فقط حذف الحركات الملغية أو في حالة المسودة "
 
 #. module: stock
 #. odoo-python
@@ -9738,6 +9781,13 @@ msgid ""
 msgstr ""
 "لا يمكنك إلغاء حركة مخزون تم تعيينها كمنتهية. قم بإنشاء أمر إرجاع حتى تتمكن "
 "من عكس الحركات التي قد تم تنفيذها من قبل. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr "لا يمكنك تغيير حركة مخزون ملغاة. قم بإنشاء بند جديد عوضاً عن ذلك. "
 
 #. module: stock
 #. odoo-python
@@ -9952,6 +10002,13 @@ msgstr "يمكنك إرجاع عمليات الانتقاء المنتهية ف�
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "يمكنك إرجاع عملية انتقاء واحدة فقط في المرة. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/model/stock_picking.py:0
+#, python-format
+msgid " You might want to update the locations of this transfer's operations "
+msgstr "قد ترغب في تحديث المواقع لعمليات هذه الشحنة "
 
 #. module: stock
 #. odoo-python

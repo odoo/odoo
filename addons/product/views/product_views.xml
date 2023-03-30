@@ -48,12 +48,6 @@
                             </div>
                         </h1>
                     </div>
-                    <style>
-                        div[name="options"] .o_field_boolean > div {
-                            margin-left: 10px;
-                            margin-right: 0px;
-                        }
-                    </style>
                     <div name="options">
                         <span class="d-inline-block">
                             <field name="sale_ok"/>
@@ -75,7 +69,7 @@
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <label for="list_price" class="mt-1"/>
+                                    <label for="list_price"/>
                                     <div name="pricing">
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
@@ -266,10 +260,13 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <label for="lst_price" string="Sales Price"/>
-                                <div class="o_row col-5 ps-0">
-                                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                                <div class="o_row">
+                                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
                                 </div>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
+                                <label for="standard_price"/>
+                                <div class="o_row">
+                                    <field name="standard_price" widget='monetary' class="oe_inline" options="{'currency_field': 'cost_currency_id'}"/>
+                                </div>
                                 <field name="currency_id" invisible='1'/>
                                 <field name="cost_currency_id" invisible="1"/>
                             </group>
@@ -278,24 +275,24 @@
                             <group name="weight" string="Logistics" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                 <label for="volume"/>
                                 <div class="o_row">
-                                    <field name="volume"/>
+                                    <field name="volume" class="oe_inline"/>
                                     <span><field name="volume_uom_name"/></span>
                                 </div>
                                 <label for="weight"/>
                                 <div class="o_row">
-                                    <field name="weight"/>
+                                    <field name="weight" class="oe_inline"/>
                                     <span><field name="weight_uom_name"/></span>
                                 </div>
                             </group>
-                            <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
-                                <field colspan="2" name="packaging_ids" nolabel="1"
-                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
-                            </group>
-                        </group>
-                        <group>
                             <group name="tags" string="Tags">
                                 <field name="product_tag_ids" string="Product Template Tags" widget="many2many_tags" readonly="1" options="{'no_open': True, 'color_field': 'color'}"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
+                                <field colspan="2" name="packaging_ids" nolabel="1"
+                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </group>
                     </sheet>

@@ -288,11 +288,15 @@ class Website(models.Model):
             if not website.homepage_url.startswith('/'):
                 raise ValidationError(_("The homepage URL should be relative and start with '/'."))
 
+    # TODO: rename in master
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_remaining_website(self):
         website = self.search([('id', 'not in', self.ids)], limit=1)
         if not website:
             raise UserError(_('You must keep at least one website.'))
+        default_website = self.env.ref('website.default_website', raise_if_not_found=False)
+        if default_website and default_website in self:
+            raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
 
     def unlink(self):
         self._remove_attachments_on_website_unlink()
@@ -852,9 +856,10 @@ class Website(models.Model):
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
                 model_name = self.env['ir.model']._display_name_for([model])[0]['display_name']
+                field_name = Model.fields_get()[column]['string']
                 dependencies.setdefault(model_name, [])
                 dependencies[model_name] += [{
-                    'field_name': Model.fields_get()[column]['string'],
+                    'field_name': field_name,
                     'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/web#id={rec.id}&view_type=form&model={model}',
                     'model_name': model_name,
@@ -1192,6 +1197,7 @@ class Website(models.Model):
             domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
+        pages = pages._get_most_specific_pages()
         return pages
 
     def search_pages(self, needle=None, limit=None):

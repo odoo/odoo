@@ -5,15 +5,15 @@
 # Translators:
 # Bohdan Lisnenko, 2022
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1266,6 +1266,11 @@ msgstr ""
 "                        При зміні цього, округлення не зміниться на попередніх записах; можливо, спричиняючи невідповідність новим."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
+msgid "<strong>Total Rounded</strong>"
+msgstr "<strong>Всього округлено</strong>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total</strong>"
@@ -1414,6 +1419,13 @@ msgstr "Створено другий платіж: %s"
 msgid ""
 "A second payment will be created automatically in the destination journal."
 msgstr "Другий платіж буде створено автоматично в журналі призначення."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
+msgstr "Виписка повинна містити рядки з того ж журналу."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -2858,11 +2870,6 @@ msgid "Attach a file"
 msgstr "Долучити файл"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
-msgid "Attachment"
-msgstr "Прикріплення"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_attachment_count
@@ -2877,6 +2884,7 @@ msgid "Attachment Count"
 msgstr "Підрахунок прикріплення"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__attachment_ids
@@ -4996,6 +5004,7 @@ msgstr "Рахунок клієнта"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -5284,6 +5293,7 @@ msgstr "Спеціальна послідовність платежів"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "Типовий рахунок"
 
@@ -11032,13 +11042,6 @@ msgstr "Період порівняння"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "Please create new accounts from the Chart of Accounts menu."
-msgstr "Будь ласка, створіть нові облікові записи в меню План рахунків."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11050,6 +11053,13 @@ msgstr ""
 "оновлювали їх. Дійсно, вони не зовсім відповідають податкам оригінальної "
 "версії модуля локалізації.<br/>Ви можливо захочете архівувати їх або "
 "адаптувати.<br/><ul>"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr "Будь ласка, створіть нові облікові записи в меню План рахунків."
 
 #. module: account
 #. odoo-python
@@ -13817,6 +13827,17 @@ msgstr "Терміни оплати повинні мати один рядок 
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"Одиниця вимірювання (UoM) '%s', яку ви обралидля товару '%s', несумісна з "
+"цією категорією : %s."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "Рахунок %s (%s) застарілий."
 
@@ -14682,6 +14703,24 @@ msgstr ""
 "вибрали деякі з обох типів."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr "Запущений баланс (%s) не співпадає із вказаним кінцевим балансом."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+"Початковий баланс не збігається з кінцевим балансом попередньої виписки, або"
+" попередня виписка відсутня."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr "Рядок виписки, що створив цей запис"
@@ -14843,6 +14882,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
 msgstr "Під час обробки цієї сторінки сталася помилка."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+"Під час спроби додати банер до оригінального PDF-файлу сталася помилка.\n"
+"Переконайтеся, що джерело файлу дійсне."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15143,6 +15192,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"Цей товар уже використовується в опублікованих записах журналу.\n"
+"Якщо ви хочете змінити його одиницю вимірювання, заархівуйте цей товар і створіть новий."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -15250,6 +15310,7 @@ msgstr "Сьогоднішні дії"
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15320,6 +15381,13 @@ msgstr "Сума залишку"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Residual in Currency"
 msgstr "Загальний залишок у валюті"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
+#, python-format
+msgid "Total Rounded"
+msgstr "Всього округлень"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -15493,6 +15561,17 @@ msgstr "ВГОРУ"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
+"Неможливо створити виписку через відсутність транзакцій. Перш ніж "
+"продовжити, ви можете змінити порядок транзакцій."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Undefined Yet"
@@ -15551,6 +15630,12 @@ msgstr "Неоплачені рахунки"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Залишок"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "Неопубліковані записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15906,6 +15991,7 @@ msgstr "Рахунок постачальника створено"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -16165,6 +16251,19 @@ msgstr "Неправильне значення кредиту чи дебету
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
 msgstr "Щорічно"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+"Ви не можете імпортувати \"openning_balance\", якщо початкова проводка (%s) "
+"вже опублікована. Якщо ви абсолютно впевнені, що хочете змінити початковий "
+"баланс своїх рахунків, скиньте проводку до чернетки."
 
 #. module: account
 #. odoo-python
@@ -16485,6 +16584,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Будь ласка, зверніться до свого бухгалтера, щоб надрукувати результат "
+"цілісності хешу."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16577,18 +16684,6 @@ msgstr "Ви не можете видалити елемент, пов'язан�
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"You cannot delete this entry, as it has already consumed a sequence number "
-"and is not the last one in the chain. You should probably revert it instead."
-msgstr ""
-"Ви не можете видалити цей запис, оскільки він уже використав порядковий "
-"номер і не є останнім у ланцюжку. Натомість вам, ймовірно, слід повернути "
-"його."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16616,11 +16711,13 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Ви не можете видалити наступні поля через обмежений режим, що активується в "
-"журналі: %s."
+"Ви не можете редагувати наступні поля: %s.\n"
+"Наступні записи вже хешовані:\n"
+"%s"
 
 #. module: account
 #. odoo-python

@@ -667,22 +667,40 @@ class AccountReconcileModel(models.Model):
 
         return aml_domain
 
+    def _get_st_line_text_values_for_matching(self, st_line):
+        """ Collect the strings that could be used on the statement line to perform some matching.
+
+        :param st_line: The current statement line.
+        :return: A list of strings.
+        """
+        self.ensure_one()
+        allowed_fields = []
+        if self.match_text_location_label:
+            allowed_fields.append('payment_ref')
+        if self.match_text_location_note:
+            allowed_fields.append('narration')
+        if self.match_text_location_reference:
+            allowed_fields.append('ref')
+        return st_line._get_st_line_strings_for_matching(allowed_fields=allowed_fields)
+
     def _get_invoice_matching_st_line_tokens(self, st_line):
         """ Parse the textual information from the statement line passed as parameter
         in order to extract from it the meaningful information in order to perform the matching.
 
         :param st_line: A statement line.
-        :return: A list of tokens, each one being a string.
+        :return:    A tuple of list of tokens, each one being a string.
+                    The first element is a list of tokens you may match on numerical information.
+                    The second element is a list of tokens you may match exactly.
         """
-        st_line_text_values = st_line._get_st_line_strings_for_matching(allowed_fields=(
-            'payment_ref' if self.match_text_location_label else None,
-            'narration' if self.match_text_location_note else None,
-            'ref' if self.match_text_location_reference else None,
-        ))
+        st_line_text_values = self._get_st_line_text_values_for_matching(st_line)
         significant_token_size = 4
-        tokens = []
+        numerical_tokens = []
+        exact_tokens = []
         for text_value in st_line_text_values:
-            for token in (text_value or '').split():
+            tokens = (text_value or '').split()
+
+            # Numerical tokens
+            for token in tokens:
                 # The token is too short to be significant.
                 if len(token) < significant_token_size:
                     continue
@@ -693,8 +711,12 @@ class AccountReconcileModel(models.Model):
                 if len(formatted_token) < significant_token_size:
                     continue
 
-                tokens.append(formatted_token)
-        return tokens
+                numerical_tokens.append(formatted_token)
+
+            # Exact tokens.
+            if len(tokens) == 1:
+                exact_tokens.append(tokens[0])
+        return numerical_tokens, exact_tokens
 
     def _get_invoice_matching_amls_candidates(self, st_line, partner):
         """ Returns the match candidates for the 'invoice_matching' rule, with respect to the provided parameters.
@@ -715,9 +737,10 @@ class AccountReconcileModel(models.Model):
         query = self.env['account.move.line']._where_calc(aml_domain)
         tables, where_clause, where_params = query.get_sql()
 
-        tokens = self._get_invoice_matching_st_line_tokens(st_line)
-        if tokens:
-            sub_queries = []
+        sub_queries = []
+        all_params = []
+        numerical_tokens, exact_tokens = self._get_invoice_matching_st_line_tokens(st_line)
+        if numerical_tokens:
             for table_alias, field in (
                 ('account_move_line', 'name'),
                 ('account_move_line__move_id', 'name'),
@@ -741,7 +764,27 @@ class AccountReconcileModel(models.Model):
                     JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
                     WHERE {where_clause} AND {table_alias}.{field} IS NOT NULL
                 ''')
+                all_params += where_params
 
+        if exact_tokens:
+            for table_alias, field in (
+                ('account_move_line', 'name'),
+                ('account_move_line__move_id', 'name'),
+                ('account_move_line__move_id', 'ref'),
+            ):
+                sub_queries.append(rf'''
+                    SELECT
+                        account_move_line.id,
+                        account_move_line.date,
+                        account_move_line.date_maturity,
+                        {table_alias}.{field} AS token
+                    FROM {tables}
+                    JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
+                    WHERE {where_clause} AND {table_alias}.{field} IS NOT NULL
+                ''')
+                all_params += where_params
+
+        if sub_queries:
             self._cr.execute(
                 '''
                     SELECT
@@ -753,7 +796,7 @@ class AccountReconcileModel(models.Model):
                     HAVING COUNT(*) > 0
                     ORDER BY nb_match DESC, ''' + order_by + '''
                 ''',
-                (where_params * 3) + [tuple(tokens)],
+                all_params + [tuple(numerical_tokens + exact_tokens)],
             )
             candidate_ids = [r[0] for r in self._cr.fetchall()]
             if candidate_ids:

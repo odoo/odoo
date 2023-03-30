@@ -1,0 +1,59 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_price_diff
+# 
+# Translators:
+# Benson <Benson.Dr@Gmail.com>, 2023
+# Tony Ng, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"PO-Revision-Date: 2023-02-02 12:25+0000\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: purchase_price_diff
+#: model:ir.model,name:purchase_price_diff.model_account_move_line
+msgid "Journal Item"
+msgstr "日記賬項目"
+
+#. module: purchase_price_diff
+#: model:ir.model.fields,field_description:purchase_price_diff.field_product_category__property_account_creditor_price_difference_categ
+#: model:ir.model.fields,field_description:purchase_price_diff.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,field_description:purchase_price_diff.field_product_template__property_account_creditor_price_difference
+msgid "Price Difference Account"
+msgstr "價格差額賬戶"
+
+#. module: purchase_price_diff
+#: model:ir.model,name:purchase_price_diff.model_product_template
+msgid "Product"
+msgstr "產品"
+
+#. module: purchase_price_diff
+#: model:ir.model,name:purchase_price_diff.model_product_category
+msgid "Product Category"
+msgstr "產品類別"
+
+#. module: purchase_price_diff
+#: model:ir.model.fields,help:purchase_price_diff.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,help:purchase_price_diff.field_product_template__property_account_creditor_price_difference
+msgid ""
+"This account is used in automated inventory valuation to record the price "
+"difference between a purchase order and its related vendor bill when "
+"validating this vendor bill."
+msgstr "此賬戶用於存貨自動估值工作。核實供應商賬單時，若賬單上的價格與採購訂單不同，此賬戶會記錄有關差額。"
+
+#. module: purchase_price_diff
+#: model:ir.model.fields,help:purchase_price_diff.field_product_category__property_account_creditor_price_difference_categ
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and accounting cost."
+msgstr "此賬戶用於記錄採購價格及會計成本之間的價格差額估值。"

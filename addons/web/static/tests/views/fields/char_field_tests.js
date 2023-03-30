@@ -310,7 +310,7 @@ QUnit.module("Fields", (hooks) => {
                         return Promise.resolve([
                             [
                                 { lang: "en_US", source: "yop", value: "yop" },
-                                { lang: "fr_BE", source: "yop", value: "valeur français" },
+                                { lang: "fr_BE", source: "yop", value: "yop français" },
                                 { lang: "es_ES", source: "yop", value: "yop español" },
                             ],
                             { translation_type: "char", translation_show_source: false },
@@ -319,9 +319,9 @@ QUnit.module("Fields", (hooks) => {
                     if (call_get_field_translations === 1) {
                         return Promise.resolve([
                             [
-                                { lang: "en_US", source: "yop", value: "english value" },
-                                { lang: "fr_BE", source: "yop", value: "valeur français" },
-                                { lang: "es_ES", source: "yop", value: "" },
+                                { lang: "en_US", source: "bar", value: "bar" },
+                                { lang: "fr_BE", source: "bar", value: "yop français" },
+                                { lang: "es_ES", source: "bar", value: "bar" },
                             ],
                             { translation_type: "char", translation_show_source: false },
                         ]);
@@ -330,9 +330,10 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/update_field_translations") {
                     assert.deepEqual(
                         args[2],
-                        { en_US: "english value", es_ES: "" },
-                        "the new translation value should be written"
+                        { en_US: "bar", es_ES: false },
+                        "the new translation value should be written and the value false voids the translation"
                     );
+                    serverData.models.partner.records[0].foo = "bar";
                     return Promise.resolve(null);
                 }
             },
@@ -366,7 +367,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(translations[0].value, "yop", "English translation should be filled");
         assert.strictEqual(
             translations[1].value,
-            "valeur français",
+            "yop français",
             "French translation should be filled"
         );
         assert.strictEqual(
@@ -375,34 +376,34 @@ QUnit.module("Fields", (hooks) => {
             "Spanish translation should be filled"
         );
 
-        await editInput(translations[0], null, "english value");
-        await editInput(translations[2], null, "");
+        await editInput(translations[0], null, "bar"); // set the en_US(user language) translation to "foo"
+        await editInput(translations[2], null, ""); // void the es_ES translation
         await click(target, ".modal button.btn-primary"); // save
 
         assert.strictEqual(
             target.querySelector(`.o_field_char input[type="text"]`).value,
-            "english value",
+            "bar",
             "the new translation was not transfered to modified record"
         );
 
-        await editInput(target, `.o_field_char input[type="text"]`, "new english value");
+        await editInput(target, `.o_field_char input[type="text"]`, "baz");
         await click(target, ".o_field_char .btn.o_field_translate");
 
         translations = target.querySelectorAll(".modal .o_translation_dialog .translation input");
         assert.strictEqual(
             translations[0].value,
-            "new english value",
+            "baz",
             "Modified value should be used instead of translation"
         );
         assert.strictEqual(
             translations[1].value,
-            "valeur français",
-            "French translation should be filled"
+            "yop français",
+            "French translation shouldn't be changed"
         );
         assert.strictEqual(
             translations[2].value,
-            "",
-            "Spanish translation should be an empty string"
+            "bar",
+            "Spanish translation should fallback to the English translation"
         );
     });
 

@@ -113,7 +113,7 @@ msgstr "160x80cm. 긴 다리."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2 x 7 가격 표시"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -123,17 +123,17 @@ msgstr "2년"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
 msgid "4 x 12"
-msgstr ""
+msgstr "4 x 12"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 가격 표시"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 가격 표시"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -157,6 +157,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        가격 추가\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        가격 추가\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -567,12 +573,12 @@ msgstr "하위 분류"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "라벨 레이아웃 선택"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "라벨 인쇄용 시트 레이아웃 선택"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -683,7 +689,7 @@ msgstr "소모품"
 msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
-msgstr ""
+msgstr "소모품 항목은 재고 수준을 관리하지 않는 실제 품목으로서 언제나 사용이 가능한 항목입니다."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1053,7 +1059,7 @@ msgstr "이 가격리스트 명세의 명시적 규칙 이름"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "추가할 내용"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1160,7 +1166,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr ""
+msgstr "바코드를 사용하여 품목 사진 가져오기"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1177,7 +1183,7 @@ msgstr "품목 목록을 표시할 때 주문 순서를 제공합니다"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr ""
+msgstr "구글 이미지"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1960,7 +1966,7 @@ msgstr "인쇄"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Print Labels"
-msgstr "꼬리표 인쇄"
+msgstr "라벨 인쇄"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2453,9 +2459,9 @@ msgstr "이 규칙이 하나의 품목 양식에만 적용되는 경우 양식�
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr "할인으로 계산된 금액에 더하거나 빼기(고정된 경우)할 고정 금액을 지정하십시오."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2502,7 +2508,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "Steel"
-msgstr "철"
+msgstr "철제"
 
 #. module: product
 #: model:product.template,name:product.product_product_7_product_template
@@ -2808,7 +2814,7 @@ msgstr "단위"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "상향판매 및 교차판매"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3268,7 +3274,7 @@ msgstr "일"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "예: 치즈 버거"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view

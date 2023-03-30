@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transifex_project_url" model="ir.config_parameter">
+        <field name="key">transifex.project_url</field>
+        <field name="value">https://www.transifex.com/odoo</field>
+    </record>
+
+    <record id="transifex_code_translation_reload" model="ir.cron">
+        <field name="name">Transifex: Reload code translations</field>
+        <field name="model_id" ref="model_transifex_code_translation"/>
+        <field name="state">code</field>
+        <field name="code">model.reload()</field>
+        <field name='interval_number'>7</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+    </record>
+
+</odoo>

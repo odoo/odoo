@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Andy Yiu, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Andy Yiu, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -503,7 +504,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
-msgstr ""
+msgstr "見積価格"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -650,7 +651,7 @@ msgstr "最終更新日"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "地域配送"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -660,7 +661,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "配送郵便番号プレフィックスを管理しましょう"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -775,6 +776,9 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"このキャリアが適用される郵便番号のプレフィックス。正規表現を使用すると、郵便番号の長さが異なる国にも対応できることに注意しましょう。 "
+"つまり、プレフィックスの最後の '$'は、正確な郵便番号にマッチする場合に使用できます (たとえば '100$' は '100' にのみマッチし、 "
+"'1000' にはマッチしません)。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -836,7 +840,7 @@ msgstr "数量"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__real
 msgid "Real cost"
-msgstr ""
+msgstr "実価格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__return_label_ids
@@ -965,7 +969,7 @@ msgstr ""
 msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
-msgstr ""
+msgstr "販売オーダとその確認メールの下部に記載される配送方法の詳細。例：お客様が従うべき指示。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1019,7 +1023,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
-msgstr "郵便"
+msgstr "郵送"
 
 #. module: delivery
 #. odoo-python
@@ -1247,12 +1251,12 @@ msgstr "この配送方法は、この注文を追跡するための宅配業者
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 #: model:ir.ui.menu,name:delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "郵便番号プレフィックス"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "郵便番号プレフィックス"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -216,6 +217,8 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.reserved_qty, 100.0)
         self.assertEqual(move_line.qty_done, 0.0)
         move_line.qty_done = 100.0
+        with self.assertRaises(UserError, msg="It should not be possible to write directly to reserved_qty"):
+            move_line.reserved_qty = 1.0
 
         # validation
         move1._action_done()
@@ -4584,6 +4587,32 @@ class StockMove(TransactionCase):
         self.assertEqual(receipt2.state, 'done')
         self.assertEqual(receipt3.state, 'done')
 
+    def test_immediate_validate_9_tracked_move_with_0_qty_done(self):
+        """When trying to validate a picking as an immediate transfer, the done
+        quantity of tracked move should be automatically fulfilled if the
+        picking type doesn't use new or existing LN/SN."""
+        picking_type_receipt = self.env.ref('stock.picking_type_in')
+        picking_type_receipt.use_create_lots = False
+        picking_type_receipt.use_existing_lots = False
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = picking_type_receipt
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 4
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_lot
+            move.product_uom_qty = 20
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        immediate_wizard = receipt.button_validate()
+        immediate_wizard_form = Form(
+            self.env[immediate_wizard['res_model']].with_context(immediate_wizard['context'])
+        ).save()
+        immediate_wizard_form.process()
+        self.assertEqual(receipt.state, 'done')
+
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
             'name': 'test_set_quantity_done_1',
@@ -5932,15 +5961,38 @@ class StockMove(TransactionCase):
         self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
 
     def test_move_line_compute_locations(self):
+        stock_location = self.env['stock.location'].create({
+            'name': 'test-stock',
+            'usage': 'internal',
+        })
+        shelf_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        })
         move = self.env['stock.move'].create({
             'name': 'foo',
             'product_id': self.product.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
             'move_line_ids': [(0, 0, {})]
         })
-        self.assertEqual(move.move_line_ids.location_id, self.stock_location)
-        self.assertEqual(move.move_line_ids.location_dest_id, self.customer_location)
+        self.assertEqual(move.move_line_ids.location_id, stock_location)
+        self.assertEqual(move.move_line_ids.location_dest_id, shelf_location)
+
+        # directly created mls should default to picking's src/dest locations
+        internal_transfer = self.env.ref('stock.picking_type_internal')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': internal_transfer.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
+            'move_line_nosuggest_ids': [Command.create({
+                'product_id': self.product.id,
+                'qty_done': 1.0
+            })]
+        })
+        self.assertEqual(picking.move_line_ids.location_id.id, stock_location.id)
+        self.assertEqual(picking.move_line_ids.location_dest_id.id, shelf_location.id)
 
     def test_receive_more_and_in_child_location(self):
         """

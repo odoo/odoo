@@ -247,7 +247,6 @@ QUnit.module("Search", (hooks) => {
         await editSearch(target, "07/15/1983 00:00:00");
         searchInput = target.querySelector(".o_searchview input");
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
-        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" }); // select
 
         assert.deepEqual(

@@ -21,8 +21,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
     def _export_invoice_ecosio_schematrons(self):
         return {
-            'invoice': 'eu.peppol.bis3.aunz.ubl:invoice:1.0.7',
-            'credit_note': 'eu.peppol.bis3.aunz.ubl:creditnote:1.0.7',
+            'invoice': 'eu.peppol.bis3.aunz.ubl:invoice:1.0.8',
+            'credit_note': 'eu.peppol.bis3.aunz.ubl:creditnote:1.0.8',
         }
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
@@ -41,6 +41,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
         if partner.country_code == 'AU':
             vals['endpoint_id'] = partner.vat.replace(" ", "")
+        if partner.country_code == 'NZ':
+            vals['endpoint_id'] = partner.company_registry
 
         for party_tax_scheme in vals['party_tax_scheme_vals']:
             party_tax_scheme['tax_scheme_id'] = 'GST'
@@ -58,7 +60,10 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
                     'company_id_attrs': {'schemeID': '0151'},
                 })
             if partner.country_code == 'NZ':
-                vals['company_id_attrs'] = {'schemeID': '0088'}
+                vals.update({
+                    'company_id': partner.company_registry,
+                    'company_id_attrs': {'schemeID': '0088'},
+                })
         return vals_list
 
     def _get_tax_category_list(self, invoice, taxes):

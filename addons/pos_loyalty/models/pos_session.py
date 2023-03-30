@@ -56,17 +56,6 @@ class PosSession(models.Model):
     def _get_pos_ui_loyalty_reward(self, params):
         return self.env['loyalty.reward'].search_read(**params['search_params'])
 
-    def _loader_params_product_product(self):
-        result = super(PosSession, self)._loader_params_product_product()
-        config = self.config_id
-        if config._get_program_ids():
-            programs = config._get_program_ids()
-            rewards = programs.reward_ids
-            products = (programs.rule_ids.valid_product_ids | rewards.discount_line_product_id) |\
-                (rewards.all_discount_product_ids | rewards.reward_product_ids)
-            result['search_params']['domain'] = OR([result['search_params']['domain'], [('id', 'in', products.ids)]])
-        return result
-
     def _get_pos_ui_product_product(self, params):
         result = super()._get_pos_ui_product_product(params)
         rewards = self.config_id._get_program_ids().reward_ids

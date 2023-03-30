@@ -748,7 +748,7 @@ class Channel(models.Model):
             [('guest_id', '=', current_guest.id) if current_guest else expression.FALSE_LEAF],
         ])
         all_needed_members = self.env['mail.channel.member'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]), order='id')
-        all_needed_members.partner_id.mail_partner_format()  # prefetch in batch
+        all_needed_members.partner_id.sudo().mail_partner_format()  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['mail.channel.member'])

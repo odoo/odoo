@@ -132,37 +132,31 @@ class AccountAnalyticPlan(models.Model):
     def get_relevant_plans(self, **kwargs):
         """ Returns the list of plans that should be available.
             This list is computed based on the applicabilities of root plans. """
-        list_plans = []
-        set_plan_ids = {}
         company_id = kwargs.get('company_id', self.env.company.id)
-        all_plans = self.search([('parent_id', '=', False), '|', ('account_ids', '!=', False), ('children_ids.account_ids', '!=', False),
-                                 '|', ('company_id', '=', company_id), ('company_id', '=', False)])
-        for plan in all_plans:
-            applicability = plan._get_applicability(**kwargs)
-            if applicability != 'unavailable':
-                set_plan_ids[plan.id] = plan
-                list_plans.append(
-                    {
-                        "id": plan.id,
-                        "name": plan.name,
-                        "color": plan.color,
-                        "applicability": applicability,
-                        "all_account_count": plan.all_account_count
-                    })
+        record_account_ids = kwargs.get('existing_account_ids', [])
+        all_plans = self.search([
+            ('account_ids', '!=', False),
+            '|', ('company_id', '=', company_id), ('company_id', '=', False),
+        ])
+        root_plans = self.browse({
+            int(plan.parent_path.split('/')[0])
+            for plan in all_plans
+        }).filtered(lambda p: p._get_applicability(**kwargs) != 'unavailable')
         # If we have accounts that are already selected (before the applicability rules changed or from a model),
         # we want the plans that were unavailable to be shown in the list (and in optional, because the previous
         # percentage could be different from 0)
-        record_account_ids = kwargs.get('existing_account_ids', [])
-        forced_plans = self.env['account.analytic.account'].browse(record_account_ids).mapped('root_plan_id')
-        for plan in forced_plans.filtered(lambda plan: plan.id not in set_plan_ids):
-            list_plans.append({
-                    "id": plan.id,
-                    "name": plan.name,
-                    "color": plan.color,
-                    "applicability": 'optional',
-                    "all_account_count": plan.all_account_count
-                })
-        return sorted(list_plans, key=lambda d: (d['applicability'], d['id']))
+        forced_plans = self.env['account.analytic.account'].browse(record_account_ids).mapped(
+            'root_plan_id') - root_plans
+        return sorted([
+            {
+                "id": plan.id,
+                "name": plan.name,
+                "color": plan.color,
+                "applicability": plan._get_applicability(**kwargs) if plan in root_plans else 'optional',
+                "all_account_count": plan.all_account_count
+            }
+            for plan in root_plans + forced_plans
+        ], key=lambda d: (d['applicability'], d['id']))
 
     def _get_applicability(self, **kwargs):
         """ Returns the applicability of the best applicability line or the default applicability """

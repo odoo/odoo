@@ -167,7 +167,10 @@ class BaseModel(models.AbstractModel):
         if len(record_email) >= 78:
             return record_email
 
-        company_name = self.env.company.name
+        if 'company_id' in self and len(self.company_id) == 1:
+            company_name = self.sudo().company_id.name
+        else:
+            company_name = self.env.company.name
 
         # try company_name + record_name, or record_name alone (or company_name alone)
         name = f"{company_name} {record_name}" if record_name else company_name

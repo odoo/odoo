@@ -13,16 +13,16 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
-# Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2023\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -741,7 +741,7 @@ msgstr "Hodnoty atribútu"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Availabilities"
-msgstr ""
+msgstr "Dostupnosť"
 
 #. module: mrp
 #. odoo-javascript
@@ -2670,17 +2670,6 @@ msgid "Line of issue consumption"
 msgstr "Riadok spotreby"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr ""
-"Riadky je potrebné vymazať, ale nemôžete, pretože v nich stále máte nejaké "
-"množstvo na spotrebovanie."
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Miesto"
@@ -4283,6 +4272,11 @@ msgstr "Naplánovaný dátum"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "Naplánovaný dátum podľa mesiaca"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished

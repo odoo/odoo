@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -210,7 +210,7 @@ msgstr "'Bewerkingstype - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr "'Pakketten - %s' % (object.naam)"
+msgstr "'Pakketten - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -267,6 +267,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -777,7 +778,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "Een waarschuwing kan worden ingesteld op een partner (voorraad)"
+msgstr "Een waarschuwing kan worden ingesteld op een relatie (voorraad)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
@@ -1164,7 +1165,7 @@ msgstr "Aantal bijlagen"
 #: model:ir.ui.menu,name:stock.menu_attribute_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Attributen"
+msgstr "Kenmerken"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__8
@@ -2328,7 +2329,7 @@ msgid ""
 msgstr ""
 "Definieer je locaties om je magazijnstructuur en organisatie\n"
 "te reflecteren. Odoo kan fysieke locaties beheren\n"
-"(magazijnen, planken, bakken, enz), partnerlocaties (klanten,\n"
+"(magazijnen, planken, bakken, enz), relatielocaties (klanten,\n"
 "leveranciers) en virtuele locaties die de tegenhanger zijn van de\n"
 "voorraadbewerkingen zoals productieorders\n"
 "consumpties, voorraden enz."
@@ -2882,7 +2883,7 @@ msgstr ""
 "Elke voorraadbewerking in Odoo verplaatst het product van een locatie naar een \n"
 "andere. Bijvoorbeeld, als je producten ontvangt van een leverancier, zal Odoo de \n"
 "producten verplaatsen van de leverancierslocatie naar de voorraadlocatie. Elk rapport\n"
-"kan toegepast worden op fysieke, partner of virtuele locaties."
+"kan toegepast worden op fysieke, relatie of virtuele locaties."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3013,7 +3014,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_partner_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (partners)"
+msgstr "Volgers (relaties)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
@@ -3243,7 +3244,7 @@ msgstr "Krijg een volledige tracering van leveranciers naar klanten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr "Krijg informatieve of blokkerende waarschuwingen op partners"
+msgstr "Krijg informatieve of blokkerende waarschuwingen op relaties"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
@@ -3260,6 +3261,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr ""
 "Geeft de volgorde van deze regel weer wanneer de magazijnen worden "
 "weergegeven."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Globale zichtbaarheidsdagen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3833,6 +3841,16 @@ msgid "Invalid domain right operand %s"
 msgstr "Ongeldig domein rechter operand %s"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Ongeldige regel configuratie, de volgende regel veroorzaakt een eindeloze "
+"lus: %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "Hoeveelheid in voorraad"
@@ -4135,7 +4153,7 @@ msgstr "Laatste teldatum"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
 msgid "Last Delivery Partner"
-msgstr "Laatste leveringspartner"
+msgstr "Laatste leveringsrelatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
@@ -5780,12 +5798,12 @@ msgstr "Gedeeltelijk beschikbaar"
 #: model:ir.model.fields,field_description:stock.field_procurement_group__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Partner"
-msgstr "Partner"
+msgstr "Relatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__partner_address_id
 msgid "Partner Address"
-msgstr "Partneradres"
+msgstr "Relatieadres"
 
 #. module: stock
 #. odoo-python
@@ -6085,7 +6103,6 @@ msgstr "Productcategorieën"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Productcategorie"
@@ -6422,6 +6439,17 @@ msgstr "Hoeveelheid"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"De hoeveelheden worden automatisch verwijderd wanneer dat nodig is. Als je "
+"ze handmatig moet verwijderen, vraag dan aan een voorraadbeheerder om dit te"
+" doen."
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
@@ -7537,7 +7565,7 @@ msgstr "Stel eigenaar op opgeslagen producten in"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
-"Stel productattributen in (bijvoorbeeld kleur, grootte) om varianten te "
+"Stel productkenmerken in (bijvoorbeeld kleur, grootte) om varianten te "
 "beheren"
 
 #. module: stock
@@ -7552,7 +7580,7 @@ msgid ""
 "location if you subcontract the manufacturing operations."
 msgstr ""
 "Stel een locatie in als je produceert op een vaste locatie. Dit kan een "
-"partnerlocatie zijn als je de productie heeft uitbesteed."
+"relatielocatie zijn als je de productie heeft uitbesteed."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -8518,7 +8546,7 @@ msgstr ""
 "Dit is de standaard bestemmingslocatie wanneer je handmatig een levering "
 "aanmaakt met dit bewerkingstype. Het is mogelijk om dit te wijzigen of dat "
 "routes het in een andere locatie plaatsen. Indien leeg controleert het de "
-"klantlocatie van de partner. "
+"klantlocatie van de relatie. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8531,7 +8559,7 @@ msgstr ""
 "Dit is de standaard bronlocatie wanneer je handmatig een levering aanmaakt "
 "met dit bewerkingstype. Het is mogelijk om dit te wijzigen of dat routes het"
 " in een andere locatie plaatsen. Indien leeg controleert het de "
-"leverancierslocatie van de partner. "
+"leverancierslocatie van de relatie. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -8657,6 +8685,17 @@ msgstr ""
 "aangeraden om het producttype te wijzigen, aangezien dit tot inconsistenties"
 " kan leiden. Een betere oplossing zou kunnen zijn om het product te "
 "archiveren en in plaats daarvan een nieuw product te maken."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"Het bedrijf van dit product kan niet worden gewijzigd zolang er hoeveelheden"
+" van een ander bedrijf zijn."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9845,8 +9884,8 @@ msgstr "Je mag geen negatieve waardes ingeven."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Je kan enkel concept verplaatsingen verwijderen."
+msgid "You can only delete draft or cancelled moves."
+msgstr "Je kunt alleen concept- of geannuleerde verplaatsingen verwijderen."
 
 #. module: stock
 #. odoo-python
@@ -9894,6 +9933,15 @@ msgstr ""
 "Je kunt een voorraadverplaatsing die is ingesteld op 'Gereed' niet "
 "annuleren. Maak een terugkeer om de zetten die plaatsvonden terug te "
 "draaien."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Je kunt een geannuleerde voorraadverplaatsing niet wijzigen, maak liever een"
+" nieuwe regel aan."
 
 #. module: stock
 #. odoo-python
@@ -10130,6 +10178,15 @@ msgstr "Je kunt alleen pickings die gereed zijn retourneren."
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "Je kunt maar één picking tegelijk retourneren."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/model/stock_picking.py:0
+#, python-format
+msgid " You might want to update the locations of this transfer's operations "
+msgstr ""
+"Misschien wil je de locaties van de bewerkingen van deze verplaatsing "
+"bijwerken"
 
 #. module: stock
 #. odoo-python
@@ -10420,4 +10477,4 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Leveringsorder (Ref {{ object.name or 'n/b' }})"
+"{{ object.company_id.name }} Leveringsorder (Ref {{ object.name or 'nvt' }})"

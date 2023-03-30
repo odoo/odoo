@@ -24,21 +24,22 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
 # Martin Trigaux, 2022
-# Halil, 2022
 # Murat Durmuş <muratd@projetgrup.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# İlknur Gözütok, 2023
+# Tugay Hatıl <tugayh@projetgrup.com>, 2023
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
+"Last-Translator: Halil, 2023\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +119,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"%s ürünü için yapılan miktar, %s ölçü biriminde tanımlanan yuvarlama hassasiyetine uymuyor.\n"
+"Lütfen yapılan miktarı veya ölçü biriminizin yuvarlama hassasiyetini değiştirin."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -182,7 +186,7 @@ msgstr "%s (kopya)"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
-msgstr ""
+msgstr "%s[geri alındı]"
 
 #. module: stock
 #. odoo-python
@@ -231,7 +235,7 @@ msgstr "'Operasyon türü- %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr ""
+msgstr "'Paketler - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -288,6 +292,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -685,7 +690,7 @@ msgstr "<strong>Sipariş Edilen</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
-msgstr ""
+msgstr "<strong>Paket Tarihi:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -775,7 +780,7 @@ msgstr "Bir bitmiş hareket satırında rezerve edilmiş miktar olmamalıdır."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
+msgstr "Bu ürün için bu konumda zaten bir stok yenileme kuralı var."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -813,6 +818,8 @@ msgid ""
 "Activate this function to get all quantities to replenish at this particular"
 " location"
 msgstr ""
+"Tüm miktarların bu belirli konumda doldurulmasını sağlamak için bu işlevi "
+"etkinleştirin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
@@ -1032,6 +1039,8 @@ msgid ""
 "Another parent/sub replenish location %s exists, if you wish to change it, "
 "uncheck it first"
 msgstr ""
+"Başka bir üst/alt yenileme konumu %s var, değiştirmek isterseniz önce "
+"işaretini kaldırın."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1116,7 +1125,7 @@ msgstr "Mümkün olduğunca kısa sürede"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
 msgid "Ask"
-msgstr ""
+msgstr "Sor"
 
 #. module: stock
 #. odoo-javascript
@@ -1295,7 +1304,7 @@ msgstr "Barkod Tarayıcı"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__valid_ean
 msgid "Barcode is valid EAN"
-msgstr ""
+msgstr "Barkod geçerli EAN'dır."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1568,7 +1577,7 @@ msgstr "Etiket Düzenini Seç"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "Yazdırılacak Etiket Türünü Seçin"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1586,7 +1595,7 @@ msgstr "Hedef konum seç"
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "Lot etiketlerini yazdırmak için sayfa düzenini seçin"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
@@ -1596,7 +1605,7 @@ msgstr "Etiket basımı için kağıt yerleşimini seç"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr ""
+msgstr "Ürün veya lot/sn etiketlerinin yazdırılıp yazdırılmayacağını seçin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1616,7 +1625,7 @@ msgstr "Satırları Temizle"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "Miktarları temizleyin"
 
 #. module: stock
 #. odoo-javascript
@@ -1687,7 +1696,7 @@ msgstr "Teslimat maliyetlerini hesaplayın ve FedEx ile gönderin"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "Gönderim maliyetlerini hesaplayın ve Sendcloud ile gönderin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1707,7 +1716,7 @@ msgstr "Teslimat maliyetlerini hesaplayın ve bpost ile gönderin"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
-msgstr ""
+msgstr "Bir hareketin ne zaman rezerve edilmesi gerektiğini hesaplar"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -1761,6 +1770,8 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
+"Ürün ikmali sonrasında gelecekte çok gün için ürün tahminini göz önünde bulundurun, tam zamanında için 0'a ayarlayın\n"
+"Değer, rotanın türüne bağlıdır (Satın Al veya Üret)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -1867,7 +1878,10 @@ msgid "Count Picking Waiting"
 msgstr "Bekleyen Transfer Sayısı"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "Sayım Sayfası"
 
@@ -1914,6 +1928,9 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
+"Kalan ürünleri daha sonra işlemeyi düşünüyorsanız \n"
+"bir ön teslimat oluşturun. \n"
+"Kalan ürünleri işlemeyecekseniz ön teslimat oluşturmayın."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -1943,6 +1960,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "Create some storable products to see their stock info in this view."
 msgstr ""
+"Stok bilgilerini bu görünümde görmek için bazı stoklanabilir ürünler "
+"oluşturun."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__create_uid
@@ -2131,7 +2150,7 @@ msgstr "Müşteri Konumları"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr ""
+msgstr "Döngüsel Sayım"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2227,7 +2246,7 @@ msgstr "Gün"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
 msgid "Days To Order"
-msgstr ""
+msgstr "Sipariş Verilecek Gün"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
@@ -2302,6 +2321,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"Odoo'nun stokunuzu ikmal etmek için otomatik olarak teklif talepleri veya "
+"onaylanmış üretim siparişleri oluşturması için bir minimum ihtiyaç kuralı "
+"tanımlayın."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2642,7 +2664,7 @@ msgstr "Seri Atamayı Görüntüle"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_clear_serial
 msgid "Display Clear Serial"
-msgstr ""
+msgstr "Seriyi Temizle Görüntüle"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__display_complete
@@ -2750,7 +2772,7 @@ msgstr "Biten"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
-msgstr ""
+msgstr "Tarafından tamamlandı"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -2768,12 +2790,12 @@ msgstr "Taslak Hareketler"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "Duplicated SN Warning"
-msgstr ""
+msgstr "Yinelenen SN Uyarısı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
 msgid "Duplicated Serial Number"
-msgstr ""
+msgstr "Yinelenen Seri Numarası"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -3144,7 +3166,7 @@ msgstr "Biçim"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
 msgid "Free Qty"
-msgstr ""
+msgstr "Free Qty"
 
 #. module: stock
 #. odoo-javascript
@@ -3161,7 +3183,7 @@ msgstr "Miktar Kullanmak İçin Ücretsiz"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr ""
+msgstr "Ücretsiz Kullanım"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -3248,6 +3270,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "Depoları görüntülerken bu satırın sırasını verir."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Küresel Görünürlük Günleri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3342,7 +3371,7 @@ msgstr "Toplama Türünü Gizle"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__hide_reservation_method
 msgid "Hide Reservation Method"
-msgstr ""
+msgstr "Rezervasyon Yöntemini Gizle"
 
 #. module: stock
 #. odoo-python
@@ -3475,6 +3504,8 @@ msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and"
 " only one label will be printed for this lot."
 msgstr ""
+"Bir lotun ölçü birimi 'Adet' değilse, lot bir adet olarak kabul edilecek ve "
+"bu lot için yalnızca bir etiket basılacaktır."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -3511,7 +3542,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
 msgid "If the same SN is in another Quant"
-msgstr ""
+msgstr "Aynı SN başka bir stokda"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3530,6 +3561,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"Bu onay kutusu işaretlenirse, doğrulama sırasında Odoo alım raporunu (tahsis"
+" edilecek hareketler varsa) otomatik olarak gösterecektir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3770,7 +3803,7 @@ msgstr "İç Tip"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
 msgid "Internal locations among descendants"
-msgstr ""
+msgstr "Internal locations among descendants"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__ref
@@ -3799,6 +3832,16 @@ msgstr "Geçersiz domain operatörü %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Geçersiz domain operatörü %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Geçersiz kural yapılandırması, aşağıdaki kural sonsuz bir döngüye neden "
+"oluyor: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4020,7 +4063,7 @@ msgstr "Json Teslim Günleri"
 #: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
-msgstr ""
+msgstr "Json Popup"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
@@ -4256,7 +4299,7 @@ msgstr "Son Güncelleme"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
 msgid "Last time the Quantity was Updated"
-msgstr ""
+msgstr "Miktarın En Son Güncellendiği Zaman"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -4973,7 +5016,7 @@ msgstr "Etkilenen sonraki transfer(ler):"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr ""
+msgstr "%s seçili değil veya bir Teslimat seçili"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -5003,7 +5046,7 @@ msgstr "İzleme Yok"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "No allocation need found."
-msgstr ""
+msgstr "Tahsis ihtiyacı bulunamadı."
 
 #. module: stock
 #. odoo-python
@@ -5020,7 +5063,7 @@ msgstr "Bu lotta operasyon yapılmadı"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer !"
-msgstr ""
+msgstr "Operasyon bulunamadı. Bir transfer oluşturalım!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5074,7 +5117,7 @@ msgstr "Stok hareketi bulunamadı"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "No stock to show"
-msgstr ""
+msgstr "Gösterilecek stok yok"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -5180,7 +5223,7 @@ msgstr "Son 12 aydaki çıkış stok hareketlerinin sayısı"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
 msgid "Numbers of days  in advance that replenishments demands are created."
-msgstr ""
+msgstr "İkmal taleplerinin önceden oluşturulacağı gün sayısı."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__10
@@ -5222,7 +5265,7 @@ msgstr "Stokta:"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr ""
+msgstr "Lot/SN başına bir"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
@@ -5521,7 +5564,7 @@ msgstr "Paket"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "Paket Tarihi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -6038,7 +6081,6 @@ msgstr "Ürün Kategorileri"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Ürün Kategorisi"
@@ -6373,6 +6415,14 @@ msgstr "Miktar"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
@@ -7254,7 +7304,7 @@ msgstr "Hurda Arama"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Select Route"
-msgstr ""
+msgstr "Rota Seç"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -7306,7 +7356,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Sendcloud Connector"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -7427,8 +7477,11 @@ msgstr ""
 "Bu hareket için kaynak konumu %s olarak değiştirilecek."
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "Ayarla"
 
@@ -8568,6 +8621,15 @@ msgstr ""
 "arşivleyip tekrar yeni bir ürün olarak oluşturmak daha iyi bir çözümdür."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8928,7 +8990,7 @@ msgstr "Tür"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Type a message..."
-msgstr ""
+msgstr "Bir mesaj yaz..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
@@ -9726,8 +9788,8 @@ msgstr "Negatif miktar giremezsiniz."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Sadece taslak hareketleri silebilirsiniz."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9771,6 +9833,13 @@ msgid ""
 msgstr ""
 "'Bitti' olarak ayarlanmış bir stok hareketini iptal edemezsiniz. Gerçekleşen"
 " hamleleri tersine çevirmek için bir geri dönüş oluşturun."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9996,6 +10065,13 @@ msgstr "Sadece tamamlanmış olan transferleri iade alabilirsiniz."
 msgid "You may only return one picking at a time."
 msgstr ""
 "Bir defada sadece bir toplama listesi için ters transfer yapabilirsiniz."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/model/stock_picking.py:0
+#, python-format
+msgid " You might want to update the locations of this transfer's operations "
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10275,4 +10351,4 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} Teslimat (Ref {{ object.name or 'n/a' }})"

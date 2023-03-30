@@ -21,17 +21,17 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Farouk Jabiri, 2022
 # Ivan Espinola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -496,13 +496,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "TOTS"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr "ALT"
 
 #. module: web
 #. odoo-javascript
@@ -2102,7 +2095,7 @@ msgstr "Descarregar"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Download PDF Preview"
-msgstr "Descarrega la vista prèvia del PDF"
+msgstr "Descarregar una vista prèvia del PDF"
 
 #. module: web
 #. odoo-javascript
@@ -4127,7 +4120,7 @@ msgstr "Preferències"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview
 msgid "Preview"
-msgstr "Previsualitza"
+msgstr "Vista prèvia"
 
 #. module: web
 #: model:ir.actions.report,name:web.action_report_externalpreview
@@ -4142,7 +4135,7 @@ msgstr "Vista prèvia de l'informe intern "
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
 msgid "Preview logo"
-msgstr "logo de vista prèvia"
+msgstr "Previsualitzar el logo"
 
 #. module: web
 #. odoo-javascript
@@ -4630,7 +4623,7 @@ msgstr "Ds"
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Save"
-msgstr "Desa"
+msgstr "Desar"
 
 #. module: web
 #. odoo-javascript
@@ -4656,7 +4649,7 @@ msgstr "Desar i nou"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Save as :"
-msgstr "Desa com a:"
+msgstr "Desar com a:"
 
 #. module: web
 #. odoo-javascript
@@ -4692,7 +4685,7 @@ msgstr "Desar manualment"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Save record"
-msgstr "Desa el registre"
+msgstr "Desar el registre"
 
 #. module: web
 #. odoo-javascript
@@ -4992,7 +4985,7 @@ msgstr "Comparteix amb tots els usuaris"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
@@ -5186,7 +5179,7 @@ msgstr "Pren un minut per anar a fer un cafè, <br /> perquè està carregant...
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
 msgid "Tax ID"
-msgstr "ID d'impost"
+msgstr "NIF"
 
 #. module: web
 #. odoo-javascript
@@ -5208,12 +5201,10 @@ msgstr "Text"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"El Número d'identificació d'impost. Completa-ho si el contacte està "
-"relacionat amb els impostos del govern. És utilitzat en algunes declaracions"
-" legals."
 
 #. module: web
 #. odoo-python
@@ -6286,13 +6277,6 @@ msgstr "Baixant..."
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "ex. Solucions de Negoci Globals"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "expandText"
-msgstr "expandText"
 
 #. module: web
 #. odoo-javascript

@@ -10,6 +10,7 @@ from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.addons.rating.models import rating_data
+from odoo.addons.web_editor.controllers.main import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
@@ -53,7 +54,6 @@ PROJECT_TASK_READABLE_FIELDS = {
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
-    'partner_email',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -593,7 +593,7 @@ class Project(models.Model):
             new_task_ids.append(new_task.id)
             all_subtasks = new_task._get_all_subtasks()
             if all_subtasks:
-                new_subtasks += new_task.child_ids.filtered(lambda child: child.display_project_id == self)
+                new_subtasks += all_subtasks.filtered(lambda child: child.display_project_id == self)
         project.write({'tasks': [Command.set(new_task_ids)]})
         new_subtasks.write({'display_project_id': project.id})
         return True
@@ -869,6 +869,11 @@ class Project(models.Model):
 
     def _get_profitability_sequence_per_invoice_type(self):
         return {}
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        # To be extended to avoid account.move.line overlap between
+        # profitability reports.
+        return []
 
     def _get_user_values(self):
         return {
@@ -1192,7 +1197,7 @@ class Task(models.Model):
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email From', help="These people will receive email.", index='trigram',
-        compute='_compute_email_from', recursive=True, store=True, readonly=False)
+        compute='_compute_email_from', recursive=True, store=True, readonly=False, copy=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, group_operator="avg")
@@ -1211,6 +1216,7 @@ class Task(models.Model):
         readonly=False,
         store=True,
         tracking=True,
+        index='btree_not_null',
         help="Deliver your services automatically when a milestone is reached by linking it to a sales order item."
     )
     has_late_and_unreached_milestone = fields.Boolean(
@@ -2039,6 +2045,8 @@ class Task(models.Model):
         return tasks
 
     def write(self, vals):
+        if len(self) == 1:
+            handle_history_divergence(self, 'description', vals)
         portal_can_write = False
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
@@ -2244,6 +2252,7 @@ class Task(models.Model):
                     record_name=task.display_name,
                     email_layout_xmlid='mail.mail_notification_layout',
                     model_description=task_model_description,
+                    mail_auto_delete=False,
                 )
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
@@ -2692,14 +2701,58 @@ class ProjectTags(models.Model):
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        domain = args
-        if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
-        return super()._name_search(name, domain, operator, limit, name_get_uid)
-
-    @api.model
-    def name_create(self, name):
-        existing_tag = self.search([('name', '=ilike', name.strip())], limit=1)
-        if existing_tag:
-            return existing_tag.name_get()[0]
-        return super().name_create(name)
+        if self.env.context.get('project_id') and operator == 'ilike':
+            # `args` has the form of the default filter ['!', ['id', 'in', <ids>]]
+            # passed to exclude already selected tags -> exclude them in our query too
+            excluded_ids = list(args[1][2]) \
+                if args and len(args) == 2 and args[0] == '!' and len(args[1]) == 3 and args[1][:2] == ["id", "in"] \
+                else []
+            # UNION ALL is lazy evaluated, if the first query has enough results,
+            # the second is not executed (just planned).
+            query = """
+                WITH query_tags_in_tasks AS (
+                    SELECT tags.id, COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') AS name, 1 AS sequence
+                    FROM project_tags AS tags
+                    JOIN (
+                        SELECT project_tags_id
+                        FROM project_tags_project_task_rel AS rel
+                        JOIN project_task AS task
+                            ON task.project_id = %(project_id)s
+                            AND task.id = rel.project_task_id
+                        ORDER BY task.id DESC
+                        LIMIT 1000 -- arbitrary limit to speed up lookup on huge projects (fallback below on global scope)
+                    ) AS tags__tasks_ids
+                        ON tags__tasks_ids.project_tags_id = tags.id
+                    WHERE tags.id != ALL(%(excluded_ids)s)
+                    AND COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') ILIKE %(search_term)s
+                    GROUP BY 1, 2, 3  -- faster than a distinct
+                    LIMIT %(limit)s
+                ), query_all_tags AS (
+                    SELECT tags.id, COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') AS name, 2 AS sequence
+                    FROM project_tags AS tags
+                    WHERE tags.id != ALL(%(excluded_ids)s)
+                    AND tags.id NOT IN (SELECT id FROM query_tags_in_tasks)
+                    AND COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') ILIKE %(search_term)s
+                    LIMIT %(limit)s
+                )
+                SELECT id FROM (
+                    SELECT id, name, sequence
+                    FROM query_tags_in_tasks
+                    UNION ALL
+                    SELECT id, name, sequence
+                    FROM query_all_tags
+                    LIMIT %(limit)s
+                ) AS tags
+                ORDER BY sequence, name
+            """
+            params = {
+                'project_id': self.env.context.get('project_id'),
+                'excluded_ids': excluded_ids,
+                'limit': limit,
+                'lang': self.env.context.get('lang', 'en_US'),
+                'search_term': '%' + name + '%',
+            }
+            self.env.cr.execute(query, params)
+            return [row[0] for row in self.env.cr.fetchall()]
+        else:
+            return super()._name_search(name, args, operator, limit, name_get_uid)

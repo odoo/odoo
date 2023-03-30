@@ -29,15 +29,15 @@
                     </t>
                     <t t-set-slot="control-panel-status-indicator">
                         <t t-if="canEdit">
-                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" isDisabled="state.isDisabled" />
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" isDisabled="state.isDisabled" fieldIsDirty="state.fieldIsDirty" />
                         </t>
                     </t>
                     <t t-set-slot="control-panel-create-button">
                         <t t-if="canCreate">
-                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">Create</button>
+                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">New</button>
                         </t>
                     </t>
-                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" setFieldAsDirty.bind="setFieldAsDirty" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
                 </Layout>
             </div>
         </div>
@@ -58,20 +58,9 @@
             </div>
             <div t-elif="canCreate" class="o_form_buttons_view">
                 <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
-                    Create
+                    New
                 </button>
             </div>
-        </div>
-    </t>
-
-    <!-- Used in FormRenderer -->
-    <t t-name="web.TranslateAlert" owl="1">
-        <div class="alert alert-info alert-dismissible" role="alertdialog">
-            Please update translations of :
-            <t t-foreach="Array.from(props.translateAlert.fields)" t-as="field" t-key="field.name">
-                <strong><a class="o_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
-            </t>
-            <button t-on-click="props.translateAlert.close" type="button" class="btn-close" aria-label="Close"></button>
         </div>
     </t>
 </templates>

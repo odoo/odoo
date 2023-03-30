@@ -17,6 +17,8 @@ Odoo database.
     },
     'data': [
         'security/ir.model.access.csv',
+        'security/account_edi_proxy_client_security.xml',
+        'views/account_edi_proxy_user_views.xml',
     ],
     'installable': True,
     'license': 'LGPL-3',

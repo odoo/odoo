@@ -136,4 +136,71 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
 
     Tour.register('PaymentScreenRoundingDown', { test: true, url: '/pos/ui' }, getSteps());
 
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.00');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
+
+    ProductScreen.exec.addOrderline('Product Test 1.25', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.5');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
+
+    ProductScreen.exec.addOrderline('Product Test 1.4', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.5');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
+
+    ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.00');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.pressNumpad('2');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('1.0');
+
+    Tour.register('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Product Test', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.95');
+    PaymentScreen.exec.pay('Cash', '5');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('3.05');
+    PaymentScreen.check.totalDueIs('1.95');
+    Chrome.do.clickTicketButton();
+
+    Tour.register('PaymentScreenTotalDueWithOverPayment', { test: true, url: '/pos/ui' }, getSteps());
+
 });

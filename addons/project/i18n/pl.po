@@ -6,7 +6,6 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
 # Jaroslaw Kaczmarski, 2022
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2022
 # Arek Smagacz <arek.smagacz@gmail.com>, 2022
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
 # Mariusz, 2022
@@ -33,14 +32,15 @@
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Maksym <ms@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -294,7 +294,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__25
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__25
 msgid "25"
-msgstr ""
+msgstr "25"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__26
@@ -638,6 +638,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">Podzadania</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1706,7 +1711,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Niestandardowa wiadomość o odbiorze"
 
 #. module: project
 #. odoo-python
@@ -2382,6 +2387,7 @@ msgstr "Piątek"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "Przyszłe czynności"
@@ -2622,6 +2628,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Jeżeli ustawione, ta treść będzie wysyłana automatycznie do "
+"nieautoryzowanych użytkowników zamiast wiadomości domyślnej."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -3014,6 +3022,7 @@ msgid "Last Updated on"
 msgstr "Data ostatniej aktualizacji"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "Czynności zaległe"
@@ -4057,6 +4066,11 @@ msgid "Project Collaborators"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
 msgstr "Liczba projektów"
@@ -4105,7 +4119,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "Etap projektu"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
@@ -4149,11 +4163,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
 msgstr ""
 
 #. module: project
@@ -4791,7 +4800,7 @@ msgstr "Sekwencja"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Dodaj zdjęcie"
+msgstr "Ustaw okładkę"
 
 #. module: project
 #. odoo-python
@@ -4872,6 +4881,7 @@ msgid "Show Project on Dashboard"
 msgstr "Pokaż projekt w konsoli"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
@@ -5652,6 +5662,7 @@ msgstr "Na dzisiaj"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "Dzisiejsze czynności"

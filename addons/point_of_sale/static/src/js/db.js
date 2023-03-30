@@ -40,7 +40,11 @@ var PosDB = core.Class.extend({
         this.partner_sorted = [];
         this.partner_by_id = {};
         this.partner_by_barcode = {};
+        // FIXME before master: partner_search_string is no longer used but is kept for partial
+        // compatibility with customizations. The string is no longer useful but we don't want
+        // a custo to crash when calling a method (eg .split()) on it.
         this.partner_search_string = "";
+        this.partner_search_strings = {};
         this.partner_write_date = null;
 
         this.category_by_id = {};
@@ -261,7 +265,7 @@ var PosDB = core.Class.extend({
         return str;
     },
     add_partners: function(partners){
-        var updated_count = 0;
+        var updated = {};
         var new_write_date = '';
         var partner;
         for(var i = 0, len = partners.length; i < len; i++){
@@ -283,38 +287,49 @@ var PosDB = core.Class.extend({
             }
             if (!this.partner_by_id[partner.id]) {
                 this.partner_sorted.push(partner.id);
+            } else {
+                const oldPartner = this.partner_by_id[partner.id];
+                if (oldPartner.barcode) {
+                    delete this.partner_by_barcode[oldPartner.barcode];
+                }
             }
+            if (partner.barcode) {
+                this.partner_by_barcode[partner.barcode] = partner;
+            }
+            updated[partner.id] = partner;
             this.partner_by_id[partner.id] = partner;
-
-            updated_count += 1;
         }
 
         this.partner_write_date = new_write_date || this.partner_write_date;
 
-        if (updated_count) {
-            // If there were updates, we need to completely
-            // rebuild the search string and the barcode indexing
+        const updatedChunks = new Set();
+        const CHUNK_SIZE = 100;
+        for (const id in updated) {
+            const chunkId = Math.floor(id / CHUNK_SIZE);
+            if (updatedChunks.has(chunkId)) {
+                // another partner in this chunk was updated and we already rebuild the chunk
+                continue;
+            }
+            updatedChunks.add(chunkId);
+            // If there were updates, we need to rebuild the search string for this chunk
+            let searchString = "";
 
-            this.partner_search_string = "";
-            this.partner_by_barcode = {};
-
-            for (var id in this.partner_by_id) {
-                partner = this.partner_by_id[id];
-
-                if(partner.barcode){
-                    this.partner_by_barcode[partner.barcode] = partner;
+            for (let id = chunkId * CHUNK_SIZE; id < (chunkId + 1) * CHUNK_SIZE; id++) {
+                if (!(id in this.partner_by_id)) {
+                    continue;
                 }
+                const partner = this.partner_by_id[id];
                 partner.address = (partner.street ? partner.street + ', ': '') +
                                   (partner.zip ? partner.zip + ', ': '') +
                                   (partner.city ? partner.city + ', ': '') +
                                   (partner.state_id ? partner.state_id[1] + ', ': '') +
                                   (partner.country_id ? partner.country_id[1]: '');
-                this.partner_search_string += this._partner_search_string(partner);
+                searchString += this._partner_search_string(partner);
             }
 
-            this.partner_search_string = utils.unaccent(this.partner_search_string);
+            this.partner_search_strings[chunkId] = utils.unaccent(searchString);
         }
-        return updated_count;
+        return Object.keys(updated).length;
     },
     get_partner_write_date: function(){
         return this.partner_write_date || "1970-01-01 00:00:00";
@@ -342,13 +357,15 @@ var PosDB = core.Class.extend({
             return [];
         }
         var results = [];
-        for(var i = 0; i < this.limit; i++){
-            var r = re.exec(this.partner_search_string);
+        const searchStrings = Object.values(this.partner_search_strings).reverse();
+        let searchString = searchStrings.pop();
+        while (searchString && results.length < this.limit) {
+            var r = re.exec(searchString);
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
-            }else{
-                break;
+            } else {
+                searchString = searchStrings.pop();
             }
         }
         return results;

@@ -198,7 +198,8 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
-                <attribute name="class">o_applicant_form o_applicant_interviewer_form</attribute>
+                <attribute name="js_class">hr_recruitment_interviewer</attribute>
+                <attribute name="class">o_applicant_form</attribute>
             </xpath>
             <xpath expr="//group[@name='recruitment_contract']" position="replace"/>
         </field>
@@ -351,7 +352,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <field name="date_closed" invisible="1"/>
-                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('date_closed', '=', False)]}">
+                            <div class="ribbon ribbon-top-right pe-none" attrs="{'invisible': [('date_closed', '=', False)]}">
                                 <span class="bg-success">Hired</span>
                             </div>
                             <span class="badge rounded-pill text-bg-danger float-end me-4" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}">Refused</span>

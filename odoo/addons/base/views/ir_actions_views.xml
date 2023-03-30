@@ -285,12 +285,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Python Code" name='code' autofocus="autofocus"
+                            <page string="Python Code" name='code'
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
-                            <page string="Data to Write" name="page_object" autofocus="autofocus"
+                            <page string="Data to Write" name="page_object"
                                     attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
                                 <p attrs="{'invisible': [('model_id', '!=', False)]}">
                                     Please set the Model to Create before choosing values
@@ -316,7 +316,7 @@
                                 <field name="groups_id"/>
                             </page>
 
-                            <page string="Actions" name="actions" autofocus="autofocus"
+                            <page string="Actions" name="actions"
                                     attrs="{'invisible': [('state', '!=', 'multi')]}">
                                 <p class="oe_grey">
                                     If several child actions return an action, only the last one will be executed.
@@ -325,7 +325,7 @@
                                 <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help" name="help_info" autofocus="autofocus"
+                            <page string="Help" name="help_info"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <div style="margin-top: 4px;">
                                     <h3>Help with Python expressions</h3>
@@ -336,8 +336,9 @@
                                         <li><code>record</code>: record on which the action is triggered; may be be void</li>
                                         <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
                                         <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
-                                        <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
+                                        <li><code>log(message, level='info')</code>: logging function to record debug information in <code>ir.logging</code> table</li>
                                         <li><code>UserError</code>: Warning Exception to use with <code>raise</code></li>
+                                        <li><code>Command</code>: x2Many commands namespace</li>
                                         <li>To return an action, assign: <code>action = {...}</code></li>
                                     </ul>
                                     <div attrs="{'invisible': [('state', '!=', 'code')]}">

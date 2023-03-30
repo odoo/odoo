@@ -6,14 +6,14 @@
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
 # Vo Thanh Thuy, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -328,8 +328,7 @@ msgstr "KHOẢN TIỀN"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr ""
-"Chấp thuận tiền típ của khách hàng hoặc chuyển đổi tiền thừa thành típ"
+msgstr "Nhận tiền tip của khách hàng hoặc chuyển đổi tiền thừa thành tip. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -456,7 +455,7 @@ msgstr "Thêm ghi chú khách hàng"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Add Tip"
-msgstr "Tiền boa"
+msgstr "Thêm tiền tip"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -908,6 +907,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Tăng doanh số bán hàng của bạn với nhiều loại chương trình: phiếu giảm giá, "
+"khuyến mại, phiếu quà tăng, khách hàng thân thiết. Có thể thiết lập các điều"
+" kiện cụ thể  (sản phẩm, khách hàng, số tiền mua tối thiểu, thời gian). Phần"
+" thưởng có thể là chiết khấu (% hoặc số tiền) hoặc các sản phẩm miễn phí."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -945,7 +948,7 @@ msgstr "TIỀN MẶT"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "CHANGE"
-msgstr "ĐỔI"
+msgstr "TIỀN THỪA"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1176,14 +1179,14 @@ msgstr "Ghế"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Change"
-msgstr "Thay đổi"
+msgstr "Tiền thừa"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Change Tip"
-msgstr "Thay đổi hướng dẫn"
+msgstr "Đổi tiền tip"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
@@ -1707,7 +1710,7 @@ msgstr "Hiển thị khuôn mặt khách hàng"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Customer Invoice"
-msgstr "Công nợ khách hàng"
+msgstr "Hóa đơn Khách hàng"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2795,7 +2798,7 @@ msgstr "Lô sản phẩm không hợp lệ"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #, python-format
 msgid "Inventory"
-msgstr "Kho vận"
+msgstr "Tồn kho"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2902,7 +2905,7 @@ msgstr "Đã cài đặt đầy đủ kế toán chưa"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_tipped
 msgid "Is this already tipped?"
-msgstr "Điều này đã được giới thiệu?"
+msgstr "Hóa đơn đã được tip? "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
@@ -3421,6 +3424,11 @@ msgstr "Phiên mới"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Giá đựng báo"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sự kiện theo Lịch cho Hoạt động Kế tiếp"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4942,7 +4950,7 @@ msgstr "Giá sản phẩm trên biên lai"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_tipproduct
 msgid "Product tips"
-msgstr "Hướng dẫn sản phẩm"
+msgstr "Tip sản phẩm"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -5100,7 +5108,7 @@ msgstr "Làm mới màn hình"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Refund"
-msgstr "Giảm công nợ"
+msgstr "Hoàn tiền"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -6723,25 +6731,25 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Tip"
-msgstr "Hướng dẫn"
+msgstr "Tiền tip"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr "Tiền thưởng"
+msgstr "Số tiền tip"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Tip Product"
-msgstr "Sản phẩm boa"
+msgstr "Sản phẩm tip"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Tips"
-msgstr "Hướng dẫn"
+msgstr "Tiền tip"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -6928,6 +6936,17 @@ msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 
 #. module: point_of_sale
 #. odoo-python
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Đơn hàng này chưa được đồng bộ với máy chủ. Bảo đảm đơn đã được đồng bộ và "
+"thử lại. "
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7089,9 +7108,10 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "Thuế GTGT:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "Đơn hàng chưa đồng bộ"
 
 #. module: point_of_sale
 #. odoo-javascript

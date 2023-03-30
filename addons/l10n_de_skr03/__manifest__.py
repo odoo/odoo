@@ -34,7 +34,7 @@
 {
     'name': 'Germany SKR03 - Accounting',
     'icon': '/l10n_de/static/description/icon.png',
-    'version': '3.0',
+    'version': '3.1',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
     'category': 'Accounting/Localizations/Account Charts',

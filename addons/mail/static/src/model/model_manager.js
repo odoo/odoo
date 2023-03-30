@@ -276,6 +276,9 @@ export class ModelManager {
      * @param {Listener} listener
      */
     removeListener(listener) {
+        if (!listener) {
+            return;
+        }
         this._listeners.delete(listener);
         this._listenersToNotifyInUpdateCycle.delete(listener);
         this._listenersToNotifyAfterUpdateCycle.delete(listener);

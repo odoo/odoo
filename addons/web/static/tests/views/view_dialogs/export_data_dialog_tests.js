@@ -98,7 +98,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 },
                 {
                     children: false,
-                    field_type: "char",
+                    field_type: "boolean",
                     id: "bar",
                     relation_field: null,
                     required: false,
@@ -635,7 +635,19 @@ QUnit.module("ViewDialogs", (hooks) => {
                 }
                 if (route === "/web/export/get_fields") {
                     if (!args.parent_field) {
-                        return Promise.resolve(fetchedFields.root);
+                        return Promise.resolve([
+                            ...fetchedFields.root,
+                            {
+                                id: "not_exportable",
+                                string: "Not exportable",
+                                type: "char",
+                                exportable: false,
+                            },
+                            {
+                                id: "exportable",
+                                string: "Exportable",
+                            },
+                        ]);
                     }
                     if (args.prefix === "partner_ids") {
                         assert.step("fetch fields for 'partner_ids'");
@@ -927,4 +939,91 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         await click(target.querySelector(".o_list_export_xlsx"));
     });
+
+    QUnit.test("Export dialog with duplicated fields", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="foo" string="Foo"/>
+                    <field name="foo" string="duplicate of Foo"/>
+                </tree>`,
+            actionMenus: {},
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_list_table th:nth-child(2)").textContent,
+            "Foo",
+            "first column contains the field"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_table th:nth-child(3)").textContent,
+            "duplicate of Foo",
+            "second column contains the duplicated field"
+        );
+
+        await openExportDataDialog();
+        assert.containsOnce(
+            target,
+            ".modal .o_export_field",
+            "there is only one field in export field list."
+        );
+        assert.strictEqual(
+            target.querySelector(".modal .o_export_field").textContent,
+            "Foo",
+            "the field to export corresponds to the field displayed in the list view"
+        );
+    });
+
+    QUnit.test(
+        "Export dialog: export list contains field with 'default_export: true'",
+        async function (assert) {
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: `<tree export_xlsx="1">
+                <field name="foo"/>
+            </tree>`,
+                actionMenus: {},
+                mockRPC(route, args) {
+                    if (route === "/web/export/formats") {
+                        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                    }
+                    if (route === "/web/export/get_fields") {
+                        if (!args.parent_field) {
+                            return Promise.resolve([
+                                ...fetchedFields.root,
+                                {
+                                    id: "default_exportable",
+                                    string: "Default exportable",
+                                    type: "char",
+                                    default_export: true,
+                                },
+                            ]);
+                        }
+                        return Promise.resolve(fetchedFields[args.prefix]);
+                    }
+                },
+            });
+
+            await openExportDataDialog();
+            assert.containsN(target, ".o_export_field", 2, "two fields are selected in the list");
+            assert.strictEqual(
+                target.querySelector(".o_fields_list").textContent,
+                "FooDefault exportable",
+                "values are the correct ones"
+            );
+        }
+    );
 });

@@ -38,6 +38,7 @@ const {SIZES, MEDIAS_BREAKPOINTS} = require('@web/core/ui/ui_service');
 var qweb = core.qweb;
 var _t = core._t;
 const preserveCursor = OdooEditorLib.preserveCursor;
+const descendants = OdooEditorLib.descendants;
 
 /**
  * @param {HTMLElement} el
@@ -945,6 +946,16 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     async start() {
         await this._super(...arguments);
+        if (!this.menuEl.children.length) {
+            // Remove empty text nodes so that :empty css rule can work
+            // TODO this has been added here as a fix to be extra careful. In
+            // master we should just avoid adding text nodes inside
+            // we-selection-items in the first place.
+            while (this.menuEl.firstChild
+                    && !this.menuEl.firstChild.data.trim().length) {
+                this.menuEl.firstChild.remove();
+            }
+        }
 
         if (this.options && this.options.valueEl) {
             this.containerEl.insertBefore(this.options.valueEl, this.menuEl);
@@ -1232,6 +1243,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
     async setValue() {
         await this._super(...arguments);
         this.inputEl.value = this._value;
+        this._oldValue = this._value;
     },
 
     //--------------------------------------------------------------------------
@@ -1255,25 +1267,47 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
      */
     _onInputInput: function (ev) {
         this._value = this.inputEl.value;
+        // When the value changes as a result of a arrow up/down, the change
+        // event is not called, unless a real user input has been triggered.
+        // This event handler holds a variable for this in order to not call
+        // `_onUserValueChange` two times. If the users only uses arrow up/down
+        // it will be trigger on blur otherwise it will be triggered on change.
+        if (!ev.detail || !ev.detail.keyUpOrDown) {
+            this.changeEventWillBeTriggered = true;
+        }
         this._onUserValuePreview(ev);
     },
     /**
-     * TODO remove in master
+     * @private
+     * @param {Event} ev
      */
-    _onInputBlur: function (ev) {},
+    _onInputBlur: function (ev) {
+        if (this.notifyValueChangeOnBlur && !this.changeEventWillBeTriggered) {
+            // In case the input value has been modified with arrow up/down, the
+            // change event is not triggered (except if there has been a natural
+            // input event), so if the element doesn't trigger a preview, we
+            // have to notify that the value changes now.
+            this._onUserValueChange(ev);
+            this.notifyValueChangeOnBlur = false;
+        }
+        this.changeEventWillBeTriggered = false;
+    },
     /**
      * @private
      * @param {Event} ev
      */
     _onInputKeydown: function (ev) {
+        const params = this._methodsParams;
+        if (!params.unit && !params.step) {
+            return;
+        }
         switch (ev.which) {
+            case $.ui.keyCode.ENTER:
+                this._onUserValueChange(ev);
+                break;
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN: {
                 const input = ev.currentTarget;
-                const params = this._methodsParams;
-                if (!params.unit && !params.step) {
-                    break;
-                }
                 let value = parseFloat(input.value || input.placeholder);
                 if (isNaN(value)) {
                     value = 0.0;
@@ -1284,11 +1318,28 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                 }
                 value += (ev.which === $.ui.keyCode.UP ? step : -step);
                 input.value = this._floatToStr(value);
-                $(input).trigger('input');
+                // We need to know if the change event will be triggered or not.
+                // Change is triggered if there has been a "natural" input event
+                // from the user. Since we are triggering a "fake" input event,
+                // we specify that the original event is a key up/down.
+                input.dispatchEvent(new CustomEvent('input', {
+                    bubbles: true,
+                    cancelable: true,
+                    detail: {keyUpOrDown: true}
+                }));
+                this.notifyValueChangeOnBlur = true;
                 break;
             }
         }
     },
+    /**
+     * @override
+     */
+    _onUserValueChange() {
+        if (this._oldValue !== this._value) {
+            this._super(...arguments);
+        }
+    }
 });
 
 const MultiUserValueWidget = UserValueWidget.extend({
@@ -3552,6 +3603,12 @@ const SnippetOptionWidget = Widget.extend({
                 }
 
                 const dependencies = widget.getDependencies();
+
+                if (dependencies.length === 1 && dependencies[0] === 'fake') {
+                    widget.toggleVisibility(false);
+                    return;
+                }
+
                 const dependenciesData = [];
                 dependencies.forEach(depName => {
                     const toBeActive = (depName[0] !== '!');
@@ -4482,7 +4539,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 const isGridHandle = handleEl.classList.contains('o_grid_handle');
                 handleEl.classList.toggle('d-none', isGrid ^ isGridHandle);
                 // Disabling the resize if we are in mobile view.
-                handleEl.classList.toggle('readonly', isMobileView && isGridHandle);
+                const isHorizontalSizing = handleEl.matches('.e, .w');
+                handleEl.classList.toggle('readonly', isMobileView && (isHorizontalSizing || isGridHandle));
             }
 
             // Hiding the move handle in mobile view so we can't drag the
@@ -4917,6 +4975,15 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 registry.layout_column = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    cleanForSave() {
+        // Remove the padding highlights.
+        this.$target[0].querySelectorAll('.o_we_padding_highlight').forEach(highlightedEl => {
+            highlightedEl._removePaddingPreview();
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -4932,6 +4999,9 @@ registry.layout_column = SnippetOptionWidget.extend({
         let $row = this.$('> .row');
         if (!$row.length) {
             const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
+            for (const node of descendants(this.$target[0])) {
+                node.ouid = undefined;
+            }
             $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
             restoreCursor();
         }
@@ -4944,6 +5014,9 @@ registry.layout_column = SnippetOptionWidget.extend({
         await new Promise(resolve => setTimeout(resolve));
         if (nbColumns === 0) {
             const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
+            for (const node of descendants($row[0])) {
+                node.ouid = undefined;
+            }
             $row.contents().unwrap().contents().unwrap();
             restoreCursor();
             this.trigger_up('activate_snippet', {$snippet: this.$target});
@@ -5061,6 +5134,24 @@ registry.layout_column = SnippetOptionWidget.extend({
         gridUtils._resizeGrid(rowEl);
         this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.cssProperty.startsWith('--grid-item-padding')) {
+            // Reset the animations.
+            this._removePaddingPreview();
+            void this.$target[0].offsetWidth; // Trigger a DOM reflow.
+
+            // Highlight the padding when changing it, by adding a pseudo-
+            // element with an animated colored border inside the grid items.
+            const rowEl = this.$target[0];
+            rowEl.classList.add('o_we_padding_highlight');
+            rowEl._removePaddingPreview = this._removePaddingPreview.bind(this);
+            rowEl.addEventListener('animationend', rowEl._removePaddingPreview);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -5169,9 +5260,34 @@ registry.layout_column = SnippetOptionWidget.extend({
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
+    },
+    /**
+     * Removes the padding highlights that were added when changing the grid
+     * items padding.
+     *
+     * @private
+     */
+    _removePaddingPreview() {
+        const rowEl = this.$target[0];
+        rowEl.removeEventListener('animationend', rowEl._removePaddingPreview);
+        rowEl.classList.remove('o_we_padding_highlight');
+        delete rowEl._removePaddingPreview;
+    },
+});
 
-        // Adding back an align-items-* class.
-        rowEl.classList.add('align-items-start');
+registry.vAlignment = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const value = await this._super(...arguments);
+        if (methodName === 'selectClass' && !value) {
+            // If there is no `align-items-` class on the row, then the `align-
+            // items-stretch` class is selected, because the behaviors are
+            // equivalent in both situations.
+            return 'align-items-stretch';
+        }
+        return value;
     },
 });
 
@@ -5431,6 +5547,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'd-none');
         weightEl.title = _t("Size");
         this.$weight = $(weightEl);
+        // Perform the loading of the image info synchronously in order to
+        // avoid an intermediate rendering of the Blocks tab during the
+        // loadImageInfo RPC that obtains the file size.
+        // This does not update the target.
+        await this._applyOptions(false);
     },
 
     //--------------------------------------------------------------------------
@@ -6653,6 +6774,18 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    onBuilt() {
+        // Flip classes should no longer be used but are still present in some
+        // theme snippets.
+        if (this.$target[0].querySelector('.o_we_flip_x, .o_we_flip_y')) {
+            this._handlePreviewState(false, () => {
+                return {flip: this._getShapeData().flip};
+            });
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -6665,7 +6798,12 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     shape(previewMode, widgetValue, params) {
         this._handlePreviewState(previewMode, () => {
-            return {shape: widgetValue, colors: this._getImplicitColors(widgetValue, this._getShapeData().colors), flip: []};
+            return {
+                shape: widgetValue,
+                colors: this._getImplicitColors(widgetValue, this._getShapeData().colors),
+                flip: [],
+                animated: params.animated,
+            };
         });
     },
     /**
@@ -6847,7 +6985,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         // Updates/removes the shape container as needed and gives it the
         // correct background shape
         const json = target.dataset.oeShapeData;
-        const {shape, colors, flip = []} = json ? JSON.parse(json) : {};
+        const {shape, colors, flip = [], animated = 'false'} = json ? JSON.parse(json) : {};
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
             return this._insertShapeContainer(null);
@@ -6858,6 +6996,8 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         // Compat: remove old flip classes as flipping is now done inside the svg
         shapeContainer.classList.remove('o_we_flip_x', 'o_we_flip_y');
+
+        shapeContainer.classList.toggle('o_we_animated', animated === 'true');
 
         if (colors || flip.length) {
             // Custom colors/flip, overwrite shape that is set by the class

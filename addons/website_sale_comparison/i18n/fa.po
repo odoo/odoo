@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_comparison
+# 	* website_sale_comparison
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Hamid Darabi, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+# Hanna Kheradroosta, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2022-12-15 12:45+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
 msgid "134.7 x 200 x 7.2 mm"
-msgstr ""
+msgstr "134.7 x 200 x 7.2 میلی‌متر"
 
 #. module: website_sale_comparison
 #: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_7
@@ -32,23 +34,35 @@ msgid "308 g"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
-msgid "<i class=\"fa fa-exchange\"/> Compare"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
+msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to Cart"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
-msgid "<span class=\"h3\">Suggested alternatives: </span>"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
+msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
+msgstr "<strong>قیمت:</strong>"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -63,36 +77,47 @@ msgid "Attribute Categories"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_1
-msgid "Brand"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "Bottom of Page"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "Category"
-msgstr "دسته‌بندی"
+msgstr "دسته بندی"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__name
 msgid "Category Name"
-msgstr "نام دسته‌بندی"
+msgstr "نام دسته بندی"
 
 #. module: website_sale_comparison
-#. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:8
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:20
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 #, python-format
 msgid "Compare"
 msgstr ""
 
 #. module: website_sale_comparison
-#. openerp-web
-#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:51
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "Contact Us"
+msgstr "تماس با ما"
+
+#. module: website_sale_comparison
+#: model_terms:ir.actions.act_window,help:website_sale_comparison.product_attribute_category_action
+msgid "Create a new attribute category"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -103,10 +128,11 @@ msgstr "ایجاد شده توسط"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_date
 msgid "Created on"
-msgstr "ایجاد شده در"
+msgstr "ایجادشده در"
 
 #. module: website_sale_comparison
 #: model:product.attribute,name:website_sale_comparison.product_attribute_8
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_2
 msgid "Dimensions"
 msgstr ""
 
@@ -116,6 +142,23 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
+msgid "Duration"
+msgstr "مدت زمان"
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_general_features
+msgid "General Features"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.actions.act_window,help:website_sale_comparison.product_attribute_category_action
+msgid ""
+"Group attributes by category that will appear in the specification\n"
+"                part of a product page."
+msgstr ""
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
 msgid "ID"
 msgstr "شناسه"
@@ -123,7 +166,7 @@ msgstr "شناسه"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category____last_update
 msgid "Last Modified on"
-msgstr "آخرین تغییر در"
+msgstr "آخرین اصلاح در"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
@@ -133,11 +176,17 @@ msgstr "آخرین تغییر توسط"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین بروز رسانی در"
 
 #. module: website_sale_comparison
-#. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:7
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "None"
+msgstr "هیچکدام"
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Product"
 msgstr "محصول"
@@ -154,14 +203,24 @@ msgid "Product Attribute Category"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:ir.model,name:website_sale_comparison.model_product_template
-msgid "Product Template"
-msgstr "قالب محصول"
+#: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:ir.model,name:website_sale_comparison.model_product_product
+msgid "Product Variant"
+msgstr "گونه محصول"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
+msgstr "تصویر محصول"
+
+#. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
+msgid "Related Attributes"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -187,20 +246,25 @@ msgid "Shop Comparator"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "Specification"
 msgstr ""
 
 #. module: website_sale_comparison
-#: code:addons/website_sale_comparison/controllers/main.py:23
-#: code:addons/website_sale_comparison/models/website_sale_comparison.py:30
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+msgid "Specifications"
+msgstr "مشخصات"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "دسته‌بندی نشده"
 
 #. module: website_sale_comparison
-#. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
 msgstr "هشدار"
@@ -211,8 +275,8 @@ msgid "Weight"
 msgstr "وزن"
 
 #. module: website_sale_comparison
-#. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "You can compare max 4 products."
 msgstr ""

@@ -151,7 +151,7 @@ class ChannelMember(models.Model):
                 if member.partner_id:
                     persona = {'partner': member._get_partner_data(fields=fields.get('persona', {}).get('partner'))}
                 if member.guest_id:
-                    persona = {'guest': member.guest_id._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)}
+                    persona = {'guest': member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)}
                 data['persona'] = persona
             members_formatted_data[member] = data
         return members_formatted_data

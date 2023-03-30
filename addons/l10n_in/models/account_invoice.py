@@ -26,6 +26,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
+    l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
     @api.depends('amount_total')
     def _compute_amount_total_words(self):
@@ -34,8 +35,17 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
-        for record in self:
-            record.l10n_in_gst_treatment = record.partner_id.l10n_in_gst_treatment
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
+        for record in indian_invoice:
+            gst_treatment = record.partner_id.l10n_in_gst_treatment
+            if not gst_treatment:
+                gst_treatment = 'unregistered'
+                if record.partner_id.country_id.code == 'IN' and record.partner_id.vat:
+                    gst_treatment = 'regular'
+                elif record.partner_id.country_id and record.partner_id.country_id.code != 'IN':
+                    gst_treatment = 'overseas'
+            record.l10n_in_gst_treatment = gst_treatment
+        (self - indian_invoice).l10n_in_gst_treatment = False
 
     @api.depends('partner_id', 'company_id')
     def _compute_l10n_in_state_id(self):

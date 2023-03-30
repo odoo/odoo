@@ -31,7 +31,7 @@ class PortalAccount(CustomerPortal):
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
     def _get_invoices_domain(self):
-        return [('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
+        return [('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
     def _get_account_searchbar_sortings(self):
         return {

@@ -16,7 +16,9 @@ var monthsShortWithoutDots = 'jan_feb_mrt_apr_mai_jun_jul_aug_sep_okt_nov_des'.s
 var fy = moment.defineLocale('fy', {
     months : 'jannewaris_febrewaris_maart_april_maaie_juny_july_augustus_septimber_oktober_novimber_desimber'.split('_'),
     monthsShort : function (m, format) {
-        if (/-MMM-/.test(format)) {
+        if (!m) {
+            return monthsShortWithDots;
+        } else if (/-MMM-/.test(format)) {
             return monthsShortWithoutDots[m.month()];
         } else {
             return monthsShortWithDots[m.month()];
@@ -58,7 +60,7 @@ var fy = moment.defineLocale('fy', {
         y : 'ien jier',
         yy : '%d jierren'
     },
-    ordinalParse: /\d{1,2}(ste|de)/,
+    dayOfMonthOrdinalParse: /\d{1,2}(ste|de)/,
     ordinal : function (number) {
         return number + ((number === 1 || number === 8 || number >= 20) ? 'ste' : 'de');
     },

@@ -12,16 +12,17 @@
 # Martin Trigaux, 2022
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -710,6 +711,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Chatujte s kolegy</b> v reálném čase pomocí přímých "
+"zpráv.</p><p><i>Nejprve musíte pozvat uživatele v nastavení "
+"aplikace.</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -839,11 +843,6 @@ msgid "<strong>Original note:</strong>"
 msgstr "<strong>Originální poznámka:</strong>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>Doporučené aktivity</strong>"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
@@ -947,7 +946,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "AM"
-msgstr ""
+msgstr "Dopoledne"
 
 #. module: mail
 #. odoo-javascript
@@ -1423,8 +1422,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1954,13 +1953,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "Může se zrušit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Může upravovat tělo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -2364,7 +2363,7 @@ msgstr "Komentář"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Compact"
-msgstr ""
+msgstr "Kompaktní"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_company
@@ -2375,6 +2374,7 @@ msgstr "Společnosti"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2477,7 +2477,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Považuje odpovědi za nové vlákno"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -4760,7 +4760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Je Editor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -5081,7 +5081,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "Join Channel"
-msgstr ""
+msgstr "Připojit se ke kanálu"
 
 #. module: mail
 #. odoo-javascript
@@ -5462,6 +5462,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "Zaznamenat poznámku"
@@ -5627,14 +5628,12 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
-#: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
 msgstr "Pošta: správce e-mailové fronty"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_gateway_action
-#: model:ir.cron,name:mail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
 msgstr "Mail: Služba Fetchmail"
 
@@ -5683,6 +5682,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Spravovat odpovědi jako nově přicházející e-maily místo toho, aby odpovědi "
+"směřovaly do stejného vlákna."
 
 #. module: mail
 #. odoo-javascript
@@ -6407,6 +6408,8 @@ msgid ""
 "No response received. Check server information.\n"
 " %s"
 msgstr ""
+"Nepřišla žádná odpověď. Zkontrolujte info serveru\n"
+" %s"
 
 #. module: mail
 #. odoo-javascript
@@ -6501,14 +6504,12 @@ msgstr "Typ oznámení"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
-#: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
 msgstr "Oznámení: Smazat oznámení starší než 6 měsíců"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
-#: model:ir.cron,name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
 msgstr ""
 
@@ -6858,6 +6859,13 @@ msgid "Open in Discuss"
 msgstr "Otevřít v diskusi"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr "Otevřít profil"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
@@ -6919,6 +6927,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
+"e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
+"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
+"{{object.partner_id.lang}}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -6927,6 +6939,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"Původní diskuse: Odpovědi najdete v diskuzi původního dokumentu.\n"
+" Jiná e-mailová adresa: Odpovědi budou odeslány na e-mailovou adresu uvedenou v id sledovací zprávy namísto původního diskusního vlákna dokumentu.\n"
+" To má vliv na generované ID zprávy."
 
 #. module: mail
 #. odoo-javascript
@@ -7220,6 +7235,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Pravidla jak zpracovat chatovací upozornění:\n"
+"- Zpracovat e-mailem: upozornění budou zaslané na vaši e-mailovou adresu\n"
+"- Zpracovat v Odoo: upozornění se zobrazí ve vaší schránce Odoo Příchozí zprávy"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -7400,7 +7418,6 @@ msgstr "Smlouva o záruce vydavatele"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
-#: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
 msgstr "Vydavatel: oznámení o aktualizaci"
 
@@ -7580,6 +7597,11 @@ msgid "Recipients"
 msgstr "Příjemci"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
 msgstr "Doporučený typ aktivity"
@@ -7730,12 +7752,12 @@ msgstr "Odstranit odběratele"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Vykreslování modelu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Odpovědi"
 
 #. module: mail
 #. odoo-javascript
@@ -8985,11 +9007,10 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Daňové identifikační číslo. Dokončete jej, pokud je kontakt podroben daním. "
-"Používá se v některých právních prohlášeních."
 
 #. module: mail
 #. odoo-javascript
@@ -9725,7 +9746,7 @@ msgstr "Nahrát dokument"
 #: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "Nahrát soubor"
 
 #. module: mail
 #. odoo-javascript
@@ -16233,8 +16254,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -25303,7 +25324,7 @@ msgstr "není"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "note"
-msgstr ""
+msgstr "poznámka"
 
 #. module: mail
 #. odoo-javascript

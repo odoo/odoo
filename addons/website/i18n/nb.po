@@ -16,9 +16,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Henning Fyllingsnes, 2023\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
@@ -613,9 +613,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 
 #. module: website
@@ -821,6 +819,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
 "                            <b>Events</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
+"                            <b>Arrangementer</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -1262,6 +1262,7 @@ msgstr ""
 "kontekstuelle farger, og kraftfulle visningsalternativer."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1554,7 +1555,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Add to Cart Button"
-msgstr ""
+msgstr "Legg i handlekurv knapp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -1991,6 +1992,7 @@ msgid "Autosizing"
 msgstr "Autostørrelse"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -2665,7 +2667,7 @@ msgstr "Lukk"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Close Button Color"
-msgstr ""
+msgstr "Lukk knapp farge"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -4106,6 +4108,7 @@ msgid "Extension View"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -4833,7 +4836,7 @@ msgstr "Topptekst"
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
-msgstr "Topptekstfarge"
+msgstr "Overskrift farge"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_overlay
@@ -5025,13 +5028,13 @@ msgstr "Hjemmeside"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Homepage URL"
-msgstr ""
+msgstr "Hjemmeside URL"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_homepage_url
 #: model:ir.model.fields,field_description:website.field_website__homepage_url
 msgid "Homepage Url"
-msgstr ""
+msgstr "Hjemmeside URL"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -5108,6 +5111,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -6310,7 +6314,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.menu,name:website.menu_edit_menu
 msgid "Menu Editor"
-msgstr ""
+msgstr "Meny redigering"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
@@ -6332,6 +6336,11 @@ msgstr ""
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 msgid "Menus"
 msgstr "Menyer"
+
+#. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -9094,6 +9103,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Fullstendig link for å nå dokumentet via nettstedet."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -9104,7 +9114,7 @@ msgstr "Full URL for å få tilgang til server-handlinger gjennom nettstedet."
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "The homepage URL should be relative and start with '/'."
-msgstr ""
+msgstr "Hjemmeside URL skal starte med \"/\""
 
 #. module: website
 #. odoo-javascript
@@ -9372,6 +9382,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "This translation is not editable."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9575,6 +9592,13 @@ msgstr "Overgang"
 #, python-format
 msgid "Translate Attribute"
 msgstr "Oversett attributt"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "Translate header in the text. Menu is generated automatically."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -10398,6 +10422,7 @@ msgid "Website Pages"
 msgstr "Nettsted-sider"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10452,6 +10477,7 @@ msgid "Website URL"
 msgstr "Nettsted-URL"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -10703,6 +10729,14 @@ msgstr "Du kan ikke fjerne et felt som kreves av selve modellen."
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove the submit button of the form"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
 msgstr ""
 
 #. module: website

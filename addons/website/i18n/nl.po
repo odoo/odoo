@@ -6,16 +6,16 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -506,7 +506,7 @@ msgstr "<b>Voeg </b> de geselecteerde afbeelding toe."
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
 msgstr ""
-"<b>Klik op wijzigen</b> om te starten met het ontwerpen van je startpagina."
+"<b>Klik op Bewerken</b> om te starten met het ontwerpen van je startpagina."
 
 #. module: website
 #. odoo-javascript
@@ -634,14 +634,10 @@ msgstr "<b>Verschuif</b> deze knop om de kolomgrootte te wijzigen."
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 "<br/><br/>\n"
-"                    Voorbeeld van een regel:<br/>\n"
-"                    <code class=\"ms-4\">Niet toestaan: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Toestaan: *</code>"
+"                    Voorbeeld van regel:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -888,7 +884,7 @@ msgid ""
 "                            <b>Partners</b>"
 msgstr ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-"                            <b>Partners</b>"
+"                            <b>Relaties</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -1379,6 +1375,7 @@ msgstr ""
 "achtergrondkleuren en krachtige weergaveopties."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1463,7 +1460,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "API Key"
-msgstr "API-sleutel"
+msgstr "API Key"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_about_us
@@ -2122,6 +2119,7 @@ msgid "Autosizing"
 msgstr "Automatisch aanpassen"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -2379,7 +2377,7 @@ msgstr "Kruimelpad"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Build my website"
-msgstr "Mijn website bouwen"
+msgstr "Bouw mijn website"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4021,7 +4019,7 @@ msgstr "Volg je bezoeker eenvoudig met Plausible"
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code_options
 #, python-format
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: website
 #. odoo-javascript
@@ -4166,7 +4164,7 @@ msgstr "Schakel de juiste Google Maps API's in je Google-account in"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
-msgstr "Voer een API-sleutel in"
+msgstr "Voer een API Key in"
 
 #. module: website
 #. odoo-javascript
@@ -4284,6 +4282,7 @@ msgid "Extension View"
 msgstr "Extensie weergave"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -4868,12 +4867,12 @@ msgstr "Google Maps"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Google Map API Key"
-msgstr "Google Maps API sleutel"
+msgstr "Google Maps API Key"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
 msgid "Google Maps API Key"
-msgstr "Google Maps API sleutel"
+msgstr "Google Maps API Key"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
@@ -5313,6 +5312,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -5724,7 +5724,7 @@ msgstr "Intuïtief systeem"
 #, python-format
 msgid "Invalid API Key. The following error was returned by Google:"
 msgstr ""
-"Ongeldige API-sleutel. De volgende foutmelding is geretourneerd door Google:"
+"Ongeldige API Key. De volgende foutmelding is geretourneerd door Google:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -6565,6 +6565,11 @@ msgid "Menus"
 msgstr "Menu's"
 
 #. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Relaties samenvoegen wizard"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Messages"
 msgstr "Berichten"
@@ -7007,7 +7012,7 @@ msgstr "Deze bezoeker heeft nog geen pagina's bekeken"
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.visitor_partner_action
 msgid "No partner linked for this visitor"
-msgstr "Geen partner gekoppeld aan deze bezoeker"
+msgstr "Geen relatie gekoppeld aan deze bezoeker"
 
 #. module: website
 #. odoo-javascript
@@ -7574,17 +7579,17 @@ msgstr "Bovenliggend pad"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__partner_id
 msgid "Partner of the last logged in user."
-msgstr "Partner van de laatst aangemelde gebruiker."
+msgstr "Relatie van de laatst aangemelde gebruiker."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
 msgid "Partner-related data of the user"
-msgstr "Partner gerelateerde gegevens van de gebruiker"
+msgstr "Relatie gerelateerde gegevens van de gebruiker"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.visitor_partner_action
 msgid "Partners"
-msgstr "Partners"
+msgstr "Relaties"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -7687,7 +7692,7 @@ msgstr "Graag het formulier correct in te vullen."
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid "Points of sale"
-msgstr "Verkooppunten"
+msgstr "Kassa's"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7884,7 +7889,7 @@ msgstr "Eigenschappen"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__partner_id
 msgid "Public Partner"
-msgstr "Openbare partner"
+msgstr "Openbare relatie"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__user_id
@@ -9385,6 +9390,7 @@ msgstr ""
 "De volledige URL om toegang tot het document te krijgen via de website."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -9680,6 +9686,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "This translation is not editable."
+msgstr "Deze vertaling is niet bewerkbaar."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9890,7 +9903,14 @@ msgstr "Overgang"
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Translate Attribute"
-msgstr "Attribuut vertalen"
+msgstr "Kenmerk vertalen"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "Translate header in the text. Menu is generated automatically."
+msgstr "Vertaal koptekst in de tekst. Het menu wordt automatisch gegenereerd."
 
 #. module: website
 #. odoo-javascript
@@ -10759,6 +10779,7 @@ msgid "Website Pages"
 msgstr "Websitepagina's"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10813,6 +10834,7 @@ msgid "Website URL"
 msgstr "Website URL"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11030,7 +11052,7 @@ msgstr "Je kunt kleuren en achtergronden bewerken om functies te markeren."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "You can edit, duplicate..."
-msgstr "Je kunt wijzigen, dupliceren..."
+msgstr "Je kunt bewerken, dupliceren..."
 
 #. module: website
 #. odoo-python
@@ -11076,6 +11098,16 @@ msgstr "Je kunt geen veld verwijderen dat door het model zelf vereist is."
 #, python-format
 msgid "You can't remove the submit button of the form"
 msgstr "Je kunt de verzendknop van het formulier niet verwijderen"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+"Je kan de standaard website %s niet verwijderen. Probeer in plaats daarvan "
+"de instellingen te wijzigen."
 
 #. module: website
 #. odoo-python

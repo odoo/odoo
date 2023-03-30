@@ -21,9 +21,9 @@
 # eriiikgt, 2022
 # marcescu, 2022
 # Eric Antones <eantones@users.noreply.github.com>, 2022
-# Josep Anton Belchi, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# jabelchi, 2022
 # Farouk Jabiri, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Farouk Jabiri, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -596,7 +596,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_scored_question', '!=', "
 "True)]}\">Points</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('isscoredquestion', '!=', "
+"<span attrs=\"{'invisible': [('is_scored_question', '!=', "
 "True)]}\">Punts</span>"
 
 #. module: survey
@@ -623,7 +623,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
 "</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary onlyleftradius px-2 pt-1\">Màxim "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Màxim "
 "</span>"
 
 #. module: survey
@@ -632,7 +632,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
 "</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary onlyleftradius px-2 pt-1\">Mínim "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Mínim "
 "</span>"
 
 #. module: survey
@@ -695,8 +695,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or"
 " press Enter</span>"
 msgstr ""
-"<span class=\"osurveyenter fw-bold text-muted ms-2 d-none d-md-inline\">o "
-"premeu Introdueix</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">o "
+"premeu Retorn</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -705,7 +705,7 @@ msgid ""
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
-"<span class=\"osurveykey text-center position-absolute bg-white rounded-"
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Clau</span></span>"
 
@@ -3518,7 +3518,7 @@ msgstr "Participants"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
-msgstr "Participa a l'enquesta {{ object.surveyid.displayname }}"
+msgstr "Participa a l'enquesta {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3670,7 +3670,7 @@ msgstr "Predefinides preguntes"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Preview"
-msgstr "Previsualitza"
+msgstr "Vista prèvia"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2
@@ -4863,7 +4863,7 @@ msgstr "Totalment d'acord"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col1
 msgid "Totally disagree"
-msgstr "Totalmente en desacuerdo"
+msgstr "Totalment en desacord"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4

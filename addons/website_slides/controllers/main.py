@@ -15,7 +15,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import email_split
 
@@ -137,17 +137,26 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_slide_quiz_data(self, slide):
         is_designer = request.env.user.has_group('website.group_website_designer')
+        slides_resources = slide.slide_resource_ids if slide.channel_id.is_member else []
         values = {
+            'slide_description': slide.description,
             'slide_questions': [{
+                'answer_ids': [{
+                    'comment': answer.comment if is_designer else None,
+                    'id': answer.id,
+                    'is_correct': answer.is_correct if slide.user_has_completed or is_designer else None,
+                    'text_value': answer.text_value,
+                } for answer in question.sudo().answer_ids],
                 'id': question.id,
                 'question': question.question,
-                'answer_ids': [{
-                    'id': answer.id,
-                    'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide.user_has_completed or is_designer else None,
-                    'comment': answer.comment if is_designer else None
-                } for answer in question.sudo().answer_ids],
-            } for question in slide.question_ids]
+            } for question in slide.question_ids],
+            'slide_resource_ids': [{
+                'display_name' : resource.display_name,
+                'download_url': resource._get_download_url(),
+                'id': resource.id,
+                'link': resource.link,
+                'resource_type': resource.resource_type,
+            } for resource in slides_resources]
         }
         if 'slide_answer_quiz' in request.session:
             slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
@@ -793,7 +802,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.data = slide.binary_content and base64.b64decode(slide.binary_content) or b''
         response.mimetype = 'application/pdf'
         return response

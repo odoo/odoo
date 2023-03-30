@@ -15,7 +15,7 @@ paymentExpressCheckoutForm.include({
      * @returns {Object} The information to be displayed on the payment form.
      */
     _getOrderDetails(deliveryAmount) {
-        const pending = this._isShippingInformationRequired() && deliveryAmount === undefined;
+        const pending = this.txContext.shippingInfoRequired && deliveryAmount === undefined;
         const amount = deliveryAmount ? this.txContext.minorAmount + deliveryAmount
             : this.txContext.minorAmount;
         const displayItems = [
@@ -24,7 +24,7 @@ paymentExpressCheckoutForm.include({
                 amount: this.txContext.minorAmount,
             },
         ];
-        if (this._isShippingInformationRequired() && deliveryAmount !== undefined) {
+        if (this.txContext.shippingInfoRequired && deliveryAmount !== undefined) {
             displayItems.push({
                 label: _t("Delivery"),
                 amount: deliveryAmount,
@@ -64,7 +64,7 @@ paymentExpressCheckoutForm.include({
             requestPayerName: true, // Force fetching the billing address for Apple Pay.
             requestPayerEmail: true,
             requestPayerPhone: true,
-            requestShipping: this._isShippingInformationRequired(),
+            requestShipping: this.txContext.shippingInfoRequired,
             ...this._getOrderDetails(),
         });
         if (this.stripePaymentRequests === undefined) {
@@ -102,7 +102,7 @@ paymentExpressCheckoutForm.include({
                     state: ev.paymentMethod.billing_details.address.state,
                 }
             };
-            if (this._isShippingInformationRequired()) {
+            if (this.txContext.shippingInfoRequired) {
                 addresses.shipping_address = {
                     name: ev.shippingAddress.recipient,
                     phone: ev.shippingAddress.phone,
@@ -143,7 +143,7 @@ paymentExpressCheckoutForm.include({
             }
         });
 
-        if (this._isShippingInformationRequired()) {
+        if (this.txContext.shippingInfoRequired) {
             // Wait until the express checkout form is loaded for Apple Pay and Google Pay to select
             // a default shipping address and trigger the `shippingaddresschange` event, so we can
             // fetch the available shipping options. When the customer manually selects a different

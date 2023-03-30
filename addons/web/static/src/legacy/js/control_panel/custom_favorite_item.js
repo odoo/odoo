@@ -4,11 +4,10 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     const { CheckBox } = require("@web/core/checkbox/checkbox");
     const { Dropdown } = require("@web/core/dropdown/dropdown");
     const FavoriteMenu = require('web.FavoriteMenu');
-    const { useAutofocus } = require("@web/core/utils/hooks");
     const { useModel } = require('web.Model');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { useState } = owl;
+    const { useState, useRef } = owl;
 
     let favoriteId = 0;
 
@@ -36,7 +35,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
             const favId = favoriteId++;
             this.useByDefaultId = `o_favorite_use_by_default_${favId}`;
             this.shareAllUsersId = `o_favorite_share_all_users_${favId}`;
-            this.descriptionRef = useAutofocus();
+            this.descriptionRef = useRef("description");
             this.model = useModel("searchModel");
             this.interactive = true;
             this.state = useState({
@@ -54,7 +53,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
          * @private
          */
         saveFavorite() {
-            if (!this.state.description.length) {
+            if (!this.state.description) {
                 this.env.services.notification.notify({
                     message: this.env._t("A name for your favorite filter is required."),
                     type: 'danger',

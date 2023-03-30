@@ -8,14 +8,15 @@
 # Martin Trigaux, 2022
 # Fernando S, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Antoine Demany, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Antoine Demany, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,17 +416,35 @@ msgstr "<span>Orden</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid "<span>Process Checkout</span>"
-msgstr "<span>Pagar ahora</span>"
+msgid ""
+"<span>Proceed to Checkout</span>\n"
+"                            <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+"<span>Pagar ahora</span>\n"
+"                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Process Checkout</span>\n"
-"                                                <span class=\"fa fa-chevron-right\"/>"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span>Procesar pago</span>\n"
+"<span>Pagar ahora</span>\n"
 "                                                <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span>Sign In</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid ""
+"<span>Sign In</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -2490,7 +2509,7 @@ msgstr "Número de productos por tabla en la tienda"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_picking
 msgid "On Site Payments & Picking"
-msgstr "Pagos y recolección en el sitio"
+msgstr "Pagos y recolección en tienda física"
 
 #. module: website_sale
 #. odoo-python
@@ -2749,7 +2768,7 @@ msgstr "Posición"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
 msgid "Prevent Sale of Zero Priced Product"
-msgstr "Evitar la venta de un producto que no tenga precio"
+msgstr "Evitar la venta de un producto con costo cero"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3670,6 +3689,7 @@ msgstr "Fuentes"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid "Specify unit"
 msgstr "Especificar unidad"

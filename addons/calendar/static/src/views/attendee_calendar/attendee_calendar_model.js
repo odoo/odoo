@@ -134,7 +134,7 @@ export class AttendeeCalendarModel extends CalendarModel {
     async archiveRecord(record) {
         let recurrenceUpdate = false;
         if (record.rawRecord.recurrency) {
-            recurrenceUpdate = await this.askRecurrenceUpdatePolicy(this.dialog);
+            recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
             if (!recurrenceUpdate) {
                 return;
             }

@@ -38,9 +38,3 @@ class StockMove(models.Model):
             if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
                 raise UserError(_('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
         return valuation_price_unit_total, valuation_total_qty
-
-    def _get_mto_procurement_date(self):
-        date = super()._get_mto_procurement_date()
-        if 'buy' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
-            date -= relativedelta(days=self.company_id.po_lead)
-        return date

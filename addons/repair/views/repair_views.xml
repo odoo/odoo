@@ -45,7 +45,7 @@
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object" data-hotkey="y"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" confirm="Draft invoices for this order will be cancelled. Do you confirm the action?" attrs="{'invisible':['|', ('state', '=', 'cancel'), ('invoice_state', '!=', 'draft')]}" data-hotkey="l"/>
-                   <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','=', 'cancel',), ('invoice_state', '=', 'draft')]}" data-hotkey="l"/>
+                   <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','in', ('cancel','done')), ('invoice_state', '=', 'draft')]}" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">

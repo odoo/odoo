@@ -155,8 +155,8 @@ class TestUBLCommon(AccountEdiTestCommon):
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': self.currency_data['currency'].id,
-            'invoice_origin': 'test invoice origin',
             'narration': 'test narration',
+            'ref': 'ref_move',
             **invoice_kwargs,
             'invoice_line_ids': [
                 (0, 0, {
@@ -196,40 +196,20 @@ class TestUBLCommon(AccountEdiTestCommon):
 
         return attachment
 
-    def _test_import_partner(self, edi_code, filename):
+    def _import_invoice_attachment(self, invoice, edi_code, journal):
+        """ Extract the attachment from the invoice and import it on the given journal.
         """
-        Given an invoice where partner_1 is the vendor and partner_2 is the customer with an EDI attachment.
-        * Uploading the attachment as an invoice should create an invoice with the buyer = partner_2.
-        * Uploading the attachment as a vendor bill should create a bill with the vendor = partner_1.
-        """
-        invoice = self._generate_move(
-            seller=self.partner_1,
-            buyer=self.partner_2,
-            move_type='out_invoice',
-            invoice_line_ids=[{'product_id': self.product_a.id}],
-        )
+        # Get the attachment from the invoice
         edi_attachment = invoice.edi_document_ids.filtered(
             lambda doc: doc.edi_format_id.code == edi_code).attachment_id
-        self.assertEqual(edi_attachment.name, filename)
         edi_etree = self.get_xml_tree_from_string(edi_attachment.raw)
 
-        # Import attachment as an invoice
-        new_invoice = self.edi_format._create_invoice_from_xml_tree(
+        # import the attachment and return the resulting invoice
+        return self.edi_format._create_invoice_from_xml_tree(
             filename='test_filename',
             tree=edi_etree,
-            journal=self.env['account.journal'].search(
-                [('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+            journal=journal,
         )
-        self.assertEqual(self.partner_2, new_invoice.partner_id)
-
-        # Import attachment as a vendor bill
-        new_invoice = self.edi_format._create_invoice_from_xml_tree(
-            filename='test_filename',
-            tree=edi_etree,
-            journal=self.env['account.journal'].search(
-                [('type', '=', 'purchase'), ('company_id', '=', self.env.company.id)], limit=1)
-        )
-        self.assertEqual(self.partner_1, new_invoice.partner_id)
 
     def _test_encoding_in_attachment(self, edi_code, filename):
         """

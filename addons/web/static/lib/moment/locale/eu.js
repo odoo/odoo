@@ -53,7 +53,7 @@ var eu = moment.defineLocale('eu', {
         y : 'urte bat',
         yy : '%d urte'
     },
-    ordinalParse: /\d{1,2}\./,
+    dayOfMonthOrdinalParse: /\d{1,2}\./,
     ordinal : '%d.',
     week : {
         dow : 1, // Monday is the first day of the week.

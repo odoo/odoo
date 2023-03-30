@@ -3,16 +3,17 @@
 # 	* base_setup
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2023
+# Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Shigurefox <tom.liang@omniwaresoft.com.tw>, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,10 +48,10 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
-"                                            現有使用者\n"
+"                                            名有效使用者\n"
 "                                        </span>\n"
 "                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
-"                                            現有使用者\n"
+"                                            名有效使用者\n"
 "                                        </span>"
 
 #. module: base_setup
@@ -123,6 +124,7 @@ msgid "About"
 msgstr "關於"
 
 #. module: base_setup
+#. odoo-python
 #: code:addons/base_setup/controllers/main.py:0
 #, python-format
 msgid "Access Denied"
@@ -251,6 +253,7 @@ msgid "Default Access Rights"
 msgstr "預設存取權限"
 
 #. module: base_setup
+#. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 #, python-format
 msgid "Default User Template not found."
@@ -534,6 +537,13 @@ msgstr "使用者"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Users"
 msgstr "使用者"
+
+#. module: base_setup
+#. odoo-python
+#: code:addons/base_setup/models/res_config_settings.py:0
+#, python-format
+msgid "VAT"
+msgstr "統一編號"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form

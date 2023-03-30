@@ -18,7 +18,7 @@ class TestResetPassword(HttpCase):
             'email': 'noop@example.com',
         })
 
-        self.assertEqual(test_user.email, url_parse(test_user.signup_url).decode_query()["signup_email"], "query must contain 'signup_email'")
+        self.assertEqual(test_user.email, url_parse(test_user.with_context(create_user=True).signup_url).decode_query()["signup_email"], "query must contain 'signup_email'")
 
         # Invalidate signup_url to skip signup process
         self.env.invalidate_all()

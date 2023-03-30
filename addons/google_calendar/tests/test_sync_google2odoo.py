@@ -743,6 +743,86 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_recurrence_no_duplicate(self):
+        values = [
+            {
+                "attendees": [
+                    {
+                        "email": "myemail@exampl.com",
+                        "responseStatus": "needsAction",
+                        "self": True,
+                    },
+                    {"email": "jane.doe@example.com", "responseStatus": "needsAction"},
+                    {
+                        "email": "john.doe@example.com",
+                        "organizer": True,
+                        "responseStatus": "accepted",
+                    },
+                ],
+                "created": "2023-02-20T11:45:07.000Z",
+                "creator": {"email": "john.doe@example.com"},
+                "end": {"dateTime": "2023-02-25T16:20:00+01:00", "timeZone": "Europe/Zurich"},
+                "etag": '"4611038912699385"',
+                "eventType": "default",
+                "iCalUID": "9lxiofipomymx2yr1yt0hpep99@google.com",
+                "id": "9lxiofipomymx2yr1yt0hpep99",
+                "kind": "calendar#event",
+                "organizer": {"email": "john.doe@example.com"},
+                "recurrence": ["RRULE:FREQ=WEEKLY;BYDAY=SA"],
+                "reminders": {"useDefault": True},
+                "sequence": 0,
+                "start": {"dateTime": "2023-02-25T15:30:00+01:00", "timeZone": "Europe/Zurich"},
+                "status": "confirmed",
+                "summary": "Weekly test",
+                "updated": "2023-02-20T11:45:08.547Z",
+            },
+            {
+                "attendees": [
+                    {
+                        "email": "myemail@exampl.com",
+                        "responseStatus": "needsAction",
+                        "self": True,
+                    },
+                    {
+                        "email": "jane.doe@example.com",
+                        "organizer": True,
+                        "responseStatus": "needsAction",
+                    },
+                    {"email": "john.doe@example.com", "responseStatus": "accepted"},
+                ],
+                "created": "2023-02-20T11:45:44.000Z",
+                "creator": {"email": "john.doe@example.com"},
+                "end": {"dateTime": "2023-02-26T15:20:00+01:00", "timeZone": "Europe/Zurich"},
+                "etag": '"5534851880843722"',
+                "eventType": "default",
+                "iCalUID": "hhb5t0cffjkndvlg7i22f7byn1@google.com",
+                "id": "hhb5t0cffjkndvlg7i22f7byn1",
+                "kind": "calendar#event",
+                "organizer": {"email": "jane.doe@example.com"},
+                "recurrence": ["RRULE:FREQ=WEEKLY;BYDAY=SU"],
+                "reminders": {"useDefault": True},
+                "sequence": 0,
+                "start": {"dateTime": "2023-02-26T14:30:00+01:00", "timeZone": "Europe/Zurich"},
+                "status": "confirmed",
+                "summary": "Weekly test 2",
+                "updated": "2023-02-20T11:48:00.634Z",
+            },
+        ]
+        google_events = GoogleEvent(values)
+        self.env['calendar.recurrence']._sync_google2odoo(google_events)
+        no_duplicate_gevent = google_events.filter(lambda e: e.id == "9lxiofipomymx2yr1yt0hpep99")
+        dt_start = datetime.fromisoformat(no_duplicate_gevent.start["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=0)
+        dt_end = datetime.fromisoformat(no_duplicate_gevent.end["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=23)
+        no_duplicate_event = self.env["calendar.event"].search(
+            [
+                ("name", "=", no_duplicate_gevent.summary),
+                ("start", ">=", dt_start),
+                ("stop", "<=", dt_end,)
+            ]
+        )
+        self.assertEqual(len(no_duplicate_event), 1)
+
+    @patch_api
     def test_simple_event_into_recurrency(self):
         """ Synched single events should be converted in recurrency without problems"""
         google_id = 'aaaaaaaaaaaa'
@@ -1262,4 +1342,30 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(len(events), 2)
         self.assertFalse(events.mapped('attendee_ids'))
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_owner_only_new_google_event(self):
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(1, len(event.attendee_ids))
+        self.assertEqual(event.partner_ids[0], event.attendee_ids[0].partner_id)
+        self.assertEqual('accepted', event.attendee_ids[0].state)
         self.assertGoogleAPINotCalled()

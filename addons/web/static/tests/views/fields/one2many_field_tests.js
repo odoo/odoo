@@ -8848,6 +8848,58 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        'add a line with a context depending on the parent record, created a second record with "Save & New"',
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="p" context="{'default_display_name': display_name}" >
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            });
+
+            assert.containsNone(target, ".o_data_row");
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                []
+            );
+            await editInput(target, "[name='display_name'] input", "Jack");
+
+            await addRow(target);
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "Jack"
+            );
+
+            await click(target, ".modal .o_form_button_save_new");
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "Jack"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                ["Jack"]
+            );
+
+            await clickSave(target.querySelector(".modal"));
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                ["Jack", "Jack"]
+            );
+        }
+    );
+
     QUnit.test("o2m add a line custom control create editable", async function (assert) {
         await makeView({
             type: "form",
@@ -11513,8 +11565,10 @@ QUnit.module("Fields", (hooks) => {
 
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(target.querySelector("[name=qux] input"), document.activeElement);
-
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_field_x2many_list_row_add a"),
@@ -11559,7 +11613,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(document.activeElement, target.querySelector("[name=qux] input"));
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
 
             assert.strictEqual(
@@ -11621,7 +11678,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(document.activeElement, target.querySelector("[name=qux] input"));
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
 
             assert.strictEqual(
@@ -11701,7 +11761,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(target.querySelector("[name=qux] input"), document.activeElement);
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_field_x2many_list_row_add a"),
@@ -12189,7 +12252,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views partner", "read partner", "read turtle"]);
 
         await click(target, ".o_boolean_toggle");
-        assert.verifySteps(["onchange turtle", "onchange partner"]);
+        assert.verifySteps(["onchange turtle", "onchange partner", "write turtle", "read turtle"]);
     });
 
     QUnit.test("create a new record with an x2m invisible", async function (assert) {

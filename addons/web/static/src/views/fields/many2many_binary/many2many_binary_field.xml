@@ -30,13 +30,13 @@
         <div class="o_attachment_wrap">
             <t t-set="ext" t-value="getExtension(file)"/>
             <div class="o_image_box float-start" t-att-data-tooltip="'Download ' + file.name">
-                <a t-att-href="getUrl(file.id)" aria-label="Download">
+                <a t-att-href="getUrl(file.id)" aria-label="Download" download="">
                     <span class="o_image o_hover" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext" role="img"/>
                 </a>
             </div>
 
             <div class="caption">
-                <a class="ml4" t-att-data-tooltip="'Download ' + file.name" t-att-href="getUrl(file.id)"><t t-esc='file.name'/></a>
+                <a class="ml4" t-att-data-tooltip="'Download ' + file.name" t-att-href="getUrl(file.id)" download=""><t t-esc='file.name'/></a>
             </div>
             <div class="caption small">
                 <a class="ml4 small text-uppercase" t-att-href="getUrl(file.id)"><b><t t-esc='ext'/></b></a>

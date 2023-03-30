@@ -2501,12 +2501,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.strictEqual(target.querySelector(".o_view_nocontent").innerText, "Hello");
-        assert.containsNone(target, "table");
+        assert.containsOnce(target, "table");
 
         await doAction(webClient, 4);
         assert.containsOnce(target, ".o_list_view");
         assert.containsNone(target, ".o_view_nocontent");
-        assert.containsOnce(target, "table");
     });
 
     QUnit.test("process context.form_view_initial_mode", async function (assert) {

@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -61,6 +61,15 @@ msgstr ""
 "ПДВ не може бути підтверджено європейською службою VIES."
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
+msgid "Technical field display a message to the user if the VIES check fails."
+msgstr ""
+"Технічне поле відображає повідомлення для користувача, якщо перевірка VIES "
+"не вдається."
+
+#. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -71,16 +80,7 @@ msgstr ""
 "Примітка: очікуваний формат %(expected_format)s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] either failed the VIES VAT "
-"validation check or did not respect the expected format %(expected_format)s."
-msgstr ""
-"%(vat_label)s номер [%(wrong_vat)s] або або не пройшов перевірку VIES VAT, "
-"або не відповідав очікуваному формату %(expected_format)s."
-
-#. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -91,18 +91,14 @@ msgstr ""
 "Примітка: очікуваний формат %(expected_format)s"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s either failed "
-"the VIES VAT validation check or did not respect the expected format "
-"%(expected_format)s."
-msgstr ""
-"%(vat_label)s номер [%(wrong_vat)s] для %(record_label)s або не пройшов "
-"перевірку VIES VAT, або не відповідав очікуваному формату "
-"%(expected_format)s."
+msgid "The VAT number %s failed the VIES VAT validation check."
+msgstr "ІПН %s не пройшов перевірку VIES VAT."
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -124,12 +120,14 @@ msgid "Verify VAT numbers using the European VIES service"
 msgstr "Перевірте номери ПДВ за допомогою європейського сервісу VIES"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
 msgstr "схема оподаткування [%s]"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"

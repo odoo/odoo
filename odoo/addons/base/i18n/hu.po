@@ -16,16 +16,16 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
 # krnkris, 2022
 # Martin Trigaux, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
+# gezza <geza.nagy@oregional.hu>, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-16 09:04+0000\n"
+"POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -424,6 +424,14 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hr_reports
+msgid ""
+"\n"
+"        Accounting reports for Croatia (in EURO !)\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
 msgid ""
 "\n"
@@ -467,6 +475,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Accounting reports for Pakistan\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_pl_reports
+msgid ""
+"\n"
+"        Accounting reports for Poland\n"
 "    "
 msgstr ""
 
@@ -583,6 +599,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Avoid auto-enabling the documents feature on fsm projects.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_bo_reports
+msgid ""
+"\n"
+"        Base module for Bolivian reports\n"
 "    "
 msgstr ""
 
@@ -1379,6 +1403,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hr_euro
+msgid ""
+"\n"
+"    Croatian Chart of Accounts updated (RRIF ver.2021) (in EURO !)\n"
+"    \n"
+"    Sources:\n"
+"    https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
 msgid ""
 "\n"
@@ -1495,6 +1532,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
+#: model:ir.module.module,description:base.module_l10n_pe_edi_stock_20
 msgid ""
 "\n"
 "    The delivery guide (Guía de Remisión) is needed as a proof\n"
@@ -1972,6 +2010,9 @@ msgid ""
 "\n"
 "Accounting reports for Luxembourg\n"
 "=================================\n"
+"Luxembourgish SAF-T (also known as FAIA) is standard file format for exporting various types of accounting transactional data using the XML format.\n"
+"The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
+"Necessary master data is also included.\n"
 "    "
 msgstr ""
 
@@ -2478,6 +2519,15 @@ msgid ""
 "It adds a button on the product itself but also an action in the list view of the products.\n"
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lu_reports_annual_vat_2023
+msgid ""
+"\n"
+"Annual VAT report for Luxembourg - 2023 update\n"
+"===============================================\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -3907,6 +3957,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_reports_gstr
+msgid ""
+"\n"
+"GST return filing using IAP\n"
+"================================\n"
+"\n"
+"** GSTR-1: Send and view summary report\n"
+"** GSTR-2B: matching\n"
+"** GSTR-3B: view report\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -4183,10 +4246,26 @@ msgid ""
 "\n"
 "Step 1: First you need to create an API username and password in the E-invoice portal.\n"
 "Step 2: Switch to company related to that GST number\n"
-"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configuration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "\n"
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
+msgid ""
+"\n"
+"Indian - E-waybill\n"
+"====================================\n"
+"To submit E-waybill through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-waybill portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Indian Electronic WayBill or find \"E-waybill\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
 msgstr ""
 
@@ -4249,6 +4328,18 @@ msgid ""
 "Intrastat Reports\n"
 "==================\n"
 "    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_upi
+msgid ""
+"\n"
+"Invoice with UPI QR code\n"
+"=========================\n"
+"This module adds QR code in invoice report for UPI payment allowing to make payment via any UPI app.\n"
+"\n"
+"To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
+"  "
 msgstr ""
 
 #. module: base
@@ -5735,6 +5826,17 @@ msgid ""
 "\n"
 "Take into account the working schedule (sick leaves, part time, ...) of employees when scheduling appointments\n"
 "--------------------------------------------------------------------------------------------------------------\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_tcs_tds
+msgid ""
+"\n"
+"Tax Report TCS/TDS for India\n"
+"====================================\n"
+"\n"
+"This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -7471,6 +7573,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_purchase_price_diff
+msgid ""
+"\n"
+"WMS Accounting module\n"
+"======================\n"
+"This module adds the price difference account. Used in standard perpetual valuation.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_stock_account
 msgid ""
 "\n"
@@ -7550,6 +7662,20 @@ msgid ""
 "With this module, users will be able to link bank journals to their\n"
 "online bank accounts (for supported banking institutions), and configure\n"
 "a periodic and automatic synchronization of their bank statements.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_it_edi_withholding
+msgid ""
+"\n"
+"Withholding and Pension Fund handling for the E-invoice implementation for Italy.\n"
+"\n"
+"    The Withholding tax and the Pension Fund tax are computed like every other tax\n"
+"    with the ordering by sequence, so please be careful with the order of the taxes\n"
+"    in your tax configuration.\n"
+"\n"
+"    Please also update the Italian Accounting module (l10n_it) when you install this module.\n"
 "    "
 msgstr ""
 
@@ -8081,6 +8207,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Kontakt: használja ezt a vállalatok alkalmazottainak kapcsolattartási adatihoz (pld: ügyvezető, tulajdonos, ...).\n"
+"- Számlázási cím: preferált cím az összes számlához. Alapértelmezésben kiválasztásra került a vállalat rendeléseihez készülő számlákon.\n"
+"- Szállítási cím: preferált cím a szállításokhoz. Alapértelmezésben kiválasztásra került a vállalat rendeléseihez készülő kiszállításokon.\n"
+"- Privát: privát címeket csak megfelelő jogosultsággal rendelkező felhasználók láthatják, érzékeny személyes adatokat tartalmazhatnak (pld: alkalmazott otthoni címe, ...).\n"
+"- Egyéb: a vállalat egyéb címei (pld: telephely, ...)"
 
 #. module: base
 #. odoo-python
@@ -8252,6 +8383,11 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+msgid "<code>Command</code>: x2Many commands namespace"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
@@ -8276,7 +8412,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
-"<code>log(message, level='info')</code>:logging function to record debug "
+"<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
 
@@ -9036,6 +9172,13 @@ msgid "API Key Description"
 msgstr ""
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "API Key Ready"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
 msgstr ""
@@ -9154,11 +9297,6 @@ msgstr ""
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr ""
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Számla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -10268,6 +10406,8 @@ msgid ""
 "An option is not supported by the server:\n"
 " %s"
 msgstr ""
+"A szerver nem támogatja az egyik opciót:\n"
+"%s"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_asiapay
@@ -10320,7 +10460,7 @@ msgstr "Anguilla"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Another user already has this barcode"
-msgstr ""
+msgstr "A vonalkód egy másik felhasználóhoz tartozik"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -11123,7 +11263,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_product_expiry
 msgid "Barcode Expiry"
-msgstr ""
+msgstr "Vonalkód érvényesség"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
@@ -11467,7 +11607,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
 msgid "Blank"
-msgstr ""
+msgstr "Üres"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -11483,6 +11623,11 @@ msgstr "Bolívia"
 #: model:ir.module.module,shortdesc:base.module_l10n_bo
 msgid "Bolivia - Accounting"
 msgstr "Bolívia - Könyvelés"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bo_reports
+msgid "Bolivia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bq
@@ -11906,7 +12051,7 @@ msgstr "Egyszerre csak egy mezőt lehet átnevezni!"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Can't compare more than two views."
-msgstr ""
+msgstr "Kettőnél több nézetet nem lehet összehasonlítani."
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -12832,7 +12977,7 @@ msgstr "Csatlakozás"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_encryption
 msgid "Connection Encryption"
-msgstr ""
+msgstr "Kapcsolat titkosítás"
 
 #. module: base
 #. odoo-python
@@ -12976,7 +13121,7 @@ msgstr "A kapcsolatnak meg kell adni egy nevet"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr ""
+msgstr "Alkalmazáson belüli vásárlásokat tartalmaz"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -13552,9 +13697,19 @@ msgid "Croatia"
 msgstr "Horvátország"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hr_euro
+msgid "Croatia - Accounting (EURO)"
+msgstr "Horvátország - Könyvelés (EURO)"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (RRIF 2012)"
 msgstr "Horvátország - Könyvelés (RRIF 2012)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
+msgid "Croatia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
@@ -13774,27 +13929,27 @@ msgstr "DHL Express szállítás"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
 msgid "DIN 5008"
-msgstr ""
+msgstr "DIN 5008"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_purchase
 msgid "DIN 5008 - Purchase"
-msgstr ""
+msgstr "DIN 5008 - Beszerzés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_repair
 msgid "DIN 5008 - Repair"
-msgstr ""
+msgstr "DIN 5008 - Javítás"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_sale
 msgid "DIN 5008 - Sale"
-msgstr ""
+msgstr "DIN 5008 - Értékesítés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_stock
 msgid "DIN 5008 - Stock"
-msgstr ""
+msgstr "DIN 5008 - Készlet"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -14166,7 +14321,7 @@ msgstr "Dánia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk
 msgid "Denmark - Accounting"
-msgstr ""
+msgstr "Dánia - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_reports
@@ -14305,7 +14460,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Disable"
-msgstr ""
+msgstr "Letiltás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
@@ -14801,6 +14956,8 @@ msgstr "Időtartam"
 msgid ""
 "E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr ""
+"E - VÍZELLÁTÁS; SZENNYVÍZ GYŰJTÉSE, KEZELÉSE; HULLADÉKGAZDÁLKODÁS; "
+"SZENNYEZŐDÉSMENTESÍTÉS"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -14889,7 +15046,7 @@ msgstr "Ecuador"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuadorian Accounting"
-msgstr ""
+msgstr "Ecuador - Könyvelés"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -14904,7 +15061,7 @@ msgstr "Egyiptom"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg
 msgid "Egypt - Accounting"
-msgstr ""
+msgstr "Egyiptom - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
@@ -14975,6 +15132,11 @@ msgid "Electronic Delivery Note for Peru (OSE method) and UBL 2.1"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_pe_edi_stock_20
+msgid "Electronic Delivery Note for Peru (REST API method)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi
 msgid "Electronic Invoicing for Peru (OSE method) and UBL 2.1"
 msgstr ""
@@ -15033,12 +15195,12 @@ msgstr "E-mail aláírás"
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
 #: model:ir.model.fields,field_description:base.field_res_users__employee
 msgid "Employee"
-msgstr "Alkalmazott"
+msgstr "Munkavállaló"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
 msgid "Employee Contracts"
-msgstr "Alkalmazotti szerződések"
+msgstr "Munkavállalói szerződések"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_reports
@@ -15071,12 +15233,12 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_hr
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
-msgstr "Alkalmazottak"
+msgstr "Munkavállalók"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr
 msgid "Employees - Mexico"
-msgstr ""
+msgstr "Munkavállalók - Mexikó"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_hr_account
@@ -15308,7 +15470,7 @@ msgstr "Észtország"
 #. module: base
 #: model:res.country,name:base.sz
 msgid "Eswatini"
-msgstr ""
+msgstr "Szváziföld"
 
 #. module: base
 #: model:res.country,name:base.et
@@ -15318,7 +15480,7 @@ msgstr "Etiópia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr "Etióp könyvelés"
+msgstr "Etiópia - Könyvelés"
 
 #. module: base
 #: model:res.country.group,name:base.europe
@@ -15722,7 +15884,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
 msgid "F - CONSTRUCTION"
-msgstr ""
+msgstr "F - ÉPÍTŐIPAR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_fedex
@@ -15993,32 +16155,32 @@ msgstr "Mező neve"
 #: model:ir.module.category,name:base.module_category_services_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr "Helyszíni feladat"
+msgstr "Terepi szerviz"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_forecast
 msgid "Field Service - Project Forecast"
-msgstr ""
+msgstr "Terepi szerviz - Projekt előrejelzés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
 msgid "Field Service - Sale"
-msgstr ""
+msgstr "Terepi szerviz - Értékesítés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr ""
+msgstr "Terepi szerviz kimutatások"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
 msgid "Field Service Reports - Sale"
-msgstr ""
+msgstr "Terepi szerviz kimutatások - Értékesítés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
 msgid "Field Service Stock"
-msgstr ""
+msgstr "Terepi szerviz - Készlet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__ttype
@@ -16489,7 +16651,7 @@ msgstr "Francia Guyana"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr "Francia bérszámfelytés"
+msgstr "Francia bérszámfejtés"
 
 #. module: base
 #: model:res.country,name:base.pf
@@ -16563,12 +16725,12 @@ msgstr "Funkció"
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
 msgid ""
 "G - WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
-msgstr ""
+msgstr "G - KERESKEDELEM; GÉPJÁRMŰJAVÍTÁS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice
 msgid "G.C.C. - Arabic/English Invoice"
-msgstr ""
+msgstr "G.C.C. - Arab/Angol számla"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__gpl-2
@@ -16759,12 +16921,12 @@ msgstr "Németország"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Germany - Accounting"
-msgstr "Német könyvelés"
+msgstr "Németország - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_reports
 msgid "Germany - Accounting Reports"
-msgstr "Német könyvelési kimutatások"
+msgstr "Németország - Könyvelési kimutatások"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_pos_cert
@@ -16860,7 +17022,7 @@ msgstr ""
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Menjen a beállítások panelhez"
+msgstr "Ugrás a beállítások panelhez"
 
 #. module: base
 #. odoo-python
@@ -16868,7 +17030,7 @@ msgstr "Menjen a beállítások panelhez"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Go to users"
-msgstr ""
+msgstr "Ugrás a felhasználókhoz"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
@@ -16878,7 +17040,7 @@ msgstr "Google Naptár"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_gmail
 msgid "Google Gmail"
-msgstr ""
+msgstr "Google Gmail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
@@ -16923,7 +17085,7 @@ msgstr "Görögország"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
 msgid "Greece - Accounting"
-msgstr "Görög könyvelés"
+msgstr "Görögország - Könyvelés"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -17034,7 +17196,7 @@ msgstr "Guatemala"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr "Guatemalai könyvelés"
+msgstr "Guatemala - Könyvelés"
 
 #. module: base
 #: model:res.country,name:base.gg
@@ -17074,7 +17236,7 @@ msgstr "Guyana"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_H
 msgid "H - TRANSPORTATION AND STORAGE"
-msgstr ""
+msgstr "H - SZÁLLÍTÁS; RAKTÁROZÁS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
@@ -17208,7 +17370,7 @@ msgstr "Ügyfélszolgálat - CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sms
 msgid "Helpdesk - SMS"
-msgstr ""
+msgstr "Ügyfélszolgálat - SMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
@@ -17475,7 +17637,7 @@ msgstr "Hong Kong"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk
 msgid "Hong Kong - Accounting"
-msgstr "Hong Kong-i könyvelés"
+msgstr "Hong Kong - Könyvelés"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
@@ -17548,17 +17710,17 @@ msgstr "Magyarország"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
 msgid "Hungary - Accounting"
-msgstr ""
+msgstr "Magyarország - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu_reports
 msgid "Hungary - Accounting Reports"
-msgstr ""
+msgstr "Magyarország - Könyvelési kimutatások"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I - ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
-msgstr ""
+msgstr "I - SZÁLLÁSHELY-SZOLGÁLTATÁS; VENDÉGLÁTÁS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_crm
@@ -17692,6 +17854,11 @@ msgstr "Üzenetküldő busz"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_form
 msgid "IR Profile"
+msgstr ""
+
+#. module: base
+#: model:res.country,vat_label:base.nz
+msgid "IRD/GST"
 msgstr ""
 
 #. module: base
@@ -18194,6 +18361,16 @@ msgid "Indian - E-invoicing"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_edi_ewaybill
+msgid "Indian - E-waybill"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr
+msgid "Indian - GSTR India eFiling"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
 msgid "Indian - Point of Sale"
 msgstr ""
@@ -18212,6 +18389,16 @@ msgstr "India - Értékesítés riport (GST)"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_stock
 msgid "Indian - Stock Report(GST)"
 msgstr "India - Készlet riport (GST)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_tcs_tds
+msgid "Indian - TCS/TDS Accounting Report and Taxes"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_upi
+msgid "Indian - UPI"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -18241,7 +18428,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id
 msgid "Indonesian - Accounting"
-msgstr ""
+msgstr "Indonézia - Könyvelés"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
@@ -18717,6 +18904,7 @@ msgid "Inventory"
 msgstr "Készlet"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_purchase_price_diff
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
 msgstr "Leltár, Logisztika, Értékelés, Könyvelés"
@@ -18875,6 +19063,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi
 msgid "Italy - E-invoicing"
 msgstr "Olaszország - E-számlázás"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_edi_withholding
+msgid "Italy - E-invoicing (Withholding)"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -19077,11 +19270,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__lgpl-3
 msgid "LGPL Version 3"
 msgstr "LGPL Verzió 3"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr ""
 
 #. module: base
 #. odoo-python
@@ -19710,6 +19898,11 @@ msgid "Lithuania - Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
+msgid "Lithuania - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
 msgid "Lithuanian Standard Audit File for Tax"
 msgstr ""
@@ -19813,6 +20006,11 @@ msgstr "Luxembourgi könyvelés"
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_reports
 msgid "Luxembourg - Accounting Reports"
 msgstr "Luxembourg - Könyvelési kimutatások"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lu_reports_annual_vat_2023
+msgid "Luxembourg - Annual VAT Report 2023 update"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_hr_payroll
@@ -23260,6 +23458,7 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#: code:addons/base/models/res_users.py:0
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -23724,6 +23923,11 @@ msgid "Payment - Account"
 msgstr "Fizetés - Számla"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
+msgid "Payment - Account / Invoice Online Payment Patch"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Engine"
 msgstr ""
@@ -23831,7 +24035,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Fizetési szolgáltatók"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -23882,6 +24086,11 @@ msgstr "Peru - Könyvelés"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock
 msgid "Peruvian - Electronic Delivery Note"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock_20
+msgid "Peruvian - Electronic Delivery Note 2.0"
 msgstr ""
 
 #. module: base
@@ -24072,6 +24281,11 @@ msgstr "Lengyelország"
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
 msgstr "Lengyel - Könyvelés"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pl_reports
+msgid "Poland - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.groups,name:base.group_portal
@@ -26991,15 +27205,6 @@ msgid "Somalia"
 msgstr "Szomália"
 
 #. module: base
-#. odoo-python
-#: code:addons/fields.py:0
-#, python-format
-msgid ""
-"Someone with escalated rights previously modified this field (%s %s), you "
-"are therefore not able to modify it yourself."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
 #: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
 msgid "Sometimes called BIC or Swift."
@@ -27687,6 +27892,11 @@ msgid "Switzerland - Accounting Reports"
 msgstr "Svájci könyvelési kimutatások"
 
 #. module: base
+#: model:res.country.group,name:base.ch_and_li
+msgid "Switzerland and Liechtenstein"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__symbol
 msgid "Symbol"
 msgstr "Szimbólum"
@@ -28117,6 +28327,13 @@ msgstr "Thaiföld - könyvelés"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 
@@ -28180,8 +28397,9 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_partner__vat
 #: model:ir.model.fields,help:base.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
 
 #. module: base
@@ -28197,13 +28415,6 @@ msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
 "later."
 msgstr "A `%s` modul úgy néz ki most nem elérhető, kérem próbálja meg később."
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_module.py:0
-#, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Az `alap` modult nem lehet törölni"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -28377,6 +28588,17 @@ msgstr ""
 "                                    listája, mint <code>név, méret</code>. Hivatkozhat a \n"
 "                                    relációs mezőkből elérhető mezőkre, például \n"
 "                                    <code>partner_id.company_id.name</code>."
+
+#. module: base
+#. odoo-python
+#: code:addons/fields.py:0
+#, python-format
+msgid ""
+"The field value you're saving (%s %s) includes content that is restricted "
+"for security reasons. It is possible that someone with higher privileges "
+"previously modified it, and you are therefore not able to modify it yourself"
+" while preserving the content."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -29209,6 +29431,13 @@ msgid ""
 "This technical module allows to define lease prices on a product template "
 "and use them in sale order according to a duration, a quantity, a price "
 "list."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_module.py:0
+#, python-format
+msgid "Those modules cannot be uninstalled: %s"
 msgstr ""
 
 #. module: base
@@ -30447,7 +30676,7 @@ msgstr "Üzbegisztán"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "ÁFA"
+msgstr "Adószám"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -30722,6 +30951,7 @@ msgid "Visible"
 msgstr "Látható"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_purchase_price_diff
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
 msgstr "WMS könyvelés"
@@ -31633,6 +31863,7 @@ msgid "Zip Required"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""
@@ -32343,7 +32574,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "week"
-msgstr ""
+msgstr "hét"
 
 #. module: base
 #. odoo-python

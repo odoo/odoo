@@ -112,7 +112,7 @@
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
                                             <field name="work_location_id" context="{'default_address_id': address_id}" />
                                         </group>
-                                        <group name="managers" string="Approvers" class="hide-group-if-empty">
+                                        <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
                                             <!-- is overridden in other hr related modules -->
                                         </group>
                                         <group name="departure" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
@@ -196,7 +196,7 @@
                                     <group string='Payroll' name="payroll_group">
                                         <field name="job_id"/>
                                     </group>
-                                    <group name="application_group"/>
+                                    <group name="application_group" string="Application Settings" invisible="1"/>
                                 </group>
                             </page>
                         </notebook>

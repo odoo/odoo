@@ -81,6 +81,10 @@ export class ComposerSuggestedRecipient extends Component {
                     onRecordSaved: () => this._onDialogSaved(),
                     resModel: "res.partner",
                     title: this.composerSuggestedRecipientView.suggestedRecipientInfo.dialogText,
+                }, {
+                    onClose: () => {
+                        this._checkboxRef.el.checked = !!this.composerSuggestedRecipientView.suggestedRecipientInfo.partner;
+                    },
                 });
             }
         }

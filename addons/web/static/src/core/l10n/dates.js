@@ -174,9 +174,13 @@ export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) 
  * @returns {moment} a moment.js object in the browser's timezone
  */
 export function luxonToMoment(dt) {
-    const o = dt.toObject();
-    // Note: the month is 0-based in moment.js, but 1-based in luxon.js
-    return moment({ ...o, month: o.month - 1 });
+    if (dt.isValid) {
+        const o = dt.toObject();
+        // Note: the month is 0-based in moment.js, but 1-based in luxon.js
+        return moment({ ...o, month: o.month - 1 });
+    } else {
+        return moment.invalid();
+    }
 }
 
 /**
@@ -274,7 +278,7 @@ export function parseDate(value, options = {}) {
     if (!value) {
         return false;
     }
-    return parseDateTime(value, options).startOf("day");
+    return parseDateTime(value, { format: localization.dateFormat, ...options }).startOf("day");
 }
 
 /**

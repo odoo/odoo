@@ -268,13 +268,14 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
       nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
       nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
       nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
-      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "SERVICE LOCAL" ""'
+      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     ${Else}
       nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" '
       nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
       nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
-      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} ObjectName "SERVICE LOCAL" ""'
+      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     ${EndIf}
+    AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
     Call RestartOdooService
 SectionEnd

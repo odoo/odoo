@@ -77,7 +77,7 @@ class configmanager(object):
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
             'reportgz': False,
             'root_path': None,
-            'websocket_keep_alive_timeout': 600,
+            'websocket_keep_alive_timeout': 3600,
             'websocket_rate_limit_burst': 10,
             'websocket_rate_limit_delay': 0.2,
         }
@@ -293,7 +293,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Advanced options")
         group.add_option('--dev', dest='dev_mode', type="string",
                          help="Enable developer mode. Param: List of options separated by comma. "
-                              "Options : all, [pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml")
+                              "Options : all, reload, qweb, xml")
         group.add_option('--shell-interface', dest='shell_interface', type="string",
                          help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
                               "[ipython|ptpython|bpython|python]")
@@ -532,8 +532,8 @@ class configmanager(object):
         self.options['translate_modules'] = opt.translate_modules and [m.strip() for m in opt.translate_modules.split(',')] or ['all']
         self.options['translate_modules'].sort()
 
-        dev_split = opt.dev_mode and  [s.strip() for s in opt.dev_mode.split(',')] or []
-        self.options['dev_mode'] = 'all' in dev_split and dev_split + ['pdb', 'reload', 'qweb', 'werkzeug', 'xml'] or dev_split
+        dev_split = [s.strip() for s in opt.dev_mode.split(',')] if opt.dev_mode else []
+        self.options['dev_mode'] = dev_split + (['reload', 'qweb', 'xml'] if 'all' in dev_split else [])
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path

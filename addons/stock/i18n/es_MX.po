@@ -5,15 +5,15 @@
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,6 +268,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -773,7 +774,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. La aplicación de Inventario debe estar instalada.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. La aplicación Inventario debe estar instalada.\n"
 "Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
@@ -1880,7 +1881,10 @@ msgid "Count Picking Waiting"
 msgstr "Número de recolecciones en espera"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "Hoja de conteos"
 
@@ -2857,7 +2861,7 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Disfrute de una experiencia de ritmo rápido con la aplicación de Código de "
+"Disfrute de una experiencia de ritmo rápido con la aplicación Código de "
 "barras de Odoo. Es increíblemente rápida y funciona incluso sin una conexión"
 " a internet estable. Es compatible con todos los flujos: ajustes de "
 "inventario, recolección por lotes, movimientos por lotes o paletas, "
@@ -3273,6 +3277,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "Da la secuencia de esta línea cuando se muestran los almacenes."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Días de visibilidad global"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3845,6 +3856,16 @@ msgstr "Dominio inválido para el operador %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Dominio inválido para el operando derecho %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"La configuración de la regla no es válida, la siguiente regla causa un bucle"
+" infinito: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -6105,7 +6126,6 @@ msgstr "Categorías de productos"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Categoría de producto"
@@ -6443,6 +6463,17 @@ msgstr "Quant"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Los quants se eliminan de forma automática cuando se considera adecuado "
+"hacerlo. Si debe eliminarlos de manera manual, solicite a un gerente de "
+"existencias que lo haga."
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
@@ -7086,8 +7117,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Se utilizan las cajas reutilizables para la preparación de lotes y después se vacían para volver a utilizarse. Al escanear una caja reutilizable mediante la aplicación de código de barras, se agregan los productos a la caja.\n"
-"En cambio, las cajas desechables no se vuelven a utilizar y cuando se escanea una caja desechable a través de la aplicación de código de barras, los productos incluidos se agregan al traslado. "
+"Se utilizan las cajas reutilizables para la preparación de lotes y después se vacían para volver a utilizarse. Al escanear una caja reutilizable mediante la aplicación Código de barras, se agregan los productos a la caja.\n"
+"En cambio, las cajas desechables no se vuelven a utilizar y cuando se escanea una caja desechable a través de la aplicación Código de barras, los productos incluidos se agregan al traslado. "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -7509,8 +7540,11 @@ msgstr ""
 "Se cambiará la ubicación de origen para este movimiento a %s"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "Establecer"
 
@@ -8685,6 +8719,17 @@ msgstr ""
 "recomienda cambiar el tipo de producto, ya que puede provocar "
 "inconsistencias. Una mejor solución podría ser archivar el producto y crear "
 "uno nuevo."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La empresa de este producto no se puede cambiar mientras tenga cantidades "
+"que pertenecen a otra empresa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9870,8 +9915,8 @@ msgstr "No puede ingresar cantidades negativas."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Solo puede eliminar movimientos en estado de borrador."
+msgid "You can only delete draft or cancelled moves."
+msgstr "Solo puede eliminar movimientos en estado de borrador o cancelados."
 
 #. module: stock
 #. odoo-python
@@ -9917,6 +9962,15 @@ msgstr ""
 "No puede cancelar un movimiento de existencias que se haya configurado como "
 "‘Hecho’. Cree una devolución para revertir los movimientos que se "
 "realizaron."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No puede cambiar un movimiento de existencias cancelado, cree una nueva "
+"línea en su lugar."
 
 #. module: stock
 #. odoo-python
@@ -10147,6 +10201,15 @@ msgstr "Solo puede devolver las recolecciones hechas."
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "Solo puede devolver una recolección a la vez."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/model/stock_picking.py:0
+#, python-format
+msgid " You might want to update the locations of this transfer's operations "
+msgstr ""
+"Tal vez quiera actualizar las ubicaciones de las operaciones de este "
+"traslado"
 
 #. module: stock
 #. odoo-python

@@ -22,9 +22,20 @@ function loadAnchors(url, body) {
             resolve();
         }
     }).then(function (response) {
-        return _.map($(response).find('[id][data-anchor=true]'), function (el) {
+        const anchors = _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });
+        // Always suggest the top and the bottom of the page as internal link
+        // anchor even if the header and the footer are not in the DOM. Indeed,
+        // the "scrollTo" function handles the scroll towards those elements
+        // even when they are not in the DOM.
+        if (!anchors.includes('#top')) {
+            anchors.unshift('#top');
+        }
+        if (!anchors.includes('#bottom')) {
+            anchors.push('#bottom');
+        }
+        return anchors;
     }).catch(error => {
         console.debug(error);
         return [];

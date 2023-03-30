@@ -16,16 +16,17 @@
 # Jan Prokop, 2022
 # Martin Trigaux, 2022
 # SAKodoo <sak@odoo.com>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Damian Brencic <brencicdamian12313@gmail.com>, 2023
+# dominikkertys <dominik.kertys@26house.com>, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2022\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2023\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +101,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "%s days ago"
-msgstr ""
+msgstr "%s pred dňami"
 
 #. module: web
 #. odoo-javascript
@@ -367,7 +368,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>Platobné podmienky: 30 dní</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -474,13 +475,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "Všetky"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1283,6 +1277,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Clear"
 msgstr "Zmazať"
@@ -3848,7 +3843,7 @@ msgid ""
 "                    of\n"
 "                    <span class=\"topage\"/>"
 msgstr ""
-"Stránka:\n"
+"Strana:\n"
 "                    <span class=\"page\"/>\n"
 "                    z\n"
 "                    <span class=\"topage\"/>"
@@ -3857,7 +3852,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
-msgstr "Stránka: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr "Strana: <span class=\"page\"/> / <span class=\"topage\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -4050,6 +4045,8 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2020/07/0003</span></b>"
 msgstr ""
+"Pri platbe, prosím, vyplňte číslo dokladu do poľa Informácia pre príjemcu: <b><span>\n"
+"                           INV/2023/07/0003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4943,7 +4940,7 @@ msgstr "Zdielať so všetkými používateľmi"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
@@ -5157,11 +5154,10 @@ msgstr "Text"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Daňové identifikačné číslo. Vyplňte ho v prípade že spoločnosť je podlieha "
-"daniam. Používa sa pre niektoré z právnych vyhlásení."
 
 #. module: web
 #. odoo-python
@@ -6192,7 +6188,7 @@ msgstr "dni"
 #: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
 #, python-format
 msgid "days ago"
-msgstr ""
+msgstr "pred dňami"
 
 #. module: web
 #. odoo-javascript
@@ -6221,13 +6217,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "napr. Globálne obchodné riešenia"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "expandText"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6543,7 +6532,7 @@ msgstr ""
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "žiadny"
 
 #. module: web
 #. odoo-javascript

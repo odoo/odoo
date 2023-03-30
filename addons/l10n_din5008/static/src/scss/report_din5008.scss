@@ -6,11 +6,11 @@
     &.header {
         table {
             width: 100%;
-            img, h3, td, tr {
+            img, h3, div.h3, td, tr {
                 padding: 0;
                 margin: 0;
             }
-            h3 {
+            h3, div.h3 {
                 color: $o-default-report-primary-color;
                 position: relative;
                 top: -10mm;
@@ -66,7 +66,7 @@
         .page {
             margin-left: 5mm;
             margin-right: 10mm;
-            > h2, h1, #informations {
+            > h2, h1, #informations, .mt-4 > h2 {
                 display: none;
             }
             [name=invoice_line_table], [name=stock_move_table], .o_main_table {

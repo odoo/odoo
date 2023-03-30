@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Lukas Van Cauter <cvl@odoo.com>, 2022
-# Martin Trigaux, 2022
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -130,8 +130,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorieten\" role=\"img\" "
-"title=\"Favorieten\"/>"
+"<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-"
+"label=\"Winkelmandje\" title=\"Winkelmandje\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -204,7 +204,7 @@ msgstr "<span class=\"o_form_label\">Standaarddagboeken</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Multi Employees per Session</span>"
-msgstr "<span class=\"o_form_label\">Meerdere medewerkers per sessie</span>"
+msgstr "<span class=\"o_form_label\">Meerdere werknemers per sessie</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -941,9 +941,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"Standaard worden 100 partners geladen.\n"
-"Wanneer de sessie open is, blijven we alle resterende partners op de achtergrond laden.\n"
-"In de tussentijd kun je de knop 'Klanten laden' gebruiken om partners uit de database te laden."
+"Standaard worden 100 relaties geladen.\n"
+"Wanneer de sessie open is, blijven we alle resterende relaties op de achtergrond laden.\n"
+"In de tussentijd kun je de knop 'Klanten laden' gebruiken om relaties uit de database te laden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1052,7 +1052,7 @@ msgstr "Kas"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash In"
-msgstr "Geld in"
+msgstr "Contant geld"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1077,7 +1077,7 @@ msgstr "Geldregels"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash Out"
-msgstr "Geld uit"
+msgstr "Uitbetalen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -2104,8 +2104,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
-"Wilt je betalingsverschillen accepteren en een winst/verlies journaalpost "
-"boeken?"
+"Wilt je betalingsverschillen accepteren en een winst/verliesboeking maken?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2391,7 +2390,7 @@ msgstr "Volgers"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
@@ -2443,8 +2442,7 @@ msgid ""
 "journal entries for each customer. It could slow down the closing process."
 msgstr ""
 "Dwingt om een klant in te stellen bij gebruik van deze betaalmethode en "
-"splitst de journaalboekingen voor elke klant. Het kan het sluitingsproces "
-"vertragen."
+"splitst de boekingen voor elke klant. Het kan het sluitingsproces vertragen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -3451,6 +3449,11 @@ msgid "Newspaper Rack"
 msgstr "Nieuwsbrief rek"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Volgende activiteit deadline"
@@ -3483,7 +3486,7 @@ msgstr "Nee"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "No Point of Sale selected"
-msgstr "Geen verkooppunt geselecteerd"
+msgstr "Geen Kassa geselecteerd"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4064,7 +4067,7 @@ msgstr "Hoofdcategorie"
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
 #, python-format
 msgid "Partner"
-msgstr "Partner"
+msgstr "Relatie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__partner_load_background
@@ -4381,7 +4384,7 @@ msgid ""
 "Please create/select a Point of Sale above to show the configuration "
 "options."
 msgstr ""
-"Maak/selecteer hierboven een Verkooppunt om de configuratie-opties te tonen."
+"Maak/selecteer hierboven een kassa om de configuratie-opties te tonen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4437,7 +4440,7 @@ msgstr "Je dient de factuur via de backend af te drukken"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr "Kies een partner voor deze verkoop."
+msgstr "Kies een relatie voor deze verkoop."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5737,7 +5740,7 @@ msgstr "Instellingen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Settings on this page will apply to this point of sale."
-msgstr "Instellingen op deze pagina zijn van toepassing op dit verkooppunt."
+msgstr "Instellingen op deze pagina zijn van toepassing op dit Kassa."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6188,7 +6191,7 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Het verkooppunt ondersteunt alleen de afrondingsstrategie \"voeg een "
+"Het Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
 "afrondingsregel toe\"."
 
 #. module: point_of_sale
@@ -6307,8 +6310,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The invoice journal of the point of sale %s must belong to the same company."
-msgstr ""
-"Het factuurjournaal van het verkooppunt %s moet van hetzelfde bedrijf zijn."
+msgstr "Het factuurdagboek van het kassa %s moet van hetzelfde bedrijf zijn."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6369,8 +6371,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
-msgstr ""
-"De betaalmethoden voor het verkooppunt %s moeten van zijn bedrijf zijn."
+msgstr "De betaalmethoden voor het Kassa %s moeten van zijn bedrijf zijn."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_id
@@ -6454,8 +6455,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The sales journal of the point of sale %s must belong to its company."
-msgstr ""
-"Het verkoopjournaal van het verkooppunt %s moet bij zijn bedrijf horen."
+msgstr "Het verkoopdagboek van de kassa %s moet bij zijn bedrijf horen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7012,6 +7012,17 @@ msgstr "Type van activiteit uitzondering op record."
 
 #. module: point_of_sale
 #. odoo-python
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Deze bestelling is nog niet gesynchroniseerd met de server. Zorg ervoor dat "
+"het is gesynchroniseerd en probeer het opnieuw."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7175,9 +7186,10 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "BTW:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "Niet-gesynchroniseerde bestelling"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7193,7 +7205,7 @@ msgstr "Geldige product partij"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Validate"
-msgstr "Bevestig"
+msgstr "Goedkeuren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7416,8 +7428,8 @@ msgstr ""
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr ""
-"Je kunt een verkooppuntcategorie niet verwijderen terwijl er nog een sessie "
-"is geopend."
+"Je kunt een kassacategorie niet verwijderen terwijl er nog een sessie is "
+"geopend."
 
 #. module: point_of_sale
 #. odoo-python

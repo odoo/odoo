@@ -39,7 +39,7 @@ class HrOrgChartController(http.Controller):
             job_id=job.id,
             job_name=job.name or '',
             job_title=employee.job_title or '',
-            direct_sub_count=len(employee.child_ids),
+            direct_sub_count=len(employee.child_ids - employee),
             indirect_sub_count=employee.child_all_count,
         )
 
@@ -91,7 +91,7 @@ class HrOrgChartController(http.Controller):
             return {}
 
         if subordinates_type == 'direct':
-            res = employee.child_ids.ids
+            res = (employee.child_ids - employee).ids
         elif subordinates_type == 'indirect':
             res = (employee.subordinate_ids - employee.child_ids).ids
         else:

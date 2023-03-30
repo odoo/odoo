@@ -8,6 +8,8 @@ import {
     getNodesTextContent,
     patchWithCleanup,
     selectDropdownItem,
+    triggerEvent,
+    clickDiscard,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
@@ -85,6 +87,7 @@ QUnit.module("Fields", (hooks) => {
             target,
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
+        assert.containsOnce(target, '.o_field_many2one_avatar > div[data-tooltip="Aline"]');
 
         assert.containsOnce(target, ".o_input_dropdown");
         assert.strictEqual(target.querySelector(".o_input_dropdown input").value, "Aline");
@@ -305,5 +308,35 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_selected_row");
 
         assert.verifySteps(["openRecord"]);
+    });
+
+    QUnit.test("cancelling create dialog should clear value in the field", async function (assert) {
+        serverData.views = {
+            "user,false,form": `
+                <form>
+                    <field name="name" />
+                </form>`,
+        };
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        const input = target.querySelector(".o_field_widget[name=user_id] input");
+        input.value = "yy";
+        await triggerEvent(input, null, "input");
+        await click(target, ".o_field_widget[name=user_id] input");
+        await selectDropdownItem(target, "user_id", "Create and edit...");
+
+        await clickDiscard(target.querySelector(".modal"));
+        assert.strictEqual(target.querySelector(".o_field_widget[name=user_id] input").value, "");
+        assert.containsOnce(target, ".o_field_widget[name=user_id] span.o_m2o_avatar_empty");
     });
 });

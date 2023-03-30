@@ -53,6 +53,9 @@ class MailTestFieldType(models.Model):
             self = self.with_context(default_type='first')
         return super(MailTestFieldType, self).create(vals_list)
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
 
 class MailTestLang(models.Model):
     """ A simple chatter model with lang-based capabilities, allowing to
@@ -65,6 +68,9 @@ class MailTestLang(models.Model):
     email_from = fields.Char()
     customer_id = fields.Many2one('res.partner')
     lang = fields.Char('Lang')
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         groups = super(MailTestLang, self)._notify_get_recipients_groups(msg_vals=msg_vals)
@@ -146,6 +152,15 @@ class MailTestMultiCompany(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
+
+
+class MailTestMultiCompanyRead(models.Model):
+    """ Just mail.test.simple, but multi company and supporting posting
+    even if the user has no write access. """
+    _description = 'Simple Chatter Model '
+    _name = 'mail.test.multi.company.read'
+    _inherit = ['mail.test.multi.company']
+    _mail_post_access = 'read'
 
 
 class MailTestNotMailThread(models.Model):

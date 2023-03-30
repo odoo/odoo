@@ -3,15 +3,16 @@
 # 	* sale_project
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,6 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -33,6 +35,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order"
@@ -54,11 +57,25 @@ msgstr ""
 "   - Складські переміщення: кількість надходить від підтверджених комплектувань\n"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
 msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Delivered Quantity (Manual)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Milestones"
+msgstr "На основі віх"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -88,7 +105,7 @@ msgid "Customer"
 msgstr "Клієнт"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Delivered"
@@ -135,6 +152,7 @@ msgid "Invoice Count"
 msgstr "Підрахунок рахунку"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
@@ -143,6 +161,7 @@ msgstr ""
 "продана."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -152,6 +171,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -160,6 +180,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -168,6 +189,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -176,6 +198,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -185,6 +208,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -194,6 +218,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -203,12 +228,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -217,6 +244,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -225,6 +253,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -238,13 +267,14 @@ msgid "Invoice your time and material to customers"
 msgstr "Виставте у рахунку клієнту ваш час та матеріали"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Invoiced"
 msgstr "Виставлено рахунок"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -272,7 +302,7 @@ msgid "Journal Item"
 msgstr "Запис у журналі"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Load more"
@@ -291,6 +321,7 @@ msgstr ""
 "Створення завдання та відстеження годин: створіть завдання з перевірки замовлення на продаж та відстежуйте години роботи."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
@@ -307,6 +338,7 @@ msgid "Milestone Count"
 msgstr "Підрахунок віх"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -315,6 +347,7 @@ msgid "Milestones"
 msgstr "Віхи"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New"
@@ -357,13 +390,14 @@ msgstr ""
 "         'У проекті замовлення на продаж': Буде використовуватися налаштований проект замовлення на продаж, якщо визначено або  резервно скопійовано на створення нового проекту на основі вибраного шаблону."
 
 #. module: sale_project
-#: code:addons/sale_project/models/project.py:0
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
 msgstr "Інші доходи"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -375,6 +409,13 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Prepaid/Fixed Price"
+msgstr "Попередня оплата/Фіксована ціна"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -422,6 +463,7 @@ msgid "Project's sale order"
 msgstr "Замовлення на продаж проекту"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -456,7 +498,7 @@ msgid "Sale Order Count"
 msgstr "Підрахунок замовлення на продаж"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sales"
@@ -468,7 +510,9 @@ msgid "Sales & Invoicing"
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
 #: model:ir.model,name:sale_project.model_sale_order
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
@@ -485,6 +529,7 @@ msgid "Sales Order Id"
 msgstr "Id замовлення на продаж"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
@@ -510,9 +555,13 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Пункт замовлення на продаж, до якого буде додано час, витрачений на це завдання, щоб виставити рахунок вашому клієнту.\n"
+"За замовчуванням буде вибрано набір рядків замовлення на продаж в проекті. За відсутності такого, буде використано останній передплачений рядок замовлення, який залишився.\n"
+"Видаліть рядок замовлення на продаж, щоб зробити це завдання неоплачуваним. Ви також можете змінити або видалити рядок замовлення на продаж для кожного запису табеля обліку робочого часу окремо."
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -525,6 +574,7 @@ msgid "Sales Order Line"
 msgstr "Рядок замовлення"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
@@ -536,6 +586,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Рядок замовлення на продаж, який буде вибрано за замовчуванням у завданнях і табелях цього проекту, за винятком випадків, коли працівник, указаний у табелях, явно пов’язаний з іншим рядком замовлення на продаж в проекті.\n"
+"За потреби його можна змінити для кожного завдання та окремого запису в табелі."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -549,18 +601,21 @@ msgid "Sales order to which the task is linked."
 msgstr "Замовлення на продаж, із яким пов'язане це завдання."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
 msgstr "Пошук у рахунку"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
 msgstr "Пошук у замовленні на продаж"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
@@ -580,7 +635,7 @@ msgid "Service Invoicing Policy"
 msgstr "Політика виставлення рахунків за послуги"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sold"
@@ -593,6 +648,7 @@ msgid "Task"
 msgstr "Завдання"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
@@ -620,6 +676,7 @@ msgid "Tasks associated to this sale"
 msgstr "Завдання пов'язане із цим продажем"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -630,6 +687,7 @@ msgstr ""
 "проект."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -640,6 +698,7 @@ msgstr ""
 "генерувати проект."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -650,6 +709,7 @@ msgstr ""
 "глобальному проекті."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
@@ -672,6 +732,7 @@ msgid "Vendor Bill Count"
 msgstr "Підрахунок рахунків постачальника"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -679,6 +740,7 @@ msgid "Vendor Bills"
 msgstr "Рахунки постачальників"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid ""

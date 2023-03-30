@@ -61,6 +61,7 @@ function getElementToFocus(cell) {
 export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
+        this.notificationService = useService("notification");
         this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
@@ -108,15 +109,18 @@ export class ListRenderer extends Component {
         onPatched(() => {
             const editedRecord = this.props.list.editedRecord;
             if (editedRecord && this.activeRowId !== editedRecord.id) {
-                let column = this.state.columns[0];
-                let forward;
                 if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
-                    column = this.cellToFocus.column;
-                    forward = this.cellToFocus.forward;
+                    const column = this.cellToFocus.column;
+                    const forward = this.cellToFocus.forward;
+                    this.focusCell(column, forward);
+                } else if (this.lastEditedCell) {
+                    this.focusCell(this.lastEditedCell.column, true);
+                } else {
+                    this.focusCell(this.state.columns[0]);
                 }
-                this.focusCell(column, forward);
             }
             this.cellToFocus = null;
+            this.lastEditedCell = null;
         });
         let dataRowId;
         this.rootRef = useRef("root");
@@ -140,7 +144,7 @@ export class ListRenderer extends Component {
 
         if (this.env.searchModel) {
             useBus(this.env.searchModel, "focus-view", () => {
-                if (this.props.list.model.useSampleModel || !this.showTable) {
+                if (this.props.list.model.useSampleModel) {
                     return;
                 }
 
@@ -152,16 +156,16 @@ export class ListRenderer extends Component {
         }
 
         // not very beautiful but works: refactor at some point
-        this.lastCellFocused;
+        let lastCellBeforeDialogOpening;
         useBus(this.props.list.model, "list-confirmation-dialog-will-open", () => {
             if (this.tableRef.el.contains(document.activeElement)) {
-                this.lastCellFocused = document.activeElement.closest("td");
+                lastCellBeforeDialogOpening = document.activeElement.closest("td");
             }
         });
 
         useBus(this.props.list.model, "list-confirmation-dialog-closed", () => {
-            if (this.lastCellFocused) {
-                this.focus(this.lastCellFocused);
+            if (lastCellBeforeDialogOpening) {
+                this.focus(lastCellBeforeDialogOpening);
             }
         });
 
@@ -180,11 +184,17 @@ export class ListRenderer extends Component {
             () => {
                 this.freezeColumnWidths();
             },
-            () => [this.state.columns, this.isEmpty, this.showTable]
+            () => [this.state.columns, this.isEmpty]
         );
         useExternalListener(window, "resize", () => {
             this.columnWidths = null;
             this.freezeColumnWidths();
+        });
+    }
+
+    displaySaveNotification() {
+        this.notificationService.add(this.env._t('Please click on the "save" button first'), {
+            type: "danger",
         });
     }
 
@@ -210,9 +220,6 @@ export class ListRenderer extends Component {
     // The following code manipulates the DOM directly to avoid having to wait for a
     // render + patch which would occur on the next frame and cause flickering.
     freezeColumnWidths() {
-        if (!this.showTable) {
-            return;
-        }
         if (!this.keepColumnWidths) {
             this.columnWidths = null;
         }
@@ -333,7 +340,7 @@ export class ListRenderer extends Component {
     }
 
     get canResequenceRows() {
-        if (!this.props.list.canResequence()) {
+        if (!this.props.list.canResequence() || this.props.readonly) {
             return false;
         }
         const orderBy = this.props.list.orderBy;
@@ -394,6 +401,7 @@ export class ListRenderer extends Component {
                     const toFocus = getElementToFocus(cell);
                     if (cell !== toFocus) {
                         this.focus(toFocus);
+                        this.lastEditedCell = { column, record: editedRecord };
                         break;
                     }
                 }
@@ -872,8 +880,6 @@ export class ListRenderer extends Component {
         const list = this.props.list;
         if (this.isSortable(column)) {
             list.sortBy(fieldName);
-            // don't resize column when reordering.
-            this.keepColumnWidths = true;
         }
     }
 
@@ -1512,11 +1518,6 @@ export class ListRenderer extends Component {
         return !group.isFolded && group.list.limit < group.list.count;
     }
 
-    get showTable() {
-        const { model } = this.props.list;
-        return model.hasData() || !this.props.noContentHelp;
-    }
-
     toggleGroup(group) {
         group.toggle();
     }
@@ -1676,6 +1677,8 @@ export class ListRenderer extends Component {
         // Mouse or keyboard events : stop resize
         const stopResize = (ev) => {
             this.resizing = false;
+            // freeze column size after resizing
+            this.keepColumnWidths = true;
             // Ignores the 'left mouse button down' event as it used to start resizing
             if (ev.type === "mousedown" && ev.which === 1) {
                 return;
@@ -1835,6 +1838,7 @@ ListRenderer.props = [
     "editable?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
+    "readonly?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
 
