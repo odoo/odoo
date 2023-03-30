@@ -291,3 +291,45 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
     }
 );
+
+QUnit.test("read more/less links on message of type notification", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        // "data-o-mail-quote" enables read more/less blocks
+        body: `
+            <div>
+                Dear Joel Willis,<br>
+                Thank you for your enquiry.<br>
+                If you have any questions, please let us know.
+                <br><br>
+                Thank you,<br>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>`,
+        model: "res.partner",
+        res_id: partnerId,
+        message_type: "notification",
+    });
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    const openViewAction = {
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    };
+    await openView(openViewAction);
+    assert.containsOnce($, ".o-mail-Message a:contains(Read More)");
+});
