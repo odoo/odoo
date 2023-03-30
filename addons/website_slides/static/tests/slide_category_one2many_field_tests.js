@@ -17,7 +17,7 @@ QUnit.module("SlideCategoryOneToManyField", {
                     fields: {
                         is_category: { type: "boolean" },
                         name: { type: "char", string: "Name" },
-                        int: { type: "number", string: "Integer" },
+                        int: { type: "integer", string: "Integer" },
                     },
                     records: [
                         {
