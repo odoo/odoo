@@ -43,6 +43,7 @@ export function makeFakeLocalizationService(config = {}) {
         name: "localization",
         start: async (env) => {
             env._t = _t;
+            return localization;
         },
     };
 }

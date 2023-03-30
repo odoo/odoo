@@ -1,111 +1,69 @@
 /** @odoo-module */
 
-import { loadCSS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { batched } from "@point_of_sale/js/utils";
-import { debounce } from "@web/core/utils/timing";
+import { throttleForAnimation } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { WithEnv, ErrorHandler } from "@web/core/utils/components";
+import { ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
-
-// ChromeAdapter imports
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { registry } from "@web/core/registry";
-import env from "web.env";
-
-import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
-
-import {
-    onMounted,
-    onWillDestroy,
-    useExternalListener,
-    useSubEnv,
-    reactive,
-    onWillUnmount,
-    Component,
-} from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { useExternalListener, useSubEnv, reactive, onWillUnmount, Component } from "@odoo/owl";
 
 /**
  * Chrome is the root component of the PoS App.
  */
 export class Chrome extends Component {
     static template = "Chrome"; // FIXME POSREF namespace templates
-    static components = { Transition, MainComponentsContainer, WithEnv, ErrorHandler, Navbar };
+    static components = { Transition, MainComponentsContainer, ErrorHandler, Navbar };
     setup() {
         this.pos = usePos();
         this.popup = useService("popup");
-        // BEGIN ChromeAdapter
-        ProductScreen.sortControlButtons();
-        const legacyActionManager = useService("legacy_action_manager");
 
-        this.batchedCustomerDisplayRender = batched(() => {
-            reactivePos.send_current_order_to_customer_facing_display();
-        });
-        const reactivePos = reactive(this.pos.globalState, this.batchedCustomerDisplayRender);
-        env.pos = reactivePos;
-        env.legacyActionManager = legacyActionManager;
-
-        // The proxy requires the instance of PosGlobalState to function properly.
-        this.hardwareProxy = useService("hardware_proxy");
-        this.hardwareProxy.pos = reactivePos;
-
+        const reactivePos = reactive(this.pos.globalState);
         // TODO: Should we continue on exposing posmodel as global variable?
-        // Expose only the reactive version of `pos` when in debug mode.
-        window.posmodel = this.pos.globalState.debug ? reactivePos : this.pos.globalState;
-
-        this.wowlEnv = this.env;
-        // FIXME POSREF: make wowl services available in legacy env
-        Object.setPrototypeOf(env.services, this.wowlEnv.services);
-        this.env = env;
-        this.__owl__.childEnv = env;
+        window.posmodel = reactivePos;
+        // FIXME POSREF: remove
         useSubEnv({
             get isMobile() {
                 return window.innerWidth <= 768;
             },
-        });
-        let currentIsMobile = this.env.isMobile;
-        const updateUI = debounce(() => {
-            if (this.env.isMobile !== currentIsMobile) {
-                currentIsMobile = this.env.isMobile;
-                this.render(true);
-            }
-        }, 15); // FIXME POSREF use throttleForAnimation?
-        useExternalListener(window, "resize", updateUI);
-        onWillUnmount(updateUI.cancel);
-        // END ChromeAdapter
-
-        super.setup();
-        useExternalListener(window, "beforeunload", this._onBeforeUnload);
-        useService("number_buffer").activate();
-
-        useSubEnv({
             pos: reactive(
-                this.env.pos,
+                reactivePos,
                 batched(() => this.render(true)) // FIXME POSREF remove render(true)
             ),
         });
-
-        onMounted(() => {
-            // remove default webclient handlers that induce click delay
-            // FIXME POSREF if these handlers shouldn't be there we should not load the files that add them.
-            $(document).off();
-            $(window).off();
-            $("html").off();
-            $("body").off();
+        let currentIsMobile = this.env.isMobile;
+        const updateUI = throttleForAnimation(() => {
+            if (this.env.isMobile !== currentIsMobile) {
+                currentIsMobile = this.env.isMobile;
+                // FIXME POSREF
+                this.render(true);
+            }
         });
+        useExternalListener(window, "resize", updateUI);
+        onWillUnmount(updateUI.cancel);
 
-        onWillDestroy(() => {
-            try {
-                // FIXME POSREF is this needed?
-                this.env.pos.destroy();
-            } catch {
-                // throwing here causes loop
+        // prevent backspace from performing a 'back' navigation
+        document.addEventListener("keydown", (ev) => {
+            if (ev.key === "Backspace" && !ev.target.matches("input, textarea")) {
+                ev.preventDefault();
             }
         });
 
+        // This is not done in onWillStart because we want to show the loader immediately
         this.start();
+    }
+    async start() {
+        await this.pos.globalState.load_server_data();
+        if (this.pos.globalState.config.use_proxy) {
+            await this.pos.connectToProxy();
+        }
+        this._closeOtherTabs();
+        this.pos.uiState = "READY";
+        const { name, props } = this.startScreen;
+        this.pos.showScreen(name, props);
+        this.runBackgroundTasks();
     }
 
     // GETTERS //
@@ -113,130 +71,42 @@ export class Chrome extends Component {
     /**
      * Startup screen can be based on pos config so the startup screen
      * is only determined after pos data is completely loaded.
-     *
-     * NOTE: Wait for pos data to be completed before calling this getter.
      */
     get startScreen() {
-        if (this.pos.uiState !== "READY") {
-            console.warn(
-                `Accessing startScreen of Chrome component before 'pos.uiState' to be 'READY' is not recommended.`
-            );
-        }
         return { name: "ProductScreen" };
     }
 
     // CONTROL METHODS //
 
-    /**
-     * Call this function after the Chrome component is mounted.
-     * This will load pos and assign it to the environment.
-     */
-    async start() {
-        // Little trick to avoid displaying the block ui during the POS models loading
-        // FIXME POSREF: use a silent RPC instead
-        const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
-        registry.category("main_components").remove("BlockUI");
-
-        try {
-            await this.env.pos.load_server_data();
-            if (this.env.pos.config.use_proxy) {
-                await this.pos.connectToProxy();
-            }
-            // Load the saved `env.pos.toRefundLines` from localStorage when
-            // the PosGlobalState is ready.
-            Object.assign(
-                this.env.pos.toRefundLines,
-                this.env.pos.db.load("TO_REFUND_LINES") || {}
-            );
-            this._buildChrome();
-            this._closeOtherTabs();
-            this.env.pos.selectedCategoryId =
-                this.env.pos.config.start_category && this.env.pos.config.iface_start_categ_id
-                    ? this.env.pos.config.iface_start_categ_id[0]
-                    : 0;
-            this.pos.uiState = "READY";
-            const { name, props } = this.startScreen;
-            this.pos.showScreen(name, props);
-            setTimeout(() => this._runBackgroundTasks());
-        } catch (error) {
-            let title = "Unknown Error";
-            let body;
-
-            if (error.message && [100, 200, 404, -32098].includes(error.message.code)) {
-                // this is the signature of rpc error
-                if (error.message.code === -32098) {
-                    title = "Network Failure (XmlHttpRequestError)";
-                    body =
-                        "The Point of Sale could not be loaded due to a network problem.\n" +
-                        "Please check your internet connection.";
-                } else if (error.message.code === 200) {
-                    title = error.message.data.message || this.env._t("Server Error");
-                    body =
-                        error.message.data.debug ||
-                        this.env._t("The server encountered an error while receiving your order.");
-                }
-            } else if (error instanceof Error) {
-                title = error.message;
-                if (error.cause) {
-                    body = error.cause.message;
-                } else {
-                    body = error.stack;
-                }
-            }
-
-            return this.popup.add(ErrorTracebackPopup, { title, body, exitButtonIsShown: true });
-        }
-        registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
-
-        // Subscribe to the changes in the models.
-        this.batchedCustomerDisplayRender();
-    }
-
-    _runBackgroundTasks() {
+    runBackgroundTasks() {
         // push order in the background, no need to await
-        this.env.pos.push_orders();
+        this.pos.globalState.push_orders();
         // Allow using the app even if not all the images are loaded.
         // Basically, preload the images in the background.
         this._preloadImages();
-        if (
-            this.env.pos.config.limited_partners_loading &&
-            this.env.pos.config.partner_load_background
-        ) {
+        const {
+            limited_partners_loading,
+            partner_load_background,
+            limited_products_loading,
+            product_load_background,
+        } = this.pos.globalState.config;
+        if (limited_partners_loading && partner_load_background) {
             // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
-            reactive(this.env.pos).loadPartnersBackground();
+            reactive(this.pos.globalState).loadPartnersBackground();
         }
-        if (
-            this.env.pos.config.limited_products_loading &&
-            this.env.pos.config.product_load_background
-        ) {
+        if (limited_products_loading && product_load_background) {
             // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
-            reactive(this.env.pos)
-                .loadProductsBackground()
-                .then(() => {
-                    this.render(true);
-                });
+            reactive(this.pos.globalState).loadProductsBackground();
         }
-    }
-
-    /**
-     * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
-     * browser, reloading or going to other page.
-     */
-    _onBeforeUnload() {
-        this.env.pos.db.save("TO_REFUND_LINES", this.env.pos.toRefundLines);
-    }
-    _onSetSyncStatus({ detail: { status, pending } }) {
-        this.env.pos.synch.status = status;
-        this.env.pos.synch.pending = pending;
     }
 
     // MISC METHODS //
     _preloadImages() {
-        for (const product of this.env.pos.db.get_product_by_category(0)) {
+        for (const product of this.pos.globalState.db.get_product_by_category(0)) {
             const image = new Image();
             image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
         }
-        for (const category of Object.values(this.env.pos.db.category_by_id)) {
+        for (const category of Object.values(this.pos.globalState.db.category_by_id)) {
             if (category.id == 0) {
                 continue;
             }
@@ -249,34 +119,15 @@ export class Chrome extends Component {
             image.src = `/point_of_sale/static/src/img/${imageName}`;
         }
     }
-
-    _buildChrome() {
-        if ($.browser.chrome) {
-            var chrome_version = $.browser.version.split(".")[0];
-            if (parseInt(chrome_version, 10) >= 50) {
-                loadCSS("/point_of_sale/static/src/css/chrome50.css");
-            }
-        }
-
-        if (this.env.pos.config.iface_big_scrollbars) {
-            this.pos.hasBigScrollBars = true;
-        }
-
-        this._disableBackspaceBack();
-    }
-    // prevent backspace from performing a 'back' navigation
-    _disableBackspaceBack() {
-        $(document).on("keydown", function (e) {
-            if (e.which === 8 && !$(e.target).is("input, textarea")) {
-                e.preventDefault();
-            }
-        });
-    }
+    /**
+     * Close other tabs that contain the same pos session.
+     */
     _closeOtherTabs() {
+        // FIXME POSREF use the bus?
         localStorage["message"] = "";
         localStorage["message"] = JSON.stringify({
             message: "close_tabs",
-            session: this.env.pos.pos_session.id,
+            session: this.pos.globalState.pos_session.id,
         });
 
         window.addEventListener(
@@ -286,7 +137,7 @@ export class Chrome extends Component {
                     const msg = JSON.parse(event.newValue);
                     if (
                         msg.message === "close_tabs" &&
-                        msg.session == this.env.pos.pos_session.id
+                        msg.session == this.pos.globalState.pos_session.id
                     ) {
                         console.info("POS / Session opened in another window. EXITING POS");
                         this.pos.closePos();
@@ -297,7 +148,7 @@ export class Chrome extends Component {
         );
     }
     get showCashMoveButton() {
-        return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
+        return Boolean(this.pos.globalState?.config?.config?.cash_control);
     }
     /**
      * Unmounts the tempScreen on error and dispatches the error in a separate

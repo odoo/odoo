@@ -5,7 +5,6 @@ var _t = core._t;
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useService } from "@web/core/utils/hooks";
 import { useState } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
 
 export class NumberPopup extends AbstractAwaitablePopup {
     static template = "NumberPopup";
@@ -31,6 +30,7 @@ export class NumberPopup extends AbstractAwaitablePopup {
      */
     setup() {
         super.setup();
+        this.localization = useService("localization");
         let startingBuffer = "";
         if (typeof this.props.startingValue === "number" && this.props.startingValue > 0) {
             startingBuffer = this.props.startingValue
@@ -46,7 +46,7 @@ export class NumberPopup extends AbstractAwaitablePopup {
         });
     }
     get decimalSeparator() {
-        return localization.decimalPoint;
+        return this.localization.decimalPoint;
     }
     get inputBuffer() {
         if (this.state.buffer === null) {

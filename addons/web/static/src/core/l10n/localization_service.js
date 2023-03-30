@@ -87,6 +87,7 @@ export const localizationService = {
             thousandsSep: userLocalization.thousands_sep,
             weekStart: userLocalization.week_start,
         });
+        return localization;
     },
 };
 

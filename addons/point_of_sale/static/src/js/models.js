@@ -193,7 +193,7 @@ export class PosGlobalState extends PosModel {
         };
     }
     async load_product_uom_unit() {
-        const uom_id = await this.env.services.orm.call("ir.model.data", "check_object_reference", [
+        const uom_id = await this.orm.call("ir.model.data", "check_object_reference", [
             "uom",
             "product_uom_unit",
         ]);
@@ -204,11 +204,18 @@ export class PosGlobalState extends PosModel {
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
+        Object.assign(this.toRefundLines, this.db.load("TO_REFUND_LINES") || {});
+        window.addEventListener("beforeunload", () =>
+            this.db.save("TO_REFUND_LINES", this.toRefundLines)
+        );
+        const { start_category, iface_start_categ_id } = this.config;
+        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+        this.hasBigScrollBars = this.config.iface_big_scrollbars;
         this.markReady();
     }
 
     async load_server_data() {
-        const loadedData = await this.env.services.orm.call("pos.session", "load_pos_data", [
+        const loadedData = await this.orm.silent.call("pos.session", "load_pos_data", [
             [odoo.pos_session_id],
         ]);
         await this._processData(loadedData);
@@ -370,32 +377,28 @@ export class PosGlobalState extends PosModel {
     // updated partners, and fails if not
     async load_new_partners() {
         const search_params = { domain: this.prepare_new_partners_domain() };
-        if (this.env.pos.config.limited_partners_loading) {
+        if (this.config.limited_partners_loading) {
             search_params["order"] = "write_date desc";
-            if (this.env.pos.config.partner_load_background) {
-                search_params["limit"] = this.env.pos.config.limited_partners_amount || 1;
+            if (this.config.partner_load_background) {
+                search_params["limit"] = this.config.limited_partners_amount || 1;
             } else {
                 search_params["limit"] = 1;
             }
         }
         // FIXME POSREF TIMEOUT 3000
-        const partners = await this.env.services.orm.silent.call(
+        const partners = await this.orm.silent.call(
             "pos.session",
             "get_pos_ui_res_partner_by_params",
             [[odoo.pos_session_id], search_params]
         );
-        if (this.env.pos.config.partner_load_background) {
+        if (this.config.partner_load_background) {
             this.loadPartnersBackground(
                 search_params["domain"],
-                this.env.pos.config.limited_partners_amount || 1,
+                this.config.limited_partners_amount || 1,
                 "write_date desc"
             );
         }
-        if (this.addPartners(partners)) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.addPartners(partners);
     }
 
     setSelectedCategoryId(categoryId) {
@@ -557,7 +560,7 @@ export class PosGlobalState extends PosModel {
                 }
             }
         }
-        const products = await this.env.services.orm.call(
+        const products = await this.orm.call(
             "pos.session",
             "get_pos_ui_product_product_by_params",
             [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
@@ -568,7 +571,7 @@ export class PosGlobalState extends PosModel {
     async _loadPartners(partnerIds) {
         if (partnerIds.length > 0) {
             // FIXME POSREF TIMEOUT
-            const fetchedPartners = await this.env.services.orm.silent.call(
+            const fetchedPartners = await this.orm.silent.call(
                 "pos.session",
                 "get_pos_ui_res_partner_by_params",
                 [[odoo.pos_session_id], { domain: [["id", "in", partnerIds]] }]
@@ -593,7 +596,7 @@ export class PosGlobalState extends PosModel {
         let page = 0;
         let products = [];
         do {
-            products = await this.env.services.orm.silent.call(
+            products = await this.orm.silent.call(
                 "pos.session",
                 "get_pos_ui_product_product_by_params",
                 [
@@ -614,7 +617,7 @@ export class PosGlobalState extends PosModel {
         let i = 0;
         let partners = [];
         do {
-            partners = await this.env.services.orm.silent.call(
+            partners = await this.orm.silent.call(
                 "pos.session",
                 "get_pos_ui_res_partner_by_params",
                 [
@@ -642,7 +645,7 @@ export class PosGlobalState extends PosModel {
 
         this.set_synch("connecting", removedOrdersIds.length);
         try {
-            const removeOrdersResponseData = await this.env.services.orm.silent.call(
+            const removeOrdersResponseData = await this.orm.silent.call(
                 "pos.order",
                 "remove_from_ui",
                 [removedOrdersIds]
@@ -736,7 +739,7 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getOrdersJson() {
-        return await this.env.services.orm.call("pos.order", "get_draft_share_order_ids", [], {
+        return await this.orm.call("pos.order", "get_draft_share_order_ids", [], {
             config_id: this.config.id,
         });
     }
@@ -762,11 +765,10 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getPricelistJson(pricelistsToGet) {
-        return await this.env.services.orm.call(
-            "pos.session",
-            "get_pos_ui_product_pricelists_by_ids",
-            [[odoo.pos_session_id], pricelistsToGet]
-        );
+        return await this.orm.call("pos.session", "get_pos_ui_product_pricelists_by_ids", [
+            [odoo.pos_session_id],
+            pricelistsToGet,
+        ]);
     }
     _addPosPricelists(pricelistsJson) {
         if (!this.config.use_pricelist) {
@@ -805,11 +807,10 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getFiscalPositionJson(fiscalPositionToGet) {
-        return await this.env.services.orm.call(
-            "pos.session",
-            "get_pos_ui_account_fiscal_positions_by_ids",
-            [[odoo.pos_session_id], fiscalPositionToGet]
-        );
+        return await this.orm.call("pos.session", "get_pos_ui_account_fiscal_positions_by_ids", [
+            [odoo.pos_session_id],
+            fiscalPositionToGet,
+        ]);
     }
     _addPosFiscalPosition(fiscalPositionJson) {
         this.fiscal_positions.push(...fiscalPositionJson);
@@ -830,11 +831,12 @@ export class PosGlobalState extends PosModel {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
-        const productInfo = await this.env.services.orm.call(
-            "product.product",
-            "get_product_info_pos",
-            [[product.id], product.get_price(order.pricelist, quantity), quantity, this.config.id]
-        );
+        const productInfo = await this.orm.call("product.product", "get_product_info_pos", [
+            [product.id],
+            product.get_price(order.pricelist, quantity),
+            quantity,
+            this.config.id,
+        ]);
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
         const margin = priceWithoutTax - product.standard_price;
@@ -865,11 +867,9 @@ export class PosGlobalState extends PosModel {
         };
     }
     async getClosePosInfo() {
-        const closingData = await this.env.services.orm.call(
-            "pos.session",
-            "get_closing_control_data",
-            [[this.pos_session.id]]
-        );
+        const closingData = await this.orm.call("pos.session", "get_closing_control_data", [
+            [this.pos_session.id],
+        ]);
         const ordersDetails = closingData.orders_details;
         const paymentsAmount = closingData.payments_amount;
         const payLaterAmount = closingData.pay_later_amount;
@@ -1057,7 +1057,7 @@ export class PosGlobalState extends PosModel {
         }
         // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
-        const orm = options.to_invoice ? this.env.services.orm : this.env.services.orm.silent;
+        const orm = options.to_invoice ? this.orm : this.orm.silent;
         // FIXME POSREF timeout
         // const timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
         return orm
@@ -1555,17 +1555,16 @@ export class PosGlobalState extends PosModel {
      */
     async _addProducts(ids, setAvailable = true) {
         if (setAvailable) {
-            await this.env.services.orm.write("product.product", ids, { available_in_pos: true });
+            await this.orm.write("product.product", ids, { available_in_pos: true });
         }
-        const product = await this.env.services.orm.call(
-            "pos.session",
-            "get_pos_ui_product_product_by_params",
-            [odoo.pos_session_id, { domain: [["id", "in", ids]] }]
-        );
+        const product = await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+            odoo.pos_session_id,
+            { domain: [["id", "in", ids]] },
+        ]);
         this._loadProductProduct(product);
     }
     async refreshTotalDueOfPartner(partner) {
-        const partnerWithUpdatedTotalDue = await this.env.services.orm.searchRead(
+        const partnerWithUpdatedTotalDue = await this.orm.searchRead(
             "res.partner",
             [["id", "=", partner.id]],
             ["total_due"]
