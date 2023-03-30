@@ -32,9 +32,9 @@
                             Log note
                         </button>
                     </div>
-                    <div class="o_ChatterTopbar_tools position-relative d-flex flex-grow-1 border-bottom"
+                    <div class="o_ChatterTopbar_tools position-relative d-flex flex-grow-1"
                         t-att-class="{
-                            'border-start ps-2': chatterTopbar.chatter.hasActivities,
+                            'o_ChatterTopbar_borderLeft ps-2': chatterTopbar.chatter.hasActivities,
                         }"
                     >
                         <t t-if="chatterTopbar.chatter.hasActivities">
@@ -43,7 +43,7 @@
                                 <span>Activities</span>
                             </button>
                         </t>
-                        <div class="flex-grow-1 border-start pe-2"
+                        <div class="o_ChatterTopbar_borderLeft flex-grow-1 pe-2"
                             t-att-class="{
                                 'ms-2': chatterTopbar.chatter.hasActivities,
                             }"
