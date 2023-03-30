@@ -25,6 +25,20 @@ class LivechatController(http.Controller):
 
         stream = request.env['ir.binary']._get_stream_from(mock_attachment)
         return stream.get_response()
+    
+    @http.route('/im_livechat/assets_embed.<any(css,js):ext>', type='http', auth='public')
+    def embed_assets(self, ext, **kwargs):
+        # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
+        bundle = 'im_livechat.assets_embed'
+        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
+        asset = AssetsBundle(bundle, files)
+
+        mock_attachment = getattr(asset, ext)()
+        if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
+            mock_attachment = mock_attachment[0]
+
+        stream = request.env['ir.binary']._get_stream_from(mock_attachment)
+        return stream.get_response()
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):

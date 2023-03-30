@@ -225,7 +225,33 @@ Help your customers with this chat, and analyse their feedback.
 
             'im_livechat/static/src/public/*.js',
             'im_livechat/static/src/services/*.js',
-        ]
+        ],
+        # New bundles
+        'im_livechat.assets_embed': [
+            'im_livechat/static/src/new/shadow.scss',
+
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            ('include', 'web.assets_common'),
+            ('include', 'web._assets_bootstrap'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/webclient/webclient.scss',
+            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
+            'web/static/src/core/**/*',
+            'web/static/src/env.js',
+            ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
+            'web/static/src/views/fields/formatters.js',
+            'web/static/src/views/fields/file_handler.*',
+            'web/static/src/views/fields/many2many_tags/tags_list.*',
+
+            'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/env.js',
+            'web/static/src/legacy/js/owl_compatibility.js',
+            'web/static/src/legacy/js/services/data_manager.js',
+            'web/static/src/legacy/js/services/session.js',
+            'web/static/src/legacy/legacy_load_views.js',
+            'web/static/src/legacy/utils.js',
+        ],
     },
     'license': 'LGPL-3',
 }
