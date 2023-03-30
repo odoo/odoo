@@ -154,10 +154,10 @@ const FAVORITE_PRIVATE_GROUP = 1;
 const FAVORITE_SHARED_GROUP = 2;
 
 export class SearchModel extends EventBus {
-    constructor(env, services) {
+    constructor(env, services, args) {
         super();
         this.env = env;
-        this.setup(services);
+        this.setup(services, args);
     }
     /**
      * @override
@@ -593,8 +593,7 @@ export class SearchModel extends EventBus {
      */
     async createNewFavorite(params) {
         const { preFavorite, irFilter } = this._getIrFilterDescription(params);
-        const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
-        this.env.bus.trigger("CLEAR-CACHES");
+        const serverSideId = await this._createIrFilters(irFilter);
 
         // before the filter cache was cleared!
         this.blockNotification = true;
@@ -614,6 +613,12 @@ export class SearchModel extends EventBus {
         this.nextId++;
         this.blockNotification = false;
         this._notify();
+    }
+
+    async _createIrFilters(irFilter) {
+        const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
+        this.env.bus.trigger("CLEAR-CACHES");
+        return serverSideId;
     }
 
     /**
@@ -702,15 +707,19 @@ export class SearchModel extends EventBus {
         if (searchItem.type !== "favorite") {
             return;
         }
-        const { serverSideId } = searchItem;
-        await this.orm.unlink("ir.filters", [serverSideId]);
-        this.env.bus.trigger("CLEAR-CACHES");
+        await this._deleteIrFilters(searchItem);
         const index = this.query.findIndex((queryElem) => queryElem.searchItemId === favoriteId);
         delete this.searchItems[favoriteId];
         if (index >= 0) {
             this.query.splice(index, 1);
         }
         this._notify();
+    }
+
+    async _deleteIrFilters(searchItem) {
+        const { serverSideId } = searchItem;
+        await this.orm.unlink("ir.filters", [serverSideId]);
+        this.env.bus.trigger("CLEAR-CACHES");
     }
 
     /**
