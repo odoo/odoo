@@ -1692,7 +1692,7 @@ export class Product extends PosModel {
         let price_extra = 0.0;
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
-        if (_.some(this.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id)) {
+        if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
             const attributes = this.attribute_line_ids
                 .map((id) => this.pos.attributes_by_ptal_id[id])
                 .filter((attr) => attr !== undefined);
@@ -1959,7 +1959,7 @@ export class Orderline extends PosModel {
             var packlotline = pack_lot_lines[i][2];
             var pack_lot_line = new Packlotline(
                 {},
-                { json: _.extend({ ...packlotline }, { order_line: this }) }
+                { json: Object.assign({ ...packlotline }, { order_line: this }) }
             );
             this.pack_lot_lines.add(pack_lot_line);
         }

@@ -22,7 +22,7 @@ weWidgets.LinkPopoverWidget.include({
 });
 
 const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
-    events: _.extend({}, weWidgets.LinkPopoverWidget.prototype.events, {
+    events: Object.assign({}, weWidgets.LinkPopoverWidget.prototype.events, {
         'click .js_edit_menu': '_onEditMenuClick',
     }),
     /**

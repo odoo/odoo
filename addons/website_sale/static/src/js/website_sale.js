@@ -208,7 +208,7 @@ const { ProductImageViewerWrapper } = require("@website_sale/js/components/websi
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
-    events: _.extend({}, VariantMixin.events || {}, {
+    events: Object.assign({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',

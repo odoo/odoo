@@ -115,7 +115,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         delete data.rating_count;
         delete data.rating_value;
 
-        this.options = _.extend(this.options, data);
+        this.options = Object.assign(this.options, data);
 
         this._reloadRatingPopupComposer();
     }

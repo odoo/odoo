@@ -52,7 +52,7 @@ var ServiceProviderMixin = {
         while (!done) {
             var serviceName = _.findKey(this.UndeployedServices, function (Service) {
                 // no missing dependency
-                return !_.some(Service.prototype.dependencies, function (depName) {
+                return !Service.prototype.dependencies.some( function (depName) {
                     return !self.services[depName];
                 });
             });

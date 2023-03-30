@@ -8,7 +8,7 @@ var ReplaySuggestionWidget = require('website_event_track_live.website_event_tra
 
 publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     selector: '.o_wevent_event_track_live',
-    custom_events: _.extend({}, publicWidget.Widget.prototype.custom_events, {
+    custom_events: Object.assign({}, publicWidget.Widget.prototype.custom_events, {
         'video-ended': '_onVideoEnded'
     }),
 

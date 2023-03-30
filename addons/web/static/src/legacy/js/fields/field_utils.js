@@ -361,7 +361,7 @@ function formatMonetary(value, field, options) {
         digits = field.digits || digits;
     }
     var formatted_value = formatFloat(value, field,
-        _.extend({}, options , {digits: digits})
+        Object.assign({}, options , {digits: digits})
     );
 
     if (!currency || options.noSymbol) {

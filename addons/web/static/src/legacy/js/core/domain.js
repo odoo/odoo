@@ -1,6 +1,7 @@
 odoo.define("web.Domain", function (require) {
 "use strict";
 
+const { every } = require("@web/core/utils/arrays");
 var collections = require("web.collections");
 var pyUtils = require("web.py_utils");
 var py = window.py; // look py.js
@@ -141,13 +142,9 @@ var Domain = collections.Tree.extend({
         } else { // The domain is a set of [name, operator, value] entitie(s)
             switch (this._data) {
                 case "&":
-                    return _.every(this._children, function (child) {
-                        return child.compute(values);
-                    });
+                    return this._children.every( child => child.compute(values) );
                 case "|":
-                    return _.some(this._children, function (child) {
-                        return child.compute(values);
-                    });
+                    return this._children.some( child => child.compute(values) );
                 case "!":
                     return !this._children[0].compute(values);
             }

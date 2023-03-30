@@ -72,7 +72,7 @@ var DomainNode = Widget.extend({
         this._super.apply(this, arguments);
 
         this.model = model;
-        this.options = _.extend({
+        this.options = Object.assign({
             readonly: true,
             operators: null,
             debugMode: false,
@@ -163,7 +163,7 @@ var DomainNode = Widget.extend({
  */
 var DomainTree = DomainNode.extend({
     template: "DomainTree",
-    events: _.extend({}, DomainNode.prototype.events, {
+    events: Object.assign({}, DomainNode.prototype.events, {
         "click .o_domain_tree_operator_selector .dropdown-item": "_onOperatorChange",
     }),
     custom_events: {
@@ -462,11 +462,11 @@ var DomainTree = DomainNode.extend({
  */
 var DomainSelector = DomainTree.extend({
     template: "DomainSelector",
-    events: _.extend({}, DomainTree.prototype.events, {
+    events: Object.assign({}, DomainTree.prototype.events, {
         "click .o_domain_add_first_node_button": "_onAddFirstButtonClick",
         "change .o_domain_debug_input": "_onDebugInputChange",
     }),
-    custom_events: _.extend({}, DomainTree.prototype.custom_events, {
+    custom_events: Object.assign({}, DomainTree.prototype.custom_events, {
         domain_changed: "_onDomainChange",
     }),
 
@@ -638,7 +638,7 @@ var DomainSelector = DomainTree.extend({
  */
 var DomainLeaf = DomainNode.extend({
     template: "DomainLeaf",
-    events: _.extend({}, DomainNode.prototype.events, {
+    events: Object.assign({}, DomainNode.prototype.events, {
         "change .o_domain_leaf_operator_select": "_onOperatorSelectChange",
         "change .o_domain_leaf_value_input": "_onValueInputChange",
 
@@ -923,7 +923,7 @@ var DomainLeaf = DomainNode.extend({
                 break;
 
             default:
-                operators = _.extend({}, operator_mapping);
+                operators = Object.assign({}, operator_mapping);
                 break;
         }
 

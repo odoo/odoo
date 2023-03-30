@@ -87,7 +87,7 @@ var ModelFieldSelectorPopover = Widget.extend({
 
         this.model = model;
         this.chain = chain;
-        this.options = _.extend({
+        this.options = Object.assign({
             order: 'string',
             filters: {},
             fields: null,
@@ -99,7 +99,7 @@ var ModelFieldSelectorPopover = Widget.extend({
             cancelOnEscape: false,
             chainedTitle: false
         }, options || {});
-        this.options.filters = _.extend({
+        this.options.filters = Object.assign({
             searchable: true,
         }, this.options.filters);
 
@@ -721,7 +721,7 @@ function sortFields(fields, model, order) {
         array = array.sortBy(function (p) {return p[1][order]; });
     }
     return array.map(function (p) {
-            return _.extend({
+            return Object.assign({
                 name: p[0],
                 model: model,
             }, p[1]);
