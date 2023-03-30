@@ -446,7 +446,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.partner_id = line.move_id.partner_id.commercial_partner_id
 
-    @api.depends('move_id.date', 'move_id.currency_id')
+    @api.depends('move_id.currency_id')
     def _compute_currency_id(self):
         for line in self:
             if line.display_type == 'cogs':
@@ -2526,6 +2526,7 @@ class AccountMoveLine(models.Model):
             'move_line_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
             'company_id': account.company_id.id or self.company_id.id or self.env.company.id,
+            'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
 
     # -------------------------------------------------------------------------

@@ -407,5 +407,77 @@ QUnit.module('favorite filter widget', (hooks) => {
         assert.isNotVisible(fixture.querySelector('.o_mass_mailing_remove_filter'),
             "should not have option to remove filter because mailing domain is changed");
     });
+
+    QUnit.test('filter widget works in edit and readonly', async (assert) => {
+        assert.expect(4);
+
+        serverData.models.partner = {
+            fields: {
+                name: { string: 'Name', type: 'char', searchable: true },
+            },
+        };
+
+        serverData.models['mailing.filter'].records = [{
+            id: 1,
+            name: 'Azure Partner Only',
+            mailing_domain: "[['name','=', 'Azure Interior']]",
+            mailing_model_id: 2,
+        }];
+
+        serverData.models['mailing.mailing'].records.push({
+            id: 3,
+            display_name: 'Partner Event promotion',
+            subject: 'Early bird discount for Partners!',
+            mailing_model_id: 2,
+            mailing_model_name: 'partner',
+            mailing_filter_count: 1,
+            mailing_filter_domain: "[['name','=', 'Azure Interior']]",
+            mailing_filter_id: 1,
+            mailing_domain: "[['name','=', 'Azure Interior']]",
+            state: 'draft',
+        });
+
+        serverData.models['mailing.mailing'].fields.state = {
+            string: 'Stage',
+            type: 'selection',
+            selection: [['draft', 'Draft'], ['running', 'Running']]
+        };
+
+        serverData.models['mailing.mailing'].onchanges = {
+            mailing_filter_id: obj => {
+                obj.mailing_domain = serverData.models['mailing.filter'].records.filter(r => r.id === obj.mailing_filter_id)[0].mailing_domain;
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 3,
+            serverData,
+            arch: `<form>
+                    <field name="display_name"/>
+                    <field name="subject"/>
+                    <field name="mailing_model_name" invisible="1"/>
+                    <field name="mailing_model_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="mailing_filter_count" />
+                    <field name="mailing_filter_id" widget="mailing_filter" options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
+                    <field name="state" widget="statusbar" options="{'clickable' : '1'}"/>
+                    <group>
+                        <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_name'}"/>
+                    </group>
+                </form>`,
+        });
+
+        await testUtils.nextTick();
+        const selectField = fixture.querySelector("button[data-value='running']");
+        assert.containsOnce(fixture, "div[name='mailing_model_id']:not(.o_readonly_modifier)");
+        assert.ok(fixture.querySelector(".o_mass_mailing_save_filter_container").checkVisibility());
+        // set to 'running'
+        selectField.dispatchEvent(new Event('click'));
+        selectField.dispatchEvent(new Event('change'));
+        await testUtils.nextTick();
+        assert.containsOnce(fixture, "div[name='mailing_model_id'].o_readonly_modifier");
+        assert.ok(fixture.querySelector(".o_mass_mailing_save_filter_container").checkVisibility());
+    });
 });
 });
