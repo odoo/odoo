@@ -117,7 +117,7 @@
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', ('is_planned', '=', False), ('state', '=', 'cancel')]}" data-hotkey="x"/>
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" data-hotkey="q"/>
                     <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}" data-hotkey="w"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="z"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="y"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock to adjust component demand during production, or consumed quantities once the manufacturing order is done." data-hotkey="l"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True)]}" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced." data-hotkey="l"/>
