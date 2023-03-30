@@ -16,7 +16,7 @@
                         'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))],
                         'required': [('display_type', '=', False)],
                     }"
-                    options="{'no_open': True}"
+                    width="35%"
                     context="{'partner_id': parent.partner_id}"
                     widget="pol_product_many2one"/>
                 <field name="product_template_attribute_value_ids" invisible="1"/>
