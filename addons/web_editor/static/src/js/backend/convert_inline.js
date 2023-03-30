@@ -511,12 +511,7 @@ function enforceImagesResponsivity(editable) {
         const mso = document.createComment(`[if mso]>${image.outerHTML}<![endif]`);
         image.before(mso);
         image.classList.toggle('mso-hide', true);
-        const notMsoStart = document.createComment('[if !mso]><!');
-        const notMsoEnd = document.createComment('<![endif]');
-        image.before(notMsoStart);
-        image.after(notMsoEnd);
         image.removeAttribute('height');
-        msos.push(mso, notMsoStart, notMsoEnd);
     }
 }
 // Masonry has crazy nested tables that require some extra treatment.
@@ -670,6 +665,11 @@ async function toInline($editable, cssRules, $iframe) {
     for (const toHide of editable.querySelectorAll('.mso-hide')) {
         const style = toHide.getAttribute('style') || '';
         toHide.setAttribute('style', `${style} mso-hide: all;`.trim());
+        const notMsoStart = document.createComment('[if !mso]><!');
+        const notMsoEnd = document.createComment('<![endif]');
+        toHide.before(notMsoStart);
+        toHide.after(notMsoEnd);
+        msos.push(notMsoStart, notMsoEnd);
     }
 
     // Styles were applied inline, we don't need a style element anymore.
@@ -1129,7 +1129,7 @@ function normalizeRem($editable, rootFontSize=16) {
             outlookTd.setAttribute('style', msoStyles);
         }
         // The opening tag of `outlookTd` is for Outlook.
-        const mso = document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`)
+        const mso = document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`);
         td.before(mso);
         // The opening tag of `td` is for the others.
         const notMsoStart = document.createComment('[if !mso]><!');
