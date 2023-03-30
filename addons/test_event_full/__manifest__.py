@@ -33,7 +33,10 @@ automatic lead generation, full Online support, ...
     ],
     'assets': {
         'web.assets_tests': [
-            'test_event_full/static/**/*',
+            'test_event_full/static/src/js/tours/*',
+        ],
+        'web.qunit_suite_tests': [
+            'test_event_full/static/src/js/tests/*',
         ],
     },
     'license': 'LGPL-3',

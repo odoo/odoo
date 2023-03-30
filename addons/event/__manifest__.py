@@ -53,6 +53,8 @@ Key Features
             'event/static/src/scss/event.scss',
             'event/static/src/icon_selection_field/icon_selection_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.xml',
+            'event/static/src/template_reference_field/field_event_mail_template_reference.js',
+            'event/static/src/template_reference_field/field_event_mail_template_reference.xml',
             'event/static/src/js/tours/**/*',
         ],
         'web.assets_frontend': [
