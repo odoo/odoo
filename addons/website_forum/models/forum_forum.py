@@ -181,7 +181,9 @@ class Forum(models.Model):
     # EXTENDS WEBSITE.MULTI.MIXIN
 
     def _compute_website_url(self):
-        return '/forum/%s' % (slug(self))
+        if not self.id:
+            return False
+        return f'/forum/{slug(self)}'
 
     # ----------------------------------------------------------------------
     # CRUD
@@ -261,6 +263,9 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
+        website_url = self._compute_website_url
+        if not website_url:
+            return False
         return self.env['website'].get_client_action(self._compute_website_url())
 
     @api.model
