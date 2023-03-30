@@ -190,7 +190,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 
         this._stopWidgets($from);
 
-        var defs = this._getPublicWidgetsRegistry(options).map( PublicWidget => {
+        var defs = _.map(this._getPublicWidgetsRegistry(options), function (PublicWidget) {
             var selector = PublicWidget.prototype.selector || '';
             var $target = dom.cssFind($from, selector, true);
 

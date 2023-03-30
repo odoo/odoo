@@ -786,9 +786,8 @@ time.strftime = py.PY_def.fromJSON(function () {
     return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
 });
 
-var args = 'year month day hour minute second '
-                + 'years months weeks days hours minutes seconds '
-                + 'weekday leapdays yearday nlyearday'.split(' ').map( arg => {
+var args = `year month day hour minute second years months weeks days hours minutes seconds weekday leapdays yearday nlyearday`
+.split(' ').map( arg => {
     switch (arg) {
         case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
         case 'hours':case 'minutes':case 'seconds':
