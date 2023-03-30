@@ -19,3 +19,14 @@ class Task(models.Model):
                 else:
                     vals['name'] = _('Untitled to-do')
         return super().create(vals_list)
+
+    def action_convert_to_task(self):
+        self.ensure_one()
+        self.company_id = self.project_id.company_id
+        return {
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.id,
+            'type': 'ir.actions.act_window',
+            'target': 'main',
+        }

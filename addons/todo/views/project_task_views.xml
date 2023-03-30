@@ -80,7 +80,7 @@
                   default_group_by="personal_stage_type_ids"
                   editable="bottom"
                   multi_edit="1"
-                  sample="1">
+                  js_class="todo_list">
                 <field name="name"/>
                 <field name="user_ids" optional="show" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -142,6 +142,40 @@
                 <group>
                     <field name="name" string="To-do Title" placeholder="e.g. Send Invitations"/>
                 </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Todo conversion form (used by an action added in TodoFormView (contoller) -->
+    <record id="project_task_view_todo_conversion_form" model="ir.ui.view">
+        <field name="model">project.task</field>
+        <field name="name">project.task.view.todo.conversion.form</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Task"
+                  js_class="todo_conversion_form">
+                <sheet>
+                    <group>
+                        <field name="project_id"
+                               domain="[('company_id', 'in', context.get('allowed_company_ids'))]"
+                               required="1"
+                               placeholder="Select an existing project"
+                               default_focus="1"/>
+                        <field name="user_ids"
+                               class="o_task_user_field"
+                               options="{'no_open': True, 'no_quick_create': True}"
+                               widget="many2many_avatar_user"
+                               domain="[('share', '=', False), ('active', '=', True)]"/>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'color_field': 'color', 'no_create_edit': True}"
+                               context="{'project_id': project_id}"
+                               placeholder="Choose tags from the selected project"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_convert_to_task" string="Convert to Task" type="object" class="btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
             </form>
         </field>
     </record>
@@ -240,6 +274,20 @@
         <field name="view_mode">activity</field>
         <field name="view_id" ref="project_task_view_todo_activity"/>
         <field name="act_window_id" ref="project_task_action_todo"/>
+    </record>
+
+    <!-- Conversion actions-->
+    <record id="project_task_action_convert_todo_to_task" model="ir.actions.act_window">
+        <field name="name">Convert to Task</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_action_convert_todo_to_task_form_view">
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_task_view_todo_conversion_form"/>
+        <field name="act_window_id" ref="project_task_action_convert_todo_to_task"/>
     </record>
 
 </odoo>
