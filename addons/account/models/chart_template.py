@@ -788,3 +788,9 @@ class AccountChartTemplate(models.AbstractModel):
                                     xml_id = f"account.{company.id}_{_xml_id}"
                                     translation_importer.model_translations[mname][fname][xml_id][lang] = value
         translation_importer.save(overwrite=False)
+
+    def _register_hook(self):
+        super()._register_hook()
+        if hasattr(self.env.registry, '_delayed_account_translator'):
+            self.env.registry._delayed_account_translator(self.env)
+            del self.env.registry._delayed_account_translator
