@@ -124,6 +124,7 @@ export function getBasicData() {
                 thumbnail: { string: "Thumbnail", type: "text" },
                 favorited_ids: { string: "Name", type: "many2many" },
                 is_favorited: { string: "Name", type: "boolean" },
+                is_multipage: { string: "Is multipage", type: "boolean" },
                 mimetype: { string: "Mimetype", type: "char" },
                 partner_id: { string: "Related partner", type: "many2one", relation: "partner" },
                 owner_id: { string: "Owner", type: "many2one", relation: "partner" },
