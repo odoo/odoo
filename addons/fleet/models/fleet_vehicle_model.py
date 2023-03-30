@@ -18,6 +18,7 @@ FUEL_TYPES = [
 
 class FleetVehicleModel(models.Model):
     _name = 'fleet.vehicle.model'
+    _inherit = ['avatar.mixin']
     _description = 'Model of a vehicle'
     _order = 'name asc'
 
