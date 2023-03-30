@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<templates xml:space="preserve">
+
+    <t t-name="event.mail_template_many2one_field" t-inherit="web.Many2OneField" t-inherit-mode="primary">
+        <!--always display without open link when readonly-->
+        <xpath expr="//t[@t-if='props.readonly']/t[@t-if='!props.canOpen']" position="attributes">
+            <attribute name="t-if">true</attribute>
+        </xpath>
+    </t>
+
+</templates>
