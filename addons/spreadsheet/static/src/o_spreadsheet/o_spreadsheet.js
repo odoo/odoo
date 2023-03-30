@@ -1446,7 +1446,7 @@
      *   formula, commas are used to separate arguments
      * - it does not support % symbol, in formulas % is an operator
      */
-    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
+    const formulaNumberRegexp = /(^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+)(?!\w|!)/;
     const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
     const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
     const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
@@ -3052,6 +3052,7 @@
     const LINE_HEIGHT = 1.2;
     css /* scss */ `
   div.o-scorecard {
+    font-family: ${DEFAULT_FONT};
     user-select: none;
     background-color: white;
     display: flex;
@@ -19252,6 +19253,8 @@
                         start = 0;
                     if (end > textLength)
                         end = textLength;
+                    if (start > textLength)
+                        start = textLength;
                 }
                 let startNode = this.findChildAtCharacterIndex(start);
                 let endNode = this.findChildAtCharacterIndex(end);
@@ -19521,6 +19524,7 @@
       padding-right: 2px;
 
       box-sizing: border-box;
+      font-family: ${DEFAULT_FONT};
 
       caret-color: black;
       padding-left: 3px;
@@ -22154,6 +22158,10 @@
             }
         }
         onInput(ev) {
+            // the user meant to paste in the sheet, not open the composer with the pasted content
+            if (!ev.isComposing && ev.inputType === "insertFromPaste") {
+                return;
+            }
             if (ev.data) {
                 // if the user types a character on the grid, it means he wants to start composing the selected cell with that
                 // character
@@ -24230,6 +24238,11 @@
     <Override ContentType="${contentType}" PartName="${partName}" />
   `;
     }
+    function createDefault(extension, contentType) {
+        return escapeXml /*xml*/ `
+    <Default Extension="${extension}" ContentType="${contentType}" />
+  `;
+    }
     function joinXmlNodes(xmlNodes) {
         return new XMLString(xmlNodes.join("\n"));
     }
@@ -24273,6 +24286,17 @@
     function areNamespaceIgnoredByQuerySelector() {
         const doc = new DOMParser().parseFromString("<t:test xmlns:t='a'/>", "text/xml");
         return doc.querySelector("test") !== null;
+    }
+    /**
+     * Return the image content type (e.g. image/jpeg) from image path.
+     * By default jpeg
+     * @param imagePath
+     * @returns
+     */
+    async function getImageContentType(imagePath) {
+        var _a;
+        const response = await fetch(imagePath);
+        return (_a = response.headers.get("Content-Type")) !== null && _a !== void 0 ? _a : "image/jpeg";
     }
 
     class AttributeValue {
@@ -39217,7 +39241,7 @@
             const file = await this.getImageFromUser();
             const path = await this.fileStore.upload(file);
             const size = await this.getImageSize(path);
-            return { path, size };
+            return { path, size, contentType: file.type };
         }
         getImageFromUser() {
             return new Promise((resolve, reject) => {
@@ -41122,9 +41146,6 @@
       color: #333;
     }
 
-    * {
-      font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
-    }
     &,
     *,
     *:before,
@@ -44228,11 +44249,11 @@
      * See ECMA-376 standard.
      * https://www.ecma-international.org/publications-and-standards/standards/ecma-376/
      */
-    function getXLSX(data) {
+    async function getXLSX(data) {
         const files = [];
         const construct = getDefaultXLSXStructure();
         files.push(createWorkbook(data, construct));
-        files.push(...createWorksheets(data, construct));
+        files.push(...(await createWorksheets(data, construct)));
         files.push(createStylesSheet(construct));
         files.push(createSharedStrings(construct.sharedStrings));
         files.push(...createRelsFiles(construct.relsFiles));
@@ -44273,7 +44294,8 @@
   `;
         return createXMLFile(parseXML(xml), "xl/workbook.xml", "workbook");
     }
-    function createWorksheets(data, construct) {
+    async function createWorksheets(data, construct) {
+        var _a;
         const files = [];
         let currentTableIndex = 1;
         for (const [sheetIndex, sheet] of Object.entries(data.sheets)) {
@@ -44302,15 +44324,18 @@
             }
             const images = sheet.images;
             for (const image of images) {
+                const contentType = (_a = image.data.contentType) !== null && _a !== void 0 ? _a : (await getImageContentType(image.data.path));
+                const extension = contentType.split("/")[1];
                 const xlsxImageId = convertImageId(image.id);
                 const imageRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
-                    target: `../media/image${xlsxImageId}`,
+                    target: `../media/image${xlsxImageId}.${extension}`,
                     type: XLSX_RELATION_TYPE.image,
                 });
                 drawingRelIds.push(imageRelId);
                 files.push({
-                    path: `xl/media/image${xlsxImageId}`,
+                    path: `xl/media/image${xlsxImageId}.${extension}`,
                     imagePath: image.data.path,
+                    contentType,
                 });
             }
             const drawings = [...charts, ...images];
@@ -44432,13 +44457,20 @@
     }
     function createContentTypes(files) {
         const overrideNodes = [];
+        const defaultNodes = {};
         for (const file of files) {
             if ("contentType" in file && file.contentType) {
-                overrideNodes.push(createOverride("/" + file.path, CONTENT_TYPES[file.contentType]));
+                if ("imagePath" in file) {
+                    defaultNodes[file.contentType] = createDefault(file.contentType.split("/")[1], file.contentType);
+                }
+                else {
+                    overrideNodes.push(createOverride("/" + file.path, CONTENT_TYPES[file.contentType]));
+                }
             }
         }
         const xml = escapeXml /*xml*/ `
     <Types xmlns="${NAMESPACE["Types"]}">
+      ${joinXmlNodes(Object.values(defaultNodes))}
       <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />
       <Default Extension="xml" ContentType="application/xml" />
       ${joinXmlNodes(overrideNodes)}
@@ -44842,7 +44874,7 @@
          * This prove to be necessary if the client did not trigger that evaluation in the first place
          * (e.g. open a document with several sheet and click on download before visiting each sheet)
          */
-        exportXLSX() {
+        async exportXLSX() {
             this.dispatch("EVALUATE_CELLS");
             let data = createEmptyExcelWorkbookData();
             for (let handler of this.handlers) {
@@ -44851,7 +44883,8 @@
                 }
             }
             data = JSON.parse(JSON.stringify(data));
-            return getXLSX(data);
+            const xlsxData = await getXLSX(data);
+            return xlsxData;
         }
         garbageCollectExternalResources() {
             for (const plugin of this.corePlugins) {
@@ -44993,8 +45026,8 @@
 
 
     __info__.version = '16.2.1';
-    __info__.date = '2023-03-23T11:46:56.858Z';
-    __info__.hash = 'd1e5470';
+    __info__.date = '2023-03-30T14:36:01.241Z';
+    __info__.hash = '884b3a8';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
