@@ -172,8 +172,9 @@ class Post(models.Model):
 
     @api.depends('name')
     def _compute_website_url(self):
-        for post in self:
-            anchor = post.parent_id and '#answer_%d' % post.id or ''
+        self.website_url = False
+        for post in self.filtered(lambda post: post.id):
+            anchor = f'#answer_{post.id}' if post.parent_id else ''
             post.website_url = f'/forum/{slug(post.forum_id)}/{slug(post)}{anchor}'
 
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
@@ -793,6 +794,8 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
+        if not self.website_url:
+            return False
         return self.env['website'].get_client_action(self.website_url)
 
     @api.model
