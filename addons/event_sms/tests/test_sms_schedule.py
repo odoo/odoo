@@ -42,13 +42,11 @@ class TestSMSSchedule(EventCase, SMSCase):
                 (0, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'notification_type': 'sms',
                     'template_ref': 'sms.template,%i' % cls.sms_template_sub.id}),
                 (0, 0, {  # 3 days before event
                     'interval_nbr': 3,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',
-                    'notification_type': 'sms',
                     'template_ref': 'sms.template,%i' % cls.sms_template_rem.id}),
             ],
             'name': 'TestEvent',

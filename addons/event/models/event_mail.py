@@ -5,9 +5,9 @@ import logging
 import random
 import threading
 
-from collections import namedtuple
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from typing import NamedTuple
 
 from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
@@ -26,20 +26,22 @@ _INTERVALS = {
 }
 
 
+class MailValues(NamedTuple):
+    interval_nbr: int
+    interval_unit: str
+    interval_type: str
+    template_ref: str
+
+
 class EventTypeMail(models.Model):
     """ Template of event.mail to attach to event.type. Those will be copied
     upon all events created in that type to ease event creation. """
     _name = 'event.type.mail'
     _description = 'Mail Scheduling on Event Category'
 
-    @api.model
-    def _selection_template_model(self):
-        return [('mail.template', 'Mail')]
-
     event_type_id = fields.Many2one(
         'event.type', string='Event Type',
         ondelete='cascade', required=True)
-    notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
@@ -51,19 +53,18 @@ class EventTypeMail(models.Model):
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
         string='Trigger', default="before_event", required=True)
-    template_model_id = fields.Many2one('ir.model', string='Template Model', compute='_compute_template_model_id', compute_sudo=True)
-    template_ref = fields.Reference(string='Template', selection='_selection_template_model', required=True)
+    notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
+    template_ref = fields.Reference(string='Template', selection=[('mail.template', 'Mail')])
 
-    @api.depends('notification_type')
-    def _compute_template_model_id(self):
-        mail_model = self.env['ir.model']._get('mail.template')
-        for mail in self:
-            mail.template_model_id = mail_model if mail.notification_type == 'mail' else False
+    @api.depends('template_ref')
+    def _compute_notification_type(self):
+        """Assigns the type of template in use, if any is set."""
+        sms_schedulers = self.filtered(lambda scheduler: scheduler.template_ref and scheduler.template_ref._name == 'mail.template')
+        sms_schedulers.notification_type = 'mail'
 
     def _prepare_event_mail_values(self):
         self.ensure_one()
-        return namedtuple("MailValues", ['notification_type', 'interval_nbr', 'interval_unit', 'interval_type', 'template_ref'])(
-            self.notification_type,
+        return MailValues(
             self.interval_nbr,
             self.interval_unit,
             self.interval_type,
@@ -78,23 +79,8 @@ class EventMailScheduler(models.Model):
     _rec_name = 'event_id'
     _description = 'Event Automated Mailing'
 
-    @api.model
-    def _selection_template_model(self):
-        return [('mail.template', 'Mail')]
-
-    def _selection_template_model_get_mapping(self):
-        return {'mail': 'mail.template'}
-
-    @api.onchange('notification_type')
-    def set_template_ref_model(self):
-        mail_model = self.env['mail.template']
-        if self.notification_type == 'mail':
-            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
-            self.template_ref = "{},{}".format('mail.template', record.id) if record else False
-
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
-    notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
@@ -116,14 +102,8 @@ class EventMailScheduler(models.Model):
         [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent')],
         string='Global communication Status', compute='_compute_mail_state')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)
-    template_model_id = fields.Many2one('ir.model', string='Template Model', compute='_compute_template_model_id', compute_sudo=True)
-    template_ref = fields.Reference(string='Template', selection='_selection_template_model', required=True)
-
-    @api.depends('notification_type')
-    def _compute_template_model_id(self):
-        mail_model = self.env['ir.model']._get('mail.template')
-        for mail in self:
-            mail.template_model_id = mail_model if mail.notification_type == 'mail' else False
+    notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
+    template_ref = fields.Reference(string='Template', selection=[('mail.template', 'Mail')])
 
     @api.depends('event_id.date_begin', 'event_id.date_end', 'interval_type', 'interval_unit', 'interval_nbr')
     def _compute_scheduled_date(self):
@@ -151,13 +131,10 @@ class EventMailScheduler(models.Model):
             else:
                 scheduler.mail_state = 'running'
 
-    @api.constrains('notification_type', 'template_ref')
-    def _check_template_ref_model(self):
-        model_map = self._selection_template_model_get_mapping()
-        for record in self.filtered('template_ref'):
-            model = model_map[record.notification_type]
-            if record.template_ref._name != model:
-                raise ValidationError(_('The template which is referenced should be coming from %(model_name)s model.', model_name=model))
+    @api.depends('template_ref')
+    def _compute_notification_type(self):
+        sms_schedulers = self.filtered(lambda scheduler: scheduler.template_ref and scheduler.template_ref._name == 'mail.template')
+        sms_schedulers.notification_type = 'mail'
 
     def execute(self):
         for scheduler in self:
@@ -185,9 +162,6 @@ class EventMailScheduler(models.Model):
                 # before or after event -> one shot email
                 if scheduler.mail_done or scheduler.notification_type != 'mail':
                     continue
-                # no template -> ill configured, skip and avoid crash
-                if not scheduler.template_ref:
-                    continue
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
                     scheduler.event_id.mail_attendees(scheduler.template_ref.id)
@@ -211,8 +185,7 @@ class EventMailScheduler(models.Model):
 
     def _prepare_event_mail_values(self):
         self.ensure_one()
-        return namedtuple("MailValues", ['notification_type', 'interval_nbr', 'interval_unit', 'interval_type', 'template_ref'])(
-            self.notification_type,
+        return MailValues(
             self.interval_nbr,
             self.interval_unit,
             self.interval_type,
