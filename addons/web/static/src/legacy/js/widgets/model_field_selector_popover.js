@@ -150,7 +150,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      * @returns {Object}
      */
     getSelectedField: function () {
-        return _.findWhere(this.pages[this.chain.length - 1], {name: this.chain.slice(-1) });
+        return this.pages[this.chain.length - 1].find( page => page.name === this.chain.slice(-1) );
     },
     /**
      * Saves a new field chain (array) and re-render.
@@ -214,9 +214,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      *                   to its name
      /*/
     _getLastPageField: function (name) {
-        return _.findWhere( this.pages.slice(-1) , {
-            name: name,
-        });
+        return this.pages.slice(-1).find( page => page.name === name )
     },
     /**
      * Searches the cache for the given model fields, according to the given
@@ -404,8 +402,8 @@ var ModelFieldSelectorPopover = Widget.extend({
     _getTitle: function () {
         var title = "";
         if (this.pages.length > 1) {
-            var prevField = _.findWhere(this.pages[this.pages.length - 2], {
-                name: (this.chain.length === this.pages.length) ? this.chain[this.chain.length - 2] : this.chain.slice(-1),
+            var prevField = this.pages[this.pages.length - 2].find( page => {
+                return page.name === (this.chain.length === this.pages.length) ? this.chain[this.chain.length - 2] : this.chain.slice(-1)
             });
             if (prevField) {
                 this.titlesNames[ this.chain.slice(-1) ] = prevField.string;

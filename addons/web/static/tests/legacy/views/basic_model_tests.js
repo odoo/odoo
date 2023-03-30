@@ -1069,12 +1069,12 @@ odoo.define('web.basic_model_tests', function (require) {
             var dataPoint = model.get(resultID);
             assert.strictEqual(dataPoint.data.length, 2, "should have two groups");
 
-            var groupFalse = _.findWhere(dataPoint.data, { value: false });
+            var groupFalse = dataPoint.data.find( point => !point.value )
             assert.ok(groupFalse, "should have a group for value false");
             assert.deepEqual(groupFalse.domain, [['selection', '=', false]],
                 "group's domain should be correct");
 
-            var groupA = _.findWhere(dataPoint.data, { value: 'A' });
+            var groupA = dataPoint.data.find( point => point.value === "A") 
             assert.ok(groupA, "should have a group for value 'a'");
             assert.deepEqual(groupA.domain, [['selection', '=', 'a']],
                 "group's domain should be correct");

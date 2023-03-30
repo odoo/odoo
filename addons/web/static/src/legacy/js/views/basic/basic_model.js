@@ -340,7 +340,7 @@ var BasicModel = AbstractModel.extend({
         var record = this.localData[id];
         var parent = this.localData[record.parentID];
         if (parent) {
-            var entry = _.findWhere(parent._savePoint, {operation: 'ADD', id: id});
+            var entry = parent._savePoint.find( entry => entry.operation === 'ADD' && entry.id === id);
             if (entry) {
                 // 2.1. no drop on non-new addition in list
                 if (!entry.isNew) {
@@ -1075,7 +1075,7 @@ var BasicModel = AbstractModel.extend({
                         if (dataType === 'record') {
                             _.each(data.data, function (dataPoint) {
                                 var recordData = self.localData[dataPoint].data;
-                                var inRecords = _.findWhere(records, {id: recordData.id});
+                                var inRecords = records.find( record.id === recordData.id);
                                 if (inRecords) {
                                     recordData[field] = inRecords[field];
                                 }
@@ -2167,7 +2167,7 @@ var BasicModel = AbstractModel.extend({
                             if (resID in list._cache) {
                                 return list._cache[resID];
                             }
-                            return _.findWhere(listData, {res_id: resID}).id;
+                            return listData.find( data => data.res_id === resID).id;
                         }),
                     }, options);
                 }
@@ -3405,7 +3405,7 @@ var BasicModel = AbstractModel.extend({
                     for (var i = 0; i < list.res_ids.length; i++) {
                         if (_.contains(keptIds, list.res_ids[i])) {
                             // this is an id that already existed
-                            relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
+                            relRecord = relRecordUpdated.find( record => record.res_id === list.res_ids[i]);
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
@@ -3416,7 +3416,7 @@ var BasicModel = AbstractModel.extend({
                             commands[fieldName].push(command);
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
-                            relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            relRecord = relRecordAdded.find( record => record.res_id === list.res_ids[i]);
                             if (!relRecord) {
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
@@ -4804,7 +4804,7 @@ var BasicModel = AbstractModel.extend({
         return def.then(function (records) {
             _.each(resIDs, function (id) {
                 var dataPoint;
-                var data = _.findWhere(records, {id: id});
+                var data = records.find( record => record.id === id );
                 if (id in list._cache) {
                     dataPoint = self.localData[list._cache[id]];
                     if (data) {
@@ -5262,7 +5262,7 @@ var BasicModel = AbstractModel.extend({
             for (var i = list.offset + list.limit; i < list.res_ids.length; i++) {
                 var id = list.res_ids[i];
                 var dataPointID = list._cache[id];
-                if (_.findWhere(list._changes, {isNew: true, id: dataPointID})) {
+                if ( list._changes.find( change => change.isNew && change.id === dataPointID)) {
                     list.data.push(dataPointID);
                 } else {
                     break;

@@ -310,7 +310,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         });
 
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
-        this.activeForm = _.findWhere(this.models, {model: targetModelName});
+        this.activeForm = this.models.find( m => m.model === targetModelName );
         // Create the Form Action select
         this.selectActionEl = document.createElement('we-select');
         this.selectActionEl.setAttribute('string', 'Action');
@@ -709,7 +709,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 oldFormInfo = FormEditorRegistry.get(oldFormKey);
             }
             this.$target.find('.s_website_form_field').remove();
-            this.activeForm = _.findWhere(this.models, {id: modelId});
+            this.activeForm = this.models.find( model => model.id === modelId );
         }
         const formKey = this.activeForm.website_form_key;
         const formInfo = FormEditorRegistry.get(formKey);

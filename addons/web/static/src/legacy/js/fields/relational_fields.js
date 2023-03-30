@@ -1091,7 +1091,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {any} id
      */
     _removeTag: function (id) {
-        var record = _.findWhere(this.value.data, {res_id: id});
+        var record = this.value.data.find( d => d.res_id === id);
         this._setValue({
             operation: 'FORGET',
             ids: [record.id],
@@ -1340,7 +1340,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         }
         var tagID = $(ev.currentTarget).parent().data('id');
         var tagColor = $(ev.currentTarget).parent().data('color');
-        var tag = _.findWhere(this.value.data, { res_id: tagID });
+        var tag = this.value.data.find( d => d.res_id === tagID );
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             // Manual initialize dropdown and show (once)
             if (ev.currentTarget.dataset.bsToggle !== 'dropdown') {
@@ -1393,7 +1393,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         changes[this.colorField] = color;
 
         this.trigger_up('field_changed', {
-            dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
+            dataPointID: this.value.data.find( d => d.res_id === id).id,
             changes: changes,
             force_save: true,
         });
