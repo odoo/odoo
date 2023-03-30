@@ -1858,7 +1858,7 @@ var BasicModel = AbstractModel.extend({
                         // CREATE or UPDATE
                         if (command[0] === 0 && command[1]) {
                             // updating an existing (virtual) record
-                            var previousChange = _.find(oldChanges, function (operation) {
+                            var previousChange = oldChanges.find( function (operation) {
                                 var child = self.localData[operation.id];
                                 return child && (child.ref === command[1]);
                             });
@@ -2569,7 +2569,7 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function (name_gets) {
                 _.each(records, function (record) {
-                    var nameGet = _.find(name_gets, function (nameGet) {
+                    var nameGet = name_gets.find( function (nameGet) {
                         return nameGet[0] === record.data.id;
                     });
                     record.data.display_name = nameGet[1];
@@ -4894,7 +4894,7 @@ var BasicModel = AbstractModel.extend({
                     // the 'title'.
                     var value = group[groupByField];
                     if (list.fields[rawGroupBy].type === "selection") {
-                        var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
+                        var choice = list.fields[rawGroupBy].selection.find( function (c) {
                             return c[0] === value;
                         });
                         value = choice ? choice[1] : false;
@@ -4918,7 +4918,7 @@ var BasicModel = AbstractModel.extend({
                         type: 'list',
                         viewType: list.viewType,
                     });
-                    var oldGroup = _.find(previousGroups, function (g) {
+                    var oldGroup = previousGroups.find(  function (g) {
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {

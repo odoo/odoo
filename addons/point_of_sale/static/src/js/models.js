@@ -1833,13 +1833,13 @@ export class Product extends PosModel {
         if (price_extra) {
             price += price_extra;
         }
-        _.find(pricelist_items, function (rule) {
+        pricelist_items.find(function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
             }
 
             if (rule.base === "pricelist") {
-                const base_pricelist = _.find(self.pos.pricelists, function (pricelist) {
+                const base_pricelist = self.pos.pricelists.find(function (pricelist) {
                     return pricelist.id === rule.base_pricelist_id[0];
                 });
                 if (base_pricelist) {
@@ -2845,7 +2845,7 @@ export class Order extends PosModel {
             this.uid = this.generate_unique_id();
             this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
-            this.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+            this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
             });
         }
@@ -2886,7 +2886,7 @@ export class Order extends PosModel {
         this.user_id = json.user_id;
 
         if (json.fiscal_position_id) {
-            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+            var fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === json.fiscal_position_id;
             });
 
@@ -2898,7 +2898,7 @@ export class Order extends PosModel {
         }
 
         if (json.pricelist_id) {
-            this.pricelist = _.find(this.pos.pricelists, function (pricelist) {
+            this.pricelist = this.pos.pricelists.find(function (pricelist) {
                 return pricelist.id === json.pricelist_id;
             });
         } else {

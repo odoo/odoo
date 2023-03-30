@@ -29,7 +29,7 @@ export const PaymentSix = PaymentInterface.extend({
         this.enable_reversals();
 
         var terminal_ip = this.payment_method.six_terminal_ip;
-        var instanced_payment_method = _.find(this.pos.payment_methods, function (payment_method) {
+        var instanced_payment_method = this.pos.payment_methods.find(function (payment_method) {
             return (
                 payment_method.use_payment_terminal === "six" &&
                 payment_method.six_terminal_ip === terminal_ip &&

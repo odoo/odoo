@@ -1533,7 +1533,7 @@ var FieldSelection = AbstractField.extend({
     _onChange: function () {
         var res_id = JSON.parse(this.$el.val());
         if (this.field.type === 'many2one') {
-            var value = _.find(this.values, function (val) {
+            var value = this.values.find( function (val) {
                 return val[0] === res_id;
             });
             this._setValue({id: res_id, display_name: value[1]});

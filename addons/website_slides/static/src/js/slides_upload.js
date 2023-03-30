@@ -658,7 +658,7 @@ var SlideUploadDialog = Dialog.extend({
                     .text(_.str.sprintf(_t('Failed to install "%s".'), this.modulesToInstallStatus.name));
             }
         } else {
-            this.modulesToInstallStatus = _.extend({}, _.find(this.modulesToInstall, function (item) { return item.id === moduleId; }));
+            this.modulesToInstallStatus = _.extend({}, this.modulesToInstall.find( function (item) { return item.id === moduleId; }));
             this.set('state', '_import');
             this.$('#o_wslides_install_module_text')
                 .text(_.str.sprintf(_t('Do you want to install the "%s" app?'), this.modulesToInstallStatus.name));

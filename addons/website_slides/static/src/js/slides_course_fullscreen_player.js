@@ -22,7 +22,7 @@
      */
     var findSlide = function (slideList, matcher) {
         var slideMatch = _.matcher(matcher);
-        return _.find(slideList, slideMatch);
+        return slideList.find( slide => slideMatch(slide) );
     };
 
     /**

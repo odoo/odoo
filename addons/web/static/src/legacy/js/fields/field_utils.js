@@ -403,7 +403,7 @@ function formatPercentage(value, field, options) {
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  */
 function formatSelection(value, field, options) {
-    var val = _.find(field.selection, function (option) {
+    var val = field.selection.find( function (option) {
         return option[0] === value;
     });
     if (!val) {

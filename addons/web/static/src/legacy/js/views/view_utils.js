@@ -31,7 +31,7 @@ var viewUtils = {
             case 'many2one':
                 return group.res_id || false;
             case 'selection':
-                var descriptor = _.find(groupedByField.selection, function (option) {
+                var descriptor = groupedByField.selection.find( function (option) {
                     return option[1] === group.value;
                 });
                 return descriptor && descriptor[0];
