@@ -14,7 +14,7 @@ async function downloadSpreadsheet(env, action) {
     const dataSources = new DataSources(orm);
     const model = new Model(migrate(data), { custom: { dataSources } }, stateUpdateMessages);
     await waitForDataLoaded(model);
-    const { files } = model.exportXLSX();
+    const { files } = await model.exportXLSX();
     await download({
         url: "/spreadsheet/xlsx",
         data: {

@@ -1160,7 +1160,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             filterSheet.cells["B2"].content,
             model.getters.getFilterDisplayValue(filter.label)
         );
-        model.exportXLSX(); // should not crash
+        await model.exportXLSX(); // should not crash
     });
 
     QUnit.test("Date filter automatic default value for years filter", async function (assert) {
