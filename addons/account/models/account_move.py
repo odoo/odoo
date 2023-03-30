@@ -4011,6 +4011,21 @@ class AccountMove(models.Model):
 
         return rslt
 
+    def _get_pdf_and_send_invoice_vals(self, template):
+        return {
+            'mail_template_id': template.id,
+            'move_ids': self.ids,
+            'checkbox_send_mail': True,
+            'checkbox_download': False,
+        }
+
+    def _generate_pdf_and_send_invoice(self, template, from_cron=True):
+        composer_vals = self._get_pdf_and_send_invoice_vals(template)
+        composer = self.env['account.move.send'].create(composer_vals)
+
+        # from_cron=True to log errors in chatter instead of raise
+        composer.action_send_and_print(from_cron=from_cron)
+
     # -------------------------------------------------------------------------
     # TOOLING
     # -------------------------------------------------------------------------
