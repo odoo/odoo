@@ -3,9 +3,10 @@
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { createSpreadsheetModel } from "@spreadsheet/helpers";
+
 import {
     createModelWithDataSource,
-    setupDataSourceEvaluation,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
@@ -24,7 +25,6 @@ import {
     insertChartInSpreadsheet,
 } from "@spreadsheet/../tests/utils/chart";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/utils/list";
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import {
@@ -93,14 +93,17 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(computedDomain[0], "&");
     });
 
-    QUnit.test("Can add a global filter with an empty field matching (no field chain)", async function (assert) {
-        const { model } = await createSpreadsheetWithPivotAndList();
-        assert.equal(model.getters.getGlobalFilters().length, 0);
-        await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: {1: {}} });
-        assert.equal(model.getters.getGlobalFilters().length, 1);
-        const computedDomain = model.getters.getPivotComputedDomain("1");
-        assert.deepEqual(computedDomain, []);
-    });
+    QUnit.test(
+        "Can add a global filter with an empty field matching (no field chain)",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivotAndList();
+            assert.equal(model.getters.getGlobalFilters().length, 0);
+            await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: { 1: {} } });
+            assert.equal(model.getters.getGlobalFilters().length, 1);
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assert.deepEqual(computedDomain, []);
+        }
+    );
 
     QUnit.test("Can delete a global filter", async function (assert) {
         assert.expect(4);
@@ -644,16 +647,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 return resId === 1 ? [[1, "Jean-Jacques"]] : [[2, "Raoul Grosbedon"]];
             },
         };
-        const model = new Model(
-            {},
-            {
-                custom: {
-                    dataSources: new DataSources({ ...orm, silent: orm }),
-                    env: { services: { orm } },
-                },
-            }
-        );
-        setupDataSourceEvaluation(model);
+        const model = createSpreadsheetModel({
+            orm,
+            env: { services: { orm } },
+        });
         setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Relation Filter")`);
         await nextTick();
         await addGlobalFilter(model, {

@@ -5,23 +5,9 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
+import { createSpreadsheetModel } from "@spreadsheet/helpers";
+
 import { getBasicServerData } from "./data";
-
-const { Model } = spreadsheet;
-
-/**
- * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
- * @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model
- */
-
-export function setupDataSourceEvaluation(model) {
-    model.config.custom.dataSources.addEventListener("data-source-updated", () => {
-        const sheetId = model.getters.getActiveSheetId();
-        model.dispatch("EVALUATE_CELLS", { sheetId });
-    });
-}
 
 /**
  * Create a spreadsheet model with a mocked server environnement
@@ -37,13 +23,11 @@ export async function createModelWithDataSource(params = {}) {
         serverData: params.serverData || getBasicServerData(),
         mockRPC: params.mockRPC,
     });
-    const model = new Model(params.spreadsheetData, {
-        custom: {
-            env,
-            dataSources: new DataSources(env.services.orm),
-        },
+    const model = createSpreadsheetModel({
+        orm: env.services.orm,
+        data: params.spreadsheetData,
+        env,
     });
-    setupDataSourceEvaluation(model);
     await nextTick(); // initial async formulas loading
     return model;
 }

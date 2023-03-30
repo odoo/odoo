@@ -1,10 +1,6 @@
 /** @odoo-module */
 
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-
-const { Model } = spreadsheet;
+import { createSpreadsheetModel } from "@spreadsheet/helpers";
 
 /**
  * @type {{
@@ -207,17 +203,14 @@ export class DashboardLoader {
      * @returns {Model}
      */
     _createSpreadsheetModel(data, revisions = []) {
-        const dataSources = new DataSources(this.orm);
-        const model = new Model(
-            migrate(data),
-            {
-                custom: { env: this.env, orm: this.orm, dataSources },
-                mode: "dashboard",
-            },
-            revisions
-        );
+        const model = createSpreadsheetModel({
+            data,
+            orm: this.orm,
+            env: this.env,
+            revisions,
+            config: { mode: "dashboard" },
+        });
         this._activateFirstSheet(model);
-        dataSources.addEventListener("data-source-updated", () => model.dispatch("EVALUATE_CELLS"));
         return model;
     }
 }
