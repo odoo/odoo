@@ -699,6 +699,8 @@ class StockQuant(models.Model):
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+        if self.env.context.get('with_expiration'):
+            domain = expression.AND([[('expiration_date', '>=', self.env.context['with_expiration'])], domain])
 
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
         return self.search(domain, order=order).sorted(lambda q: not q.lot_id)
