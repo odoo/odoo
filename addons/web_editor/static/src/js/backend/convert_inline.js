@@ -638,8 +638,8 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
-    handleMasonry(editable);
     flattenBackgroundImages(editable);
+    handleMasonry(editable);
     responsiveToStaticForOutlook(editable);
     enforceTablesResponsivity(editable);
     formatTables($editable);
@@ -681,7 +681,8 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.addClass('odoo-editor-editable');
 }
 const XMLNS_URN = 'urn:schemas-microsoft-com:vml';
-// We assume background-size: cover, background-repeat: no-repeat and size 100%.
+// We assume background-size: cover, background-repeat: no-repeat, size 100% and
+// content is centered x/y (assumptions may not hold for cover snippet).
 function backgroundImageToVml(backgroundImage) {
     const clone = backgroundImage.cloneNode(true);
     const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
@@ -690,8 +691,8 @@ function backgroundImageToVml(backgroundImage) {
     [...clone.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || style.fontSize));
     const div = document.createElement('div');
     div.style.fontSize = 0;
-    div.style.height = backgroundImage.style.height || '100%';
-    div.style.width = backgroundImage.style.width || '100%';
+    div.style.height = '100%';
+    div.style.width = '100%';
     // ad-hoc fix to preserve some inherited properties without ancestor context:
     for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
         div.style[prop] = backgroundImage.style[prop] || style[prop];
@@ -706,13 +707,16 @@ function backgroundImageToVml(backgroundImage) {
     clone.className = clone.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
     clone.setAttribute('background', url);
     clone.setAttribute('valign', 'middle');
-    const vmlStyle = `width:${width*.75}pt;height:${height*.75}pt;`;
-    // : { width: containerWidth }, instead of mso-width-percent
+    const vmlStyle = `width:${width*.75}pt;height:${height*.75}pt;v-text-anchor:middle;`; // note: centering span not needed with this
     return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}
         <v:rect xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="${vmlStyle}">
             <v:fill src="${url}" origin="-0.5,-0.5" position="-0.5,-0.5" type="frame" size="1,1" aspect="atleast" color="#000000"/>
             <v:textbox inset="0,0,0,0">
-                ${vmlContent.outerHTML}
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="${width}" align="center" style="text-align: center;">${vmlContent.outerHTML}</td>
+                    </tr>
+                </table>
             </v:textbox>
         </v:rect>
         </${clone.nodeName.toLowerCase()}>
