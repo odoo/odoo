@@ -44,6 +44,8 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         )
 
     def test_fiscal_year_with_company_id(self):
+        self.env.company.fiscalyear_last_day = 7
+        self.env.company.fiscalyear_last_month = "6"
         company = self.env["res.company"].create(
             {
                 "name": "test company",
@@ -60,7 +62,7 @@ class SpreadsheetFiscalYearTest(TransactionCase):
             ),
             [
                 {"start": date(2020, 2, 4), "end": date(2021, 2, 3)},
-                {"start": date(2020, 1, 1), "end": date(2020, 12, 31)},
+                {"start": date(2019, 6, 8), "end": date(2020, 6, 7)},
             ],
         )
 
@@ -84,6 +86,8 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         self.assertEqual(o1_request2, o2_request2)
 
     def test_fiscal_year_with_wrong_company_id(self):
+        self.env.company.fiscalyear_last_day = 7
+        self.env.company.fiscalyear_last_month = "6"
         self.assertEqual(
             self.env["res.company"].get_fiscal_dates(
                 [
@@ -93,6 +97,6 @@ class SpreadsheetFiscalYearTest(TransactionCase):
             ),
             [
                 False,
-                {"start": date(2020, 1, 1), "end": date(2020, 12, 31)},
+                {"start": date(2019, 6, 8), "end": date(2020, 6, 7)},
             ],
         )
