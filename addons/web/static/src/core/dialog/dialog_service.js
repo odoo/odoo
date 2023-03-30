@@ -1,9 +1,18 @@
 /** @odoo-module **/
 
 import { registry } from "../registry";
-import { DialogContainer } from "./dialog_container";
+import { Component, markRaw, reactive, xml } from "@odoo/owl";
+import { WithEnv } from "../utils/components";
 
-import { markRaw, reactive } from "@odoo/owl";
+class DialogWrapper extends Component {
+    static template = xml`
+        <WithEnv env="{ dialogData: props.subEnv }">
+            <t t-component="props.subComponent" t-props="props.subProps" />
+        </WithEnv>
+    `;
+    static components = { WithEnv };
+    static props = ["*"];
+}
 
 /**
  *  @typedef {{
@@ -21,55 +30,60 @@ import { markRaw, reactive } from "@odoo/owl";
  */
 
 export const dialogService = {
+    dependencies: ["overlay"],
     /** @returns {DialogServiceInterface} */
-    start(env) {
-        const dialogs = reactive({});
-        let dialogId = 0;
+    start(env, { overlay }) {
+        const stack = [];
+        let nextId = 0;
 
-        registry.category("main_components").add("DialogContainer", {
-            Component: DialogContainer,
-            props: { dialogs },
-        });
-
-        function add(dialogClass, props, options = {}) {
-            for (const dialog of Object.values(dialogs)) {
-                dialog.dialogData.isActive = false;
+        const deactivate = () => {
+            for (const subEnv of stack) {
+                subEnv.isActive = false;
             }
-            const id = ++dialogId;
-            function close() {
-                if (dialogs[id]) {
-                    delete dialogs[id];
-                    Object.values(dialogs).forEach((dialog, i, dialogArr) => {
-                        dialog.dialogData.isActive = i === dialogArr.length - 1;
-                    });
-                    if (options.onClose) {
-                        options.onClose();
-                    }
-                }
-            }
+        };
 
-            const dialog = {
+        const add = (dialogClass, props, options = {}) => {
+            const id = nextId++;
+            const close = () => remove();
+            const subEnv = reactive({
                 id,
-                class: dialogClass,
-                props: markRaw({ ...props, close }),
-                dialogData: {
-                    isActive: true,
-                    close,
-                    id,
-                },
-            };
+                close,
+                isActive: true,
+            });
+
+            deactivate();
+            stack.push(subEnv);
+
             if (env.isSmall) {
                 const scrollOrigin = { top: window.scrollY, left: window.scrollX };
-                dialog.dialogData.scrollToOrigin = () => {
-                    if (!Object.keys(dialogs).length) {
+                subEnv.scrollToOrigin = () => {
+                    if (!stack.length) {
                         window.scrollTo(scrollOrigin);
                     }
                 };
             }
-            dialogs[id] = dialog;
 
-            return close;
-        }
+            const remove = overlay.add(
+                DialogWrapper,
+                {
+                    subComponent: dialogClass,
+                    subProps: markRaw({ ...props, close }),
+                    subEnv,
+                },
+                {
+                    onRemove: () => {
+                        stack.pop();
+                        deactivate();
+                        if (stack.length) {
+                            stack.at(-1).isActive = true;
+                        }
+                        options.onClose?.();
+                    },
+                }
+            );
+
+            return remove;
+        };
 
         return { add };
     },

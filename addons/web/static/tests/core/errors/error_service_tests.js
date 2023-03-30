@@ -11,6 +11,7 @@ import {
 import { errorService, UncaughtPromiseError } from "@web/core/errors/error_service";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
+import { overlayService } from "@web/core/overlay/overlay_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { registerCleanup } from "../../helpers/cleanup";
@@ -33,6 +34,7 @@ let unhandledRejectionCb;
 
 QUnit.module("Error Service", {
     async beforeEach() {
+        serviceRegistry.add("overlay", overlayService);
         serviceRegistry.add("error", errorService);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("notification", notificationService);

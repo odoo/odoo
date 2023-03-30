@@ -1,10 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "../registry";
-import { EffectContainer } from "./effect_container";
 import { RainbowMan } from "./rainbow_man";
-
-import { EventBus } from "@odoo/owl";
 
 const effectRegistry = registry.category("effects");
 
@@ -70,26 +67,23 @@ effectRegistry.add("rainbow_man", rainbowMan);
 // -----------------------------------------------------------------------------
 
 export const effectService = {
-    start(env) {
-        const bus = new EventBus();
-        registry.category("main_components").add("EffectContainer", {
-            Component: EffectContainer,
-            props: { bus },
-        });
-        let effectId = 0;
-
+    dependencies: ["overlay"],
+    start(env, { overlay }) {
         /**
          * @param {Object} [params] various params depending on the type of effect
          * @param {string} [params.type="rainbow_man"] the effect to display
          */
-        function add(params = {}) {
+        const add = (params = {}) => {
             const type = params.type || "rainbow_man";
             const effect = effectRegistry.get(type);
             const { Component, props } = effect(env, params) || {};
             if (Component) {
-                bus.trigger("UPDATE", { Component, props, id: effectId++ });
+                const remove = overlay.add(Component, {
+                    ...props,
+                    close: () => remove(),
+                });
             }
-        }
+        };
 
         return { add };
     },

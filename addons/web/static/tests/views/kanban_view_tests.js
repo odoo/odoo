@@ -1027,22 +1027,19 @@ QUnit.module("Views", (hooks) => {
             ["yop", "blip", "gnap", "blip"]
         );
 
-        assert.containsNone(target, ".o_popover_container .o_popover");
+        assert.containsNone(target, ".o_popover");
         target.querySelector(".o_kanban_record").dispatchEvent(new Event("mouseenter"));
         await nextTick();
-        assert.containsNone(target, ".o_popover_container .o_popover");
+        assert.containsNone(target, ".o_popover");
 
         simulateTimeout();
         await nextTick();
-        assert.containsOnce(target, ".o_popover_container .o_popover");
-        assert.strictEqual(
-            target.querySelector(".o_popover_container .o_popover").innerText,
-            "yop"
-        );
+        assert.containsOnce(target, ".o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "yop");
 
         target.querySelector(".o_kanban_record").dispatchEvent(new Event("mouseleave"));
         await nextTick();
-        assert.containsNone(target, ".o_popover_container .o_popover");
+        assert.containsNone(target, ".o_popover");
     });
 
     QUnit.test("pager should be hidden in grouped mode", async (assert) => {

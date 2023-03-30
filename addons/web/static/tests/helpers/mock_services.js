@@ -12,6 +12,7 @@ import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
+import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, status } from "@odoo/owl";
 import { ormService } from "@web/core/orm_service";
@@ -345,4 +346,5 @@ export const mocks = {
     dialog: makeFakeDialogService,
     orm: () => ormService,
     action: makeFakeActionService,
+    overlay: () => overlayService,
 };

@@ -384,7 +384,7 @@ QUnit.module("Fields", (hooks) => {
             )
         );
         // select input
-        const popover = document.querySelector(".o_popover_container");
+        const popover = document.querySelector(".o-overlay-container");
         await click(popover.querySelector(".o_field_many2one_selection input"));
         // select first input
         await click(popover.querySelector(".o-autocomplete--dropdown-item"));

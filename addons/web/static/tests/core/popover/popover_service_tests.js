@@ -46,8 +46,6 @@ QUnit.module("Popover service", {
 });
 
 QUnit.test("simple use", async (assert) => {
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
 
@@ -67,8 +65,6 @@ QUnit.test("simple use", async (assert) => {
 });
 
 QUnit.test("close on click away", async (assert) => {
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
 
@@ -85,8 +81,6 @@ QUnit.test("close on click away", async (assert) => {
 });
 
 QUnit.test("do not close on click away", async (assert) => {
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
 
@@ -109,10 +103,6 @@ QUnit.test("do not close on click away", async (assert) => {
 });
 
 QUnit.test("close callback", async (assert) => {
-    assert.expect(3);
-
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
 
@@ -129,8 +119,6 @@ QUnit.test("close callback", async (assert) => {
 });
 
 QUnit.test("sub component triggers close", async (assert) => {
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp" t-on-click="() => this.props.close()">in popover</div>`;
 
@@ -147,8 +135,6 @@ QUnit.test("sub component triggers close", async (assert) => {
 });
 
 QUnit.test("close popover if target is removed", async (assert) => {
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
 
@@ -166,13 +152,9 @@ QUnit.test("close popover if target is removed", async (assert) => {
 });
 
 QUnit.test("close and do not crash if target parent does not exist", async (assert) => {
-    assert.expect(3);
-
     // This target does not have any parent, it simulates the case where the element disappeared
     // from the DOM before the setup of the component
     const dissapearedTarget = document.createElement("div");
-
-    assert.containsOnce(fixture, ".o_popover_container");
 
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
@@ -188,8 +170,6 @@ QUnit.test("close and do not crash if target parent does not exist", async (asse
 });
 
 QUnit.test("keep popover if target sibling is removed", async (assert) => {
-    assert.containsOnce(fixture, ".o_popover_container");
-
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
 
