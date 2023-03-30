@@ -37,21 +37,18 @@
             (5, 0),
             (0, 0, {'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'notification_type': 'mail',
                     'template_ref': 'mail.template,%i' % ref('event.event_subscription'),
                    }
             ),
             (0, 0, {'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',
-                    'notification_type': 'mail',
                     'template_ref': 'mail.template,%i' % ref('event.event_reminder'),
                    }
             ),
             (0, 0, {'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'after_event',
-                    'notification_type': 'sms',
                     'template_ref': 'sms.template,%i' % ref('event_sms.sms_template_data_event_reminder'),
                    }
             )]"/>
