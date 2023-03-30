@@ -12,6 +12,7 @@ import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hoo
 
 import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
@@ -95,5 +96,13 @@ export class ActivityListPopoverItem extends Component {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
         await this.env.services["mail.activity"].markAsDone(this.props.activity, [attachmentId]);
         this.props.onActivityChanged();
+    }
+
+    get activityAssigneeAvatar() {
+        return url("/web/image", {
+            field: "avatar_128",
+            id: this.props.activity.user_id[0],
+            model: "res.users",
+        });
     }
 }
