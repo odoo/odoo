@@ -4273,10 +4273,6 @@ export class OdooEditor extends EventTarget {
      */
     _onPaste(ev) {
         ev.preventDefault();
-        const wysiwyg = $(this.editable).data('wysiwyg');
-        if (this._pluginCall('onPasteBlock', [ev, wysiwyg])) {
-            return;
-        }
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
