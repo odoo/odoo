@@ -139,7 +139,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
                     'type': 'bank',
                     'company_id': company.id,
                     'bank_account_id': record.res_partner_bank_id.id,
-                    'bank_statements_source': 'file_import',
+                    'bank_statements_source': 'undefined',
                 })
             else:
                 selected_journal.bank_account_id = record.res_partner_bank_id.id
