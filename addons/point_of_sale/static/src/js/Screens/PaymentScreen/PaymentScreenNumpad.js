@@ -2,6 +2,7 @@
 
 import { PSNumpadInputButton } from "./PSNumpadInputButton";
 import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class PaymentScreenNumpad extends Component {
     static components = { PSNumpadInputButton };
@@ -9,6 +10,6 @@ export class PaymentScreenNumpad extends Component {
 
     setup() {
         super.setup();
-        this.decimalPoint = this.env._t.database.parameters.decimal_point;
+        this.decimalPoint = useService("localization").decimalPoint;
     }
 }

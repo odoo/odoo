@@ -11,7 +11,8 @@
  */
 export const ControlButtonsMixin = (x) => {
     const controlButtonsToPosition = [];
-    const sortedControlButtons = [];
+    const orderedControlButtons = [];
+    let sortedControlButtons = [];
 
     class Extended extends x {
         get controlButtons() {
@@ -42,10 +43,11 @@ export const ControlButtonsMixin = (x) => {
 
         // If no position is set, we just push it to the array.
         if (!controlButton.position) {
-            sortedControlButtons.push(controlButton);
+            orderedControlButtons.push(controlButton);
         } else {
             controlButtonsToPosition.push(controlButton);
         }
+        Extended.sortControlButtons();
     };
 
     /**
@@ -56,6 +58,7 @@ export const ControlButtonsMixin = (x) => {
      * purposes, it is enough.
      */
     Extended.sortControlButtons = function () {
+        sortedControlButtons = [...orderedControlButtons];
         function setControlButton(locator, index, cb) {
             if (locator == "replace") {
                 sortedControlButtons[index] = cb;
@@ -68,7 +71,7 @@ export const ControlButtonsMixin = (x) => {
         function locate(cb) {
             const [locator, reference] = cb.position;
             const index = sortedControlButtons.findIndex((cb) => cb.name == reference);
-            return [locator, index, reference];
+            return [locator, index];
         }
         const cbMissingReference = [];
         // 1. First pass. If the reference control button isn't there, collect it for second pass.
@@ -88,11 +91,8 @@ export const ControlButtonsMixin = (x) => {
         //  ii) They really have missing reference.
         // Thus, we have to iterate the cb with missing reference in reverse.
         for (const cb of cbMissingReference.reverse()) {
-            const [locator, index, reference] = locate(cb);
+            const [locator, index] = locate(cb);
             if (index == -1) {
-                console.warn(
-                    `'${cb.name}' is not properly position because '${reference}' is not found. Is '${reference}' spelled correctly?`
-                );
                 sortedControlButtons.push(cb);
             } else {
                 setControlButton(locator, index, cb);

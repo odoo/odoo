@@ -30,6 +30,7 @@ export class PaymentScreen extends Component {
         this.pos = usePos();
         this.orm = useService("orm");
         this.popup = useService("popup");
+        this.action = useService("action");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.payment_methods_from_config = this.env.pos.payment_methods.filter((method) =>
@@ -233,8 +234,8 @@ export class PaymentScreen extends Component {
             // 2. Invoice.
             if (this.currentOrder.is_to_invoice()) {
                 if (syncOrderResult.length) {
-                    await this.env.legacyActionManager.do_action("account.account_invoices", {
-                        additional_context: {
+                    await this.action.doAction("account.account_invoices", {
+                        additionalContext: {
                             active_ids: [syncOrderResult[0].account_move],
                         },
                     });

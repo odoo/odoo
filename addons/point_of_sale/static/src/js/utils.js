@@ -9,7 +9,7 @@
  */
 export function batched(callback) {
     let called = false;
-    return async () => {
+    return async (...args) => {
         // This await blocks all calls to the callback here, then releases them sequentially
         // in the next microtick. This line decides the granularity of the batch.
         await Promise.resolve();
@@ -20,7 +20,7 @@ export function batched(callback) {
             // within the callback will proceed only after resetting called to false, and have
             // a chance to execute the callback again
             Promise.resolve().then(() => (called = false));
-            callback();
+            callback(...args);
         }
     };
 }

@@ -2,9 +2,8 @@
 
 import { parse } from "web.field_utils";
 import { barcodeService } from "@barcodes/barcode_service";
-import { _t } from "web.core";
 import { registry } from "@web/core/registry";
-import { EventBus, onWillDestroy, useComponent, useExternalListener } from "@odoo/owl";
+import { EventBus, onWillDestroy, useComponent } from "@odoo/owl";
 
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
@@ -36,7 +35,6 @@ const getDefaultConfig = () => ({
  *
  * Usage
  * =====
- * - Activate in the construction of root component. `NumberBuffer.activate()`
  * - Use the buffer in a child component by calling `NumberBuffer.use(<config>)`
  *   in the constructor of the child component.
  * - The component that `uses` the buffer has access to the following instance
@@ -58,11 +56,17 @@ const getDefaultConfig = () => ({
  * - Write more integration tests. NumberPopup can be used as test component.
  */
 class NumberBuffer extends EventBus {
-    constructor({ sound }) {
+    static serviceDependencies = ["sound", "localization"];
+    constructor() {
         super();
+        this.setup(...arguments);
+    }
+    setup({ sound, localization }) {
         this.isReset = false;
         this.bufferHolderStack = [];
         this.sound = sound;
+        this.defaultDecimalPoint = localization.decimalPoint;
+        window.addEventListener("keyup", this._onKeyboardInput.bind(this));
     }
     /**
      * @returns {String} value of the buffer, e.g. '-95.79'
@@ -106,15 +110,6 @@ class NumberBuffer extends EventBus {
      */
     getFloat() {
         return parse.float(this.get());
-    }
-    /**
-     * Add keyup listener to window via the useExternalListener hook.
-     * When the component calling this is unmounted, the listener is also
-     * removed from window.
-     */
-    activate() {
-        this.defaultDecimalPoint = _t.database.parameters.decimal_point;
-        useExternalListener(window, "keyup", this._onKeyboardInput.bind(this));
     }
     /**
      * @param {Object} config Use to setup the buffer
@@ -324,9 +319,9 @@ class NumberBuffer extends EventBus {
 }
 
 export const numberBuffer = {
-    dependencies: ["sound"],
-    start(env, { sound }) {
-        return new NumberBuffer({ sound });
+    dependencies: NumberBuffer.serviceDependencies,
+    start(env, deps) {
+        return new NumberBuffer(deps);
     },
 };
 
