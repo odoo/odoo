@@ -2,7 +2,7 @@
 
 from odoo import models, _
 from odoo.osv import expression
-from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools import html2plaintext, cleanup_xml_node, find_xml_value
 from lxml import etree
 
 
@@ -466,6 +466,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_fill_invoice_form(self, invoice, tree, qty_factor):
+
+        def _find_value(xpath, element=tree):
+            # avoid 'TypeError: empty namespace prefix is not supported in XPath'
+            nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
+            return find_xml_value(xpath, element, nsmap)
+
         logs = []
 
         if qty_factor == -1:
@@ -473,11 +479,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== partner_id ====
 
-        partner = self._import_retrieve_partner(tree, invoice)
-        if partner:
-            invoice.partner_id = partner
-        else:
-            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.is_sale_document() else _("vendor")))
+        role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
+        vat = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID')
+        phone = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone')
+        mail = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail')
+        name = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name')
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat)
 
         # ==== currency_id ====
 
