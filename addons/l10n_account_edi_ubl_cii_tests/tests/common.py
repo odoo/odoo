@@ -200,12 +200,8 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         })
 
         account_move.action_post()
-        self.action_send_and_print(account_move)
+        account_move._generate_pdf_and_send_invoice(self.move_template)
         return account_move
-
-    def action_send_and_print(self, invoice):
-        composer = self.env['account.move.send'].create({'mail_template_id': self.move_template.id, 'move_ids': invoice.ids})
-        composer.action_send_and_print()
 
     def _assert_invoice_attachment(self, attachment, xpaths, expected_file):
         """
