@@ -189,6 +189,7 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
 
     startSteps();
 
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickHomeCategory();
     ProductScreen.exec.addOrderline('Product Test', '1');
     ProductScreen.do.clickPayButton();

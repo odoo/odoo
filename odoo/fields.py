@@ -1692,29 +1692,6 @@ class _String(Field):
     def convert_to_write(self, value, record):
         return value
 
-    def get_trans_func(self, records):
-        """ Return a translation function `translate` for `self` on the given
-        records; the function call `translate(record_id, value)` translates the
-        field English value to the language given by the environment of `records`.
-        """
-        lang = records.env.lang or 'en_US'
-        if lang == 'en_US' or not self.translate:
-            return lambda record_id, value: value
-        # TODO: CWG: optimize it to one query
-        vals_en2lang = zip(records.with_context(lang='en_US').mapped(self.name),
-                           records.with_context(lang=lang).mapped(self.name))
-        translation_dictionaries = dict(
-            zip(records.ids, [self.get_translation_dictionary(val_en, {lang: val_lang}) for val_en, val_lang in vals_en2lang]))
-        if callable(self.translate):
-            def translate(record_id, value):
-                translation_dictionary = translation_dictionaries[record_id]
-                # pylint: disable=not-callable
-                return self.translate(lambda term: translation_dictionary[term][lang], value)
-        else:  # TODO CWG: TBD never used, useless?
-            def translate(record_id, value):
-                return translation_dictionaries.get(record_id).get(value, value)
-        return translate
-
     def get_translation_dictionary(self, from_lang_value, to_lang_values):
         """ Build a dictionary from terms in from_lang_value to terms in to_lang_values
 
@@ -3704,10 +3681,12 @@ class Properties(Field):
 
         dict_value = {}
         for property_definition in values_list:
-            property_value = property_definition.get('value') or False
+            property_value = property_definition.get('value')
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
 
+            if property_type not in ('integer', 'float') or property_value != 0:
+                property_value = property_value or False
             if property_type in ('many2one', 'many2many') and property_model and property_value:
                 # check that value are correct before storing them in database
                 if property_type == 'many2many' and property_value and not is_list_of(property_value, int):

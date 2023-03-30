@@ -185,7 +185,7 @@ class HrWorkEntry(models.Model):
 
         employee_ids = self.employee_id.ids
         if 'employee_id' in vals and vals['employee_id']:
-            employee_ids += vals['employee_id']
+            employee_ids += [vals['employee_id']]
         with self._error_checking(skip=skip_check, employee_ids=employee_ids):
             return super(HrWorkEntry, self).write(vals)
 
