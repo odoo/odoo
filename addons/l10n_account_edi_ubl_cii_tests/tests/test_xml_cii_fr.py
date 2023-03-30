@@ -304,6 +304,34 @@ class TestCIIFR(TestUBLCommon):
         )
         self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
+    def test_import_and_create_partner_facturx(self):
+        """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
+        """
+        partner_vals = {
+            'name': "Buyer",
+            'mail': "buyer@yahoo.com",
+            'phone': "1111",
+            'vat': "FR89215010646",
+        }
+        # assert there is no matching partner
+        partner_match = self.env['res.partner']._retrieve_partner(**partner_vals)
+        self.assertFalse(partner_match)
+
+        # Import attachment as an invoice
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+        })
+        self._update_invoice_from_file(
+            module_name='l10n_account_edi_ubl_cii_tests',
+            subfolder='tests/test_files/from_odoo',
+            filename='facturx_test_import_partner.xml',
+            invoice=invoice)
+
+        # assert a new partner has been created
+        partner_vals['email'] = partner_vals.pop('mail')
+        self.assertRecordValues(invoice.partner_id, [partner_vals])
+
     def test_import_tax_included(self):
         """
         Tests whether the tax included / tax excluded are correctly decoded when
