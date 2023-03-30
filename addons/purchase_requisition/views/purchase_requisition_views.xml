@@ -156,7 +156,7 @@
                             <tree string="Products" editable="bottom">
                                 <field name="product_id"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
-                                <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', '')], 'readonly': [('parent.state', '!=', 'draft')]}"/>
+                                <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', '')]}"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
