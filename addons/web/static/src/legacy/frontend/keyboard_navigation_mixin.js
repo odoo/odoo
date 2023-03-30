@@ -77,7 +77,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                 return;
             }
             var accesskeyElements = $(document).find('[accesskey]').filter(':visible');
-            _.each(accesskeyElements, function (elem) {
+            accesskeyElements.forEach( function (elem) {
                 var overlay = $(_.str.sprintf("<div class='o_web_accesskey_overlay font-sans-serif'>%s</div>", $(elem).attr('accesskey').toUpperCase()));
 
                 var $overlayParent;
@@ -168,7 +168,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                         .not('[accesskey]')
                         .not('[disabled]')
                         .not('[tabindex="-1"]');
-                    _.each(buttonsWithoutAccessKey, function (elem) {
+                    buttonsWithoutAccessKey.forEach( function (elem) {
                         var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
                         for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
                             var candidateAccessKey = buttonString[letterIndex].toUpperCase();
@@ -183,7 +183,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                 }
 
                 var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
-                _.each(elementsWithoutAriaKeyshortcut, function (elem) {
+                elementsWithoutAriaKeyshortcut.forEach( function (elem) {
                     elem.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + elem.accessKey);
                 });
                 this._addAccessKeyOverlays();

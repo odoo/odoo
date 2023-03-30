@@ -39,7 +39,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
 
         await this._getCurrentLocation();
-        await _.each(carriers, async carrierInput => {
+        await carriers.forEach( async carrierInput => {
             this._showLoading((carrierInput));
             await this._handleCarrierUpdateResult(carrierInput)
         });

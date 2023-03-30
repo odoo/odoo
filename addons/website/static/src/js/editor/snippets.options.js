@@ -1753,7 +1753,7 @@ options.registry.Carousel = options.Class.extend({
         const id = 'myCarousel' + Date.now();
         this.$target.attr('id', id);
         this.$target.find('[data-bs-target]').attr('data-bs-target', '#' + id);
-        _.each(this.$target.find('[data-bs-slide], [data-bs-slide-to]'), function (el) {
+        this.$target.find('[data-bs-slide], [data-bs-slide-to]').forEach( function (el) {
             var $el = $(el);
             if ($el.attr('data-bs-target')) {
                 $el.attr('data-bs-target', '#' + id);

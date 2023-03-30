@@ -256,7 +256,7 @@ var FieldMany2One = AbstractField.extend({
         this.$input.autocomplete({
             source: function (req, resp) {
                 self.suggestions = [];
-                _.each(self._autocompleteSources, function (source) {
+                self._autocompleteSources.forEach( function (source) {
                     // Resets the results for this source
                     source.results = [];
 
@@ -359,7 +359,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _concatenateAutocompleteResults: function () {
         var results = [];
-        _.each(this._autocompleteSources, function (source) {
+        this._autocompleteSources.forEach( function (source) {
             if (source.results && source.results.length) {
                 results = results.concat(source.results);
             } else if (source.loading) {

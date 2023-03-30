@@ -200,7 +200,7 @@ options.registry.gallery = options.Class.extend({
         while (imgs.length) {
             var min = Infinity;
             var $lowest;
-            _.each(cols, function (col) {
+            cols.forEach( function (col) {
                 var $col = $(col);
                 var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
                 if (height < min) {
@@ -235,7 +235,7 @@ options.registry.gallery = options.Class.extend({
 
         this._replaceContent($row);
 
-        _.each(imgs, function (img) {
+        imgs.forEach( function (img) {
             var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';

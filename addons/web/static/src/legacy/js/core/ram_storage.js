@@ -47,7 +47,7 @@ var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
      * @return {string}
      */
     key: function (index) {
-        return _.keys(this.storage)[index];
+        return Object.keys(this.storage)[index];
     },
     /**
      * Removes the given key from the storage

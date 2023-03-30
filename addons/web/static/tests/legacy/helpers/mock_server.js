@@ -1471,7 +1471,7 @@ var MockServer = Class.extend({
 
         // if no fields have been given, the server picks all stored fields
         if (kwargs.fields.length === 0) {
-            aggregatedFields = _.keys(this.data[model].fields);
+            aggregatedFields = Object.keys(this.data[model].fields);
         }
 
         var groupByFieldNames = groupBy.map( groupByField => {
@@ -1829,7 +1829,7 @@ var MockServer = Class.extend({
         var records = this._getRecords(args.model, args.domain || [], {
           active_test,
         });
-        var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
+        var fields = args.fields && args.fields.length ? args.fields : Object.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
         if (args.sort) {

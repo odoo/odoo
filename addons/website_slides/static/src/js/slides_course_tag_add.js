@@ -129,7 +129,7 @@ var TagCourseDialog = Dialog.extend({
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
-                _.each(data, function (obj) {
+                data.forEach( function (obj) {
                     if (that.matcher(query.term, obj[nameKey])) {
                         tags.results.push({id: obj.id, text: obj[nameKey]});
                     }

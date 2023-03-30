@@ -32,7 +32,7 @@ var Throbber = Widget.extend({
                 return;
             var seconds = (new Date().getTime() - self.start_time) / 1000;
             var mes;
-            _.each(messages_by_seconds(), function(el) {
+            messages_by_seconds().forEach( function(el) {
                 if (seconds >= el[0])
                     mes = el[1];
             });
@@ -59,7 +59,7 @@ if ($.blockUI) {
 function blockAccessKeys() {
     var elementWithAccessKey = [];
     elementWithAccessKey = document.querySelectorAll('[accesskey]');
-    _.each(elementWithAccessKey, function (elem) {
+    elementWithAccessKey.forEach( function (elem) {
         elem.setAttribute("data-accesskey",elem.getAttribute('accesskey'));
         elem.removeAttribute('accesskey');
     });
@@ -68,7 +68,7 @@ function blockAccessKeys() {
 function unblockAccessKeys() {
     var elementWithDataAccessKey = [];
     elementWithDataAccessKey = document.querySelectorAll('[data-accesskey]');
-    _.each(elementWithDataAccessKey, function (elem) {
+    elementWithDataAccessKey.forEach( function (elem) {
         elem.setAttribute('accesskey', elem.getAttribute('data-accesskey'));
         elem.removeAttribute('data-accesskey');
     });

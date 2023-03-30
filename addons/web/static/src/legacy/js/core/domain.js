@@ -227,7 +227,7 @@ var Domain = collections.Tree.extend({
             this._children.push(subdomain);
         } else {
             var self = this;
-            _.each(subdomain._children, function (childDomain) {
+            subdomain._children.forEach( function (childDomain) {
                 self._children.push(childDomain);
             });
         }
@@ -291,7 +291,7 @@ var Domain = collections.Tree.extend({
     normalizeArray: function (domain) {
         if (domain.length === 0) { return domain; }
         var expected = 1;
-        _.each(domain, function (item) {
+        domain.forEach( function (item) {
             if (item === "&" || item === "|") {
                 expected++;
             } else if (item !== "!") {
@@ -340,7 +340,7 @@ var Domain = collections.Tree.extend({
         }
 
         var stack = [];
-        _.each(domain, function (dom) {
+        domain.forEach( function (dom) {
             if (dom === '|' || dom === '&') {
                 stack.push(dom);
             } else {

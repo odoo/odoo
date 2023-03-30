@@ -147,7 +147,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
 
         // set a unique id to each row for options hierarchy
         var $products = this.$el.find('tr.js_product');
-        _.each($products, function (el) {
+        $products.forEach( function (el) {
             var $el = $(el);
             var uniqueId = self._getUniqueId(el);
 

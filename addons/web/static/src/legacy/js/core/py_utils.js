@@ -176,7 +176,7 @@ function eval_domains(domains, evaluation_context) {
  */
 function get_normalized_domain(domain_array) {
     var expected = 1; // Holds the number of expected domain expressions
-    _.each(domain_array, function (item) {
+    domain_array.forEach( function (item) {
         if (item === "&" || item === "|") {
             expected++;
         } else if (item !== "!") {

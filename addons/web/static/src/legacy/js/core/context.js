@@ -10,7 +10,7 @@ var Context = Class.extend({
         this.__contexts = [];
         this.__eval_context = null;
         var self = this;
-        _.each(arguments, function (x) {
+        arguments.forEach( function (x) {
             self.add(x);
         });
     },

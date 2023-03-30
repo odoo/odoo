@@ -376,7 +376,7 @@ var Animation = publicWidget.Widget.extend({
      */
     start: function () {
         this._prepareEffects();
-        _.each(this._animationEffects, function (effect) {
+        this._animationEffects.forEach( function (effect) {
             effect.start();
         });
         return this._super.apply(this, arguments);
@@ -398,7 +398,7 @@ var Animation = publicWidget.Widget.extend({
         this._animationEffects = [];
 
         var self = this;
-        _.each(this.effects, function (desc) {
+        this.effects.forEach( function (desc) {
             self._addEffect(self[desc.update], desc.startEvents, _findTarget(desc.startTarget), {
                 getStateCallback: desc.getState && self[desc.getState],
                 endEvents: desc.endEvents || undefined,
@@ -463,7 +463,7 @@ registry.slider = publicWidget.Widget.extend({
         this.$('img').off('.slider');
         this.$el.carousel('pause');
         this.$el.removeData('bs.carousel');
-        _.each(this.$('.carousel-item'), function (el) {
+        this.$('.carousel-item').forEach( function (el) {
             $(el).css('min-height', '');
         });
         $(window).off('.slider');
@@ -480,7 +480,7 @@ registry.slider = publicWidget.Widget.extend({
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
         $items.css('min-height', '');
-        _.each($items, el => {
+        $items.forEach( el => {
             var $item = $(el);
             var isActive = $item.hasClass('active');
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
@@ -919,7 +919,7 @@ registry.socialShare = publicWidget.Widget.extend({
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
         };
-        if (!_.contains(_.keys(socialNetworks), social)) {
+        if (!_.contains(Object.keys(socialNetworks), social)) {
             return;
         }
         var wHeight = 500;
@@ -1249,7 +1249,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
 
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        _.each(this.$animatedElements, el => {
+        this.$animatedElements.forEach( el => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
                 return;

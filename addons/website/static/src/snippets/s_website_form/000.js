@@ -275,7 +275,7 @@ odoo.define('website.s_website_form', function (require) {
             // Serialize form inputs into a single object
             // Aggregate multiple values into arrays
             var form_values = {};
-            _.each(this.form_fields, function (input) {
+            this.form_fields.forEach( function (input) {
                 if (input.name in form_values) {
                     // If a value already exists for this field,
                     // we are facing a x2many field, so we store

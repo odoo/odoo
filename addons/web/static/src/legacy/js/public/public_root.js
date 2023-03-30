@@ -326,7 +326,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      */
     _onWebsiteFormSubmit: function (ev) {
         var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
-        _.each($buttons, function (btn) {
+        $buttons.forEach( function (btn) {
             var $btn = $(btn);
             $btn.prepend('<i class="fa fa-circle-o-notch fa-spin"></i> ');
             $btn.prop('disabled', true);

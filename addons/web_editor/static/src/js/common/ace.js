@@ -526,11 +526,11 @@ var ViewEditor = Widget.extend({
             // Initialize a 0 level for each view and assign them an array containing their children.
             var self = this;
             var roots = [];
-            _.each(this.views, function (view) {
+            this.views.forEach( function (view) {
                 view.level = 0;
                 view.children = [];
             });
-            _.each(this.views, function (view) {
+            this.views.forEach( function (view) {
                 var parentId = view.inherit_id[0];
                 var parent = parentId && self.views[parentId];
                 if (parent) {
@@ -546,11 +546,11 @@ var ViewEditor = Widget.extend({
             function visit(view, level) {
                 view.level = level;
                 self.sortedViews.push(view);
-                _.each(view.children, function (child) {
+                view.children.forEach( function (child) {
                     visit(child, level + 1);
                 });
             }
-            _.each(roots, function (root) {
+            roots.forEach( function (root) {
                 visit(root, 0);
             });
         }
@@ -853,7 +853,7 @@ var ViewEditor = Widget.extend({
 
         var self = this;
         this.$lists.xml.empty();
-        _.each(this.sortedViews, function (view) {
+        this.sortedViews.forEach( function (view) {
             self.$lists.xml.append($('<option/>', {
                 value: view.id,
                 text: view.name,

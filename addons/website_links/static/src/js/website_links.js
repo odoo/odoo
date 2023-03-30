@@ -304,7 +304,7 @@ var RecentLinks = publicWidget.Widget.extend({
                 limit: 20,
             },
         }).then(function (result) {
-            _.each(result.reverse(), function (link) {
+            result.reverse().forEach( function (link) {
                 self._addLink(link);
             });
             self._updateNotification();

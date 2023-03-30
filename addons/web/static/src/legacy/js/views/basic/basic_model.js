@@ -380,7 +380,7 @@ var BasicModel = AbstractModel.extend({
                 context: context,
             })
             .then(function () {
-                _.each(records, function (record) {
+                records.forEach( function (record) {
                     // discard any changes to prevent creating a new record with auto-save
                     self.discardChanges(record.id);
                     var parent = record.parentID && self.localData[record.parentID];
@@ -622,7 +622,7 @@ var BasicModel = AbstractModel.extend({
         this._sortList(element);
 
         if (!element.orderedResIDs && element._changes) {
-            _.each(element._changes, function (change) {
+            element._changes.forEach(  function (change) {
                 if (change.operation === 'ADD' && change.isNew) {
                     element.data = _.without(element.data, change.id);
                     if (change.position === 'top') {
@@ -854,13 +854,13 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var defs = [];
         var record_fields = {};
-        _.each(fields, function (field) {
+        fields.forEach( function (field) {
             record_fields[field.name] = _.pick(field, 'type', 'relation', 'domain', 'selection');
         });
         fieldInfo = fieldInfo || {};
         var fieldsInfo = {};
         fieldsInfo.default = {};
-        _.each(fields, function (field) {
+        fields.forEach( function (field) {
             fieldsInfo.default[field.name] = fieldInfo[field.name] || {};
         });
         var record = this._makeDataPoint({
@@ -869,7 +869,7 @@ var BasicModel = AbstractModel.extend({
             fieldsInfo: fieldsInfo,
             viewType: 'default',
         });
-        _.each(fields, function (field) {
+        fields.forEach( function (field) {
             var dataPoint;
             record.data[field.name] = null;
             if (field.type === 'many2one') {
@@ -902,7 +902,7 @@ var BasicModel = AbstractModel.extend({
             } else if (field.type === 'one2many' || field.type === 'many2many') {
                 var relatedFieldsInfo = {};
                 relatedFieldsInfo.default = {};
-                _.each(field.fields, function (field) {
+                field.fields.forEach( function (field) {
                     relatedFieldsInfo.default[field.name] = {};
                 });
                 var dpParams = {
@@ -922,7 +922,7 @@ var BasicModel = AbstractModel.extend({
                     if (_.isObject(field.value[0])) {
                         dpParams.res_ids = _.pluck(field.value, 'id');
                         dataPoint = self._makeDataPoint(dpParams);
-                        _.each(field.value, function (data) {
+                        field.value.forEach( function (data) {
                             var recordDP = self._makeDataPoint({
                                 data: data,
                                 modelName: field.relation,
@@ -1073,7 +1073,7 @@ var BasicModel = AbstractModel.extend({
                     if (data.data.length) {
                         var dataType = self.localData[data.data[0]].type;
                         if (dataType === 'record') {
-                            _.each(data.data, function (dataPoint) {
+                            data.data.forEach( function (dataPoint) {
                                 var recordData = self.localData[dataPoint].data;
                                 var inRecords = records.find( record.id === recordData.id);
                                 if (inRecords) {
@@ -1091,7 +1091,7 @@ var BasicModel = AbstractModel.extend({
                         }
                     }
                     data.res_ids = [];
-                    _.each(data.data, function (d) {
+                    data.data.forEach( function (d) {
                         var dataPoint = self.localData[d];
                         if (dataPoint.type === 'record') {
                             data.res_ids.push(dataPoint.res_id);
@@ -1156,7 +1156,7 @@ var BasicModel = AbstractModel.extend({
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
-                _.each(fieldNames, function (name) {
+                fieldNames.forEach( function (name) {
                     if (changes[name] === null) {
                         delete changes[name];
                     }
@@ -1252,7 +1252,7 @@ var BasicModel = AbstractModel.extend({
         if (list.type === 'record') {
             return;
         } else if (list._changes) {
-            _.each(list._changes, function (change) {
+            list._changes.forEach( function (change) {
                 delete change.isNew;
             });
         }
@@ -1512,7 +1512,7 @@ var BasicModel = AbstractModel.extend({
         var additionalContexts = options && options.context;
         var makeDefaultRecords = [];
         if (additionalContexts){
-            _.each(additionalContexts, function (context) {
+            additionalContexts.forEach( function (context) {
                 params.context = self._getContext(list, {additionalContext: context, full: true, sanitize_default_values: true});
                 makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
             });
@@ -1523,7 +1523,7 @@ var BasicModel = AbstractModel.extend({
 
         return Promise.all(makeDefaultRecords).then(function (resultIds){
             var ids = [];
-            _.each(resultIds, function (id){
+            resultIds.forEach( function (id){
                 ids.push(id);
 
                 list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
@@ -1590,7 +1590,7 @@ var BasicModel = AbstractModel.extend({
 
         if (options.notifyChange === false) {
             return Promise.all(defs).then(function () {
-                return Promise.resolve(_.keys(changes));
+                return Promise.resolve(Object.keys(changes));
             });
         }
 
@@ -1610,7 +1610,7 @@ var BasicModel = AbstractModel.extend({
                     self._performOnChange(record, onChangeFields, { viewType: options.viewType })
                     .then(function (result) {
                         delete record._warning;
-                        resolve(_.keys(changes).concat(Object.keys(result && result.value || {})));
+                        resolve(Object.keys(changes).concat(Object.keys(result && result.value || {})));
                     }).guardedCatch(function () {
                         self._visitChildren(record, function (elem) {
                             Object.assign(elem, initialData[elem.id]);
@@ -1618,7 +1618,7 @@ var BasicModel = AbstractModel.extend({
                         reject();
                     });
                 } else {
-                    resolve(_.keys(changes));
+                    resolve(Object.keys(changes));
                 }
             }).then(function (fieldNames) {
                 return self._fetchSpecialData(record).then(function (fieldNames2) {
@@ -1852,7 +1852,7 @@ var BasicModel = AbstractModel.extend({
 
                 // save it in case of a [5] which will remove the _changes
                 var oldChanges = list._changes;
-                _.each(val, function (command) {
+                val.forEach( function (command) {
                     var rec, recID;
                     if (command[0] === 0 || command[0] === 1) {
                         // CREATE or UPDATE
@@ -1912,7 +1912,7 @@ var BasicModel = AbstractModel.extend({
                         list._changes = [{operation: 'REMOVE_ALL'}];
                     } else if (command[0] === 6) {
                         list._changes = [{operation: 'REMOVE_ALL'}];
-                        _.each(command[2], function (resID) {
+                        command[2].forEach( function (resID) {
                             linkRecord(list, resID);
                         });
                     }
@@ -2815,7 +2815,7 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchRelatedData: function (list, toFetch, fieldName) {
         var self = this;
-        var ids = _.keys(toFetch);
+        var ids = Object.keys(toFetch);
         for (var i = 0; i < ids.length; i++) {
             ids[i] = Number(ids[i]);
         }
@@ -2826,7 +2826,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         var def;
-        var fieldNames = _.keys(fieldInfo.relatedFields);
+        var fieldNames = Object.keys(fieldInfo.relatedFields);
         if (fieldNames.length) {
             var field = list.fields[fieldName];
             def = this._rpc({
@@ -3175,7 +3175,7 @@ var BasicModel = AbstractModel.extend({
         _.each(list.data, function (groupIndex) {
             var group = self.localData[groupIndex];
             var nextDataToFetch = self._getDataToFetch(group, fieldName);
-            _.each(_.keys(nextDataToFetch), function (id) {
+            _.each(Object.keys(nextDataToFetch), function (id) {
                 if (toFetch[id]) {
                     toFetch[id] = toFetch[id].concat(nextDataToFetch[id]);
                 } else {
@@ -4754,7 +4754,7 @@ var BasicModel = AbstractModel.extend({
         });
 
         // fetch many2ones display_name
-        _.each(_.keys(many2ones), function (name) {
+        _.each(Object.keys(many2ones), function (name) {
             defs.push(self._fetchNameGets(x2manyList, name));
         });
 
@@ -4782,7 +4782,7 @@ var BasicModel = AbstractModel.extend({
             }
             var record = self.localData[dataPointID];
             var data = Object.assign({}, record.data, record._changes);
-            if (_.difference(fieldNames, _.keys(data)).length) {
+            if (_.difference(fieldNames, Object.keys(data)).length) {
                 missingIDs.push(resId);
             }
         }
