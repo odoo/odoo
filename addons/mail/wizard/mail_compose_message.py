@@ -206,12 +206,14 @@ class MailComposer(models.TransientModel):
             result['partner_ids'] = partner_ids
             record = self.env[values.get('model') or result['model']].browse(values.get('res_id') or result['res_id'])
             parent_subject = tools.ustr(parent.subject or '')
-            subject = parent_subject or record._message_compute_subject()
+            subject = parent_subject
+            if not subject and hasattr(record, '_message_compute_subject'):
+                subject = record._message_compute_subject()
         elif values.get('model') and values.get('res_id'):
             record = self.env[values['model']].browse(values['res_id'])
             doc_name = record.display_name
             result['record_name'] = doc_name or ''
-            subject = record._message_compute_subject()
+            subject = record._message_compute_subject() if hasattr(record, '_message_compute_subject') else tools.ustr(result['record_name'])
 
         result['subject'] = subject
 
