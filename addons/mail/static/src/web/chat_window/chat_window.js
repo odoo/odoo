@@ -76,8 +76,6 @@ export class ChatWindow extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape":
-                // prevent reopening last app when in home menu
-                ev.stopPropagation();
                 if (
                     isEventHandled(ev, "NavigableList.close") ||
                     isEventHandled(ev, "Composer.discard")

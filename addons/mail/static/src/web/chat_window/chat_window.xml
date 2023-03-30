@@ -9,7 +9,8 @@
                 'o-folded': props.chatWindow.folded,
                 'position-absolute bottom-0 rounded-top-3 bg-view overflow-hidden d-flex flex-column': !props.chatWindow.hidden
                 }"
-        t-on-keydown="onKeydown"
+        t-on-keydown.stop="onKeydown"
+        tabindex="1"
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center cursor-pointer flex-shrink-0" t-on-click="toggleFold">
             <div t-if="store.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
