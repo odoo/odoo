@@ -308,13 +308,11 @@ class TestMailSchedule(EventCase, MockEmail):
             'name': "Go Sports",
             'event_type_mail_ids': [
                 Command.create({
-                    'notification_type': 'mail',
                     'interval_nbr': 0,
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
                 Command.create({
-                    'notification_type': 'mail',
                     'interval_nbr': 5,
                     'interval_unit': 'hours',
                     'interval_type': 'before_event',
@@ -330,7 +328,8 @@ class TestMailSchedule(EventCase, MockEmail):
         self.assertEqual(len(test_event.event_mail_ids), 2, "Should now have only two communication lines")
         mails_to_send = test_event.event_mail_ids - mail_done
         duplicate_mails = mails_to_send.filtered(lambda mail:
-            mail.notification_type == 'mail' and\
+            mail.template_ref and\
+            mail.template_ref._name == 'mail.template' and\
             mail.interval_nbr == 0 and\
             mail.interval_unit == 'now' and\
             mail.interval_type == 'after_sub' and\
