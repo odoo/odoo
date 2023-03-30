@@ -100,6 +100,14 @@ class HrEmployeePrivate(models.Model):
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
+    employee_type = fields.Selection([
+            ('employee', 'Employee'),
+            ('student', 'Student'),
+            ('trainee', 'Trainee'),
+            ('contractor', 'Contractor'),
+            ('freelance', 'Freelancer'),
+        ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
+        help="The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History.")
 
     job_id = fields.Many2one(tracking=True)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
