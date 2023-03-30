@@ -15,6 +15,7 @@ export class InvoiceButton extends Component {
         this.invoiceButton = useRef("invoice-button");
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.action = useService("action");
     }
     get isAlreadyInvoiced() {
         if (!this.props.order) {
@@ -38,8 +39,8 @@ export class InvoiceButton extends Component {
                 { load: false }
             );
             if (orderWithInvoice && orderWithInvoice.account_move) {
-                await this.env.legacyActionManager.do_action("account.account_invoices", {
-                    additional_context: {
+                await this.action.doAction("account.account_invoices", {
+                    additionalContext: {
                         active_ids: [orderWithInvoice.account_move],
                     },
                 });

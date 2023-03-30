@@ -26,7 +26,6 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
         setup() {
             this.state = useState({ buffer: "" });
             this.numberBuffer = useService("number_buffer");
-            this.numberBuffer.activate();
             this.numberBuffer.use({
                 state: this.state,
             });

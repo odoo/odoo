@@ -45,7 +45,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         }
     },
     isInterfacePrinter() {
-        return this.env.pos.config.iface_printers;
+        return this.config.iface_printers;
     },
     addSubmitOrderButton() {
         return this.config.module_pos_restaurant && this.unwatched.printers.length;

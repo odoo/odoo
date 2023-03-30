@@ -22,8 +22,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.pos = usePos();
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.action = useService("action");
         this.hardwareProxy = useService("hardware_proxy");
-        this.legacyActionManager = useService("legacy_action_manager");
         this.manualInputCashCount = false;
         this.cashControl = this.pos.globalState.config.cash_control;
         this.closeSessionClicked = false;
@@ -91,9 +91,9 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async downloadSalesReport() {
-        await this.legacyActionManager.do_action("point_of_sale.sale_details_report", {
-            additional_context: {
-                active_ids: [this.pos.globalState.pos_session.id],
+        await this.action.doAction("point_of_sale.sale_details_report", {
+            additionalContext: {
+                active_ids: [this.env.pos.pos_session.id],
             },
         });
     }

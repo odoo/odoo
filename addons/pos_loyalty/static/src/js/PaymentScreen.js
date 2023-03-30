@@ -156,12 +156,8 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                 }
             }
             if (payload.coupon_report) {
-                for (const report_entry of Object.entries(payload.coupon_report)) {
-                    await this.env.legacyActionManager.do_action(report_entry[0], {
-                        additional_context: {
-                            active_ids: report_entry[1],
-                        },
-                    });
+                for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
+                    await this.action.doAction(actionId, { additionalContext: { active_ids } });
                 }
             }
             order.new_coupon_info = payload.new_coupon_info;

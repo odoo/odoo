@@ -16,6 +16,7 @@ export class NumpadWidget extends Component {
     };
     setup() {
         this.numberBuffer = useService("number_buffer");
+        this.localization = useService("localization");
     }
     get hasPriceControlRights() {
         return (
@@ -43,6 +44,6 @@ export class NumpadWidget extends Component {
         this.numberBuffer.sendKey(key);
     }
     get decimalSeparator() {
-        return this.env._t.database.parameters.decimal_point;
+        return this.localization.decimalPoint;
     }
 }
