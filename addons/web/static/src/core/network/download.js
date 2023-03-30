@@ -504,15 +504,15 @@ download._download = (options) => {
         xhr.responseType = "blob";
         xhr.onload = () => {
             const mimetype = xhr.response.type;
+            const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(
+                /;$/,
+                ""
+            );
+            // replace because apparently we send some C-D headers with a trailing ";"
+            const filename = header ? parse(header).parameters.filename : null;
             // In Odoo, the default mimetype, including for JSON errors is text/html (ref: http.py:Root.get_response )
-            // in that case, we have to assume the file is not valid, hence that there was an error
-            if (xhr.status === 200 && mimetype !== "text/html") {
-                // replace because apparently we send some C-D headers with a trailing ";"
-                const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(
-                    /;$/,
-                    ""
-                );
-                const filename = header ? parse(header).parameters.filename : null;
+            // in that case, in order to also be able to download html files, we check if we get a proper filename to be able to download
+            if (xhr.status === 200 && (mimetype !== "text/html" || filename)) {
                 _download(xhr.response, filename, mimetype);
                 return resolve(filename);
             } else if (xhr.status === 502) {
