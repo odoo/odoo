@@ -60,13 +60,13 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
     CustomDialog.components = { Dialog };
     CustomDialog.template = xml`<Dialog title="'Welcome'">content</Dialog>`;
     await mount(PseudoWebClient, target, { env });
-    assert.containsNone(target, ".o_dialog_container .o_dialog");
+    assert.containsNone(target, ".o_dialog");
     env.services.dialog.add(CustomDialog);
     await nextTick();
-    assert.containsOnce(target, ".o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Welcome");
-    await click(target.querySelector(".o_dialog_container .o_dialog footer button"));
-    assert.containsNone(target, ".o_dialog_container .o_dialog");
+    await click(target.querySelector(".o_dialog footer button"));
+    assert.containsNone(target, ".o_dialog");
 });
 
 QUnit.test("Simple rendering and close a single dialog", async (assert) => {
@@ -77,16 +77,16 @@ QUnit.test("Simple rendering and close a single dialog", async (assert) => {
     CustomDialog.template = xml`<Dialog title="'Welcome'">content</Dialog>`;
 
     await mount(PseudoWebClient, target, { env });
-    assert.containsNone(target, ".o_dialog_container .o_dialog");
+    assert.containsNone(target, ".o_dialog");
 
     const removeDialog = env.services.dialog.add(CustomDialog);
     await nextTick();
-    assert.containsOnce(target, ".o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Welcome");
 
     removeDialog();
     await nextTick();
-    assert.containsNone(target, ".o_dialog_container .o_dialog");
+    assert.containsNone(target, ".o_dialog");
 
     // Call a second time, the close on the dialog.
     // As the dialog is already close, this call is just ignored. No error should be raised.
@@ -101,20 +101,20 @@ QUnit.test("rendering with two dialogs", async (assert) => {
     CustomDialog.template = xml`<Dialog title="props.title">content</Dialog>`;
 
     await mount(PseudoWebClient, target, { env });
-    assert.containsNone(target, ".o_dialog_container .o_dialog");
+    assert.containsNone(target, ".o_dialog");
     env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
-    assert.containsOnce(target, ".o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Hello");
     env.services.dialog.add(CustomDialog, { title: "Sauron" });
     await nextTick();
-    assert.containsN(target, ".o_dialog_container .o_dialog", 2);
+    assert.containsN(target, ".o_dialog", 2);
     assert.deepEqual(
         [...target.querySelectorAll("header .modal-title")].map((el) => el.textContent),
         ["Hello", "Sauron"]
     );
-    await click(target.querySelector(".o_dialog_container .o_dialog footer button"));
-    assert.containsOnce(target, ".o_dialog_container .o_dialog");
+    await click(target.querySelector(".o_dialog footer button"));
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Sauron");
 });
 
@@ -127,31 +127,25 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
 
     env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
-    let dialogModal = target.querySelector(
-        ".o_dialog_container .o_dialog .modal:not(.o_inactive_modal)"
-    );
+    let dialogModal = target.querySelector(".o_dialog .modal:not(.o_inactive_modal)");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 
     env.services.dialog.add(CustomDialog, { title: "Sauron" });
     await nextTick();
-    dialogModal = target.querySelector(
-        ".o_dialog_container .o_dialog .modal:not(.o_inactive_modal)"
-    );
+    dialogModal = target.querySelector(".o_dialog .modal:not(.o_inactive_modal)");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 
     env.services.dialog.add(CustomDialog, { title: "Rafiki" });
     await nextTick();
-    dialogModal = target.querySelector(
-        ".o_dialog_container .o_dialog .modal:not(.o_inactive_modal)"
-    );
+    dialogModal = target.querySelector(".o_dialog .modal:not(.o_inactive_modal)");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 });
 
 QUnit.test("Interactions between multiple dialogs", async (assert) => {
-    assert.expect(14);
+    assert.expect(10);
     function activity(modals) {
         const active = [];
         const names = [];
@@ -179,7 +173,6 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     let res = activity(modals);
     assert.deepEqual(res.active, [false, false, true]);
     assert.deepEqual(res.names, ["Hello", "Sauron", "Rafiki"]);
-    assert.hasClass(target.querySelector(".o_dialog_container"), "modal-open");
 
     let lastDialog = modals[modals.length - 1];
     lastDialog.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
@@ -189,7 +182,6 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     res = activity(modals);
     assert.deepEqual(res.active, [false, true]);
     assert.deepEqual(res.names, ["Hello", "Sauron"]);
-    assert.hasClass(target.querySelector(".o_dialog_container"), "modal-open");
 
     lastDialog = modals[modals.length - 1];
     await click(lastDialog, "footer button");
@@ -198,12 +190,10 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     res = activity(modals);
     assert.deepEqual(res.active, [true]);
     assert.deepEqual(res.names, ["Hello"]);
-    assert.hasClass(target.querySelector(".o_dialog_container"), "modal-open");
 
     lastDialog = modals[modals.length - 1];
     await click(lastDialog, "footer button");
-    assert.containsNone(target, ".o_dialog_container .modal");
-    assert.containsOnce(target, ".o_dialog_container");
+    assert.containsNone(target, ".modal");
 });
 
 QUnit.test("dialog component crashes", async (assert) => {

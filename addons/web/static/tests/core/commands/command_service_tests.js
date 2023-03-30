@@ -41,13 +41,13 @@ export async function backspaceSearchBar() {
 }
 
 class TestComponent extends Component {
-    get DialogContainer() {
-        return registry.category("main_components").get("DialogContainer");
+    get OverlayContainer() {
+        return registry.category("main_components").get("OverlayContainer");
     }
 }
 TestComponent.template = xml`
   <div>
-    <t t-component="DialogContainer.Component" t-props="DialogContainer.props" />
+    <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
   </div>
 `;
 

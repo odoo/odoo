@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { errorService } from "@web/core/errors/error_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -84,8 +85,7 @@ QUnit.module("base_automation", {}, function () {
         });
 
         const env = await makeTestEnv();
-        const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
-        await mount(Container, target, { env, props });
+        await mount(MainComponentsContainer, target, { env });
 
         const errorEvent = new PromiseRejectionEvent("error", {
             reason: {
@@ -117,8 +117,7 @@ QUnit.module("base_automation", {}, function () {
         });
 
         const env = await makeTestEnv();
-        const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
-        await mount(Container, target, { env, props });
+        await mount(MainComponentsContainer, target, { env });
 
         const errorEvent = new PromiseRejectionEvent("error", {
             reason: {

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { overlayService } from "@web/core/overlay/overlay_service";
 import { browser } from "@web/core/browser/browser";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { menuService } from "@web/webclient/menus/menu_service";
@@ -32,6 +33,7 @@ let target;
 QUnit.module("Navbar", {
     async beforeEach() {
         target = getFixture();
+        serviceRegistry.add("overlay", overlayService);
         serviceRegistry.add("menu", menuService);
         serviceRegistry.add("action", actionService);
         serviceRegistry.add("notification", notificationService);

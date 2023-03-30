@@ -3,12 +3,15 @@
 import { usePosition } from "../position_hook";
 
 import { Component } from "@odoo/owl";
+import { useForwardRefToParent } from "../utils/hooks";
 
 export class Popover extends Component {
     setup() {
+        useForwardRefToParent("ref");
         usePosition(this.props.target, {
             onPositioned: this.props.onPositioned || this.onPositioned.bind(this),
             position: this.props.position,
+            popper: "ref",
         });
     }
     onPositioned(el, { direction, variant }) {
@@ -27,8 +30,8 @@ export class Popover extends Component {
             `o-popover-${direction}`,
             `o-popover--${position}`,
         ].join(" ");
-        if (this.props.popoverClass) {
-            el.classList.add(...this.props.popoverClass.split(" "));
+        if (this.props.class) {
+            el.classList.add(...this.props.class.split(" "));
         }
 
         // reset all arrow classes
@@ -66,13 +69,14 @@ export class Popover extends Component {
 Popover.template = "web.PopoverWowl";
 Popover.defaultProps = {
     position: "bottom",
+    class: "",
 };
 Popover.props = {
-    id: {
+    ref: {
+        type: Function,
         optional: true,
-        type: Number,
     },
-    popoverClass: {
+    class: {
         optional: true,
         type: String,
     },

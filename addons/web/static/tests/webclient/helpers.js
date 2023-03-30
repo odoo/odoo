@@ -55,6 +55,7 @@ import { commandService } from "@web/core/commands/command_service";
 import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { standaloneAdapter } from "web.OwlCompatibility";
+import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, onMounted, xml } from "@odoo/owl";
 
@@ -93,6 +94,7 @@ export function setupWebClientRegistries() {
         menu: () => menuService,
         notification: () => notificationService,
         orm: () => ormService,
+        overlay: () => overlayService,
         popover: () => popoverService,
         router: () => makeFakeRouterService(),
         title: () => fakeTitleService,

@@ -417,7 +417,7 @@ QUnit.module("Fields", (hooks) => {
 
         const o_kanban_record = target.querySelector(".o_kanban_record:nth-child(2)");
         await click(o_kanban_record, ".o_field_tags > img.o_m2m_avatar", true);
-        const popover = document.querySelector(".o_popover_container");
+        const popover = document.querySelector(".o-overlay-container");
         assert.strictEqual(popover.querySelectorAll(".o_tag").length, 2, "Should have 2 tags");
         // delete inside the popover
         await click(popover.querySelector(".o_tag .o_delete"));

@@ -224,7 +224,7 @@ QUnit.module('partner_autocomplete', {
         // Click on the first option - "First company"
         await click(autocompleteContainer.querySelectorAll('ul li.partner_autocomplete_dropdown_many2one')[0], null);
 
-        const modalContent = target.querySelector('.o_dialog_container .modal-content');
+        const modalContent = target.querySelector('.modal-content');
         // Check that the fields of the modal have been pre-filled
         const expectedValues = {
             "website": "firstcompany.com",
