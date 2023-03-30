@@ -6,6 +6,7 @@ import {
     formatDateTime,
     luxonToMoment,
     luxonToMomentFormat,
+    momentToLuxon,
     parseDate,
     parseDateTime,
 } from "@web/core/l10n/dates";
@@ -86,9 +87,9 @@ export class DatePicker extends Component {
             this.datePickerShown = true;
             this.inputRef.el.select();
         });
-        window.$(this.rootRef.el).on("hide.datetimepicker", () => {
+        window.$(this.rootRef.el).on("hide.datetimepicker", ({date}) => {
             this.datePickerShown = false;
-            this.onDateChange({ useStatic: true });
+            this.onDateChange({ eventDate: date, useStatic: true });
         });
         window.$(this.rootRef.el).on("error.datetimepicker", () => false);
     }
@@ -215,11 +216,14 @@ export class DatePicker extends Component {
      * @param {Object} [params={}]
      * @param {boolean} [params.useStatic]
      */
-    onDateChange({ useStatic } = {}) {
-        const { value } = this.inputRef.el;
-        const options = this.getOptions(useStatic);
-        const parsedDate = this.parseValue(value, options)[0];
-        this.state.warning = parsedDate && parsedDate > DateTime.local();
+    onDateChange({ eventDate, useStatic } = {}) {
+        let parsedDate = eventDate && this.date.locale ? momentToLuxon(eventDate).setLocale(this.date.locale): null;
+        if (!parsedDate) {
+            const { value } = this.inputRef.el;
+            const options = this.getOptions(useStatic);
+            parsedDate = this.parseValue(value, options)[0];
+            this.state.warning = parsedDate && parsedDate > DateTime.local();
+        }
         // Always update input.
         // if the date is invalid, it will reset to default (= given) date.
         // if the input is a computed date (+5d for instance), it will put the correct date.
