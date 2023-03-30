@@ -98,7 +98,7 @@ class Base(models.AbstractModel):
             del context['active_test']
             recordset = recordset.with_context(context)
 
-        records = recordset._read_main(specification=fields, offset=offset, limit=limit, order=order)
+        records = recordset._unity_read_format(specification=fields, offset=offset, limit=limit, order=order)
         if not records:
             return {
                 'length': 0,
@@ -116,12 +116,6 @@ class Base(models.AbstractModel):
             'length': length,
             'records': records
         }
-
-    @api.model
-    def web_read_unity(self, fields=None):
-        fields = self.check_field_access_rights('read', fields)
-        self.fetch(fields)
-        return self._read_main(fields)
 
     @api.model
     def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,

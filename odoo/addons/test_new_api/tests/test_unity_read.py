@@ -5,7 +5,7 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase, new_test_user
 
 
-class TestUnifiedRead(TransactionCase):
+class TestUnityRead(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -37,25 +37,25 @@ class TestUnifiedRead(TransactionCase):
         cls.course_no_author = cls.env['test_new_api.course'].create({'name': 'some other course without author'})
 
     def test_read_add_id(self):
-        read = self.course.web_read_unity({'display_name': {}})
+        read = self.course.unity_read({'display_name': {}})
         self.assertEqual(read, [{'id': self.course.id, 'display_name': 'introduction to OWL'}])
 
     def test_read_many2one_gives_id(self):
-        read = self.course.web_read_unity({'display_name': {}, 'author_id': {}})
+        read = self.course.unity_read({'display_name': {}, 'author_id': {}})
         self.assertEqual(read, [
             {'id': self.course.id,
              'display_name': 'introduction to OWL',
              'author_id': self.author.id}])
 
     def test_read_many2one_gives_id_2(self):
-        read = self.course.web_read_unity({'display_name': {}, 'author_id': {'fields': {}}})
+        read = self.course.unity_read({'display_name': {}, 'author_id': {'fields': {}}})
         self.assertEqual(read, [
             {'id': self.course.id,
              'display_name': 'introduction to OWL',
              'author_id': self.author.id}])
 
     def test_read_many2one_can_read_extra_fields(self):
-        read = self.course.web_read_unity({'display_name': {}, 'author_id': {'fields': {'write_date': {}}}})
+        read = self.course.unity_read({'display_name': {}, 'author_id': {'fields': {'write_date': {}}}})
         self.assertEqual(read, [
             {
                 'id': self.course.id,
@@ -66,7 +66,7 @@ class TestUnifiedRead(TransactionCase):
 
     def test_read_many2one_throws_if_it_cannot_read_extra_fields(self):
         with self.assertRaises(AccessError):
-            self.course.with_user(self.only_course_user).web_read_unity(
+            self.course.with_user(self.only_course_user).unity_read(
                 {
                     'display_name': {},
                     'author_id':
@@ -76,14 +76,14 @@ class TestUnifiedRead(TransactionCase):
                 })
 
     def test_read_many2one_gives_false_if_no_value(self):
-        read = self.course_no_author.web_read_unity({'display_name': {}, 'author_id': {}})
+        read = self.course_no_author.unity_read({'display_name': {}, 'author_id': {}})
         self.assertEqual(read, [
             {'id': self.course_no_author.id,
              'display_name': 'some other course without author',
              'author_id': False}])
 
     def test_read_many2one_gives_id_name(self):
-        read = self.course.web_read_unity({'display_name': {}, 'author_id': {'fields': {'display_name': {}}}})
+        read = self.course.unity_read({'display_name': {}, 'author_id': {'fields': {'display_name': {}}}})
         self.assertEqual(read, [
             {
                 'id': self.course.id,
@@ -96,7 +96,7 @@ class TestUnifiedRead(TransactionCase):
         ])
 
     def test_read_many2one_gives_id_name_even_if_you_dont_have_access(self):
-        read = self.course.with_user(self.only_course_user).web_read_unity(
+        read = self.course.with_user(self.only_course_user).unity_read(
             {'display_name': {}, 'author_id': {'fields': {'display_name': {}}}})
         self.assertEqual(read, [
             {
@@ -110,7 +110,7 @@ class TestUnifiedRead(TransactionCase):
         ])
 
     def test_many2one_respects_context(self):
-        read = self.course.web_read_unity(
+        read = self.course.unity_read(
 
             {
                 'display_name': {},
@@ -133,7 +133,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_read_one2many_gives_ids(self):
-        read = self.course.web_read_unity({'display_name': {}, 'lesson_ids': {}})
+        read = self.course.unity_read({'display_name': {}, 'lesson_ids': {}})
         self.assertEqual(read, [
             {
                 'id': self.course.id,
@@ -142,7 +142,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_specify_fields_one2many(self):
-        read = self.course.web_read_unity(
+        read = self.course.unity_read(
             {
                 'display_name': {},
                 'lesson_ids':
@@ -163,7 +163,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_one2many_context_have_no_impact_on_name(self):
-        read = self.course.web_read_unity(
+        read = self.course.unity_read(
             {
                 'name': {},
                 'lesson_ids':
@@ -186,7 +186,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_one2many_respects_context(self):
-        read = self.course.web_read_unity(
+        read = self.course.unity_read(
             {
                 'display_name': {},
                 'lesson_ids':
@@ -208,7 +208,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_read_many2many_gives_ids(self):
-        read = self.course.web_read_unity({'display_name': {},
+        read = self.course.unity_read({'display_name': {},
                                  'lesson_ids': {
                                      'fields': {
                                          'attendee_ids': {}
@@ -226,7 +226,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_specify_fields_many2many(self):
-        read = self.course.web_read_unity({'display_name': {},
+        read = self.course.unity_read({'display_name': {},
                                  'lesson_ids': {
                                      'fields': {
                                          'attendee_ids': {
@@ -257,7 +257,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_many2many_respects_limit(self):
-        read = self.course.web_read_unity({'display_name': {},
+        read = self.course.unity_read({'display_name': {},
                                  'lesson_ids': {
                                      'fields': {
                                          'attendee_ids': {
@@ -290,7 +290,7 @@ class TestUnifiedRead(TransactionCase):
             }])
 
     def test_many2many_respects_offset(self):
-        read = self.course.web_read_unity({'display_name': {},
+        read = self.course.unity_read({'display_name': {},
                                  'lesson_ids': {
                                      'fields': {
                                          'attendee_ids': {
@@ -327,7 +327,7 @@ class TestUnifiedRead(TransactionCase):
         pass
 
     def test_many2many_respects_order(self):
-        read = self.course.web_read_unity(
+        read = self.course.unity_read(
             {
                 'name': {},
                 'lesson_ids':

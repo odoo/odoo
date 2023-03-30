@@ -3016,7 +3016,12 @@ class BaseModel(metaclass=MetaModel):
         self.fetch(fields)
         return self._read_format(fnames=fields, load=load)
 
-    def _read_main(self, specification: list | dict, limit: int | None = None, offset: int | None = None, order: str|None = None) -> list[dict]:
+    def unity_read(self, fields=None):
+        fields = self.check_field_access_rights('read', fields)
+        self.fetch(fields)
+        return self._unity_read_format(fields)
+
+    def _unity_read_format(self, specification: list | dict, limit: int | None = None, offset: int | None = None, order: str | None = None) -> list[dict]:
         # TODO VSC: replace _read_format
         #  and remove load=_classic_read : the specification should be able to support it correctly
 
@@ -3029,7 +3034,7 @@ class BaseModel(metaclass=MetaModel):
 
         # TODO VSC: should only prefetch the fields for the records respecting the limit
         # TODO VSC: for x2many reentry in this function, the prefetch should have already fetched
-        self.browse(self._prefetch_ids).fetch(specification.keys())
+        # self.browse(self._prefetch_ids).fetch(specification.keys())
         records = []
 
         if offset is not None and offset > 0:
@@ -3068,16 +3073,16 @@ class BaseModel(metaclass=MetaModel):
                                 else:
                                     # specification for more fields other than display_name on the many2one like
                                     # 'many2one_id': {'fields':{'id':{}, 'write_date':{}}}
-                                    vals[field_name] = relational_record._read_main(field_spec["fields"])[0]
+                                    vals[field_name] = relational_record.unity_read(field_spec["fields"])[0]
                             else:
                                 # specification like 'many2one_id': {} or 'many2one_id' : {'fields':{}}
                                 vals[field_name] = field.convert_to_read(record[field_name], record, use_name_get=False)
                         else:
                             assert field.type in ["many2many", "one2many"]
 
-                            vals[field_name] = relational_record._read_main(field_spec["fields"],
-                                                                            limit=field_spec.get('limit'),
-                                                                            offset=field_spec.get('offset'))
+                            vals[field_name] = relational_record._unity_read_format(field_spec["fields"],
+                                                                                    limit=field_spec.get('limit'),
+                                                                                    offset=field_spec.get('offset'))
                 records.append(vals)
             except MissingError:
                 # if we can't access the fields of a record, that means that either the record has been deleted or it is not accessible
@@ -5172,6 +5177,40 @@ class BaseModel(metaclass=MetaModel):
             records = records.with_context(context)
 
         return records._read_format(fnames=fields, **read_kwargs)
+
+    @api.model
+    def unity_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
+        """ Perform a :meth:`search_fetch` followed by a :meth:`_read_format`.
+
+        :param domain: Search domain, see ``args`` parameter in :meth:`search`.
+            Defaults to an empty domain that will match all records.
+        :param fields: List of fields to read, see ``fields`` parameter in :meth:`read`.
+            Defaults to all fields.
+        :param int offset: Number of records to skip, see ``offset`` parameter in :meth:`search`.
+            Defaults to 0.
+        :param int limit: Maximum number of records to return, see ``limit`` parameter in :meth:`search`.
+            Defaults to no limit.
+        :param order: Columns to sort result, see ``order`` parameter in :meth:`search`.
+            Defaults to no sort.
+        :param read_kwargs: All read keywords arguments used to call
+            ``read(..., **read_kwargs)`` method e.g. you can use
+            ``search_read(..., load='')`` in order to avoid computing name_get
+        :return: List of dictionaries containing the asked fields.
+        :rtype: list(dict).
+        """
+        fields = self.check_field_access_rights('read', fields)
+        records = self.search_fetch(domain or [], fields, offset=offset, limit=limit, order=order)
+
+        # Method _read_format() ignores 'active_test', but it would forward it
+        # to any downstream search call(e.g. for x2m or computed fields), and
+        # this is not the desired behavior. The flag was presumably only meant
+        # for the main search().
+        if 'active_test' in self._context:
+            context = dict(self._context)
+            del context['active_test']
+            records = records.with_context(context)
+
+        return records._unity_read_format(fnames=fields, **read_kwargs)
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."
