@@ -77,7 +77,7 @@ class IrQWeb(models.AbstractModel):
 
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
         view = self.env['ir.ui.view']._get(key).sudo()
-        name = view.name
+        name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         # Forbid sanitize contains the specific reason:
         # - "true": always forbid
