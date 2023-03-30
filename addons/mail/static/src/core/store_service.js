@@ -70,11 +70,7 @@ export class Store {
     /** @type {Object.<number, import("@mail/core/follower_model").Follower>} */
     followers = {};
 
-    /**
-     * This is Odoobot
-     *
-     * @type {import("@mail/core/persona_model").Persona}
-     */
+    /** @type {import("@mail/core/persona_model").Persona} */
     odoobot = null;
     /** @type {Object.<number, import("@mail/core/persona_model").Persona>} */
     personas = {};
