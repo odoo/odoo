@@ -195,8 +195,8 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer._evaluate_res_domain()
 
-    @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
-                 'res_ids', 'template_id')
+    @api.depends('composition_mode', 'model', 'parent_id', 'record_name',
+                 'res_domain', 'res_ids', 'template_id')
     def _compute_subject(self):
         """ Computation is coming either form template, either from context.
         When having a template with a value set, copy it (in batch mode) or
@@ -212,8 +212,11 @@ class MailComposer(models.TransientModel):
                 if (not subject and composer.model and
                     composer.composition_mode == 'comment' and
                     not composer.composition_batch):
-                    res_ids = composer._evaluate_res_ids()
-                    subject = self.env[composer.model].browse(res_ids)._message_compute_subject()
+                    if composer.model_is_thread:
+                        res_ids = composer._evaluate_res_ids()
+                        subject = self.env[composer.model].browse(res_ids)._message_compute_subject()
+                    else:
+                        subject = composer.record_name
                 composer.subject = subject
 
     @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',
