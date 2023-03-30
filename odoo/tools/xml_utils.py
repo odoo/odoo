@@ -222,7 +222,11 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
             })
 
     _logger.info("Unzipping loaded archive")
-    archive = zipfile.ZipFile(BytesIO(content))
+    try:
+        archive = zipfile.ZipFile(BytesIO(content))
+    except zipfile.BadZipFile:
+        _logger.info("ZIP archive could not be read")
+        return False
     saved_attachments = env['ir.attachment']
     for file_path in archive.namelist():
         if not file_path.endswith('.xsd'):
