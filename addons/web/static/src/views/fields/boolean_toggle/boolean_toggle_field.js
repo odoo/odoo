@@ -6,10 +6,16 @@ import { booleanField, BooleanField } from "../boolean/boolean_field";
 
 export class BooleanToggleField extends BooleanField {
     static template = "web.BooleanToggleField";
+    static props = {
+        ...BooleanField.props,
+        autosave: { type: Boolean, optional: true },
+    };
 
     async onChange(newValue) {
         await this.props.record.update({ [this.props.name]: newValue });
-        return this.props.record.save();
+        if (this.props.autosave) {
+            return this.props.record.save();
+        }
     }
 }
 
@@ -17,8 +23,9 @@ export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
     displayName: _lt("Toggle"),
-    extractProps(fieldInfo, dynamicInfo) {
+    extractProps({ options }, dynamicInfo) {
         return {
+            autosave: "autosave" in options ? Boolean(options.autosave) : true,
             readonly: dynamicInfo.readonly,
         };
     },

@@ -11,7 +11,9 @@ export class ListBooleanToggleField extends BooleanToggleField {
             await this.props.record.update({
                 [this.props.name]: !this.props.record.data[this.props.name],
             });
-            return this.props.record.save();
+            if (this.props.autosave) {
+                return this.props.record.save();
+            }
         }
     }
 }
