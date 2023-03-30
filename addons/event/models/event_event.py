@@ -12,7 +12,7 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_date, format_datetime
+from odoo.tools import format_date, format_datetime, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
@@ -33,22 +33,19 @@ class EventType(models.Model):
 
     def _default_event_mail_type_ids(self):
         return [(0, 0,
-                 {'notification_type': 'mail',
-                  'interval_nbr': 0,
+                 {'interval_nbr': 0,
                   'interval_unit': 'now',
                   'interval_type': 'after_sub',
                   'template_ref': 'mail.template, %i' % self.env.ref('event.event_subscription').id,
                  }),
                 (0, 0,
-                 {'notification_type': 'mail',
-                  'interval_nbr': 1,
+                 {'interval_nbr': 1,
                   'interval_unit': 'hours',
                   'interval_type': 'before_event',
                   'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
                  }),
                 (0, 0,
-                 {'notification_type': 'mail',
-                  'interval_nbr': 3,
+                 {'interval_nbr': 3,
                   'interval_unit': 'days',
                   'interval_type': 'before_event',
                   'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
@@ -539,11 +536,11 @@ class EventEvent(models.Model):
 
             # lines to add: those which do not have the exact copy available in lines to keep
             if event.event_type_id.event_type_mail_ids:
-                mails_to_keep_vals = {mail._prepare_event_mail_values() for mail in event.event_mail_ids - mails_to_remove}
+                mails_to_keep_vals = {frozendict(mail._prepare_event_mail_values()) for mail in event.event_mail_ids - mails_to_remove}
                 for mail in event.event_type_id.event_type_mail_ids:
-                    mail_values = mail._prepare_event_mail_values()
+                    mail_values = frozendict(mail._prepare_event_mail_values())
                     if mail_values not in mails_to_keep_vals:
-                        command.append(Command.create(mail_values._asdict()))
+                        command.append(Command.create(mail_values))
             if command:
                 event.event_mail_ids = command
 

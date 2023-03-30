@@ -52,28 +52,24 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                     (0, 0, {  # right at subscription
                         'interval_unit': 'now',
                         'interval_type': 'after_sub',
-                        'notification_type': 'mail',
                         'template_ref': f'mail.template,{cls.template_subscription.id}',
                     }),
                     (0, 0, {  # one hour after subscription
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_sub',
-                        'notification_type': 'mail',
                         'template_ref': f'mail.template,{cls.template_subscription.id}',
                     }),
                     (0, 0, {  # 1 days before event
                         'interval_nbr': 1,
                         'interval_unit': 'days',
                         'interval_type': 'before_event',
-                        'notification_type': 'mail',
                         'template_ref': f'mail.template,{cls.template_reminder.id}',
                     }),
                     (0, 0, {  # immediately after event
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_event',
-                        'notification_type': 'mail',
                         'template_ref': f'mail.template,{cls.template_reminder.id}',
                     }),
                 ]
@@ -352,7 +348,6 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             (0, 0, {  # right at subscription
                 'interval_unit': 'now',
                 'interval_type': 'after_sub',
-                'notification_type': 'mail',
                 'template_ref': f'mail.template,{self.template_subscription.id}',
             }),
         ]})
@@ -435,13 +430,11 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             'name': "Go Sports",
             'event_type_mail_ids': [
                 Command.create({
-                    'notification_type': 'mail',
                     'interval_nbr': 0,
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
                 Command.create({
-                    'notification_type': 'mail',
                     'interval_nbr': 5,
                     'interval_unit': 'hours',
                     'interval_type': 'before_event',
