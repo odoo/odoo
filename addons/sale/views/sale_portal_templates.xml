@@ -371,6 +371,12 @@
     template rendered in PDF with the report engine.
     -->
     <template id="sale_order_portal_content" name="Sales Order Portal Content">
+        <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user() and not sale_order.partner_id.user_ids">
+                <p class="alert alert-info mt-3" role="status">
+                    <a role="button" t-att-href='sale_order.partner_id.signup_prepare() and sale_order.partner_id.with_context(relative_url=True).signup_url' class='btn btn-primary'>Sign Up</a>
+                        to follow your order.
+                </p>
+            </t>
         <!-- Intro -->
         <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
           <h2 class="my-0">

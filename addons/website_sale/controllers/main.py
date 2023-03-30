@@ -1623,6 +1623,12 @@ class WebsiteSale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
+            # Archive all created partners if the user is logged out.
+            if request.env.user._is_public():
+                partner_id = order.partner_id
+                for child in partner_id.child_ids:
+                    child.action_archive()
+                partner_id.action_archive()
             values = self._prepare_shop_payment_confirmation_values(order)
             return request.render("website_sale.confirmation", values)
         else:
