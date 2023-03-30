@@ -826,7 +826,7 @@ class MassMailing(models.Model):
         res_ids = self._get_recipients()
         trace_domain = [('model', '=', self.mailing_model_real)]
         if self.ab_testing_enabled and self.ab_testing_pc == 100:
-            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', '=', self._get_ab_testing_siblings_mailings().ids)]])
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
         else:
             trace_domain = expression.AND([trace_domain, [
                 ('res_id', 'in', res_ids),
