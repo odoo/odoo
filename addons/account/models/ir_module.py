@@ -72,4 +72,9 @@ class IrModule(models.Model):
     def _load_module_terms(self, modules, langs, overwrite=False):
         super()._load_module_terms(modules, langs, overwrite)
         if 'account' in modules:
-            self.env['account.chart.template']._load_translations(langs=langs)
+            def load_account_translations(env):
+                env['account.chart.template']._load_translations(langs=langs)
+            if self.env.registry.loaded:
+                load_account_translations(self.env)
+            else:
+                self.env.registry._delayed_account_translator = load_account_translations
