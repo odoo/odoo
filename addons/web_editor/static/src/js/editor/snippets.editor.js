@@ -2149,7 +2149,7 @@ var SnippetsMenu = Widget.extend({
         // environment where editing is not normally possible. This should be
         // reviewed if we are to handle more hierarchy of editable nodes being
         // editable despite their non editable environment.
-        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable, .o_not_editable :not([contenteditable="true"])`;
+        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable :not([contenteditable="true"])`;
 
         let filterFunc = function () {
             return !$(this).is(exclude);
