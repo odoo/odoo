@@ -229,6 +229,7 @@ class Theme(models.AbstractModel):
         'website.template_header_image',
         'website.template_header_hamburger_full',
         'website.template_header_magazine',
+        'website.template_header_stretch',
         # Default one, keep it last
         'website.template_header_default',
     ]
