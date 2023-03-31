@@ -1955,6 +1955,10 @@ td {
     background: rgba(255,255,255,.25);
 }
 
+.pos .partnerlist-screen tr.highlight div.unselect-tag-mobile{
+    display: none;
+}
+
 .pos .partnerlist-screen .partner-list th.partner-line-last-column-placeholder,
 .pos .partnerlist-screen .partner-list td.partner-line-last-column-placeholder {
     padding: 0;
@@ -2095,6 +2099,7 @@ td {
     width: 340px;
     font-size: 14px;
     box-sizing: border-box;
+    min-width: 100px;
 }
 .pos .partnerlist-screen .partner-details input.partner-name {
     font-size: 24px;
@@ -2106,40 +2111,81 @@ td {
     opacity: 0.3;
 }
 
-@media screen and (max-width: 768px) {
-    .pos .partnerlist-screen .partner-details-box {
+@media screen and (max-width: 1045px) {
+    .partner-list thead {
+        display: none;
+    }
+
+    .partner-list-contents {
+        margin-top: 10px;
+    }
+
+    .partner-line {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
+        padding: 12px 24px;
     }
-    .pos .partnerlist-screen .partner-details-left{
-        width: auto;
-        float: none;
-        flex-grow: 1;
+    .partner-line td {
+        flex-basis: 100%;
+        padding: 5px;
     }
-    .pos .partnerlist-screen .partner-details-right{
-        width: auto;
-        float: none;
-        flex-grow: 1;
+    .partner-line-adress{
+        margin-top: 10px;
     }
-    .pos .partnerlist-screen .partner-detail{
+    .partner-line-balance{
+        margin-top: 10px;
+        order: 3;
+    }
+    .partner-line .pos-right-align{
+        text-align: left ;
+    }
+    .partner-line-email {
+        order: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .edit-partner-button-cell {
+        order: 4;
+        margin-top: 10px;
+    }
+    .partner-list-contents {
+        margin-top: 10px;
+    }
+    .partner-list td {
+        padding: 0px 0px !important;
+    }
+    .partner-line-last-column-placeholder {
+        display: none;
+    }
+    .pos .partnerlist-screen tr.highlight div.unselect-tag{
+        display: none;
+    }
+
+    .pos .partnerlist-screen tr.highlight div.unselect-tag-mobile {
+        display: inline-block;
+        color: #fff;
+        padding: 3px 6px;
+        font-size: small;
+        border-radius: 2px;
+        margin-top: 12px;
+        background: rgba(255,255,255,.25);
+        margin-left: 10px;
+    }
+    .pos .partnerlist-screen  .partner-details-box{
         display: flex;
         flex-direction: column;
     }
-    .pos .partnerlist-screen .partner-details input,
-    .pos .partnerlist-screen .partner-details select
-    {
-        width: 100%;
-    }
-    .pos .partnerlist-screen .partner-details input.partner-name {
-        width: 100%;
-    }
-    .pos .partnerlist-screen .partner-detail > .label{
-        width: auto;
+    .pos .partnerlist-screen  .partner-details-box .label{
         text-align: left;
     }
-    .pos .partnerlist-screen .partner-list td {
-        overflow: hidden;
-        white-space: nowrap;
+    .pos .partnerlist-screen .partner-details-left{
+        width: unset;
+    }
+    .pos .partnerlist-screen .partner-details-right{
+        width: unset;
     }
 }
 
