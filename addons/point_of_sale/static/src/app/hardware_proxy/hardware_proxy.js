@@ -23,7 +23,6 @@ export class HardwareProxy extends EventBus {
         this.useDebugWeight = false;
         this.host = "";
         this.keptalive = false;
-        this.customerDisplayAvailable = true;
         this.connectionInfo = reactive({ status: "disconnected", drivers: {} });
         effect(
             (info) => {
@@ -189,27 +188,6 @@ export class HardwareProxy extends EventBus {
     resetDebugWeight() {
         this.useDebugWeight = false;
         this.debugWeight = 0;
-    }
-
-    updateCustomerDisplay(html) {
-        if (this.customerDisplayAvailable && this.connectionInfo.status == "connected") {
-            return this.message("customer_facing_display", { html }, { timeout: 5000 });
-        }
-    }
-
-    /**
-     * @param {string} html
-     * @returns {Promise}
-     */
-    takeControlOfCustomerDisplay(html) {
-        return this.message("take_control", { html });
-    }
-
-    /**
-     * @returns {Promise}
-     */
-    testOwnershipOfCustomerDisplay() {
-        return this.host ? this.message("test_ownership") : Promise.reject({ abort: true });
     }
 
     // asks the proxy to log some information, as with the debug.log you can provide several arguments.

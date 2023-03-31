@@ -2,101 +2,21 @@
 
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { _t } from "@web/core/l10n/translation";
 
 export class CustomerFacingDisplayButton extends Component {
     static template = "CustomerFacingDisplayButton";
-
     setup() {
-        super.setup();
-        this.hardwareProxy = useService("hardware_proxy");
-        this.local =
-            this.env.pos.config.iface_customer_facing_display_local &&
-            !this.env.pos.config.iface_customer_facing_display_via_proxy;
-        this.state = useState({ status: this.local ? "success" : "failure" });
-        this._start();
+        this.pos = usePos();
+        this.customerDisplay = useState(useService("customer_display"));
     }
     get message() {
         return {
             success: "",
-            warning: this.env._t("Connected, Not Owned"),
-            failure: this.env._t("Disconnected"),
-            not_found: this.env._t("Customer Screen Unsupported. Please upgrade the IoT Box"),
-        }[this.state.status];
-    }
-    onClick() {
-        if (this.local) {
-            return this.onClickLocal();
-        } else {
-            return this.onClickProxy();
-        }
-    }
-    async onClickLocal() {
-        this.env.pos.customer_display = window.open("", "Customer Display", "height=600,width=900");
-        const renderedHtml = await this.env.pos.render_html_for_customer_facing_display();
-        var $renderedHtml = $("<div>").html(renderedHtml);
-        $(this.env.pos.customer_display.document.body).html(
-            $renderedHtml.find(".pos-customer_facing_display")
-        );
-        $(this.env.pos.customer_display.document.head).html(
-            $renderedHtml.find(".resources").html()
-        );
-    }
-    async onClickProxy() {
-        try {
-            const renderedHtml = await this.env.pos.render_html_for_customer_facing_display();
-            let ownership = await this.hardwareProxy.takeControlOfCustomerDisplay(renderedHtml);
-            if (typeof ownership === "string") {
-                ownership = JSON.parse(ownership);
-            }
-            if (ownership.status === "success") {
-                this.state.status = "success";
-            } else {
-                this.state.status = "warning";
-            }
-            if (!this.hardwareProxy.customerDisplayAvailable) {
-                this.hardwareProxy.customerDisplayAvailable = true;
-                this._start();
-            }
-        } catch (error) {
-            if (typeof error == "undefined") {
-                this.state.status = "failure";
-            } else {
-                this.state.status = "not_found";
-            }
-        }
-    }
-    _start() {
-        if (this.local) {
-            return;
-        }
-
-        const loop = async () => {
-            if (this.hardwareProxy.customerDisplayAvailable) {
-                try {
-                    let ownership = await this.hardwareProxy.testOwnershipOfCustomerDisplay();
-                    if (typeof ownership === "string") {
-                        ownership = JSON.parse(ownership);
-                    }
-                    if (ownership.status === "OWNER") {
-                        this.state.status = "success";
-                    } else {
-                        this.state.status = "warning";
-                    }
-                } catch (error) {
-                    if (error.abort) {
-                        // Stop the loop
-                        return;
-                    }
-                    if (typeof error == "undefined") {
-                        this.state.status = "failure";
-                    } else {
-                        this.state.status = "not_found";
-                        this.hardwareProxy.customerDisplayAvailable = false;
-                    }
-                }
-                setTimeout(loop, 3000);
-            }
-        };
-        loop();
+            warning: _t("Connected, Not Owned"),
+            failure: _t("Disconnected"),
+            not_found: _t("Customer Screen Unsupported. Please upgrade the IoT Box"),
+        }[this.customerDisplay.status];
     }
 }
