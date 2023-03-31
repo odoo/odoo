@@ -978,21 +978,6 @@ $-transition-duration: 200ms;
                 height: $o-theme-navbar-fixed-logo-height;
             }
         }
-        @if o-website-value('header-template') == 'vertical' {
-            .o_header_centered_logo {
-                display: none;
-            }
-            @include media-breakpoint-up(lg) {
-                .navbar-brand {
-                    font-size: 0;
-                    opacity: 0;
-
-                    img {
-                        height: 0;
-                    }
-                }
-            }
-        }
     }
     &.o_header_standard.o_header_is_scrolled {
         @if index(('menu_logo_below', 'logo_menu_below'), o-website-value('header-template')) != null {
@@ -1124,23 +1109,7 @@ header {
     }
 }
 
-@if o-website-value('header-template') == 'vertical' {
-    header .o_header_centered_logo {
-        order: -1;
-        width: 50%;
-        margin-top: $spacer;
-
-        @include media-breakpoint-up(lg) {
-            order: inherit;
-            width: 40%;
-            margin-bottom: $spacer;
-        }
-    }
-    .navbar-nav {
-        padding-top: $navbar-padding-y;
-        padding-bottom: $navbar-padding-y;
-    }
-} @else if o-website-value('header-template') == 'sidebar' {
+@if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
             // Two different website options might add padding:
