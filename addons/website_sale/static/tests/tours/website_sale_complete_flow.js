@@ -148,7 +148,7 @@
     {
         content: "Open Dropdown for logout",
         extra_trigger: ".o_header_standard:not(.o_transitioning)",
-        trigger: '#top_menu li.dropdown:visible a:contains("abcd")',
+        trigger: 'header#top li.dropdown:visible a:contains("abcd")',
     },
     {
         content: "Logout",
@@ -269,12 +269,12 @@
     {
         content: "Open Dropdown for See quotation",
         extra_trigger: '.oe_cart .oe_website_sale_tx_status',
-        trigger: '#top_menu li.dropdown:visible a:contains("abc")',
+        trigger: 'header#top li.dropdown:visible a:contains("abc")',
     },
     {
         content: "My account",
-        extra_trigger: '#top_menu li.dropdown .js_usermenu.show',
-        trigger: '#top_menu .dropdown-menu a[href="/my/home"]:visible',
+        extra_trigger: 'header#top li.dropdown .js_usermenu.show',
+        trigger: 'header#top .dropdown-menu a[href="/my/home"]:visible',
     },
     {
         content: "See Quotations",
@@ -285,7 +285,7 @@
     {
         content: "Open Dropdown for logout",
         extra_trigger: ".o_header_standard:not(.o_transitioning)",
-        trigger: '#top_menu li.dropdown:visible a:contains("abc")',
+        trigger: 'header#top li.dropdown:visible a:contains("abc")',
     },
     {
         content: "Logout",
@@ -313,7 +313,7 @@
     {
         content: "Open Dropdown for logout",
         extra_trigger: '.o_wizard:contains("Extra Info")',
-        trigger: '#top_menu li.dropdown:visible a:contains("Mitchell Admin")',
+        trigger: 'header#top li.dropdown:visible a:contains("Mitchell Admin")',
     },
     {
         content: "Logout",
