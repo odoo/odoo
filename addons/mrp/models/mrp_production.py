@@ -380,11 +380,19 @@ class MrpProduction(models.Model):
 
     @api.depends('procurement_group_id')
     def _compute_picking_ids(self):
-        for order in self:
-            order.picking_ids = self.env['stock.picking'].search([
-                ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
-            ])
-            order.delivery_count = len(order.picking_ids)
+        self.picking_ids = []
+        self.delivery_count = 0
+        mo_by_group = defaultdict(lambda: self.env['mrp.production'])
+        for mo in self:
+            mo_by_group[mo.procurement_group_id] |= mo
+        pickings = self.env['stock.picking'].read_group([
+            ('group_id', 'in', self.procurement_group_id.ids),
+            ('group_id', '!=', False),
+            ], ["group_id", "ids:array_agg(id)"], ["group_id"])
+        if pickings:
+            for p_group in pickings:
+                mo_by_group[p_group["group_id"][0]].picking_ids = self.env['stock.picking'].browse(p_group['ids'])
+                mo_by_group[p_group["group_id"][0]].delivery_count = p_group['group_id_count']
 
     def action_view_mo_delivery(self):
         """ This function returns an action that display picking related to
