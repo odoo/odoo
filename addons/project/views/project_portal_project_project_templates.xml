@@ -77,6 +77,7 @@
 
     <template id="portal_my_project" name="My Project">
         <t t-call="portal.portal_layout">
+            <t t-set="title" t-value="project.name"/>
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t t-set="backend_url" t-value="'/web#model=project.project&amp;id=%s&amp;view_type=kanban' % (project.id)"/>

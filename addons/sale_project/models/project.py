@@ -118,7 +118,7 @@ class Project(models.Model):
         return action
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name in ['service_revenues', 'other_revenues']:
+        if section_name in ['service_revenues', 'materials']:
             view_types = ['list', 'kanban', 'form']
             action = {
                 'name': _('Sales Order Items'),
@@ -133,6 +133,16 @@ class Project(models.Model):
                 action['domain'] = domain
             action['views'] = [(False, v) for v in view_types]
             return action
+
+        if section_name == 'other_invoice_revenues':
+            action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
+            action['domain'] = domain if domain else []
+            if res_id:
+                action['views'] = [(False, 'form')]
+                action['view_mode'] = 'form'
+                action['res_id'] = res_id
+            return action
+
         return super().action_profitability_items(section_name, domain, res_id)
 
     @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
@@ -309,16 +319,16 @@ class Project(models.Model):
         return {
             **super()._get_profitability_labels(),
             'service_revenues': _lt('Other Services'),
-            'other_revenues': _lt('Materials'),
-            'other_invoice_revenues': _lt('Other Revenues'),
+            'materials': _lt('Materials'),
+            'other_invoice_revenues': _lt('Customer Invoices'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
         return {
             **super()._get_profitability_sequence_per_invoice_type(),
             'service_revenues': 6,
-            'other_revenues': 7,
-            'other_invoice_revenues': 8,
+            'materials': 7,
+            'other_invoice_revenues': 9,
         }
 
     def _get_service_policy_to_invoice_type(self):
@@ -376,32 +386,33 @@ class Project(models.Model):
                         'ordered_prepaid')
                 for product_id, (amount_to_invoice, amount_invoiced, sol_ids) in sols_per_product.items():
                     if product_id in product_ids:
-                        invoice_type = service_policy_to_invoice_type.get(service_policy, 'other_revenues')
+                        invoice_type = service_policy_to_invoice_type.get(service_policy, 'materials')
                         revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
                         revenue['to_invoice'] += amount_to_invoice
                         total_to_invoice += amount_to_invoice
                         revenue['invoiced'] += amount_invoiced
                         total_invoiced += amount_invoiced
-                        if display_sol_action and invoice_type in ['service_revenues', 'other_revenues']:
+                        if display_sol_action and invoice_type in ['service_revenues', 'materials']:
                             revenue.setdefault('record_ids', []).extend(sol_ids)
 
             if display_sol_action:
-                section_name = 'other_revenues'
-                other_revenues = revenues_dict.get(section_name, {})
+                section_name = 'materials'
+                materials = revenues_dict.get(section_name, {})
                 sale_order_items = self.env['sale.order.line'] \
-                    .browse(other_revenues.pop('record_ids', [])) \
+                    .browse(materials.pop('record_ids', [])) \
                     ._filter_access_rules_python('read')
                 if sale_order_items:
-                    if sale_order_items:
-                        args = [section_name, [('id', 'in', sale_order_items.ids)]]
-                        if len(sale_order_items) == 1:
-                            args.append(sale_order_items.id)
-                        action_params = {
-                            'name': 'action_profitability_items',
-                            'type': 'object',
-                            'args': json.dumps(args),
-                        }
-                        other_revenues['action'] = action_params
+                    args = [section_name, [('id', 'in', sale_order_items.ids)]]
+                    if len(sale_order_items) == 1:
+                        args.append(sale_order_items.id)
+                    action_params = {
+                        'name': 'action_profitability_items',
+                        'type': 'object',
+                        'args': json.dumps(args),
+                    }
+                    if len(sale_order_items) == 1:
+                        action_params['res_id'] = sale_order_items.id
+                    materials['action'] = action_params
         sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
         return {
             'data': [{'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals} for invoice_type, vals in revenues_dict.items()],
@@ -419,7 +430,7 @@ class Project(models.Model):
             ('is_downpayment', '=', False)],
         ])
 
-    def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
+    def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None, with_action=True):
         """
         Get all revenues items from invoices, and put them into their own
         "other_invoice_revenues" section.
@@ -439,7 +450,7 @@ class Project(models.Model):
         # account_move_line__move_id is the alias of the joined table account_move in the query
         # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
         # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type')
+        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type', 'move_id')
         self._cr.execute(query_string, query_param)
         invoices_move_line_read = self._cr.dictfetchall()
         if invoices_move_line_read:
@@ -449,10 +460,12 @@ class Project(models.Model):
             rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id, date.today())
             conversion_rates = {cid: rates[self.analytic_account_id.currency_id.id] / rate_from for cid, rate_from in rates.items()}
 
+            move_ids = set()
             amount_invoiced = amount_to_invoice = 0.0
             for moves_read in invoices_move_line_read:
                 price_subtotal = self.analytic_account_id.currency_id.round(moves_read['price_subtotal'] * conversion_rates[moves_read['currency_id']])
                 analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
+                move_ids.add(moves_read['move_id'])
                 if moves_read['parent_state'] == 'draft':
                     if moves_read['move_type'] == 'out_invoice':
                         amount_to_invoice += price_subtotal * analytic_contribution
@@ -472,6 +485,8 @@ class Project(models.Model):
                     'invoiced': amount_invoiced,
                     'to_invoice': amount_to_invoice,
                 }
+                if with_action and self.user_has_groups('sales_team.group_sale_salesman_all_leads, account.group_account_invoice, account.group_account_readonly'):
+                    invoices_revenues['action'] = self._get_action_for_profitability_section(list(move_ids), section_id)
                 return {
                     'data': [invoices_revenues],
                     'total': {
@@ -481,18 +496,7 @@ class Project(models.Model):
                 }
         return {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}}
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
-        domain = [('order_id', 'in', self.sudo()._get_sale_orders().ids)]
-        revenue_items_from_sol = self._get_revenues_items_from_sol(
-            domain,
-            with_action,
-        )
-        revenues = profitability_items['revenues']
-        revenues['data'] += revenue_items_from_sol['data']
-        revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
-        revenues['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
-
+    def _add_invoice_items(self, domain, profitability_items, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
             ['ids:array_agg(id)'],
@@ -501,11 +505,25 @@ class Project(models.Model):
         revenue_items_from_invoices = self._get_revenues_items_from_invoices(
             excluded_move_line_ids=self.env['sale.order.line'].browse(
                 [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
-            ).invoice_lines.ids
+            ).invoice_lines.ids,
+            with_action=with_action
         )
-        revenues['data'] += revenue_items_from_invoices['data']
-        revenues['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
-        revenues['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
+        profitability_items['revenues']['data'] += revenue_items_from_invoices['data']
+        profitability_items['revenues']['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
+        profitability_items['revenues']['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
+
+    def _get_profitability_items(self, with_action=True):
+        profitability_items = super()._get_profitability_items(with_action)
+        domain = [('order_id', 'in', self.sudo()._get_sale_orders().ids)]
+        revenue_items_from_sol = self._get_revenues_items_from_sol(
+            domain,
+            with_action,
+        )
+        profitability_items['revenues']['data'] += revenue_items_from_sol['data']
+        profitability_items['revenues']['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
+        profitability_items['revenues']['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
+        self._add_invoice_items(domain, profitability_items, with_action=with_action)
+        self._add_purchase_items(profitability_items, with_action=with_action)
         return profitability_items
 
     def _get_stat_buttons(self):

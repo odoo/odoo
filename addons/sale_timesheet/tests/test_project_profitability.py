@@ -20,25 +20,9 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'costs': {'data': [], 'total': {'to_bill': 0.0, 'billed': 0.0}},
         }
 
-    def test_profitability_of_non_billable_project(self):
-        """ Test no data is found for the project profitability since the project is not billable
-            even if it is linked to a sale order items.
-        """
-        self.assertFalse(self.project_non_billable.allow_billable)
-        self.assertDictEqual(
-            self.project_non_billable._get_profitability_items(False),
-            self.project_profitability_items_empty,
-        )
-        self.project_non_billable.write({'sale_line_id': self.so.order_line[0].id})
-        self.assertDictEqual(
-            self.project_non_billable._get_profitability_items(False),
-            self.project_profitability_items_empty,
-            "Even if the project has a sale order item linked the project profitability should not be computed since it is not billable."
-        )
-
     def test_get_project_profitability_items(self):
         """ Test _get_project_profitability_items method to ensure the project profitability
-            is correctly computed as expected.
+            is computed as expected.
         """
         sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'partner_id': self.partner_b.id,
@@ -83,15 +67,27 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertEqual(self.task.sale_line_id, delivery_service_order_line)
         self.assertEqual((timesheet1 + timesheet2).so_line, delivery_service_order_line)
         self.assertEqual(delivery_service_order_line.qty_delivered, 0.0, 'The service type is not timesheet but manual so the quantity delivered is not increased by the timesheets linked.')
+
+        # Adding an extra cost/revenue to ensure those are computed correctly.
+        self.env['account.analytic.line'].create([{
+            'name': 'other revenues line',
+            'account_id': self.project_task_rate.analytic_account_id.id,
+            'amount': 100,
+        }, {
+            'name': 'other costs line',
+            'account_id': self.project_task_rate.analytic_account_id.id,
+            'amount': -100,
+        }])
         self.assertDictEqual(
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [],
-                    'total': {'to_invoice': 0.0, 'invoiced': 0.0},
+                    'data': [{'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 0.0},
                 },
                 'costs': {
                     'data': [
+                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
@@ -101,7 +97,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                     ],
                     'total': {
                         'to_bill': 0.0,
-                        'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
+                        'billed': -100 + (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
                     },
                 },
             }
@@ -121,11 +117,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [],
-                    'total': {'to_invoice': 0.0, 'invoiced': 0.0},
+                    'data': [{'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
+                    'total': {'invoiced': 100.0, 'to_invoice': 0.0},
                 },
                 'costs': {
                     'data': [
+                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
@@ -142,7 +139,8 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                     'total': {
                         'to_bill': 0.0,
                         'billed':
-                            (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
+                            -100
+                            + (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
                             + timesheet3.unit_amount * -self.employee_manager.hourly_cost,
                     },
                 },
@@ -163,12 +161,14 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             {
                 'revenues': {
                     'data': [
+                        {'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0},
                         {'id': 'billable_time', 'sequence': sequence_per_invoice_type['billable_time'], 'to_invoice': delivery_timesheet_order_line.untaxed_amount_to_invoice, 'invoiced': 0.0},
                     ],
-                    'total': {'to_invoice': delivery_timesheet_order_line.untaxed_amount_to_invoice, 'invoiced': 0.0},
+                    'total': {'invoiced': 100.0, 'to_invoice': delivery_timesheet_order_line.untaxed_amount_to_invoice},
                 },
                 'costs': {
                     'data': [
+                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_time',
                             'sequence': sequence_per_invoice_type['billable_time'],
@@ -185,7 +185,8 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                     'total': {
                         'to_bill': 0.0,
                         'billed':
-                            (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
+                            -100
+                            + (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
                             + timesheet3.unit_amount * -self.employee_manager.hourly_cost,
                     },
                 },

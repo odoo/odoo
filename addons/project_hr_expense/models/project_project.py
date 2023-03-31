@@ -64,7 +64,7 @@ class Project(models.Model):
 
     def _get_profitability_sequence_per_invoice_type(self):
         sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
-        sequence_per_invoice_type['expenses'] = 11
+        sequence_per_invoice_type['expenses'] = 13
         return sequence_per_invoice_type
 
     def _get_already_included_profitability_invoice_line_ids(self):

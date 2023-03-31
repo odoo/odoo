@@ -483,6 +483,13 @@ class Project(models.Model):
         )
         return profitability_items
 
+    def _get_domain_aal_with_no_move_line(self):
+        # we add the tuple 'project_id = False' in the domain to remove the timesheets from the search.
+        return expression.AND([
+            super()._get_domain_aal_with_no_move_line(),
+            [('project_id', '=', False)]
+        ])
+
     def _get_service_policy_to_invoice_type(self):
         return {
             **super()._get_service_policy_to_invoice_type(),

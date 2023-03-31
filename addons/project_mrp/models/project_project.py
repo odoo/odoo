@@ -53,7 +53,7 @@ class Project(models.Model):
 
     def _get_profitability_sequence_per_invoice_type(self):
         sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
-        sequence_per_invoice_type['manufacturing_order'] = 10
+        sequence_per_invoice_type['manufacturing_order'] = 12
         return sequence_per_invoice_type
 
     def _get_profitability_aal_domain(self):
