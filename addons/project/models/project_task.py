@@ -1069,17 +1069,13 @@ class Task(models.Model):
         return result
 
     def unlink(self):
+        # Add subtasks to batch of tasks to delete
+        self |= self._get_all_subtasks()
         last_task_id_per_recurrence_id = self.recurrence_id._get_last_task_id_per_recurrence_id()
         for task in self:
             if task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
                 task.recurrence_id.unlink()
         return super().unlink()
-
-    def unlink_task_and_subtasks_recursively(self):
-        childs = self.with_context(active_test=False).child_ids
-        if childs:
-            childs.unlink_task_and_subtasks_recursively()
-        self.unlink()
 
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
