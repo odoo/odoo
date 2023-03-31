@@ -103,21 +103,24 @@
         </xpath>
     </template>
 
+    <template id="template_header_sales_two" inherit_id="website.template_header_sales_two">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_icon_wrap_class" t-value="'position-relative me-2 rounded-circle border p-2 bg-o-color-3 o_border_contrast'"/>
+                <t t-set="_link_class" t-value="'btn d-flex align-items-center fw-bold text-reset o_navlink_background_hover'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+                <t t-set="_text_class" t-value="'small'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item'"/>
-                <t t-set="_link_class" t-value="'nav-link'"/>
-            </t>
-        </xpath>
-    </template>
-
-    <template id="template_header_slogan" inherit_id="website.template_header_slogan">
-        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
-            <t t-call="website_sale.header_cart_link">
-                <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>

@@ -222,7 +222,6 @@ class Theme(models.AbstractModel):
         'website.template_header_hamburger',
         'website.template_header_vertical',
         'website.template_header_sidebar',
-        'website.template_header_slogan',
         'website.template_header_contact',
         'website.template_header_boxed',
         'website.template_header_image',
@@ -231,6 +230,7 @@ class Theme(models.AbstractModel):
         'website.template_header_stretch',
         'website.template_header_search',
         'website.template_header_sales_one',
+        'website.template_header_sales_two',
         # Default one, keep it last
         'website.template_header_default',
     ]
