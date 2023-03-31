@@ -2002,7 +2002,10 @@ class AccountMove(models.Model):
 
         def dirty():
             *path, dirty_fname = needed_dirty_fname.split('.')
-            dirty_recs = container['records'].mapped('.'.join(path)).filtered(dirty_fname)
+            eligible_recs = container['records'].mapped('.'.join(path))
+            if eligible_recs._name == 'account.move.line':
+                eligible_recs = eligible_recs.filtered(lambda l: l.display_type != 'cogs')
+            dirty_recs = eligible_recs.filtered(dirty_fname)
             return dirty_recs, dirty_fname
 
         existing_before = existing()

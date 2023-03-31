@@ -4,7 +4,7 @@
     <t t-name="mail.ActivityBox" owl="1">
         <t t-if="activityBoxView">
             <div class="o_ActivityBox" t-attf-class="{{ className }}" t-ref="root">
-                <a href="#" role="button" class="o_ActivityBox_title btn d-flex align-items-center mt-4 p-0 w-100 fw-bold" t-att-aria-expanded="activityBoxView.isActivityListVisible ? 'true' : 'false'" t-on-click="activityBoxView.onClickActivityBoxTitle">
+                <a href="#" role="button" class="o_ActivityBox_title btn d-flex align-items-center p-0 w-100 fw-bold" t-att-aria-expanded="activityBoxView.isActivityListVisible ? 'true' : 'false'" t-on-click="activityBoxView.onClickActivityBoxTitle">
                     <hr class="o_ActivityBox_titleLine w-auto flex-grow-1 me-3" />
                     <span class="o_ActivityBox_titleText">
                         <i class="fa fa-fw" t-att-class="activityBoxView.isActivityListVisible ? 'fa-caret-down' : 'fa-caret-right'"/>

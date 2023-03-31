@@ -386,20 +386,33 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
         const imgs = target.querySelectorAll(".o_field_widget img");
+
         assert.deepEqual(
             [imgs[0].attributes.width, imgs[0].attributes.height],
             [undefined, undefined],
             "if both size are set to 0, both attributes are undefined"
         );
+
         assert.deepEqual(
             [imgs[1].attributes.width, imgs[1].attributes.height.value],
             [undefined, "50"],
             "if only the width is set to 0, the width attribute is not set on the img"
         );
         assert.deepEqual(
+            [imgs[1].style.width, imgs[1].style.maxWidth, imgs[1].style.height, imgs[1].style.maxHeight],
+            ["auto", "100%", "", "50px"],
+            "the image should correctly set its attributes"
+        );
+
+        assert.deepEqual(
             [imgs[2].attributes.width.value, imgs[2].attributes.height],
             ["50", undefined],
             "if only the height is set to 0, the height attribute is not set on the img"
+        );
+        assert.deepEqual(
+            [imgs[2].style.width, imgs[2].style.maxWidth, imgs[2].style.height, imgs[2].style.maxHeight],
+            ["", "50px", "auto", "100%"],
+            "the image should correctly set its attributes"
         );
     });
 
