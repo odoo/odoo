@@ -80,3 +80,23 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
             tx.token_id = self._create_token(demo_simulated_state=state)
             tx._send_payment_request()
             self.assertEqual(tx.state, tx.token_id.demo_simulated_state)
+
+    def test_send_full_capture_request_does_not_create_capture_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx = source_tx._send_capture_request()
+        self.assertFalse(
+            child_tx, msg="Full capture should not create a child transaction."
+        )
+
+    def test_send_partial_capture_request_creates_capture_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx = source_tx._send_capture_request(amount_to_capture=10)
+        self.assertTrue(
+            source_tx.child_transaction_ids,
+            msg="Partial capture should create a child transaction and linked it to the source tx.",
+        )
+        self.assertEqual(
+            child_tx.amount, 10, msg="Child transaction should have the requested amount."
+        )
