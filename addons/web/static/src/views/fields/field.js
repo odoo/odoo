@@ -168,7 +168,6 @@ export class Field extends Component {
                         );
                     },
                 };
-
                 propsFromNode = this.field.extractProps(fieldInfo, dynamicInfo);
             }
         }

@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         trigger: ".o-kanban-button-new",
     }, {
         content: "Set the Survey's title",
-        trigger: ".o_field_widget[name=title] input",
+        trigger: ".o_field_widget[name=title] textarea",
         run: "text Test survey",
     }, {
         content: "Add a first question",

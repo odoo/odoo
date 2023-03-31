@@ -1,7 +1,8 @@
 /* @odoo-module */
 
 import { onExternalClick } from "@mail/utils/hooks";
-import { Component, useRef, useState, onWillUpdateProps, useEffect } from "@odoo/owl";
+import { Component, useRef, useState, onWillUpdateProps } from "@odoo/owl";
+import { useAutoresize } from "@web/core/utils/autoresize";
 
 export class AutoresizeInput extends Component {
     static template = "mail.AutoresizeInput";
@@ -23,32 +24,13 @@ export class AutoresizeInput extends Component {
             value: this.props.value,
         });
         this.inputRef = useRef("input");
-        this.maxWidth = undefined;
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
                 this.state.value = nextProps.value;
             }
         });
         onExternalClick("input", () => this.onValidate());
-        useEffect(
-            () => {
-                // This mesures the maximum width of the input which can get from the flex layout.
-                this.inputRef.el.style.width = "100%";
-                this.maxWidth = this.inputRef.el.clientWidth;
-                // Minimum width of the input
-                this.inputRef.el.style.width = "10px";
-                if (this.state.value === "" && this.props.placeholder !== "") {
-                    this.inputRef.el.style.width = "auto";
-                    return;
-                }
-                if (this.inputRef.el.scrollWidth + 5 > this.maxWidth) {
-                    this.inputRef.el.style.width = "100%";
-                    return;
-                }
-                this.inputRef.el.style.width = this.inputRef.el.scrollWidth + 5 + "px";
-            },
-            () => [this.state.value]
-        );
+        useAutoresize(this.inputRef);
     }
 
     /**
