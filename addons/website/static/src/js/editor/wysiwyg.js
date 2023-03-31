@@ -1,9 +1,8 @@
-odoo.define('website.wysiwyg', function (require) {
-'use strict';
+/** @odoo-module alias=website.wysiwyg **/
 
-var Wysiwyg = require('web_editor.wysiwyg');
-var snippetsEditor = require('website.snippet.editor');
-let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
+import Wysiwyg from "web_editor.wysiwyg";
+import snippetsEditor from "website.snippet.editor";
+import socialMediaOptions from "@website/snippets/s_social_media/options";
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -337,5 +336,4 @@ snippetsEditor.SnippetsMenu.include({
     },
 });
 
-return WebsiteWysiwyg;
-});
+export default WebsiteWysiwyg;

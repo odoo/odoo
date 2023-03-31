@@ -1,19 +1,18 @@
-odoo.define('web.bus_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var { busService } = require('@bus/services/bus_service');
-const { presenceService } = require('@bus/services/presence_service');
-const { busParametersService } = require('@bus/bus_parameters_service');
-const { multiTabService } = require('@bus/multi_tab_service');
-const { WEBSOCKET_CLOSE_CODES } = require("@bus/workers/websocket_worker");
-const { startServer } = require('@bus/../tests/helpers/mock_python_environment');
-const { patchWebsocketWorkerWithCleanup } = require("@bus/../tests/helpers/mock_websocket");
+import { busService } from "@bus/services/bus_service";
+import { presenceService } from "@bus/services/presence_service";
+import { busParametersService } from "@bus/bus_parameters_service";
+import { multiTabService } from "@bus/multi_tab_service";
+import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 
-const { browser } = require("@web/core/browser/browser");
-const { registry } = require("@web/core/registry");
-const { session } = require('@web/session');
-const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
-const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
 QUnit.module('Bus', {
     beforeEach: function () {
@@ -583,5 +582,3 @@ QUnit.module('Bus', {
         }
     );
 });
-});
-

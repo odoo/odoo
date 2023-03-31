@@ -1,10 +1,9 @@
-odoo.define('purchase_stock.purchase_steps', function (require) {
-"use strict";
+/** @odoo-module alias=purchase_stock.purchase_steps **/
 
-var core = require('web.core');
+import core from "web.core";
 
 var _t = core._t;
-var PurchaseAdditionalTourSteps = require('purchase.purchase_steps');
+import PurchaseAdditionalTourSteps from "purchase.purchase_steps";
 
 PurchaseAdditionalTourSteps.include({
 
@@ -44,6 +43,4 @@ PurchaseAdditionalTourSteps.include({
     }
 });
 
-return PurchaseAdditionalTourSteps;
-
-});
+export default PurchaseAdditionalTourSteps;

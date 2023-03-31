@@ -1,8 +1,7 @@
-odoo.define('website_blog.s_blog_posts_frontend', function (require) {
-'use strict';
+/** @odoo-module alias=website_blog.s_blog_posts_frontend **/
 
-var publicWidget = require('web.public.widget');
-const DynamicSnippet = require('website.s_dynamic_snippet');
+import publicWidget from "web.public.widget";
+import DynamicSnippet from "website.s_dynamic_snippet";
 
 const DynamicSnippetBlogPosts = DynamicSnippet.extend({
     selector: '.s_dynamic_snippet_blog_posts',
@@ -30,5 +29,4 @@ const DynamicSnippetBlogPosts = DynamicSnippet.extend({
 });
 publicWidget.registry.blog_posts = DynamicSnippetBlogPosts;
 
-return DynamicSnippetBlogPosts;
-});
+export default DynamicSnippetBlogPosts;

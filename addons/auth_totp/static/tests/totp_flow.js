@@ -1,9 +1,8 @@
-odoo.define('auth_totp.tours', function(require) {
-"use strict";
+/** @odoo-module **/
 
-const ajax = require('web.ajax');
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import ajax from "web.ajax";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 function openRoot() {
     return [{
@@ -337,4 +336,3 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     totp_state: false,
 }),
 ]})
-});

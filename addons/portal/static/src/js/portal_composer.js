@@ -1,9 +1,8 @@
-odoo.define('portal.composer', function (require) {
-'use strict';
+/** @odoo-module alias=portal.composer **/
 
-var ajax = require('web.ajax');
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import ajax from "web.ajax";
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -206,7 +205,6 @@ var PortalComposer = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     PortalComposer: PortalComposer,
 };
-});

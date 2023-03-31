@@ -1,9 +1,8 @@
 
-odoo.define('web_editor.custom_colors', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.custom_colors **/
 
 // These colors are already normalized as per normalizeCSSColor in web.Colorpicker
-return [
+export default [
     ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF'],
     ['#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF'],
     ['#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE'],
@@ -13,4 +12,3 @@ return [
     ['#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842'],
     ['#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
 ];
-});

@@ -1,12 +1,11 @@
-odoo.define('survey.session_manage', function (require) {
-'use strict';
+/** @odoo-module alias=survey.session_manage **/
 
-var publicWidget = require('web.public.widget');
-var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
-var SurveySessionChart = require('survey.session_chart');
-var SurveySessionTextAnswers = require('survey.session_text_answers');
-var SurveySessionLeaderBoard = require('survey.session_leaderboard');
-const {_lt} = require('web.core');
+import publicWidget from "web.public.widget";
+import SurveyPreloadImageMixin from "survey.preload_image_mixin";
+import SurveySessionChart from "survey.session_chart";
+import SurveySessionTextAnswers from "survey.session_text_answers";
+import SurveySessionLeaderBoard from "survey.session_leaderboard";
+import {_lt} from "web.core";
 
 const nextPageTooltips = {
     closingWords: _lt('End of Survey'),
@@ -704,6 +703,4 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     }
 });
 
-return publicWidget.registry.SurveySessionManage;
-
-});
+export default publicWidget.registry.SurveySessionManage;

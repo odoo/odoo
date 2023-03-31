@@ -1,8 +1,7 @@
-odoo.define('test_website.json_auth', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-var session = require('web.session')
+import { registry } from "@web/core/registry";
+import session from "web.session";
 
 registry.category("web_tour.tours").add('test_json_auth', {
     test: true,
@@ -23,4 +22,3 @@ registry.category("web_tour.tours").add('test_json_auth', {
     run: function () {},
 }
 ]});
-});

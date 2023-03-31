@@ -1,7 +1,6 @@
-odoo.define('website_event_track_live_quiz.event_quiz', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_track_live_quiz.event_quiz **/
 
-var Quiz = require('website_event_track_quiz.event.quiz');
+import Quiz from "website_event_track_quiz.event.quiz";
 
 var WebsiteEventTrackSuggestionQuiz = Quiz.include({
     /**
@@ -49,6 +48,4 @@ var WebsiteEventTrackSuggestionQuiz = Quiz.include({
     }
 });
 
-return WebsiteEventTrackSuggestionQuiz;
-
-});
+export default WebsiteEventTrackSuggestionQuiz;

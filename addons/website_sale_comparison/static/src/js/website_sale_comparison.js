@@ -1,12 +1,11 @@
-odoo.define('website_sale_comparison.comparison', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale_comparison.comparison **/
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-const {getCookie, setCookie} = require('web.utils.cookies');
-var VariantMixin = require('sale.VariantMixin');
-var website_sale_utils = require('website_sale.utils');
+import concurrency from "web.concurrency";
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import {getCookie, setCookie} from "web.utils.cookies";
+import VariantMixin from "sale.VariantMixin";
+import website_sale_utils from "website_sale.utils";
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 
 var qweb = core.qweb;
@@ -332,5 +331,4 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         };
     }
 });
-return ProductComparison;
-});
+export default ProductComparison;

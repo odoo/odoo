@@ -1,9 +1,8 @@
-odoo.define('payment.post_processing', function (require) {
-    'use strict';
-
-    var publicWidget = require('web.public.widget');
-    var core = require('web.core');
-    const {Markup} = require('web.utils');
+/** @odoo-module alias=payment.post_processing **/
+    
+    import publicWidget from "web.public.widget";
+    import core from "web.core";
+    import {Markup} from "web.utils";
 
     var _t = core._t;
 
@@ -138,5 +137,4 @@ odoo.define('payment.post_processing', function (require) {
         },
     });
 
-    return publicWidget.registry.PaymentPostProcessing;
-});
+    export default publicWidget.registry.PaymentPostProcessing;

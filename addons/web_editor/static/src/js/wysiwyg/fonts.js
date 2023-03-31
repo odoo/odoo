@@ -1,7 +1,6 @@
-odoo.define('wysiwyg.fonts', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.fonts **/
 
-return {
+export default {
     /**
      * Retrieves all the CSS rules which match the given parser (Regex).
      *
@@ -95,4 +94,3 @@ return {
         });
     }),
 };
-});

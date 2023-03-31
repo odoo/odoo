@@ -1,7 +1,6 @@
-odoo.define('website_sale_wishlist_admin.tour', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const wTourUtils = require("website.tour_utils");
+import wTourUtils from "website.tour_utils";
 
 wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
     url: '/shop?search=Rock',
@@ -82,5 +81,3 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         },
     ]
 );
-
-});

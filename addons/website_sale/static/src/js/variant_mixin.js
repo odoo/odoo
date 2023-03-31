@@ -1,7 +1,6 @@
-odoo.define('website_sale.VariantMixin', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale.VariantMixin **/
 
-var VariantMixin = require('sale.VariantMixin');
+import VariantMixin from "sale.VariantMixin";
 
 /**
  * Website behavior is slightly different from backend so we append
@@ -80,6 +79,4 @@ VariantMixin._toggleDisable = function ($parent, isCombinationPossible) {
     originalToggleDisable.apply(this, [$parent, isCombinationPossible]);
 };
 
-return VariantMixin;
-
-});
+export default VariantMixin;

@@ -1,7 +1,6 @@
-odoo.define('survey.quick.access', function (require) {
-'use strict';
+/** @odoo-module alias=survey.quick.access **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     selector: '.o_survey_quick_access',
@@ -91,6 +90,4 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.SurveyQuickAccessWidget;
-
-});
+export default publicWidget.registry.SurveyQuickAccessWidget;

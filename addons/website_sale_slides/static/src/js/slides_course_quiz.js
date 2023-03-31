@@ -1,7 +1,6 @@
-odoo.define('website_sale_slides.quiz', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {websiteSlidesQuizNoFullscreen} = require('@website_slides/js/slides_course_quiz');
+import {websiteSlidesQuizNoFullscreen} from "@website_slides/js/slides_course_quiz";
 
 websiteSlidesQuizNoFullscreen.include({
     _extractChannelData: function (slideData) {
@@ -14,5 +13,4 @@ websiteSlidesQuizNoFullscreen.include({
             hasDiscountedPrice: slideData.hasDiscountedPrice
         });
     }
-});
 });

@@ -1,8 +1,7 @@
-odoo.define('website.tour.focus_blur_snippets', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { loadJS } = require('@web/core/assets');
-const { registry } = require("@web/core/registry");
+import { loadJS } from "@web/core/assets";
+import { registry } from "@web/core/registry";
 
 const blockIDToData = {
     parent: {
@@ -80,4 +79,3 @@ registry.category("web_tour.tours").add('focus_blur_snippets', {
     ...clickAndCheck('child2', ['blur parent', 'blur child1', 'focus parent', 'focus child2']),
     ...clickAndCheck('parent', ['blur parent', 'blur child2', 'focus parent']),
 ]});
-});

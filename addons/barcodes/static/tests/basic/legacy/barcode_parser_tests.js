@@ -1,7 +1,6 @@
-odoo.define('barcodes/static/tests/barcode_parser_tests.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const BarcodeParser = require('barcodes.BarcodeParser');
+import BarcodeParser from "barcodes.BarcodeParser";
 
 
 QUnit.module('Barcodes', {}, function () {
@@ -53,6 +52,5 @@ QUnit.module('Barcode Parser', {
         utca = "71679131569";
         assert.equal(barcodeNomenclature.get_barcode_check_digit(utca + "0"), 7);
     });
-});
 });
 });

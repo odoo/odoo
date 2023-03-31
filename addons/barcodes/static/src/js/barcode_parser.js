@@ -1,8 +1,7 @@
-odoo.define('barcodes.BarcodeParser', function (require) {
-"use strict";
+/** @odoo-module alias=barcodes.BarcodeParser **/
 
-var Class = require('web.Class');
-var rpc = require('web.rpc');
+import Class from "web.Class";
+import rpc from "web.rpc";
 
 // The BarcodeParser is used to detect what is the category
 // of a barcode (product, partner, ...) and extract an encoded value
@@ -277,5 +276,4 @@ var BarcodeParser = Class.extend({
     },
 });
 
-return BarcodeParser;
-});
+export default BarcodeParser;

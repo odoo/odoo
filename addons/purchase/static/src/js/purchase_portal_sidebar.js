@@ -1,18 +1,17 @@
-odoo.define('purchase.PurchasePortalSidebar', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var PortalSidebar = require('portal.PortalSidebar');
+import publicWidget from "web.public.widget";
+import PortalSidebar from "portal.PortalSidebar";
 
 publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
-    selector: '.o_portal_purchase_sidebar',
+    selector: ".o_portal_purchase_sidebar",
 
     /**
      * @constructor
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.authorizedTextTag = ['em', 'b', 'i', 'u'];
+        this.authorizedTextTag = ["em", "b", "i", "u"];
         this.spyWatched = $('body[data-target=".navspy"]');
     },
     /**
@@ -41,7 +40,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      */
     _setElementId: function (prefix, $el) {
         var id = _.uniqueId(prefix);
-        this.spyWatched.find($el).attr('id', id);
+        this.spyWatched.find($el).attr("id", id);
         return id;
     },
     /**
@@ -54,23 +53,32 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
         var self = this,
             lastLI = false,
             lastUL = null,
-            $bsSidenav = this.$el.find('.bs-sidenav');
+            $bsSidenav = this.$el.find(".bs-sidenav");
 
-        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr("id", "");
+        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr(
+            "id",
+            ""
+        );
         _.each(this.spyWatched.find("#quote_content h2, #quote_content h3"), function (el) {
             var id, text;
             switch (el.tagName.toLowerCase()) {
                 case "h2":
-                    id = self._setElementId('quote_header_', el);
+                    id = self._setElementId("quote_header_", el);
                     text = self._extractText($(el));
                     if (!text) {
                         break;
                     }
-                    lastLI = $("<li class='nav-item'>").append($('<a class="nav-link" style="max-width: 200px;" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
+                    lastLI = $("<li class='nav-item'>")
+                        .append(
+                            $(
+                                '<a class="nav-link" style="max-width: 200px;" href="#' + id + '"/>'
+                            ).text(text)
+                        )
+                        .appendTo($bsSidenav);
                     lastUL = false;
                     break;
                 case "h3":
-                    id = self._setElementId('quote_', el);
+                    id = self._setElementId("quote_", el);
                     text = self._extractText($(el));
                     if (!text) {
                         break;
@@ -79,13 +87,21 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                         if (!lastUL) {
                             lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
                         }
-                        $("<li class='nav-item'>").append($('<a class="nav-link" style="max-width: 200px;" href="#' + id + '"/>').text(text)).appendTo(lastUL);
+                        $("<li class='nav-item'>")
+                            .append(
+                                $(
+                                    '<a class="nav-link" style="max-width: 200px;" href="#' +
+                                        id +
+                                        '"/>'
+                                ).text(text)
+                            )
+                            .appendTo(lastUL);
                     }
                     break;
             }
-            el.setAttribute('data-anchor', true);
+            el.setAttribute("data-anchor", true);
         });
-        this.trigger_up('widgets_start_request', {$target: $bsSidenav});
+        this.trigger_up("widgets_start_request", { $target: $bsSidenav });
     },
     /**
      * extract text of menu title for sidebar
@@ -101,12 +117,15 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
             var current = $(el);
             if ($.trim(current.text())) {
                 var tagName = current.prop("tagName");
-                if (_.isUndefined(tagName) || (!_.isUndefined(tagName) && _.contains(self.authorizedTextTag, tagName.toLowerCase()))) {
+                if (
+                    _.isUndefined(tagName) ||
+                    (!_.isUndefined(tagName) &&
+                        _.contains(self.authorizedTextTag, tagName.toLowerCase()))
+                ) {
                     rawText.push($.trim(current.text()));
                 }
             }
         });
-        return rawText.join(' ');
+        return rawText.join(" ");
     },
-});
 });

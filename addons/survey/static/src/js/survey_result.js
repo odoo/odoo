@@ -1,10 +1,9 @@
-odoo.define('survey.result', function (require) {
-'use strict';
+/** @odoo-module alias=survey.result **/
 
-var _t = require('web.core')._t;
-const { loadJS } = require('@web/core/assets');
-const { SurveyImageZoomer } = require("@survey/js/survey_image_zoomer");
-var publicWidget = require('web.public.widget');
+import { _t } from "web.core";
+import { loadJS } from "@web/core/assets";
+import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
+import publicWidget from "web.public.widget";
 
 // The given colors are the same as those used by D3
 var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
@@ -608,10 +607,8 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     }
 });
 
-return {
+export default {
     resultWidget: publicWidget.registry.SurveyResultWidget,
     chartWidget: publicWidget.registry.SurveyResultChart,
     paginationWidget: publicWidget.registry.SurveyResultPagination
 };
-
-});

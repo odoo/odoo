@@ -1,17 +1,16 @@
-odoo.define('website.editor.snippets.options', function (require) {
-'use strict';
+/** @odoo-module alias=website.editor.snippets.options **/
 
-const {ColorpickerWidget} = require('web.Colorpicker');
-var core = require('web.core');
-const { loadBundle, loadCSS } = require("@web/core/assets");
-var Dialog = require('web.Dialog');
-const {Markup, sprintf} = require('web.utils');
-const weUtils = require('web_editor.utils');
-var options = require('web_editor.snippets.options');
-const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
-const wUtils = require('website.utils');
-const {isImageSupportedForStyle} = require('web_editor.image_processing');
-require('website.s_popup_options');
+import {ColorpickerWidget} from "web.Colorpicker";
+import core from "web.core";
+import { loadBundle, loadCSS } from "@web/core/assets";
+import Dialog from "web.Dialog";
+import {Markup, sprintf} from "web.utils";
+import weUtils from "web_editor.utils";
+import options from "web_editor.snippets.options";
+import wLinkPopoverWidget from "@website/js/widgets/link_popover_widget";
+import wUtils from "website.utils";
+import {isImageSupportedForStyle} from "web_editor.image_processing";
+import "website.s_popup_options";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -3721,8 +3720,7 @@ options.registry.GridImage = options.Class.extend({
     },
 });
 
-return {
+export default {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
 };
-});

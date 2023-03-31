@@ -1,9 +1,8 @@
-odoo.define('website_mail_group.s_group_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const core = require('web.core');
-const options = require('web_editor.snippets.options');
-const wUtils = require('website.utils');
+import core from "web.core";
+import options from "web_editor.snippets.options";
+import wUtils from "website.utils";
 const _t = core._t;
 
 options.registry.Group = options.Class.extend({
@@ -101,5 +100,4 @@ options.registry.Group = options.Class.extend({
             args: [''],
         });
     },
-});
 });

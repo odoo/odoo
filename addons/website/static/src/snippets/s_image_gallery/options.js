@@ -1,10 +1,9 @@
-odoo.define('website.s_image_gallery_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
-const { ComponentWrapper } = require('web.OwlCompatibility');
-var core = require('web.core');
-var options = require('web_editor.snippets.options');
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { ComponentWrapper } from "web.OwlCompatibility";
+import core from "web.core";
+import options from "web_editor.snippets.options";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -490,5 +489,4 @@ options.registry.gallery_img = options.Class.extend({
             },
         });
     },
-});
 });

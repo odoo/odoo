@@ -1,8 +1,7 @@
-odoo.define('survey.test_survey_session_start_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-var surveySessionTools = require('survey.session_tour_tools');
+import { registry } from "@web/core/registry";
+import surveySessionTools from "survey.session_tour_tools";
 
 /**
  * Small tour that will open the session manager and check
@@ -28,5 +27,3 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     trigger: 'h1:contains("Nickname")',
     run: function () {} // check first question is displayed
 }])});
-
-});

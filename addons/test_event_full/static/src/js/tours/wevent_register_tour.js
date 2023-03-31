@@ -1,7 +1,6 @@
-odoo.define('test_event_full.tour.register', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 /**
  * TALKS STEPS
@@ -169,6 +168,4 @@ registry.category("web_tour.tours").add('wevent_register', {
         discoverRoomSteps('Best wood for furniture'),
         registerSteps,
     )
-});
-
 });

@@ -1,8 +1,7 @@
-odoo.define('website_livechat.tour', function(require) {
-'use strict';
+/** @odoo-module alias=website_livechat.tour **/
 
-var commonSteps = require("website_livechat.tour_common");
-const { registry } = require("@web/core/registry");
+import commonSteps from "website_livechat.tour_common";
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_livechat_complete_flow_tour', {
     test: true,
@@ -34,5 +33,4 @@ registry.category("web_tour.tours").add('website_livechat_no_rating_no_close_tou
     url: '/',
     steps: [].concat(commonSteps.startStep)});
 
-return {};
-});
+export default {};

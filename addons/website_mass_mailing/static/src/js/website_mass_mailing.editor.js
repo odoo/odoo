@@ -1,9 +1,8 @@
-odoo.define('website_mass_mailing.editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-const Dialog = require('web.Dialog');
-var options = require('web_editor.snippets.options');
+import core from "web.core";
+import Dialog from "web.Dialog";
+import options from "web_editor.snippets.options";
 
 const qweb = core.qweb;
 var _t = core._t;
@@ -134,5 +133,4 @@ options.registry.recaptchaSubscribe = options.Class.extend({
         }
         return this._super(...arguments);
     },
-});
 });

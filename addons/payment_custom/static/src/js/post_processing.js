@@ -1,7 +1,6 @@
-odoo.define('payment_custom.post_processing', require => {
-    'use strict';
-
-    const paymentPostProcessing = require('payment.post_processing');
+/** @odoo-module **/
+    
+    import paymentPostProcessing from "payment.post_processing";
 
     paymentPostProcessing.include({
         /**
@@ -22,4 +21,3 @@ odoo.define('payment_custom.post_processing', require => {
             }
         }
     });
-});

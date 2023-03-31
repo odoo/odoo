@@ -1,8 +1,7 @@
-odoo.define('auth_totp_portal.tours', function(require) {
-"use strict";
+/** @odoo-module **/
 
-const ajax = require('web.ajax');
-const { registry } = require("@web/core/registry");
+import ajax from "web.ajax";
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('totportal_tour_setup', {
     test: true,
@@ -121,4 +120,3 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
     trigger: "h3:contains(Documents)",
     run: () => {}
 }]});
-});

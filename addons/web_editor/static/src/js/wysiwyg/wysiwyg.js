@@ -1,29 +1,27 @@
-odoo.define('web_editor.wysiwyg', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.wysiwyg **/
 
-const { ComponentWrapper } = require('web.OwlCompatibility');
-const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
-const { VideoSelector } = require('@web_editor/components/media_dialog/video_selector');
-const dom = require('web.dom');
-const core = require('web.core');
-const { browser } = require('@web/core/browser/browser');
-const Widget = require('web.Widget');
-const Dialog = require('web.Dialog');
-const customColors = require('web_editor.custom_colors');
-const {ColorPaletteWidget} = require('web_editor.ColorPalette');
-const {ColorpickerWidget} = require('web.Colorpicker');
-const concurrency = require('web.concurrency');
-const { device } = require('web.config');
-const { localization } = require('@web/core/l10n/localization');
-const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
-const snippetsEditor = require('web_editor.snippet.editor');
-const Toolbar = require('web_editor.toolbar');
-const weWidgets = require('wysiwyg.widgets');
-const Link = require('wysiwyg.widgets.Link');
-const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
-const weUtils = require('web_editor.utils');
-const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
-const { Mutex } = require('web.concurrency');
+import { ComponentWrapper } from "web.OwlCompatibility";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { VideoSelector } from "@web_editor/components/media_dialog/video_selector";
+import dom from "web.dom";
+import core from "web.core";
+import { browser } from "@web/core/browser/browser";
+import Widget from "web.Widget";
+import Dialog from "web.Dialog";
+import customColors from "web_editor.custom_colors";
+import {ColorPaletteWidget} from "web_editor.ColorPalette";
+import {ColorpickerWidget} from "web.Colorpicker";
+import concurrency from "web.concurrency";
+import { device } from "web.config";
+import { localization } from "@web/core/l10n/localization";
+import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import snippetsEditor from "web_editor.snippet.editor";
+import Toolbar from "web_editor.toolbar";
+import weWidgets from "wysiwyg.widgets";
+import Link from "wysiwyg.widgets.Link";
+import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
+import weUtils from "web_editor.utils";
+import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -466,7 +464,7 @@ const Wysiwyg = Widget.extend({
                 return clientA.startTime < clientB.startTime;
             }
         };
-        const rpcMutex = new Mutex();
+        const rpcMutex = new concurrency.Mutex();
 
         this._getNewPtp = () => {
             // Wether or not the history has been sent or received at least once.
@@ -2714,12 +2712,4 @@ Wysiwyg.setRange = function (startNode, startOffset = 0, endNode = startNode, en
     range.setEnd(endNode, endOffset);
     selection.addRange(range);
 };
-return Wysiwyg;
-});
-odoo.define('web_editor.widget', function (require) {
-'use strict';
-    return {
-        Dialog: require('wysiwyg.widgets.Dialog'),
-        LinkDialog: require('wysiwyg.widgets.LinkDialog'),
-    };
-});
+export default Wysiwyg;

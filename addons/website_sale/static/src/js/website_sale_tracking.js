@@ -1,6 +1,6 @@
-odoo.define('website_sale.tracking', function (require) {
+/** @odoo-module alias=website_sale.tracking **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -117,6 +117,4 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.websiteSaleTracking;
-
-});
+export default publicWidget.registry.websiteSaleTracking;

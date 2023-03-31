@@ -1,10 +1,9 @@
-odoo.define('website.s_countdown', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_countdown **/
 
-const {ColorpickerWidget} = require('web.Colorpicker');
-const core = require('web.core');
-const publicWidget = require('web.public.widget');
-const weUtils = require('web_editor.utils');
+import {ColorpickerWidget} from "web.Colorpicker";
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import weUtils from "web_editor.utils";
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -418,5 +417,4 @@ const CountdownWidget = publicWidget.Widget.extend({
 
 publicWidget.registry.countdown = CountdownWidget;
 
-return CountdownWidget;
-});
+export default CountdownWidget;

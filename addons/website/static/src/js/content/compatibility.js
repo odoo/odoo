@@ -1,12 +1,11 @@
-odoo.define('website.content.compatibility', function (require) {
-'use strict';
+/** @odoo-module alias=website.content.compatibility **/
 
 /**
  * Tweaks the website rendering so that the old browsers correctly render the
  * content too.
  */
 
-require('web.dom_ready');
+import "web.dom_ready";
 
 // Check the browser and its version and add the info as an attribute of the
 // HTML element so that css selectors can match it
@@ -31,8 +30,7 @@ if (!isFlexSupported) {
     document.documentElement.setAttribute('data-no-flex', '');
 }
 
-return {
+export default {
     browser: browser,
     isFlexSupported: isFlexSupported,
 };
-});

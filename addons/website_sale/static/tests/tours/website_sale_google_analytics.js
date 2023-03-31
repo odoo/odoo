@@ -1,8 +1,7 @@
-odoo.define('website_sale.google_analytics', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const websiteSaleTracking = require('website_sale.tracking');
+import { registry } from "@web/core/registry";
+import websiteSaleTracking from "website_sale.tracking";
 
 let itemId;
 
@@ -68,5 +67,3 @@ registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
         run: () => {}, // it's a check
     },
 ]});
-
-});

@@ -1,8 +1,7 @@
-odoo.define('options.s_google_map_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {_t} = require('web.core');
-const options = require('web_editor.snippets.options');
+import {_t} from "web.core";
+import options from "web_editor.snippets.options";
 
 options.registry.GoogleMap = options.Class.extend({
 
@@ -52,5 +51,4 @@ options.registry.GoogleMap = options.Class.extend({
         }
         return this._super(...arguments);
     },
-});
 });

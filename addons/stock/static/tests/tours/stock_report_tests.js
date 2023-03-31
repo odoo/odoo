@@ -1,7 +1,6 @@
-odoo.define('stock.reports.setup.tour', function (require) {
-    "use strict";
-
-    const { registry } = require("@web/core/registry");
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
 
     registry.category("web_tour.tours").add('test_stock_route_diagram_report', {
         test: true,
@@ -20,4 +19,3 @@ odoo.define('stock.reports.setup.tour', function (require) {
         trigger: 'iframe .o_report_stock_rule',
     },
     ]});
-});

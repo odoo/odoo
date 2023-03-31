@@ -1,7 +1,6 @@
-odoo.define('web_unsplash.beacon', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
     // /!\ To adapt the day the beacon makes sense for backend customizations
@@ -30,5 +29,4 @@ publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
         }
         return this._super.apply(this, arguments);
     },
-});
 });

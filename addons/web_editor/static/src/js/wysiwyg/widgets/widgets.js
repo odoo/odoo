@@ -1,15 +1,14 @@
-odoo.define('wysiwyg.widgets', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets **/
 
-var Dialog = require('wysiwyg.widgets.Dialog');
-var AltDialog = require('wysiwyg.widgets.AltDialog');
-var LinkDialog = require('wysiwyg.widgets.LinkDialog');
-var LinkTools = require('wysiwyg.widgets.LinkTools');
-var ImageCropWidget = require('wysiwyg.widgets.ImageCropWidget');
-const LinkPopoverWidget = require('@web_editor/js/wysiwyg/widgets/link_popover_widget')[Symbol.for("default")];
-const {ColorpickerDialog} = require('web.Colorpicker');
+import Dialog from "wysiwyg.widgets.Dialog";
+import AltDialog from "wysiwyg.widgets.AltDialog";
+import LinkDialog from "wysiwyg.widgets.LinkDialog";
+import LinkTools from "wysiwyg.widgets.LinkTools";
+import ImageCropWidget from "wysiwyg.widgets.ImageCropWidget";
+import LinkPopoverWidget from "@web_editor/js/wysiwyg/widgets/link_popover_widget";
+import {ColorpickerDialog} from "web.Colorpicker";
 
-return {
+export default {
     Dialog: Dialog,
     AltDialog: AltDialog,
     LinkDialog: LinkDialog,
@@ -18,4 +17,3 @@ return {
     LinkPopoverWidget: LinkPopoverWidget,
     ColorpickerDialog: ColorpickerDialog,
 };
-});

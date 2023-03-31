@@ -1,9 +1,8 @@
-odoo.define('website_sale_tour.tour', function (require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
-    var rpc = require("web.rpc");
-    const tourUtils = require('website_sale.tour_utils');
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
+    import rpc from "web.rpc";
+    import tourUtils from "website_sale.tour_utils";
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
         test: true,
@@ -388,4 +387,3 @@ odoo.define('website_sale_tour.tour', function (require) {
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
         trigger: 'button[name="o_payment_submit_button"]:visible',
     }]});
-});

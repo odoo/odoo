@@ -1,9 +1,9 @@
-odoo.define('website_event.website_event', function (require) {
+/** @odoo-module alias=website_event.website_event **/
 
-var ajax = require('web.ajax');
-var core = require('web.core');
-var Widget = require('web.Widget');
-var publicWidget = require('web.public.widget');
+import ajax from "web.ajax";
+import core from "web.core";
+import Widget from "web.Widget";
+import publicWidget from "web.public.widget";
 
 var _t = core._t;
 
@@ -92,5 +92,4 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     },
 });
 
-return EventRegistrationForm;
-});
+export default EventRegistrationForm;

@@ -1,7 +1,6 @@
-odoo.define("website.tour.website_style_edition", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require("website.tour_utils");
+import wTourUtils from "website.tour_utils";
 
 const TARGET_FONT_SIZE = 30;
 
@@ -49,4 +48,3 @@ wTourUtils.goToTheme(),
     trigger: '.o_select_media_dialog',
     run: () => {}, // It's a check.
 }]);
-});

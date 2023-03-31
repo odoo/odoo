@@ -1,9 +1,8 @@
-odoo.define('website_slides.slides_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {_t} = require('web.core');
-const {Markup} = require('web.utils');
-const wTourUtils = require('website.tour_utils');
+import {_t} from "web.core";
+import {Markup} from "web.utils";
+import wTourUtils from "website.tour_utils";
 
 wTourUtils.registerWebsitePreviewTour('slides_tour', {
     url: '/slides',
@@ -112,4 +111,3 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     content: Markup(_t("Finally you can click here to enjoy your content in fullscreen")),
     position: 'bottom',
 }]);
-});

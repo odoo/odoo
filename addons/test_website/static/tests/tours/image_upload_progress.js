@@ -1,10 +1,9 @@
-odoo.define('test_website.image_upload_progress', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
-const { FileSelectorControlPanel } = require('@web_editor/components/media_dialog/file_selector');
-const { patch, unpatch } = require('web.utils');
+import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
+import { patch, unpatch } from "web.utils";
 
 let patchWithError = false;
 const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, 'test_website.mock_image_widgets', {
@@ -241,5 +240,3 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         },
     },
 ]);
-
-});

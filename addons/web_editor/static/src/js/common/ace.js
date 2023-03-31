@@ -1,13 +1,12 @@
-odoo.define('web_editor.ace', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.ace **/
 
-var config = require('web.config');
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var dom = require('web.dom');
-var Dialog = require('web.Dialog');
-var Widget = require('web.Widget');
-var localStorage = require('web.local_storage');
+import config from "web.config";
+import concurrency from "web.concurrency";
+import core from "web.core";
+import dom from "web.dom";
+import Dialog from "web.Dialog";
+import Widget from "web.Widget";
+import localStorage from "web.local_storage";
 
 var _t = core._t;
 
@@ -1031,5 +1030,4 @@ var ViewEditor = Widget.extend({
     },
 });
 
-return ViewEditor;
-});
+export default ViewEditor;

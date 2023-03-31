@@ -1,7 +1,6 @@
-odoo.define('website_sale.tour_variants_modal_window', function (require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
 
     // This tour relies on a data created from the python test.
     registry.category("web_tour.tours").add('tour_variants_modal_window', {
@@ -63,4 +62,3 @@ odoo.define('website_sale.tour_variants_modal_window', function (require) {
             trigger: 'td.td-product_name:contains(Never attribute size custom: Yes never custom: TEST)',
         }
     ]});
-});

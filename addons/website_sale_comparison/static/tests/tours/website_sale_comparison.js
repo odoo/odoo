@@ -1,8 +1,7 @@
-odoo.define('website_sale_comparison.tour_comparison', function (require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
-    const tourUtils = require('website_sale.tour_utils');
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
+    import tourUtils from "website_sale.tour_utils";
 
     registry.category("web_tour.tours").add('product_comparison', {
         test: true,
@@ -166,4 +165,3 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         run: function () {},
     },
     ]});
-});

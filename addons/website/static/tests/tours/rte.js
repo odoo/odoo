@@ -1,8 +1,7 @@
-odoo.define('website.tour.rte', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var session = require('web.session');
-const wTourUtils = require('website.tour_utils');
+import session from "web.session";
+import wTourUtils from "website.tour_utils";
 
 var domReady = new Promise(function (resolve) {
     $(resolve);
@@ -239,4 +238,3 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     trigger: 'iframe body:not(.rte_translator_error)',
     run: function () {},
 }]);
-});

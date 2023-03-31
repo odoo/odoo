@@ -1,14 +1,13 @@
-odoo.define('website.s_website_form', function (require) {
-    'use strict';
-
-    var core = require('web.core');
-    var time = require('web.time');
-    const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
-    const session = require('web.session');
-    var ajax = require('web.ajax');
-    var publicWidget = require('web.public.widget');
-    const dom = require('web.dom');
-    const concurrency = require('web.concurrency');
+/** @odoo-module **/
+    
+    import core from "web.core";
+    import time from "web.time";
+    import {ReCaptcha} from "google_recaptcha.ReCaptchaV3";
+    import session from "web.session";
+    import ajax from "web.ajax";
+    import publicWidget from "web.public.widget";
+    import dom from "web.dom";
+    import concurrency from "web.concurrency";
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -671,4 +670,3 @@ odoo.define('website.s_website_form', function (require) {
             this._updateFieldsVisibility();
         },
     });
-});

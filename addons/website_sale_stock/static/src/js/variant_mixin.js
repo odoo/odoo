@@ -1,13 +1,12 @@
-odoo.define('website_sale_stock.VariantMixin', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale_stock.VariantMixin **/
 
-const {Markup} = require('web.utils');
-var VariantMixin = require('sale.VariantMixin');
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
+import {Markup} from "web.utils";
+import VariantMixin from "sale.VariantMixin";
+import publicWidget from "web.public.widget";
+import core from "web.core";
 var QWeb = core.qweb;
 
-require('website_sale.website_sale');
+import "website_sale.website_sale";
 
 /**
  * Addition to the variant_mixin._onChangeCombination
@@ -96,6 +95,4 @@ publicWidget.registry.WebsiteSale.include({
     }
 });
 
-return VariantMixin;
-
-});
+export default VariantMixin;

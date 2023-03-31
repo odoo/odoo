@@ -1,10 +1,9 @@
+/** @odoo-module **/
 /* global YT */
-odoo.define('website_event_track_live.website_event_youtube_embed', function (require) {
-'use strict';
 
-var publicWidget = require('web.public.widget');
-var TrackSuggestionWidget = require('website_event_track_live.website_event_track_suggestion');
-var ReplaySuggestionWidget = require('website_event_track_live.website_event_track_replay_suggestion');
+import publicWidget from "web.public.widget";
+import TrackSuggestionWidget from "website_event_track_live.website_event_track_suggestion";
+import ReplaySuggestionWidget from "website_event_track_live.website_event_track_replay_suggestion";
 
 publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     selector: '.o_wevent_event_track_live',
@@ -120,6 +119,4 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
             this.outro.on('replay', null, this._onReplay.bind(this));
         }
     }
-});
-
 });

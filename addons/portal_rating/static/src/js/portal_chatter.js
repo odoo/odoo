@@ -1,10 +1,9 @@
-odoo.define('rating.portal.chatter', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var portalChatter = require('portal.chatter');
-var utils = require('web.utils');
-var time = require('web.time');
+import core from "web.core";
+import portalChatter from "portal.chatter";
+import utils from "web.utils";
+import time from "web.time";
 
 var _t = core._t;
 var PortalChatter = portalChatter.PortalChatter;
@@ -379,5 +378,4 @@ PortalChatter.include({
         }
         this._changeCurrentPage(1, domain);
     },
-});
 });

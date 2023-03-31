@@ -1,8 +1,7 @@
-odoo.define('sale.SalePortalSidebar', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var PortalSidebar = require('portal.PortalSidebar');
+import publicWidget from "web.public.widget";
+import PortalSidebar from "portal.PortalSidebar";
 
 publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_sale_sidebar',
@@ -113,5 +112,4 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
         });
         return rawText.join(' ');
     },
-});
 });

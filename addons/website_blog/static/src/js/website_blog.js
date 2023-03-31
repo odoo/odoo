@@ -1,9 +1,8 @@
-odoo.define('website_blog.website_blog', function (require) {
-'use strict';
-var core = require('web.core');
+/** @odoo-module **/
 
-const dom = require('web.dom');
-const publicWidget = require('web.public.widget');
+import core from "web.core";
+import dom from "web.dom";
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
@@ -98,5 +97,4 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     _forumScrollAction: function ($el, duration, callback) {
         dom.scrollTo($el[0], {duration: duration}).then(() => callback());
     },
-});
 });

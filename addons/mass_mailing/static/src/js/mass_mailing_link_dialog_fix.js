@@ -1,4 +1,3 @@
-
 odoo.define('mass_mailing.fix.LinkDialog', function (require) {
 'use strict';
 
@@ -71,5 +70,4 @@ LinkDialog.include({
         }
     },
 });
-
 });

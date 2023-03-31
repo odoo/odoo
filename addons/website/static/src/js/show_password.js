@@ -1,13 +1,13 @@
+/** @odoo-module alias=website.show_password **/
+
 //
 // This file is meant to allow to switch the type of an input #password
 // from password to text on mousedown on an input group.
 // On mouse down, we see the password in clear text
 // On mouse up, we hide it again.
 //
-odoo.define('website.show_password', function (require) {
-'use strict';
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.ShowPassword = publicWidget.Widget.extend({
     selector: '#showPass',
@@ -43,6 +43,4 @@ publicWidget.registry.ShowPassword = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.ShowPassword;
-
-});
+export default publicWidget.registry.ShowPassword;

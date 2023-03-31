@@ -1,7 +1,6 @@
-odoo.define('website_event_track_live_quiz.website_event_track_suggestion', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_track_live_quiz.website_event_track_suggestion **/
 
-var WebsiteEventTrackSuggestion = require('website_event_track_live.website_event_track_suggestion');
+import WebsiteEventTrackSuggestion from "website_event_track_live.website_event_track_suggestion";
 
 var WebsiteEventTrackSuggestionLiveQuiz = WebsiteEventTrackSuggestion.include({
     events: _.extend({}, WebsiteEventTrackSuggestion.prototype.events, {
@@ -26,6 +25,4 @@ var WebsiteEventTrackSuggestionLiveQuiz = WebsiteEventTrackSuggestion.include({
     }
 });
 
-return WebsiteEventTrackSuggestionLiveQuiz;
-
-});
+export default WebsiteEventTrackSuggestionLiveQuiz;

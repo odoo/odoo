@@ -1,8 +1,7 @@
-odoo.define('website_links.charts', function (require) {
-'use strict';
+/** @odoo-module alias=website_links.charts **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 var _t = core._t;
 
@@ -296,8 +295,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     BarChart: BarChart,
     PieChart: PieChart,
 };
-});

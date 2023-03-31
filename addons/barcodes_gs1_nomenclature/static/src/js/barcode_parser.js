@@ -1,9 +1,8 @@
-odoo.define('barcodes_gs1_nomenclature/static/src/js/barcode_parser.js', function (require) {
-"use strict";
+/** @odoo-module alias=barcodes_gs1_nomenclature.barcode_parser **/
 
-const BarcodeParser = require('barcodes.BarcodeParser');
+import BarcodeParser from "barcodes.BarcodeParser";
 const FNC1_CHAR = String.fromCharCode(29);
-const {_lt} = require('web.core');
+import {_lt} from "web.core";
 
 BarcodeParser.include({
     /**
@@ -148,8 +147,7 @@ BarcodeParser.include({
     },
 });
 
-return {
+export default {
     BarcodeParser,
     FNC1_CHAR,
 };
-});

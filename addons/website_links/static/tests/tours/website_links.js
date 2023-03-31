@@ -1,7 +1,6 @@
-odoo.define('website_links.website_links_tour', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_links_tour', {
     test: true,
@@ -75,6 +74,4 @@ registry.category("web_tour.tours").add('website_links_tour', {
             },
         },
     ]
-});
-
 });

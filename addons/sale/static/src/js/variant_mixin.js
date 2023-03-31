@@ -1,10 +1,9 @@
-odoo.define('sale.VariantMixin', function (require) {
-'use strict';
+/** @odoo-module alias=sale.VariantMixin **/
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var utils = require('web.utils');
-var ajax = require('web.ajax');
+import concurrency from "web.concurrency";
+import core from "web.core";
+import utils from "web.utils";
+import ajax from "web.ajax";
 var _t = core._t;
 
 var VariantMixin = {
@@ -710,6 +709,4 @@ var VariantMixin = {
     }
 };
 
-return VariantMixin;
-
-});
+export default VariantMixin;

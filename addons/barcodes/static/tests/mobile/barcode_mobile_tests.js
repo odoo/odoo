@@ -1,11 +1,10 @@
-odoo.define('barcodes.barcode_mobile_tests', function (require) {
-    "use strict";
-
-    const {barcodeService} = require("@barcodes/barcode_service");
-    const {barcodeRemapperService} = require("@barcodes/js/barcode_events");
-    const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
-    const { registry } = require("@web/core/registry");
-    var testUtils = require('web.test_utils');
+/** @odoo-module **/
+    
+    import {barcodeService} from "@barcodes/barcode_service";
+    import {barcodeRemapperService} from "@barcodes/js/barcode_events";
+    import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+    import { registry } from "@web/core/registry";
+    import testUtils from "web.test_utils";
 
     const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
     const isMobileChrome = barcodeService.isMobileChrome;
@@ -101,5 +100,4 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
             $('#qunit-fixture').empty();
             document.querySelector('input[name=barcode]').remove();
         });
-    });
     });

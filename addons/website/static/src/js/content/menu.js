@@ -1,9 +1,8 @@
-odoo.define('website.content.menu', function (require) {
-'use strict';
+/** @odoo-module alias=website.content.menu **/
 
-const config = require('web.config');
-var publicWidget = require('web.public.widget');
-var animations = require('website.content.snippets.animation');
+import config from "web.config";
+import publicWidget from "web.public.widget";
+import animations from "website.content.snippets.animation";
 const extraMenuUpdateCallbacks = [];
 
 const BaseAnimatedHeader = animations.Animation.extend({
@@ -597,7 +596,6 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     extraMenuUpdateCallbacks: extraMenuUpdateCallbacks,
 };
-});
