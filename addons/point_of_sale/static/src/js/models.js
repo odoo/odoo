@@ -3,7 +3,6 @@
 
 import { PosDB } from "@point_of_sale/js/db";
 import config from "web.config";
-import core from "web.core";
 import field_utils from "web.field_utils";
 import time from "web.time";
 import utils from "web.utils";
@@ -19,7 +18,6 @@ import { memoize } from "@web/core/utils/functions";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
 
-var QWeb = core.qweb;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
 const Markup = utils.Markup;
@@ -2953,7 +2951,6 @@ export class Order extends PosModel {
     }
     export_for_printing() {
         var orderlines = [];
-        var self = this;
 
         this.orderlines.forEach(function (orderline) {
             orderlines.push(orderline.export_for_printing());
@@ -2973,26 +2970,6 @@ export class Order extends PosModel {
         const cashier = this.pos.get_cashier();
         const company = this.pos.company;
         const date = new Date();
-
-        function is_html(subreceipt) {
-            return subreceipt ? subreceipt.split("\n")[0].indexOf("<!DOCTYPE QWEB") >= 0 : false;
-        }
-
-        function render_html(subreceipt) {
-            if (!is_html(subreceipt)) {
-                return subreceipt;
-            } else {
-                subreceipt = subreceipt.split("\n").slice(1).join("\n");
-                var qweb = new QWeb2.Engine();
-                qweb.debug = config.isDebug();
-                qweb.default_dict = _.clone(QWeb.default_dict);
-                qweb.add_template(
-                    '<templates><t t-name="subreceipt">' + subreceipt + "</t></templates>"
-                );
-
-                return qweb.render("subreceipt", { pos: self.pos, order: self, receipt: receipt });
-            }
-        }
 
         var receipt = {
             orderlines: orderlines,
@@ -3046,19 +3023,10 @@ export class Order extends PosModel {
             base_url: this.pos.base_url,
         };
 
-        if (is_html(this.pos.config.receipt_header)) {
-            receipt.header = "";
-            receipt.header_html = render_html(this.pos.config.receipt_header);
-        } else {
-            receipt.header = this.pos.config.receipt_header || "";
-        }
+        const isHeaderOrFooter = this.pos.config.is_header_or_footer;
+        receipt.header = (isHeaderOrFooter && this.pos.config.receipt_header) || "";
+        receipt.footer = (isHeaderOrFooter && this.pos.config.receipt_footer) || "";
 
-        if (is_html(this.pos.config.receipt_footer)) {
-            receipt.footer = "";
-            receipt.footer_html = render_html(this.pos.config.receipt_footer);
-        } else {
-            receipt.footer = this.pos.config.receipt_footer || "";
-        }
         if (!receipt.date.localestring && (!this.state || this.state == "draft")) {
             receipt.date.localestring = field_utils.format.datetime(
                 moment(new Date()),
