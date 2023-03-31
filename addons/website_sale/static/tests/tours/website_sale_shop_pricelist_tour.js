@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add(
             },
             {
                 content: "Go to login page",
-                trigger: ".nav-link:contains('Sign in')"
+                trigger: ".btn:contains('Sign in')"
             },
             {
                 content: "Submit login",

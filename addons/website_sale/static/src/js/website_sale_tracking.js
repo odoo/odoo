@@ -103,7 +103,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onOrder: function () {
-        if ($('#top_menu [href="/web/login"]').length) {
+        if ($('header#top [href="/web/login"]').length) {
             this._vpv('/stats/ecom/customer_signup');
         }
         this._vpv('/stats/ecom/order_checkout');
