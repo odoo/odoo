@@ -1,7 +1,6 @@
-odoo.define("website.tour.snippet_empty_parent_autoremove", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 function removeSelectedBlock() {
     return {
@@ -66,4 +65,3 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
         run: () => null,
     },
 ]);
-});

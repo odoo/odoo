@@ -1,27 +1,7 @@
-odoo.define("website_event_booth_exhibitor.tour_steps", function (require) {
-    "use strict";
-
-    var core = require('web.core');
-
-    var FinalSteps = core.Class.extend({
-
-        _getSteps: function () {
-            return [{
-                trigger: 'h3:contains("Booth Registration completed!")',
-                run: function() {},
-            }];
-        },
-
-    });
-
-    return FinalSteps;
-
-});
-odoo.define("website_event_booth_exhibitor.tour", function (require) {
-    "use strict";
-
-    const { registry } = require("@web/core/registry");
-    var FinalSteps = require('website_event_booth_exhibitor.tour_steps');
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
+    import FinalSteps from "website_event_booth_exhibitor.tour_steps";
 
 
     registry.category("web_tour.tours").add("webooth_exhibitor_register", {
@@ -63,4 +43,3 @@ odoo.define("website_event_booth_exhibitor.tour", function (require) {
         trigger: 'button:contains("Book my Booths")',
         run: 'click',
     }, ...new FinalSteps()._getSteps()].filter(Boolean)});
-});

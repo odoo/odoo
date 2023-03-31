@@ -1,8 +1,7 @@
-odoo.define('rating.portal.composer', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var portalComposer = require('portal.composer');
+import core from "web.core";
+import portalComposer from "portal.composer";
 
 var _t = core._t;
 
@@ -168,5 +167,4 @@ PortalComposer.include({
         }
         return this._super.apply(this, arguments);
     },
-});
 });

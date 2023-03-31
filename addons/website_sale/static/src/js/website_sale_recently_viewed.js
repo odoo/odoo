@@ -1,7 +1,7 @@
-odoo.define('website_sale.recently_viewed', function (require) {
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-const {getCookie, setCookie} = require('web.utils.cookies');
+import publicWidget from "web.public.widget";
+import {getCookie, setCookie} from "web.utils.cookies";
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
     selector: '#product_detail',
@@ -61,5 +61,4 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
     _onProductChange: function (ev) {
         this._updateProductView($(ev.currentTarget));
     },
-});
 });

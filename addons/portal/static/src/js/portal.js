@@ -1,10 +1,9 @@
-odoo.define('portal.portal', function (require) {
-'use strict';
+/** @odoo-module alias=portal.portal **/
 
-var publicWidget = require('web.public.widget');
-const Dialog = require('web.Dialog');
-const {_t, qweb} = require('web.core');
-const session = require('web.session');
+import publicWidget from "web.public.widget";
+import Dialog from "web.Dialog";
+import {_t, qweb} from "web.core";
+import session from "web.session";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
@@ -356,7 +355,6 @@ function handleCheckIdentity(rpc, wrapped) {
         });
     });
 }
-return {
+export default {
     handleCheckIdentity,
 }
-});

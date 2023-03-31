@@ -1,8 +1,7 @@
-odoo.define('website_event_track.website_event_track_proposal_form_tags', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_track.website_event_track_proposal_form_tags **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 var _t = core._t;
 
@@ -95,6 +94,4 @@ publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.ex
     },
 });
 
-return publicWidget.registry.websiteEventTrackProposalFormTags;
-
-});
+export default publicWidget.registry.websiteEventTrackProposalFormTags;

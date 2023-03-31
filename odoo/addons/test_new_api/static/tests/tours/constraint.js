@@ -1,8 +1,7 @@
-odoo.define('web.test.constraint', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    const { registry } = require("@web/core/registry");
-    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+    import { registry } from "@web/core/registry";
+    import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
     registry.category("web_tour.tours").add('sql_constaint', {
         url: '/web?debug=1#action=test_new_api.action_categories',
@@ -35,4 +34,3 @@ odoo.define('web.test.constraint', function (require) {
     },
     ...stepUtils.discardForm(),
     ]});
-});

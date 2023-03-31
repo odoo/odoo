@@ -1,8 +1,7 @@
-odoo.define('website_sale_wishlist.tour', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var rpc = require('web.rpc');
-const { registry } = require("@web/core/registry");
+import rpc from "web.rpc";
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     test: true,
@@ -402,6 +401,4 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             isCheck: true,
         },
     ]
-});
-
 });

@@ -1,8 +1,7 @@
-odoo.define('website_hr_recruitment.tour', function(require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
-    const wTourUtils = require("website.tour_utils");
+/** @odoo-module alias=website_hr_recruitment.tour **/
+    
+    import { registry } from "@web/core/registry";
+    import wTourUtils from "website.tour_utils";
 
     function applyForAJob(jobName, application) {
         return [{
@@ -130,5 +129,4 @@ odoo.define('website_hr_recruitment.tour', function(require) {
     },
 ]);
 
-    return {};
-});
+export default {};

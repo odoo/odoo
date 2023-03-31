@@ -1,9 +1,8 @@
-odoo.define('wysiwyg.widgets.ImageCropWidget', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets.ImageCropWidget **/
 
-const core = require('web.core');
-const Widget = require('web.Widget');
-const {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} = require('web_editor.image_processing');
+import core from "web.core";
+import Widget from "web.Widget";
+import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "web_editor.image_processing";
 
 const _t = core._t;
 
@@ -230,5 +229,4 @@ const ImageCropWidget = Widget.extend({
     },
 });
 
-return ImageCropWidget;
-});
+export default ImageCropWidget;

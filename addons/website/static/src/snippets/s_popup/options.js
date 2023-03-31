@@ -1,7 +1,6 @@
-odoo.define('website.s_popup_options', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_popup_options **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.SnippetPopup = options.Class.extend({
     /**
@@ -148,5 +147,4 @@ options.registry.SnippetPopup = options.Class.extend({
             iframe.src = '';
         });
     },
-});
 });

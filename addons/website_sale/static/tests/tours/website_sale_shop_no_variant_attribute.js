@@ -1,8 +1,7 @@
-odoo.define('website_sale.tour_shop_no_variant_attribute', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import { registry } from "@web/core/registry";
+import tourUtils from "website_sale.tour_utils";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
@@ -35,4 +34,3 @@ registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
         run: function () {},
     },
 ]});
-});

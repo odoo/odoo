@@ -1,9 +1,8 @@
-odoo.define('website_mail_group.mail_group', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const core = require('web.core');
+import core from "web.core";
 const _t = core._t;
-const MailGroup = require('mail_group.mail_group');
+import MailGroup from "mail_group.mail_group";
 
 MailGroup.include({
     start: async function () {
@@ -45,6 +44,4 @@ MailGroup.include({
 
         this.$el.data('isMember', this.isMember);
     },
-});
-
 });

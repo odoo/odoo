@@ -1,8 +1,9 @@
-odoo.define('website_sale_slides.course.join.widget', function (require) {
-"use strict";
+/** @odoo-module alias=website_sale_slides.course.join.widget **/
 
-var CourseJoinWidget = require('@website_slides/js/slides_course_join')[Symbol.for("default")].courseJoinWidget;
-const wUtils = require('website.utils');
+import CourseJoin from "@website_slides/js/slides_course_join";
+import wUtils from "website.utils";
+
+const CourseJoinWidget = CourseJoin.courseJoinWidget;
 
 CourseJoinWidget.include({
     init: function (parent, options) {
@@ -39,6 +40,4 @@ CourseJoinWidget.include({
     },
 });
 
-return CourseJoinWidget;
-
-});
+export default CourseJoinWidget;

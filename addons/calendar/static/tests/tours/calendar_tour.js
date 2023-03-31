@@ -1,7 +1,7 @@
-odoo.define('calendar.tour', function (require) {
-    'use strict';
-    const { registry } = require("@web/core/registry");
-    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+/** @odoo-module **/
+
+    import { registry } from "@web/core/registry";
+    import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
     const todayDate = function() {
         let now = new Date();
@@ -69,4 +69,3 @@ odoo.define('calendar.tour', function (require) {
             content: 'Check the event title',
         },
     ]});
-});

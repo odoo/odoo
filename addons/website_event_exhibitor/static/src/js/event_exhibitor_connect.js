@@ -1,9 +1,8 @@
-odoo.define('website_event_exhibitor.event_exhibitor_connect', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_exhibitor.event_exhibitor_connect **/
 
-var Dialog = require('web.Dialog');
-var publicWidget = require('web.public.widget');
-const {Markup} = require('web.utils');
+import Dialog from "web.Dialog";
+import publicWidget from "web.public.widget";
+import {Markup} from "web.utils";
 
 var ExhibitorConnectClosedDialog = Dialog.extend({
     events: _.extend({}, Dialog.prototype.events, {
@@ -123,9 +122,7 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
 });
 
 
-return {
+export default {
     ExhibitorConnectClosedDialog: ExhibitorConnectClosedDialog,
     eventExhibitorConnect: publicWidget.registry.eventExhibitorConnect,
 };
-
-});

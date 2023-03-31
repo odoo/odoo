@@ -1,10 +1,9 @@
-odoo.define('website_event.event_steps', function (require) {
-"use strict";
+/** @odoo-module alias=website_event.event_steps **/
 
-const {_t} = require('web.core');
-const {Markup} = require('web.utils');
+import {_t} from "web.core";
+import {Markup} from "web.utils";
 
-var EventAdditionalTourSteps = require('event.event_steps');
+import EventAdditionalTourSteps from "event.event_steps";
 
 EventAdditionalTourSteps.include({
 
@@ -45,6 +44,4 @@ EventAdditionalTourSteps.include({
     }
 });
 
-return EventAdditionalTourSteps;
-
-});
+export default EventAdditionalTourSteps;

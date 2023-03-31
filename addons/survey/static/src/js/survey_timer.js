@@ -1,7 +1,6 @@
-odoo.define('survey.timer', function (require) {
-'use strict';
+/** @odoo-module alias=survey.timer **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
@@ -77,6 +76,4 @@ publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.SurveyTimerWidget;
-
-});
+export default publicWidget.registry.SurveyTimerWidget;

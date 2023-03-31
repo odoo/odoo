@@ -1,7 +1,6 @@
-odoo.define('website_event_exhibitor.event_sponsor_search', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_exhibitor.event_sponsor_search **/
 
-const publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
 
     selector: '.o_wesponsor_index',
@@ -65,5 +64,4 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.websiteEventSearchSponsor;
-});
+export default publicWidget.registry.websiteEventSearchSponsor;

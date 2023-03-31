@@ -1,7 +1,6 @@
-odoo.define('website_event_track_live.website_event_track_replay_suggestion', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_track_live.website_event_track_replay_suggestion **/
 
-var Widget = require('web.Widget');
+import Widget from "web.Widget";
 
 /**
  * The widget will have the responsibility to manage the interactions between the
@@ -37,5 +36,4 @@ var WebsiteEventReplaySuggestion = Widget.extend({
     }
 });
 
-return WebsiteEventReplaySuggestion;
-});
+export default WebsiteEventReplaySuggestion;

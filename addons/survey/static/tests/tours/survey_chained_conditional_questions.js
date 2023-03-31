@@ -1,7 +1,6 @@
-odoo.define('survey.tour_test_survey_chained_conditional_questions', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_survey_chained_conditional_questions', {
     test: true,
@@ -42,5 +41,3 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
     }
 
 ]});
-
-});

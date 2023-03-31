@@ -1,7 +1,6 @@
-odoo.define('website.tour_reset_password', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_reset_password', {
     test: true,
@@ -26,4 +25,3 @@ registry.category("web_tour.tours").add('website_reset_password', {
         run: function () {}
     },
 ]});
-});

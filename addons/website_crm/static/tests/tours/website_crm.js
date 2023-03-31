@@ -1,8 +1,7 @@
-odoo.define('website_crm.tour', function(require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
-    const wTourUtils = require('website.tour_utils');
+/** @odoo-module alias=website_crm.tour **/
+    
+    import { registry } from "@web/core/registry";
+    import wTourUtils from "website.tour_utils";
 
     wTourUtils.registerWebsitePreviewTour('website_crm_pre_tour', {
         test: true,
@@ -82,5 +81,4 @@ odoo.define('website_crm.tour', function(require) {
         trigger: "#wrap:has(h1:contains('Thank You!'))"
     }]});
 
-    return {};
-});
+    export default {};

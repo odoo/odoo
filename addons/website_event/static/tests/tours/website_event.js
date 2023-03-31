@@ -1,9 +1,8 @@
-odoo.define("website_event.tour", function (require) {
-    "use strict";
-
-    const {_t} = require("web.core");
-    const {Markup} = require('web.utils');
-    const wTourUtils = require('website.tour_utils');
+/** @odoo-module **/
+    
+    import {_t} from "web.core";
+    import {Markup} from "web.utils";
+    import wTourUtils from "website.tour_utils";
 
 
     wTourUtils.registerWebsitePreviewTour("website_event_tour", {
@@ -60,4 +59,3 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Click here to customize your event further."),
         position: "bottom",
     }]);
-});

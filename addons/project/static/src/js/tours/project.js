@@ -1,10 +1,9 @@
-odoo.define('project.tour', function(require) {
-"use strict";
+/** @odoo-module **/
 
-const {_t} = require('web.core');
-const {Markup} = require('web.utils');
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import {_t} from "web.core";
+import {Markup} from "web.utils";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_tour', {
     sequence: 110,
@@ -136,5 +135,3 @@ registry.category("web_tour.tours").add('project_tour', {
     // last step to confirm we've come back before considering the tour successful
     auto: true
 }]});
-
-});

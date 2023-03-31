@@ -1,8 +1,7 @@
-odoo.define('website_sale.tour_shop_dynamic_variants', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import { registry } from "@web/core/registry";
+import tourUtils from "website_sale.tour_utils";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
@@ -33,4 +32,3 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
         trigger: 'td.td-product_name:contains(Dynamic Product (Dynamic Value 2))',
     },
 ]});
-});

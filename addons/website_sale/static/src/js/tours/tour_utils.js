@@ -1,9 +1,8 @@
-odoo.define("website_sale.tour_utils", function (require) {
-    "use strict";
-
-    const core = require("web.core");
+/** @odoo-module alias=website_sale.tour_utils **/
+    
+    import core from "web.core";
     const _t = core._t;
-    const wTourUtils = require('website.tour_utils');
+    import wTourUtils from "website.tour_utils";
 
     function addToCart({productName, search = true, productHasVariants = false}) {
         const steps = [];
@@ -108,7 +107,7 @@ odoo.define("website_sale.tour_utils", function (require) {
         ];
     }
 
-    return {
+    export default {
         addToCart,
         assertCartContains,
         assertProductPrice,
@@ -117,4 +116,3 @@ odoo.define("website_sale.tour_utils", function (require) {
         selectPriceList,
         searchProduct,
     };
-});

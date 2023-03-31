@@ -1,9 +1,8 @@
-odoo.define('website_blog.wysiwyg', function (require) {
-'use strict';
+/** @odoo-module **/
 
 
-const Wysiwyg = require('website.wysiwyg');
-require('website.editor.snippets.options');
+import Wysiwyg from "website.wysiwyg";
+import "website.editor.snippets.options";
 
 Wysiwyg.include({
     custom_events: Object.assign({}, Wysiwyg.prototype.custom_events, {
@@ -81,6 +80,4 @@ Wysiwyg.include({
     _onSetBlogPostUpdatedTags: function (ev) {
         this.blogTagsPerBlogPost[ev.data.blogPostID] = ev.data.tags;
     },
-});
-
 });

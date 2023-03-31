@@ -1,7 +1,6 @@
-odoo.define('web_editor.utils', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.utils **/
 
-const {ColorpickerWidget} = require('web.Colorpicker');
+import {ColorpickerWidget} from "web.Colorpicker";
 
 let editableWindow = window;
 const _setEditableWindow = (ew) => editableWindow = ew;
@@ -409,7 +408,7 @@ function _getColorClass(el, colorNames, prefix) {
     return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
 }
 
-return {
+export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
@@ -432,4 +431,3 @@ return {
     getColorClass: _getColorClass,
     setEditableWindow: _setEditableWindow,
 };
-});

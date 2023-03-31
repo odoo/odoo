@@ -1,7 +1,6 @@
-odoo.define('website_forum.tour_forum_question', function (require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
 
     registry.category("web_tour.tours").add('forum_question', {
         test: true,
@@ -61,4 +60,3 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '#wrap:has(".o_wforum_answer_correct")',
     }]});
-});

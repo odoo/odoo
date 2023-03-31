@@ -1,17 +1,16 @@
-odoo.define('survey.form', function (require) {
-'use strict';
+/** @odoo-module alias=survey.form **/
 
-var field_utils = require('web.field_utils');
-var publicWidget = require('web.public.widget');
-var time = require('web.time');
-var config = require('web.config');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var dom = require('web.dom');
-const {getCookie, setCookie, deleteCookie} = require('web.utils.cookies');
+import field_utils from "web.field_utils";
+import publicWidget from "web.public.widget";
+import time from "web.time";
+import config from "web.config";
+import core from "web.core";
+import Dialog from "web.Dialog";
+import dom from "web.dom";
+import {getCookie, setCookie, deleteCookie} from "web.utils.cookies";
 
-var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
-const { SurveyImageZoomer } = require("@survey/js/survey_image_zoomer");
+import SurveyPreloadImageMixin from "survey.preload_image_mixin";
+import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 
 var _t = core._t;
 var isMac = navigator.platform.toUpperCase().includes('MAC');
@@ -1206,6 +1205,4 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
 });
 
-return publicWidget.registry.SurveyFormWidget;
-
-});
+export default publicWidget.registry.SurveyFormWidget;

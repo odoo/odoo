@@ -1,7 +1,6 @@
-odoo.define('portal.tour', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('portal_load_homepage', {
     test: true,
@@ -16,6 +15,4 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
             trigger: 'input[value="Joel Willis"]'
         }
     ]
-});
-
 });

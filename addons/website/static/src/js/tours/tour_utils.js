@@ -1,9 +1,8 @@
-odoo.define("website.tour_utils", function (require) {
-"use strict";
+/** @odoo-module alias=website.tour_utils **/
 
-const {_t} = require("web.core");
-const {Markup} = require('web.utils');
-const { registry } = require("@web/core/registry");
+import {_t} from "web.core";
+import {Markup} from "web.utils";
+import { registry } from "@web/core/registry";
 
 function addMedia(position = "right") {
     return {
@@ -392,7 +391,7 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
     return steps;
 }
 
-return {
+export default {
     addMedia,
     assertCssVariable,
     assertPathName,
@@ -422,4 +421,3 @@ return {
     registerBackendAndFrontendTour,
     selectElementInWeSelectWidget,
 };
-});

@@ -1,7 +1,6 @@
-odoo.define('website_sale_product_configurator.OptionalProductsModal', function (require) {
-    "use strict";
-
-const { OptionalProductsModal } = require('@sale_product_configurator/js/product_configurator_modal');
+/** @odoo-module **/
+    
+import { OptionalProductsModal } from "@sale_product_configurator/js/product_configurator_modal";
 
 OptionalProductsModal.include({
     /**
@@ -34,6 +33,4 @@ OptionalProductsModal.include({
     _triggerPriceUpdateOnChangeQuantity: function () {
         return !this.isWebsite;
     }
-});
-
 });

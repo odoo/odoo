@@ -1,16 +1,15 @@
-odoo.define('wysiwyg.widgets.LinkTools', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets.LinkTools **/
 
-const Link = require('wysiwyg.widgets.Link');
-const {ColorPaletteWidget} = require('web_editor.ColorPalette');
-const {ColorpickerWidget} = require('web.Colorpicker');
-const {
+import Link from "wysiwyg.widgets.Link";
+import {ColorPaletteWidget} from "web_editor.ColorPalette";
+import {ColorpickerWidget} from "web.Colorpicker";
+import {
     computeColorClasses,
     getCSSVariableValue,
     getColorClass,
     getNumericAndUnit,
     isColorGradient,
-} = require('web_editor.utils');
+} from "web_editor.utils";
 
 /**
  * Allows to customize link content and style.
@@ -490,5 +489,4 @@ const LinkTools = Link.extend({
     },
 });
 
-return LinkTools;
-});
+export default LinkTools;

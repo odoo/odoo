@@ -1,8 +1,7 @@
-odoo.define('website_sale.payment', require => {
-    'use strict';
-
-    const checkoutForm = require('payment.checkout_form');
-    const publicWidget = require('web.public.widget');
+/** @odoo-module **/
+    
+    import checkoutForm from "payment.checkout_form";
+    import publicWidget from "web.public.widget";
 
     const websiteSalePaymentMixin = {
 
@@ -123,4 +122,3 @@ odoo.define('website_sale.payment', require => {
                 this.$submitButton.prop('disabled', disabledReasonFound);
             },
         }));
-});

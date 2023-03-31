@@ -1,13 +1,12 @@
-odoo.define('web_editor.test_utils', function (require) {
-"use strict";
+/** @odoo-module alias=web_editor.test_utils **/
 
-var ajax = require('web.ajax');
-var MockServer = require('web.MockServer');
-var testUtils = require('web.test_utils');
-var OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
-var Widget = require('web.Widget');
-var Wysiwyg = require('web_editor.wysiwyg');
-var options = require('web_editor.snippets.options');
+import ajax from "web.ajax";
+import MockServer from "web.MockServer";
+import testUtils from "web.test_utils";
+import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import Widget from "web.Widget";
+import Wysiwyg from "web_editor.wysiwyg";
+import options from "web_editor.snippets.options";
 
 const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
@@ -880,7 +879,7 @@ function removeComments(html, removeMsoHide=true) {
     }
 }
 
-return {
+export default {
     wysiwygData: wysiwygData,
     createWysiwyg: createWysiwyg,
     testKeyboard: testKeyboard,
@@ -895,6 +894,3 @@ return {
     getTdHtml: getTdHtml,
     removeComments: removeComments,
 };
-
-
-});

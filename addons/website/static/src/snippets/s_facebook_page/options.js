@@ -1,7 +1,6 @@
-odoo.define('website.s_facebook_page_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.facebookPage = options.Class.extend({
     /**
@@ -151,5 +150,4 @@ options.registry.facebookPage = options.Class.extend({
         this.fbData.href = defaultURL;
         return Promise.resolve();
     },
-});
 });

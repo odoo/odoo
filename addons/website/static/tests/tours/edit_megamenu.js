@@ -1,7 +1,6 @@
-odoo.define("website.tour.edit_megamenu", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     content: "Toggles the mega menu.",
@@ -96,4 +95,3 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         run: function () {}, // it's a check
     },
 ]);
-});

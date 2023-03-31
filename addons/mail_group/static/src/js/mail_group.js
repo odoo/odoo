@@ -1,8 +1,7 @@
-odoo.define('mail_group.mail_group', function (require) {
-'use strict';
+/** @odoo-module alias=mail_group.mail_group **/
 
-const publicWidget = require('web.public.widget');
-const core = require('web.core');
+import publicWidget from "web.public.widget";
+import core from "web.core";
 const _t = core._t;
 
 publicWidget.registry.MailGroup = publicWidget.Widget.extend({
@@ -88,5 +87,4 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.MailGroup;
-});
+export default publicWidget.registry.MailGroup;

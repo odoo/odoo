@@ -1,10 +1,9 @@
-odoo.define('website/static/tests/dashboard_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const ControlPanel = require('web.ControlPanel');
-const Dashboard = require('website.backend.dashboard');
-const testUtils = require("web.test_utils");
-const { patch, unpatch } = require('web.utils');
+import ControlPanel from "web.ControlPanel";
+import Dashboard from "website.backend.dashboard";
+import testUtils from "web.test_utils";
+import { patch, unpatch } from "web.utils";
 
 const { createParent, nextTick, prepareTarget } = testUtils;
 
@@ -60,6 +59,4 @@ QUnit.module('Website Backend Dashboard', {
 
         unpatch(ControlPanel.prototype, 'test.ControlPanel');
     });
-});
-
 });

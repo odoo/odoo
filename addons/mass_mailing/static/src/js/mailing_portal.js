@@ -1,10 +1,9 @@
-odoo.define('mass_mailing.unsubscribe', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    var session = require('web.session');
-    var ajax = require('web.ajax');
-    var core = require('web.core');
-    require('web.dom_ready');
+    import session from "web.session";
+    import ajax from "web.ajax";
+    import core from "web.core";
+    import "web.dom_ready";
 
     var _t = core._t;
 
@@ -13,9 +12,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
     var res_id = parseInt($("input[name='res_id']").val());
     var token = (location.search.split('token' + '=')[1] || '').split('&')[0];
 
-    if (!$('.o_unsubscribe_form').length) {
-        return;
-    }
+if ($('.o_unsubscribe_form').length) {
     session.load_translations().then(function () {
         if (email != '' && email != undefined){
             ajax.jsonRpc('/mailing/blacklist/check', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
@@ -63,12 +60,12 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
 
         var checked_ids = [];
         $("input[type='checkbox']:checked").each(function (i){
-          checked_ids[i] = parseInt($(this).val());
+            checked_ids[i] = parseInt($(this).val());
         });
 
         var unchecked_ids = [];
         $("input[type='checkbox']:not(:checked)").each(function (i){
-          unchecked_ids[i] = parseInt($(this).val());
+            unchecked_ids[i] = parseInt($(this).val());
         });
 
         ajax.jsonRpc('/mailing/list/update', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
@@ -186,7 +183,6 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                 $('#info_state').removeClass('alert-info').removeClass('alert-success').removeClass('alert-error').addClass('alert-warning');
             });
     });
-});
 
 function toggle_opt_out_section(value) {
     var result = !value;
@@ -195,4 +191,5 @@ function toggle_opt_out_section(value) {
     $("#button_remove_blacklist").attr('disabled', false);
     if (value) { $('[name="button_subscription"]').addClass('clickable');  }
     else { $('[name="button_subscription"]').removeClass('clickable'); }
+}
 }

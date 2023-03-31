@@ -1,7 +1,6 @@
-odoo.define("website.tour.website_navbar_menu", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_navbar_menu", {
     test: true,
@@ -17,4 +16,3 @@ registry.category("web_tour.tours").add("website_navbar_menu", {
         run: function () {}, // it's a check
     }
 ]});
-});

@@ -1,11 +1,10 @@
-odoo.define('website.snippet.editor', function (require) {
-'use strict';
+/** @odoo-module alias=website.snippet.editor **/
 
-const {qweb, _t, _lt} = require('web.core');
-const Dialog = require('web.Dialog');
-const weSnippetEditor = require('web_editor.snippet.editor');
-const wSnippetOptions = require('website.editor.snippets.options');
-const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+import {qweb, _t, _lt} from "web.core";
+import Dialog from "web.Dialog";
+import weSnippetEditor from "web_editor.snippet.editor";
+import wSnippetOptions from "website.editor.snippets.options";
+import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
@@ -512,7 +511,6 @@ weSnippetEditor.SnippetEditor.include({
         return restore;
     },
 });
-return {
+export default {
     SnippetsMenu: wSnippetMenu,
 };
-});

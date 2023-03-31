@@ -1,10 +1,9 @@
-odoo.define('website.s_dynamic_snippet', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_dynamic_snippet **/
 
-const core = require('web.core');
-const config = require('web.config');
-const publicWidget = require('web.public.widget');
-const {Markup} = require('web.utils');
+import core from "web.core";
+import config from "web.config";
+import publicWidget from "web.public.widget";
+import {Markup} from "web.utils";
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 
@@ -243,6 +242,4 @@ const DynamicSnippet = publicWidget.Widget.extend({
 
 publicWidget.registry.dynamic_snippet = DynamicSnippet;
 
-return DynamicSnippet;
-
-});
+export default DynamicSnippet;

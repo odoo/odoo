@@ -1,5 +1,5 @@
-odoo.define('website_event.ticket_details', function (require) {
-    var publicWidget = require('web.public.widget');
+/** @odoo-module alias=website_event.ticket_details **/
+    import publicWidget from "web.public.widget";
 
     publicWidget.registry.ticketDetailsWidget = publicWidget.Widget.extend({
         selector: '.o_wevent_js_ticket_details',
@@ -56,5 +56,4 @@ odoo.define('website_event.ticket_details', function (require) {
         }
     });
 
-return publicWidget.registry.ticketDetailsWidget;
-});
+export default publicWidget.registry.ticketDetailsWidget;

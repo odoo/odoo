@@ -1,8 +1,7 @@
-odoo.define('website_form_project.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var FormEditorRegistry = require('website.form_editor_registry');
+import core from "web.core";
+import FormEditorRegistry from "website.form_editor_registry";
 
 var _t = core._t;
 
@@ -30,6 +29,4 @@ FormEditorRegistry.add('create_task', {
         string: _t('Project'),
         createAction: 'project.open_view_project_all',
     }],
-});
-
 });

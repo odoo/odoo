@@ -1,10 +1,9 @@
-odoo.define('test_main_flows.tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {_t} = require('web.core');
-const {Markup} = require('web.utils');
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import {_t} from "web.core";
+import {Markup} from "web.utils";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
@@ -974,4 +973,3 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .brea
     auto: true,
     run() {}
 }]});
-});

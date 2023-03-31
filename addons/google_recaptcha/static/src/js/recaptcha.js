@@ -1,10 +1,9 @@
-odoo.define('google_recaptcha.ReCaptchaV3', function (require) {
-"use strict";
+/** @odoo-module alias=google_recaptcha.ReCaptchaV3 **/
 
-const Class = require('web.Class');
-const core = require('web.core');
-const { session } = require('@web/session');
-const { loadJS } = require('@web/core/assets');
+import Class from "web.Class";
+import core from "web.core";
+import { session } from "@web/session";
+import { loadJS } from "@web/core/assets";
 
 const _t = core._t;
 
@@ -55,7 +54,6 @@ const ReCaptcha = Class.extend({
     },
 });
 
-return {
+export default {
     ReCaptcha: ReCaptcha,
 };
-});

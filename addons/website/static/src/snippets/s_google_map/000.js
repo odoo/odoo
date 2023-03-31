@@ -1,8 +1,7 @@
+/** @odoo-module **/
 /* global google */
-odoo.define('website.s_google_map', function (require) {
-'use strict';
 
-const publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
     selector: '.s_google_map',
@@ -93,5 +92,4 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
             map.setMapTypeId('map_style');
         }
     },
-});
 });

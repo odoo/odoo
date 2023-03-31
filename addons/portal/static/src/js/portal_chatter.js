@@ -1,12 +1,11 @@
-odoo.define('portal.chatter', function (require) {
-'use strict';
+/** @odoo-module alias=portal.chatter **/
 
-var core = require('web.core');
-const dom = require('web.dom');
-var publicWidget = require('web.public.widget');
-var time = require('web.time');
-var portalComposer = require('portal.composer');
-const {Markup} = require('web.utils');
+import core from "web.core";
+import dom from "web.dom";
+import publicWidget from "web.public.widget";
+import time from "web.time";
+import portalComposer from "portal.composer";
+import {Markup} from "web.utils";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -339,7 +338,6 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     PortalChatter: PortalChatter,
 };
-});

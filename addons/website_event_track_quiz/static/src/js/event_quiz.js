@@ -1,10 +1,9 @@
-odoo.define('website_event_track_quiz.event.quiz', function (require) {
+/** @odoo-module alias=website_event_track_quiz.event.quiz **/
 
-'use strict';
 
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
-var session = require('web.session');
+import publicWidget from "web.public.widget";
+import core from "web.core";
+import session from "web.session";
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -338,6 +337,4 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
     },
 });
 
-return Quiz;
-
-});
+export default Quiz;

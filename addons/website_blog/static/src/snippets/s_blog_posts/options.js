@@ -1,10 +1,9 @@
-odoo.define('website_blog.s_blog_posts_options', function (require) {
-'use strict';
+/** @odoo-module alias=website_blog.s_blog_posts_options **/
 
-const options = require('web_editor.snippets.options');
-const dynamicSnippetOptions = require('website.s_dynamic_snippet_options');
+import options from "web_editor.snippets.options";
+import dynamicSnippetOptions from "website.s_dynamic_snippet_options";
 
-var wUtils = require('website.utils');
+import wUtils from "website.utils";
 
 const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
     /**
@@ -85,5 +84,4 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
 
 options.registry.dynamic_snippet_blog_posts = dynamicSnippetBlogPostsOptions;
 
-return dynamicSnippetBlogPostsOptions;
-});
+export default dynamicSnippetBlogPostsOptions;

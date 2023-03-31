@@ -1,14 +1,13 @@
-odoo.define('website_sale.editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var options = require('web_editor.snippets.options');
-const Wysiwyg = require('website.wysiwyg');
-const { ComponentWrapper } = require('web.OwlCompatibility');
-const { MediaDialog, MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
-const { useWowlService } = require('@web/legacy/utils');
-const {qweb, _t} = require('web.core');
-const {Markup} = require('web.utils');
-const Dialog = require('web.Dialog');
+import options from "web_editor.snippets.options";
+import Wysiwyg from "website.wysiwyg";
+import { ComponentWrapper } from "web.OwlCompatibility";
+import { MediaDialog, MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { useWowlService } from "@web/legacy/utils";
+import {qweb, _t} from "web.core";
+import {Markup} from "web.utils";
+import Dialog from "web.Dialog";
 
 const { onRendered } = owl;
 
@@ -988,6 +987,3 @@ options.registry.ReplaceMedia.include({
         return this._super(...arguments);
     }
 });
-
-});
-

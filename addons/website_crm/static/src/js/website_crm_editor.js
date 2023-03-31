@@ -1,8 +1,7 @@
-odoo.define('website_crm.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var FormEditorRegistry = require('website.form_editor_registry');
+import core from "web.core";
+import FormEditorRegistry from "website.form_editor_registry";
 
 var _t = core._t;
 
@@ -56,6 +55,4 @@ FormEditorRegistry.add('create_lead', {
         string: _t('Salesperson'),
         title: _t('Assign leads/opportunities to a salesperson.'),
     }],
-});
-
 });

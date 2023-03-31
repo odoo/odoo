@@ -1,8 +1,7 @@
-odoo.define('website_sale.validate', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
+import publicWidget from "web.public.widget";
+import core from "web.core";
 var _t = core._t;
 
 publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
@@ -47,5 +46,4 @@ publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
             self.$el.html(result.message);
         });
     },
-});
 });

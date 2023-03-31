@@ -1,9 +1,8 @@
-odoo.define('payment.checkout_form', require => {
-    'use strict';
+/** @odoo-module alias=payment.checkout_form **/
+    
+    import publicWidget from "web.public.widget";
 
-    const publicWidget = require('web.public.widget');
-
-    const paymentFormMixin = require('payment.payment_form_mixin');
+    import paymentFormMixin from "payment.payment_form_mixin";
 
     publicWidget.registry.PaymentCheckoutForm = publicWidget.Widget.extend(paymentFormMixin, {
         selector: 'form[name="o_payment_checkout"]',
@@ -98,5 +97,4 @@ odoo.define('payment.checkout_form', require => {
         },
 
     });
-    return publicWidget.registry.PaymentCheckoutForm;
-});
+    export default publicWidget.registry.PaymentCheckoutForm;

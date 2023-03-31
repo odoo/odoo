@@ -1,6 +1,5 @@
-odoo.define("website_event_track.website_event_pwa_widget", function (require) {
-    "use strict";
-
+/** @odoo-module alias=website_event_track.website_event_pwa_widget **/
+    
     /*
      * The "deferredPrompt" Promise will resolve only if the "beforeinstallprompt" event
      * has been triggered. It allows to register this listener as soon as possible
@@ -16,8 +15,8 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
         });
     });
 
-    var config = require("web.config");
-    var publicWidget = require("web.public.widget");
+    import config from "web.config";
+    import publicWidget from "web.public.widget";
 
     var PWAInstallBanner = publicWidget.Widget.extend({
         template: "pwa_install_banner",
@@ -206,8 +205,7 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
         },
     });
 
-    return {
+    export default {
         PWAInstallBanner: PWAInstallBanner,
         WebsiteEventPWAWidget: publicWidget.registry.WebsiteEventPWAWidget,
     };
-});

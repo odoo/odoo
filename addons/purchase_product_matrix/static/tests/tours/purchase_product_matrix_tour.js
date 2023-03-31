@@ -1,8 +1,7 @@
-odoo.define('purchase_product_matrix.purchase_matrix_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('purchase_matrix_tour', {
     url: "/web",
@@ -78,6 +77,3 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: 'click' // apply the matrix
 }, ...stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")' })
 ]});
-
-
-});

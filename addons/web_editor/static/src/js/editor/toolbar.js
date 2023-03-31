@@ -1,8 +1,7 @@
-odoo.define('web_editor.toolbar', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.toolbar **/
 
-var Widget = require('web.Widget');
-var config = require('web.config');
+import Widget from "web.Widget";
+import config from "web.config";
 
 const Toolbar = Widget.extend({
     /**
@@ -25,6 +24,4 @@ const Toolbar = Widget.extend({
     },
 });
 
-return Toolbar;
-
-});
+export default Toolbar;

@@ -1,7 +1,6 @@
-odoo.define('website_event_sale.tour.last_ticket', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('event_buy_last_ticket', {
     test: true,
@@ -89,4 +88,3 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         run: function () {}, // it's a check
     },
 ]});
-});

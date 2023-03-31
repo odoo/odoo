@@ -1,7 +1,6 @@
-odoo.define('website.s_dynamic_snippet_options', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_dynamic_snippet_options **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 const dynamicSnippetOptions = options.Class.extend({
     /**
@@ -342,5 +341,4 @@ const dynamicSnippetOptions = options.Class.extend({
 
 options.registry.dynamic_snippet = dynamicSnippetOptions;
 
-return dynamicSnippetOptions;
-});
+export default dynamicSnippetOptions;

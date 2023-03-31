@@ -1,7 +1,6 @@
-odoo.define("website.tour.snippet_version", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 wTourUtils.registerWebsitePreviewTour("snippet_version", {
     edition: true,
@@ -63,4 +62,3 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     extra_trigger: 'we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert',
     trigger: 'iframe body',
 }]);
-});

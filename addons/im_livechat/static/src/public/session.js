@@ -1,6 +1,6 @@
-odoo.define("web.session", function (require) {
-    const Session = require("web.Session");
-    const { serverUrl } = require("@im_livechat/livechat_data");
+/** @odoo-module alias=web.session **/
 
-    return new Session(undefined, serverUrl, { use_cors: true });
-});
+import Session from "web.Session";
+import { serverUrl } from "@im_livechat/livechat_data";
+
+export default new Session(undefined, serverUrl, { use_cors: true });

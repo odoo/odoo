@@ -1,7 +1,6 @@
-odoo.define('website.s_table_of_content_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.TableOfContent = options.Class.extend({
     /**
@@ -180,5 +179,4 @@ options.registry.TableOfContentMainColumns = options.Class.extend({
         leftPanelEl.querySelector('.oe_snippet_clone').classList.add('d-none'); // TODO improve the way to do that
         return this._super.apply(this, arguments);
     },
-});
 });

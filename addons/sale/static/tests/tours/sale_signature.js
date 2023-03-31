@@ -1,7 +1,6 @@
-odoo.define('sale.tour_sale_signature', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
@@ -47,4 +46,3 @@ registry.category("web_tour.tours").add('sale_signature', {
         run: function() {},
     }
 ]});
-});

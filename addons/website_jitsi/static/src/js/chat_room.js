@@ -1,9 +1,8 @@
-odoo.define('website_jitsi.chat_room', function (require) {
-'use strict';
+/** @odoo-module alias=website_jitsi.chat_room **/
 
-const config = require("web.config");
-const core = require('web.core');
-const publicWidget = require('web.public.widget');
+import config from "web.config";
+import core from "web.core";
+import publicWidget from "web.public.widget";
 const QWeb = core.qweb;
 
 publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
@@ -272,6 +271,4 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.ChatRoom;
-
-});
+export default publicWidget.registry.ChatRoom;

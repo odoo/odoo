@@ -1,7 +1,6 @@
-odoo.define('website_mail.follow', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.js_follow)',
@@ -125,5 +124,4 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
             });
         }
     },
-});
 });

@@ -1,7 +1,6 @@
-odoo.define('survey.session_manage_test', function (require) {
-"use strict";
+/** @odoo-module alias=survey.session_manage_test **/
 
-var SessionManager = require('survey.session_manage');
+import SessionManager from "survey.session_manage";
 /**
  * Small override for test/tour purposes.
  */
@@ -32,6 +31,4 @@ SessionManager.include({
     }
 });
 
-return SessionManager;
-
-});
+export default SessionManager;

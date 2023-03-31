@@ -1,8 +1,7 @@
+/** @odoo-module **/
 /* global ace */
-odoo.define('test_website.reset_views', function (require) {
-'use strict';
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 var BROKEN_STEP = {
     // because saving a broken template opens a recovery page with no assets
@@ -103,5 +102,3 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         BROKEN_STEP
     ]
 );
-
-});

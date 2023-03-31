@@ -1,19 +1,18 @@
-odoo.define('web_editor.snippet.editor', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.snippet.editor **/
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var dom = require('web.dom');
-const {Markup, sprintf, confine} = require('web.utils');
-var Widget = require('web.Widget');
-var options = require('web_editor.snippets.options');
-const {ColorPaletteWidget} = require('web_editor.ColorPalette');
-const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
-const {getCSSVariableValue} = require('web_editor.utils');
-const gridUtils = require('@web_editor/js/common/grid_layout_utils');
+import concurrency from "web.concurrency";
+import core from "web.core";
+import Dialog from "web.Dialog";
+import dom from "web.dom";
+import {Markup, sprintf, confine} from "web.utils";
+import Widget from "web.Widget";
+import options from "web_editor.snippets.options";
+import {ColorPaletteWidget} from "web_editor.ColorPalette";
+import SmoothScrollOnDrag from "web.smooth_scroll_on_drag";
+import {getCSSVariableValue} from "web_editor.utils";
+import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 const QWeb = core.qweb;
-const {closestElement} = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+import {closestElement} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 var _t = core._t;
 
@@ -4343,9 +4342,8 @@ var SnippetsMenu = Widget.extend({
     },
 });
 
-return {
+export default {
     SnippetsMenu: SnippetsMenu,
     SnippetEditor: SnippetEditor,
     globalSelector: globalSelector,
 };
-});

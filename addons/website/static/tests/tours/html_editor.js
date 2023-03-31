@@ -1,8 +1,7 @@
+/** @odoo-module**/
 /* global ace */
-odoo.define('website.test.html_editor', function (require) {
-'use strict';
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';
@@ -218,5 +217,3 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
     ]
 );
-
-});

@@ -1,9 +1,8 @@
-odoo.define("website.tour.snippets_all_drag_and_drop", async function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { WysiwygAdapterComponent } = require('@website/components/wysiwyg_adapter/wysiwyg_adapter');
-const websiteTourUtils = require('website.tour_utils');
-const { patch, unpatch } = require('web.utils');
+import { WysiwygAdapterComponent } from "@website/components/wysiwyg_adapter/wysiwyg_adapter";
+import websiteTourUtils from "website.tour_utils";
+import { patch, unpatch } from "web.utils";
 
 const patchWysiwygAdapter = () => patch(WysiwygAdapterComponent.prototype, 'snippets_all_drag_and_drop.wysiwyg_adapter', {
     _trigger_up(ev) {
@@ -16,7 +15,7 @@ const patchWysiwygAdapter = () => patch(WysiwygAdapterComponent.prototype, 'snip
 
 const unpatchWysiwygAdapter = () => unpatch(WysiwygAdapterComponent.prototype, 'snippets_all_drag_and_drop.wysiwyg_adapter');
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 let snippetsNames = (new URL(document.location.href)).searchParams.get('snippets_names') || '';
 // When this test is loaded in the backend, the search params aren't as easy to
@@ -120,5 +119,4 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
         run: () => unpatchWysiwygAdapter(),
     }
 ]),
-});
 });

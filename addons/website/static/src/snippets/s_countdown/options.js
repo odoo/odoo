@@ -1,8 +1,7 @@
-odoo.define('website.s_countdown_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const core = require('web.core');
-const options = require('web_editor.snippets.options');
+import core from "web.core";
+import options from "web_editor.snippets.options";
 
 const qweb = core.qweb;
 
@@ -141,5 +140,4 @@ options.registry.countdown = options.Class.extend({
         this.updateUIEndMessage();
         this.trigger_up('cover_update');
     },
-});
 });

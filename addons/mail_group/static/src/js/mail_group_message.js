@@ -1,7 +1,6 @@
-odoo.define('mail_group.mail_group_message', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
     selector: '.o_mg_message',
@@ -85,5 +84,4 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
             $showMore.remove();
         });
      },
-});
 });

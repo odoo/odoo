@@ -1,7 +1,6 @@
-odoo.define("website.tour.default_shape_gets_palette_colors", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     test: true,
@@ -28,4 +27,3 @@ wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
         },
     },
 ]);
-});

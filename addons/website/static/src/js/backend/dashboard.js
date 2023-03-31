@@ -1,14 +1,13 @@
-odoo.define('website.backend.dashboard', function (require) {
-'use strict';
+/** @odoo-module alias=website.backend.dashboard **/
 
-var AbstractAction = require('web.AbstractAction');
-const { loadBundle } = require("@web/core/assets");
-var core = require('web.core');
-var field_utils = require('web.field_utils');
-var pyUtils = require('web.py_utils');
-var session = require('web.session');
-var time = require('web.time');
-var web_client = require('web.web_client');
+import AbstractAction from "web.AbstractAction";
+import { loadBundle } from "@web/core/assets";
+import core from "web.core";
+import field_utils from "web.field_utils";
+import pyUtils from "web.py_utils";
+import session from "web.session";
+import time from "web.time";
+import web_client from "web.web_client";
 
 var QWeb = core.qweb;
 
@@ -360,5 +359,4 @@ var Dashboard = AbstractAction.extend({
 
 core.action_registry.add('backend_dashboard', Dashboard);
 
-return Dashboard;
-});
+export default Dashboard;

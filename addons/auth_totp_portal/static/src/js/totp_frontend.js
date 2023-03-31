@@ -1,10 +1,9 @@
-odoo.define('auth_totp_portal.button', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {_t} = require('web.core');
-const publicWidget = require('web.public.widget');
-const Dialog = require('web.Dialog');
-const {handleCheckIdentity} = require('portal.portal');
+import {_t} from "web.core";
+import publicWidget from "web.public.widget";
+import Dialog from "web.Dialog";
+import {handleCheckIdentity} from "portal.portal";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
@@ -302,5 +301,4 @@ publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend
         );
         window.location = window.location;
     }
-});
 });

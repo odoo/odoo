@@ -1,7 +1,6 @@
-odoo.define('website_sale.backend', function (require) {
-"use strict";
+/** @odoo-module alias=website_sale.backend **/
 
-var WebsiteBackend = require('website.backend.dashboard');
+import WebsiteBackend from "website.backend.dashboard";
 var COLORS = ['#875a7b', '#21b799', '#E4A900', '#D5653E', '#5B899E', '#E46F78', '#8F8F8F'];
 
 WebsiteBackend.include({
@@ -122,6 +121,4 @@ WebsiteBackend.include({
         });
     },
 });
-return WebsiteBackend;
-
-});
+export default WebsiteBackend;

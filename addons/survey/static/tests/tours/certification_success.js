@@ -1,7 +1,6 @@
-odoo.define('survey.tour_test_certification_success', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var SurveyFormWidget = require('survey.form');
+import SurveyFormWidget from "survey.form";
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
@@ -12,7 +11,7 @@ SurveyFormWidget.include({
     }
 });
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_certification_success', {
     test: true,
@@ -95,5 +94,3 @@ registry.category("web_tour.tours").add('test_certification_success', {
         trigger: 'div:contains("Congratulations, you have passed the test!")',
     }
 ]});
-
-});

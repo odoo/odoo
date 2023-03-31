@@ -1,8 +1,7 @@
-odoo.define('website_hr_recruitment.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var FormEditorRegistry = require('website.form_editor_registry');
+import core from "web.core";
+import FormEditorRegistry from "website.form_editor_registry";
 
 var _t = core._t;
 
@@ -50,6 +49,4 @@ FormEditorRegistry.add('apply_job', {
         string: _t('Department'),
     }],
     successPage: '/job-thank-you',
-});
-
 });

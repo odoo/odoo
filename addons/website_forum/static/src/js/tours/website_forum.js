@@ -1,8 +1,7 @@
-odoo.define("website_forum.tour_forum", function (require) {
-    "use strict";
-
-    var core = require("web.core");
-    const wTourUtils = require('website.tour_utils');
+/** @odoo-module **/
+    
+    import core from "web.core";
+    import wTourUtils from "website.tour_utils";
 
     var _t = core._t;
 
@@ -64,4 +63,3 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click here to accept this answer."),
         position: "right",
     }]);
-});

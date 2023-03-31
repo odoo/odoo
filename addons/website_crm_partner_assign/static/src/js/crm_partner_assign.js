@@ -1,9 +1,8 @@
-odoo.define('crm.partner_assign', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {_t} = require('web.core');
-var publicWidget = require('web.public.widget');
-var time = require('web.time');
+import {_t} from "web.core";
+import publicWidget from "web.public.widget";
+import time from "web.time";
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
@@ -285,5 +284,4 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             return false;
         }
     },
-});
 });

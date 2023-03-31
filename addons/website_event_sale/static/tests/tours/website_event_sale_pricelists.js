@@ -1,8 +1,7 @@
-odoo.define('website_event_sale.tour.event_sale_pricelists_different_currencies', function (require) {
-    'use strict';
-
-    const { registry } = require("@web/core/registry");
-    const { getPriceListChecksSteps } = require('website_event_sale.tour.WebsiteEventSaleTourMethods');
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
+    import { getPriceListChecksSteps } from "website_event_sale.tour.WebsiteEventSaleTourMethods";
 
     registry.category("web_tour.tours").add('event_sale_pricelists_different_currencies', {
         test: true,
@@ -54,4 +53,3 @@ odoo.define('website_event_sale.tour.event_sale_pricelists_different_currencies'
             priceBeforeDiscount: "1,000.00",
         }),
     ]});
-});

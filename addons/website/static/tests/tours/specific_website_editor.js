@@ -1,7 +1,6 @@
-odoo.define('website.tour.specific_website_editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('generic_website_editor', {
     test: true,
@@ -28,4 +27,3 @@ registry.category("web_tour.tours").add('specific_website_editor', {
     content: 'Check that the editor DOM matches its website-specific features',
     run: function () {}, // Simple check
 }]});
-});

@@ -1,8 +1,7 @@
-odoo.define('website_event_meet.website_event_create_room_button', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_meet.website_event_create_room_button **/
 
-const publicWidget = require('web.public.widget');
-const core = require('web.core');
+import publicWidget from "web.public.widget";
+import core from "web.core";
 const QWeb = core.qweb;
 
 publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend({
@@ -53,6 +52,4 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
     },
 });
 
-return publicWidget.registry.websiteEventMeetingRoom;
-
-});
+export default publicWidget.registry.websiteEventMeetingRoom;

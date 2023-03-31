@@ -1,8 +1,7 @@
-odoo.define('auth_totp_mail.tours', function(require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 function openAccountSettingsTab() {
     return [{
@@ -73,5 +72,3 @@ registry.category("web_tour.tours").add('totp_admin_invite', {
     content: "check that demo user can be invited to use 2FA.",
     trigger: "button:contains(Invite to use 2FA)",
 }]});
-
-});

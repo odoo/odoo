@@ -1,9 +1,8 @@
-odoo.define('website_slides_survey.upload_modal', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
+import core from "web.core";
 var _t = core._t;
-var SlidesUpload = require('@website_slides/js/slides_upload')[Symbol.for("default")];
+import SlidesUpload from "@website_slides/js/slides_upload";
 
 /**
  * Management of the new 'certification' slide_category
@@ -121,6 +120,4 @@ SlidesUpload.SlideUploadDialog.include({
         result['survey'] = survey;
         return result;
     },
-});
-
 });

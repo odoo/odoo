@@ -1,12 +1,11 @@
+/** @odoo-module **/
 /* global Accept */
-odoo.define('payment_authorize.payment_form', require => {
-    'use strict';
+    
+    import core from "web.core";
+    import { loadJS } from "@web/core/assets";
 
-    const core = require('web.core');
-    const { loadJS } = require('@web/core/assets');
-
-    const checkoutForm = require('payment.checkout_form');
-    const manageForm = require('payment.manage_form');
+    import checkoutForm from "payment.checkout_form";
+    import manageForm from "payment.manage_form";
 
     const _t = core._t;
 
@@ -210,4 +209,3 @@ odoo.define('payment_authorize.payment_form', require => {
 
     checkoutForm.include(authorizeMixin);
     manageForm.include(authorizeMixin);
-});

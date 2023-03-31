@@ -1,8 +1,7 @@
-odoo.define('survey.session_chart', function (require) {
-'use strict';
+/** @odoo-module alias=survey.session_chart **/
 
-var publicWidget = require('web.public.widget');
-var SESSION_CHART_COLORS = require('survey.session_colors');
+import publicWidget from "web.public.widget";
+import SESSION_CHART_COLORS from "survey.session_colors";
 
 publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
     init: function (parent, options) {
@@ -358,6 +357,4 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
     }
 });
 
-return publicWidget.registry.SurveySessionChart;
-
-});
+export default publicWidget.registry.SurveySessionChart;

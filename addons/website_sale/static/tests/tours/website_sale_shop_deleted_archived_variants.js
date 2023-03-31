@@ -1,7 +1,6 @@
-odoo.define('website_sale.tour_shop_deleted_archived_variants', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('tour_shop_deleted_archived_variants', {
@@ -50,4 +49,3 @@ registry.category("web_tour.tours").add('tour_shop_deleted_archived_variants', {
         run: function () {},
     }
 ]});
-});

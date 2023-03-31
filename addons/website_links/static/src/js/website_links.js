@@ -1,8 +1,7 @@
-odoo.define('website_links.website_links', function (require) {
-'use strict';
+/** @odoo-module alias=website_links.website_links **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 var _t = core._t;
 
@@ -533,9 +532,8 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     SelectBox: SelectBox,
     RecentLinkBox: RecentLinkBox,
     RecentLinks: RecentLinks,
 };
-});

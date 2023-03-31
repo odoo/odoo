@@ -1,8 +1,7 @@
-odoo.define('mass_mailing.snippets.editor', function (require) {
-'use strict';
+/** @odoo-module alias=mass_mailing.snippets.editor **/
 
-const {_lt} = require('web.core');
-const snippetsEditor = require('web_editor.snippet.editor');
+import {_lt} from "web.core";
+import snippetsEditor from "web_editor.snippet.editor";
 
 const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     events: _.extend({}, snippetsEditor.SnippetsMenu.prototype.events, {
@@ -163,6 +162,4 @@ const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     },
 });
 
-return MassMailingSnippetsMenu;
-
-});
+export default MassMailingSnippetsMenu;

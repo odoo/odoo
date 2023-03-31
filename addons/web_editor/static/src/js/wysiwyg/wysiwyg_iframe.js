@@ -1,10 +1,9 @@
-odoo.define('web_editor.wysiwyg.iframe', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var Wysiwyg = require('web_editor.wysiwyg');
-var ajax = require('web.ajax');
-var core = require('web.core');
-var config = require('web.config');
+import Wysiwyg from "web_editor.wysiwyg";
+import ajax from "web.ajax";
+import core from "web.core";
+import config from "web.config";
 
 var qweb = core.qweb;
 var promiseJsAssets;
@@ -188,6 +187,4 @@ Wysiwyg.include({
             this.$iframe[0].contentWindow.addEventListener('blur', this._onBlur);
         }
     },
-});
-
 });

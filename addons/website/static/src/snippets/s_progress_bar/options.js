@@ -1,9 +1,8 @@
-odoo.define('website.s_progress_bar_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const core = require('web.core');
-const utils = require('web.utils');
-const options = require('web_editor.snippets.options');
+import core from "web.core";
+import utils from "web.utils";
+import options from "web_editor.snippets.options";
 
 const _t = core._t;
 
@@ -76,5 +75,4 @@ options.registry.progress = options.Class.extend({
         }
         return this._super(...arguments);
     },
-});
 });

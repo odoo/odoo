@@ -1,8 +1,7 @@
-odoo.define('website.s_chart', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_chart **/
 
-const publicWidget = require('web.public.widget');
-const weUtils = require('web_editor.utils');
+import publicWidget from "web.public.widget";
+import weUtils from "web_editor.utils";
 
 const ChartWidget = publicWidget.Widget.extend({
     selector: '.s_chart',
@@ -152,5 +151,4 @@ const ChartWidget = publicWidget.Widget.extend({
 
 publicWidget.registry.chart = ChartWidget;
 
-return ChartWidget;
-});
+export default ChartWidget;

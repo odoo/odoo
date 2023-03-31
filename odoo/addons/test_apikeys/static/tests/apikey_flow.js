@@ -1,8 +1,7 @@
-odoo.define('test_apikeys.tour', function(require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const ajax = require('web.ajax');
+import { registry } from "@web/core/registry";
+import ajax from "web.ajax";
 
 registry.category("web_tour.tours").add('apikeys_tour_setup', {
     test: true,
@@ -104,4 +103,3 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
         };
     }
 }]});
-});

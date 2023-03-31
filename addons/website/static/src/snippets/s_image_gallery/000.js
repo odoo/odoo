@@ -1,8 +1,7 @@
-odoo.define('website.s_image_gallery', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_image_gallery **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 var qweb = core.qweb;
 
@@ -171,8 +170,7 @@ const GallerySliderWidget = publicWidget.Widget.extend({
 publicWidget.registry.gallery = GalleryWidget;
 publicWidget.registry.gallerySlider = GallerySliderWidget;
 
-return {
+export default {
     GalleryWidget: GalleryWidget,
     GallerySliderWidget: GallerySliderWidget,
 };
-});

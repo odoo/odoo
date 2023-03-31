@@ -1,9 +1,8 @@
-odoo.define('website_event_meet.website_event_meet_meeting_room', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_meet.website_event_meet_meeting_room **/
 
-const publicWidget = require('web.public.widget');
-const core = require('web.core');
-const Dialog = require('web.Dialog');
+import publicWidget from "web.public.widget";
+import core from "web.core";
+import Dialog from "web.Dialog";
 const _t = core._t;
 
 publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
@@ -105,6 +104,4 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
     }
 });
 
-return publicWidget.registry.websiteEventMeetingRoom;
-
-});
+export default publicWidget.registry.websiteEventMeetingRoom;

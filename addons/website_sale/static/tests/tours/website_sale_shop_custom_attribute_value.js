@@ -1,8 +1,7 @@
-odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) {
-    "use strict";
-
-    const { registry } = require("@web/core/registry");
-    const tourUtils = require('website_sale.tour_utils');
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
+    import tourUtils from "website_sale.tour_utils";
 
     registry.category("web_tour.tours").add("shop_custom_attribute_value", {
         url: "/shop?search=Customizable Desk",
@@ -28,4 +27,3 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         extra_trigger: '#cart_products',
         run: function (){}, // check
     }]});
-});

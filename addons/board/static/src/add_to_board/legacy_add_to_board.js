@@ -1,12 +1,11 @@
-odoo.define("board.AddToBoardMenu", function (require) {
-    "use strict";
+/** @odoo-module alias=board.AddToBoardMenu **/
 
-    const Context = require("web.Context");
-    const Domain = require("web.Domain");
-    const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const FavoriteMenu = require("web.FavoriteMenu");
-    const { sprintf } = require("web.utils");
-    const { useAutofocus } = require("@web/core/utils/hooks");
+    import Context from "web.Context";
+    import Domain from "web.Domain";
+    import { Dropdown } from "@web/core/dropdown/dropdown";
+    import FavoriteMenu from "web.FavoriteMenu";
+    import { sprintf } from "web.utils";
+    import { useAutofocus } from "@web/core/utils/hooks";
 
     const { Component, useState } = owl;
 
@@ -156,5 +155,4 @@ odoo.define("board.AddToBoardMenu", function (require) {
 
     FavoriteMenu.registry.add("add-to-board-menu", AddToBoardMenu, 10);
 
-    return AddToBoardMenu;
-});
+    export default AddToBoardMenu;

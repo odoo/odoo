@@ -1,7 +1,6 @@
-odoo.define('website_event_track_live.website_event_track_suggestion', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_track_live.website_event_track_suggestion **/
 
-var Widget = require('web.Widget');
+import Widget from "web.Widget";
 
 var WebsiteEventTrackSuggestion = Widget.extend({
     template: 'website_event_track_live.website_event_track_suggestion',
@@ -75,6 +74,4 @@ var WebsiteEventTrackSuggestion = Widget.extend({
     }
 });
 
-return WebsiteEventTrackSuggestion;
-
-});
+export default WebsiteEventTrackSuggestion;

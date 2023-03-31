@@ -1,10 +1,9 @@
-odoo.define('portal.PortalSidebar', function (require) {
-'use strict';
+/** @odoo-module alias=portal.PortalSidebar **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var time = require('web.time');
-var session = require('web.session');
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import time from "web.time";
+import session from "web.session";
 
 var _t = core._t;
 
@@ -71,5 +70,4 @@ var PortalSidebar = publicWidget.Widget.extend({
         }
     },
 });
-return PortalSidebar;
-});
+export default PortalSidebar;

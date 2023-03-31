@@ -1,8 +1,7 @@
-odoo.define('website.s_facebook_page', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_facebook_page **/
 
-var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+import publicWidget from "web.public.widget";
+import utils from "web.utils";
 
 const FacebookPageWidget = publicWidget.Widget.extend({
     selector: '.o_facebook_page',
@@ -56,5 +55,4 @@ const FacebookPageWidget = publicWidget.Widget.extend({
 
 publicWidget.registry.facebookPage = FacebookPageWidget;
 
-return FacebookPageWidget;
-});
+export default FacebookPageWidget;

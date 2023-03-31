@@ -1,9 +1,8 @@
-odoo.define('website_event_booth.booth_registration', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_booth.booth_registration **/
 
-var core = require('web.core');
-var dom = require('web.dom');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import dom from "web.dom";
+import publicWidget from "web.public.widget";
 var QWeb = core.qweb;
 var _t = core._t;
 
@@ -230,5 +229,4 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
 });
 
-return publicWidget.registry.boothRegistration;
-});
+export default publicWidget.registry.boothRegistration;

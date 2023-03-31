@@ -1,9 +1,8 @@
-odoo.define("website_sale.tour_shop", function (require) {
-    "use strict";
-
-    const {_t} = require("web.core");
-    const {Markup} = require('web.utils');
-    const wTourUtils = require("website.tour_utils");
+/** @odoo-module **/
+    
+    import {_t} from "web.core";
+    import {Markup} from "web.utils";
+    import wTourUtils from "website.tour_utils";
 
     wTourUtils.registerWebsitePreviewTour("shop", {
         url: '/shop',
@@ -78,4 +77,3 @@ odoo.define("website_sale.tour_shop", function (require) {
         // Just check during test mode. Otherwise, clicking it will result to random error on loading the Chart.js script.
         run: () => {},
     }]);
-});

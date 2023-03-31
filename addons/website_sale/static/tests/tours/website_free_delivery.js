@@ -1,8 +1,7 @@
-odoo.define('website_sale_delivery.tour', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import { registry } from "@web/core/registry";
+import tourUtils from "website_sale.tour_utils";
 
 registry.category("web_tour.tours").add('check_free_delivery', {
         test: true,
@@ -50,4 +49,3 @@ registry.category("web_tour.tours").add('check_free_delivery', {
             run: function () {}, // it's a check
         }
     ]});
-});

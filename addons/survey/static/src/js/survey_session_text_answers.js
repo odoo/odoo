@@ -1,10 +1,9 @@
-odoo.define('survey.session_text_answers', function (require) {
-'use strict';
+/** @odoo-module alias=survey.session_text_answers **/
 
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
-var time = require('web.time');
-var SESSION_CHART_COLORS = require('survey.session_colors');
+import publicWidget from "web.public.widget";
+import core from "web.core";
+import time from "web.time";
+import SESSION_CHART_COLORS from "survey.session_colors";
 
 var QWeb = core.qweb;
 
@@ -68,6 +67,4 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.SurveySessionTextAnswers;
-
-});
+export default publicWidget.registry.SurveySessionTextAnswers;

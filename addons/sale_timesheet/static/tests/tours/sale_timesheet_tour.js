@@ -1,9 +1,8 @@
-odoo.define('sale_timesheet.tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {Markup} = require('web.utils');
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import {Markup} from "web.utils";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
@@ -305,4 +304,3 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 ]});
-});

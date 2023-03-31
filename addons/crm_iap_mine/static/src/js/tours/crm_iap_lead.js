@@ -1,11 +1,10 @@
-odoo.define('crm_iap_mine.generate_leads_steps', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const {Markup} = require('web.utils');
-var core = require('web.core');
+import { registry } from "@web/core/registry";
+import {Markup} from "web.utils";
+import core from "web.core";
 
-require('@crm/js/tours/crm');
+import "@crm/js/tours/crm";
 var _t = core._t;
 
 var DragOppToWonStepIndex = _.findIndex(registry.category("web_tour.tours").get("crm_tour").steps, function (step) {
@@ -37,6 +36,4 @@ registry.category("web_tour.tours").get("crm_tour").steps.splice(DragOppToWonSte
     run: function (actions) {
         actions.auto('.modal-footer button[special=cancel]');
 }
-});
-
 });

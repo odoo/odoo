@@ -1,19 +1,18 @@
-odoo.define('website.content.snippets.animation', function (require) {
-'use strict';
+/** @odoo-module alias=website.content.snippets.animation **/
 
 /**
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
-const { loadJS } = require('@web/core/assets');
-var Class = require('web.Class');
-var config = require('web.config');
-var core = require('web.core');
-const dom = require('web.dom');
-var mixins = require('web.mixins');
-var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
-const wUtils = require('website.utils');
+import { loadJS } from "@web/core/assets";
+import Class from "web.Class";
+import config from "web.config";
+import core from "web.core";
+import dom from "web.dom";
+import mixins from "web.mixins";
+import publicWidget from "web.public.widget";
+import utils from "web.utils";
+import wUtils from "website.utils";
 
 var qweb = core.qweb;
 
@@ -1601,11 +1600,10 @@ registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     Widget: publicWidget.Widget,
     Animation: Animation,
     registry: registry,
 
     Class: Animation, // Deprecated
 };
-});

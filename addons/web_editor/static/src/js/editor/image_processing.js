@@ -1,7 +1,6 @@
-odoo.define('web_editor.image_processing', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.image_processing **/
 
-const {getAffineApproximation, getProjective} = require('@web_editor/js/editor/perspective_utils');
+import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
@@ -494,7 +493,7 @@ function createDataURL(blob) {
     });
 }
 
-return {
+export default {
     applyModifications,
     cropperDataFields,
     activateCropper,
@@ -506,4 +505,3 @@ return {
     createDataURL,
     isGif,
 };
-});

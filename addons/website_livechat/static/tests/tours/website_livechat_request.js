@@ -1,8 +1,7 @@
-odoo.define('website_livechat.chat_request_tour', function(require) {
-'use strict';
+/** @odoo-module alias=website_livechat.chat_request_tour **/
 
-var commonSteps = require("website_livechat.tour_common");
-const { registry } = require("@web/core/registry");
+import commonSteps from "website_livechat.tour_common";
+import { registry } from "@web/core/registry";
 
 
 var stepWithChatRequestStep = [{
@@ -42,5 +41,4 @@ registry.category("web_tour.tours").add('website_livechat_chat_request_part_2_en
     url: '/',
     steps: [].concat(commonSteps.endDiscussionStep, commonSteps.okRatingStep, commonSteps.feedbackStep, commonSteps.transcriptStep, commonSteps.closeStep)});
 
-return {};
-});
+export default {};

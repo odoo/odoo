@@ -1,8 +1,7 @@
-odoo.define('barcodes_gs1_nomenclature/static/src/js/tests/barcode_parser_tests.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const BarcodeParser = require('barcodes.BarcodeParser');
-const { barcodeService } = require('@barcodes/barcode_service');
+import BarcodeParser from "barcodes.BarcodeParser";
+import { barcodeService } from "@barcodes/barcode_service";
 
 
 QUnit.module('Barcodes', {}, function () {
@@ -248,6 +247,4 @@ QUnit.module('Barcode GS1 Parser', {
         assert.equal(res[2].ai, "16");
     });
 });
-});
-
 });

@@ -1,7 +1,6 @@
-odoo.define('sale_management.sale_management', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
     selector: '.o_portal_sale_sidebar',
@@ -107,5 +106,4 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
         });
     },
 
-});
 });

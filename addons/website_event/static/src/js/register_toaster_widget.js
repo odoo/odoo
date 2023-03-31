@@ -1,10 +1,9 @@
-odoo.define('website_event.register_toaster_widget', function (require) {
-'use strict';
+/** @odoo-module alias=website_event.register_toaster_widget **/
 
-let core = require('web.core');
-const {Markup} = require('web.utils');
+import core from "web.core";
+import {Markup} from "web.utils";
 let _t = core._t;
-let publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
     selector: '.o_wevent_register_toaster',
@@ -27,6 +26,4 @@ publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.RegisterToasterWidget;
-
-});
+export default publicWidget.registry.RegisterToasterWidget;

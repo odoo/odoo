@@ -1,10 +1,9 @@
-odoo.define('website.s_rating_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { ComponentWrapper } = require('web.OwlCompatibility');
-const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+import { ComponentWrapper } from "web.OwlCompatibility";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.Rating = options.Class.extend({
     /**
@@ -142,5 +141,4 @@ options.registry.Rating = options.Class.extend({
         $activeIcons.removeClass().addClass(faClassActiveIcons);
         $inactiveIcons.removeClass().addClass(faClassInactiveIcons);
     },
-});
 });

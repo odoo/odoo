@@ -1,8 +1,7 @@
-odoo.define('website_event_track.website_event_track_timer', function (require) {
+/** @odoo-module alias=website_event_track.website_event_track_timer **/
 
-'use strict';
 
-const publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 /*
  * Simple implementation of a timer widget that uses a "time to live" configuration
@@ -82,6 +81,4 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.websiteEventTrackTimer;
-
-});
+export default publicWidget.registry.websiteEventTrackTimer;

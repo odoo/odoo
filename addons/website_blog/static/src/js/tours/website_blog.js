@@ -1,9 +1,8 @@
-odoo.define("website_blog.tour", function (require) {
-    "use strict";
-
-    const {_t} = require("web.core");
-    const {Markup} = require('web.utils');
-    const wTourUtils = require('website.tour_utils');
+/** @odoo-module **/
+    
+    import {_t} from "web.core";
+    import {Markup} from "web.utils";
+    import wTourUtils from "website.tour_utils";
 
     wTourUtils.registerWebsitePreviewTour("blog", {
         url: "/",
@@ -91,4 +90,3 @@ odoo.define("website_blog.tour", function (require) {
         content: Markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
     },
 ]);
-});

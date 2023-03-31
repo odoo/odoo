@@ -1,8 +1,7 @@
-odoo.define('website_links.code_editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 var _t = core._t;
 
@@ -117,5 +116,4 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
         ev.preventDefault();
         this._submitCode();
     },
-});
 });

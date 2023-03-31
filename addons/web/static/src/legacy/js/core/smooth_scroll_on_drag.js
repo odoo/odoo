@@ -1,4 +1,4 @@
-odoo.define('web/static/src/js/core/smooth_scroll_on_drag.js', function (require) {
+odoo.define('web.smooth_scroll_on_drag', function (require) {
 "use strict";
 
 const Class = require('web.Class');

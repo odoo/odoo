@@ -1,10 +1,9 @@
-odoo.define('portal.rating.composer', function (require) {
-'use strict';
+/** @odoo-module alias=portal.rating.composer **/
 
-const publicWidget = require('web.public.widget');
-const session = require('web.session');
-const portalComposer = require('portal.composer');
-const {_t, qweb} = require('web.core');
+import publicWidget from "web.public.widget";
+import session from "web.session";
+import portalComposer from "portal.composer";
+import {_t, qweb} from "web.core";
 
 const PortalComposer = portalComposer.PortalComposer;
 
@@ -123,6 +122,4 @@ const RatingPopupComposer = publicWidget.Widget.extend({
 
 publicWidget.registry.RatingPopupComposer = RatingPopupComposer;
 
-return RatingPopupComposer;
-
-});
+export default RatingPopupComposer;

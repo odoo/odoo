@@ -1,7 +1,6 @@
-odoo.define('website_forum.test_error', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.testError = publicWidget.Widget.extend({
     selector: '.rpc_error',
@@ -26,5 +25,4 @@ publicWidget.registry.testError = publicWidget.Widget.extend({
             route: $link.attr('href'),
         });
     }
-});
 });

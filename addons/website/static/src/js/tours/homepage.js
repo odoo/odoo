@@ -1,7 +1,6 @@
-odoo.define("website.tour.homepage", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require("website.tour_utils");
+import wTourUtils from "website.tour_utils";
 
 const snippets = [
     {
@@ -42,5 +41,3 @@ wTourUtils.registerThemeHomepageTour('homepage', [
     wTourUtils.clickOnSnippet(snippets[5], 'top'),
     wTourUtils.changeBackgroundColor(),
 ]);
-
-});

@@ -1,10 +1,9 @@
-odoo.define('website_sale.s_dynamic_snippet_products_options', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale.s_dynamic_snippet_products_options **/
 
-const options = require('web_editor.snippets.options');
-const s_dynamic_snippet_carousel_options = require('website.s_dynamic_snippet_carousel_options');
+import options from "web_editor.snippets.options";
+import s_dynamic_snippet_carousel_options from "website.s_dynamic_snippet_carousel_options";
 
-var wUtils = require('website.utils');
+import wUtils from "website.utils";
 
 const alternativeSnippetRemovedOptions = [
     'filter_opt', 'product_category_opt', 'product_tag_opt', 'product_names_opt',
@@ -92,5 +91,4 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
 
 options.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
 
-return dynamicSnippetProductsOptions;
-});
+export default dynamicSnippetProductsOptions;

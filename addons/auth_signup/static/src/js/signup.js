@@ -1,7 +1,6 @@
-odoo.define('auth_signup.signup', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
     selector: '.oe_signup_form',
@@ -21,5 +20,4 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
         $btn.attr('disabled', 'disabled');
         $btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
     },
-});
 });

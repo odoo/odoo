@@ -1,8 +1,7 @@
-odoo.define('website.s_table_of_content', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_table_of_content **/
 
-const publicWidget = require('web.public.widget');
-const {extraMenuUpdateCallbacks} = require('website.content.menu');
+import publicWidget from "web.public.widget";
+import {extraMenuUpdateCallbacks} from "website.content.menu";
 
 const TableOfContent = publicWidget.Widget.extend({
     selector: 'section .s_table_of_content_navbar_sticky',
@@ -107,5 +106,4 @@ publicWidget.registry.anchorSlide.include({
 
 publicWidget.registry.snippetTableOfContent = TableOfContent;
 
-return TableOfContent;
-});
+export default TableOfContent;

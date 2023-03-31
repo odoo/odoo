@@ -1,7 +1,6 @@
-odoo.define('website.s_tabs_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.NavTabs = options.registry.MultipleItems.extend({
     isTopOption: true,
@@ -139,5 +138,4 @@ options.registry.NavTabsStyle = options.Class.extend({
         }
         return this._super(...arguments);
     },
-});
 });

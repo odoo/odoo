@@ -1,7 +1,6 @@
-odoo.define("website_event_booth_sale_exhibitor.tour", function (require) {
-    "use strict";
-
-    var FinalSteps = require('website_event_booth_exhibitor.tour_steps');
+/** @odoo-module **/
+    
+    import FinalSteps from "website_event_booth_exhibitor.tour_steps";
 
     FinalSteps.include({
 
@@ -26,5 +25,3 @@ odoo.define("website_event_booth_sale_exhibitor.tour", function (require) {
         }
 
     });
-
-});

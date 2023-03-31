@@ -1,8 +1,7 @@
-odoo.define('account_payment.payment_form', require => {
-    'use strict';
-
-    const checkoutForm = require('payment.checkout_form');
-    const manageForm = require('payment.manage_form');
+/** @odoo-module **/
+    
+    import checkoutForm from "payment.checkout_form";
+    import manageForm from "payment.manage_form";
 
     const PaymentMixin = {
 
@@ -32,5 +31,3 @@ odoo.define('account_payment.payment_form', require => {
 
     checkoutForm.include(PaymentMixin);
     manageForm.include(PaymentMixin);
-
-});
