@@ -231,6 +231,7 @@ class Theme(models.AbstractModel):
         'website.template_header_sales_one',
         'website.template_header_sales_two',
         'website.template_header_sales_three',
+        'website.template_header_sales_four',
         # Default one, keep it last
         'website.template_header_default',
     ]
