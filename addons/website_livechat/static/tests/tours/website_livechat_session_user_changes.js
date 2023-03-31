@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             trigger: ".o-mail-Message-content:contains('Hello')",
         },
         {
-            trigger: "#top_menu a:contains(Mitchell Admin)",
+            trigger: "header#top a:contains(Mitchell Admin)",
             run: "click",
             shadow_dom: false,
         },

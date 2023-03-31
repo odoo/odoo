@@ -36,7 +36,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         var self = this;
         var def = this._super.apply(this, arguments);
         var wishDef;
-        if (this.wishlistProductIDs.length != +$('#top_menu .my_wish_quantity').text()) {
+        if (this.wishlistProductIDs.length != +$('header#top .my_wish_quantity').text()) {
             wishDef = $.get('/shop/wishlist', {
                 count: 1,
             }).then(function (res) {

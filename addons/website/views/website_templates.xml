@@ -277,20 +277,20 @@
 
 <!-- Navbar -->
 <template id="navbar_toggler" name="Navbar Toggler">
-    <button type="button" t-attf-class="navbar-toggler #{_toggler_class}" data-bs-toggle="collapse" data-bs-target="#top_menu_collapse">
+    <button type="button" t-attf-class="navbar-toggler #{_toggler_class} o_not_editable" data-bs-toggle="offcanvas" data-bs-target="#top_menu_collapse" aria-controls="top_menu_collapse">
         <span class="navbar-toggler-icon o_not_editable"/>
     </button>
 </template>
 
 <template id="navbar" name="Navbar">
     <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or ''"/>
-    <nav data-name="Navbar" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes}">
+    <nav data-name="Navbar" t-attf-aria-label="#{_navbar_name if _navbar_name else 'Main'}" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes} #{_extra_navbar_classes}">
         <t t-out="0"/>
     </nav>
 </template>
 
 <template id="navbar_nav" name="Navbar Nav">
-    <ul id="top_menu" t-attf-class="nav navbar-nav o_menu_loading #{_nav_class}" role="menu">
+    <ul id="top_menu" t-attf-class="nav navbar-nav #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{_nav_class}" role="menu">
         <t t-out="0"/>
     </ul>
 </template>
@@ -1972,13 +1972,13 @@
 
 <!-- Language selector templates -->
 <template id="lang_flag" name="Language Flag">
-    <img class="o_lang_flag" t-attf-src="#{flag_image_src}?height=25"/>
+    <img t-attf-class="o_lang_flag #{_flag_class}" t-attf-src="#{flag_image_src}?height=25"/>
 </template>
 
 <template id="language_selector_add_language">
     <!-- When clicked from the iframe preview in backend, the click will be
     prevented to directly call the action in the top window -->
-    <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
+    <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'} small"
        groups="website.group_website_restricted_editor"
        t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{quote_plus(url_for('', '[lang]') + '?' + keep_query())}">
         <i class="fa fa-plus-circle"/>
@@ -1989,6 +1989,7 @@
 <template id="language_selector" inherit_id="portal.language_selector">
     <xpath expr="//t[@t-nocache]" position="attributes">
         <attribute name="t-nocache-flags">flags</attribute>
+        <attribute name="t-nocache-_flag_class">_flag_class</attribute>
     </xpath>
 
     <xpath expr="//t[@t-set='active_lang']" position="before">

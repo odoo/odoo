@@ -73,21 +73,22 @@
            t-nocache-no_text="no_text"
            t-nocache-_div_classes="_div_classes"
            t-nocache-_btn_class="_btn_class"
+           t-nocache-_txt_class="_txt_class"
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
             <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
             <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
-                <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button t-attf-class="btn border-0 dropdown-toggle #{_btn_class or 'btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
-                            class="align-middle"
+                            t-attf-class="align-middle #{_txt_class}"
                             t-esc="active_lang[2].split('/').pop()"/>
                 </button>
                 <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                     <t t-foreach="languages" t-as="lg">
-                        <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
+                        <a class="dropdown-item" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
                         t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
-                        t-att-data-url_code="lg[1]">
-                            <span t-if="not no_text" t-esc="lg[2].split('/').pop()"/>
+                        t-att-data-url_code="lg[1]" t-att-title="lg[2].split('/').pop()">
+                            <span t-if="not no_text" t-out="lg[2].split('/').pop()" t-attf-class="#{_txt_class}"/>
                         </a>
                     </t>
                 </div>
@@ -100,6 +101,8 @@
            t-nocache-_avatar="_avatar"
            t-nocache-_icon="_icon"
            t-nocache-_icon_class="_icon_class"
+           t-nocache-_icon_wrap_class="_icon_wrap_class"
+           t-nocache-_no_caret="_no_caret"
            t-nocache-_user_name="_user_name"
            t-nocache-_user_name_class="_user_name_class"
            t-nocache-_item_class="_item_class"
@@ -107,12 +110,14 @@
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
             <t t-set="is_connected" t-value="not user_id._is_public()"/>
             <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
+                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="#{'' if _no_caret else 'dropdown-toggle'} btn #{_link_class}">
                     <t t-if="_avatar">
                         <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
                         <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
                     </t>
-                    <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
+                    <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
+                        <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
+                    </div>
                     <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                 </a>
                 <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">

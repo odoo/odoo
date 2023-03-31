@@ -4,16 +4,22 @@
         <t t-nocache="The number of products is dynamic, this rendering cannot be cached."
            t-nocache-_icon="_icon"
            t-nocache-_text="_text"
+           t-nocache-_badge="_badge"
+           t-nocache-_badge_class="_badge_class"
+           t-nocache-_icon_wrap_class="_icon_wrap_class"
+           t-nocache-_text_class="_text_class"
            t-nocache-_item_class="_item_class"
            t-nocache-_link_class="_link_class">
             <t t-set="website_sale_cart_quantity" t-value="request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else website.sale_get_order().cart_quantity or 0"/>
             <t t-set="show_cart" t-value="true"/>
             <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-            <li t-attf-class="o_wsale_my_cart align-self-md-start #{not show_cart and 'd-none'} #{_item_class}">
+            <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
                 <a href="/shop/cart" t-attf-class="#{_link_class}">
-                    <i t-if="_icon" class="fa fa-shopping-cart"/>
-                    <span t-if="_text">My Cart</span>
-                    <sup t-attf-class="my_cart_quantity badge text-bg-primary #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <div t-attf-class="#{_icon_wrap_class}">
+                        <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
+                        <sup t-attf-class="my_cart_quantity badge text-bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    </div>
+                    <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
                 </a>
             </li>
         </t>

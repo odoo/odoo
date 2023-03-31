@@ -28,14 +28,19 @@
            t-nocache-_icon="_icon"
            t-nocache-_item_class="_item_class"
            t-nocache-_link_class="_link_class"
+           t-nocache-_badge_class="_badge_class"
+           t-nocache-_icon_wrap_class="_icon_wrap_class"
+           t-nocache-_text_class="_text_class"
            t-nocache-_text="_text">
             <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
             <t t-set="show_wishes" t-value="True"/>
             <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
-                    <i t-if="_icon" class="fa fa-1x fa-heart"/>
-                    <span t-if="_text">Wishlist</span>
-                    <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary"/>
+                    <div t-attf-class="#{_icon_wrap_class}">
+                        <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
+                        <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary #{_badge_class}"/>
+                    </div>
+                    <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
                 </a>
             </li>
         </t>
