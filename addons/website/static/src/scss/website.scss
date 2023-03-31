@@ -55,7 +55,7 @@ $-seen-urls: ();
     // 3) The values in the $colors map are also printed by Bootstrap. However,
     // we have color variables which can contain a reference to a color
     // combination and that is the info we want in that case.
-    @each $key in ('menu', 'footer', 'copyright') {
+    @each $key in ('menu', 'header-sales_one', 'footer', 'copyright') {
         $-value: map-get($o-color-palette, $key);
         @if type-of($-value) == 'number' {
             @include print-variable($key, $-value);
@@ -1208,6 +1208,12 @@ header {
             align-items: center;
             height: 100%;
         }
+    }
+} @else if o-website-value('header-template') == 'sales_one' {
+    #wrapwrap .o_header_sales_one_bot {
+        @include o-apply-colors('header-sales_one');
+        @include o-apply-colors('header-sales_one-custom');
+        @include o-add-gradient('menu-secondary-gradient');
     }
 }
 
