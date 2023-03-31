@@ -168,3 +168,25 @@ class AccountAnalyticLine(models.Model):
             if mapping_entry:
                 return mapping_entry.cost
         return super()._hourly_cost()
+
+    def action_sale_order_from_timesheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sale Order'),
+            'res_model': 'sale.order',
+            'views': [[False, 'form']],
+            'context': {'create': False, 'show_sale': True},
+            'res_id': self.order_id.id,
+        }
+
+    def action_invoice_from_timesheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Invoice'),
+            'res_model': 'account.move',
+            'views': [[False, 'form']],
+            'context': {'create': False},
+            'res_id': self.timesheet_invoice_id.id,
+        }
