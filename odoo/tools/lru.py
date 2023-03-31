@@ -2,8 +2,6 @@
 import collections
 import threading
 
-from .func import locked
-
 __all__ = ['LRU']
 
 class LRU(object):
@@ -19,9 +17,9 @@ class LRU(object):
         for key, value in pairs:
             self[key] = value
 
-    @locked
     def __contains__(self, obj):
-        return obj in self.d
+        with self._lock:
+            return obj in self.d
 
     def get(self, obj, val=None):
         try:
@@ -29,31 +27,31 @@ class LRU(object):
         except KeyError:
             return val
 
-    @locked
     def __getitem__(self, obj):
-        a = self.d[obj]
-        self.d.move_to_end(obj, last=False)
-        return a
+        with self._lock:
+            a = self.d[obj]
+            self.d.move_to_end(obj, last=False)
+            return a
 
-    @locked
     def __setitem__(self, obj, val):
-        self.d[obj] = val
-        self.d.move_to_end(obj, last=False)
-        while len(self.d) > self.count:
-            self.d.popitem(last=True)
+        with self._lock:
+            self.d[obj] = val
+            self.d.move_to_end(obj, last=False)
+            while len(self.d) > self.count:
+                self.d.popitem(last=True)
 
-    @locked
     def __delitem__(self, obj):
-        del self.d[obj]
+        with self._lock:
+            del self.d[obj]
 
-    @locked
     def __len__(self):
-        return len(self.d)
+        with self._lock:
+            return len(self.d)
 
-    @locked
     def pop(self,key):
-        return self.d.pop(key)
+        with self._lock:
+            return self.d.pop(key)
 
-    @locked
     def clear(self):
-        self.d.clear()
+        with self._lock:
+            self.d.clear()
