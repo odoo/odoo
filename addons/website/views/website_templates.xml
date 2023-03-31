@@ -774,6 +774,111 @@
     </xpath>
 </template>
 
+<!-- "Search" template -->
+<template id="template_header_search" inherit_id="website.layout" name="Template Header Search" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <t t-call="website.navbar">
+            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
+
+            <div id="top_menu_container" class="flex-wrap">
+                <div aria-label="Top" class="border-bottom o_border_contrast">
+                    <div class="container d-flex justify-content-between flex-wrap w-100">
+                        <ul class="o_header_search_left_col navbar-nav flex-wrap">
+                            <!-- Language Selector -->
+                            <t t-call="website.placeholder_header_language_selector">
+                                <t t-set="_div_classes" t-valuef="h-100 border-end o_border_contrast"/>
+                                <t t-set="_btn_class" t-valuef="o_navlink_background_hover btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"/>
+                            </t>
+                            <!-- Text element -->
+                            <t t-call="website.placeholder_header_text_element">
+                                <t t-set="_txt_elt_content" t-valuef="sentence"/>
+                                <t t-set="_div_class" t-valuef="d-flex align-items-center h-100 border-end p-2 text-muted o_border_contrast"/>
+                            </t>
+                        </ul>
+                        <ul class="navbar-nav flex-wrap">
+                            <!-- Social Links -->
+                            <t t-call="website.placeholder_header_social_links">
+                                <t t-set="_div_class" t-valuef="d-flex align-items-center h-100 border-start px-1 o_border_contrast"/>
+                            </t>
+                            <!-- Sign In -->
+                            <t t-call="portal.placeholder_user_sign_in">
+                                <t t-set="_link_class" t-valuef="o_navlink_background_hover btn btn-sm d-flex align-items-center h-100 rounded-0 border-0 border-start px-3 text-reset o_border_contrast"/>
+                            </t>
+                            <!-- User Dropdown -->
+                            <t t-call="portal.user_dropdown">
+                                <t t-set="_user_name" t-value="true"/>
+                                <t t-set="_item_class" t-valuef="dropdown border-start o_border_contrast"/>
+                                <t t-set="_link_class" t-valuef="o_navlink_background_hover btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"/>
+                                <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+                <div aria-label="Bottom" class="container d-grid align-items-center w-100 py-2 o_grid_header_3_cols">
+                    <!-- Navbar -->
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-valuef="me-4"/>
+
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-valuef="nav-item"/>
+                                <t t-set="link_class" t-valuef="nav-link"/>
+                            </t>
+                        </t>
+                    </t>
+                    <!-- Brand -->
+                    <t t-call="website.placeholder_header_brand">
+                        <t t-set="_link_class" t-valuef="mw-100 mx-auto"/>
+                    </t>
+                    <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-3">
+                        <!-- Search bar -->
+                        <t t-call="website.placeholder_header_search_box">
+                            <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
+                            <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
+                        </t>
+                        <!-- Call To Action -->
+                        <t t-call="website.header_call_to_action_pill"/>
+                    </ul>
+                </div>
+            </div>
+        </t>
+        <t t-call="website.template_header_mobile">
+            <t t-set="_txt_elt_content" t-valuef="sentence"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="template_header_search_align_center" inherit_id="website.template_header_search" active="False">
+    <xpath expr="//div[hasclass('o_grid_header_3_cols')]" position="attributes">
+        <attribute name="class" add="o_grid_header_3_cols_fixed" remove="o_grid_header_3_cols_fixed" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="order-1 justify-content-center mx-auto w-100 px-4"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="inside" >
+        <t t-set="_link_class" t-valuef="order-0 me-auto mw-100"/>
+    </xpath>
+    <xpath expr="//ul[hasclass('o_header_search_right_col')]" position="attributes">
+        <attribute name="class" add="order-2" remove="" separator=" "/>
+    </xpath>
+</template>
+
+<template id="template_header_search_align_right" inherit_id="website.template_header_search" active="False">
+    <xpath expr="//div[hasclass('o_grid_header_3_cols')]" position="attributes">
+        <attribute name="class" add="o_grid_header_3_cols_fixed" remove="o_grid_header_3_cols_fixed" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="order-2 justify-content-end ms-auto w-100 ps-4"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="inside" >
+        <t t-set="_link_class" t-valuef="order-1 mx-auto mw-100"/>
+    </xpath>
+    <xpath expr="//ul[hasclass('o_header_search_right_col')]" position="attributes">
+        <attribute name="class" add="order-0 me-4" remove="ps-3 ms-auto" separator=" "/>
+    </xpath>
+</template>
+
 <template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_sidebar" separator=" "/>
@@ -1157,57 +1262,6 @@
 <template id="template_header_boxed_align_right" inherit_id="website.template_header_boxed" active="False">
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
         <t t-set="_nav_class" t-valuef="ms-auto"/>
-    </xpath>
-</template>
-
-<template id="template_header_centered_logo" inherit_id="website.layout" name="Template Header Centered Logo" active="False">
-    <xpath expr="//header//nav" position="replace">
-        <t t-call="website.navbar">
-            <div id="top_menu_container" class="container">
-                <!-- Brand -->
-                <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="m-0"/>
-                </t>
-                <!-- Right -->
-                <ul class="nav navbar-nav o_header_centered_logo justify-content-end flex-row">
-                    <!-- Sign In -->
-                    <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item ms-3"/>
-                        <t t-set="_link_class" t-valuef="nav-link"/>
-                    </t>
-                    <!-- User Dropdown -->
-                    <t t-call="portal.user_dropdown">
-                        <t t-set="_icon" t-value="true"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown ms-3"/>
-                        <t t-set="_link_class" t-valuef="nav-link"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-end"/>
-                    </t>
-                    <!-- Call To Action -->
-                    <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="ms-2"/>
-                    </t>
-                </ul>
-                <!-- Navbar Toggler -->
-                <t t-call="website.navbar_toggler"/>
-                <!-- Navbar Collapse -->
-                <div id="top_menu_collapse"
-                     class="collapse navbar-collapse o_header_centered_logo order-last order-lg-first">
-                    <t t-call="website.navbar_nav">
-                        <!-- Menu -->
-                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                            <t t-call="website.submenu">
-                                <t t-set="item_class" t-valuef="nav-item"/>
-                                <t t-set="link_class" t-valuef="nav-link"/>
-                            </t>
-                        </t>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_div_classes" t-valuef="nav-item ms-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
-                        </t>
-                    </t>
-                </div>
-            </div>
-        </t>
     </xpath>
 </template>
 
