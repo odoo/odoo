@@ -85,6 +85,17 @@
         </xpath>
     </template>
 
+    <template id="template_header_stretch" inherit_id="website_sale.template_header_stretch">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'border-start o_border_contrast'"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset'"/>
+                <t t-set="_badge_class" t-value="'rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="template_header_vertical" inherit_id="website_sale.template_header_vertical">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">

@@ -617,6 +617,92 @@
     </xpath>
 </template>
 
+<!-- "Stretch" template -->
+<template id="template_header_stretch" inherit_id="website.layout" name="Template Header Stretch" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <t t-call="website.navbar">
+            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block py-0 shadow-sm"/>
+
+            <div id="top_menu_container" class="container align-items-stretch">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand">
+                    <t t-set="_link_class" t-valuef="d-flex align-items-center me-4 p-2"/>
+                </t>
+                <!-- Navbar -->
+                <t t-call="website.navbar_nav">
+                    <t t-set="_nav_class" t-valuef="d-flex align-items-center me-auto border-end o_border_contrast"/>
+
+                    <!-- Menu -->
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-valuef="nav-item h-100 border-start o_border_contrast"/>
+                            <t t-set="link_class" t-valuef="nav-link d-flex align-items-center h-100"/>
+                        </t>
+                    </t>
+                </t>
+                <!-- Extra elements -->
+                <ul class="o_header_stretch_elts navbar-nav flex-shrink-0 ps-2">
+                    <!-- Text element -->
+                        <t t-call="website.placeholder_header_text_element">
+                            <t t-set="_div_class" t-valuef="h-100 border-start o_border_contrast"/>
+                            <t t-set="_link_class" t-valuef="o_navlink_background_hover d-flex align-items-center h-100 text-reset"/>
+                        </t>
+                    <!-- Search bar -->
+                    <t t-call="website.placeholder_header_search_box">
+                        <t t-set="_input_classes" t-valuef="o_header_stretch_search_input border-0 rounded-0 bg-transparent text-reset"/>
+                        <t t-set="_submit_classes" t-valuef="o_navlink_background_hover rounded-0 text-reset"/>
+                        <t t-set="_form_classes" t-valuef="h-100 z-index-0"/>
+                        <t t-set="_classes" t-valuef="h-100 border-start o_border_contrast"/>
+                    </t>
+                    <!-- Social -->
+                    <t t-call="website.header_social_links_no_color">
+                        <t t-set="_div_class" t-valuef="d-flex align-items-center h-100 border-start px-2 o_border_contrast"/>
+                    </t>
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector">
+                        <t t-set="_div_classes" t-valuef="h-100 border-start o_border_contrast"/>
+                        <t t-set="_btn_class" t-valuef="o_navlink_background_hover h-100 rounded-0 text-reset"/>
+                        <t t-set="_txt_class" t-valuef="small"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                    </t>
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-valuef="border-start o_border_contrast"/>
+                        <t t-set="_link_class" t-valuef="o_navlink_background_hover btn d-flex align-items-center h-100 rounded-0 fw-bold text-reset"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_icon" t-value="true"/>
+                        <t t-set="_item_class" t-valuef="dropdown border-start o_border_contrast"/>
+                        <t t-set="_link_class" t-valuef="o_navlink_background_hover d-flex align-items-center h-100 rounded-0 text-reset"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                    </t>
+                    <!-- Call To Action -->
+                    <t t-call="website.header_call_to_action_stretched">
+                        <t t-set="_div_class" t-valuef="d-flex h-100 border-start o_border_contrast"/>
+                    </t>
+                </ul>
+            </div>
+        </t>
+        <t t-call="website.template_header_mobile"/>
+    </xpath>
+</template>
+
+<template id="template_header_stretch_align_center" inherit_id="website.template_header_stretch" active="False">
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="d-flex align-items-center mx-auto border-end px-2 o_border_contrast"/>
+    </xpath>
+</template>
+
+<template id="template_header_stretch_align_right" inherit_id="website.template_header_stretch" active="False">
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="d-flex align-items-center ms-auto o_border_contrast"/>
+    </xpath>
+    <xpath expr="//ul[hasclass('o_header_stretch_elts')]" position="attributes">
+        <attribute name="class" remove="ps-2" separator=" "/>
+    </xpath>
+</template>
+
 <!-- "Vertical" template -->
 <template id="template_header_vertical" inherit_id="website.layout" name="Template Header Vertical" active="False">
     <xpath expr="//header//nav" position="replace">
