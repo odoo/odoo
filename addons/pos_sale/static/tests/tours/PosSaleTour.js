@@ -3,6 +3,7 @@
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
+import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import Tour from "web_tour.tour";
 
@@ -42,3 +43,20 @@ ProductScreen.check.totalAmountIs("11.00");
 
 Tour.register('PosSettleOrderIncompatiblePartner', { test: true, url: '/pos/ui' }, getSteps());
 
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.selectFirstOrder();
+ProductScreen.do.clickOrderline("Product A", "1");
+ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
+ProductScreen.do.clickOrderline("Product B", "1");
+ProductScreen.do.pressNumpad('Qty 0');
+ProductScreen.check.selectedOrderlineHas('Product B', '0.00');
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.isShown();
+
+Tour.register('PosSettleOrder2', { test: true, url: '/pos/ui' }, getSteps());
