@@ -29,10 +29,7 @@
                 <t t-if="receipt.company.website">
                     <div><t t-esc="receipt.company.website" /></div>
                 </t>
-                <t t-if="receipt.header_html">
-                    <t t-out="receipt.header_html" />
-                </t>
-                <t t-if="!receipt.header_html and receipt.header">
+                <t t-if="receipt.header">
                     <div><t t-esc="receipt.header" /></div>
                 </t>
                 <t t-if="receipt.cashier">
