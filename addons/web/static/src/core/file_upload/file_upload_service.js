@@ -24,7 +24,7 @@ export const fileUploadService = {
 
         /**
          * @param {string}                          route
-         * @param {FileList}                        files
+         * @param {FileList|Array<File>}            files
          * @param {Object}                          [params]
          * @param {function(formData): void}        [params.buildFormData]
          * @param {Boolean}                         [params.displayErrorNotification]
