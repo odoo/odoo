@@ -440,10 +440,12 @@ export class Rtc {
                 this.disconnect(session);
                 break;
             case "raise_hand":
-                Object.assign(session, { isRaisingHand: payload.active });
+                Object.assign(session, {
+                    raisingHand: payload.active ? new Date() : undefined,
+                });
                 // eslint-disable-next-line no-case-declarations
                 const notificationId = "raise_hand_" + session.id;
-                if (session.isRaisingHand) {
+                if (session.raisingHand) {
                     this.addCallNotification({
                         id: notificationId,
                         text: sprintf(_t("%s raised a hand"), session.name),
@@ -691,7 +693,7 @@ export class Rtc {
                     },
                 });
                 await this.notify([session], "raise_hand", {
-                    active: this.state.selfSession.isRaisingHand,
+                    active: Boolean(this.state.selfSession.raisingHand),
                 });
             } catch (e) {
                 if (!(e instanceof DOMException) || e.name !== "OperationError") {
@@ -929,10 +931,10 @@ export class Rtc {
         delete session.packetsSent;
         delete session.dtlsState;
         delete session.iceState;
+        delete session.raisingHand;
         delete session.logStep;
         delete session.audioError;
         delete session.videoError;
-        session.isRaisingHand = false;
         session.isTalking = false;
         this.removeVideoFromSession(session);
         session.dataChannel?.close();
@@ -1057,15 +1059,15 @@ export class Rtc {
     }
 
     /**
-     * @param {Boolean} isRaisingHand
+     * @param {Boolean} raise
      */
-    async raiseHand(isRaisingHand) {
+    async raiseHand(raise) {
         if (!this.state.selfSession || !this.state.channel) {
             return;
         }
-        this.state.selfSession.isRaisingHand = isRaisingHand;
+        this.state.selfSession.raisingHand = raise ? new Date() : undefined;
         await this.notify(Object.values(this.state.channel.rtcSessions), "raise_hand", {
-            active: this.state.selfSession.isRaisingHand,
+            active: this.state.selfSession.raisingHand,
         });
     }
 

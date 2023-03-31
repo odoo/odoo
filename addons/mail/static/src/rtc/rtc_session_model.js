@@ -20,11 +20,12 @@ export class RtcSession {
     dataChannel;
     audioError;
     videoError;
-    isRaisingHand;
     isTalking;
     localVolume;
     /** @type {RTCPeerConnection} */
     peerConnection;
+    /** @type {Date|undefined} */
+    raisingHand;
     videoComponentCount = 0;
     /** @type {MediaStream} */
     videoStream;

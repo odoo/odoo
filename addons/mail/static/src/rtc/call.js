@@ -72,25 +72,45 @@ export class Call extends Component {
     }
 
     get visibleCards() {
-        const cards = [];
+        const raisingHandCards = [];
+        const sessionCards = [];
+        const invitationCards = [];
         const filterVideos = this.userSettings.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of Object.values(this.props.thread.rtcSessions)) {
             if (!filterVideos || session.videoStream) {
-                cards.push({
+                const data = {
                     key: "session_" + session.id,
                     session,
-                });
+                };
+                if (session.raisingHand) {
+                    raisingHandCards.push(data);
+                } else {
+                    sessionCards.push(data);
+                }
             }
         }
         if (!filterVideos) {
             for (const memberId of this.props.thread.invitedMemberIds) {
-                cards.push({
+                invitationCards.push({
                     key: "member_" + memberId,
                     member: this.store.channelMembers[memberId],
                 });
             }
         }
-        return cards;
+        raisingHandCards.sort((c1, c2) => {
+            return c1.session.raisingHand - c2.session.raisingHand;
+        });
+        sessionCards.sort((c1, c2) => {
+            return (
+                c1.session.channelMember?.persona?.name?.localeCompare(
+                    c2.session.channelMember?.persona?.name
+                ) ?? 1
+            );
+        });
+        invitationCards.sort((c1, c2) => {
+            return c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1;
+        });
+        return raisingHandCards.concat(sessionCards, invitationCards);
     }
 
     get visibleMainCards() {
