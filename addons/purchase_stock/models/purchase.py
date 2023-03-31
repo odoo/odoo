@@ -321,7 +321,8 @@ class PurchaseOrderLine(models.Model):
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
                 self._update_move_date_deadline(new_date)
         lines = self.filtered(lambda l: l.order_id.state == 'purchase')
-        previous_product_qty = {line.id: line.product_uom_qty for line in lines}
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
+        previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         if 'price_unit' in values:
             for line in lines:
@@ -329,7 +330,8 @@ class PurchaseOrderLine(models.Model):
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
                 moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
-            lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
+            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom.rounding) != 0)
+            lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
         return result
 
     def unlink(self):

@@ -36,9 +36,9 @@ var StockOrderpointListController = ListController.extend({
     _onButtonClicked: function (ev) {
         if (ev.data.attrs.class.split(' ').includes('o_replenish_buttons')) {
             ev.stopPropagation();
-            var self = this;
-            this._callButtonAction(ev.data.attrs, ev.data.record).then(function () {
-                self.reload();
+            this.trigger_up('save_line', {
+                recordID: ev.data.record.id,
+                onSuccess: () => this._callButtonAction(ev.data.attrs, ev.data.record).then(() => this.reload())
             });
         } else {
             this._super.apply(this, arguments);

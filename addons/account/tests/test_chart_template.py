@@ -1,3 +1,5 @@
+import logging
+
 from odoo.addons.account.models.chart_template import update_taxes_from_templates
 from odoo.tests import tagged
 from odoo.tests.common import SavepointCase
@@ -7,17 +9,64 @@ from odoo.tests.common import SavepointCase
 class TestChartTemplate(SavepointCase):
 
     @classmethod
+    def setUpClass(cls):
+        """ Set up a company with the generic chart template, containing two taxes and a fiscal position.
+        We need to add xml_ids to the templates because they are loaded from their xml_ids
+        """
+        super().setUpClass()
+
+        be_country_id = cls.env.ref('base.be').id
+        cls.company = cls.env['res.company'].create({
+            'name': 'TestCompany1',
+            'country_id': be_country_id,
+            'account_tax_fiscal_country_id': be_country_id,
+        })
+
+        cls.chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
+        if not cls.chart_template:
+            cls.skipTest(cls, "Accounting Tests skipped because the generic chart of accounts was not found")
+
+        cls.fiscal_position_template = cls._create_fiscal_position_template('account.test_fiscal_position_template',
+                                                                            'BE fiscal position test', be_country_id)
+        cls.tax_template_1 = cls._create_tax_template('account.test_tax_template_1', 'Tax name 1', 1, 'tag_name_1')
+        cls.tax_template_2 = cls._create_tax_template('account.test_tax_template_2', 'Tax name 2', 2, 'tag_name_2')
+        cls.fiscal_position_tax_template_1 = cls._create_fiscal_position_tax_template(
+            cls.fiscal_position_template, 'account.test_fp_tax_template_1', cls.tax_template_1, cls.tax_template_2
+        )
+
+        cls.chart_template.try_loading(company=cls.company)
+        cls.chart_template_xmlid = cls.chart_template.get_external_id()[cls.chart_template.id]
+        cls.fiscal_position = cls.env['account.fiscal.position'].search([
+            ('company_id', '=', cls.company.id),
+            ('name', '=', cls.fiscal_position_template.name),
+        ])
+
+    @classmethod
     def create_tax_template(cls, name, template_name, amount):
+        # TODO to remove in master
+        logging.warning("Deprecated method, please use _create_tax_template() instead")
+        return cls._create_tax_template(template_name, name, amount, tag_name=None)
+
+    @classmethod
+    def _create_tax_template(cls, tax_template_xmlid, name, amount, tag_name=None):
+        if tag_name:
+            tag = cls.env['account.account.tag'].create({
+                'name': tag_name,
+                'applicability': 'taxes',
+                'country_id': cls.company.account_tax_fiscal_country_id.id,
+            })
         return cls.env['account.tax.template']._load_records([{
-            'xml_id': template_name,
+            'xml_id': tax_template_xmlid,
             'values': {
                 'name': name,
                 'amount': amount,
+                'type_tax_use': 'none',
                 'chart_template_id': cls.chart_template.id,
                 'invoice_repartition_line_ids': [
                     (0, 0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
+                        'tag_ids': [(6, 0, tag.ids)] if tag_name else None,
                     }),
                     (0, 0, {
                         'factor_percent': 100,
@@ -28,6 +77,7 @@ class TestChartTemplate(SavepointCase):
                     (0, 0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
+                        'tag_ids': [(6, 0, tag.ids)] if tag_name else None,
                     }),
                     (0, 0, {
                         'factor_percent': 100,
@@ -38,160 +88,180 @@ class TestChartTemplate(SavepointCase):
         }])
 
     @classmethod
-    def setUpClass(cls):
-        """
-            Setups a company with a custom chart template, containing a tax and a fiscal position.
-            We need to add xml_ids to the templates because they are loaded from their xml_ids
-        """
-        super().setUpClass()
-
-        # Create user.
-        user = cls.env['res.users'].create({
-            'name': 'Because I am accountman!',
-            'login': 'accountman',
-            'password': 'accountman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
-        })
-        user.partner_id.email = 'accountman@test.com'
-
-        cls.company_1 = cls.env['res.company'].create({
-            'name': 'TestCompany1',
-            'country_id': cls.env.ref('base.be').id,
-        })
-
-        cls.env = cls.env(user=user)
-        cls.cr = cls.env.cr
-
-        user.write({
-            'company_ids': [(6, 0, cls.company_1.ids)],
-            'company_id': cls.company_1.id,
-        })
-
-        cls.chart_template = cls.env['account.chart.template']._load_records([{
-            'xml_id': 'account.test_chart_template',
+    def _create_fiscal_position_template(cls, fp_template_xmlid, fp_template_name, country_id):
+        return cls.env['account.fiscal.position.template']._load_records([{
+            'xml_id': fp_template_xmlid,
             'values': {
-                'name': 'Test Chart Template',
-                'code_digits': 6,
-                'currency_id': cls.env.ref('base.EUR').id,
-                'bank_account_code_prefix': 1000,
-                'cash_account_code_prefix': 2000,
-                'transfer_account_code_prefix': 3000,
-            },
-        }])
-        cls.tax_1_template = cls.create_tax_template('Tax 1', 'account.test_tax_1_template', 15)
-        cls.tax_2_template = cls.create_tax_template('Tax 2', 'account.test_tax_2_template', 0)
-
-        cls.fiscal_position_template = cls.env['account.fiscal.position.template']._load_records([{
-            'xml_id': 'account.test_fiscal_position_template',
-            'values': {
-                'name': 'Fiscal Position',
+                'name': fp_template_name,
                 'chart_template_id': cls.chart_template.id,
-                'country_id': cls.env.ref('base.be').id,
+                'country_id': country_id,
                 'auto_apply': True,
             },
         }])
 
-        cls.env['account.fiscal.position.tax.template']._load_records([{
-            'xml_id': 'account.test_fiscal_position_tax_template_1',
+    @classmethod
+    def _create_fiscal_position_tax_template(cls, fiscal_position_template, fiscal_position_tax_template_xmlid, tax_template_src, tax_template_dest):
+        return cls.env['account.fiscal.position.tax.template']._load_records([{
+            'xml_id': fiscal_position_tax_template_xmlid,
             'values': {
-                'tax_src_id': cls.tax_1_template.id,
-                'tax_dest_id': cls.tax_2_template.id,
-                'position_id': cls.fiscal_position_template.id,
+                'tax_src_id': tax_template_src.id,
+                'tax_dest_id': tax_template_dest.id,
+                'position_id': fiscal_position_template.id,
             },
         }])
 
-        cls.chart_template.try_loading(company=cls.company_1)
-
-        cls.partner_1 = cls.env['res.partner'].create({
-            'name': 'Partner 1',
-            'country_id': cls.env.ref('base.be').id,
-        })
-
-    def test_update_taxes_from_templates(self):
+    def test_update_taxes_new_template(self):
+        """ Tests that adding a new tax template and a fiscal position tax template
+        creates this new tax and fiscal position line when updating
         """
-            Tests that adding a new tax template and a fiscal position tax template with this new tax template
-            creates this new tax and fiscal position line when updating
-        """
-        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_1.id)
-        tax_3_template = self.create_tax_template('Tax 3', 'account.test_tax_3_template', 16)
-        tax_4_template = self.create_tax_template('Tax 4', 'account.test_tax_4_template', 17)
+        tax_template_3 = self._create_tax_template('account.test_tax_3_template', 'Tax name 3', 3, 'tag_name_3')
+        tax_template_4 = self._create_tax_template('account.test_tax_4_template', 'Tax name 4', 4)
+        self._create_fiscal_position_tax_template(self.fiscal_position_template, 'account.test_fiscal_position_tax_template', tax_template_3, tax_template_4)
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
 
-        self.env['account.fiscal.position.tax.template']._load_records([
-            {
-                'xml_id': 'account.test_fiscal_position_new_tax_src_template',
-                'values': {
-                    'tax_src_id': tax_3_template.id,
-                    'tax_dest_id': self.tax_1_template.id,
-                    'position_id': self.fiscal_position_template.id,
-                },
-            },
-            {
-                'xml_id': 'account.test_fiscal_position_new_tax_dest_template',
-                'values': {
-                    'tax_src_id': self.tax_2_template.id,
-                    'tax_dest_id': tax_4_template.id,
-                    'position_id': self.fiscal_position_template.id,
-                },
-            },
+        taxes = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', 'in', [tax_template_3.name, tax_template_4.name]),
         ])
-
-        taxes = self.env['account.tax'].search([('company_id', '=', self.company_1.id)])
-
-        # Only the template have been created, so it should not be reflected yet on the company's chart template
-        self.assertEqual(len(fiscal_position.tax_ids), 1)
-        self.assertEqual(len(taxes), 2)
-
-        chart_template_xml_id = self.chart_template.get_external_id()[self.chart_template.id]
-        update_taxes_from_templates(self.env.cr, chart_template_xml_id)
-
-        taxes = self.env['account.tax'].search([('company_id', '=', self.company_1.id)])
         self.assertRecordValues(taxes, [
-            {'name': 'Tax 1'},
-            {'name': 'Tax 2'},
-            {'name': 'Tax 3'},
-            {'name': 'Tax 4'},
+            {'name': 'Tax name 3', 'amount': 3},
+            {'name': 'Tax name 4', 'amount': 4},
+        ])
+        self.assertEqual(taxes.invoice_repartition_line_ids.tag_ids.name, 'tag_name_3')
+        self.assertRecordValues(self.fiscal_position.tax_ids.tax_src_id, [
+            {'name': 'Tax name 1'},
+            {'name': 'Tax name 3'},
+        ])
+        self.assertRecordValues(self.fiscal_position.tax_ids.tax_dest_id, [
+            {'name': 'Tax name 2'},
+            {'name': 'Tax name 4'},
         ])
 
-        self.assertRecordValues(fiscal_position.tax_ids.tax_src_id, [
-            {'name': 'Tax 1'},
-            {'name': 'Tax 3'},
-            {'name': 'Tax 2'},
-        ])
-        self.assertRecordValues(fiscal_position.tax_ids.tax_dest_id, [
-            {'name': 'Tax 2'},
-            {'name': 'Tax 1'},
-            {'name': 'Tax 4'},
-        ])
-
-    def test_update_taxes_removed_from_templates(self):
+    def test_update_taxes_existing_template_update(self):
+        """ When a template is close enough from the corresponding existing tax we want to update
+        that tax with the template values.
         """
-            Tests updating after the removal of taxes and fiscal position mapping from the company
+        self.tax_template_1.invoice_repartition_line_ids.tag_ids.name += " [DUP]"
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
 
+        tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', self.tax_template_1.name),
+        ])
+        # Check that tax was not recreated
+        self.assertEqual(len(tax), 1)
+        # Check that tags have been updated
+        self.assertEqual(tax.invoice_repartition_line_ids.tag_ids.name, self.tax_template_1.invoice_repartition_line_ids.tag_ids.name)
+
+    def test_update_taxes_existing_template_recreation(self):
+        """ When a template is too different from the corresponding existing tax we want to recreate
+        a new taxes from template.
         """
-        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_1.id)
-        fiscal_position.tax_ids.unlink()
-        self.env['account.tax'].search([('company_id', '=', self.company_1.id)]).unlink()
+        # We increment the amount so the template gets slightly different from the
+        # corresponding tax and triggers recreation
+        old_tax_name = self.tax_template_1.name
+        old_tax_amount = self.tax_template_1.amount
+        self.tax_template_1.name = "Tax name 1 modified"
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
 
-        chart_template_xml_id = self.chart_template.get_external_id()[self.chart_template.id]
-        update_taxes_from_templates(self.env.cr, chart_template_xml_id)
+        # Check that old tax has not been changed
+        old_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', old_tax_name),
+        ], limit=1)
+        self.assertEqual(old_tax[0].amount, old_tax_amount)
 
-        # if taxes have been deleted, they will be recreated, and the fiscal position mapping for it too
-        self.assertEqual(len(self.env['account.tax'].search([('company_id', '=', self.company_1.id)])), 2)
-        self.assertEqual(len(fiscal_position.tax_ids), 1)
+        # Check that new tax has been recreated
+        tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', self.tax_template_1.name),
+        ], limit=1)
+        self.assertEqual(tax[0].amount, self.tax_template_1.amount)
 
-        fiscal_position.tax_ids.unlink()
-        update_taxes_from_templates(self.env.cr, chart_template_xml_id)
-
-        # if only the fiscal position mapping has been removed, it won't be recreated
-        self.assertEqual(len(fiscal_position.tax_ids), 0)
+    def test_update_taxes_remove_fiscal_position_from_tax(self):
+        """ Tests that when we remove the tax from the fiscal position mapping it is not
+        recreated after update of taxes.
+        """
+        self.fiscal_position.tax_ids.unlink()
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+        self.assertEqual(len(self.fiscal_position.tax_ids), 0)
 
     def test_update_taxes_conflict_name(self):
-        chart_template_xml_id = self.chart_template.get_external_id()[self.chart_template.id]
-        template_vals = self.tax_1_template._get_tax_vals_complete(self.company_1)
-        template_vals['amount'] = 20
-        self.chart_template.create_record_with_xmlid(self.company_1, self.tax_1_template, "account.tax", template_vals)
-        update_taxes_from_templates(self.env.cr, chart_template_xml_id)
-        tax_1_old = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', "[old] " + self.tax_1_template.name)])
-        tax_1_new = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', self.tax_1_template.name)])
-        self.assertEqual(len(tax_1_old), 1, "Old tax still exists but with a different name.")
-        self.assertEqual(len(tax_1_new), 1, "New tax have been created with the original name.")
+        """ When recreating a tax during update a conflict name can occur since
+        we need to respect unique constraint on (name, company_id, type_tax_use, tax_scope).
+        To do so, the old tax needs to be prefixed with '[old] '.
+        """
+        # We increment the amount so the template gets slightly different from the
+        # corresponding tax and triggers recreation
+        old_amount = self.tax_template_1.amount
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        taxes_from_template_1 = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', 'like', f"%{self.tax_template_1.name}"),
+        ])
+        self.assertRecordValues(taxes_from_template_1, [
+            {'name': f"[old] {self.tax_template_1.name}", 'amount': old_amount},
+            {'name': f"{self.tax_template_1.name}", 'amount': self.tax_template_1.amount},
+        ])
+
+    def test_update_taxes_multi_company(self):
+        """ In a multi-company environment all companies should be correctly updated."""
+        company_2 = self.env['res.company'].create({
+            'name': 'TestCompany2',
+            'country_id': self.env.ref('base.be').id,
+            'account_tax_fiscal_country_id': self.env.ref('base.be').id,
+        })
+        self.chart_template.try_loading(company=company_2)
+
+        # triggers recreation of taxes related to template 1
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        taxes_from_template_1 = self.env['account.tax'].search([
+            ('name', 'like', f"%{self.tax_template_1.name}"),
+            ('company_id', 'in', [self.company.id, company_2.id]),
+        ])
+        # we should have 4 records: 2 companies * (1 original tax + 1 recreated tax)
+        self.assertEqual(len(taxes_from_template_1), 4)
+
+    def test_message_to_accountants(self):
+        """ When we duplicate a tax because it was too different from the existing one we send
+        a message to accountant advisors. This message should only be sent to advisors
+        and not to regular users.
+        """
+        # create 1 normal user, 2 accountants managers
+        accountant_manager_group = self.env.ref('account.group_account_manager')
+        advisor_users = self.env['res.users'].create([{
+            'name': 'AccountAdvisorTest1',
+            'login': 'aat1',
+            'password': 'aat1aat1',
+            'groups_id': [(4, accountant_manager_group.id)],
+        }, {
+            'name': 'AccountAdvisorTest2',
+            'login': 'aat2',
+            'password': 'aat2aat2',
+            'groups_id': [(4, accountant_manager_group.id)],
+        }])
+        normal_user = self.env['res.users'].create([{
+            'name': 'AccountUserTest1',
+            'login': 'aut1',
+            'password': 'aut1aut1',
+            'groups_id': [(4, self.env.ref('account.group_account_user').id)],
+        }])
+        # create situation where we need to recreate the tax during update to get notification(s) sent
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        # accountants received the message
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('partner_ids', 'in', advisor_users.partner_id.ids),
+            ('body', 'like', f"%{self.tax_template_1.name}%"),  # we look for taxes' name that have been sent in the message's body
+        ]), 1)
+        # normal user didn't
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('partner_ids', 'in', normal_user.partner_id.ids),
+            ('body', 'like', f"%{self.tax_template_1.name}%"),  # we look for taxes' name that have been sent in the message's body
+        ]), 0)
