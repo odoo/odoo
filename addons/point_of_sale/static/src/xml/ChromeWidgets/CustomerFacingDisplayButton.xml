@@ -2,15 +2,15 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="CustomerFacingDisplayButton" owl="1">
-        <div class="oe_status" t-on-click="onClick">
+        <div class="oe_status" t-on-click="() => customerDisplay.connect()">
             <span class="message"><t t-esc="message" /></span>
-            <div t-if="state.status === 'warning'" class="js_warning oe_icon oe_orange">
+            <div t-if="customerDisplay.status === 'warning'" class="js_warning oe_icon oe_orange">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Warning" title="Customer Screen Warning"></i>
             </div>
-             <div t-if="state.status === 'failure'" class="js_disconnected oe_icon oe_red">
+             <div t-if="customerDisplay.status === 'failure'" class="js_disconnected oe_icon oe_red">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Disconnected" title="Customer Screen Disconnected"></i>
             </div>
-            <div t-if="state.status === 'success'" class="js_connected oe_icon oe_green">
+            <div t-if="customerDisplay.status === 'success'" class="js_connected oe_icon oe_green">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Connected" title="Customer Screen Connected"></i>
             </div>
         </div>
