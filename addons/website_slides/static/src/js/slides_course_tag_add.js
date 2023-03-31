@@ -6,7 +6,7 @@ import publicWidget from 'web.public.widget';
 
 var TagCourseDialog = Dialog.extend({
     template: 'website.slides.tag.add',
-    events: _.extend({}, Dialog.prototype.events, {
+    events: Object.assign({}, Dialog.prototype.events, {
         'change input#tag_id' : '_onChangeTag',
     }),
 

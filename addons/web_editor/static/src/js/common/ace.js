@@ -518,7 +518,7 @@ var ViewEditor = Widget.extend({
 
         function _processViews(views) {
             // Only keep the active views and index them by ID.
-            _.extend(this.views, _.indexBy(_.filter(views, function (view) {
+            Object.assign(this.views, _.indexBy(_.filter(views, function (view) {
                 return view.active;
             }), 'id'));
 
@@ -566,7 +566,7 @@ var ViewEditor = Widget.extend({
             var resources = type === 'scss' ? this.scss : this.js;
             _.each(data, function (bundleInfos) {
                 _.each(bundleInfos[1], function (info) { info.bundle = bundleInfos[0]; });
-                _.extend(resources, _.indexBy(bundleInfos[1], 'url'));
+                Object.assign(resources, _.indexBy(bundleInfos[1], 'url'));
             });
         }
     },

@@ -817,7 +817,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 if (args.method !== "get_views") {
-                    assert.step(_.last(route.split("/")));
+                    assert.step(route.split("/").at(-1));
                 }
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1].timmy, [
@@ -1424,7 +1424,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method !== "get_views") {
-                    assert.step(_.last(route.split("/")) + " on " + args.model);
+                    assert.step(route.split("/").at(-1) + " on " + args.model);
                 }
                 if (args.model === "turtle") {
                     assert.step(JSON.stringify(args.args[0])); // the read ids

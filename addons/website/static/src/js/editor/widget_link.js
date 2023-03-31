@@ -4,7 +4,7 @@ import weWidgets from "wysiwyg.widgets";
 import wUtils from "website.utils";
 
 weWidgets.LinkTools.include({
-    custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
+    custom_events: Object.assign({}, weWidgets.LinkTools.prototype.custom_events || {}, {
         website_url_chosen: '_onAutocompleteClose',
     }),
     LINK_DEBOUNCE: 1000,

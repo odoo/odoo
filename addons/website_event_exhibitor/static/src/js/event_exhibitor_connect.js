@@ -5,7 +5,7 @@ import publicWidget from "web.public.widget";
 import {Markup} from "web.utils";
 
 var ExhibitorConnectClosedDialog = Dialog.extend({
-    events: _.extend({}, Dialog.prototype.events, {
+    events: Object.assign({}, Dialog.prototype.events, {
         'click .o_wesponsor_js_connect_modal_contry': '_onClickCountryFlag',
     }),
     template: 'exhibitor.connect.closed.modal',

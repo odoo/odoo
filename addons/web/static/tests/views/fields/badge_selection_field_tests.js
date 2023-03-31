@@ -91,7 +91,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_save");
 
-        var newRecord = _.last(serverData.models.partner.records);
+        var newRecord = serverData.models.partner.records.at(-1);
         assert.strictEqual(newRecord.product_id, 37, "should have saved record with correct value");
     });
 
@@ -122,7 +122,7 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target.querySelector(".o_form_button_save"));
 
-            var newRecord = _.last(serverData.models.partner.records);
+            var newRecord = serverData.models.partner.records.at(-1);
             assert.strictEqual(
                 newRecord.color,
                 "black",

@@ -104,9 +104,7 @@ var AbstractModel = mvc.Model.extend({
             value = fieldUtils.parse[field.type](value, field, {isUTC: true});
         } else if (field.type === 'selection' && value === false) {
             // process selection: convert false to 0, if 0 is a valid key
-            var hasKey0 = _.find(field.selection, function (option) {
-                return option[0] === 0;
-            });
+            var hasKey0 = field.selection.find(option => option[0] === 0);
             value = hasKey0 ? 0 : value;
         }
         return value;

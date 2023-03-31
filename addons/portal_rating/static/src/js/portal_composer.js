@@ -13,7 +13,7 @@ var PortalComposer = portalComposer.PortalComposer;
  * Extends Portal Composer to handle rating submission
  */
 PortalComposer.include({
-    events: _.extend({}, PortalComposer.prototype.events, {
+    events: Object.assign({}, PortalComposer.prototype.events, {
         'click .stars i': '_onClickStar',
         'mouseleave .stars': '_onMouseleaveStarBlock',
         'mousemove .stars i': '_onMoveStar',
