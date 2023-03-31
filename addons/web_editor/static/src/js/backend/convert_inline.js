@@ -749,7 +749,9 @@ function flattenBackgroundImages(editable) {
     //     }
     //     mso.textContent = '[if mso]>' + renderedMso.innerHTML + '<![endif]';
     // }
-    const backgroundImages = [...editable.querySelectorAll('*[style*=background-image]')].reverse();
+    const backgroundImages = [...editable.querySelectorAll('*[style*=background-image]')]
+        .filter(el => el.style.backgroundImage.includes('url(') && !el.closest('.mso-hide'))
+        .reverse();
     for (const backgroundImage of backgroundImages) {
         const vml = backgroundImageToVml(backgroundImage);
         const mso = document.createComment(`[if mso]>${vml}<![endif]`);
