@@ -666,55 +666,6 @@ async function toInline($editable, cssRules, $iframe) {
     }
     $editable.addClass('odoo-editor-editable');
 }
-const XMLNS_URN = 'urn:schemas-microsoft-com:vml';
-// We assume background-size: cover, background-repeat: no-repeat, size 100% and
-// content is centered x/y (assumptions may not hold for cover snippet).
-function backgroundImageToVml(backgroundImage) {
-    const clone = backgroundImage.cloneNode(true);
-    const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
-    const url = backgroundImage.style.backgroundImage.match(/url\("?(.+?)"?\)/)[1];
-    const style = getComputedStyle(backgroundImage);
-    [...clone.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || style.fontSize));
-    const div = document.createElement('div');
-    div.style.fontSize = 0;
-    div.style.height = '100%';
-    div.style.width = '100%';
-    // ad-hoc fix to preserve some inherited properties without ancestor context:
-    for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
-        div.style[prop] = backgroundImage.style[prop] || style[prop];
-    }
-    div.replaceChildren(...clone.childNodes);
-    const vmlContent = document.createElement('div');
-    vmlContent.append(div);
-    for (const prop of ['background', 'background-image', 'background-repeat', 'background-size']) {
-        clone.style.removeProperty(prop);
-    }
-    clone.style.padding = 0;
-    clone.className = clone.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
-    clone.setAttribute('background', url);
-    clone.setAttribute('valign', 'middle');
-    const vmlStyle = `width:${width*.75}pt;height:${height*.75}pt;v-text-anchor:middle;`; // note: centering span not needed with this
-    return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}
-        <v:rect xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="${vmlStyle}">
-            <v:fill src="${url}" origin="-0.5,-0.5" position="-0.5,-0.5" type="frame" size="1,1" aspect="atleast" color="#000000"/>
-            <v:textbox inset="0,0,0,0">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td width="${width}" align="center" style="text-align: center;">${vmlContent.outerHTML}</td>
-                    </tr>
-                </table>
-            </v:textbox>
-        </v:rect>
-        </${clone.nodeName.toLowerCase()}>
-    `;
-    // return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}
-    //     <v:image xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="${vmlStyle}" src="${url}"/>
-    //     <v:rect xmlns:v="${XMLNS_URN}" fill="true" stroke="false" style="position:absolute;${vmlStyle}">
-    //         <v:fill type="frame" sizes="${width*.75}pt,${height*.75}pt" aspect="atleast" opacity="0%" color="#000000"/>
-    //         <v:textbox inset="0,0,0,0">${vmlContent.outerHTML}</v:textbox>
-    //     </v:rect>
-    //     </${clone.nodeName.toLowerCase()}>`;
-}
 /**
  * Take all elements with a `background-image` style and convert them to `vml`
  * for Outlook.
@@ -727,7 +678,7 @@ function flattenBackgroundImages(editable) {
         .reverse();
     for (const backgroundImage of backgroundImages) {
         // Put the Outlook version after the original one in an mso conditional.
-        backgroundImage.after(_createMso(backgroundImageToVml(backgroundImage)));
+        backgroundImage.after(_createMso(_backgroundImageToVml(backgroundImage)));
         // Hide the original element for Outlook.
         backgroundImage.classList.toggle('mso-hide', true);
     }
@@ -1165,6 +1116,65 @@ function _applyColspan(element, colspan, tableWidth) {
     // Round to 2 decimal places.
     const width = Math.round(tableWidth * widthPercentage * 100) / 100;
     element.style.setProperty('max-width', width + 'px');
+}
+/**
+ * Take an element with a background image and return a string containing the
+ * VML code to display the same image properly in Outlook, with its contents
+ * inside.
+ * TODO: We assume:
+ *      - background-size: cover,
+ *      - background-repeat: no-repeat,
+ *      - size 100%
+ *      - content is centered x/y
+ * These assumptions may not hold for cover snippet and other uses. This needs
+ * to account for that.
+ * TODO: centering span probably not needed with `v-text-anchor:middle` present.
+ *
+ * @param {Element} backgroundImage
+ * @returns {string}
+ */
+function _backgroundImageToVml(backgroundImage) {
+    // Create the outer structure.
+    const clone = backgroundImage.cloneNode(true);
+    const div = document.createElement('div');
+    div.replaceChildren(...clone.childNodes);
+    [['fontSize', 0], ['height', '100%'], ['width', '100%']].forEach(([k, v]) => div.style[k] = v);
+    const vmlContent = document.createElement('div');
+    vmlContent.append(div);
+
+    // Preserve important inherited properties without ancestor context.
+    const style = getComputedStyle(backgroundImage);
+    for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
+        div.style[prop] = backgroundImage.style[prop] || style[prop];
+    }
+    [...div.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || style.fontSize));
+
+    // Prepare the top element for hosting the VML image.
+    for (const prop of ['background', 'background-image', 'background-repeat', 'background-size']) {
+        clone.style.removeProperty(prop);
+    }
+    clone.style.padding = 0;
+    clone.className = clone.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
+    const url = backgroundImage.style.backgroundImage.match(/url\("?(.+?)"?\)/)[1];
+    clone.setAttribute('background', url);
+    clone.setAttribute('valign', 'middle');
+
+    // Create the VML structure, with the content of the original element inside.
+    const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
+    const vml = `<v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
+                    style="$width:${width*.75}pt;height:${height*.75}pt;v-text-anchor:middle;">
+        <v:fill src="${url}" origin="-0.5,-0.5" position="-0.5,-0.5" type="frame" size="1,1" aspect="atleast" color="#000000"/>
+        <v:textbox inset="0,0,0,0">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="${width}" align="center" style="text-align: center;">${vmlContent.outerHTML}</td>
+                </tr>
+            </table>
+        </v:textbox>
+    </v:rect>`;
+
+    // Wrap the VML in the original opening and closing tags.
+    return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}${vml}</${clone.nodeName.toLowerCase()}>`;
 }
 /**
  * Take a selector and return its specificity according to the w3 specification.
