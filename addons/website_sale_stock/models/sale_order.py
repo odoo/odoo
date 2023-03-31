@@ -84,33 +84,18 @@ class SaleOrder(models.Model):
         )
         return self.shop_warning
 
-    def _get_cache_key_for_line(self, line):
-        return line.product_id
-
-    def _get_context_for_line(self, line):
-        return {
-            'website_sale_stock_get_quantity': True,
-        }
-
     def _filter_can_send_abandoned_cart_mail(self):
         """ Filter sale orders on their product availability. """
-        self = super()._filter_can_send_abandoned_cart_mail()
-        combination_info_cache = {}
+        return super()._filter_can_send_abandoned_cart_mail().filtered(
+            lambda so: so._all_product_available()
+        )
 
-        def _are_all_product_available_for_purchase(sale_order):
-            for line in sale_order.order_line:
-                product = line.product_id
-                if product.type != 'product':
-                    continue
-                cache_key = self._get_cache_key_for_line(line)
-                combination_info = combination_info_cache.get(cache_key)
-                if not combination_info:
-                    combination_info = product.with_context(**self._get_context_for_line(line))._get_combination_info_variant(add_qty=line.product_uom_qty)
-                    combination_info_cache[cache_key] = combination_info
-                if not product.allow_out_of_stock_order and combination_info['free_qty'] == 0:
-                    return False
-            return True
-
-        # If none of the products in the checkout are available for purchase (empty inventory, for example),
-        # then the email won't be sent.
-        return self.filtered(_are_all_product_available_for_purchase)
+    def _all_product_available(self):
+        for line in self.with_context(website_sale_stock_get_quantity=True).order_line:
+            product = line.product_id
+            if product.type != 'product' or product.allow_out_of_stock_order:
+                continue
+            combination_info = product._get_combination_info_variant(add_qty=line.product_uom_qty)
+            if combination_info['free_qty'] == 0:
+                return False
+        return True
