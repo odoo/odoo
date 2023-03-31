@@ -4,6 +4,7 @@ odoo.define('pos_sale.tour', function (require) {
     const { Chrome } = require('point_of_sale.tour.ChromeTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
     const { ProductScreen } = require('pos_sale.tour.ProductScreenTourMethods');
+    const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     const Tour = require('web_tour.tour');
 
@@ -23,4 +24,22 @@ odoo.define('pos_sale.tour', function (require) {
     Chrome.do.clickTicketButton();
 
     Tour.register('PosSettleOrder', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.do.clickOrderline("Product A", "1");
+    ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
+    ProductScreen.do.clickOrderline("Product B", "1");
+    ProductScreen.do.pressNumpad('Qty 0');
+    ProductScreen.check.selectedOrderlineHas('Product B', '0.00');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+
+    Tour.register('PosSettleOrder2', { test: true, url: '/pos/ui' }, getSteps());
 });
