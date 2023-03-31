@@ -8,7 +8,7 @@ import options from "web_editor.snippets.options";
 var _t = core._t;
 var qweb = core.qweb;
 
-options.registry.gallery = options.Class.extend({
+options.registry.gallery = options.registry.CarouselHandler.extend({
     /**
      * @override
      */
@@ -320,50 +320,6 @@ options.registry.gallery = options.Class.extend({
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
             this.mode('reset', this.getMode());
-        } else if (name === 'image_index_request') {
-            var imgs = this._getImages();
-            var position = imgs.indexOf(data.$image[0]);
-            imgs.splice(position, 1);
-            switch (data.position) {
-                case 'first':
-                    imgs.unshift(data.$image[0]);
-                    break;
-                case 'prev':
-                    imgs.splice(position - 1, 0, data.$image[0]);
-                    break;
-                case 'next':
-                    imgs.splice(position + 1, 0, data.$image[0]);
-                    break;
-                case 'last':
-                    imgs.push(data.$image[0]);
-                    break;
-            }
-            position = imgs.indexOf(data.$image[0]);
-            imgs.forEach((img, index) => {
-                // Note: there might be more efficient ways to do that but it is
-                // more simple this way and allows compatibility with 10.0 where
-                // indexes were not the same as positions.
-                $(img).attr('data-index', index);
-            });
-            const currentMode = this.getMode();
-            this.mode('reset', currentMode);
-            if (currentMode === 'slideshow') {
-                const $carousel = this.$target.find('.carousel');
-                $carousel.removeClass('slide');
-                $carousel.carousel(position);
-                this.$target.find('.carousel-indicators li').removeClass('active');
-                this.$target.find('.carousel-indicators li[data-bs-slide-to="' + position + '"]').addClass('active');
-                this.trigger_up('activate_snippet', {
-                    $snippet: this.$target.find('.carousel-item.active img'),
-                    ifInactiveOptions: true,
-                });
-                $carousel.addClass('slide');
-            } else {
-                this.trigger_up('activate_snippet', {
-                    $snippet: data.$image,
-                    ifInactiveOptions: true,
-                });
-            }
         }
     },
 
@@ -451,6 +407,24 @@ options.registry.gallery = options.Class.extend({
         return parseInt(this.$target.attr('data-columns')) || 3;
     },
     /**
+     * @override
+     */
+    _reorderItems(itemsEls, newItemPosition) {
+        itemsEls.forEach((img, index) => {
+            img.dataset.index = index;
+        });
+        const currentMode = this.getMode();
+        this.mode("reset", currentMode);
+        if (currentMode === "slideshow") {
+            this._updateIndicatorAndActivateSnippet(newItemPosition);
+        } else {
+            this.trigger_up("activate_snippet", {
+                $snippet: $(itemsEls[newItemPosition]),
+                ifInactiveOptions: true,
+            });
+        }
+    },
+    /**
      * Empties the container, adds the given content and returns the container.
      *
      * @private
@@ -461,6 +435,12 @@ options.registry.gallery = options.Class.extend({
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         $container.empty().append($content);
         return $container;
+    },
+    /**
+     * @override
+     */
+    _getItemsGallery() {
+        return this._getImages();
     },
 });
 
@@ -476,26 +456,6 @@ options.registry.gallery_img = options.Class.extend({
             name: 'image_removed',
             data: {
                 $image: this.$target,
-            },
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Allows to change the position of an image (its order in the image set).
-     *
-     * @see this.selectClass for parameters
-     */
-    position: function (previewMode, widgetValue, params) {
-        this.trigger_up('option_update', {
-            optionName: 'gallery',
-            name: 'image_index_request',
-            data: {
-                $image: this.$target,
-                position: widgetValue,
             },
         });
     },
