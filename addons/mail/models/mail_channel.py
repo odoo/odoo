@@ -808,7 +808,7 @@ class Channel(models.Model):
                 if member:
                     channel_data['channelMembers'] = [('insert', list(member._mail_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'
-                    channel_data['serverMessageUnreadCounter'] = member.message_unread_counter
+                    channel_data['message_unread_counter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
                     info['seen_message_id'] = member.seen_message_id.id
                     channel_data['custom_channel_name'] = member.custom_channel_name

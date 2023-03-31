@@ -174,6 +174,11 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
         );
         if (waitUntilMessagesLoaded) {
             const messagesLoadedPromise = makeDeferred();
+            const store = webClient.env.services["mail.store"];
+            const thread = store.threads[store.discuss.threadLocalId];
+            if (thread.isLoaded) {
+                messagesLoadedPromise.resolve();
+            }
             let loadMessageRoute = `/mail/${threadId}/messages`;
             if (Number.isInteger(threadId)) {
                 loadMessageRoute = "/mail/channel/messages";

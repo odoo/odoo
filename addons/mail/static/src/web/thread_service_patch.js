@@ -116,7 +116,8 @@ patch(ThreadService.prototype, "mail/web", {
                 res_id: thread.id,
                 model: thread.model,
             };
-            this.messageService.insert(tmpData);
+            const message = this.messageService.insert(tmpData);
+            thread.messages.push(message);
         }
         return thread;
     },

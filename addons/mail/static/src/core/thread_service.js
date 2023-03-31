@@ -13,11 +13,12 @@ import { Composer } from "../composer/composer_model";
 import { prettifyMessageContent } from "../utils/format";
 import { registry } from "@web/core/registry";
 import { url } from "@web/core/utils/urls";
+import { memoize } from "@web/core/utils/functions";
 import { DEFAULT_AVATAR } from "@mail/core/persona_service";
 import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
 import { browser } from "@web/core/browser/browser";
 
-const FETCH_MSG_LIMIT = 30;
+const FETCH_LIMIT = 30;
 
 export class ThreadService {
     nextId = 0;
@@ -104,18 +105,16 @@ export class ThreadService {
     async markAsRead(thread) {
         if (!thread.isLoaded && thread.status === "loading") {
             await thread.isLoadedDeferred;
+            await new Promise(setTimeout);
         }
-        const mostRecentNonTransientMessage = thread.mostRecentNonTransientMessage;
-        if (
-            this.isUnread(thread) &&
-            thread.allowSetLastSeenMessage &&
-            mostRecentNonTransientMessage
-        ) {
+        const newestPersistentMessage = thread.newestPersistentMessage;
+        thread.seen_message_id = thread.newestPersistentMessage?.id ?? false;
+        if (this.isUnread(thread) && thread.allowSetLastSeenMessage && newestPersistentMessage) {
             this.rpc("/mail/channel/set_last_seen_message", {
                 channel_id: thread.id,
-                last_message_id: mostRecentNonTransientMessage.id,
+                last_message_id: newestPersistentMessage.id,
             }).then(() => {
-                this.update(thread, { serverLastSeenMsgBySelf: mostRecentNonTransientMessage.id });
+                this.updateSeen(thread, newestPersistentMessage.id);
             });
         }
         if (thread.hasNeedactionMessages) {
@@ -123,13 +122,38 @@ export class ThreadService {
         }
     }
 
-    markAllMessagesAsRead(thread) {
-        return this.orm.silent.call("mail.message", "mark_all_as_read", [
+    updateSeen(thread, lastSeenId = thread.newestPersistentMessage?.id) {
+        const lastReadIndex = thread.messages.findIndex((message) => message.id === lastSeenId);
+        let newNeedactionCounter = 0;
+        let newUnreadCounter = 0;
+        for (const message of thread.messages.slice(lastReadIndex + 1)) {
+            if (message.isNeedaction) {
+                newNeedactionCounter++;
+            }
+            if (Number.isInteger(message.id)) {
+                newUnreadCounter++;
+            }
+        }
+        this.update(thread, {
+            seen_message_id: lastSeenId,
+            message_needaction_counter: newNeedactionCounter,
+            message_unread_counter: newUnreadCounter,
+        });
+    }
+
+    async markAllMessagesAsRead(thread) {
+        await this.orm.silent.call("mail.message", "mark_all_as_read", [
             [
                 ["model", "=", thread.model],
                 ["res_id", "=", thread.id],
             ],
         ]);
+        Object.assign(thread, {
+            needactionMessages: [],
+            message_unread_counter: 0,
+            message_needaction_counter: 0,
+            seen_message_id: thread.newestPersistentMessage?.id,
+        });
     }
 
     /**
@@ -174,9 +198,10 @@ export class ThreadService {
             return {};
         })();
         try {
+            // ordered messages received: newest to oldest
             const rawMessages = await this.rpc(route, {
                 ...params,
-                limit: FETCH_MSG_LIMIT,
+                limit: FETCH_LIMIT,
                 max_id: max,
                 min_id: min,
             });
@@ -205,17 +230,56 @@ export class ThreadService {
      * @param {Thread} thread
      */
     async fetchNewMessages(thread) {
-        if (thread.status === "loading" || (thread.isLoaded && thread.model === "mail.channel")) {
+        if (
+            thread.status === "loading" ||
+            (thread.isLoaded && ["mail.channel", "mail.box"].includes(thread.model))
+        ) {
             return;
         }
-        const min = thread.isLoaded ? thread.mostRecentNonTransientMessage?.id : undefined;
+        const min = thread.isLoaded ? thread.newestPersistentMessage?.id : undefined;
         try {
-            const fetchedMsgs = await this.fetchMessages(thread, { min });
+            const fetched = await this.fetchMessages(thread, { min });
+            // feed messages
+            // could have received a new message as notification during fetch
+            // filter out already fetched (e.g. received as notification in the meantime)
+            const startIndex =
+                min === undefined ? 0 : thread.messages.findIndex((message) => message.id === min);
+            const filtered = fetched.filter(
+                (message) =>
+                    thread.persistentMessages.length === 0 ||
+                    message.id < thread.oldestPersistentMessage.id ||
+                    message.id > thread.newestPersistentMessage.id
+            );
+            thread.messages.splice(startIndex, 0, ...filtered);
+            // feed needactions
+            // same for needaction messages, special case for mailbox:
+            // kinda "fetch new/more" with needactions on many origin threads at once
+            if (thread === this.store.discuss.inbox) {
+                for (const message of fetched) {
+                    const thread = message.originThread;
+                    if (!thread.needactionMessages.includes(message)) {
+                        thread.needactionMessages.unshift(message);
+                    }
+                }
+            } else {
+                const startNeedactionIndex =
+                    min === undefined
+                        ? 0
+                        : thread.messages.findIndex((message) => message.id === min);
+                const filteredNeedaction = fetched.filter(
+                    (message) =>
+                        message.isNeedaction &&
+                        (thread.needactionMessages.length === 0 ||
+                            message.id < thread.oldestNeedactionMessage.id ||
+                            message.id > thread.newestNeedactionMessage.id)
+                );
+                thread.needactionMessages.splice(startNeedactionIndex, 0, ...filteredNeedaction);
+            }
             Object.assign(thread, {
                 loadMore:
-                    min === undefined && fetchedMsgs.length === FETCH_MSG_LIMIT
+                    min === undefined && fetched.length === FETCH_LIMIT
                         ? true
-                        : min === undefined && fetchedMsgs.length !== FETCH_MSG_LIMIT
+                        : min === undefined && fetched.length !== FETCH_LIMIT
                         ? false
                         : thread.loadMore,
             });
@@ -223,6 +287,39 @@ export class ThreadService {
             // handled in fetchMessages
         }
     }
+
+    // This function is like fetchNewMessages but just for a single message at most on all pinned threads
+    fetchPreviews = memoize(async () => {
+        const ids = [];
+        for (const thread of Object.values(this.store.threads)) {
+            if (["channel", "group", "chat"].includes(thread.type)) {
+                ids.push(thread.id);
+            }
+        }
+        if (ids.length) {
+            const previews = await this.orm.call("mail.channel", "channel_fetch_preview", [ids]);
+            for (const preview of previews) {
+                const thread = this.store.threads[createLocalId("mail.channel", preview.id)];
+                const data = Object.assign(preview.last_message, {
+                    body: markup(preview.last_message.body),
+                });
+                const message = this.messageService.insert({
+                    ...data,
+                    res_id: thread.id,
+                    model: thread.model,
+                });
+                if (!thread.isLoaded) {
+                    thread.messages.push(message);
+                    if (message.isNeedaction && !thread.needactionMessages.includes(message)) {
+                        thread.needactionMessages.push(message);
+                    }
+                }
+                thread.isLoaded = true;
+                thread.loadMore = true;
+                thread.status = "ready";
+            }
+        }
+    });
 
     /**
      * @param {Thread} thread
@@ -232,10 +329,11 @@ export class ThreadService {
             return;
         }
         try {
-            const fetchedMsgs = await this.fetchMessages(thread, {
-                max: thread.oldestNonTransientMessage?.id,
+            const fetched = await this.fetchMessages(thread, {
+                max: thread.oldestPersistentMessage?.id,
             });
-            if (fetchedMsgs.length < FETCH_MSG_LIMIT) {
+            thread.messages.unshift(...fetched);
+            if (fetched.length < FETCH_LIMIT) {
                 thread.loadMore = false;
             }
         } catch {
@@ -483,7 +581,9 @@ export class ThreadService {
                 "hasWriteAccess",
                 "is_pinned",
                 "message_needaction_counter",
+                "message_unread_counter",
                 "name",
+                "seen_message_id",
                 "state",
                 "group_based_subscription",
                 "last_interest_dt",
@@ -495,12 +595,6 @@ export class ThreadService {
             }
 
             thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
-            if (serverData.channel && "serverMessageUnreadCounter" in serverData.channel) {
-                thread.serverMessageUnreadCounter = serverData.channel.serverMessageUnreadCounter;
-            }
-            if ("seen_message_id" in serverData) {
-                thread.serverLastSeenMsgBySelf = serverData.seen_message_id;
-            }
             if ("rtc_inviting_session" in serverData) {
                 this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
                     thread,
@@ -736,6 +830,8 @@ export class ThreadService {
                 model: thread.model,
                 temporary_id: tmpId,
             });
+            thread.messages.push(tmpMsg);
+            thread.seen_message_id = tmpMsg.id;
         }
         const data = await this.rpc("/mail/message/post", params);
         if (data.parentMessage) {
@@ -749,6 +845,9 @@ export class ThreadService {
         const message = this.messageService.insert(
             Object.assign(data, { body: markup(data.body) })
         );
+        if (!thread.messages.includes(message)) {
+            thread.messages.push(message);
+        }
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
@@ -763,7 +862,7 @@ export class ThreadService {
      * @param {Thread} thread
      */
     isUnread(thread) {
-        return this.localMessageUnreadCounter(thread) > 0;
+        return this.unreadCounter(thread) > 0;
     }
 
     /**
@@ -792,7 +891,7 @@ export class ThreadService {
             return thread.counter;
         }
         if (thread.type === "chat" || thread.type === "group") {
-            return this.localMessageUnreadCounter(thread);
+            return this.unreadCounter(thread) || thread.message_needaction_counter;
         }
         return thread.message_needaction_counter;
     }
@@ -800,46 +899,15 @@ export class ThreadService {
     /**
      * @param {Thread} thread
      */
-    localMessageUnreadCounter(thread) {
-        let baseCounter = thread.serverMessageUnreadCounter;
-        let countFromId = thread.lastServerMessageId ? thread.lastServerMessageId : 0;
-        const lastSeenMessageId = this.lastSeenBySelfMessageId(thread);
-        const firstMessage = thread.messages[0];
-        if (firstMessage && (lastSeenMessageId === false || lastSeenMessageId >= firstMessage.id)) {
-            baseCounter = 0;
-            countFromId = lastSeenMessageId || 0;
-        }
+    unreadCounter(thread) {
+        const baseCounter = thread.message_unread_counter;
+        const countFromId = thread.lastServerMessageId ? thread.lastServerMessageId : 0;
         return thread.messages.reduce((total, message) => {
-            if (message.id <= countFromId || message.temporary_id) {
+            if (message.isSelfAuthored || message.id <= countFromId || message.temporary_id) {
                 return total;
             }
             return total + 1;
         }, baseCounter);
-    }
-
-    /**
-     * @param {Thread} thread
-     */
-    lastSeenBySelfMessageId(thread) {
-        if (thread.model !== "mail.channel") {
-            return null;
-        }
-        const firstMessage = thread.messages[0];
-        if (firstMessage && thread.serverLastSeenMsgBySelf < firstMessage.id) {
-            return thread.serverLastSeenMsgBySelf;
-        }
-        let lastSeenMessageId = thread.serverLastSeenMsgBySelf;
-        for (const message of thread.messages) {
-            if (message.id <= thread.serverLastSeenMsgBySelf) {
-                continue;
-            }
-            if (message.temporary_id || message.isTransient) {
-                lastSeenMessageId = message.id;
-                continue;
-            }
-            return lastSeenMessageId;
-        }
-        return lastSeenMessageId;
     }
 
     getDiscussCategoryCounter(categoryId) {
@@ -848,7 +916,7 @@ export class ThreadService {
             if (categoryId === "channels") {
                 return channel.message_needaction_counter > 0 ? acc + 1 : acc;
             } else {
-                return this.localMessageUnreadCounter(channel) > 0 ? acc + 1 : acc;
+                return this.isUnread(channel) > 0 ? acc + 1 : acc;
             }
         }, 0);
     }

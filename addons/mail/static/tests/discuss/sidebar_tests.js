@@ -1155,7 +1155,7 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
         author_id: partnerId,
         model: "mail.channel",
         res_id: channelId,
-        body: `@Mitchell Admin`,
+        body: "@Mitchell Admin",
         needaction: true,
     });
     pyEnv["mail.notification"].create([
