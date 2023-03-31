@@ -49,7 +49,7 @@ const ColorPaletteWidget = Widget.extend({
         this._super.apply(this, arguments);
         const editableDocument = options.editable ? options.editable.ownerDocument : document;
         this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
-        this.options = _.extend({
+        this.options = Object.assign({
             selectedColor: false,
             resetButton: true,
             excluded: [],

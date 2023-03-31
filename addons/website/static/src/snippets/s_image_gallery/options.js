@@ -92,7 +92,7 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        const lastImage = _.last(this._getImages());
+        const lastImage = this._getImages().at(-1);
         let index = lastImage ? this._getIndex(lastImage) : -1;
         const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
             multiImages: true,

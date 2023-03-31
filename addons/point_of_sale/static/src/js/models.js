@@ -1679,7 +1679,7 @@ export class Product extends PosModel {
         let price_extra = 0.0;
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
-        if (_.some(this.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id)) {
+        if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
             const attributes = _.map(
                 this.attribute_line_ids,
                 (id) => this.pos.attributes_by_ptal_id[id]
@@ -1769,8 +1769,9 @@ export class Product extends PosModel {
         return { draftPackLotLines, quantity: weight, description, price_extra };
     }
     isPricelistItemUsable(item, date) {
+        const categories = this.parent_category_ids.concat(this.categ.id);
         return (
-            (!item.categ_id || _.contains(this.parent_category_ids.concat(this.categ.id), item.categ_id[0])) &&
+            (!item.categ_id || categories.includes(item.categ_id[0])) &&
             (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
             (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
         );
@@ -1824,13 +1825,13 @@ export class Product extends PosModel {
         if (price_extra) {
             price += price_extra;
         }
-        _.find(pricelist_items, function (rule) {
+        pricelist_items.find(function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
             }
 
             if (rule.base === "pricelist") {
-                const base_pricelist = _.find(self.pos.pricelists, function (pricelist) {
+                const base_pricelist = self.pos.pricelists.find(function (pricelist) {
                     return pricelist.id === rule.base_pricelist_id[0];
                 });
                 if (base_pricelist) {
@@ -1949,10 +1950,7 @@ export class Orderline extends PosModel {
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new Packlotline(
-                {},
-                { json: _.extend({ ...packlotline }, { order_line: this }) }
-            );
+            var pack_lot_line = new Packlotline({}, { json: { ...packlotline, order_line: this } });
             this.pack_lot_lines.add(pack_lot_line);
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
@@ -2335,8 +2333,8 @@ export class Orderline extends PosModel {
             tax: this.get_tax(),
             product_description: this.get_product().description,
             product_description_sale: this.get_product().description_sale,
-            pack_lot_lines:      this.get_lot_lines(),
-            customer_note:      this.get_customer_note(),
+            pack_lot_lines: this.get_lot_lines(),
+            customer_note: this.get_customer_note(),
             taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
         };
     }
@@ -2425,26 +2423,27 @@ export class Orderline extends PosModel {
             return this.get_base_price();
         }
     }
-    get_taxed_lst_unit_price(){
+    get_taxed_lst_unit_price() {
         var lst_price = this.compute_fixed_price(this.get_lst_price());
-        if (this.pos.config.iface_tax_included === 'total') {
-            var product =  this.get_product();
+        if (this.pos.config.iface_tax_included === "total") {
+            var product = this.get_product();
             var taxes_ids = product.taxes_id;
             var product_taxes = this.pos.get_taxes_after_fp(taxes_ids);
-            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
+            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding)
+                .total_included;
         }
         return lst_price;
     }
-    get_price_without_tax(){
+    get_price_without_tax() {
         return this.get_all_prices().priceWithoutTax;
     }
-    get_price_with_tax(){
+    get_price_with_tax() {
         return this.get_all_prices().priceWithTax;
     }
-    get_price_with_tax_before_discount () {
+    get_price_with_tax_before_discount() {
         return this.get_all_prices().priceWithTaxBeforeDiscount;
     }
-    get_tax(){
+    get_tax() {
         return this.get_all_prices().tax;
     }
     get_applicable_taxes() {
@@ -2598,8 +2597,8 @@ export class Orderline extends PosModel {
     get_fixed_lst_price() {
         return this.compute_fixed_price(this.get_lst_price());
     }
-    get_lst_price(){
-        return this.product.get_price(this.pos.default_pricelist, 1, 0)
+    get_lst_price() {
+        return this.product.get_price(this.pos.default_pricelist, 1, 0);
     }
     set_lst_price(price) {
         this.order.assert_editable();
@@ -2842,7 +2841,7 @@ export class Order extends PosModel {
             this.uid = this.generate_unique_id();
             this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
-            this.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+            this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
             });
         }
@@ -2884,7 +2883,7 @@ export class Order extends PosModel {
         this.firstDraft = false;
 
         if (json.fiscal_position_id) {
-            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+            var fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === json.fiscal_position_id;
             });
 
@@ -2896,7 +2895,7 @@ export class Order extends PosModel {
         }
 
         if (json.pricelist_id) {
-            this.pricelist = _.find(this.pos.pricelists, function (pricelist) {
+            this.pricelist = this.pos.pricelists.find(function (pricelist) {
                 return pricelist.id === json.pricelist_id;
             });
         } else {
@@ -3325,7 +3324,7 @@ export class Order extends PosModel {
         this.select_orderline(this.get_last_orderline());
     }
 
-    isFirstDraft(){
+    isFirstDraft() {
         return this.firstDraft;
     }
 

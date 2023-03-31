@@ -8,7 +8,7 @@ import wUtils from 'website.utils';
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
-    events: _.extend({}, Dialog.prototype.events, {
+    events: Object.assign({}, Dialog.prototype.events, {
         'click .o_wslides_js_upload_install_button': '_onClickInstallModule',
         'click .o_wslides_select_category': '_onClickSlideCategoryIcon',
         'change input#upload': '_onChangeSlideUpload',
@@ -156,7 +156,7 @@ var SlideUploadDialog = Dialog.extend({
         } else {
             sourceType = this.$('input[name="source_type"]:checked').data('value');
         }
-        var values = _.extend({
+        var values = Object.assign({
             'channel_id': this.channelID,
             'description': this._formGetFieldValue('description'),
             'document_google_url': this._formGetFieldValue('document_google_url'),
@@ -171,17 +171,17 @@ var SlideUploadDialog = Dialog.extend({
 
         var canvas = this.$('#data_canvas')[0];
         if (this.file.type === 'application/pdf') {
-            _.extend(values, {
+            Object.assign(values, {
                 'image_1920': canvas.toDataURL().split(',')[1],
                 'slide_category': 'document',
                 'binary_content': this.file.data
             });
         } else if (values['slide_category'] === 'article') {
-            _.extend(values, {
+            Object.assign(values, {
                 'image_1920': this.file.type === 'image/svg+xml' ? await this._svgToPng() : this.file.data,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
-            _.extend(values, {
+            Object.assign(values, {
                 'slide_category': 'infographic',
                 'binary_content': this.file.type === 'image/svg+xml' ? await this._svgToPNG() : this.file.data,
             });
@@ -656,7 +656,7 @@ var SlideUploadDialog = Dialog.extend({
                     .text(_.str.sprintf(_t('Failed to install "%s".'), this.modulesToInstallStatus.name));
             }
         } else {
-            this.modulesToInstallStatus = _.extend({}, _.find(this.modulesToInstall, function (item) { return item.id === moduleId; }));
+            this.modulesToInstallStatus = Object.assign({}, this.modulesToInstall.find( function (item) { return item.id === moduleId; }));
             this.set('state', '_import');
             this.$('#o_wslides_install_module_text')
                 .text(_.str.sprintf(_t('Do you want to install the "%s" app?'), this.modulesToInstallStatus.name));

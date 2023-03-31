@@ -125,7 +125,7 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
 function jsonRpc(url, fct_name, params, settings) {
     settings = settings || {};
     return _genericJsonRpc(fct_name, params, settings, function(data) {
-        return $.ajax(url, _.extend({}, settings, {
+        return $.ajax(url, Object.assign({}, settings, {
             url: url,
             dataType: 'json',
             type: 'POST',
@@ -275,7 +275,7 @@ var loadAsset = (function () {
         if (cache[xmlId]) {
             return cache[xmlId];
         }
-        context = _.extend({}, session.user_context, context);
+        context = Object.assign({}, session.user_context, context);
         const params = {
             args: [xmlId, {
                 debug: config.isDebug()
@@ -316,7 +316,7 @@ var loadAsset = (function () {
     return load;
 })();
 
-_.extend(ajax, {
+Object.assign(ajax, {
     jsonRpc: jsonRpc,
     rpc: rpc,
     loadAsset: loadAsset,

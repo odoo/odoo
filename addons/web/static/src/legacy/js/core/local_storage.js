@@ -20,7 +20,7 @@ try {
      * it's not up to them to handle these cases.
      */
     storage = (function () {
-        var storage = Object.create(_.extend({
+        var storage = Object.create(Object.assign({
                 getItem: localStorage.getItem.bind(localStorage),
                 setItem: localStorage.setItem.bind(localStorage),
                 removeItem: localStorage.removeItem.bind(localStorage),

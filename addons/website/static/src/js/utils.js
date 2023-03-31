@@ -177,7 +177,7 @@ function prompt(options, _qweb) {
     if (_.isUndefined(_qweb)) {
         _qweb = 'website.prompt';
     }
-    options = _.extend({
+    options = Object.assign({
         window_title: '',
         field_name: '',
         'default': '', // dict notation for IE<9

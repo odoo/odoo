@@ -26,7 +26,7 @@ var DateWidget = Widget.extend({
         this._super.apply(this, arguments);
 
         this.name = parent.name;
-        this.options = _.extend({
+        this.options = Object.assign({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1000 }),
@@ -339,7 +339,7 @@ var DateWidget = Widget.extend({
 var DateTimeWidget = DateWidget.extend({
     type_of_date: "datetime",
     init: function (parent, options) {
-        this._super(parent, _.extend({
+        this._super(parent, Object.assign({
             buttons: {
                 showToday: false,
                 showClear: false,

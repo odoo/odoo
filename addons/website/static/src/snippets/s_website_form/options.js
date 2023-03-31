@@ -284,7 +284,7 @@ const FieldEditor = FormEditor.extend({
 });
 
 options.registry.WebsiteFormEditor = FormEditor.extend({
-    events: _.extend({}, options.Class.prototype.events || {}, {
+    events: Object.assign({}, options.Class.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
 

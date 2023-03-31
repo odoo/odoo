@@ -4,16 +4,16 @@ import {_lt} from "web.core";
 import snippetsEditor from "web_editor.snippet.editor";
 
 const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
-    events: _.extend({}, snippetsEditor.SnippetsMenu.prototype.events, {
+    events: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_design_btn': '_onDesignTabClick',
     }),
-    custom_events: _.extend({}, snippetsEditor.SnippetsMenu.prototype.custom_events, {
+    custom_events: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.custom_events, {
         drop_zone_over: '_onDropZoneOver',
         drop_zone_out: '_onDropZoneOut',
         drop_zone_start: '_onDropZoneStart',
         drop_zone_stop: '_onDropZoneStop',
     }),
-    tabs: _.extend({}, snippetsEditor.SnippetsMenu.prototype.tabs, {
+    tabs: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.tabs, {
         DESIGN: 'design',
     }),
     optionsTabStructure: [

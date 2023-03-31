@@ -79,7 +79,7 @@ const table = [
         fixture: {
             before() {
                 this.WORD_REPLACEMENT = window.QWeb2.WORD_REPLACEMENT;
-                window.QWeb2.WORD_REPLACEMENT = _.extend(
+                window.QWeb2.WORD_REPLACEMENT = Object.assign(
                     {not: '!', None: 'undefined'},
                     this.WORD_REPLACEMENT
                 )

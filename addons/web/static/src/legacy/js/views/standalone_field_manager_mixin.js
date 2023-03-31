@@ -12,7 +12,7 @@ import FieldManagerMixin from 'web.FieldManagerMixin';
  * @property {Function} _confirmChange
  * @property {Function} _registerWidget
  */
-var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
+var StandaloneFieldManagerMixin = Object.assign({}, FieldManagerMixin, {
 
     /**
      * @override

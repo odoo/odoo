@@ -362,7 +362,7 @@ var MockServer = Class.extend({
             var attrs = node.getAttribute('attrs');
             if (attrs) {
                 attrs = pyUtils.py_eval(attrs);
-                _.extend(modifiers, attrs);
+                Object.assign(modifiers, attrs);
             }
 
             var states = node.getAttribute('states');
@@ -422,7 +422,7 @@ var MockServer = Class.extend({
                         // this is hackhish, but _getView modifies the subview document in place,
                         // especially to generate the "modifiers" attribute
                         const { models } = self._getView(childNode, relModel,
-                            relFields, _.extend({}, context, {base_model_name: model}));
+                            relFields, Object.assign({}, context, {base_model_name: model}));
                         [...models].forEach((modelName) => relatedModels.add(modelName));
                     }
                 });
@@ -570,7 +570,7 @@ var MockServer = Class.extend({
         var model = this.data[modelName];
         var newID = this._getUnusedID(modelName);
         var originalRecord = _.findWhere(model.records, {id: id});
-        var duplicateRecord = _.extend({}, originalRecord, {id: newID});
+        var duplicateRecord = Object.assign({}, originalRecord, {id: newID});
         duplicateRecord.display_name = originalRecord.display_name + ' (copy)';
         model.records.push(duplicateRecord);
         return newID;

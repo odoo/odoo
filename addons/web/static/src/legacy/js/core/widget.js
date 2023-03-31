@@ -364,7 +364,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * @return {jQuery}
      */
     _makeDescriptive: function () {
-        var attrs = _.extend({}, this.attributes || {});
+        var attrs = Object.assign({}, this.attributes || {});
         if (this.id) {
             attrs.id = this.id;
         }

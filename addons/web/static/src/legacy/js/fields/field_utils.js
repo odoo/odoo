@@ -360,7 +360,7 @@ function formatMonetary(value, field, options) {
         digits = field.digits || digits;
     }
     var formatted_value = formatFloat(value, field,
-        _.extend({}, options , {digits: digits})
+        Object.assign({}, options , {digits: digits})
     );
 
     if (!currency || options.noSymbol) {
@@ -402,9 +402,7 @@ function formatPercentage(value, field, options) {
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  */
 function formatSelection(value, field, options) {
-    var val = _.find(field.selection, function (option) {
-        return option[0] === value;
-    });
+    var val = field.selection.find(option => option[0] === value);
     if (!val) {
         return '';
     }

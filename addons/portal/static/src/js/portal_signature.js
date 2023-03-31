@@ -111,7 +111,7 @@ var SignatureForm = publicWidget.Widget.extend({
 
         return this._rpc({
             route: this.callUrl,
-            params: _.extend(this.rpcParams, {
+            params: Object.assign(this.rpcParams, {
                 'name': name,
                 'signature': signature,
             }),
