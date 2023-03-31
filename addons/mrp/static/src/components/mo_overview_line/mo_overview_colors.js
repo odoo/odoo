@@ -18,6 +18,15 @@ const PURCHASE_DECORATORS = {
     cancel: "muted",
 };
 
+const PICKING_DECORATORS = {
+    draft: "muted",
+    waiting: "warning",
+    confirmed: "warning",
+    assigned: "info",
+    done: "success",
+    cancel: "danger",
+};
+
 const OPERATION_DECORATORS = {
     pending: "info",
     waiting: "info",
@@ -39,6 +48,9 @@ export function getStateDecorator(model, state) {
             break;
         case "mrp.workorder":
             decorators = OPERATION_DECORATORS;
+            break;
+        case "stock.picking":
+            decorators = PICKING_DECORATORS;
             break;
         case "purchase.order":
             decorators = PURCHASE_DECORATORS;
