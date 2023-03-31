@@ -21,7 +21,9 @@ const userChatter = {
     },
 
     onClickAvatar() {
-        this.openChat(this.props.record.data[this.props.name][0]);
+        const id = this.props.record.data[this.props.name][0] ?? false
+        if (id !== false)
+            this.openChat(id);
     },
 };
 
