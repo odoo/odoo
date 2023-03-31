@@ -1159,34 +1159,6 @@ header {
             }
         }
     }
-} @else if o-website-value('header-template') == 'hamburger-full' {
-    @include media-breakpoint-up(md) {
-        #wrapwrap {
-            $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
-            > header {
-                .navbar-collapse {
-                    max-height: unset;
-
-                    > .container {
-                        height: calc(100vh - #{$o-hamburger-full-navbar-height});
-                        transition: height .3s ease;
-                    }
-                    .nav-link {
-                        padding-right: $nav-link-padding-x;
-                        padding-left: $nav-link-padding-x;
-                    }
-                    .dropdown-menu {
-                        position: absolute;
-                    }
-                }
-            }
-        }
-    }
-    @include media-breakpoint-up(lg) {
-        #wrapwrap > header #top_menu {
-            align-items: center !important;
-        }
-    }
 } @else if o-website-value('header-template') == 'stretch' {
     #wrapwrap > header input::placeholder {
         color: #{var(--NavStretch-placeholder-color, $input-placeholder-color)};
@@ -1271,7 +1243,7 @@ header {
 
 .dropdown-menu.o_mega_menu_container_size {
     $-header-template: o-website-value('header-template');
-    @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
+    @if not index(('sidebar', 'hamburger'), $-header-template) {
         $bp: if($-header-template == 'minimalist', md, lg);
         @include media-breakpoint-up($bp) {
             left: 50%;
