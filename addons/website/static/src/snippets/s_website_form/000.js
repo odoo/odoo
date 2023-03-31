@@ -124,7 +124,13 @@ odoo.define('website.s_website_form', function (require) {
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
             const dataForEl = document.querySelector(`[data-for='${this.el.id}']`);
-            if (dataForEl || Object.keys(this.preFillValues).length) {
+            this.editTranslations = !!this._getContext(true).edit_translations;
+            // On the "edit_translations" mode, a <span/> with a translated term
+            // will replace the attribute value, leading to some inconsistencies
+            // (setting again the <span> on the attributes after the editor's
+            // cleanup, setting wrong values on the attributes after translating
+            // default values...)
+            if (!this.editTranslations && (dataForEl || Object.keys(this.preFillValues).length)) {
                 const dataForValues = dataForEl ?
                     JSON.parse(dataForEl.dataset.values
                         .replace('False', '""')
