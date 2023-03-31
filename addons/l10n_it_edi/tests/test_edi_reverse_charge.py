@@ -125,7 +125,7 @@ class TestItEdiReverseCharge(TestItEdi):
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_reverse_charge.xml')
 
-    def test_bill_reverse_charge(self):
+    def test_bill_reverse_charge_and_refund(self):
         bill = self.env['account.move'].with_company(self.company).create({
             'move_type': 'in_invoice',
             'invoice_date': '2022-03-24',
