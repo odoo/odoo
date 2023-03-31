@@ -5065,7 +5065,7 @@ registry.layout_column = SnippetOptionWidget.extend({
         }
 
         const nbColumns = parseInt(widgetValue);
-        await this._updateColumnCount($row, (nbColumns || 1) - $row.children().length);
+        await this._updateColumnCount($row, (nbColumns || 1));
         // Yield UI thread to wait for event to bubble before activate_snippet is called.
         // In this case this lets the select handle the click event before we switch snippet.
         // TODO: make this more generic in activate_snippet event handler.
@@ -5220,7 +5220,7 @@ registry.layout_column = SnippetOptionWidget.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectCount') {
-            return this.$('> .row').children().length;
+            return this._getNbColumns(this._isMobile());
         } else if (methodName === 'selectLayout') {
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
@@ -5251,50 +5251,99 @@ registry.layout_column = SnippetOptionWidget.extend({
      *
      * @private
      * @param {jQuery} $row - the row in which to update the columns
-     * @param {integer} count - positif to add, negative to remove
+     * @param {integer} nbColumns - the number of columns requested
      */
-    _updateColumnCount: async function ($row, count) {
-        if (!count) {
+    _updateColumnCount: async function ($row, nbColumns) {
+        // count: positive to add, negative to remove
+        const count = nbColumns - $row[0].children.length;
+        const isMobile = this._isMobile();
+        const mobileColumns = this._getNbColumns(true);
+
+        if ((!count && !isMobile) || (isMobile && nbColumns === mobileColumns)) {
             return;
         }
 
-        if (count > 0) {
-            var $lastColumn = $row.children().last();
-            for (var i = 0; i < count; i++) {
-                await new Promise(resolve => {
-                    this.trigger_up('clone_snippet', {$snippet: $lastColumn, onSuccess: resolve});
-                });
-            }
-        } else {
-            var self = this;
-            for (const el of $row.children().slice(count)) {
-                await new Promise(resolve => {
-                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
-                });
+        const nbRows = isMobile ? Math.ceil($row[0].children.length / mobileColumns) : 1;
+
+        if (nbRows < 2 || count > 0) {
+            if (count > 0) {
+                var $lastColumn = $row.children().last();
+                for (var i = 0; i < count; i++) {
+                    await new Promise(resolve => {
+                        this.trigger_up('clone_snippet', {$snippet: $lastColumn, onSuccess: resolve});
+                    });
+                }
+            } else if (count < 0) {
+                var self = this;
+                for (const el of $row.children().slice(count)) {
+                    await new Promise(resolve => {
+                        self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
+                    });
+                }
             }
         }
 
-        this._resizeColumns($row.children());
+        this._resizeColumns($row.children(), nbColumns);
         this.trigger_up('cover_update');
     },
     /**
      * Resizes the columns so that they are kept on one row.
      *
      * @private
-     * @param {jQuery} $columns - the columns to resize
+     * @param {jQuery} $items - the items to resize
+     * @param {integer} nbColumns - the number of wanted columns
      */
-    _resizeColumns: function ($columns) {
-        const colsLength = $columns.length;
-        var colSize = Math.floor(12 / colsLength) || 1;
-        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
-        var colClass = 'col-lg-' + colSize;
-        _.each($columns, function (column) {
-            var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
-            $column.addClass(colClass);
+    _resizeColumns: function ($items, nbColumns) {
+        const isMobile = this._isMobile();
+        const sameNbColumnsMobileDesktop = nbColumns === this._getNbColumns(!isMobile);
+        const resolutionModifier = isMobile ? '' : '-lg';
+        const nbItems = $items.length;
+        const itemsOnLastRow = nbItems % nbColumns;
+        const itemSize = Math.floor(12 / nbColumns) || 1;
+        const itemOffset = this._getItemOffset(itemsOnLastRow, itemSize, nbColumns);
+        const itemClass = `col${resolutionModifier}-${itemSize}`;
+        _.each($items, function (item) {
+            if (sameNbColumnsMobileDesktop) {
+                item.className = item.className.replace(/\b(col|offset)(-lg)?(-\d{1,2})?(?![\w-])/g, '');
+                item.classList.add(`col-${itemSize}`);
+            } else {
+                // (?![\w-]): means \b (word boundary) except -. This is necessary to
+                //              avoid matching partial classes (typically: 'col' inside
+                //              'col-lg-2' while looking for occurrences of 'col-[1-12]'),
+                //              due to the optional nature of (-[1-9]\d?)?
+                const resolutionRegex = new RegExp(`\\b(col|offset)${resolutionModifier}(-\\d{1,2})?(?![\\w-])`,'g');
+                item.className = item.className.replace(resolutionRegex, '');
+                item.classList.add(itemClass);
+
+                // clean the classList from residual offset-lg-0 if the mobile version has been resized
+                if (isMobile && item.classList.contains('offset-lg-0')) {
+                    item.classList.remove('offset-lg-0');
+                }
+                if (!isMobile) {
+                    item.className = item.className.replace(/\boffset-\d{1,2}(?![\w-])/g, '');
+                }
+            }
         });
-        if (colOffset) {
-            $columns.first().addClass('offset-lg-' + colOffset);
+        if (!isMobile && !sameNbColumnsMobileDesktop) {
+            const mobileColumns = this._getNbColumns(true);
+            const mobileItemsOnLastRow = nbItems % mobileColumns;
+            const mobileItemSize = this._getItemSize($items[0], true);
+            const mobileItemOffset = this._getItemOffset(mobileItemsOnLastRow, mobileItemSize, mobileColumns);
+
+            if (mobileItemsOnLastRow) {
+                this._addMobileOffset($items, mobileItemsOnLastRow, mobileItemOffset);
+            }
+        }
+        if (itemOffset) {
+            if (itemsOnLastRow) {
+                this._addMobileOffset($items, itemsOnLastRow, itemOffset);
+            } else {
+                if (sameNbColumnsMobileDesktop) {
+                    $items[0].classList.add('offset-' + itemOffset);
+                } else {
+                    $items[0].classList.add('offset-lg-' + itemOffset);
+                }
+            }
         }
     },
     /**
@@ -5330,6 +5379,80 @@ registry.layout_column = SnippetOptionWidget.extend({
         rowEl.removeEventListener('animationend', rowEl._removePaddingPreview);
         rowEl.classList.remove('o_we_padding_highlight');
         delete rowEl._removePaddingPreview;
+    },
+    /**
+     * Checks if the current device is mobile.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isMobile() {
+        let isMobile;
+        this.trigger_up('service_context_get', {
+            callback: (ctx) => {
+                isMobile = ctx['isMobile'];
+            },
+        });
+
+        return isMobile
+    },
+    /**
+     * Calculates the number of columns depending on the mobile or desktop version.
+     *
+     * @private
+     * @param {boolean} isMobile
+     * @returns {integer} number of columns depending on mobile/desktop
+     */
+    _getNbColumns(isMobile) {
+        const items = this.$target[0].querySelector(':scope > .row')?.children;
+        if (isMobile && items) {
+            const itemSize = this._getItemSize(items[0], isMobile);
+            if (itemSize * items.length > 12 ) {
+                const nbColumns = 12 / itemSize;
+                return nbColumns;
+            }
+        }
+        return items?.length || 0;
+    },
+    /**
+     * Gets the current size of an item, depending on whether it is on mobile or desktop.
+     *
+     * @private
+     * @param {Element} item
+     * @param {boolean} isMobile
+     */
+    _getItemSize(item, isMobile) {
+        const resolutionModifier = isMobile ? '' : '-lg';
+        const resolutionRegex = new RegExp(`\\bcol${resolutionModifier}(-(\\d{1,2}))?(?![\\w-])`);
+        const columnClass = item.className.match(resolutionRegex);
+        return columnClass ? columnClass[2] : 12;
+    },
+    /**
+     * Calculates the offset to apply to an item.
+     *
+     * @private
+     * @param {integer} itemsOnLastRow - number of items on the last row
+     * @param {integer} itemSize
+     * @param {integer} nbColumns
+     * @returns {integer}
+     */
+    _getItemOffset(itemsOnLastRow, itemSize, nbColumns) {
+        return itemsOnLastRow ? Math.floor((12 - itemSize * itemsOnLastRow) / 2) : Math.floor((12 - itemSize * nbColumns) / 2);
+    },
+    /**
+     * Adds the offset when displayed on mobile to the proper item.
+     *
+     * @private
+     * @param {HTMLCollection} items
+     * @param {integer} itemsOnLastRow - number of items on the last row
+     * @param {integer} itemOffset - offset to add to the item
+     */
+    _addMobileOffset(items, itemsOnLastRow, itemOffset) {
+        const targetItem = items[items.length - itemsOnLastRow];
+        targetItem.classList.add('offset-' + itemOffset);
+        if (!targetItem.className.match(/\boffset-lg-\d{1,2}\b/g)) {
+            targetItem.classList.add('offset-lg-0');
+        }
     },
 });
 
