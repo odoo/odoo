@@ -580,7 +580,7 @@ form: module.record_id""" % (xml_id,)
     def __init__(self, env, module, idref, mode, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
-        self.envs = [env]
+        self.envs = [env(context=dict(env.context, lang=None))]
         self.idref = {} if idref is None else idref
         self._noupdate = [noupdate]
         self.xml_filename = xml_filename
@@ -625,6 +625,7 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
         quote: "
         delimiter: ,
         encoding: utf-8'''
+    env = env(context=dict(env.context, lang=None))
     filename, _ext = os.path.splitext(os.path.basename(fname))
     model = filename.split('-')[0]
     reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
