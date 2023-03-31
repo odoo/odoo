@@ -120,7 +120,7 @@ function OdooEvent(target, name, data) {
     this.target = target;
     this.name = name;
     this.data = Object.create(null);
-    _.extend(this.data, data);
+    Object.assign(this.data, data);
     this.stopped = false;
 }
 
@@ -239,7 +239,7 @@ var Events = Class.extend({
  * @name EventDispatcherMixin
  * @mixin
  */
-var EventDispatcherMixin = _.extend({}, ParentedMixin, {
+var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
     __eventDispatcherMixin: true,
     custom_events: {},
     init: function () {
@@ -306,7 +306,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         _.each(events, function (eventName) {
             self.__edispatcherEvents.off(eventName, func, dest);
             if (dest && dest.__eventDispatcherMixin) {
-                dest.__edispatcherRegisteredEvents = _.filter(dest.__edispatcherRegisteredEvents, function (el) {
+                dest.__edispatcherRegisteredEvents = dest.__edispatcherRegisteredEvents.filter( function (el) {
                     return !(el.name === eventName && el.func === func && el.source === self);
                 });
             }
@@ -359,7 +359,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
  * @name PropertiesMixin
  * @mixin
  */
-var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
+var PropertiesMixin = Object.assign({}, EventDispatcherMixin, {
     init: function () {
         EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
@@ -387,7 +387,7 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
             // remove this, or move it elsewhere.  Also, learn OO programming.
             if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
                 var digits = self.field.digits;
-                if (_.isArray(digits)) {
+                if (Array.isArray(digits)) {
                     if (utils.float_is_zero(tmp - val, digits[1])) {
                         return;
                     }

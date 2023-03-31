@@ -99,7 +99,7 @@ odoo.define('web.basic_model_tests', function (require) {
                     return this._super.apply(this, arguments);
                 },
             });
-            const params = _.extend(this.params, {
+            const params = Object.assign(this.params, {
                 context: { active_field: 2 },
                 groupedBy: ['product_id'],
                 fieldNames: ['foo'],
@@ -826,7 +826,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var rpcCount = 0;
             var fields = this.data.partner.fields;
-            fields.other_product_id = _.extend({}, fields.product_id);
+            fields.other_product_id = Object.assign({}, fields.product_id);
             fields.product_id.default = 37;
             fields.other_product_id.default = 41;
 
@@ -1069,12 +1069,12 @@ odoo.define('web.basic_model_tests', function (require) {
             var dataPoint = model.get(resultID);
             assert.strictEqual(dataPoint.data.length, 2, "should have two groups");
 
-            var groupFalse = _.findWhere(dataPoint.data, { value: false });
+            var groupFalse = dataPoint.data.find( d => !d.value );
             assert.ok(groupFalse, "should have a group for value false");
             assert.deepEqual(groupFalse.domain, [['selection', '=', false]],
                 "group's domain should be correct");
 
-            var groupA = _.findWhere(dataPoint.data, { value: 'A' });
+            var groupA = dataPoint.data.find( d => d.value === 'A' );
             assert.ok(groupA, "should have a group for value 'a'");
             assert.deepEqual(groupA.domain, [['selection', '=', 'a']],
                 "group's domain should be correct");
@@ -1996,7 +1996,7 @@ odoo.define('web.basic_model_tests', function (require) {
             });
 
             // load a new record (default_get)
-            var params = _.extend(this.params, {
+            var params = Object.assign(this.params, {
                 res_id: undefined,
                 type: 'record',
                 fieldNames: ['foo'],
@@ -2196,7 +2196,7 @@ odoo.define('web.basic_model_tests', function (require) {
                     string: 'foobool2',
                 },
             };
-            _.extend(this.data.partner.fields, newFields);
+            Object.assign(this.data.partner.fields, newFields);
 
             this.data.partner.fields.foobool.onChange = true;
             this.data.partner.onchanges.foobool = function (obj) {

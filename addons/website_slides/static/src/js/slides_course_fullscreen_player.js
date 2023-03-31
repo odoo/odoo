@@ -22,7 +22,7 @@
      */
     var findSlide = function (slideList, matcher) {
         var slideMatch = _.matcher(matcher);
-        return _.find(slideList, slideMatch);
+        return slideList.find( slide => slideMatch(slide) );
     };
 
     /**
@@ -494,10 +494,10 @@
      * This widget is rendered sever side, and attached to the existing DOM.
      */
     var Fullscreen = SlideCoursePage.extend({
-        events: _.extend({}, SlideCoursePage.prototype.events, {
+        events: Object.assign({}, SlideCoursePage.prototype.events, {
             'click .o_wslides_fs_toggle_sidebar': '_onClickToggleSidebar',
         }),
-        custom_events: _.extend({}, SlideCoursePage.prototype.custom_events, {
+        custom_events: Object.assign({}, SlideCoursePage.prototype.custom_events, {
             'change_slide': '_onChangeSlideRequest',
             'slide_go_next': '_onSlideGoToNext',
         }),
@@ -613,13 +613,13 @@
                 } else if (slideData.category === 'document') {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
-                // fill empty property to allow searching on it with _.filter(list, matcher)
+                // fill empty property to allow searching on it with list.filter(matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
                 slideData.hasQuestion = !!slideData.hasQuestion;
                 // technical settings for the Fullscreen to work
                 var autoSetDone = false;
                 if (!slideData.hasQuestion) {
-                    if (_.contains(['infographic', 'document', 'article'], slideData.category)) {
+                    if (['infographic', 'document', 'article'].includes(slideData.category)) {
                         autoSetDone = true;  // images, documents (local + external) and articles are marked as completed when opened
                     } else if (slideData.category === 'video' && slideData.videoSourceType === 'google_drive') {
                         autoSetDone = true;  // google drive videos do not benefit from the YouTube integration and are marked as completed when opened
@@ -669,7 +669,7 @@
             }
 
             // render slide content
-            if (_.contains(['document', 'infographic'], slide.category)) {
+            if (['document', 'infographic'].includes(slide.category)) {
                 $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
             } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
                 this.videoPlayer = new VideoPlayerYouTube(this, slide);
@@ -755,8 +755,7 @@
         _toggleSlideCompleted: async function (slide, completed = true) {
             await this._super(...arguments);
 
-            const slideMatch = _.matcher({id: slide.id});
-            const fsSlides = _.filter(this.slides, slideMatch);
+            const fsSlides = this.slides.filter( _slide => _slide.id === slide.id);
 
             fsSlides.forEach(slide => slide.completed = completed);
 

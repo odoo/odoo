@@ -212,7 +212,7 @@ var PublicWidget = Widget.extend({
             }
             // If the method has no meaningful options, use the default Widget
             // system
-            var isAsync = _.contains(methodOptions, 'async');
+            var isAsync = methodOptions.includes('async');
             if (!isAsync) {
                 events[event] = method;
                 return;

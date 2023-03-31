@@ -278,7 +278,7 @@
                 $question.find('a.o_wslides_quiz_answer').each(function () {
                     var $answer = $(this);
                     if (!$answer.find('input[type=radio]')[0].checked &&
-                        _.contains(self.slide.sessionAnswers, $answer.data('answerId'))) {
+                        self.slide.sessionAnswers.includes($answer.data('answerId'))) {
                         $answer.find('input[type=radio]').prop('checked', true);
                     }
                 });
@@ -678,7 +678,7 @@
 
     publicWidget.registry.websiteSlidesQuizNoFullscreen = SlideCoursePage.extend({
         selector: '.o_wslides_lesson_main', // selector of complete page, as we need slide content and aside content table
-        custom_events: _.extend({}, SlideCoursePage.prototype.custom_events, {
+        custom_events: Object.assign({}, SlideCoursePage.prototype.custom_events, {
             slide_go_next: '_onQuizNextSlide',
         }),
 

@@ -281,9 +281,9 @@ QUnit.module("Fields", (hooks) => {
                         "generated command should be REPLACE WITH"
                     );
                     // get the created type's id
-                    var createdType = _.findWhere(serverData.models.partner_type.records, {
-                        display_name: "A new type",
-                    });
+                    var createdType = serverData.models.partner_type.records.find(
+                        (record) => record.display_name === "A new type"
+                    );
                     var ids = _.sortBy([12, 15, 18].concat(createdType.id), _.identity.bind(_));
                     assert.ok(
                         _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), ids),
@@ -817,7 +817,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 if (args.method !== "get_views") {
-                    assert.step(_.last(route.split("/")));
+                    assert.step(route.split("/").slice(-1)[0]);
                 }
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1].timmy, [
@@ -1424,7 +1424,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method !== "get_views") {
-                    assert.step(_.last(route.split("/")) + " on " + args.model);
+                    assert.step(route.split("/").slice(-1)[0] + " on " + args.model);
                 }
                 if (args.model === "turtle") {
                     assert.step(JSON.stringify(args.args[0])); // the read ids

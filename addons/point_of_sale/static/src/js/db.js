@@ -231,7 +231,9 @@ export const PosDB = core.Class.extend({
     add_packagings: function (product_packagings) {
         var self = this;
         _.map(product_packagings, function (product_packaging) {
-            if (_.find(self.product_by_id, { id: product_packaging.product_id[0] })) {
+            if (
+                self.product_by_id.find((product) => product.id === product_packaging.product_id[0])
+            ) {
                 self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
             }
         });
@@ -492,7 +494,7 @@ export const PosDB = core.Class.extend({
     },
     remove_order: function (order_id) {
         var orders = this.load("orders", []);
-        orders = _.filter(orders, function (order) {
+        orders = orders.filter(function (order) {
             return order.id !== order_id;
         });
         this.save("orders", orders);
@@ -533,7 +535,7 @@ export const PosDB = core.Class.extend({
     },
     remove_unpaid_order: function (order) {
         var orders = this.load("unpaid_orders", []);
-        orders = _.filter(orders, function (o) {
+        orders = orders.filter(function (o) {
             return o.id !== order.uid;
         });
         this.save("unpaid_orders", orders);
@@ -590,7 +592,7 @@ export const PosDB = core.Class.extend({
     set_ids_removed_from_server: function (ids) {
         var to_remove = this.load("unpaid_orders_to_remove", []);
 
-        to_remove = _.filter(to_remove, function (id) {
+        to_remove = to_remove.filter(function (id) {
             return !ids.includes(id);
         });
         this.save("unpaid_orders_to_remove", to_remove);

@@ -272,7 +272,7 @@ function formatInteger(value, field, options) {
 function formatMany2one(value, field, options) {
     if (!value) {
         value = '';
-    } else if (_.isArray(value)) {
+    } else if (Array.isArray(value)) {
         // value is a pair [id, nameget]
         value = value[1];
     } else {
@@ -361,7 +361,7 @@ function formatMonetary(value, field, options) {
         digits = field.digits || digits;
     }
     var formatted_value = formatFloat(value, field,
-        _.extend({}, options , {digits: digits})
+        Object.assign({}, options , {digits: digits})
     );
 
     if (!currency || options.noSymbol) {
@@ -403,7 +403,7 @@ function formatPercentage(value, field, options) {
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  */
 function formatSelection(value, field, options) {
-    var val = _.find(field.selection, function (option) {
+    var val = field.selection.find( function (option) {
         return option[0] === value;
     });
     if (!val) {
@@ -731,13 +731,13 @@ function parseInteger(value) {
  *                   number, the value is returned untouched.
  */
 function parseMany2one(value) {
-    if (_.isArray(value)) {
+    if (Array.isArray(value)) {
         return {
             id: value[0],
             display_name: value[1],
         };
     }
-    if (_.isNumber(value) || _.isString(value)) {
+    if ((!isNaN(parseFloat(value)) && isFinite(value)) || _.isString(value)) {
         return {
             id: parseInt(value, 10),
         };

@@ -76,12 +76,12 @@ var FieldMany2One = AbstractField.extend({
     description: _lt("Many2one"),
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
-    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
+    custom_events: Object.assign({}, AbstractField.prototype.custom_events, {
         'closed_unset': '_onDialogClosedUnset',
         'field_changed': '_onFieldChanged',
         'quick_create': '_onQuickCreate',
     }),
-    events: _.extend({}, AbstractField.prototype.events, {
+    events: Object.assign({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
         'click': '_onLinkClick',
         'focusout input': '_onInputFocusout',
@@ -422,7 +422,7 @@ var FieldMany2One = AbstractField.extend({
         return {
             resModel: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
-            context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            context: Object.assign({}, this.record.getContext(this.recordParams), context || {}),
             dynamicFilters: dynamicFilters || [],
             title: _.str.sprintf((view === 'search' ? _t("Search: %s") : _t("Create: %s")), this.string),
             multiSelect: false,
@@ -974,10 +974,10 @@ var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
     className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
-    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
+    custom_events: Object.assign({}, AbstractField.prototype.custom_events, {
         field_changed: '_onFieldChanged',
     }),
-    events: _.extend({}, AbstractField.prototype.events, {
+    events: Object.assign({}, AbstractField.prototype.events, {
         'click .o_delete': '_onDeleteTag',
     }),
     relatedFields: {
@@ -1052,7 +1052,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @returns {Promise}
      */
     _addTag: function (data) {
-        if (!_.contains(this.value.res_ids, data.id)) {
+        if (!this.value.res_ids.includes(data.id)) {
             return this._setValue({
                 operation: 'ADD_M2M',
                 ids: data
@@ -1091,7 +1091,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {any} id
      */
     _removeTag: function (id) {
-        var record = _.findWhere(this.value.data, {res_id: id});
+        var record = this.value.data.find( d => d.res_id === id );
         this._setValue({
             operation: 'FORGET',
             ids: [record.id],
@@ -1126,7 +1126,7 @@ var FieldMany2ManyTags = AbstractField.extend({
             var options = _getSearchCreatePopupOptions.apply(this, arguments);
             var domain = this.record.getDomain({fieldName: this.name});
             var m2mRecords = [];
-            return _.extend({}, options, {
+            return Object.assign({}, options, {
                 domain: domain.concat(["!", ["id", "in", self.value.res_ids]]),
                 multiSelect: true,
                 onSelected: function (recordIds) {
@@ -1294,7 +1294,7 @@ const ListMany2ManyTagsAvatar = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, 
 });
 
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
-    events: _.extend({}, FieldMany2ManyTags.prototype.events, {
+    events: Object.assign({}, FieldMany2ManyTags.prototype.events, {
         'click .dropdown-toggle': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
@@ -1340,7 +1340,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         }
         var tagID = $(ev.currentTarget).parent().data('id');
         var tagColor = $(ev.currentTarget).parent().data('color');
-        var tag = _.findWhere(this.value.data, { res_id: tagID });
+        var tag = this.value.data.find( d => d.res_id === tagID );
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             // Manual initialize dropdown and show (once)
             if (ev.currentTarget.dataset.bsToggle !== 'dropdown') {
@@ -1393,7 +1393,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         changes[this.colorField] = color;
 
         this.trigger_up('field_changed', {
-            dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
+            dataPointID: this.value.data.map( d => d.res_id === id ).id,
             changes: changes,
             force_save: true,
         });
@@ -1414,7 +1414,7 @@ var FieldSelection = AbstractField.extend({
     template: 'web.Legacy.FieldSelection',
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['selection'],
-    events: _.extend({}, AbstractField.prototype.events, {
+    events: Object.assign({}, AbstractField.prototype.events, {
         'change': '_onChange',
     }),
     isQuickEditable: true,
@@ -1533,7 +1533,7 @@ var FieldSelection = AbstractField.extend({
     _onChange: function () {
         var res_id = JSON.parse(this.$el.val());
         if (this.field.type === 'many2one') {
-            var value = _.find(this.values, function (val) {
+            var value = this.values.find( function (val) {
                 return val[0] === res_id;
             });
             this._setValue({id: res_id, display_name: value[1]});
@@ -1550,7 +1550,7 @@ var FieldRadio = FieldSelection.extend({
     tagName: 'div',
     specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
-    events: _.extend({}, AbstractField.prototype.events, {
+    events: Object.assign({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
     }),
     isQuickEditable: true,

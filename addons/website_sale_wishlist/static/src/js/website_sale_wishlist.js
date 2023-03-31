@@ -96,7 +96,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         productReady.then(function (productId) {
             productId = parseInt(productId, 10);
 
-            if (productId && !_.contains(self.wishlistProductIDs, productId)) {
+            if (productId && !self.wishlistProductIDs.includes(productId)) {
                 return self._rpc({
                     route: '/shop/wishlist/add',
                     params: {
@@ -250,7 +250,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         var $input = $(ev.target);
         var $parent = $input.closest('.js_product');
         var $el = $parent.find("[data-action='o_wishlist']");
-        if (!_.contains(this.wishlistProductIDs, parseInt($input.val(), 10))) {
+        if (!this.wishlistProductIDs.includes(parseInt($input.val(), 10))) {
             $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
         } else {
             $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
@@ -265,7 +265,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         var productID = ev.currentTarget.value;
         var $el = $(ev.target).closest('.js_add_cart_variants').find("[data-action='o_wishlist']");
 
-        if (!_.contains(this.wishlistProductIDs, parseInt(productID, 10))) {
+        if (!this.wishlistProductIDs.includes(parseInt(productID, 10))) {
             $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
         } else {
             $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');

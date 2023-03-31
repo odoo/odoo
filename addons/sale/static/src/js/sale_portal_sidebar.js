@@ -105,7 +105,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
             var current = $(el);
             if ($.trim(current.text())) {
                 var tagName = current.prop("tagName");
-                if (_.isUndefined(tagName) || (!_.isUndefined(tagName) && _.contains(self.authorizedTextTag, tagName.toLowerCase()))) {
+                if (_.isUndefined(tagName) || (!_.isUndefined(tagName) && self.authorizedTextTag.includes(tagName.toLowerCase()))) {
                     rawText.push($.trim(current.text()));
                 }
             }

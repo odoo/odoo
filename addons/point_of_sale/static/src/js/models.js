@@ -1667,7 +1667,7 @@ export class Product extends PosModel {
         let price_extra = 0.0;
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
-        if (_.some(this.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id)) {
+        if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
             const attributes = _.map(
                 this.attribute_line_ids,
                 (id) => this.pos.attributes_by_ptal_id[id]
@@ -1758,7 +1758,8 @@ export class Product extends PosModel {
     }
     isPricelistItemUsable(item, date) {
         return (
-            (!item.categ_id || _.contains(this.parent_category_ids.concat(this.categ.id), item.categ_id[0])) &&
+            (!item.categ_id ||
+                this.parent_category_ids.concat(this.categ.id).includes(item.categ_id[0])) &&
             (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
             (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
         );
@@ -1800,25 +1801,23 @@ export class Product extends PosModel {
 
         var pricelist_items = [];
         if (pricelist) {
-            pricelist_items = _.filter(
-                self.applicablePricelistItems[pricelist.id],
-                function (item) {
+            pricelist_items =
+                self.applicablePricelistItems[pricelist.id]?.filter(function (item) {
                     return self.isPricelistItemUsable(item, date);
-                }
-            );
+                }) || [];
         }
 
         var price = self.lst_price;
         if (price_extra) {
             price += price_extra;
         }
-        _.find(pricelist_items, function (rule) {
+        pricelist_items.find(function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
             }
 
             if (rule.base === "pricelist") {
-                const base_pricelist = _.find(self.pos.pricelists, function (pricelist) {
+                const base_pricelist = self.pos.pricelists.find(function (pricelist) {
                     return pricelist.id === rule.base_pricelist_id[0];
                 });
                 if (base_pricelist) {
@@ -1938,7 +1937,7 @@ export class Orderline extends PosModel {
             var packlotline = pack_lot_lines[i][2];
             var pack_lot_line = new Packlotline(
                 {},
-                { json: _.extend({ ...packlotline }, { order_line: this }) }
+                { json: Object.assign({ ...packlotline }, { order_line: this }) }
             );
             this.pack_lot_lines.add(pack_lot_line);
         }
@@ -2318,8 +2317,8 @@ export class Orderline extends PosModel {
             tax: this.get_tax(),
             product_description: this.get_product().description,
             product_description_sale: this.get_product().description_sale,
-            pack_lot_lines:      this.get_lot_lines(),
-            customer_note:      this.get_customer_note(),
+            pack_lot_lines: this.get_lot_lines(),
+            customer_note: this.get_customer_note(),
             taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
         };
     }
@@ -2500,7 +2499,7 @@ export class Orderline extends PosModel {
 
         var product = this.get_product();
         var taxes_ids = this.tax_ids || product.taxes_id;
-        taxes_ids = _.filter(taxes_ids, (t) => t in this.pos.taxes_by_id);
+        taxes_ids = taxes_ids.filter((t) => t in this.pos.taxes_by_id);
         var taxdetail = {};
         var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
 
@@ -2544,7 +2543,7 @@ export class Orderline extends PosModel {
                 if (line_taxes.length && line_taxes[0].price_include) {
                     new_included_taxes = new_included_taxes.concat(line_taxes);
                 }
-                if (tax.price_include && !_.contains(line_taxes, tax)) {
+                if (tax.price_include && !line_taxes.includes(tax)) {
                     mapped_included_taxes.push(tax);
                 }
             });
@@ -2824,7 +2823,7 @@ export class Order extends PosModel {
             this.uid = this.generate_unique_id();
             this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
-            this.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+            this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
             });
         }
@@ -2865,7 +2864,7 @@ export class Order extends PosModel {
         this.user_id = json.user_id;
 
         if (json.fiscal_position_id) {
-            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+            var fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === json.fiscal_position_id;
             });
 
@@ -2877,7 +2876,7 @@ export class Order extends PosModel {
         }
 
         if (json.pricelist_id) {
-            this.pricelist = _.find(this.pos.pricelists, function (pricelist) {
+            this.pricelist = this.pos.pricelists.find(function (pricelist) {
                 return pricelist.id === json.pricelist_id;
             });
         } else {
@@ -3287,7 +3286,7 @@ export class Order extends PosModel {
         var self = this;
         this.pricelist = pricelist;
 
-        var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
+        var lines_to_recompute = this.get_orderlines().filter(function (line) {
             return !line.price_manually_set;
         });
         _.each(lines_to_recompute, function (line) {

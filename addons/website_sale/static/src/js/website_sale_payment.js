@@ -60,9 +60,7 @@
          * @return {boolean} Whether the submit button can be enabled
          */
         _isButtonReady: function () {
-            const disabledReasonFound = _.contains(
-                this.$submitButton.data('disabled_reasons'), true
-            );
+            const disabledReasonFound = this.$submitButton.data('disabled_reasons') === true;
             return !disabledReasonFound && this._super();
         },
 
@@ -115,10 +113,7 @@
              */
             _onClickTCCheckbox: function () {
                 this._adaptConfirmButton();
-
-                const disabledReasonFound = _.contains(
-                    this.$submitButton.data('disabled_reasons'), true
-                );
+                const disabledReasonFound = this.$submitButton.data('disabled_reasons') === true;
                 this.$submitButton.prop('disabled', disabledReasonFound);
             },
         }));

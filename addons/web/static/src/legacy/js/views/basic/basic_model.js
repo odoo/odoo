@@ -188,7 +188,7 @@ var BasicModel = AbstractModel.extend({
     addDefaultRecord: function (listID, options) {
         var self = this;
         var list = this.localData[listID];
-        var context = _.extend({}, this._getDefaultContext(list), this._getContext(list));
+        var context = Object.assign({}, this._getDefaultContext(list), this._getContext(list));
 
         var position = (options && options.position) || 'top';
         var params = {
@@ -226,7 +226,7 @@ var BasicModel = AbstractModel.extend({
      */
     addFieldsInfo: async function (dataPointID, viewInfo) {
         var dataPoint = this.localData[dataPointID];
-        dataPoint.fields = _.extend({}, dataPoint.fields, viewInfo.fields);
+        dataPoint.fields = Object.assign({}, dataPoint.fields, viewInfo.fields);
         // complete the given fieldInfo with the fields of the main view, so
         // that those field will be reloaded if a reload is triggered by the
         // secondary view
@@ -255,7 +255,7 @@ var BasicModel = AbstractModel.extend({
                 });
             } else {
                 // case 'record': on datapoints of all x2many fields
-                const values = _.extend({}, dataPoint.data, dataPoint._changes);
+                const values = Object.assign({}, dataPoint.data, dataPoint._changes);
                 Object.keys(fieldInfo).forEach(fieldName => {
                     const fieldType = dataPoint.fields[fieldName].type;
                     if (fieldType === 'one2many' || fieldType === 'many2many') {
@@ -329,14 +329,14 @@ var BasicModel = AbstractModel.extend({
         var record = this.localData[id];
         var parent = this.localData[record.parentID];
         if (parent) {
-            var entry = _.findWhere(parent._savePoint, {operation: 'ADD', id: id});
+            var entry = parent._savePoint.find( savepoint => savepoint.operation === 'ADD' && savepoint.id === id );
             if (entry) {
                 // 2.1. no drop on non-new addition in list
                 if (!entry.isNew) {
                     return false;
                 }
                 // 2.2. no drop on new addition on "UPDATE"
-                var lastEntry = _.last(parent._savePoint);
+                var lastEntry = parent._savePoint.slice(-1)[0];
                 if (lastEntry.operation === 'UPDATE' && lastEntry.id === id) {
                     return false;
                 }
@@ -361,7 +361,7 @@ var BasicModel = AbstractModel.extend({
     deleteRecords: function (recordIds, modelName) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
-        var context = _.extend(records[0].getContext(), session.user_context);
+        var context = Object.assign(records[0].getContext(), session.user_context);
         return this._rpc({
                 model: modelName,
                 method: 'unlink',
@@ -411,7 +411,7 @@ var BasicModel = AbstractModel.extend({
                 if (elem._savePoint instanceof Array) {
                     elem._changes = elem._savePoint.slice(0);
                 } else {
-                    elem._changes = _.extend({}, elem._savePoint);
+                    elem._changes = Object.assign({}, elem._savePoint);
                 }
                 elem._isDirty = !isNew;
             } else {
@@ -622,8 +622,8 @@ var BasicModel = AbstractModel.extend({
         }
 
         var list = {
-            aggregateValues: _.extend({}, element.aggregateValues),
-            context: _.extend({}, element.context),
+            aggregateValues: Object.assign({}, element.aggregateValues),
+            context: Object.assign({}, element.context),
             count: element.count,
             data: _.map(element.data, function (elemID) {
                 return self.__get(elemID, options);
@@ -861,8 +861,8 @@ var BasicModel = AbstractModel.extend({
             record.data[field.name] = null;
             if (field.type === 'many2one') {
                 if (field.value) {
-                    var id = _.isArray(field.value) ? field.value[0] : field.value;
-                    var display_name = _.isArray(field.value) ? field.value[1] : undefined;
+                    var id = Array.isArray(field.value) ? field.value[0] : field.value;
+                    var display_name = Array.isArray(field.value) ? field.value[1] : undefined;
                     dataPoint = self._makeDataPoint({
                         modelName: field.relation,
                         data: {
@@ -992,7 +992,7 @@ var BasicModel = AbstractModel.extend({
         if (parent.static) {
             // x2Many case: the new record has been stored in _changes, as a
             // command so we remove the command(s) related to that record
-            parent._changes = _.filter(parent._changes, function (change) {
+            parent._changes = parent._changes.filter( function (change) {
                 if (change.id === elementID &&
                     change.operation === 'ADD' && // For now, only an ADD command increases limits
                     parent.tempLimitIncrement) {
@@ -1062,7 +1062,7 @@ var BasicModel = AbstractModel.extend({
                         if (dataType === 'record') {
                             _.each(data.data, function (dataPoint) {
                                 var recordData = self.localData[dataPoint].data;
-                                var inRecords = _.findWhere(records, {id: recordData.id});
+                                var inRecords = records.find( record => record.id === recordData.id );
                                 if (inRecords) {
                                     recordData[field] = inRecords[field];
                                 }
@@ -1120,7 +1120,7 @@ var BasicModel = AbstractModel.extend({
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
                     } else {
-                        rec._savePoint = _.extend({}, newValue);
+                        rec._savePoint = Object.assign({}, newValue);
                     }
                 });
 
@@ -1191,7 +1191,7 @@ var BasicModel = AbstractModel.extend({
                                     reject,
                                 );
                             } else {
-                                _.extend(record.data, _changes);
+                                Object.assign(record.data, _changes);
                                 resolve(changedFields);
                             }
                         }).guardedCatch(reject);
@@ -1404,7 +1404,7 @@ var BasicModel = AbstractModel.extend({
     unfreezeOrder: function (elementID) {
         var list = this.localData[elementID];
         if (list.type === 'record') {
-            var data = _.extend({}, list.data, list._changes);
+            var data = Object.assign({}, list.data, list._changes);
             for (var fieldName in data) {
                 var field = list.fields[fieldName];
                 if (!field || !data[fieldName]) {
@@ -1562,7 +1562,7 @@ var BasicModel = AbstractModel.extend({
                         resolve(_.keys(changes).concat(Object.keys(result && result.value || {})));
                     }).guardedCatch(function () {
                         self._visitChildren(record, function (elem) {
-                            _.extend(elem, initialData[elem.id]);
+                            Object.assign(elem, initialData[elem.id]);
                         });
                         reject();
                     });
@@ -1730,7 +1730,7 @@ var BasicModel = AbstractModel.extend({
                 if (val) {
                     // when the value isn't false, it can be either
                     // an array [id, display_name] or just an id.
-                    var data = _.isArray(val) ?
+                    var data = Array.isArray(val) ?
                         {id: val[0], display_name: val[1]} :
                         {id: val};
                     if (!oldValue || (self.localData[oldValue].res_id !== data.id)) {
@@ -1807,7 +1807,7 @@ var BasicModel = AbstractModel.extend({
                         // CREATE or UPDATE
                         if (command[0] === 0 && command[1]) {
                             // updating an existing (virtual) record
-                            var previousChange = _.find(oldChanges, function (operation) {
+                            var previousChange = oldChanges.find( function (operation) {
                                 var child = self.localData[operation.id];
                                 return child && (child.ref === command[1]);
                             });
@@ -1962,7 +1962,7 @@ var BasicModel = AbstractModel.extend({
                 list._forceM2MLink = true;
                 // handle multiple add: command[2] may be a dict of values (1
                 // record added) or an array of dict of values
-                var data = _.isArray(command.ids) ? command.ids : [command.ids];
+                var data = Array.isArray(command.ids) ? command.ids : [command.ids];
 
                 // name_create records for which there is no id (typically, could
                 // be the case of a quick_create in a many2many_tags, so data.length
@@ -2015,7 +2015,7 @@ var BasicModel = AbstractModel.extend({
                         model: list.model,
                         method: 'read',
                         args: [_.pluck(data, 'id'), fieldNames],
-                        context: _.extend({}, record.context, field.context, list.getContext()),
+                        context: Object.assign({}, record.context, field.context, list.getContext()),
                     }).then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
@@ -2030,7 +2030,7 @@ var BasicModel = AbstractModel.extend({
                 }
                 break;
             case 'CREATE':
-                var createOptions = _.extend({
+                var createOptions = Object.assign({
                     context: command.context,
                     position: command.position
                 }, options || {});
@@ -2068,7 +2068,7 @@ var BasicModel = AbstractModel.extend({
                 // that the record wasn't in the relation yet
                 var idsToRemove = command.ids;
                 list._changes = _.reject(list._changes, function (change, index) {
-                    var idInCommands = _.contains(command.ids, change.id);
+                    var idInCommands = command.ids.includes(change.id);
                     if (idInCommands && change.operation === 'ADD') {
                         idsToRemove = _.without(idsToRemove, change.id);
                     }
@@ -2116,7 +2116,7 @@ var BasicModel = AbstractModel.extend({
                             if (resID in list._cache) {
                                 return list._cache[resID];
                             }
-                            return _.findWhere(listData, {res_id: resID}).id;
+                            return listData.find( list => list.res_id === resID).id;
                         }),
                     }, options);
                 }
@@ -2518,7 +2518,7 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function (name_gets) {
                 _.each(records, function (record) {
-                    var nameGet = _.find(name_gets, function (nameGet) {
+                    var nameGet = name_gets.find( function (nameGet) {
                         return nameGet[0] === record.data.id;
                     });
                     record.data.display_name = nameGet[1];
@@ -2547,14 +2547,14 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: _.extend({bin_size: true}, record.getContext()),
+                context: Object.assign({bin_size: true}, record.getContext()),
             })
             .then(function (result) {
                 if (result.length === 0) {
                     return Promise.reject();
                 }
                 result = result[0];
-                record.data = _.extend({}, record.data, result);
+                record.data = Object.assign({}, record.data, result);
             })
             .then(function () {
                 self._parseServerData(fieldNames, record, record.data);
@@ -2897,7 +2897,7 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchSpecialRelation: function (record, fieldName) {
         var field = record.fields[fieldName];
-        if (!_.contains(["many2one", "many2many", "one2many"], field.type)) {
+        if (!["many2one", "many2many", "one2many"].includes(field.type)) {
             return Promise.resolve();
         }
 
@@ -3175,9 +3175,9 @@ var BasicModel = AbstractModel.extend({
         var changes;
         const changesOnly = 'changesOnly' in options ? !!options.changesOnly : true;
         if (!changesOnly) {
-            changes = _.extend({}, record.data, record._changes);
+            changes = Object.assign({}, record.data, record._changes);
         } else {
-            changes = _.extend({}, record._changes);
+            changes = Object.assign({}, record._changes);
         }
         var withReadonly = options.withReadonly || false;
         var commands = this._generateX2ManyCommands(record, {
@@ -3232,11 +3232,11 @@ var BasicModel = AbstractModel.extend({
      * @returns {Object} the data
      */
     _generateOnChangeData: function (record, options) {
-        options = _.extend({}, options || {}, {withReadonly: true});
+        options = Object.assign({}, options || {}, {withReadonly: true});
         var data = {};
         if (!options.firstOnChange) {
             var commands = this._generateX2ManyCommands(record, options);
-            data = _.extend(this.get(record.id, {raw: true}).data, commands);
+            data = Object.assign(this.get(record.id, {raw: true}).data, commands);
             // 'display_name' is automatically added to the list of fields to fetch,
             // when fetching a record, even if it doesn't appear in the view. However,
             // only the fields in the view must be passed to the onchange RPC, so we
@@ -3287,7 +3287,7 @@ var BasicModel = AbstractModel.extend({
             fields = _.pick(fields, options.fieldNames);
         }
         var commands = {};
-        var data = _.extend({}, record.data, record._changes);
+        var data = Object.assign({}, record.data, record._changes);
         var type;
         for (var fieldName in fields) {
             type = fields[fieldName].type;
@@ -3319,7 +3319,7 @@ var BasicModel = AbstractModel.extend({
                 list = this._applyX2ManyOperations(list);
                 this._sortList(list);
                 if (type === 'many2many' || list._forceM2MLink) {
-                    var relRecordCreated = _.filter(relRecordAdded, function (rec) {
+                    var relRecordCreated = relRecordAdded.filter( function (rec) {
                         return typeof rec.res_id === 'string';
                     });
                     var realIDs = _.difference(list.res_ids, _.pluck(relRecordCreated, 'res_id'));
@@ -3352,9 +3352,9 @@ var BasicModel = AbstractModel.extend({
                     var didChange = false;
                     var changes, command, relRecord;
                     for (var i = 0; i < list.res_ids.length; i++) {
-                        if (_.contains(keptIds, list.res_ids[i])) {
+                        if (keptIds.includes(list.res_ids[i])) {
                             // this is an id that already existed
-                            relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
+                            relRecord = relRecordUpdated.find( record => record.res_id === list.res_ids[i] );
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
@@ -3363,9 +3363,9 @@ var BasicModel = AbstractModel.extend({
                                 command = x2ManyCommands.link_to(list.res_ids[i]);
                             }
                             commands[fieldName].push(command);
-                        } else if (_.contains(addedIds, list.res_ids[i])) {
+                        } else if (addedIds.includes(list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
-                            relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            relRecord = relRecordAdded.find( record => record.res_id === list.res_ids[i]);
                             if (!relRecord) {
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
@@ -3852,7 +3852,7 @@ var BasicModel = AbstractModel.extend({
     _getRecordEvalContext: function (record, forDomain) {
         var self = this;
         var relDataPoint;
-        var context = _.extend({}, record.data, record._changes);
+        var context = Object.assign({}, record.data, record._changes);
 
         // calls _generateX2ManyCommands for a given field, and returns the array of commands
         function _generateX2ManyCommands(fieldName) {
@@ -3881,7 +3881,7 @@ var BasicModel = AbstractModel.extend({
             }
             if (field.type === 'one2many' || field.type === 'many2many') {
                 var ids;
-                if (!context[fieldName] || _.isArray(context[fieldName])) { // no dataPoint created yet
+                if (!context[fieldName] || Array.isArray(context[fieldName])) { // no dataPoint created yet
                     ids = context[fieldName] ? context[fieldName].slice(0) : [];
                 } else {
                     relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
@@ -3897,7 +3897,7 @@ var BasicModel = AbstractModel.extend({
                      * The webClient doesn't do literal id list comparison like ids == list
                      * Only relevant in o2m: m2m does create actual records in db
                      */
-                    ids = _.filter(ids, function (id) {
+                    ids = ids.filter( function (id) {
                         return typeof id !== 'string';
                     });
                 }
@@ -3952,7 +3952,7 @@ var BasicModel = AbstractModel.extend({
                 }
                 if (field.type === 'one2many' || field.type === 'many2many') {
                     let ids;
-                    if (!fieldValue || _.isArray(fieldValue)) { // no dataPoint created yet
+                    if (!fieldValue || Array.isArray(fieldValue)) { // no dataPoint created yet
                         ids = fieldValue ? fieldValue.slice(0) : [];
                     } else {
                         relDataPoint = self._applyX2ManyOperations(self.localData[fieldValue]);
@@ -3968,13 +3968,13 @@ var BasicModel = AbstractModel.extend({
                         * The webClient doesn't do literal id list comparison like ids == list
                         * Only relevant in o2m: m2m does create actual records in db
                         */
-                        ids = _.filter(ids, function (id) {
+                        ids = ids.filter( function (id) {
                             return typeof id !== 'string';
                         });
                     }
                     return ids;
                 }
-                if (field.type === "properties" && _.isArray(fieldValue)) {
+                if (field.type === "properties" && Array.isArray(fieldValue)) {
                     // remove deleted properties to be able
                     // to filter based on empty properties field
                     return fieldValue.filter(definition => !definition.definition_deleted);
@@ -4147,7 +4147,7 @@ var BasicModel = AbstractModel.extend({
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
         var context = params.context;
-        var fields = _.extend({
+        var fields = Object.assign({
             display_name: {type: 'char'},
             id: {type: 'integer'},
         }, params.fields);
@@ -4425,7 +4425,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
 
         // save the RPC request
-        var request = _.extend({}, params);
+        var request = Object.assign({}, params);
         var prom = new Promise(function (resolve, reject) {
             request.resolve = resolve;
             request.reject = reject;
@@ -4450,7 +4450,7 @@ var BasicModel = AbstractModel.extend({
                 var request = batchedRPCsRequests[i];
                 key = request.model + ',' + JSON.stringify(request.context);
                 if (!batches[key]) {
-                    batches[key] = _.extend({}, request, {requests: [request]});
+                    batches[key] = Object.assign({}, request, {requests: [request]});
                 } else {
                     batches[key].ids = _.uniq(batches[key].ids.concat(request.ids));
                     batches[key].fieldNames = _.uniq(batches[key].fieldNames.concat(request.fieldNames));
@@ -4597,7 +4597,7 @@ var BasicModel = AbstractModel.extend({
         var many2ones = {};
         var r;
         commands = commands || []; // handle false value
-        var isCommandList = commands.length && _.isArray(commands[0]);
+        var isCommandList = commands.length && Array.isArray(commands[0]);
         if (!isCommandList) {
             commands = [[6, false, commands]];
         }
@@ -4651,7 +4651,7 @@ var BasicModel = AbstractModel.extend({
                             });
                             r._changes[fieldName] = rec.id;
                             many2ones[fieldName] = true;
-                        } else if (_.contains(['one2many', 'many2many'], fieldType)) {
+                        } else if (['one2many', 'many2many'].includes(fieldType)) {
                             var x2mCommands = value[2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
                         } else {
@@ -4703,7 +4703,7 @@ var BasicModel = AbstractModel.extend({
                 continue;
             }
             var record = self.localData[dataPointID];
-            var data = _.extend({}, record.data, record._changes);
+            var data = Object.assign({}, record.data, record._changes);
             if (_.difference(fieldNames, _.keys(data)).length) {
                 missingIDs.push(resId);
             }
@@ -4726,12 +4726,12 @@ var BasicModel = AbstractModel.extend({
         return def.then(function (records) {
             _.each(resIDs, function (id) {
                 var dataPoint;
-                var data = _.findWhere(records, {id: id});
+                var data = records.find( record => record.id === id );
                 if (id in list._cache) {
                     dataPoint = self.localData[list._cache[id]];
                     if (data) {
                         self._parseServerData(fieldNames, dataPoint, data);
-                        _.extend(dataPoint.data, data);
+                        Object.assign(dataPoint.data, data);
                     }
                 } else {
                     dataPoint = self._makeDataPoint({
@@ -4773,7 +4773,7 @@ var BasicModel = AbstractModel.extend({
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
-        var orderedBy = _.filter(list.orderedBy, function (order) {
+        var orderedBy = list.orderedBy.filter( function (order) {
             return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
         });
         var openGroupsLimit = list.groupsLimit || self.OPEN_GROUP_LIMIT;
@@ -4807,7 +4807,7 @@ var BasicModel = AbstractModel.extend({
                 _.each(groups, function (group) {
                     var aggregateValues = {};
                     _.each(group, function (value, key) {
-                        if (_.contains(fields, key) && key !== groupByField &&
+                        if (fields.includes(key) && key !== groupByField &&
                             AGGREGATABLE_TYPES.includes(list.fields[key].type)) {
                                 aggregateValues[key] = value;
                         }
@@ -4816,7 +4816,7 @@ var BasicModel = AbstractModel.extend({
                     // the 'title'.
                     var value = group[groupByField];
                     if (list.fields[rawGroupBy].type === "selection") {
-                        var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
+                        var choice = list.fields[rawGroupBy].selection.find( function (c) {
                             return c[0] === value;
                         });
                         value = choice ? choice[1] : false;
@@ -4840,7 +4840,7 @@ var BasicModel = AbstractModel.extend({
                         type: 'list',
                         viewType: list.viewType,
                     });
-                    var oldGroup = _.find(previousGroups, function (g) {
+                    var oldGroup = previousGroups.find( function (g) {
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {
@@ -4931,7 +4931,7 @@ var BasicModel = AbstractModel.extend({
         if (list.res_ids.length > list.limit && list.orderedBy.length) {
             if (!list.orderedResIDs) {
                 var fieldNames = _.pluck(list.orderedBy, 'name');
-                def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames, options.withoutRecordData);
+                def = this._readMissingFields(list, list.res_ids.filter(id => !isNaN(parseFloat(id)) && isFinite(id)), fieldNames, options.withoutRecordData);
             }
             def.then(function () {
                 self._sortList(list);
@@ -4960,7 +4960,7 @@ var BasicModel = AbstractModel.extend({
             var fieldNames = list.getFieldNames();
             for (var i = list.offset; i < upperBound; i++) {
                 var resId = currentResIDs[i];
-                if (_.isNumber(resId)) {
+                if (!isNaN(parseFloat(resId)) && isFinite(resId)) {
                     resIDs.push(resId);
                 }
             }
@@ -5123,7 +5123,7 @@ var BasicModel = AbstractModel.extend({
                 route: '/web/dataset/search_read',
                 model: list.model,
                 fields: fieldNames,
-                context: _.extend({}, list.getContext(), {bin_size: true}),
+                context: Object.assign({}, list.getContext(), {bin_size: true}),
                 domain: this._getUngroupedListDomain(list),
                 limit: list.limit,
                 offset: list.loadMoreOffset + list.offset,
@@ -5184,7 +5184,7 @@ var BasicModel = AbstractModel.extend({
             for (var i = list.offset + list.limit; i < list.res_ids.length; i++) {
                 var id = list.res_ids[i];
                 var dataPointID = list._cache[id];
-                if (_.findWhere(list._changes, {isNew: true, id: dataPointID})) {
+                if ( list._changes?.find( change => change.isNew && change.id === dataPointID )) {
                     list.data.push(dataPointID);
                 } else {
                     break;
@@ -5265,8 +5265,8 @@ var BasicModel = AbstractModel.extend({
                 }
                 var r1 = self.localData[record1ID];
                 var r2 = self.localData[record2ID];
-                var data1 = _.extend({}, r1.data, r1._changes);
-                var data2 = _.extend({}, r2.data, r2._changes);
+                var data1 = Object.assign({}, r1.data, r1._changes);
+                var data2 = Object.assign({}, r2.data, r2._changes);
 
                 // Default value to sort against: the value of the field
                 var orderData1 = data1[order.name];
@@ -5407,7 +5407,7 @@ var BasicModel = AbstractModel.extend({
                 if (!field) {
                     continue;
                 }
-                if (_.contains(['one2many', 'many2one', 'many2many'], field.type)) {
+                if (['one2many', 'many2one', 'many2many'].includes(field.type)) {
                     var hasChange = element._changes && fieldName in element._changes;
                     var value =  hasChange ? element._changes[fieldName] : element.data[fieldName];
                     var relationalElement = this.localData[value];

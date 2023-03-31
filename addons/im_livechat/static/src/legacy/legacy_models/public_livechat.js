@@ -269,7 +269,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             timeoutCallbackArguments: [partnerID],
             timerID: partnerID,
         });
-        if (_.contains(this._typingPartnerIDs, partnerID)) {
+        if (this._typingPartnerIDs.includes(partnerID)) {
             return;
         }
         this._typingPartnerIDs.push(partnerID);
@@ -327,7 +327,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     unregisterTyping(params) {
         const partnerID = params.partnerID;
         this._othersTypingTimers.unregisterTimer({ timerID: partnerID });
-        if (!_.contains(this._typingPartnerIDs, partnerID)) {
+        if (!this._typingPartnerIDs.includes(partnerID)) {
             return;
         }
         this._typingPartnerIDs = _.reject(this._typingPartnerIDs, function (id) {

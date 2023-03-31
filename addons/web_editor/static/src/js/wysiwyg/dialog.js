@@ -18,7 +18,7 @@ var WysiwygDialog = Dialog.extend({
         if (config.device.isMobile) {
             options.fullscreen = true;
         }
-        this._super(parent, _.extend({}, {
+        this._super(parent, Object.assign({}, {
             buttons: [{
                     text: this.options.save_text || _t("Save"),
                     classes: 'btn-primary',

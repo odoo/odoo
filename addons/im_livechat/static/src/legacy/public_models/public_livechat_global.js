@@ -17,7 +17,7 @@ Model({
             if (pageHistory) {
                 urlHistory = JSON.parse(pageHistory) || [];
             }
-            if (!_.contains(urlHistory, page)) {
+            if (!urlHistory.includes(page)) {
                 urlHistory.push(page);
                 while (urlHistory.length > this.HISTORY_LIMIT) {
                     urlHistory.shift();

@@ -1443,7 +1443,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             WidgetComponent.template = xml`<div>Component</div>`;
 
             const MyWidget = WidgetAdapter.extend({
-                custom_events: _.extend({}, Widget.custom_events, {
+                custom_events: Object.assign({}, Widget.custom_events, {
                     some_event: function (ev) {
                         assert.step(ev.data.value);
                     }
@@ -1475,7 +1475,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             class WidgetComponent extends LegacyComponent {}
             WidgetComponent.template = xml`<div>Component</div>`;
             const MyWidget = WidgetAdapter.extend({
-                custom_events: _.extend({}, Widget.custom_events, {
+                custom_events: Object.assign({}, Widget.custom_events, {
                     some_event: function (ev) {
                         assert.strictEqual(this, ev.data.widget);
                         assert.step(ev.data.value);

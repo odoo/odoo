@@ -110,9 +110,9 @@ var checkSCSS = (function () {
         var stack = [];
         var line = 1;
         for (var i = 0 ; i < scss.length ; i++) {
-            if (_.contains(openings, scss[i])) {
+            if (openings.includes(scss[i])) {
                 stack.push(scss[i]);
-            } else if (_.contains(closings, scss[i])) {
+            } else if (closings.includes(scss[i])) {
                 if (stack.pop() !== mapping[scss[i]]) {
                     return _getCheckReturn(false, line, _t("Unexpected ") + scss[i]);
                 }
@@ -518,7 +518,7 @@ var ViewEditor = Widget.extend({
 
         function _processViews(views) {
             // Only keep the active views and index them by ID.
-            _.extend(this.views, _.indexBy(_.filter(views, function (view) {
+            Object.assign(this.views, _.indexBy(views.filter( function (view) {
                 return view.active;
             }), 'id'));
 
@@ -566,7 +566,7 @@ var ViewEditor = Widget.extend({
             var resources = type === 'scss' ? this.scss : this.js;
             _.each(data, function (bundleInfos) {
                 _.each(bundleInfos[1], function (info) { info.bundle = bundleInfos[0]; });
-                _.extend(resources, _.indexBy(bundleInfos[1], 'url'));
+                Object.assign(resources, _.indexBy(bundleInfos[1], 'url'));
             });
         }
     },

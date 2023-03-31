@@ -316,3 +316,13 @@ export function unaccent(str, caseSensitive) {
     });
     return caseSensitive ? str : str.toLowerCase();
 }
+
+/**
+ * Return boolean if parameter is a string
+ *
+ * @param {string} str 
+ * @returns {boolean} 
+ */
+export function isString(str) {
+    return typeof str === 'string' || str instanceof String
+}

@@ -6,6 +6,8 @@ import session from "web.session";
 import utils from "web.utils";
 import Widget from "web.Widget";
 
+import { isNumber } from "@web/core/utils/numbers";
+
 const _t = core._t;
 /*
  * Rating for Livechat
@@ -92,7 +94,7 @@ const Feedback = Widget.extend({
     _onClickSend() {
         this.$(".o_livechat_rating_reason").hide();
         this._showThanksMessage();
-        if (_.isNumber(this.rating)) {
+        if (isNumber(this.rating)) {
             this._sendFeedback(this.$("textarea").val());
         }
     },

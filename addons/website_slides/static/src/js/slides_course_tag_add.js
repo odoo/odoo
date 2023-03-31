@@ -6,7 +6,7 @@ import publicWidget from 'web.public.widget';
 
 var TagCourseDialog = Dialog.extend({
     template: 'website.slides.tag.add',
-    events: _.extend({}, Dialog.prototype.events, {
+    events: Object.assign({}, Dialog.prototype.events, {
         'change input#tag_id' : '_onChangeTag',
     }),
 
@@ -111,7 +111,7 @@ var TagCourseDialog = Dialog.extend({
             },
             createSearchChoice: function (term, data) {
                 var addedTags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(addedTags, data), function (tag) {
+                if (_.union(addedTags, data).filter( function (tag) {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     if (this.opts.can_create) {

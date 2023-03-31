@@ -12,7 +12,7 @@ import FieldManagerMixin from 'web.FieldManagerMixin';
  * @property {Function} _confirmChange
  * @property {Function} _registerWidget
  */
-var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
+var StandaloneFieldManagerMixin = Object.assign({}, FieldManagerMixin, {
 
     /**
      * @override
@@ -42,7 +42,7 @@ var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
         var result = FieldManagerMixin._confirmChange.apply(this, arguments);
         var record = this.model.get(id);
         _.each(this.registeredWidgets[id], function (widget, fieldName) {
-            if (_.contains(fields, fieldName)) {
+            if (fields.includes(fieldName)) {
                 widget.reset(record, event);
             }
         });

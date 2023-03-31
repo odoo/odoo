@@ -4,7 +4,7 @@
     import { registry } from "@web/core/registry";
     let account_tour = registry.category("web_tour.tours").get("account_tour");
     // Remove the step suggesting to change the name as it is done another way (document number)
-    account_tour.steps = _.filter(account_tour.steps, step => step.trigger != "input[name=name]");
+    account_tour.steps = account_tour.steps.filter( step => step.trigger != "input[name=name]");
 
     // Configure the AFIP Responsibility
     let partner_step_idx = _.findIndex(account_tour.steps, step => step.trigger == 'div[name=partner_id] input');

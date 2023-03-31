@@ -181,7 +181,7 @@ var PortalChatter = publicWidget.Widget.extend({
             params: this._messageFetchPrepareParams()
         }).then(function (result) {
             self.result = result;
-            self.options = _.extend(self.options, self.result['options'] || {});
+            self.options = Object.assign(self.options, self.result['options'] || {});
             return result;
         });
     },

@@ -10,12 +10,12 @@ import "web.zoomodoo";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     // TODO remove KeyboardNavigationMixin in master
-    events: _.extend({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
+    events: Object.assign({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'shown.bs.modal': '_onModalShown',
     }),
-    custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
+    custom_events: Object.assign({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
@@ -62,7 +62,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     _getContext: function (context) {
         var html = document.documentElement;
-        return _.extend({
+        return Object.assign({
             'website_id': html.getAttribute('data-website-id') | 0,
         }, this._super.apply(this, arguments));
     },
@@ -71,7 +71,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     _getExtraContext: function (context) {
         var html = document.documentElement;
-        return _.extend({
+        return Object.assign({
             'editable': !!(html.dataset.editable || $('[data-oe-model]').length), // temporary hack, this should be done in python
             'translatable': !!html.dataset.translatable,
             'edit_translations': !!html.dataset.edit_translations,

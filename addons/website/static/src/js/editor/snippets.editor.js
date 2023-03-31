@@ -11,7 +11,7 @@ const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
 const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
-    events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
+    events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
         'click .o_we_animate_text': '_onAnimateTextClick',
         'click .o_we_highlight_animated_text': '_onHighlightAnimatedTextClick',
@@ -21,7 +21,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
         'reload_bundles': '_onReloadBundles',
     }),
-    tabs: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
+    tabs: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
         THEME: 'theme',
     }),
     optionsTabStructure: [

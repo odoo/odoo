@@ -32,3 +32,13 @@ export function computeVariation(value, comparisonValue) {
 export function clamp(num, min, max) {
     return Math.max(Math.min(num, max), min);
 }
+
+/**
+ * Returns boolean.
+ *
+ * @param {number} num
+ * @returns {boolean}
+ */
+export function isNumber(num) {
+    return !isNaN(parseFloat(num)) && isFinite(num);
+}

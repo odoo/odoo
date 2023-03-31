@@ -72,7 +72,7 @@ var DomainNode = Widget.extend({
         this._super.apply(this, arguments);
 
         this.model = model;
-        this.options = _.extend({
+        this.options = Object.assign({
             readonly: true,
             operators: null,
             debugMode: false,
@@ -163,7 +163,7 @@ var DomainNode = Widget.extend({
  */
 var DomainTree = DomainNode.extend({
     template: "DomainTree",
-    events: _.extend({}, DomainNode.prototype.events, {
+    events: Object.assign({}, DomainNode.prototype.events, {
         "click .o_domain_tree_operator_selector .dropdown-item": "_onOperatorChange",
     }),
     custom_events: {
@@ -462,11 +462,11 @@ var DomainTree = DomainNode.extend({
  */
 var DomainSelector = DomainTree.extend({
     template: "DomainSelector",
-    events: _.extend({}, DomainTree.prototype.events, {
+    events: Object.assign({}, DomainTree.prototype.events, {
         "click .o_domain_add_first_node_button": "_onAddFirstButtonClick",
         "change .o_domain_debug_input": "_onDebugInputChange",
     }),
-    custom_events: _.extend({}, DomainTree.prototype.custom_events, {
+    custom_events: Object.assign({}, DomainTree.prototype.custom_events, {
         domain_changed: "_onDomainChange",
     }),
 
@@ -638,7 +638,7 @@ var DomainSelector = DomainTree.extend({
  */
 var DomainLeaf = DomainNode.extend({
     template: "DomainLeaf",
-    events: _.extend({}, DomainNode.prototype.events, {
+    events: Object.assign({}, DomainNode.prototype.events, {
         "change .o_domain_leaf_operator_select": "_onOperatorSelectChange",
         "change .o_domain_leaf_value_input": "_onValueInputChange",
 
@@ -689,7 +689,7 @@ var DomainLeaf = DomainNode.extend({
                 // Set list of operators according to field type
                 var selectedField = this.fieldSelector.getSelectedField() || {};
                 this.operators = this._getOperatorsFromType(selectedField.type);
-                if (_.contains(["child_of", "parent_of", "like", "not like", "=like", "=ilike"], this.operator)) {
+                if (["child_of", "parent_of", "like", "not like", "=like", "=ilike"].includes(this.operator)) {
                     // In case user entered manually or from demo data
                     this.operators[this.operator] = operator_mapping[this.operator];
                 } else if (!this.operators[this.operator]) {
@@ -709,7 +709,7 @@ var DomainLeaf = DomainNode.extend({
                 // Adapt display value and operator for rendering
                 this.displayValue = this.value;
                 try {
-                    if (selectedField && !selectedField.relation && !_.isArray(this.value)) {
+                    if (selectedField && !selectedField.relation && !Array.isArray(this.value)) {
                         this.displayValue = field_utils.format[selectedField.type](this.value, selectedField);
                     }
                 } catch {/**/}
@@ -721,7 +721,7 @@ var DomainLeaf = DomainNode.extend({
                 }
 
                 // TODO the value could be a m2o input, etc...
-                if (_.contains(["date", "datetime"], selectedField.type)) {
+                if (["date", "datetime"].includes(selectedField.type)) {
                     this.valueWidget = new (selectedField.type === "datetime" ? datepicker.DateTimeWidget : datepicker.DateWidget)(this);
                     wDefs.push(this.valueWidget.appendTo("<div/>").then((function () {
                         this.valueWidget.$el.addClass("o_domain_leaf_value_input");
@@ -816,13 +816,13 @@ var DomainLeaf = DomainNode.extend({
     _changeOperator: function (operator, silent) {
         this.operator = operator;
 
-        if (_.contains(["set", "not set"], this.operator)) {
+        if (["set", "not set"].includes(this.operator)) {
             this.operator = this.operator === "not set" ? "=" : "!=";
             this.value = false;
-        } else if (_.contains(["in", "not in"], this.operator)) {
-            this.value = _.isArray(this.value) ? this.value : this.value ? ("" + this.value).split(",") : [];
+        } else if (["in", "not in"].includes(this.operator)) {
+            this.value = Array.isArray(this.value) ? this.value : this.value ? ("" + this.value).split(",") : [];
         } else {
-            if (_.isArray(this.value)) {
+            if (Array.isArray(this.value)) {
                 this.value = this.value.join(",");
             }
             this._changeValue(this.value, true);
@@ -859,7 +859,7 @@ var DomainLeaf = DomainNode.extend({
             if (!_.some(selectedField.selection, (function (option) { return option[0] === this.value; }).bind(this))) {
                 this.value = selectedField.selection[0][0];
             }
-        } else if (_.contains(["date", "datetime"], selectedField.type)) {
+        } else if (["date", "datetime"].includes(selectedField.type)) {
             if (couldNotParse || _.isBoolean(this.value)) {
                 this.value = field_utils.parse[selectedField.type](field_utils.format[selectedField.type](moment())).toJSON(); // toJSON to get date with server format
             } else {
@@ -869,7 +869,7 @@ var DomainLeaf = DomainNode.extend({
             // Never display "true" or "false" strings from boolean value
             if (_.isBoolean(this.value)) {
                 this.value = "";
-            } else if (_.isObject(this.value) && !_.isArray(this.value)) { // Can be object if parsed to x2x representation
+            } else if (_.isObject(this.value) && !Array.isArray(this.value)) { // Can be object if parsed to x2x representation
                 this.value = this.value.id || value || "";
             }
         }
@@ -923,7 +923,7 @@ var DomainLeaf = DomainNode.extend({
                 break;
 
             default:
-                operators = _.extend({}, operator_mapping);
+                operators = Object.assign({}, operator_mapping);
                 break;
         }
 
@@ -970,9 +970,9 @@ var DomainLeaf = DomainNode.extend({
     // TODO The two following functions should be in an independant widget
     on_add_tag: function (e) {
         if (e.type === "keyup" && e.which !== $.ui.keyCode.ENTER) return;
-        if (!_.contains(["not in", "in"], this.operator)) return;
+        if (!["not in", "in"].includes(this.operator)) return;
 
-        var values = _.isArray(this.value) ? this.value.slice() : [];
+        var values = Array.isArray(this.value) ? this.value.slice() : [];
 
         var $input = this.$(".o_domain_leaf_value_tags input");
         var val = $input.val().trim();
@@ -983,7 +983,7 @@ var DomainLeaf = DomainNode.extend({
         }
     },
     on_remove_tag: function (e) {
-        var values = _.isArray(this.value) ? this.value.slice() : [];
+        var values = Array.isArray(this.value) ? this.value.slice() : [];
         var val = this.$(e.currentTarget).data("value");
 
         var index = values.indexOf(val);

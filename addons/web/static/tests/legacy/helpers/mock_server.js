@@ -217,7 +217,7 @@ var MockServer = Class.extend({
                 if ('default' in model.fields[fieldName]) {
                     const def = model.fields[fieldName].default;
                     record[fieldName] = typeof def === 'function' ? def.call(this) : def;
-                } else if (_.contains(['one2many', 'many2many'], model.fields[fieldName].type)) {
+                } else if (['one2many', 'many2many'].includes(model.fields[fieldName].type)) {
                     record[fieldName] = [];
                 } else {
                     record[fieldName] = false;
@@ -363,7 +363,7 @@ var MockServer = Class.extend({
             var attrs = node.getAttribute('attrs');
             if (attrs) {
                 attrs = pyUtils.py_eval(attrs);
-                _.extend(modifiers, attrs);
+                Object.assign(modifiers, attrs);
             }
 
             var states = node.getAttribute('states');
@@ -382,14 +382,14 @@ var MockServer = Class.extend({
                     var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
                     if (inTreeView && !inListHeader && a === 'invisible') {
                         modifiers.column_invisible = v;
-                    } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
+                    } else if (v || !(a in modifiers) || !Array.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }
                 }
             });
 
             _.each(modifiersNames, function (a) {
-                if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
+                if (a in modifiers && (!!modifiers[a] === false || (Array.isArray(modifiers[a]) && !modifiers[a].length))) {
                     delete modifiers[a];
                 }
             });
@@ -423,7 +423,7 @@ var MockServer = Class.extend({
                         // this is hackhish, but _getView modifies the subview document in place,
                         // especially to generate the "modifiers" attribute
                         const { models } = self._getView(childNode, relModel,
-                            relFields, _.extend({}, context, {base_model_name: model}));
+                            relFields, Object.assign({}, context, {base_model_name: model}));
                         [...models].forEach((modelName) => relatedModels.add(modelName));
                     }
                 });
@@ -471,7 +471,7 @@ var MockServer = Class.extend({
      * @returns {Object[]} a list of records
      */
     _getRecords: function (model, domain, { active_test = true } = {}) {
-        if (!_.isArray(domain)) {
+        if (!Array.isArray(domain)) {
             throw new Error("MockServer._getRecords: given domain has to be an array.");
         }
 
@@ -518,7 +518,7 @@ var MockServer = Class.extend({
                 }
                 return criterion;
             });
-            records = _.filter(records, function (record) {
+            records = records.filter( function (record) {
                 return self._evaluateDomain(domain, record);
             });
         }
@@ -570,8 +570,8 @@ var MockServer = Class.extend({
     _mockCopy: function (modelName, id) {
         var model = this.data[modelName];
         var newID = this._getUnusedID(modelName);
-        var originalRecord = _.findWhere(model.records, {id: id});
-        var duplicateRecord = _.extend({}, originalRecord, {id: newID});
+        var originalRecord = model.records.find(record => record.id === id);
+        var duplicateRecord = Object.assign({}, originalRecord, {id: newID});
         duplicateRecord.display_name = originalRecord.display_name + ' (copy)';
         model.records.push(duplicateRecord);
         return newID;
@@ -1186,7 +1186,7 @@ var MockServer = Class.extend({
      * @returns {Object}
      */
     _mockLoadAction: function (kwargs) {
-        var action = _.findWhere(this.actions, {id: parseInt(kwargs.action_id)});
+        var action = this.actions.find( action => action.id === parseInt(kwargs.action_id));
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
@@ -1253,12 +1253,12 @@ var MockServer = Class.extend({
         else if (!ids) {
             return []
         }
-        if (!_.isArray(ids)) {
+        if (!Array.isArray(ids)) {
             ids = [ids];
         }
         var records = this.data[model].records;
         var names = _.map(ids, function (id) {
-            return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, ""];
+            return id ? [id, records.find( record => record.id === id).display_name] : [null, ""];
         });
         return names;
     },
@@ -1300,7 +1300,7 @@ var MockServer = Class.extend({
         var domain = (args && args[1]) || _kwargs.args || [];
         var records = this._getRecords(model, domain);
         if (str.length) {
-            records = _.filter(records, function (record) {
+            records = records.filter( function (record) {
                 return record.display_name.indexOf(str) !== -1;
             });
         }
@@ -1381,7 +1381,7 @@ var MockServer = Class.extend({
     _mockRead: function (model, args, _kwargs) {
         var self = this;
         var ids = args[0];
-        if (!_.isArray(ids)) {
+        if (!Array.isArray(ids)) {
             ids = [ids];
         }
         var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
@@ -1389,7 +1389,7 @@ var MockServer = Class.extend({
             if (!id) {
                 throw new Error("mock read: falsy value given as id, would result in an access error in actual server !");
             }
-            var record =  _.findWhere(self.data[model].records, {id: id});
+            var record =  self.data[model].records.find( record => record.id === id );
             return record ? records.concat(record) : records;
         }, []);
         var results = _.map(records, function (record) {
@@ -1406,9 +1406,7 @@ var MockServer = Class.extend({
                     // read should return 0 for unset numeric fields
                     result[fields[i]] = record[fields[i]] || 0;
                 } else if (field.type === 'many2one') {
-                    var relatedRecord = _.findWhere(self.data[field.relation].records, {
-                        id: record[fields[i]]
-                    });
+                    var relatedRecord = self.data[field.relation].records.find( record => record.id === record[fields[i]]);
                     if (relatedRecord) {
                         result[fields[i]] =
                             [record[fields[i]], relatedRecord.display_name];
@@ -1476,8 +1474,8 @@ var MockServer = Class.extend({
         });
 
         // filter out non existing fields
-        aggregatedFields = _.filter(aggregatedFields, function (name) {
-            return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
+        aggregatedFields = aggregatedFields.filter( function (name) {
+            return name in self.data[model].fields && !(groupByFieldNames.includes(name));
         });
 
         function aggregateFields(group, records) {
@@ -1594,9 +1592,7 @@ var MockServer = Class.extend({
                 const { relation, type } = fields[fieldName];
 
                 if (["many2one", "many2many"].includes(type) && !Array.isArray(value)) {
-                    const relatedRecord = _.findWhere(this.data[relation].records, {
-                        id: value
-                    });
+                    const relatedRecord = this.data[relation].records.find( record => record.id === value );
                     if (relatedRecord) {
                         group[gbField] = [value, relatedRecord.display_name];
                     } else {
@@ -1748,7 +1744,7 @@ var MockServer = Class.extend({
             return false;
         }
         for (var i in args.ids) {
-            var record = _.findWhere(records, {id: args.ids[i]});
+            var record = records.find( record => record.id === args.ids[i]);
             record[field] = Number(i) + offset;
         }
         return true;
@@ -1844,9 +1840,7 @@ var MockServer = Class.extend({
             _.each(_.uniq(fields.concat(['id'])), function (fieldName) {
                 var field = self.data[args.model].fields[fieldName];
                 if (field.type === 'many2one') {
-                    var related_record = _.findWhere(self.data[field.relation].records, {
-                        id: r[fieldName]
-                    });
+                    var related_record = self.data[field.relation].records.find( record => record.id === r[fieldName]);
                     result[fieldName] =
                         related_record ? [r[fieldName], related_record.display_name] : false;
                 } else {
@@ -1871,11 +1865,11 @@ var MockServer = Class.extend({
      */
     _mockUnlink: function (model, args) {
         var ids = args[0];
-        if (!_.isArray(ids)) {
+        if (!Array.isArray(ids)) {
             ids = [ids];
         }
         this.data[model].records = _.reject(this.data[model].records, function (record) {
-            return _.contains(ids, record.id);
+            return ids.includes(record.id);
         });
 
         // update value of relationnal fields pointing to the deleted records
@@ -2002,7 +1996,7 @@ var MockServer = Class.extend({
             case '/web/dataset/resequence':
                 return this._mockResequence(args);
         }
-        if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
+        if (route.indexOf('/web/image') >= 0 || ['.png', '.jpg'].includes(route.substr(route.length - 4))) {
             return;
         }
         switch (args.method) {
@@ -2202,14 +2196,14 @@ var MockServer = Class.extend({
      */
     _writeRecord: function (model, values, id, { ensureIntegrity = true } = {}) {
         var self = this;
-        var record = _.findWhere(this.data[model].records, {id: id});
+        var record = this.data[model].records.find( record => record.id === id );
         for (var field_changed in values) {
             var field = this.data[model].fields[field_changed];
             var value = values[field_changed];
             if (!field) {
                 throw Error(`Mock: Can't write value "${JSON.stringify(value)}" on field "${field_changed}" on record "${model},${id}" (field is undefined)`);
             }
-            if (_.contains(['one2many', 'many2many'], field.type)) {
+            if (['one2many', 'many2many'].includes(field.type)) {
                 var ids = _.clone(record[field_changed]) || [];
 
                 if (
@@ -2239,7 +2233,7 @@ var MockServer = Class.extend({
                     } else if (command[0] === 3) { // FORGET
                         ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
-                        if (!_.contains(ids, command[1])) {
+                        if (!ids.includes(command[1])) {
                             ids.push(command[1]);
                         }
                     } else if (command[0] === 5) { // DELETE ALL
@@ -2254,9 +2248,7 @@ var MockServer = Class.extend({
                 record[field_changed] = ids;
             } else if (field.type === 'many2one') {
                 if (value) {
-                    var relatedRecord = _.findWhere(this.data[field.relation].records, {
-                        id: value
-                    });
+                    var relatedRecord = this.data[field.relation].records.find( record => record.id === value );
                     if (!relatedRecord && ensureIntegrity) {
                         throw Error(`Wrong id "${JSON.stringify(value)}" for a many2one on field "${field_changed}" on record "${model},${id}"`);
                     }

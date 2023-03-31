@@ -172,7 +172,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
-        if (!_.contains(self.comparelist_product_ids, product_id)) {
+        if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (_.has(self.product_data, product_id)){
                 self._updateContent();

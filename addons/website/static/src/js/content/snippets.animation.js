@@ -79,7 +79,7 @@ publicWidget.Widget.include({
         this.editableMode = this.options.editableMode || false;
         var extraEvents = this.editableMode ? this.edit_events : this.read_events;
         if (extraEvents) {
-            this.events = _.extend({}, this.events || {}, extraEvents);
+            this.events = Object.assign({}, this.events || {}, extraEvents);
         }
     },
 });
@@ -731,7 +731,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         }
         var domain = m[1].replace(/^www\./, '');
         var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
-        if (!_.contains(supportedDomains, domain)) {
+        if (!supportedDomains.includes(domain)) {
             // Unsupported domain, don't inject iframe
             return;
         }
@@ -921,7 +921,7 @@ registry.socialShare = publicWidget.Widget.extend({
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
         };
-        if (!_.contains(_.keys(socialNetworks), social)) {
+        if (!Object.keys(socialNetworks).includes(social)) {
             return;
         }
         var wHeight = 500;

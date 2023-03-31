@@ -26,9 +26,9 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
         return def;
     },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //---------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        // Private
+        //---------------------------------------------------------------------------
 
     /**
      * create an unique id and added as a attribute of spyWatched element
@@ -120,7 +120,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                 if (
                     _.isUndefined(tagName) ||
                     (!_.isUndefined(tagName) &&
-                        _.contains(self.authorizedTextTag, tagName.toLowerCase()))
+                        self.authorizedTextTag.includes(tagName.toLowerCase()))
                 ) {
                     rawText.push($.trim(current.text()));
                 }

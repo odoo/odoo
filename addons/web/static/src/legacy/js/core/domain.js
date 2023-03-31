@@ -35,7 +35,7 @@ var Domain = collections.Tree.extend({
      */
     init: function (domain, evalContext) {
         this._super.apply(this, arguments);
-        if (_.isArray(domain) || _.isString(domain)) {
+        if (Array.isArray(domain) || _.isString(domain)) {
             this._parse(this.normalizeArray(_.clone(this.stringToArray(domain, evalContext))));
         } else {
             this._data = !!domain;
@@ -58,7 +58,7 @@ var Domain = collections.Tree.extend({
         if (this._data === true || this._data === false) {
             // The domain is a always-true or a always-false domain
             return this._data;
-        } else if (_.isArray(this._data)) {
+        } else if (Array.isArray(this._data)) {
             // The domain is a [name, operator, value] entity
             // First check if we have the field value in the field values set
             // and if the first part of the domain contains 'parent.field'
@@ -104,13 +104,13 @@ var Domain = collections.Tree.extend({
                     return (fieldValue >= this._data[2]);
                 case "in":
                     return _.intersection(
-                        _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                        Array.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
+                        Array.isArray(fieldValue) ? fieldValue : [fieldValue],
                     ).length !== 0;
                 case "not in":
                     return _.intersection(
-                        _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                        Array.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
+                        Array.isArray(fieldValue) ? fieldValue : [fieldValue],
                     ).length === 0;
                 case "like":
                     if (fieldValue === false) {
@@ -141,11 +141,11 @@ var Domain = collections.Tree.extend({
         } else { // The domain is a set of [name, operator, value] entitie(s)
             switch (this._data) {
                 case "&":
-                    return _.every(this._children, function (child) {
+                    return this._children.every( function (child) {
                         return child.compute(values);
                     });
                 case "|":
-                    return _.some(this._children, function (child) {
+                    return this._children.some( function (child) {
                         return child.compute(values);
                     });
                 case "!":

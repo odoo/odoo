@@ -31,7 +31,7 @@ var viewUtils = {
             case 'many2one':
                 return group.res_id || false;
             case 'selection':
-                var descriptor = _.find(groupedByField.selection, function (option) {
+                var descriptor = groupedByField.selection.find( function (option) {
                     return option[1] === group.value;
                 });
                 return descriptor && descriptor[0];
@@ -63,12 +63,12 @@ var viewUtils = {
         }
         var dateTypes = ['date', 'datetime'];
         if (!list.fields[groupByField].readonly &&
-            _.contains(dateTypes, list.fields[groupByField].type)) {
+            dateTypes.includes(list.fields[groupByField].type)) {
             return list.fieldsInfo && list.fieldsInfo[list.viewType][groupByField] &&
                 list.fieldsInfo[list.viewType][groupByField].allowGroupRangeValue;
         }
         var availableTypes = ['char', 'boolean', 'many2one', 'selection'];
-        return _.contains(availableTypes, list.fields[groupByField].type);
+        return availableTypes.includes(list.fields[groupByField].type);
     },
     /**
      * @param {string} arch view arch

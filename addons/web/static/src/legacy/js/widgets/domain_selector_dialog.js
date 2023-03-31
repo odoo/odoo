@@ -12,13 +12,13 @@ var _t = core._t;
  * @class DomainSelectorDialog
  */
 return Dialog.extend({
-    custom_events: _.extend({}, Dialog.prototype.custom_events, {
+    custom_events: Object.assign({}, Dialog.prototype.custom_events, {
         domain_changed: "_onDomainChange",
     }),
     init: function (parent, model, domain, options) {
         this.model = model;
         this.newDomain = null;
-        this.options = _.extend({
+        this.options = Object.assign({
             readonly: true,
             debugMode: false,
         }, options || {});
@@ -39,7 +39,7 @@ return Dialog.extend({
             ];
         }
 
-        this._super(parent, _.extend({}, {
+        this._super(parent, Object.assign({}, {
             title: _t("Domain"),
             buttons: buttons,
         }, options || {}));

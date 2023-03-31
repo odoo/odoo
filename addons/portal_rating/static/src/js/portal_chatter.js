@@ -15,7 +15,7 @@ var qweb = core.qweb;
  * Extends Frontend Chatter to handle rating
  */
 PortalChatter.include({
-    events: _.extend({}, PortalChatter.prototype.events, {
+    events: Object.assign({}, PortalChatter.prototype.events, {
         // star based control
         'click .o_website_rating_table_row': '_onClickStarDomain',
         'click .o_website_rating_selection_reset': '_onClickStarDomainReset',
@@ -32,7 +32,7 @@ PortalChatter.include({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         // options
-        if (!_.contains(this.options, 'display_rating')) {
+        if (!this.options.hasOwnProperty('display_rating')) {
             this.options = _.defaults(this.options, {
                 'display_rating': false,
                 'rating_default_value': 0.0,
@@ -199,7 +199,7 @@ PortalChatter.include({
             ratingData.publisher_name = rawRating.publisher_id[1];
             ratingData.publisher_avatar = _.str.sprintf('/web/image/res.partner/%s/avatar_128/50x50', ratingData.publisher_id);
         }
-        var commentData = _.extend(this._newPublisherCommentData(messageIndex), ratingData);
+        var commentData = Object.assign(this._newPublisherCommentData(messageIndex), ratingData);
         return commentData;
     },
 
