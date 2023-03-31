@@ -1232,6 +1232,20 @@ header {
             align-items: center !important;
         }
     }
+} @else if o-website-value('header-template') == 'stretch' {
+    #wrapwrap > header input::placeholder {
+        color: #{var(--NavStretch-placeholder-color, $input-placeholder-color)};
+    }
+    #wrapwrap > header .o_extra_menu_items {
+        height: 100%;
+        border-left: $border-width solid var(--NavLinkWithBackground-bg-color--hover, rgba($navbar-light-active-color, .1));
+
+        > .nav-link {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+    }
 }
 
 .o_grid_header_3_cols {
