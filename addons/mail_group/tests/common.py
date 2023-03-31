@@ -3,10 +3,10 @@
 
 from odoo import Command, tools
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 
 
-class TestMailListCommon(TestMailCommon):
+class TestMailListCommon(MailCommon):
 
     @classmethod
     def setUpClass(cls):
