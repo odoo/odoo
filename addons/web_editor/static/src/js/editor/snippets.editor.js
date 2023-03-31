@@ -2149,7 +2149,7 @@ var SnippetsMenu = Widget.extend({
         // environment where editing is not normally possible. This should be
         // reviewed if we are to handle more hierarchy of editable nodes being
         // editable despite their non editable environment.
-        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable, .o_not_editable :not([contenteditable="true"])`;
+        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable :not([contenteditable="true"])`;
 
         let filterFunc = function () {
             return !$(this).is(exclude);
@@ -3136,7 +3136,7 @@ var SnippetsMenu = Widget.extend({
             $content: $('<div/>', {text: _.str.sprintf(_t("Do you want to install the %s App?"), name)}).append(
                 $('<a/>', {
                     target: '_blank',
-                    href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                    href: '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
                     text: _t("More info about this app."),
                     class: 'ml4',
                 })

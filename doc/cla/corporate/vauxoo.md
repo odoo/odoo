@@ -61,4 +61,5 @@ Alejandro Garza agarza@vauxoo.com https://github.com/agarzaarvizu
 Ulises Rivadeneyra ulises@vauxoo.com https://github.com/UlisesRivadeneyra
 Alexis Hernandez alexis@vauxoo.com https://github.com/sebasdrk17
 Agustin Payen payen@vauxoo.com https://github.com/payen000
+Rodrigo Serrano rodrigosu@vauxoo.com https://github.com/Rodrigosu-Vauxoo
 Carlos Carral carlos.c@vauxoo.com https://github.com/carralc
