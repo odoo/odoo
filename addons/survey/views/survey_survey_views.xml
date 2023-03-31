@@ -53,7 +53,7 @@
                         <label for="title" class="oe_edit_only" string="Survey Title" attrs="{'invisible': [('certification', '=', True)]}"/>
                         <label for="title" class="oe_edit_only" string="Certification Title" attrs="{'invisible': [('certification', '=', False)]}"/>
                         <h1>
-                            <field name="title" placeholder="e.g. Satisfaction Survey"/>
+                            <field name="title" options="{'line_breaks': False}" widget="text" placeholder="e.g. Satisfaction Survey"/>
                         </h1>
                     </div>
                     <group>

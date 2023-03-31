@@ -70,8 +70,9 @@ export const charField = {
     supportedTypes: ["char"],
     extractProps: ({ attrs, options }) => ({
         isPassword: archParseBoolean(attrs.password),
-        dynamicPlaceholder: options?.dynamic_placeholder || false,
-        dynamicPlaceholderModelReferenceField: options?.dynamic_placeholder_model_reference_field || "",
+        dynamicPlaceholder: options.dynamic_placeholder || false,
+        dynamicPlaceholderModelReferenceField:
+            options.dynamic_placeholder_model_reference_field || "",
         autocomplete: attrs.autocomplete,
         placeholder: attrs.placeholder,
     }),

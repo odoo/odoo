@@ -14,6 +14,7 @@ import { useComponent, useEffect, useRef } from "@odoo/owl";
  * @param {() => string} getValue a function that returns the value to write in
  *   the input, if the user isn't currently editing it
  * @param {string} [refName="input"] the ref of the input/textarea
+ * @param {boolean} preventLineBreaks Prevent line breaks in input when set
  */
 export function useInputField(params) {
     const inputRef = params.ref || useRef(params.refName || "input");
@@ -83,6 +84,9 @@ export function useInputField(params) {
         const hotkey = getActiveHotkey(ev);
         if (["enter", "tab", "shift+tab"].includes(hotkey)) {
             commitChanges(false);
+        }
+        if (params.preventLineBreaks && ["enter", "shift+enter"].includes(hotkey)) {
+            ev.preventDefault();
         }
     }
 
