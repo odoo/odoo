@@ -1,8 +1,7 @@
-odoo.define('web.smooth_scroll_on_drag', function (require) {
-"use strict";
+/** @odoo-module alias=web.smooth_scroll_on_drag **/
 
-const Class = require('web.Class');
-const mixins = require('web.mixins');
+import Class from "web.Class";
+import mixins from "web.mixins";
 
 /**
  * Provides a helper for SmoothScrollOnDrag options.offsetElements
@@ -427,5 +426,4 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
     },
 });
 
-return SmoothScrollOnDrag;
-});
+export default SmoothScrollOnDrag;

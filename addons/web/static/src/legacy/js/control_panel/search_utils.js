@@ -1,9 +1,8 @@
-odoo.define('web.searchUtils', function (require) {
-    "use strict";
-
-    const { _lt, _t } = require('web.core');
-    const Domain = require('web.Domain');
-    const pyUtils = require('web.py_utils');
+/** @odoo-module alias=web.searchUtils **/
+    
+    import { _lt, _t } from "web.core";
+    import Domain from "web.Domain";
+    import pyUtils from "web.py_utils";
 
     //-------------------------------------------------------------------------
     // Constants
@@ -527,7 +526,7 @@ odoo.define('web.searchUtils', function (require) {
         return selectedOptionIds.some(optionId => !!YEAR_OPTIONS[optionId]);
     }
 
-    return {
+    export default {
         COMPARISON_OPTIONS,
         DEFAULT_INTERVAL,
         DEFAULT_PERIOD,
@@ -546,4 +545,3 @@ odoo.define('web.searchUtils', function (require) {
         rankInterval,
         yearSelected,
     };
-});

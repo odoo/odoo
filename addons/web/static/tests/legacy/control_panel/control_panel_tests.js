@@ -1,9 +1,8 @@
-odoo.define('web.control_panel_tests', function (require) {
-    "use strict";
+/** @odoo-module **/
+    
+    import testUtils from "web.test_utils";
 
-    const testUtils = require('web.test_utils');
-
-    const cpHelpers = require('@web/../tests/search/helpers');
+    import * as cpHelpers from "@web/../tests/search/helpers";
     const { createControlPanel } = testUtils;
 
     QUnit.module('ControlPanel', {
@@ -304,4 +303,3 @@ odoo.define('web.control_panel_tests', function (require) {
         });
 
     });
-});

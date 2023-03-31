@@ -1,12 +1,11 @@
-odoo.define('web.core', function (require) {
-"use strict";
+/** @odoo-module alias=web.core **/
 
-var Bus = require('web.Bus');
-var config = require('web.config');
-var Class = require('web.Class');
-var QWeb = require('web.QWeb');
-var Registry = require('web.Registry');
-var translation = require('web.translation');
+import Bus from "web.Bus";
+import config from "web.config";
+import Class from "web.Class";
+import QWeb from "web.QWeb";
+import Registry from "web.Registry";
+import translation from "web.translation";
 
 /**
  * Whether the client is currently in "debug" mode
@@ -26,7 +25,7 @@ _.each('resize,scroll'.split(','), function (evtype) {
     });
 });
 
-return {
+export default {
     qweb: new QWeb(config.isDebug()),
 
     // core classes and functions
@@ -45,5 +44,3 @@ return {
      */
     csrf_token: odoo.csrf_token,
 };
-
-});

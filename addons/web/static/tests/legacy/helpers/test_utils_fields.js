@@ -1,6 +1,5 @@
-odoo.define('web.test_utils_fields', function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.test_utils_fields **/
+    
     /**
      * Field Test Utils
      *
@@ -10,7 +9,7 @@ odoo.define('web.test_utils_fields', function (require) {
      * testUtils file.
      */
 
-    const testUtilsDom = require('web.test_utils_dom');
+    import testUtilsDom from "web.test_utils_dom";
 
     const ARROW_KEYS_MAPPING = {
         down: 'ArrowDown',
@@ -234,7 +233,7 @@ odoo.define('web.test_utils_fields', function (require) {
         return triggerKey('up', $el, keyCode);
     }
 
-    return {
+    export default {
         clickM2OCreateAndEdit,
         clickM2OHighlightedItem,
         clickM2OItem,
@@ -247,4 +246,3 @@ odoo.define('web.test_utils_fields', function (require) {
         triggerKeydown,
         triggerKeyup,
     };
-});

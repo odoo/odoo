@@ -1,16 +1,15 @@
-odoo.define('web.ControlPanel', function (require) {
-    "use strict";
-
-    const ActionMenus = require('web.ActionMenus');
-    const ComparisonMenu = require('web.ComparisonMenu');
-    const ActionModel = require('web.ActionModel');
-    const FavoriteMenu = require('web.FavoriteMenu');
-    const FilterMenu = require('web.FilterMenu');
-    const GroupByMenu = require('web.GroupByMenu');
-    const Pager = require('web.Pager');
-    const SearchBar = require('web.SearchBar');
-    const { useModel } = require('web.Model');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.ControlPanel **/
+    
+    import ActionMenus from "web.ActionMenus";
+    import ComparisonMenu from "web.ComparisonMenu";
+    import ActionModel from "web.ActionModel";
+    import FavoriteMenu from "web.FavoriteMenu";
+    import FilterMenu from "web.FilterMenu";
+    import GroupByMenu from "web.GroupByMenu";
+    import Pager from "web.Pager";
+    import SearchBar from "web.SearchBar";
+    import { useModel } from "web.Model";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const {
         onMounted,
@@ -240,5 +239,4 @@ odoo.define('web.ControlPanel', function (require) {
     };
     ControlPanel.template = 'web.Legacy.ControlPanel';
 
-    return ControlPanel;
-});
+    export default ControlPanel;

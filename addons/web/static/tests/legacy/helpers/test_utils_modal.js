@@ -1,6 +1,5 @@
-odoo.define('web.test_utils_modal', function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.test_utils_modal **/
+    
     /**
      * Modal Test Utils
      *
@@ -10,8 +9,8 @@ odoo.define('web.test_utils_modal', function (require) {
      * testUtils file.
      */
 
-    const { _t } = require('web.core');
-    const testUtilsDom = require('web.test_utils_dom');
+    import { _t } from "web.core";
+    import testUtilsDom from "web.test_utils_dom";
 
     /**
      * Click on a button in the footer of a modal (which contains a given string).
@@ -22,5 +21,4 @@ odoo.define('web.test_utils_modal', function (require) {
         return testUtilsDom.click($(`.modal-footer button:contains(${_t(text)})`));
     }
 
-    return { clickButton };
-});
+    export default { clickButton };

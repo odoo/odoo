@@ -1,7 +1,6 @@
-odoo.define('web.assets.qweb', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {assets} = require('@web/core/assets');
+import {assets} from "@web/core/assets";
 
 const loadXML = assets.loadXML;
 assets.loadXML = function (xml, app) {
@@ -19,5 +18,3 @@ assets.loadXML = function (xml, app) {
         core.qweb.add_template(qwebTemplates);
     });
 }
-
-});

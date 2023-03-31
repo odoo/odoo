@@ -1,7 +1,6 @@
-odoo.define('web.mockserver_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const MockServer = require("web.MockServer");
+import MockServer from "web.MockServer";
 
 QUnit.module("Legacy MockServer", {
     beforeEach() {
@@ -561,5 +560,4 @@ QUnit.module("Legacy MockServer", {
             },
         ]);
     });
-});
 });

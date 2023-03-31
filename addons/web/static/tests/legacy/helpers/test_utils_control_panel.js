@@ -1,8 +1,7 @@
-odoo.define('web.test_utils_control_panel', function (require) {
-    "use strict";
-
-    const { click, findItem, getNode, triggerEvent } = require('web.test_utils_dom');
-    const { editInput, editSelect, editAndTrigger } = require('web.test_utils_fields');
+/** @odoo-module alias=web.test_utils_control_panel **/
+    
+    import { click, findItem, getNode, triggerEvent } from "web.test_utils_dom";
+    import { editInput, editSelect, editAndTrigger } from "web.test_utils_fields";
 
     //-------------------------------------------------------------------------
     // Exported functions
@@ -313,7 +312,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
         await click(getNode(el).querySelector(`button.o_switch_view.o_${viewType}`));
     }
 
-    return {
+    export default {
         // Generic interactions
         toggleMenu,
         toggleMenuItem,
@@ -357,4 +356,3 @@ odoo.define('web.test_utils_control_panel', function (require) {
         // View switcher
         switchView,
     };
-});

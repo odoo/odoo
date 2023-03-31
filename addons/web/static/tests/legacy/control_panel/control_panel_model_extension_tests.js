@@ -1,8 +1,7 @@
-odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.js", function (require) {
-    "use strict";
-
-    const ActionModel = require("web.ActionModel");
-    const makeTestEnvironment = require('web.test_env');
+/** @odoo-module **/
+    
+    import ActionModel from "web.ActionModel";
+    import makeTestEnvironment from "web.test_env";
 
     function createModel(params = {}) {
         const archs = (params.arch && { search: params.arch, }) || {};
@@ -455,4 +454,3 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
         });
 
     });
-});

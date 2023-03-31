@@ -1,13 +1,12 @@
-odoo.define('web.component_extension_tests', function (require) {
-    "use strict";
-
-    const makeTestEnvironment = require("web.test_env");
-    const testUtils = require("web.test_utils");
-    const { destroy, getFixture, mount } = require("@web/../tests/helpers/utils");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module **/
+    
+    import makeTestEnvironment from "web.test_env";
+    import testUtils from "web.test_utils";
+    import { destroy, getFixture, mount } from "@web/../tests/helpers/utils";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { xml } = owl;
-    const { useListener } = require("@web/core/utils/hooks");
+    import { useListener } from "@web/core/utils/hooks";
 
     let target;
     QUnit.module("web", { beforeEach() { target = getFixture(); }}, function () {
@@ -237,4 +236,3 @@ odoo.define('web.component_extension_tests', function (require) {
             assert.verifySteps(['Root custom1', 'Leaf custom1']);
         });
     });
-});

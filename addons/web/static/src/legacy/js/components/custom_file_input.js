@@ -1,7 +1,6 @@
-odoo.define('web.CustomFileInput', function (require) {
-    "use strict";
-
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.CustomFileInput **/
+    
+    import { LegacyComponent } from "@web/legacy/legacy_component";
     const { useRef } = owl;
 
     /**
@@ -85,5 +84,4 @@ odoo.define('web.CustomFileInput', function (require) {
     };
     CustomFileInput.template = 'web.CustomFileInput';
 
-    return CustomFileInput;
-});
+    export default CustomFileInput;

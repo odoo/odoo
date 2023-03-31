@@ -1,5 +1,4 @@
-odoo.define('web.AbstractField', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractField **/
 
 /**
  * This is the basic field widget used by all the views to render a field in a view.
@@ -30,8 +29,8 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
-var field_utils = require('web.field_utils');
-var Widget = require('web.Widget');
+import field_utils from "web.field_utils";
+import Widget from "web.Widget";
 
 var AbstractField = Widget.extend({
     events: {
@@ -686,6 +685,4 @@ var AbstractField = Widget.extend({
     },
 });
 
-return AbstractField;
-
-});
+export default AbstractField;

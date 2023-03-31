@@ -1,14 +1,13 @@
-odoo.define('web.OwlDialog', function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.OwlDialog **/
+    
     const { useRef, onMounted, onWillUnmount } = owl;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',
         'large': 'modal-lg',
         'small': 'modal-sm',
     };
-    const { renderToString } = require('@web/core/utils/render');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+    import { renderToString } from "@web/core/utils/render";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     /**
      * Dialog (owl version)
@@ -286,5 +285,4 @@ odoo.define('web.OwlDialog', function (require) {
     };
     Dialog.template = 'web.OwlDialog';
 
-    return Dialog;
-});
+    export default Dialog;

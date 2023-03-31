@@ -1,11 +1,8 @@
-odoo.define('web.session', function (require) {
-"use strict";
+/** @odoo-module alias=web.session **/
 
-var Session = require('web.Session');
+import Session from "web.Session";
 
 var session = new Session(undefined, undefined, {use_cors: false});
 session.is_bound = session.session_bind();
 
-return session;
-
-});
+export default session;

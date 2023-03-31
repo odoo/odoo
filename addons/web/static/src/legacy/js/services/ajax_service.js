@@ -1,9 +1,8 @@
-odoo.define('web.AjaxService', function (require) {
-"use strict";
+/** @odoo-module alias=web.AjaxService **/
 
-var AbstractService = require('web.AbstractService');
-var core = require('web.core');
-var session = require('web.session');
+import AbstractService from "web.AbstractService";
+import core from "web.core";
+import session from "web.session";
 
 var AjaxService = AbstractService.extend({
     rpc: function (route, args, options, target) {
@@ -27,6 +26,4 @@ var AjaxService = AbstractService.extend({
 
 core.serviceRegistry.add('ajax', AjaxService);
 
-return AjaxService;
-
-});
+export default AjaxService;

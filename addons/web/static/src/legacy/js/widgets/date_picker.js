@@ -1,10 +1,9 @@
-odoo.define('web.datepicker', function (require) {
-"use strict";
+/** @odoo-module alias=web.datepicker **/
 
-var core = require('web.core');
-var field_utils = require('web.field_utils');
-var time = require('web.time');
-var Widget = require('web.Widget');
+import core from "web.core";
+import field_utils from "web.field_utils";
+import time from "web.time";
+import Widget from "web.Widget";
 
 var _t = core._t;
 
@@ -350,9 +349,7 @@ var DateTimeWidget = DateWidget.extend({
     },
 });
 
-return {
+export default {
     DateWidget: DateWidget,
     DateTimeWidget: DateTimeWidget,
 };
-
-});

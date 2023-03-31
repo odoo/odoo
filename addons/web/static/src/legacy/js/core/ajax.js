@@ -1,13 +1,12 @@
-odoo.define('web.ajax', function (require) {
-"use strict";
+/** @odoo-module alias=web.ajax **/
 
-var config = require('web.config');
-var core = require('web.core');
-const {Markup} = require('web.utils');
-var time = require('web.time');
-var download = require('web.download');
-var contentdisposition = require('web.contentdisposition');
-const { session } = require('@web/session');
+import config from "web.config";
+import core from "web.core";
+import {Markup} from "web.utils";
+import time from "web.time";
+import download from "web.download";
+import contentdisposition from "web.contentdisposition";
+import { session } from "@web/session";
 
 var _t = core._t;
 
@@ -325,6 +324,4 @@ _.extend(ajax, {
     post: post,
 });
 
-return ajax;
-
-});
+export default ajax;

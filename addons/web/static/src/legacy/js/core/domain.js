@@ -1,8 +1,7 @@
-odoo.define("web.Domain", function (require) {
-"use strict";
+/** @odoo-module alias=web.Domain **/
 
-var collections = require("web.collections");
-var pyUtils = require("web.py_utils");
+import collections from "web.collections";
+import pyUtils from "web.py_utils";
 var py = window.py; // look py.js
 
 const TRUE_LEAF = [1, '=', 1];
@@ -429,5 +428,4 @@ Domain.FALSE_LEAF = FALSE_LEAF;
 Domain.TRUE_DOMAIN = TRUE_DOMAIN;
 Domain.FALSE_DOMAIN = FALSE_DOMAIN;
 
-return Domain;
-});
+export default Domain;

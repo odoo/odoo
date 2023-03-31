@@ -1,9 +1,8 @@
-odoo.define('web.py_utils_tests', function(require) {
-"use strict";
+/** @odoo-module **/
 
-var Context = require('web.Context');
-var pyUtils = require('web.py_utils');
-var time = require('web.time');
+import Context from "web.Context";
+import pyUtils from "web.py_utils";
+import time from "web.time";
 
 const r = String.raw;
 
@@ -1402,5 +1401,4 @@ QUnit.module('core', function () {
             "[('user_id', '=', uid)]"
         );
     });
-});
 });

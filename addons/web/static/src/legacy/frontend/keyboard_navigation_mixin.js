@@ -1,7 +1,6 @@
-odoo.define('web.KeyboardNavigationMixin', function (require) {
-    "use strict";
-    var BrowserDetection = require('web.BrowserDetection');
-    const core = require('web.core');
+/** @odoo-module alias=web.KeyboardNavigationMixin **/
+    import BrowserDetection from "web.BrowserDetection";
+    import core from "web.core";
 
     /**
      * list of the key that should not be used as accesskeys. Either because we want to reserve them for a specific behavior in Odoo or
@@ -265,6 +264,4 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
         },
     };
 
-    return KeyboardNavigationMixin;
-
-});
+    export default KeyboardNavigationMixin;
