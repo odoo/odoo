@@ -225,11 +225,11 @@ class Theme(models.AbstractModel):
         'website.template_header_slogan',
         'website.template_header_contact',
         'website.template_header_boxed',
-        'website.template_header_centered_logo',
         'website.template_header_image',
         'website.template_header_hamburger_full',
         'website.template_header_magazine',
         'website.template_header_stretch',
+        'website.template_header_search',
         # Default one, keep it last
         'website.template_header_default',
     ]
