@@ -552,7 +552,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 });
                 Object.assign(channelData, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
-                    serverMessageUnreadCounter: memberOfCurrentUser.message_unread_counter,
+                    message_unread_counter: memberOfCurrentUser.message_unread_counter,
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res["rtc_inviting_session"] = {

@@ -837,7 +837,12 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
-        const channelId = pyEnv["mail.channel"].create({ name: "Test" });
+        const channelId = pyEnv["mail.channel"].create({
+            name: "Test",
+            channel_member_ids: [
+                [0, 0, { message_unread_counter: 2, partner_id: pyEnv.currentPartnerId }],
+            ],
+        });
         const messageId = pyEnv["mail.message"].create({
             author_id: partnerId,
             body: "Message with needaction",

@@ -134,17 +134,17 @@ patch(MockServer.prototype, "mail/models/mail_message", {
      *
      * @private
      * @param {Array[]} domain
-     * @param {integer} [max_id]
-     * @param {integer} [min_id]
+     * @param {integer} [before]
+     * @param {integer} [after]
      * @param {integer} [limit=30]
      * @returns {Object[]}
      */
-    _mockMailMessage_MessageFetch(domain, max_id, min_id, limit = 30) {
-        if (max_id) {
-            domain.push(["id", "<", max_id]);
+    _mockMailMessage_MessageFetch(domain, before, after, limit = 30) {
+        if (before) {
+            domain.push(["id", "<", before]);
         }
-        if (min_id) {
-            domain.push(["id", ">", min_id]);
+        if (after) {
+            domain.push(["id", ">", after]);
         }
         const messages = this.getRecords("mail.message", domain);
         // sorted from highest ID to lowest ID (i.e. from youngest to oldest)

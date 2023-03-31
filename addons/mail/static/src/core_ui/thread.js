@@ -62,7 +62,7 @@ export class Thread extends Component {
                 this.threadService.fetchMoreMessages(this.props.thread);
             }
         });
-        this.oldestNonTransientMessageId = null;
+        this.oldestPersistentMessageId = null;
         this.scrollPosition = useScrollPosition(
             "messages",
             this.props.thread.scrollPosition,
@@ -73,8 +73,8 @@ export class Thread extends Component {
                 onWillPatch: () => {
                     return {
                         hasMoreMsgsAbove:
-                            this.props.thread.oldestNonTransientMessage?.id !==
-                                this.oldestNonTransientMessage && this.props.order === "asc",
+                            this.props.thread.oldestPersistentMessage?.id !==
+                                this.oldestPersistentMessage && this.props.order === "asc",
                     };
                 },
                 onPatched: ({ hasMoreMsgsAbove, scrollTop, scrollHeight }) => {
@@ -82,13 +82,12 @@ export class Thread extends Component {
                     if (hasMoreMsgsAbove) {
                         el.scrollTop = scrollTop + el.scrollHeight - scrollHeight;
                     }
-                    this.oldestNonTransientMessage =
-                        this.props.thread.oldestNonTransientMessage?.id;
+                    this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
                 },
             });
         }
         onMounted(() => {
-            this.oldestNonTransientMessage = this.props.thread.oldestNonTransientMessage?.id;
+            this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
             if (!this.env.inChatter || this.props.hasMessageScrollAdjustInChatter) {
                 this.scrollPosition.restore();
             }

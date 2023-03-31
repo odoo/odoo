@@ -1421,11 +1421,21 @@ QUnit.test("Can reply to chatter messages from history", async (assert) => {
 
 QUnit.test("Mark as unread", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ channel_type: "chat", name: "General" });
-    pyEnv["mail.message"].create({
+    const channelId = pyEnv["mail.channel"].create({
+        channel_type: "chat",
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
         model: "mail.channel",
         res_id: channelId,
         body: "Hello World!",
+    });
+    const [memberId] = pyEnv["mail.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", pyEnv.currentPartnerId],
+    ]);
+    pyEnv["mail.channel.member"].write([memberId], {
+        seen_message_id: messageId,
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);

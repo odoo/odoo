@@ -7,8 +7,6 @@ QUnit.module("message model test", {});
 
 QUnit.test("Message model properties", async (assert) => {
     const { env } = await start();
-    /** @type {import("@mail/core/store_service").Store} */
-    const store = env.services["mail.store"];
     env.services["mail.thread"].insert({
         id: 3,
         model: "res.partner",
@@ -42,8 +40,6 @@ QUnit.test("Message model properties", async (assert) => {
         "2019-05-05 10:00:00"
     );
     assert.strictEqual(message.id, 4000);
-    assert.ok(store.discuss.inbox.messages.find((m) => m.id === message.id));
-    assert.ok(store.discuss.starred.messages.find((m) => m.id === message.id));
 
     assert.ok(message.attachments);
     assert.strictEqual(message.attachments[0].name, "test.txt");

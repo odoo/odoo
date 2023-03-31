@@ -42,13 +42,13 @@ export class MessagingMenu extends Component {
     }
 
     beforeOpen() {
-        this.messaging.fetchPreviews();
+        this.threadService.fetchPreviews();
         if (
             !this.store.discuss.inbox.isLoaded &&
             this.store.discuss.inbox.status !== "loading" &&
             this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
         ) {
-            this.threadService.fetchMessages(this.store.discuss.inbox);
+            this.threadService.fetchNewMessages(this.store.discuss.inbox);
         }
     }
 
@@ -117,24 +117,22 @@ export class MessagingMenu extends Component {
             if (a.correspondent === this.store.odoobot) {
                 return 1;
             }
-            if (!a.mostRecentNonTransientMessage?.datetime) {
+            if (!a.newestPersistentMessage?.datetime) {
                 return -1;
             }
-            if (!b.mostRecentNonTransientMessage?.datetime) {
+            if (!b.newestPersistentMessage?.datetime) {
                 return 1;
             }
-            return (
-                b.mostRecentNonTransientMessage.datetime - a.mostRecentNonTransientMessage.datetime
-            );
+            return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
         });
         const previews = [];
         for (const thread of threads) {
-            const { mostRecentMsg, mostRecentNeedactionMsg } = thread;
+            const { newestMessage, newestNeedactionMessage } = thread;
             if (thread.is_pinned) {
-                const message = mostRecentMsg;
+                const message = newestMessage;
                 previews.push({
                     id: `preview-${thread.localId}`,
-                    count: this.threadService.localMessageUnreadCounter(thread),
+                    count: thread.message_unread_counter,
                     imgUrl: thread.imgUrl,
                     hasMarkAsReadButton: this.threadService.isUnread(thread),
                     message,
@@ -142,8 +140,8 @@ export class MessagingMenu extends Component {
                     isNeedaction: false,
                 });
             }
-            if (mostRecentNeedactionMsg) {
-                const message = mostRecentNeedactionMsg;
+            if (newestNeedactionMessage) {
+                const message = newestNeedactionMessage;
                 previews.push({
                     id: `preview-needaction-${thread.localId}`,
                     count: thread.needactionMessages.length,

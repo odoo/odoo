@@ -917,18 +917,18 @@ class Message(models.Model):
         return vals_list
 
     @api.model
-    def _message_fetch(self, domain, max_id=None, min_id=None, limit=30):
+    def _message_fetch(self, domain, before=None, after=None, limit=30):
         """ Get a limited amount of formatted messages with provided domain.
             :param domain: the domain to filter messages;
-            :param min_id: messages must be more recent than this id
-            :param max_id: message must be less recent than this id
+            :param after: messages must be more recent than this id
+            :param before: message must be less recent than this id
             :param limit: the maximum amount of messages to get;
             :returns: record set of mail.message
         """
-        if max_id:
-            domain = expression.AND([domain, [('id', '<', max_id)]])
-        if min_id:
-            domain = expression.AND([domain, [('id', '>', min_id)]])
+        if before:
+            domain = expression.AND([domain, [('id', '<', before)]])
+        if after:
+            domain = expression.AND([domain, [('id', '>', after)]])
         return self.search(domain, limit=limit)
 
     def message_format(self, format_reply=True, msg_vals=None):

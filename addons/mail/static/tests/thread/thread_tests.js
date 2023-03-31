@@ -880,6 +880,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const { env, openDiscuss } = await start({
             mockRPC(route, args) {
                 if (args.model === "mail.message" && args.method === "mark_all_as_read") {
@@ -896,6 +897,7 @@ QUnit.test(
         await triggerEvents($(".o-mail-Composer-input")[0], null, ["blur", "focusout"]);
         await click("button:contains(Inbox)");
         const messageId = pyEnv["mail.message"].create({
+            author_id: partnerId,
             body: "@Mitchel Admin",
             needaction: true,
             model: "mail.channel",
