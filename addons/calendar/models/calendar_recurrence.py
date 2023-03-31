@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 import pytz
 
 from dateutil import rrule
@@ -192,10 +192,11 @@ class RecurrenceRule(models.Model):
         """
         ranges = set(ranges)
 
+        # Keep the events already created by comparing the ranges that are in UTC.
         synced_events = self.calendar_event_ids.filtered(lambda e: e._range() in ranges)
 
         existing_ranges = set(event._range() for event in synced_events)
-        ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
+        ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)       
         return synced_events, ranges_to_create
 
     def _select_new_base_event(self):
@@ -229,6 +230,27 @@ class RecurrenceRule(models.Model):
             [base_values] = event.copy_data()
             values = []
             for start, stop in ranges:
+
+                # Manage DST in DB (design choice)
+                # Special timezoning is needed to handle DST (Daylight Saving Time) changes.
+                # Given the following recurrence:
+                #   - monthly
+                #   - 1st of each month
+                #   - timezone US/Eastern (UTC−05:00)
+                #   - at 6am US/Eastern = 11am UTC
+                #   - from 2019/02/01 to 2019/05/01.
+                # The naive way would be to store:
+                # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 11:00 - 2019/05/01 11:00 (UTC)
+                #
+                # But a DST change occurs on 2019/03/10 in US/Eastern timezone. US/Eastern is now UTC−04:00.
+                # From this point in time, 11am (UTC) is actually converted to 7am (US/Eastern) instead of the expected 6am!
+                # What should be stored is:
+                # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
+                #                                                  *****              *****
+                timezone = recurrence._get_timezone() 
+                start = timezone.localize(start, is_dst=False).astimezone(pytz.utc).replace(tzinfo=None)
+                stop = timezone.localize(stop, is_dst=False).astimezone(pytz.utc).replace(tzinfo=None)
+
                 value = dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id, follow_recurrence=True)
                 if (recurrence.id, start, stop) in specific_values_creation:
                     value.update(specific_values_creation[(recurrence.id, start, stop)])
@@ -434,34 +456,34 @@ class RecurrenceRule(models.Model):
         :param dtstart: start of the recurrence
         :return: iterable of datetimes
         """
+
+        # Info:
+        #     The final goal is to compare future range with the range of existing events
+        #     and to create events from ranges that do not have events.
+        #     The first range must be the range of the basic event.
+        #     Ranges will be created in naïve UTC.
+        #     ==> Working in UTC allows to have no error due to DST
+        #         during the comparaison with the base event.
+        #     Example:
+        #     --------
+        #     FREQ=MONTHLY;COUNT=3 | dtstart = FakeDatetime(2023, 2, 25, 7, 0) [also naïve UTC]
+        #     Ocurrences:
+        #         (1) FakeDatetime(2023, 2, 25, 7, 0) + duration --> DST: False
+        #         (2) FakeDatetime(2023, 3, 25, 7, 0) + duration --> DST: False
+        #           | --> DST changeover
+        #         (3) FakeDatetime(2023, 4, 25, 7, 0) + duration --> DST: True --> But the range is the same
+
         self.ensure_one()
         dtstart = self._get_start_of_period(dtstart)
+        # Some timezones have a negative UTC offset.
+        # In order to take into account the first event, we remove one day.
+        #dtstart = dtstart - timedelta(days=1)
         if self._is_allday():
             return self._get_rrule(dtstart=dtstart)
-
-        timezone = self._get_timezone()
-        # Localize the starting datetime to avoid missing the first occurrence
-        dtstart = pytz.utc.localize(dtstart).astimezone(timezone)
-        # dtstart is given as a naive datetime, but it actually represents a timezoned datetime
+        # dtstart is given as a naive datetime, but it actually represents a UTC datetime
         # (rrule package expects a naive datetime)
         occurences = self._get_rrule(dtstart=dtstart.replace(tzinfo=None))
-
-        # Special timezoning is needed to handle DST (Daylight Saving Time) changes.
-        # Given the following recurrence:
-        #   - monthly
-        #   - 1st of each month
-        #   - timezone US/Eastern (UTC−05:00)
-        #   - at 6am US/Eastern = 11am UTC
-        #   - from 2019/02/01 to 2019/05/01.
-        # The naive way would be to store:
-        # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 11:00 - 2019/05/01 11:00 (UTC)
-        #
-        # But a DST change occurs on 2019/03/10 in US/Eastern timezone. US/Eastern is now UTC−04:00.
-        # From this point in time, 11am (UTC) is actually converted to 7am (US/Eastern) instead of the expected 6am!
-        # What should be stored is:
-        # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
-        #                                                  *****              *****
-        return (timezone.localize(occurrence, is_dst=False).astimezone(pytz.utc).replace(tzinfo=None) for occurrence in occurences)
+        return occurences
 
     def _get_events_from(self, dtstart):
         return self.env['calendar.event'].search([

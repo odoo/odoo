@@ -3,6 +3,7 @@
 
 import pytz
 from datetime import datetime, date
+from freezegun import freeze_time
 
 from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
@@ -1309,3 +1310,42 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(events), 2)
         self.assertFalse(events.mapped('attendee_ids'))
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    @freeze_time('2023-05-25')
+    def test_google_calendar(self):
+        """
+            It is possible to create events in a different Daylight Saving Time (DST) on google calendar.
+            This will create duplication problems when we synchronize from Google to Odoo.
+        """
+        frequency = "MONTHLY" # DAYLY - WEEKLY - MONTHLY - YEARLY
+        count = "3"
+        recurrence_id = "9lxiofipomymx2yr1yt0hpep99"
+        google_value = [{
+                "summary": "From winter hours to summer hours",
+                "id": recurrence_id,
+                "creator": {"email": "john.doe@example.com"},
+                "organizer": {"email": "john.doe@example.com"},
+                "created": "2023-02-25T11:45:07.000Z",
+                "start": {"dateTime": "2023-02-25T09:00:00+02:00", "timeZone": "Europe/Brussels"},
+                "end": {"dateTime": "2023-02-25T10:00:00+02:00", "timeZone": "Europe/Brussels"},
+                "recurrence": [f"RRULE:FREQ={frequency};COUNT={count}"],
+                "reminders": {"useDefault": True},
+                "updated": "2023-02-25T11:45:08.547Z",
+            }]
+        google_event = GoogleEvent(google_value)
+        self.env['calendar.recurrence']._sync_google2odoo(google_event)
+        # Get the time slot of the day
+        day_start = datetime.fromisoformat(google_event.start["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=0)
+        day_end = datetime.fromisoformat(google_event.end["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=23)
+        # Get created events
+        day_events = self.env["calendar.event"].search(
+            [
+                ("name", "=", google_event.summary),
+                ("start", ">=", day_start),
+                ("stop", "<=", day_end)
+            ]
+        )
+        self.assertGoogleAPINotCalled()
+        # Check for non-duplication
+        self.assertEqual(len(day_events), 1)
