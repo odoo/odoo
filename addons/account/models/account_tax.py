@@ -724,7 +724,7 @@ class AccountTax(models.Model):
             partner=None, currency=None, product=None, taxes=None, price_unit=None, quantity=None,
             discount=None, account=None, analytic_distribution=None, price_subtotal=None,
             is_refund=False, rate=None,
-            handle_price_include=None,
+            handle_price_include=True,
             extra_context=None,
     ):
         return {
@@ -821,12 +821,6 @@ class AccountTax(models.Model):
             price_unit_after_discount = remaining_part_to_consider * price_unit_after_discount
 
         if taxes:
-
-            if handle_price_include is None:
-                manage_price_include = bool(base_line['handle_price_include'])
-            else:
-                manage_price_include = handle_price_include
-
             taxes_res = taxes.with_context(**base_line['extra_context']).compute_all(
                 price_unit_after_discount,
                 currency=currency,
@@ -834,7 +828,7 @@ class AccountTax(models.Model):
                 product=base_line['product'],
                 partner=base_line['partner'],
                 is_refund=base_line['is_refund'],
-                handle_price_include=manage_price_include,
+                handle_price_include=base_line['handle_price_include'],
                 include_caba_tags=include_caba_tags,
             )
 
@@ -852,7 +846,7 @@ class AccountTax(models.Model):
                     product=base_line['product'],
                     partner=base_line['partner'],
                     is_refund=base_line['is_refund'],
-                    handle_price_include=manage_price_include,
+                    handle_price_include=base_line['handle_price_include'],
                     include_caba_tags=include_caba_tags,
                 )
                 for tax_res, new_taxes_res in zip(taxes_res['taxes'], new_taxes_res['taxes']):
@@ -1022,7 +1016,6 @@ class AccountTax(models.Model):
         for base_line in base_lines:
             to_update_vals, tax_values_list = self._compute_taxes_for_single_line(
                 base_line,
-                handle_price_include=handle_price_include,
                 include_caba_tags=include_caba_tags,
             )
             to_process.append((base_line, to_update_vals, tax_values_list))
