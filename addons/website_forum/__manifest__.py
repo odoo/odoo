@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 {
     'name': 'Forum',
     'category': 'Website/Website',
@@ -41,6 +42,7 @@ Ask questions, get answers, no distractions
         'views/forum_forum_templates_moderation.xml',
         'views/forum_forum_templates_post.xml',
         'views/forum_forum_templates_tools.xml',
+        'views/forum_templates_mail.xml',
         'views/website_profile_templates.xml',
         'views/snippets/snippets.xml',
 
