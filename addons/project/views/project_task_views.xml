@@ -709,10 +709,11 @@
                 <calendar date_start="date_deadline" string="Tasks" mode="month"
                           color="stage_id" event_limit="5" hide_time="true"
                           event_open_popup="true" quick_add="false" show_unusual_days="True"
-                          js_class="project_calendar"
+                          js_class="project_task_calendar"
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
                     <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
+                    <field name="subtask_count" invisible="1"/>
                     <field name="milestone_id" attrs="{'invisible': ['|', ('allow_milestones', '=', False), ('milestone_id', '=', False)]}"/>
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>

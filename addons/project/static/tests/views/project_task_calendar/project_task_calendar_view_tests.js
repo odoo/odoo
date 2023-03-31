@@ -33,7 +33,7 @@ QUnit.module("Project Task Calendar View", (hooks) => {
     });
     QUnit.test("breadcrumb contains 'Tasks by deadline'", async function (assert) {
         serverData.views = {
-            "project.task,1,calendar": `<calendar date_start="start" date_stop="stop" mode="day" js_class="project_calendar"/>`,
+            "project.task,1,calendar": `<calendar date_start="start" date_stop="stop" mode="day" js_class="project_task_calendar"/>`,
             "project.task,false,search": `<search />`,
         };
         serverData.actions = {

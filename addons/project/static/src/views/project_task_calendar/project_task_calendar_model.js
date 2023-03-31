@@ -2,7 +2,7 @@
 
 import { CalendarModel } from '@web/views/calendar/calendar_model';
 
-export class ProjectCalendarModel extends CalendarModel {
+export class ProjectTaskCalendarModel extends CalendarModel {
     /**
      * @override
      */
