@@ -539,7 +539,6 @@ function handleMasonry(editable) {
         for (const td of [...tr.children].filter(child => child.nodeName === 'TD')) {
             td.classList.toggle('o_desktop_h100', true);
             td.style.setProperty('height', '100%');
-            td.style.setProperty('padding', '0px');
             const childrenNames = [...td.children].map(child => child.nodeName);
             if (!childrenNames.includes('TABLE')) {
                 // Hack that makes vertical-align possible within an inline-block.
@@ -1056,6 +1055,9 @@ function normalizeRem($editable, rootFontSize=16) {
         } else {
             outlookTd.setAttribute('style', msoStyles);
         }
+        if (td.closest('.s_masonry_block')) {
+            outlookTd.style.padding = 0; // Not sure why this is needed.
+        }
         // The opening tag of `outlookTd` is for Outlook.
         td.before(_createMso(outlookTd.outerHTML.replace('</td>', '')));
         // The opening tag of `td` is for the others.
@@ -1162,7 +1164,7 @@ function _backgroundImageToVml(backgroundImage) {
     // Create the VML structure, with the content of the original element inside.
     const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
     const vml = `<v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
-                    style="$width:${width*.75}pt;height:${height*.75}pt;v-text-anchor:middle;">
+                    style="width:${width*.75}pt;height:${height*.75}pt;v-text-anchor:middle;">
         <v:fill src="${url}" origin="-0.5,-0.5" position="-0.5,-0.5" type="frame" size="1,1" aspect="atleast" color="#000000"/>
         <v:textbox inset="0,0,0,0">
             <table border="0" cellpadding="0" cellspacing="0">

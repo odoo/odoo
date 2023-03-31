@@ -53,7 +53,7 @@ class MailComposeMessage(models.TransientModel):
                     if body:
                         mail_values['body_html'] = Markup(
                             html_element_attrs_re.sub(
-                                r'<html\1 xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"',
+                                r'<html\1 xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">',
                                 str(body)
                             )
                         )
