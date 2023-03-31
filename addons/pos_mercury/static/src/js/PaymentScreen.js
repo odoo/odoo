@@ -425,7 +425,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
             transaction: def,
         });
 
-        var request_data = _.extend(
+        var request_data = Object.assign(
             {
                 transaction_type: "Credit",
                 transaction_code: "VoidSaleByRecordNo",

@@ -218,13 +218,13 @@ function _mockGlobalObjects(params) {
             for (key in config) {
                 delete config[key];
             }
-            _.extend(config, initialConfig);
+            Object.assign(config, initialConfig);
         }
         if ('translateParameters' in params) {
             for (key in core._t.database.parameters) {
                 delete core._t.database.parameters[key];
             }
-            _.extend(core._t.database.parameters, initialParameters);
+            Object.assign(core._t.database.parameters, initialParameters);
         }
     }
 

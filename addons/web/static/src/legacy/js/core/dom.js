@@ -406,7 +406,7 @@ var dom = {
      * @returns {jQuery}
      */
     renderButton: function (options) {
-        var jQueryParams = _.extend({
+        var jQueryParams = Object.assign({
             type: 'button',
         }, options.attrs || {});
 

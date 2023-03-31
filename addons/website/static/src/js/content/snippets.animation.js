@@ -79,7 +79,7 @@ publicWidget.Widget.include({
         this.editableMode = this.options.editableMode || false;
         var extraEvents = this.editableMode ? this.edit_events : this.read_events;
         if (extraEvents) {
-            this.events = _.extend({}, this.events || {}, extraEvents);
+            this.events = Object.assign({}, this.events || {}, extraEvents);
         }
     },
 });

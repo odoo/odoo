@@ -18,7 +18,7 @@ function corsIgnoredErrorHandler(env, error) {
 }
 
 WebsiteSaleDeliveryWidget.include({
-    events: _.extend({
+    events: Object.assign({
         "click #btn_confirm_relay": "_onClickBtnConfirmRelay",
     }, WebsiteSaleDeliveryWidget.prototype.events),
 

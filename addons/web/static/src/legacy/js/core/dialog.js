@@ -18,11 +18,11 @@ var _t = core._t;
  **/
 var Dialog = Widget.extend({
     tagName: 'main',
-    custom_events: _.extend({}, Widget.prototype.custom_events, {
+    custom_events: Object.assign({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
         close_dialog: '_onCloseDialog',
     }),
-    events: _.extend({}, Widget.prototype.events, {
+    events: Object.assign({}, Widget.prototype.events, {
         'keydown .modal-footer button': '_onFooterButtonKeyDown',
     }),
     /**
@@ -411,7 +411,7 @@ Dialog.alert = function (owner, message, options) {
         close: true,
         click: options && options.confirm_callback,
     }];
-    return new Dialog(owner, _.extend({
+    return new Dialog(owner, Object.assign({
         size: 'medium',
         buttons: buttons,
         $content: $('<main/>', {
@@ -464,7 +464,7 @@ Dialog.confirm = function (owner, message, options) {
             click: makeCallback('cancel_callback'),
         }
     ];
-    return new Dialog(owner, _.extend({
+    return new Dialog(owner, Object.assign({
         size: 'medium',
         buttons: buttons,
         $content: $('<main/>', {
@@ -518,7 +518,7 @@ Dialog.safeConfirm = function (owner, message, options) {
             click: options && options.cancel_callback
         }
     ];
-    var dialog = new Dialog(owner, _.extend({
+    var dialog = new Dialog(owner, Object.assign({
         size: 'medium',
         buttons: buttons,
         $content: $content,

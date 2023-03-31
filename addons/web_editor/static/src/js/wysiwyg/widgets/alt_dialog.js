@@ -15,7 +15,7 @@ var AltDialog = Dialog.extend({
      */
     init: function (parent, options, media) {
         options = options || {};
-        this._super(parent, _.extend({}, {
+        this._super(parent, Object.assign({}, {
             title: _t("Change media description and tooltip")
         }, options));
 

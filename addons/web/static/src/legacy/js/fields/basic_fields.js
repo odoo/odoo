@@ -60,7 +60,7 @@ var TranslatableFieldMixin = {
 var FieldBoolean = AbstractField.extend({
     className: 'o_field_boolean',
     description: _lt("Checkbox"),
-    events: _.extend({}, AbstractField.prototype.events, {
+    events: Object.assign({}, AbstractField.prototype.events, {
         change: '_onChange',
     }),
     supportedFieldTypes: ['boolean'],
@@ -308,10 +308,10 @@ var DebouncedField = AbstractField.extend({
 });
 
 var InputField = DebouncedField.extend({
-    custom_events: _.extend({}, DebouncedField.prototype.custom_events, {
+    custom_events: Object.assign({}, DebouncedField.prototype.custom_events, {
         field_changed: '_onFieldChanged',
     }),
-    events: _.extend({}, DebouncedField.prototype.events, {
+    events: Object.assign({}, DebouncedField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
         'blur' : '_onBlur',
@@ -417,10 +417,10 @@ var InputField = DebouncedField.extend({
         var inputAttrs = { placeholder: this.attrs.placeholder || "" };
         var inputVal;
         if (this.nodeOptions.isPassword) {
-            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
+            inputAttrs = Object.assign(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
-            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'off'});
+            inputAttrs = Object.assign(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'off'});
             inputVal = this._formatValue(this.value);
         }
 
@@ -1427,7 +1427,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
 var UrlWidget = InputField.extend({
     description: _lt("URL"),
     className: 'o_field_url',
-    events: _.extend({}, InputField.prototype.events, {
+    events: Object.assign({}, InputField.prototype.events, {
         'click': '_onClick',
     }),
     supportedFieldTypes: ['char'],
@@ -1503,7 +1503,7 @@ var UrlWidget = InputField.extend({
 });
 
 var AbstractFieldBinary = AbstractField.extend({
-    events: _.extend({}, AbstractField.prototype.events, {
+    events: Object.assign({}, AbstractField.prototype.events, {
         'change .o_input_file': 'on_file_change',
         'click .o_select_file_button': function () {
             this.$('.o_input_file').click();
@@ -1627,7 +1627,7 @@ var AbstractFieldBinary = AbstractField.extend({
 var FieldBinaryFile = AbstractFieldBinary.extend({
     description: _lt("File"),
     template: 'FieldBinaryFile',
-    events: _.extend({}, AbstractFieldBinary.prototype.events, {
+    events: Object.assign({}, AbstractFieldBinary.prototype.events, {
         'click': function (event) {
             if (this.mode === 'readonly' && this.value && this.recordData.id) {
                 this.on_save_as(event);

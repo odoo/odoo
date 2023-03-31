@@ -4,7 +4,7 @@ import publicWidget from 'web.public.widget';
 import 'website_sale_comparison.comparison';
 
 publicWidget.registry.ProductComparison.include({
-    events: _.extend({}, publicWidget.registry.ProductComparison.prototype.events, {
+    events: Object.assign({}, publicWidget.registry.ProductComparison.prototype.events, {
         'click .wishlist-section .o_add_to_compare': '_onClickCompare',
     }),
 

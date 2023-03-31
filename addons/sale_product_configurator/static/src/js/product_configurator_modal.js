@@ -7,7 +7,7 @@ import ServicesMixin from 'web.ServicesMixin';
 import VariantMixin from 'sale.VariantMixin';
 
 export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
-    events:  _.extend({}, Dialog.prototype.events, VariantMixin.events, {
+    events:  Object.assign({}, Dialog.prototype.events, VariantMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
         'click button.js_add_cart_json': 'onClickAddCartJSON',
         'change .in_cart input.js_quantity': '_onChangeQuantity',
@@ -37,7 +37,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
     init: function (parent, params) {
         var self = this;
 
-        var options = _.extend({
+        var options = Object.assign({
             size: 'large',
             buttons: [{
                 text: params.okButtonText,
@@ -85,7 +85,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
             force_dialog: self.forceDialog,
             no_attribute: self.rootProduct.no_variant_attribute_values,
             custom_attribute: self.rootProduct.product_custom_attribute_values,
-            context: _.extend({'quantity': self.rootProduct.quantity}, this.context),
+            context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
         })
         .then(function (modalContent) {
             if (modalContent) {

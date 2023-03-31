@@ -78,7 +78,7 @@ var PortalComposer = publicWidget.Widget.extend({
     _onAttachmentDeleteClick: function (ev) {
         var self = this;
         var attachmentId = $(ev.currentTarget).closest('.o_portal_chatter_attachment').data('id');
-        var accessToken = _.find(this.attachments, {'id': attachmentId}).access_token;
+        var accessToken = this.attachments.find(attachment => attachment.id === attachmentId).access_token;
         ev.preventDefault();
         ev.stopPropagation();
 

@@ -9752,7 +9752,7 @@ QUnit.module("Views", (hooks) => {
             // create records to have the search more button
             const newRecs = [];
             for (let i = 0; i < 8; i++) {
-                const newRec = _.extend({}, rec);
+                const newRec = Object.assign({}, rec);
                 newRec.id = 1 + i;
                 newRec.cornichon = "extra fin";
                 newRecs.push(newRec);

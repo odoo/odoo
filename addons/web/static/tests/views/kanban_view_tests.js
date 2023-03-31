@@ -3467,7 +3467,7 @@ QUnit.module("Views", (hooks) => {
             "should have created a partner"
         );
         assert.strictEqual(
-            _.last(serverData.models.partner.records).name,
+            serverData.models.partner.records.at(-1).name,
             "new partner",
             "should have correct name"
         );

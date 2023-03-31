@@ -102,7 +102,7 @@ patch(Payment.prototype, "pos_mercury.Payment", {
         this.set_credit_card_name();
     },
     export_as_JSON() {
-        return _.extend(this._super(...arguments), {
+        return Object.assign(this._super(...arguments), {
             paid: this.paid,
             mercury_card_number: this.mercury_card_number,
             mercury_card_brand: this.mercury_card_brand,

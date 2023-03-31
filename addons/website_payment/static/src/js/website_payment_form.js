@@ -4,7 +4,7 @@ import core, { _t } from 'web.core';
 import checkoutForm from 'payment.checkout_form';
 
 checkoutForm.include({
-    events: _.extend({}, checkoutForm.prototype.events || {}, {
+    events: Object.assign({}, checkoutForm.prototype.events || {}, {
         'change .o_wpayment_fee_impact': '_onFeeParameterChange',
     }),
 

@@ -177,7 +177,7 @@ var ColorpickerWidget = Widget.extend({
         if (!rgb) {
             return;
         }
-        _.extend(this.colorComponents,
+        Object.assign(this.colorComponents,
             {hex: hex},
             rgb,
             ColorpickerWidget.convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
@@ -207,7 +207,7 @@ var ColorpickerWidget = Widget.extend({
         if (!hex) {
             return;
         }
-        _.extend(this.colorComponents,
+        Object.assign(this.colorComponents,
             {red: r, green: g, blue: b},
             a === undefined ? {} : {opacity: a},
             {hex: hex},
@@ -236,7 +236,7 @@ var ColorpickerWidget = Widget.extend({
         }
         // We receive an hexa as we ignore the opacity
         const hex = ColorpickerWidget.convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
-        _.extend(this.colorComponents,
+        Object.assign(this.colorComponents,
             {hue: h, saturation: s, lightness: l},
             rgb,
             {hex: hex},
@@ -254,7 +254,7 @@ var ColorpickerWidget = Widget.extend({
         if (a < 0 || a > 100) {
             return;
         }
-        _.extend(this.colorComponents,
+        Object.assign(this.colorComponents,
             {opacity: a}
         );
         this._updateCssColor();
@@ -277,7 +277,7 @@ var ColorpickerWidget = Widget.extend({
         const g = this.colorComponents.green;
         const b = this.colorComponents.blue;
         const a = this.colorComponents.opacity;
-        _.extend(this.colorComponents,
+        Object.assign(this.colorComponents,
             {cssColor: ColorpickerWidget.convertRgbaToCSSColor(r, g, b, a)}
         );
         if (this.previewActive) {
@@ -702,7 +702,7 @@ const ColorpickerDialog = Dialog.extend({
      */
     init: function (parent, options) {
         this.options = options || {};
-        this._super(parent, _.extend({
+        this._super(parent, Object.assign({
             size: 'small',
             title: _t('Pick a color'),
             buttons: [
@@ -716,7 +716,7 @@ const ColorpickerDialog = Dialog.extend({
      */
     start: function () {
         const proms = [this._super(...arguments)];
-        this.colorPicker = new ColorpickerWidget(this, _.extend({
+        this.colorPicker = new ColorpickerWidget(this, Object.assign({
             colorPreview: true,
         }, this.options));
         proms.push(this.colorPicker.appendTo(this.$el));

@@ -432,7 +432,7 @@ var AbstractField = Widget.extend({
         if (!formatType) {
             throw new Error(`Missing format type for '${this.name}' value from the '${this.model}' model`);
         }
-        var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
+        var options = Object.assign({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
         return field_utils.format[formatType](value, this.field, options);
     },
     /**

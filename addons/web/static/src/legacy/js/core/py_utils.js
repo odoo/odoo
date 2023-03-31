@@ -105,7 +105,7 @@ function wrap_context(context) {
 }
 
 function eval_contexts(contexts, evaluation_context) {
-    evaluation_context = _.extend(pycontext(), evaluation_context || {});
+    evaluation_context = Object.assign(pycontext(), evaluation_context || {});
     return _(contexts).reduce(function (result_context, ctx) {
         // __eval_context evaluations can lead to some of `contexts`'s
         // values being null, skip them as well as empty contexts
@@ -123,18 +123,18 @@ function eval_contexts(contexts, evaluation_context) {
         case 'compound_context':
             var eval_context = eval_contexts([ctx.__eval_context]);
             evaluated = eval_contexts(
-                ctx.__contexts, _.extend({}, evaluation_context, eval_context));
+                ctx.__contexts, Object.assign({}, evaluation_context, eval_context));
             break;
         }
         // add newly evaluated context to evaluation context for following
         // siblings
-        _.extend(evaluation_context, evaluated);
-        return _.extend(result_context, evaluated);
+        Object.assign(evaluation_context, evaluated);
+        return Object.assign(result_context, evaluated);
     }, {});
 }
 
 function eval_domains(domains, evaluation_context) {
-    evaluation_context = _.extend(pycontext(), evaluation_context || {});
+    evaluation_context = Object.assign(pycontext(), evaluation_context || {});
     var result_domain = [];
     // Normalize only if the first domain is the array ["|"] or ["!"]
     var need_normalization = (
@@ -187,7 +187,7 @@ function get_normalized_domain(domain_array) {
 }
 
 function eval_groupbys(contexts, evaluation_context) {
-    evaluation_context = _.extend(pycontext(), evaluation_context || {});
+    evaluation_context = Object.assign(pycontext(), evaluation_context || {});
     var result_group = [];
     _(contexts).each(function (ctx) {
         if (_.isString(ctx)) {
@@ -204,7 +204,7 @@ function eval_groupbys(contexts, evaluation_context) {
         case 'compound_context':
             var eval_context = eval_contexts([ctx.__eval_context]);
             evaluated = eval_contexts(
-                ctx.__contexts, _.extend({}, evaluation_context, eval_context));
+                ctx.__contexts, Object.assign({}, evaluation_context, eval_context));
             break;
         }
         group = evaluated.group_by;
@@ -217,7 +217,7 @@ function eval_groupbys(contexts, evaluation_context) {
             throw new Error('Got invalid groupby {{'
                     + JSON.stringify(group) + '}}');
         }
-        _.extend(evaluation_context, evaluated);
+        Object.assign(evaluation_context, evaluated);
     });
     return result_group;
 }
@@ -285,7 +285,7 @@ function pycontext() {
  * @param {Object} [context] evaluation context
  */
 function pyeval(type, object, context) {
-    context = _.extend(pycontext(), context || {});
+    context = Object.assign(pycontext(), context || {});
 
     //noinspection FallthroughInSwitchStatementJS
     switch(type) {
@@ -347,7 +347,7 @@ function eval_domains_and_contexts(source) {
 }
 
 function py_eval(expr, context) {
-    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
+    return py.eval(expr, Object.assign({}, context || {}, {"true": true, "false": false, "null": null}));
 }
 
 /**

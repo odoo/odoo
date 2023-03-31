@@ -402,7 +402,7 @@ const UserValueWidget = Widget.extend({
      * @returns {Object}
      */
     getMethodsParams: function (methodName) {
-        const params = _.extend({}, this._methodsParams);
+        const params = Object.assign({}, this._methodsParams);
         if (methodName) {
             params.possibleValues = params.optionsPossibleValues[methodName] || [];
             params.activeValue = this.getActiveValue(methodName);
@@ -472,7 +472,7 @@ const UserValueWidget = Widget.extend({
      */
     loadMethodsData: function (validMethodNames, extraParams) {
         this._methodsNames = [];
-        this._methodsParams = _.extend({}, extraParams);
+        this._methodsParams = Object.assign({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
         this._dependencies = [];
         this._triggerWidgetsNames = [];
@@ -495,7 +495,7 @@ const UserValueWidget = Widget.extend({
             }
         }
         this._userValueWidgets.forEach(widget => {
-            const inheritedParams = _.extend({}, this._methodsParams);
+            const inheritedParams = Object.assign({}, this._methodsParams);
             inheritedParams.optionsPossibleValues = null;
             widget.loadMethodsData(validMethodNames, inheritedParams);
             const subMethodsNames = widget.getMethodsNames();
@@ -1388,7 +1388,7 @@ const MultiUserValueWidget = UserValueWidget.extend({
 
 const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
-    custom_events: _.extend({}, SelectUserValueWidget.prototype.custom_events, {
+    custom_events: Object.assign({}, SelectUserValueWidget.prototype.custom_events, {
         'custom_color_picked': '_onCustomColorPicked',
         'color_picked': '_onColorPicked',
         'color_hover': '_onColorHovered',
@@ -1458,7 +1458,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     getMethodsParams: function () {
-        return _.extend(this._super(...arguments), {
+        return Object.assign(this._super(...arguments), {
             colorNames: this.colorPalette.getColorNames(),
         });
     },
@@ -1883,7 +1883,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @override
      */
     getMethodsParams: function () {
-        return _.extend(this._super(...arguments), {
+        return Object.assign(this._super(...arguments), {
             format: this.defaultFormat,
         });
     },
@@ -2011,7 +2011,7 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @override
      */
     getMethodsParams() {
-        return _.extend(this._super(...arguments), {
+        return Object.assign(this._super(...arguments), {
             records: this.records,
         });
     },

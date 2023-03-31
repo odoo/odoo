@@ -70,9 +70,7 @@ var SelectBox = publicWidget.Widget.extend({
      * @param {String} query
      */
     _objectExists: function (query) {
-        return _.find(this.objects, function (val) {
-            return val.text.toLowerCase() === query.toLowerCase();
-        }) !== undefined;
+        return this.objects.find(val => val.text.toLowerCase() === query.toLowerCase()) !== undefined;
     },
     /**
      * @private

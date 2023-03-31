@@ -40,9 +40,9 @@ QUnit.module('core', {}, function () {
                     ['user_id', '=', 3],
                     ['member_ids', 'in', [3]]
         ];
-        assert.ok(new Domain(currentDomain).compute(_.extend({}, web, {section_id: 42})));
-        assert.ok(new Domain(currentDomain).compute(_.extend({}, web, {user_id: 3})));
-        assert.ok(new Domain(currentDomain).compute(_.extend({}, web, {member_ids: 3})));
+        assert.ok(new Domain(currentDomain).compute(Object.assign({}, web, {section_id: 42})));
+        assert.ok(new Domain(currentDomain).compute(Object.assign({}, web, {user_id: 3})));
+        assert.ok(new Domain(currentDomain).compute(Object.assign({}, web, {member_ids: 3})));
     });
 
     QUnit.test("not", function (assert) {

@@ -98,7 +98,7 @@
                     return this._super.apply(this, arguments);
                 },
             });
-            const params = _.extend(this.params, {
+            const params = Object.assign(this.params, {
                 context: { active_field: 2 },
                 groupedBy: ['product_id'],
                 fieldNames: ['foo'],
@@ -825,7 +825,7 @@
 
             var rpcCount = 0;
             var fields = this.data.partner.fields;
-            fields.other_product_id = _.extend({}, fields.product_id);
+            fields.other_product_id = Object.assign({}, fields.product_id);
             fields.product_id.default = 37;
             fields.other_product_id.default = 41;
 
@@ -1995,7 +1995,7 @@
             });
 
             // load a new record (default_get)
-            var params = _.extend(this.params, {
+            var params = Object.assign(this.params, {
                 res_id: undefined,
                 type: 'record',
                 fieldNames: ['foo'],
@@ -2195,7 +2195,7 @@
                     string: 'foobool2',
                 },
             };
-            _.extend(this.data.partner.fields, newFields);
+            Object.assign(this.data.partner.fields, newFields);
 
             this.data.partner.fields.foobool.onChange = true;
             this.data.partner.onchanges.foobool = function (obj) {

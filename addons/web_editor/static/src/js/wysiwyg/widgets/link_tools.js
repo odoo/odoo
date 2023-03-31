@@ -16,7 +16,7 @@ import {
  */
 const LinkTools = Link.extend({
     template: 'wysiwyg.widgets.linkTools',
-    events: _.extend({}, Link.prototype.events, {
+    events: Object.assign({}, Link.prototype.events, {
         'click we-select we-button': '_onPickSelectOption',
         'click we-checkbox': '_onClickCheckbox',
         'change .link-custom-color-border input': '_onChangeCustomBorderWidth',

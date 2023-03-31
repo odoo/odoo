@@ -25,7 +25,7 @@ const Many2oneDefaultMessageWidget = Many2oneUserValueWidget.extend({
 options.userValueWidgetsRegistry['we-many2one-default-message'] = Many2oneDefaultMessageWidget;
 
 options.registry.AddToCart = options.Class.extend({
-    events: _.extend({}, options.Class.prototype.events || {}, {
+    events: Object.assign({}, options.Class.prototype.events || {}, {
         'click .reset-variant-picker': '_onClickResetVariantPicker',
         'click .reset-product-picker': '_onClickResetProductPicker',
     }),

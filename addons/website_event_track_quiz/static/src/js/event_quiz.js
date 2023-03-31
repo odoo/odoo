@@ -224,7 +224,7 @@ var Quiz = publicWidget.Widget.extend({
             if (data.error) {
                 self._alertShow(data.error);
             } else {
-                self.quiz = _.extend(self.quiz, data);
+                self.quiz = Object.assign(self.quiz, data);
                 self.quiz.quizPointsGained = data.quiz_points;
                 if (data.quiz_completed) {
                     self._disableAnswers();

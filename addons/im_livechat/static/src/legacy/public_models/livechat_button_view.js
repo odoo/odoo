@@ -22,11 +22,8 @@ Model({
          * @param {Object} [options={}]
          */
         addMessage(data, options) {
-            const hasAlreadyMessage = _.some(
-                this.messaging.publicLivechatGlobal.messages,
-                function (msg) {
-                    return data.id === msg.id;
-                }
+            const hasAlreadyMessage = this.messaging.publicLivechatGlobal.messages.some(
+                (msg) => data.id === msg.id
             );
             if (hasAlreadyMessage) {
                 return;

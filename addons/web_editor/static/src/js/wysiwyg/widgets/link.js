@@ -26,7 +26,7 @@ const Link = Widget.extend({
      */
     init: function (parent, options, editable, data, $button, link) {
         this.options = options || {};
-        this._super(parent, _.extend({
+        this._super(parent, Object.assign({
             title: _t("Link to"),
         }, this.options));
 

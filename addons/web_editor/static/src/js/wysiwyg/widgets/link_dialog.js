@@ -7,7 +7,7 @@ import Link from "wysiwyg.widgets.Link";
 // This widget is there only to extend Link and be instantiated by LinkDialog.
 const _DialogLinkWidget = Link.extend({
     template: 'wysiwyg.widgets.link',
-    events: _.extend({}, Link.prototype.events || {}, {
+    events: Object.assign({}, Link.prototype.events || {}, {
         'change [name="link_style_color"]': '_onTypeChange',
     }),
 

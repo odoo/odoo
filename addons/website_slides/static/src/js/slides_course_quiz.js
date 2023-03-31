@@ -690,7 +690,7 @@
 
     publicWidget.registry.websiteSlidesQuizNoFullscreen = SlideCoursePage.extend({
         selector: '.o_wslides_lesson_main', // selector of complete page, as we need slide content and aside content table
-        custom_events: _.extend({}, SlideCoursePage.prototype.custom_events, {
+        custom_events: Object.assign({}, SlideCoursePage.prototype.custom_events, {
             slide_go_next: '_onQuizNextSlide',
         }),
 

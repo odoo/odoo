@@ -8,10 +8,10 @@ import weUtils from "web_editor.utils";
 var _t = core._t;
 
 options.registry.InnerChart = options.Class.extend({
-    custom_events: _.extend({}, options.Class.prototype.custom_events, {
+    custom_events: Object.assign({}, options.Class.prototype.custom_events, {
         'get_custom_colors': '_onGetCustomColors',
     }),
-    events: _.extend({}, options.Class.prototype.events, {
+    events: Object.assign({}, options.Class.prototype.events, {
         'click we-button.add_column': '_onAddColumnClick',
         'click we-button.add_row': '_onAddRowClick',
         'click we-button.o_we_matrix_remove_col': '_onRemoveColumnClick',

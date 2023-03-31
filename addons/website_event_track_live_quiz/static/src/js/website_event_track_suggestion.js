@@ -3,7 +3,7 @@
 import WebsiteEventTrackSuggestion from "website_event_track_live.website_event_track_suggestion";
 
 var WebsiteEventTrackSuggestionLiveQuiz = WebsiteEventTrackSuggestion.include({
-    events: _.extend({}, WebsiteEventTrackSuggestion.prototype.events, {
+    events: Object.assign({}, WebsiteEventTrackSuggestion.prototype.events, {
         'click .owevent_track_suggestion_quiz': '_onQuizClick'
     }),
 

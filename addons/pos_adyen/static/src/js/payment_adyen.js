@@ -102,7 +102,7 @@ export const PaymentAdyen = PaymentInterface.extend({
         var line = order.selected_paymentline;
         var data = {
             SaleToPOIRequest: {
-                MessageHeader: _.extend(this._adyen_common_message_header(), {
+                MessageHeader: Object.assign(this._adyen_common_message_header(), {
                     MessageCategory: "Payment",
                 }),
                 PaymentRequest: {
@@ -156,7 +156,7 @@ export const PaymentAdyen = PaymentInterface.extend({
         var self = this;
         var config = this.pos.config;
         var previous_service_id = this.most_recent_service_id;
-        var header = _.extend(this._adyen_common_message_header(), {
+        var header = Object.assign(this._adyen_common_message_header(), {
             MessageCategory: "Abort",
         });
 

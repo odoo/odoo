@@ -39,10 +39,10 @@ options.UserValueWidget.include({
 });
 
 const UrlPickerUserValueWidget = InputUserValueWidget.extend({
-    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
+    custom_events: Object.assign({}, InputUserValueWidget.prototype.custom_events || {}, {
         'website_url_chosen': '_onWebsiteURLChosen',
     }),
-    events: _.extend({}, InputUserValueWidget.prototype.events || {}, {
+    events: Object.assign({}, InputUserValueWidget.prototype.events || {}, {
         'click .o_we_redirect_to': '_onRedirectTo',
     }),
 
@@ -99,7 +99,7 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
 });
 
 const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
-    events: _.extend({}, SelectUserValueWidget.prototype.events || {}, {
+    events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
         'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
         'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
     }),
@@ -540,7 +540,7 @@ options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 options.Class.include({
-    custom_events: _.extend({}, options.Class.prototype.custom_events || {}, {
+    custom_events: Object.assign({}, options.Class.prototype.custom_events || {}, {
         'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
     specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],

@@ -8,7 +8,7 @@ import SlidesUpload from "@website_slides/js/slides_upload";
  * Management of the new 'certification' slide_category
  */
 SlidesUpload.SlideUploadDialog.include({
-    events: _.extend({}, SlidesUpload.SlideUploadDialog.prototype.events || {}, {
+    events: Object.assign({}, SlidesUpload.SlideUploadDialog.prototype.events || {}, {
         'change input#certification_id': '_onChangeCertification'
     }),
 

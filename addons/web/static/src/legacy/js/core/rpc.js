@@ -46,7 +46,7 @@ const rpc = {
             params.args = options.args || [];
             params.model = options.model;
             params.method = options.method;
-            params.kwargs = _.extend(params.kwargs || {}, options.kwargs);
+            params.kwargs = Object.assign(params.kwargs || {}, options.kwargs);
             params.kwargs.context = options.context || params.context || params.kwargs.context;
         }
 

@@ -124,7 +124,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if (!result.uid) {
                 return Promise.reject();
             }
-            _.extend(self, result);
+            Object.assign(self, result);
         });
     },
     session_logout: function () {
@@ -228,8 +228,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {Promise} promise indicating the session is done reloading
      */
     session_reload: function () {
-        var result = _.extend({}, session);
-        _.extend(this, result);
+        var result = Object.assign({}, session);
+        Object.assign(this, result);
         return Promise.resolve();
     },
     /**
@@ -247,17 +247,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     rpc: function (url, params, options) {
         var self = this;
         options = _.clone(options || {});
-        options.headers = _.extend({}, options.headers);
+        options.headers = Object.assign({}, options.headers);
 
         // we add here the user context for ALL queries, mainly to pass
         // the allowed_company_ids key
         if (params && params.kwargs) {
-            params.kwargs.context = _.extend(params.kwargs.context || {}, this.user_context);
+            params.kwargs.context = Object.assign(params.kwargs.context || {}, this.user_context);
         }
 
         // TODO: remove
         if (! _.isString(url)) {
-            _.extend(options, url);
+            Object.assign(options, url);
             url = url.url;
         }
         if (self.use_cors) {
@@ -267,7 +267,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return ajax.jsonRpc(url, "call", params, options);
     },
     url: function (path, params) {
-        params = _.extend(params || {});
+        params = Object.assign(params || {});
         var qs = $.param(params);
         if (qs.length > 0)
             qs = "?" + qs;

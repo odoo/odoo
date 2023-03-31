@@ -56,7 +56,7 @@ var ModelFieldSelector = Widget.extend({
 
         this.model = model;
         this.chain = chain;
-        this.options = _.extend({
+        this.options = Object.assign({
             order: 'string',
             readonly: true,
             fields: null,
@@ -67,7 +67,7 @@ var ModelFieldSelector = Widget.extend({
         this.popover = new ModelFieldSelectorPopover(this, model, chain, options);
 
         if (!this.options.readonly) {
-            _.extend(this.events, this.edition_events);
+            Object.assign(this.events, this.edition_events);
         }
     },
     /**

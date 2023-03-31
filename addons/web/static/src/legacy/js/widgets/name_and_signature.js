@@ -423,7 +423,7 @@ var NameAndSignature = Widget.extend({
                 }
                 self.$signatureField.jSignature('reset');
                 var ignoredContext = _.pick(context, ['shadowOffsetX', 'shadowOffsetY']);
-                _.extend(context, {shadowOffsetX: 0, shadowOffsetY: 0});
+                Object.assign(context, {shadowOffsetX: 0, shadowOffsetY: 0});
                 context.drawImage(image,
                     0,
                     0,
@@ -434,7 +434,7 @@ var NameAndSignature = Widget.extend({
                     width,
                     height
                 );
-                _.extend(context, ignoredContext);
+                Object.assign(context, ignoredContext);
                 self.trigger_up('signature_changed');
             }, 0);
         };

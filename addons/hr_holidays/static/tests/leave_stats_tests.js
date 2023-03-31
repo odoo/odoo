@@ -154,10 +154,10 @@ QUnit.test("leave stats reload when employee/department changes", async (assert)
             </form>`,
         mockRPC(route, args) {
             if (args.model === "hr.leave" && args.method === "search_read") {
-                assert.ok(_.some(args.kwargs.domain, _.matcher(["department_id", "=", 11])));
+                assert.ok(args.kwargs.domain.some(_.matcher(["department_id", "=", 11])));
             }
             if (args.model === "hr.leave" && args.method === "read_group") {
-                assert.ok(_.some(args.kwargs.domain, _.matcher(["employee_id", "=", 200])));
+                assert.ok(args.kwargs.domain.some(_.matcher(["employee_id", "=", 200])));
             }
         },
     });

@@ -82,7 +82,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             args: [[leadID], {
                 stage_id: stageID,
             }],
-            context: _.extend({website_partner_assign: 1}),
+            context: Object.assign({website_partner_assign: 1}),
         }).then(function () {
             window.location.reload();
         });

@@ -66,7 +66,7 @@ QUnit.module('core', function () {
     // Port from pypy/lib_pypy/test_datetime.py
     function makeEq(assert, c2) {
         var ctx = pyUtils.context();
-        var c = _.extend({ td: ctx.datetime.timedelta }, c2 || {});
+        var c = Object.assign({ td: ctx.datetime.timedelta }, c2 || {});
         return function (a, b, message) {
             assert.ok(py.eval(a + ' == ' + b, c), message);
         };

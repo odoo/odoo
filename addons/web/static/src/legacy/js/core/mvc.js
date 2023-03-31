@@ -183,7 +183,7 @@ var Factory = Class.extend({
             var renderer = self.getRenderer(parent, state);
             var Controller = self.Controller || self.config.Controller;
             const initialState = model.get(handle);
-            var controllerParams = _.extend({
+            var controllerParams = Object.assign({
                 initialState,
                 handle,
             }, self.controllerParams);

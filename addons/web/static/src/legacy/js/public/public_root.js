@@ -48,11 +48,11 @@ var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replac
  * children and handle them.
  */
 export const PublicRoot = publicWidget.RootWidget.extend({
-    events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
+    events: Object.assign({}, publicWidget.RootWidget.prototype.events || {}, {
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
     }),
-    custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
+    custom_events: Object.assign({}, publicWidget.RootWidget.prototype.custom_events || {}, {
         call_service: '_onCallService',
         context_get: '_onContextGet',
         main_object_request: '_onMainObjectRequest',
@@ -124,7 +124,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @returns {Object}
      */
     _getContext: function (context) {
-        return _.extend({
+        return Object.assign({
             'lang': getLang(),
         }, context || {});
     },
@@ -237,7 +237,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      */
     _onCallService: function (ev) {
         function _computeContext(context, noContextKeys) {
-            context = _.extend({}, this._getContext(), context);
+            context = Object.assign({}, this._getContext(), context);
             if (noContextKeys) {
                 context = _.omit(context, noContextKeys);
             }
