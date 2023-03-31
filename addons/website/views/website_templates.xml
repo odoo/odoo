@@ -879,6 +879,97 @@
     </xpath>
 </template>
 
+<!-- "Sales one" template -->
+<template id="template_header_sales_one" inherit_id="website.layout" name="Template Header Sale 1" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <t t-call="website.navbar">
+            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
+
+            <div id="top_menu_container">
+                <div aria-label="Top" class="container d-flex justify-content-between py-3">
+                    <!-- Brand -->
+                    <t t-call="website.placeholder_header_brand">
+                        <t t-set="_link_class" t-valuef="me-4"/>
+                    </t>
+                    <!-- Navbar -->
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-valuef="pe-2"/>
+
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-valuef="nav-item"/>
+                                <t t-set="link_class" t-valuef="nav-link"/>
+                            </t>
+                        </t>
+                    </t>
+                    <ul class="o_header_sales_one_right_col navbar-nav align-items-center gap-1 flex-grow-1 justify-content-end">
+                        <!-- Call To Action -->
+                        <t t-call="website.header_call_to_action_pill">
+                            <t t-set="_item_class" t-valuef="flex-grow-1"/>
+                            <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
+                        </t>
+                        <!-- Search bar -->
+                        <t t-call="website.placeholder_header_search_box">
+                            <t t-set="_layout" t-valuef="modal"/>
+                            <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
+                            <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
+                            <t t-set="_button_classes" t-valuef="o_navlink_background text-reset"/>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_link_class" t-valuef="btn rounded-circle text-reset fw-bold o_navlink_background"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_icon" t-value="true"/>
+                            <t t-set="_item_class" t-valuef="dropdown"/>
+                            <t t-set="_icon_class" t-valuef="fa-stack"/>
+                            <t t-set="_link_class" t-valuef="btn d-flex align-items-center rounded-circle p-1 pe-3 text-reset o_navlink_background"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                        </t>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_btn_class" t-valuef="rounded-circle text-reset o_navlink_background"/>
+                            <t t-set="_txt_class" t-valuef="small"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                        </t>
+                    </ul>
+                </div>
+                <div aria-label="Bottom" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links')" class="o_header_sales_one_bot gap-3 py-2">
+                    <ul class="navbar-nav container justify-content-between align-items-center">
+                        <!-- Text element -->
+                        <t t-call="website.placeholder_header_text_element">
+                            <t t-set="_txt_elt_content" t-valuef="list"/>
+                            <t t-set="_item_class" t-valuef="flex-basis-0 flex-grow-1 flex-shrink-0"/>
+                        </t>
+                        <!-- Social -->
+                        <t t-call="website.header_social_links_no_color"/>
+                    </ul>
+                </div>
+            </div>
+        </t>
+        <t t-call="website.template_header_mobile">
+            <t t-set="_txt_elt_content" t-valuef="list"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="template_header_sales_one_align_center" inherit_id="website.template_header_sales_one" active="False">
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="flex-grow-1 justify-content-end pe-2"/>
+    </xpath>
+</template>
+
+<template id="template_header_sales_one_align_right" inherit_id="website.template_header_sales_one" active="False">
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="flex-grow-1 justify-content-end pe-2"/>
+    </xpath>
+    <xpath expr="//ul[hasclass('o_header_sales_one_right_col')]" position="attributes">
+        <attribute name="class" remove="flex-grow-1" separator=" "/>
+    </xpath>
+</template>
+
 <template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_sidebar" separator=" "/>
