@@ -309,6 +309,13 @@ export class MessageService {
             this.store.discuss.history.messages.push(message);
             this.sortMessages(this.store.discuss.history);
         }
+        if (data.sender?.id) {
+            message.sender = this.personaService.insert({
+                ...data.senderr,
+                type: "partner",
+                channelId: message.originThread.id,
+            });
+        }
     }
 
     updateNotifications(message) {

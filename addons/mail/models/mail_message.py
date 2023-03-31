@@ -901,12 +901,22 @@ class Message(models.Model):
             if format_reply and message_sudo.model == 'mail.channel' and message_sudo.parent_id:
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
+            # sender (who posted)
+            if message_sudo.author_id and message_sudo.author_id == message_sudo.create_uid.partner_id:
+                sender = author
+            else:
+                sender = {
+                    'id': message_sudo.create_uid.partner_id.id,
+                    'name': message_sudo.create_uid.name,
+                }
+
             vals.update({
                 'author': author,
                 'default_subject': default_subject,
                 'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
+                'sender': sender,
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,
@@ -983,6 +993,9 @@ class Message(models.Model):
                     'is_note': True # only if the message is a note (subtype == note)
                     'is_discussion': False # only if the message is a discussion (subtype == discussion)
                     'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
+                    'sender': {
+                        "id": 3, "name": 'Administrator'
+                    },
                 }
         """
         self.check_access_rule('read')
