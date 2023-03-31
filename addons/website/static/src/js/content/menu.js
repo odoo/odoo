@@ -626,12 +626,13 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     },
 });
 
-publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
+publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     selector: 'header#top',
     disabledInEditableMode: false,
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
+        "shown.bs.modal #o_search_modal": "_onSearchModalShown",
     },
 
     //--------------------------------------------------------------------------
@@ -649,6 +650,16 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+    },
+    /**
+     * @private
+     */
+    _onSearchModalShown(ev) {
+        const searchModalEl = this.el.querySelector("#o_search_modal");
+        const searchInputEl = this.el.querySelector(".search-query");
+        if (searchModalEl) {
+            searchInputEl.focus();
+        }
     },
 });
 

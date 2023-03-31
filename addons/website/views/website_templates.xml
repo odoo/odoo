@@ -2119,9 +2119,11 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="False">
     <xpath expr="." position="inside">
-        <t id="header_language_selector_call" t-call="portal.language_selector">
-            <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
-        </t>
+        <li t-attf-class="#{_item_class}">
+            <t id="header_language_selector_call" t-call="portal.language_selector">
+                <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
+            </t>
+        </li>
     </xpath>
 </template>
 
@@ -2164,13 +2166,42 @@
 <template id="website.placeholder_header_call_to_action" name="Placeholder Header Call to Action"/>
 <template id="website.header_call_to_action" inherit_id="website.placeholder_header_call_to_action" name="Header Call to Action" active="True">
     <xpath expr="." position="inside">
-        <div t-attf-class="oe_structure oe_structure_solo #{_div_classes}">
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                <div class="container">
-                    <a href="/contactus" class="btn btn-primary btn_cta">Contact Us</a>
-                </div>
-            </section>
-        </div>
+        <li t-attf-class="#{_item_class}">
+            <div t-attf-class="oe_structure oe_structure_solo #{_div_class}">
+                <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                    <div class="container">
+                        <a href="/contactus" class="btn btn-primary btn_cta">Contact Us</a>
+                    </div>
+                </section>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<template id="website.header_call_to_action_large" inherit_id="website.header_call_to_action" name="Header Call to Action - Large" primary="True">
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" remove="" add="w-100" separator=" "/>
+    </xpath>
+</template>
+
+<template id="website.header_call_to_action_sidebar" inherit_id="website.header_call_to_action_large" name="Header Call to Action - Sidebar" primary="True">
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" remove="" add="p-0" separator=" "/>
+    </xpath>
+</template>
+
+<template id="website.header_call_to_action_stretched" inherit_id="website.header_call_to_action" name="Header Call to Action - Stretched" primary="True">
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" remove="" add="h-100" separator=" "/>
+    </xpath>
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" remove="" add="d-flex align-items-center h-100 rounded-0" separator=" "/>
+    </xpath>
+</template>
+
+<template id="website.header_call_to_action_pill" inherit_id="website.header_call_to_action" name="Header Call to Action - Pill" primary="True">
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" remove="btn-primary" add="btn-fill-primary rounded-circle" separator=" "/>
     </xpath>
 </template>
 
@@ -2778,4 +2809,126 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </xpath>
 </template>
 
+<!-- Extra element : Social links -->
+<template id="website.placeholder_header_social_links" name="Placeholder Header Social Links"/>
+<template id="website.header_social_links" inherit_id="website.placeholder_header_social_links" name="Header Social Links" active="False">
+    <xpath expr="." position="inside">
+        <li t-attf-class="#{_item_class}">
+            <div t-attf-class="o_header_social_links #{_div_class}">
+                <div class="s_social_media o_not_editable" data-snippet="s_social_media" data-name="Social Media">
+                    <h5 class="s_social_media_title d-none">Follow us</h5>
+                    <a href="/website/social/facebook" class="s_social_media_facebook o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                        <i class="fa fa-facebook fa-stack p-1 o_editable_media"/>
+                    </a>
+                    <a href="/website/social/twitter" class="s_social_media_twitter o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                        <i class="fa fa-twitter fa-stack p-1 o_editable_media"/>
+                    </a>
+                    <a href="/website/social/linkedin" class="s_social_media_linkedin o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                        <i class="fa fa-linkedin fa-stack p-1 o_editable_media"/>
+                    </a>
+                    <a href="/website/social/instagram" class="s_social_media_instagram o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                        <i class="fa fa-instagram fa-stack p-1 o_editable_media"/>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </xpath>
+</template>
+<template id="website.header_social_links_no_color" inherit_id="website.header_social_links" name="Header Social Links - No Color" primary="True">
+    <xpath expr="//div[hasclass('s_social_media')]" position="attributes">
+        <attribute name="class" remove="" add="no_icon_color" separator=" "/>
+    </xpath>
+    <xpath expr="//a[hasclass('s_social_media_facebook')]" position="attributes">
+        <attribute name="class" remove="" add="text-reset" separator=" "/>
+    </xpath>
+    <xpath expr="//a[hasclass('s_social_media_twitter')]" position="attributes">
+        <attribute name="class" remove="" add="text-reset" separator=" "/>
+    </xpath>
+    <xpath expr="//a[hasclass('s_social_media_linkedin')]" position="attributes">
+        <attribute name="class" remove="" add="text-reset" separator=" "/>
+    </xpath>
+    <xpath expr="//a[hasclass('s_social_media_instagram')]" position="attributes">
+        <attribute name="class" remove="" add="text-reset" separator=" "/>
+    </xpath>
+</template>
+
+<!--
+    This template allows to use the website_search_box_input many times keeping
+    the same parameters (eg. header desktop + header mobile)
+-->
+<template id="header_search_box_input" name="Header Search Box Input">
+    <t t-call="website.website_search_box_input">
+        <t t-set="search_type" t-valuef="all"/>
+        <t t-set="action" t-valuef="/website/search"/>
+        <t t-set="limit" t-value="limit or '5'"/>
+        <t t-set="display_image" t-valuef="true"/>
+        <t t-set="display_description" t-valuef="true"/>
+        <t t-set="display_extra_link" t-valuef="true"/>
+        <t t-set="display_detail" t-valuef="true"/>
+    </t>
+</template>
+
+<!-- Extra element : Search -->
+<template id="website.placeholder_header_search_box" name="Placeholder Header Search Bar"/>
+<template id="website.header_search_box" inherit_id="website.placeholder_header_search_box" name="Header Search Bar" active="True">
+    <xpath expr="." position="inside">
+        <li t-attf-class="#{_item_class}">
+            <t t-if="_layout == 'modal'">
+                <div class="modal fade" id="o_search_modal" aria-hidden="true" tabindex="-1">
+                    <div class="modal-dialog modal-lg pt-5">
+                        <div class="modal-content mt-5">
+                            <t t-call="website.header_search_box_input">
+                                <t t-set="_classes" t-valuef="input-group-lg"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <a t-attf-class="btn rounded-circle p-1 lh-1 #{_button_classes or 'bg-o-color-3'} o_not_editable" data-bs-target="#o_search_modal" data-bs-toggle="modal" role="button" title="Search">
+                    <i class="oi oi-search fa-stack lh-lg"/>
+                </a>
+            </t>
+            <t t-else="">
+                <t t-call="website.header_search_box_input"/>
+            </t>
+        </li>
+    </xpath>
+</template>
+
+<!-- Extra element : Text -->
+<template id="website.placeholder_header_text_element" name="Placeholder Header Text element"/>
+<template id="website.header_text_element" inherit_id="website.placeholder_header_text_element" name="Header Text element" active="True">
+    <xpath expr="." position="inside">
+        <li t-attf-class="#{_item_class}">
+            <div t-attf-class="s_text_block #{_div_class} #{'d-flex flex-column flex-lg-row gap-1 gap-lg-4 align-items-lg-center' if _txt_elt_content == 'list' else ''}" data-name="Text">
+                <t t-if="_txt_elt_content == 'sentence'">
+                    <small>Free Returns and Standard Shipping</small>
+                </t>
+                <t t-elif="_txt_elt_content == 'list'">
+                    <small class="d-flex align-items-center">
+                        <i class="fa fa-1x fa-fw fa-usd fa-stack me-1"/>
+                        Low Price Guarantee
+                    </small>
+                    <small class="d-flex align-items-center">
+                        <i class="fa fa-1x fa-fw fa-shopping-basket fa-stack me-1"/>
+                        30 Days Online Returns
+                    </small>
+                    <small class="d-flex align-items-center">
+                        <i class="fa fa-1x fa-fw fa-truck fa-stack me-1"/>
+                        Standard Shipping
+                    </small>
+                </t>
+                <t t-elif="_txt_elt_content == 'phone_mail'">
+                    <a href="tel:+1 (650) 555-0111" t-attf-class="nav-link o_nav-link_secondary #{_link_class}"><small><i class="fa fa-1x fa-fw fa-phone me-1"/> <span class="o_force_ltr">+1 (650) 555-0111</span></small></a>
+                    <a href="mailto:info@yourcompany.example.com" t-attf-class="nav-link o_nav-link_secondary #{_link_class}"><small><i class="fa fa-1x fa-fw fa-envelope me-1"/> info@yourcompany.example.com</small></a>
+                </t>
+                <t t-elif="_txt_elt_content == 'mail'">
+                    <a href="mailto:info@yourcompany.example.com" t-attf-class="nav-link o_nav-link_secondary #{_link_class}"><small><i class="fa fa-1x fa-fw fa-envelope me-1"/> info@yourcompany.example.com</small></a>
+                </t>
+                <t t-else="">
+                    <a href="tel:+1 (650) 555-0111" t-attf-class="nav-link o_nav-link_secondary p-2 #{_link_class}"><i class="fa fa-1x fa-fw fa-phone me-1"/><span class="o_force_ltr"><small>+1 (650) 555-0111</small></span></a>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
 </odoo>
