@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_message_tree_audit_log" model="ir.ui.view">
+        <field name="name">mail.message.tree.inherit.audit.log</field>
+        <field name="model">mail.message</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree edit="0" delete="0" create="0">
+                <field name="res_id" invisible="1"/>
+                <field name="date"/>
+                <field name="author_id" widget="many2one_avatar"/>
+                <field name="l10n_in_audit_log_account_move_id"/>
+                <field name="l10n_in_audit_log_preview"/>
+                <button name="action_open_document" type="object" icon="fa-arrow-right" string="View Related Document" attrs="{'invisible': [('res_id', 'in', (0, False, ''))]}" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_message_tree_audit_log_search">
+        <field name="name">mail.message.search</field>
+        <field name="model">mail.message</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <search string="Messages Search">
+                <field name="l10n_in_audit_log_account_move_id"/>
+                <field name="author_id"/>
+                <field name="date" string="Date"/>
+                <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_l10n_in_audit_trail_report" model="ir.actions.act_window">
+        <field name="name">Audit trail</field>
+        <field name="res_model">mail.message</field>
+        <field name="view_id" ref="view_message_tree_audit_log"/>
+        <field name="view_mode">tree</field>
+        <field name="domain">[
+            ('model', '=', 'account.move'),
+            ('message_type', '=', 'notification'),
+            ('l10n_in_audit_log_account_move_id', '!=', False),
+        ]</field>
+        <field name="search_view_id" ref="view_message_tree_audit_log_search"/>
+    </record>
+
+    <menuitem id="l10n_in_audit_trail_report_menu" name="Audit trail" action="action_l10n_in_audit_trail_report" parent="l10n_in.account_reports_in_statements_menu" sequence="2"
+        groups="account.group_account_readonly"/>
+</odoo>
