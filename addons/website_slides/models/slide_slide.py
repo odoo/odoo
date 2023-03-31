@@ -939,8 +939,8 @@ class Slide(models.Model):
         """
         if any(not slide.channel_id.is_member or not slide.website_published for slide in self):
             raise UserError(
-                _('You cannot mark a slide quiz as completed if you are not among its members.') if completed
-                else _('You cannot mark a slide quiz as not completed if you are not among its members.')
+                _('You cannot mark a slide quiz as completed if you are not among its members or it is unpublished.') if completed
+                else _('You cannot mark a slide quiz as not completed if you are not among its members or it is unpublished.')
             )
 
         points = 0
