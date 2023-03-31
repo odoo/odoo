@@ -246,7 +246,7 @@ var PortalChatter = publicWidget.Widget.extend({
         }
 
         var pages = [];
-        _.each(_.range(pmin, pmax + 1), function (index) {
+        _.range(pmin, pmax + 1).forEach( function (index) {
             pages.push(index);
         });
 
