@@ -106,16 +106,17 @@ class Project(models.Model):
             ['|', ('move_line_id', '=', False), ('move_line_id.purchase_line_id', '=', False)],
         ])
 
+    def _add_purchase_items(self, profitability_items, with_action=True):
+        return False
+
     def _get_profitability_labels(self):
         labels = super()._get_profitability_labels()
         labels['purchase_order'] = _lt('Purchase Orders')
-        labels['other_purchase_costs'] = _lt('Other Costs')
         return labels
 
     def _get_profitability_sequence_per_invoice_type(self):
         sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
-        sequence_per_invoice_type['purchase_order'] = 9
-        sequence_per_invoice_type['other_purchase_costs'] = 10
+        sequence_per_invoice_type['purchase_order'] = 10
         return sequence_per_invoice_type
 
     def _get_profitability_items(self, with_action=True):
@@ -135,6 +136,7 @@ class Project(models.Model):
                 'invoice_lines': self.env['purchase.order.line'].browse(pol['id']).invoice_lines,  # One2Many cannot be queried, they are not columns
             } for pol in self._cr.dictfetchall()]
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
+            with_action = with_action and self.user_has_groups('purchase.group_purchase_user, account.group_account_invoice, account.group_account_readonly')
             if purchase_order_line_read:
 
                 # Get conversion rate from currencies to currency of analytic account
@@ -157,7 +159,7 @@ class Project(models.Model):
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
                 purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
-                if with_action and purchase_order_line_ids and self.user_has_groups('purchase.group_purchase_user'):
+                if with_action and purchase_order_line_ids:
                     args = [section_id, [('id', 'in', purchase_order_line_ids)]]
                     if len(purchase_order_line_ids) == 1:
                         args.append(purchase_order_line_ids[0])
@@ -166,52 +168,11 @@ class Project(models.Model):
                 costs['data'].append(purchase_order_costs)
                 costs['total']['billed'] += amount_invoiced
                 costs['total']['to_bill'] += amount_to_invoice
-            # calculate the cost of bills without a purchase order
-            query = self.env['account.move.line'].sudo()._search([
+            domain = [
                 ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
                 ('parent_state', 'in', ['draft', 'posted']),
                 ('price_subtotal', '>', 0),
                 ('id', 'not in', purchase_order_line_invoice_line_ids),
-            ], order=self.env['account.move.line']._order)
-            query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-            # account_move_line__move_id is the alias of the joined table account_move in the query
-            # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
-            # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-            query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type')
-            self._cr.execute(query_string, query_param)
-            bills_move_line_read = self._cr.dictfetchall()
-            if bills_move_line_read:
-
-                # Get conversion rate from currencies to currency of analytic account
-                currency_ids = {bml['currency_id'] for bml in bills_move_line_read + [{'currency_id': self.analytic_account_id.currency_id.id}]}
-                rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id, date.today())
-                conversion_rates = {cid: rates[self.analytic_account_id.currency_id.id] / rate_from for cid, rate_from in rates.items()}
-
-                amount_invoiced = amount_to_invoice = 0.0
-                for moves_read in bills_move_line_read:
-                    price_subtotal = self.analytic_account_id.currency_id.round(moves_read['price_subtotal'] * conversion_rates[moves_read['currency_id']])
-                    analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
-                    if moves_read['parent_state'] == 'draft':
-                        if moves_read['move_type'] == 'in_invoice':
-                            amount_to_invoice -= price_subtotal * analytic_contribution
-                        else:  # moves_read['move_type'] == 'in_refund'
-                            amount_to_invoice += price_subtotal * analytic_contribution
-                    else:  # moves_read['parent_state'] == 'posted'
-                        if moves_read['move_type'] == 'in_invoice':
-                            amount_invoiced -= price_subtotal * analytic_contribution
-                        else:  # moves_read['move_type'] == 'in_refund'
-                            amount_invoiced += price_subtotal * analytic_contribution
-                # don't display the section if the final values are both 0 (bill -> vendor credit)
-                if amount_invoiced != 0 or amount_to_invoice != 0:
-                    costs = profitability_items['costs']
-                    section_id = 'other_purchase_costs'
-                    bills_costs = {
-                        'id': section_id,
-                        'sequence': self._get_profitability_sequence_per_invoice_type()[section_id],
-                        'billed': amount_invoiced,
-                        'to_bill': amount_to_invoice,
-                    }
-                    costs['data'].append(bills_costs)
-                    costs['total']['billed'] += amount_invoiced
-                    costs['total']['to_bill'] += amount_to_invoice
+            ]
+            self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
         return profitability_items

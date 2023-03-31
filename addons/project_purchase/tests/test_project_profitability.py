@@ -13,7 +13,7 @@ from odoo.addons.purchase.tests.test_purchase_invoice import TestPurchaseToInvoi
 @tagged('-at_install', 'post_install')
 class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurchaseToInvoiceCommon):
 
-    def test_bills_without_purchase_order_are_accounted_in_profitability(self):
+    def test_bills_without_purchase_order_are_accounted_in_profitability_project_purchase(self):
         """
         A bill that has an AAL on one of its line should be taken into account
         for the profitability of the project.
@@ -39,17 +39,32 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 "currency_id": self.env.company.currency_id.id,
             })],
         })
-        # the bill_1 is in draft, therefor it should have the cost "to_bill" same as the -product_price (untaxed)
+        # add 2 new AAL to the analytic account. Those costs must be present in the cost data
+        self.env['account.analytic.line'].create([{
+            'name': 'extra costs 1',
+            'account_id': self.analytic_account.id,
+            'amount': -50,
+        }, {
+            'name': 'extra costs 2',
+            'account_id': self.analytic_account.id,
+            'amount': -100,
+        }])
+        # the bill_1 is in draft, therefore it should have the cost "to_bill" same as the -product_price (untaxed)
         self.assertDictEqual(
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
                     'id': 'other_purchase_costs',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'],
                     'to_bill': -self.product_a.standard_price * analytic_contribution,
                     'billed': 0.0,
                 }],
-                'total': {'to_bill': -self.product_a.standard_price * analytic_contribution, 'billed': 0.0},
+                'total': {'to_bill': -self.product_a.standard_price * analytic_contribution, 'billed': -150.0},
             },
         )
         # post bill_1
@@ -59,12 +74,17 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
                     'id': 'other_purchase_costs',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'],
                     'to_bill': 0.0,
                     'billed': -self.product_a.standard_price * analytic_contribution,
                 }],
-                'total': {'to_bill': 0.0, 'billed': -self.product_a.standard_price * analytic_contribution},
+                'total': {'to_bill': 0.0, 'billed': -self.product_a.standard_price * analytic_contribution - 150},
             },
         )
         # create another bill, with 2 lines, 2 diff products, the second line has 2 as quantity
@@ -95,6 +115,11 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
                     'id': 'other_purchase_costs',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'],
                     'to_bill': -(self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
@@ -102,7 +127,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 }],
                 'total': {
                     'to_bill': -(self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
-                    'billed': -self.product_a.standard_price * analytic_contribution,
+                    'billed': -self.product_a.standard_price * analytic_contribution - 150,
                 },
             },
         )
@@ -113,6 +138,11 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
                     'id': 'other_purchase_costs',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'],
                     'to_bill': 0.0,
@@ -120,7 +150,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 }],
                 'total': {
                     'to_bill': 0.0,
-                    'billed': -2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
+                    'billed': -2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution - 150,
                 },
             },
         )
@@ -145,6 +175,11 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
                     'id': 'purchase_order',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
                     'to_bill': -self.product_order.standard_price * analytic_contribution,
@@ -157,7 +192,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 }],
                 'total': {
                     'to_bill': -self.product_order.standard_price * analytic_contribution,
-                    'billed': -2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
+                    'billed': -2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution - 150,
                 },
             },
         )
@@ -171,6 +206,11 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
                     'id': 'purchase_order',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
                     'to_bill': 0.0,
@@ -185,7 +225,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                     'to_bill': 0.0,
                     'billed': -(2 * self.product_a.standard_price +
                                 2 * self.product_b.standard_price +
-                                self.product_order.standard_price) * analytic_contribution,
+                                self.product_order.standard_price) * analytic_contribution - 150,
                 },
             },
         )
