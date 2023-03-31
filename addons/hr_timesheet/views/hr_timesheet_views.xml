@@ -9,8 +9,9 @@
                     <field name="readonly_timesheet" invisible="1"/>
                     <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="employee_id" invisible="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                    <field name="project_id" required="1" options="{'no_create_edit': True, 'no_open': 1}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                    <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="project_id" required="1" options="{'no_create_edit': True}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                    <field name="task_id" optional="show" options="{'no_create_edit': True}" widget="task_with_hours" context="{'default_project_id': project_id}"
+                        attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="name" optional="show" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"
                         decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" decoration-muted="unit_amount == 0"/>
@@ -123,10 +124,10 @@
                         <group>
                             <group>
                                 <field name="readonly_timesheet" invisible="1"/>
-                                <field name="project_id" required="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}"
+                                <field name="project_id" required="1" options="{'no_create_edit': True}"
                                     attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                <field name="name" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                <field name="task_id" widget="task_with_hours" options="{'no_create_edit': True}"
+                                    context="{'default_project_id': project_id}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </group>
                             <group>
@@ -138,6 +139,7 @@
                                 <field name="company_id" invisible="1"/>
                             </group>
                         </group>
+                        <field name="name" placeholder="Describe your activity" widget="text" required="0" nolabel="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     </sheet>
                 </form>
             </field>
@@ -151,8 +153,9 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
-                    <field name="employee_id" required="1" context="{'active_test': True}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="employee_id" required="1" groups="hr_timesheet.group_hr_timesheet_approver" widget="many2one_avatar_employee"
+                        attrs="{'readonly': [('readonly_timesheet', '=', True)]}" context="{'active_test': True}"/>
+                    <field name="user_id" invisible="1" groups="hr_timesheet.group_hr_timesheet_approver"/>
                 </xpath>
             </field>
         </record>
