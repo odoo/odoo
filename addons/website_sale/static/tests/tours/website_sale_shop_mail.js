@@ -1,9 +1,8 @@
-odoo.define('website_sale.tour_shop_mail', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var rpc = require('web.rpc');
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import rpc from "web.rpc";
+import { registry } from "@web/core/registry";
+import tourUtils from "website_sale.tour_utils";
 
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,
@@ -95,4 +94,3 @@ registry.category("web_tour.tours").add('shop_mail', {
         extra_trigger: 'div.o_field_html[name="body_content"] a[href^="https://my-test-domain.com"]',
     },
 ]});
-});

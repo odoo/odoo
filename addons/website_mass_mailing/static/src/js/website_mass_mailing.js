@@ -1,9 +1,8 @@
-odoo.define('mass_mailing.website_integration', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import {ReCaptcha} from "google_recaptcha.ReCaptchaV3";
 
 var _t = core._t;
 
@@ -159,6 +158,4 @@ publicWidget.registry.fixNewsletterListClass = publicWidget.Widget.extend({
         this.$target[0].classList.add('s_newsletter_list');
         return this._super(...arguments);
     },
-});
-
 });

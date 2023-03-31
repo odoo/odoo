@@ -1,7 +1,6 @@
-odoo.define('website_event_sale.tour', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('event_buy_tickets', {
     test: true,
@@ -83,6 +82,4 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             timeout: 30000,
         }
     ]
-});
-
 });

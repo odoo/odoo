@@ -1,9 +1,8 @@
-odoo.define('mass_mailing.wysiwyg', function (require) {
-'use strict';
+/** @odoo-module alias=mass_mailing.wysiwyg **/
 
-var Wysiwyg = require('web_editor.wysiwyg');
-var MassMailingSnippetsMenu = require('mass_mailing.snippets.editor');
-const {closestElement} = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
+import Wysiwyg from "web_editor.wysiwyg";
+import MassMailingSnippetsMenu from "mass_mailing.snippets.editor";
+import {closestElement} from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 
 const MassMailingWysiwyg = Wysiwyg.extend({
     //--------------------------------------------------------------------------
@@ -80,6 +79,4 @@ const MassMailingWysiwyg = Wysiwyg.extend({
     },
 });
 
-return MassMailingWysiwyg;
-
-});
+export default MassMailingWysiwyg;

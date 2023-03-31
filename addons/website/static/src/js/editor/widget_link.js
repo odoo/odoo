@@ -1,8 +1,7 @@
-odoo.define('website.editor.link', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var weWidgets = require('wysiwyg.widgets');
-var wUtils = require('website.utils');
+import weWidgets from "wysiwyg.widgets";
+import wUtils from "website.utils";
 
 weWidgets.LinkTools.include({
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
@@ -101,5 +100,4 @@ weWidgets.LinkTools.include({
         }
         this._super(...arguments);
     },
-});
 });

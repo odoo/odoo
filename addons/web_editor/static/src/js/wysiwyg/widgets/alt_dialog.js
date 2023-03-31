@@ -1,8 +1,7 @@
-odoo.define('wysiwyg.widgets.AltDialog', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets.AltDialog **/
 
-var core = require('web.core');
-var Dialog = require('wysiwyg.widgets.Dialog');
+import core from "web.core";
+import Dialog from "wysiwyg.widgets.Dialog";
 
 var _t = core._t;
 
@@ -47,5 +46,4 @@ var AltDialog = Dialog.extend({
 });
 
 
-return AltDialog;
-});
+export default AltDialog;

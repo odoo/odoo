@@ -1,8 +1,7 @@
-odoo.define('survey.test_survey_session_manage_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-var surveySessionTools = require('survey.session_tour_tools');
+import { registry } from "@web/core/registry";
+import surveySessionTools from "survey.session_tour_tools";
 
 /**
  * Since the chart is rendered using SVG, we can't use jQuery triggers to check if everything
@@ -458,5 +457,3 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: 'button[name="action_start_session"]',
     run: function () {} // check that we can start another session
 }])});
-
-});

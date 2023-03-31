@@ -1,8 +1,7 @@
-odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
-    "use strict";
-
-    const { registry } = require("@web/core/registry");
-    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+/** @odoo-module **/
+    
+    import { registry } from "@web/core/registry";
+    import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
     registry.category("web_tour.tours").add('mass_mailing_editor_tour', {
         url: '/web',
@@ -57,4 +56,3 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         trigger: 'iframe .o_editable',
         run: () => {},
     }]});
-});

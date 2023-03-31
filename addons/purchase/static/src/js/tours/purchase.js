@@ -1,34 +1,11 @@
-odoo.define('purchase.purchase_steps', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-
-var PurchaseAdditionalTourSteps = core.Class.extend({
-
-    _get_purchase_stock_steps: function () {
-        return [
-            {
-                auto: true, // Useless final step to trigger congratulation message
-                trigger: ".o_purchase_order",
-            },
-        ];
-    },
-
-});
-
-return PurchaseAdditionalTourSteps;
-
-});
-
-odoo.define('purchase.tour', function(require) {
-"use strict";
-
-var core = require('web.core');
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+import core from "web.core";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 var _t = core._t;
-var PurchaseAdditionalTourSteps = require('purchase.purchase_steps');
+import PurchaseAdditionalTourSteps from "purchase.purchase_steps";
 
 registry.category("web_tour.tours").add('purchase_tour' , {
     url: "/web",
@@ -128,5 +105,3 @@ registry.category("web_tour.tours").add('purchase_tour' , {
 }, ...stepUtils.statusbarButtonsSteps('Confirm Order', _t("Confirm your purchase.")),
 ...new PurchaseAdditionalTourSteps()._get_purchase_stock_steps(),
 ]});
-
-});

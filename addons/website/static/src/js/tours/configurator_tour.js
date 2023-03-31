@@ -1,8 +1,7 @@
-odoo.define("website.configurator_tour", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require("website.tour_utils");
-const core = require("web.core");
+import wTourUtils from "website.tour_utils";
+import core from "web.core";
 const _t = core._t;
 
 let titleSelector = '#wrap > section:first-child';
@@ -43,5 +42,3 @@ const steps = [
 ];
 
 wTourUtils.registerThemeHomepageTour('configurator_tour', steps);
-
-});

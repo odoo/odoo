@@ -1,7 +1,6 @@
-odoo.define('web_editor.loader', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.loader **/
 
-const { getBundle, loadBundle } = require('@web/core/assets');
+import { getBundle, loadBundle } from "@web/core/assets";
 
 const exports = {};
 
@@ -77,5 +76,4 @@ exports.loadFromTextarea = async (parent, textarea, options) => {
     return wysiwyg;
 };
 
-return exports;
-});
+export default exports;

@@ -1,9 +1,8 @@
-odoo.define('account.dashboard.setup.tour', function (require) {
-    "use strict";
-
-    var core = require('web.core');
-    const { registry } = require("@web/core/registry");
-    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
+/** @odoo-module alias=account.dashboard.setup.tour **/
+    
+    import core from "web.core";
+    import { registry } from "@web/core/registry";
+    import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
     var _t = core._t;
 
@@ -42,4 +41,3 @@ odoo.define('account.dashboard.setup.tour', function (require) {
         },
     }
         ]});
-});

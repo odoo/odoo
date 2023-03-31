@@ -1,10 +1,9 @@
-odoo.define('website_blog.options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-require('web.dom_ready');
-const {_t} = require('web.core');
-const options = require('web_editor.snippets.options');
-require('website.editor.snippets.options');
+import "web.dom_ready";
+import {_t} from "web.core";
+import options from "web_editor.snippets.options";
+import "website.editor.snippets.options";
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
@@ -181,5 +180,4 @@ options.registry.BlogPostTagSelection = options.Class.extend({
     async _renderCustomXML(uiFragment) {
         uiFragment.querySelector('we-many2many').dataset.recordId = this.blogPostID;
     },
-});
 });

@@ -1,7 +1,6 @@
-odoo.define('test_website.custom_snippets', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 /**
  * The purpose of this tour is to check the custom snippets flow:
@@ -105,5 +104,3 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         run: function () {}, // check
     },
 ]);
-
-});

@@ -1,9 +1,8 @@
-odoo.define('website_twitter.animation', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-const {Markup} = require('web.utils');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import {Markup} from "web.utils";
+import publicWidget from "web.public.widget";
 
 var qweb = core.qweb;
 
@@ -176,5 +175,4 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             window.open(url, '_blank');
         }
     },
-});
 });

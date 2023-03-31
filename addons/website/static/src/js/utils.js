@@ -1,7 +1,6 @@
-odoo.define('website.utils', function (require) {
-'use strict';
+/** @odoo-module alias=website.utils **/
 
-var core = require('web.core');
+import core from "web.core";
 
 const { qweb, _t } = core;
 
@@ -416,7 +415,7 @@ function generateGMapLink(dataset) {
         + '&ie=UTF8&iwloc=&output=embed';
 }
 
-return {
+export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
     onceAllImagesLoaded: onceAllImagesLoaded,
@@ -428,4 +427,3 @@ return {
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,
 };
-});

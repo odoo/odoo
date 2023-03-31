@@ -1,10 +1,9 @@
-odoo.define('website.s_chart_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-const {ColorpickerWidget} = require('web.Colorpicker');
-var options = require('web_editor.snippets.options');
-const weUtils = require('web_editor.utils');
+import core from "web.core";
+import {ColorpickerWidget} from "web.Colorpicker";
+import options from "web_editor.snippets.options";
+import weUtils from "web_editor.utils";
 
 var _t = core._t;
 
@@ -503,5 +502,4 @@ options.registry.InnerChart = options.Class.extend({
         }
         this.updateUI();
     },
-});
 });

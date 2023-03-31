@@ -1,9 +1,8 @@
-odoo.define('website_sale.s_dynamic_snippet_products', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale.s_dynamic_snippet_products **/
 
-const publicWidget = require('web.public.widget');
-const DynamicSnippetCarousel = require('website.s_dynamic_snippet_carousel');
-var wSaleUtils = require('website_sale.utils');
+import publicWidget from "web.public.widget";
+import DynamicSnippetCarousel from "website.s_dynamic_snippet_carousel";
+import wSaleUtils from "website_sale.utils";
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
@@ -172,5 +171,4 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
 publicWidget.registry.dynamic_snippet_products_cta = DynamicSnippetProductsCard;
 publicWidget.registry.dynamic_snippet_products = DynamicSnippetProducts;
 
-return DynamicSnippetProducts;
-});
+export default DynamicSnippetProducts;

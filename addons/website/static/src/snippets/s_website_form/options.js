@@ -1,13 +1,12 @@
-odoo.define('website.form_editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const core = require('web.core');
-const FormEditorRegistry = require('website.form_editor_registry');
-const options = require('web_editor.snippets.options');
-const Dialog = require('web.Dialog');
-const dom = require('web.dom');
-const {generateHTMLId} = require('web_editor.utils');
-require('website.editor.snippets.options');
+import core from "web.core";
+import FormEditorRegistry from "website.form_editor_registry";
+import options from "web_editor.snippets.options";
+import Dialog from "web.Dialog";
+import dom from "web.dom";
+import {generateHTMLId} from "web_editor.utils";
+import "website.editor.snippets.options";
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -1521,5 +1520,4 @@ options.registry.DeviceVisibility.include({
         return await this._super(...arguments)
             && !this.$target.hasClass('s_website_form_field_hidden');
     },
-});
 });

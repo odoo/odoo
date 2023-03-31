@@ -1,11 +1,10 @@
-odoo.define('payment.manage_form', require => {
-    'use strict';
+/** @odoo-module alias=payment.manage_form **/
+    
+    import core from "web.core";
+    import publicWidget from "web.public.widget";
+    import Dialog from "web.Dialog";
 
-    const core = require('web.core');
-    const publicWidget = require('web.public.widget');
-    const Dialog = require('web.Dialog');
-
-    const paymentFormMixin = require('payment.payment_form_mixin');
+    import paymentFormMixin from "payment.payment_form_mixin";
 
     const _t = core._t;
 
@@ -249,5 +248,4 @@ odoo.define('payment.manage_form', require => {
         },
 
     });
-    return publicWidget.registry.PaymentManageForm;
-});
+    export default publicWidget.registry.PaymentManageForm;

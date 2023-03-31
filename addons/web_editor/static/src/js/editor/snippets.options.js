@@ -1,19 +1,18 @@
-odoo.define('web_editor.snippets.options', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.snippets.options **/
 
-const { ComponentWrapper } = require('web.OwlCompatibility');
-const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
-var core = require('web.core');
-const {ColorpickerWidget} = require('web.Colorpicker');
-const Dialog = require('web.Dialog');
-const {scrollTo} = require('web.dom');
-const rpc = require('web.rpc');
-const time = require('web.time');
-const utils = require('web.utils');
-var Widget = require('web.Widget');
-var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
-const weUtils = require('web_editor.utils');
-const gridUtils = require('@web_editor/js/common/grid_layout_utils');
+import { ComponentWrapper } from "web.OwlCompatibility";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import core from "web.core";
+import {ColorpickerWidget} from "web.Colorpicker";
+import Dialog from "web.Dialog";
+import {scrollTo} from "web.dom";
+import rpc from "web.rpc";
+import time from "web.time";
+import utils from "web.utils";
+import Widget from "web.Widget";
+import { ColorPaletteWidget } from "web_editor.ColorPalette";
+import weUtils from "web_editor.utils";
+import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 const {
     normalizeColor,
     getBgImageURL,
@@ -21,8 +20,8 @@ const {
     backgroundImagePartsToCss,
     DEFAULT_PALETTE,
 } = weUtils;
-var weWidgets = require('wysiwyg.widgets');
-const {
+import weWidgets from "wysiwyg.widgets";
+import {
     loadImage,
     loadImageInfo,
     applyModifications,
@@ -31,9 +30,9 @@ const {
     isImageSupportedForStyle,
     createDataURL,
     isGif,
-} = require('web_editor.image_processing');
-const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
-const {SIZES, MEDIAS_BREAKPOINTS} = require('@web/core/ui/ui_service');
+} from "web_editor.image_processing";
+import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -8129,7 +8128,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
 });
 
 
-return {
+export default {
     SnippetOptionWidget: SnippetOptionWidget,
     snippetOptionRegistry: registry,
 
@@ -8150,4 +8149,3 @@ return {
     Class: SnippetOptionWidget,
     registry: registry,
 };
-});

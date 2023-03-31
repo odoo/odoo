@@ -1,12 +1,11 @@
-odoo.define('website_sale_delivery.checkout', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale_delivery.checkout **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
+import core from "web.core";
+import publicWidget from "web.public.widget";
 
 const _t = core._t;
 const qweb = core.qweb;
-var concurrency = require('web.concurrency');
+import concurrency from "web.concurrency";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -413,5 +412,4 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             $providerRestricted.hide().attr('disabled', true);
         }
     },
-});
 });

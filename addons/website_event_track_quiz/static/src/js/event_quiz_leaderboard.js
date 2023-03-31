@@ -1,8 +1,7 @@
-odoo.define('website_event_track_quiz.event_leaderboard', function (require) {
+/** @odoo-module alias=website_event_track_quiz.event_leaderboard **/
 
-'use strict';
 
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.EventLeaderboard = publicWidget.Widget.extend({
     selector: '.o_wevent_quiz_leaderboard',
@@ -29,6 +28,4 @@ publicWidget.registry.EventLeaderboard = publicWidget.Widget.extend({
     }
 });
 
-return publicWidget.registry.EventLeaderboard;
-
-});
+export default publicWidget.registry.EventLeaderboard;

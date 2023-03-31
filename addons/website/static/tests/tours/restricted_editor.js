@@ -1,7 +1,6 @@
-odoo.define("website.tour.restricted_editor", function (require) {
-"use strict";
+/** @odoo-module **/
 
-var wTourUtils = require("website.tour_utils");
+import wTourUtils from "website.tour_utils";
 
 wTourUtils.registerWebsitePreviewTour("restricted_editor", {
     test: true,
@@ -13,4 +12,3 @@ wTourUtils.registerWebsitePreviewTour("restricted_editor", {
     trigger: '#oe_snippets.o_loaded',
     content: "Check that the snippets loaded properly",
 }]);
-});

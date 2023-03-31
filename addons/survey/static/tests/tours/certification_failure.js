@@ -1,7 +1,6 @@
-odoo.define('survey.tour_test_certification_failure', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var SurveyFormWidget = require('survey.form');
+import SurveyFormWidget from "survey.form";
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
@@ -17,7 +16,7 @@ SurveyFormWidget.include({
  * try and fail twice and will no longer be able to take the certification.
  */
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 var failSteps = [{ // Page-1
     content: "Clicking on Start Certification",
@@ -105,5 +104,3 @@ registry.category("web_tour.tours").add('test_certification_failure', {
     test: true,
     url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
     steps: [].concat(failSteps, retrySteps, failSteps, lastSteps) });
-
-});

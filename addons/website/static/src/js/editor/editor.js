@@ -1,8 +1,7 @@
-odoo.define('website.editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var weWidgets = require('web_editor.widget');
-var wUtils = require('website.utils');
+import weWidgets from "web_editor.widget";
+import wUtils from "website.utils";
 
 weWidgets.LinkDialog.include({
     /**
@@ -18,5 +17,4 @@ weWidgets.LinkDialog.include({
         wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
         return result;
     },
-});
 });

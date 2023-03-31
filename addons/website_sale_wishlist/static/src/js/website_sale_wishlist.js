@@ -1,9 +1,8 @@
-odoo.define('website_sale_wishlist.wishlist', function (require) {
-"use strict";
+/** @odoo-module alias=website_sale_wishlist.wishlist **/
 
-var publicWidget = require('web.public.widget');
-var wSaleUtils = require('website_sale.utils');
-var VariantMixin = require('sale.VariantMixin');
+import publicWidget from "web.public.widget";
+import wSaleUtils from "website_sale.utils";
+import VariantMixin from "sale.VariantMixin";
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
@@ -295,5 +294,4 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             self.$('.wishlist-section .o_wish_add').removeClass('disabled');
         });
     },
-});
 });

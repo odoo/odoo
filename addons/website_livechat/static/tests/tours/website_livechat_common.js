@@ -1,5 +1,4 @@
-odoo.define('website_livechat.tour_common', function (require) {
-'use strict';
+/** @odoo-module alias=website_livechat.tour_common **/
 
 // Due to some issue with assets bundles, the current file can be loaded while
 // LivechatButtonView isn't, causing the patch to fail as the original model was
@@ -7,8 +6,8 @@ odoo.define('website_livechat.tour_common', function (require) {
 // execution of this file if @im_livechat/public_models/livechat_button_view is
 // not part of the current assets bundles (as trying to import it will silently
 // crash).
-require('@im_livechat/legacy/public_models/livechat_button_view');
-const { Patch } = require('@im_livechat/legacy/model');
+import "@im_livechat/legacy/public_models/livechat_button_view";
+import { Patch } from "@im_livechat/legacy/model";
 
 Patch({
     name: 'LivechatButtonView',
@@ -150,7 +149,7 @@ var sadRatingStep = [{
     trigger: "div.o_livechat_rating_choices > img[data-value=1]",
 }];
 
-return {
+export default {
     'startStep': startStep,
     'endDiscussionStep': endDiscussionStep,
     'transcriptStep': transcriptStep,
@@ -160,5 +159,3 @@ return {
     'okRatingStep': okRatingStep,
     'sadRatingStep': sadRatingStep,
 };
-
-});

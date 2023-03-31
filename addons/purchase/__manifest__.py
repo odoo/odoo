@@ -41,6 +41,7 @@
             'purchase/static/src/toaster_button/*',
             'purchase/static/src/views/*.js',
             'purchase/static/src/js/tours/purchase.js',
+            'purchase/static/src/js/tours/purchase_steps.js',
             'purchase/static/src/**/*.xml',
         ],
         'web.assets_frontend': [

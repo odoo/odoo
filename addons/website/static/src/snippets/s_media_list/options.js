@@ -1,7 +1,6 @@
-odoo.define('website.s_media_list_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.MediaItemLayout = options.Class.extend({
 
@@ -46,5 +45,4 @@ options.registry.MediaItemLayout = options.Class.extend({
         }
         return this._super(...arguments);
     },
-});
 });

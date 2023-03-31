@@ -1,29 +1,11 @@
-odoo.define('event.event_steps', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
+import {_t} from "web.core";
+import {Markup} from "web.utils";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-var EventAdditionalTourSteps = core.Class.extend({
-
-    _get_website_event_steps: function () {
-        return [false];
-    },
-
-});
-
-return EventAdditionalTourSteps;
-
-});
-
-odoo.define('event.event_tour', function (require) {
-"use strict";
-
-const {_t} = require('web.core');
-const {Markup} = require('web.utils');
-const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/tour_service/tour_utils');
-
-var EventAdditionalTourSteps = require('event.event_steps');
+import EventAdditionalTourSteps from "event.event_steps";
 
 registry.category("web_tour.tours").add('event_tour', {
     url: '/web',
@@ -75,5 +57,3 @@ registry.category("web_tour.tours").add('event_tour', {
     position: 'bottom',
     run: 'click',
 }].filter(Boolean)});
-
-});

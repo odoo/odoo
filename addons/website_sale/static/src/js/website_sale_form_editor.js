@@ -1,7 +1,6 @@
-odoo.define('website_sale.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var FormEditorRegistry = require('website.form_editor_registry');
+import FormEditorRegistry from "website.form_editor_registry";
 
 FormEditorRegistry.add('create_customer', {
     formFields: [{
@@ -27,6 +26,4 @@ FormEditorRegistry.add('create_customer', {
         fillWith: 'commercial_company_name',
         string: 'Company Name',
     }],
-});
-
 });

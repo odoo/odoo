@@ -1,7 +1,6 @@
-odoo.define('website.tour.automatic_editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const wTourUtils = require("website.tour_utils");
+import wTourUtils from "website.tour_utils";
 
 wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     test: true,
@@ -96,4 +95,3 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         run: () => null, // It's a check
     }
 ]);
-});

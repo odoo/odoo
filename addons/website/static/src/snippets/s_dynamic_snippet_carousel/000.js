@@ -1,9 +1,8 @@
-odoo.define('website.s_dynamic_snippet_carousel', function (require) {
-'use strict';
+/** @odoo-module alias=website.s_dynamic_snippet_carousel **/
 
-const publicWidget = require('web.public.widget');
-const DynamicSnippet = require('website.s_dynamic_snippet');
-const config = require('web.config');
+import publicWidget from "web.public.widget";
+import DynamicSnippet from "website.s_dynamic_snippet";
+import config from "web.config";
 
 const DynamicSnippetCarousel = DynamicSnippet.extend({
     selector: '.s_dynamic_snippet_carousel',
@@ -35,5 +34,4 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
 });
 publicWidget.registry.dynamic_snippet_carousel = DynamicSnippetCarousel;
 
-return DynamicSnippetCarousel;
-});
+export default DynamicSnippetCarousel;

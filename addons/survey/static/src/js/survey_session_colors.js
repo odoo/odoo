@@ -1,11 +1,10 @@
-odoo.define('survey.session_colors', function (require) {
-'use strict';
+/** @odoo-module alias=survey.session_colors **/
 
 /**
  * Small tool that returns common colors for survey session widgets.
  * Source: https://www.materialui.co/colors (500)
  */
-return [
+export default [
     '33,150,243',
     '63,81,181',
     '205,220,57',
@@ -17,5 +16,3 @@ return [
     '96,125,139',
     '244,67,54',
 ];
-
-});

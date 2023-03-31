@@ -1,9 +1,8 @@
-odoo.define('website_event_track.website_event_track_reminder', function (require) {
-'use strict';
+/** @odoo-module alias=website_event_track.website_event_track_reminder **/
 
-var core = require('web.core');
+import core from "web.core";
 var _t = core._t;
-var publicWidget = require('web.public.widget');
+import publicWidget from "web.public.widget";
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     selector: '.o_wetrack_js_reminder',
@@ -97,6 +96,4 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
 
 });
 
-return publicWidget.registry.websiteEventTrackReminder;
-
-});
+export default publicWidget.registry.websiteEventTrackReminder;

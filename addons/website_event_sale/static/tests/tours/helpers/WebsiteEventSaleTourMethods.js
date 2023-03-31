@@ -1,6 +1,5 @@
-odoo.define('website_event_sale.tour.WebsiteEventSaleTourMethods', function (require) {
-    'use strict';
-
+/** @odoo-module alias=website_event_sale.tour.WebsiteEventSaleTourMethods **/
+    
     function changePricelist(pricelistName) {
         return [
             {
@@ -72,5 +71,4 @@ odoo.define('website_event_sale.tour.WebsiteEventSaleTourMethods', function (req
             ...checkPriceCart(price),
         ]
     }
-    return { getPriceListChecksSteps, changePricelist, checkPriceCart }
-});
+    export default { getPriceListChecksSteps, changePricelist, checkPriceCart }

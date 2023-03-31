@@ -1,14 +1,13 @@
-odoo.define('website_forum.website_forum', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const dom = require('web.dom');
-var core = require('web.core');
-const {setCookie} = require('web.utils.cookies');
-var Dialog = require('web.Dialog');
-var wysiwygLoader = require('web_editor.loader');
-var publicWidget = require('web.public.widget');
-const { Markup } = require('web.utils');
-var session = require('web.session');
+import dom from "web.dom";
+import core from "web.core";
+import {setCookie} from "web.utils.cookies";
+import Dialog from "web.Dialog";
+import wysiwygLoader from "web_editor.loader";
+import publicWidget from "web.public.widget";
+import { Markup } from "web.utils";
+import session from "web.session";
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -647,6 +646,4 @@ publicWidget.registry.WebsiteForumBackButton = publicWidget.Widget.extend({
     _onBackButtonClick() {
         window.history.back();
     },
-});
-
 });

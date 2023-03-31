@@ -1,9 +1,8 @@
-odoo.define('wysiwyg.widgets.Dialog', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets.Dialog **/
 
-var config = require('web.config');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
+import config from "web.config";
+import core from "web.core";
+import Dialog from "web.Dialog";
 
 var _t = core._t;
 
@@ -85,5 +84,4 @@ var WysiwygDialog = Dialog.extend({
     },
 });
 
-return WysiwygDialog;
-});
+export default WysiwygDialog;

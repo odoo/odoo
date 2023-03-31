@@ -1,8 +1,7 @@
-odoo.define('test_website_slides_full.tour.slide.certification.member', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import { registry } from "@web/core/registry";
+import tourUtils from 'website_sale.tour_utils';
 
 /**
  * The purpose of this tour is to check the whole certification flow:
@@ -159,6 +158,4 @@ registry.category("web_tour.tours").add('certification_member', {
         certificationCompletionSteps,
         profileSteps
     )
-});
-
 });

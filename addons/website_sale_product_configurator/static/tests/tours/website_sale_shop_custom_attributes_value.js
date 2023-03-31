@@ -1,7 +1,6 @@
-odoo.define("website_sale_product_TESTurator.tour_shop_custom_attribute_value", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 var optionVariantImage;
 
 registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
@@ -56,5 +55,3 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     trigger: 'button:has(span:contains(Proceed to Checkout))',
     run: 'click',
 }]});
-
-});

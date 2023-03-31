@@ -1,8 +1,7 @@
-odoo.define('survey.print', function (require) {
-'use strict';
+/** @odoo-module alias=survey.print **/
 
-var publicWidget = require('web.public.widget');
-var dom = require('web.dom');
+import publicWidget from "web.public.widget";
+import dom from "web.dom";
 
 publicWidget.registry.SurveyPrintWidget = publicWidget.Widget.extend({
     selector: '.o_survey_print',
@@ -26,6 +25,4 @@ publicWidget.registry.SurveyPrintWidget = publicWidget.Widget.extend({
 
 });
 
-return publicWidget.registry.SurveyPrintWidget;
-
-});
+export default publicWidget.registry.SurveyPrintWidget;

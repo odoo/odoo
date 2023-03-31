@@ -1,7 +1,6 @@
-odoo.define('website_sale.utils', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale.utils **/
 
-const wUtils = require('website.utils');
+import wUtils from "website.utils";
 
 const cartHandlerMixin = {
     getRedirectOption() {
@@ -135,10 +134,9 @@ function showWarning(message) {
     cart_alert.children('span:last-child').text(message);
 }
 
-return {
+export default {
     animateClone: animateClone,
     updateCartNavBar: updateCartNavBar,
     cartHandlerMixin: cartHandlerMixin,
     showWarning: showWarning,
 };
-});

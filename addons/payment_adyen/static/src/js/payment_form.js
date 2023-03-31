@@ -1,10 +1,9 @@
+/** @odoo-module **/
 /* global AdyenCheckout */
-odoo.define('payment_adyen.payment_form', require => {
-    'use strict';
-
-    const core = require('web.core');
-    const checkoutForm = require('payment.checkout_form');
-    const manageForm = require('payment.manage_form');
+    
+    import core from "web.core";
+    import checkoutForm from "payment.checkout_form";
+    import manageForm from "payment.manage_form";
 
     const _t = core._t;
 
@@ -214,4 +213,3 @@ odoo.define('payment_adyen.payment_form', require => {
 
     checkoutForm.include(adyenMixin);
     manageForm.include(adyenMixin);
-});

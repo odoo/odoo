@@ -1,9 +1,8 @@
-odoo.define('website_slides_survey.fullscreen', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
+import core from "web.core";
 var QWeb = core.qweb;
-var Fullscreen = require('@website_slides/js/slides_course_fullscreen_player')[Symbol.for("default")];
+import Fullscreen from "@website_slides/js/slides_course_fullscreen_player";
 
 Fullscreen.include({
     /**
@@ -22,6 +21,3 @@ Fullscreen.include({
         return Promise.all([def]);
     },
 });
-});
-
-

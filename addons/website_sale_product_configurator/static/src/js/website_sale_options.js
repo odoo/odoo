@@ -1,12 +1,11 @@
-odoo.define('website_sale_options.website_sale', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale_options.website_sale **/
 
-var ajax = require('web.ajax');
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var { OptionalProductsModal } = require('@sale_product_configurator/js/product_configurator_modal');
-require('website_sale.website_sale');
-const wsUtils = require('website_sale.utils');
+import ajax from "web.ajax";
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import { OptionalProductsModal } from "@sale_product_configurator/js/product_configurator_modal";
+import "website_sale.website_sale";
+import wsUtils from "website_sale.utils";
 
 var _t = core._t;
 
@@ -127,6 +126,4 @@ publicWidget.registry.WebsiteSale.include({
     },
 });
 
-return publicWidget.registry.WebsiteSaleOptions;
-
-});
+export default publicWidget.registry.WebsiteSaleOptions;

@@ -1,9 +1,8 @@
-odoo.define('website_twitter.editor', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var dom = require('web.dom');
-var sOptions = require('web_editor.snippets.options');
+import core from "web.core";
+import dom from "web.dom";
+import sOptions from "web_editor.snippets.options";
 
 var _t = core._t;
 
@@ -69,5 +68,4 @@ sOptions.registry.twitter = sOptions.Class.extend({
         this._super.apply(this, arguments);
         this.$target.off('.website_twitter');
     },
-});
 });

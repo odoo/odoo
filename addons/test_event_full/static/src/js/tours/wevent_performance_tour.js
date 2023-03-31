@@ -1,7 +1,6 @@
-odoo.define('test_event_full.tour.performance', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 var registerSteps = [{
     content: "Select 2 units of 'Ticket1' ticket type",
@@ -80,6 +79,4 @@ registry.category("web_tour.tours").add('wevent_performance_register', {
     steps: [].concat(
         registerSteps,
     )
-});
-
 });

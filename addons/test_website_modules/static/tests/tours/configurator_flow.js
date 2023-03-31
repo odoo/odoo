@@ -1,8 +1,7 @@
-odoo.define('test_website_modules.tour.configurator_flow', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
-const wTourUtils = require('website.tour_utils');
+import { registry } from "@web/core/registry";
+import wTourUtils from "website.tour_utils";
 
 registry.category("web_tour.tours").add('configurator_flow', {
     test: true,
@@ -101,4 +100,3 @@ registry.category("web_tour.tours").add('configurator_flow', {
         },
     },
 ]});
-});

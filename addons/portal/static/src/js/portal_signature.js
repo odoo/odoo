@@ -1,9 +1,8 @@
-odoo.define('portal.signature_form', function (require) {
-'use strict';
+/** @odoo-module alias=portal.signature_form **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var NameAndSignature = require('web.name_and_signature').NameAndSignature;
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import { NameAndSignature } from "web.name_and_signature";
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -190,7 +189,6 @@ publicWidget.registry.SignatureForm = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     SignatureForm: SignatureForm,
 };
-});

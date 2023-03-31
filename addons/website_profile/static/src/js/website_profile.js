@@ -1,8 +1,7 @@
-odoo.define('website_profile.website_profile', function (require) {
-'use strict';
+/** @odoo-module alias=website_profile.website_profile **/
 
-var publicWidget = require('web.public.widget');
-var wysiwygLoader = require('web_editor.loader');
+import publicWidget from "web.public.widget";
+import wysiwygLoader from "web_editor.loader";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
@@ -129,6 +128,4 @@ publicWidget.registry.websiteProfileNextRankCard = publicWidget.Widget.extend({
 
 });
 
-return publicWidget.registry.websiteProfile;
-
-});
+export default publicWidget.registry.websiteProfile;

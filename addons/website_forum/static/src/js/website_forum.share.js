@@ -1,9 +1,8 @@
-odoo.define('website_forum.share', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-require('website.content.snippets.animation');
+import core from "web.core";
+import publicWidget from "web.public.widget";
+import "website.content.snippets.animation";
 
 var qweb = core.qweb;
 
@@ -94,5 +93,4 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
 
         return this._super.apply(this, arguments);
     },
-});
 });

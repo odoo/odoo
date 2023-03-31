@@ -1,7 +1,6 @@
-odoo.define("website.tour.edit_link_popover", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const wTourUtils = require('website.tour_utils');
+import wTourUtils from "website.tour_utils";
 
 const FIRST_PARAGRAPH = 'iframe #wrap .s_text_image p:nth-child(2)';
 
@@ -202,4 +201,3 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         },
     },
 ]);
-});

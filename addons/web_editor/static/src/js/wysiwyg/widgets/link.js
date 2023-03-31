@@ -1,10 +1,9 @@
-odoo.define('wysiwyg.widgets.Link', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets.Link **/
 
-const core = require('web.core');
-const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
-const Widget = require('web.Widget');
-const {isColorGradient} = require('web_editor.utils');
+import core from "web.core";
+import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import Widget from "web.Widget";
+import {isColorGradient} from "web_editor.utils";
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
@@ -635,5 +634,4 @@ Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
     return { link, needLabel };
 };
 
-return Link;
-});
+export default Link;

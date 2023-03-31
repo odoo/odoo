@@ -1,8 +1,7 @@
-odoo.define('web.test.x2many', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
-    const { registry } = require("@web/core/registry");
+    import { stepUtils } from "@web_tour/tour_service/tour_utils";
+    import { registry } from "@web/core/registry";
     var inc;
 
     registry.category("web_tour.tours").add('widget_x2many', {
@@ -460,4 +459,3 @@ odoo.define('web.test.x2many', function (require) {
     },
     ...stepUtils.discardForm(),
     ]});
-});

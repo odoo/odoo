@@ -1,7 +1,6 @@
-odoo.define('website.tour.form_editor', function (require) {
-    'use strict';
-
-    const wTourUtils = require("website.tour_utils");
+/** @odoo-module alias=website.tour.form_editor **/
+    
+    import wTourUtils from "website.tour_utils";
 
     // Visibility possible values:
     const VISIBLE = 'Always Visible';
@@ -572,5 +571,4 @@ odoo.define('website.tour.form_editor', function (require) {
         }
     ]);
 
-    return {};
-});
+    export default {};

@@ -1,7 +1,6 @@
-odoo.define('test_website.error_views', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_error_website', {
     test: true,
@@ -148,4 +147,3 @@ registry.category("web_tour.tours").add('test_error_website', {
         run: function () {},
     },
 ]});
-});

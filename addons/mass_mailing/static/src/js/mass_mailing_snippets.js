@@ -306,5 +306,4 @@ options.registry.DesignTab = options.Class.extend({
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
     },
 });
-
 });

@@ -1,8 +1,7 @@
-odoo.define('website_sale.tour', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale.tour **/
 
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import { registry } from "@web/core/registry";
+import tourUtils from "website_sale.tour_utils";
 
 registry.category("web_tour.tours").add('shop_buy_product', {
     test: true,
@@ -90,6 +89,4 @@ registry.category("web_tour.tours").add('shop_buy_product', {
             run: function () {}, // it's a check
         },
     ]
-});
-
 });

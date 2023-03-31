@@ -1,11 +1,10 @@
-odoo.define('web_editor.ColorPalette', function (require) {
-'use strict';
+/** @odoo-module alias=web_editor.ColorPalette **/
 
-const session = require('web.session');
-const {ColorpickerWidget} = require('web.Colorpicker');
-const Widget = require('web.Widget');
-const customColors = require('web_editor.custom_colors');
-const weUtils = require('web_editor.utils');
+import session from "web.session";
+import {ColorpickerWidget} from "web.Colorpicker";
+import Widget from "web.Widget";
+import customColors from "web_editor.custom_colors";
+import weUtils from "web_editor.utils";
 
 let colorpickerArch;
 
@@ -1007,7 +1006,6 @@ ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
     }
 };
 
-return {
+export default {
     ColorPaletteWidget: ColorPaletteWidget,
 };
-});

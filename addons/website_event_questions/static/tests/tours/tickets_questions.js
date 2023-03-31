@@ -1,7 +1,6 @@
-odoo.define('website_event_questions.tour_test_tickets_questions', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require("@web/core/registry");
+import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('test_tickets_questions', {
     test: true,
     url: '/event',
@@ -52,5 +51,3 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     trigger: '.o_wereg_confirmed, .oe_cart',
     auto: true
 }]});
-
-});

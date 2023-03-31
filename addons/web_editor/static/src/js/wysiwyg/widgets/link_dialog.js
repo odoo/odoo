@@ -1,8 +1,7 @@
-odoo.define('wysiwyg.widgets.LinkDialog', function (require) {
-'use strict';
+/** @odoo-module alias=wysiwyg.widgets.LinkDialog **/
 
-const Dialog = require('wysiwyg.widgets.Dialog');
-const Link = require('wysiwyg.widgets.Link');
+import Dialog from "wysiwyg.widgets.Dialog";
+import Link from "wysiwyg.widgets.Link";
 
 
 // This widget is there only to extend Link and be instantiated by LinkDialog.
@@ -211,5 +210,4 @@ const LinkDialog = Dialog.extend({
     },
 });
 
-return LinkDialog;
-});
+export default LinkDialog;

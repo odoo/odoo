@@ -1,7 +1,6 @@
-odoo.define('website_blog.contentshare', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const dom = require('web.dom');
+import dom from "web.dom";
 
 $.fn.share = function (options) {
     var option = $.extend($.fn.share.defaults, options);
@@ -107,4 +106,3 @@ $.fn.share.defaults = {
     className: "share",
     placement: "top",
 };
-});

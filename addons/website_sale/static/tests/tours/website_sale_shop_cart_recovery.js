@@ -1,9 +1,8 @@
-odoo.define('website_sale.tour_shop_cart_recovery', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var localStorage = require('web.local_storage');
-const { registry } = require("@web/core/registry");
-const tourUtils = require('website_sale.tour_utils');
+import localStorage from "web.local_storage";
+import { registry } from "@web/core/registry";
+import tourUtils from "website_sale.tour_utils";
 
 var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
@@ -82,4 +81,3 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         run: function () {},
     },
 ]});
-});
