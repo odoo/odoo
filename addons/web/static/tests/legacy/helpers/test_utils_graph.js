@@ -1,5 +1,4 @@
-odoo.define('web.test_utils_graph', function () {
-"use strict";
+/** @odoo-module alias=web.test_utils_graph **/
 
 /**
  * Graph Test Utils
@@ -21,8 +20,6 @@ function reload(graph, params) {
     return graph.reload(params);
 }
 
-return {
+export default {
     reload: reload,
 };
-
-});

@@ -1,13 +1,12 @@
-odoo.define('web.comparison_menu_tests', function (require) {
-    "use strict";
-
-    const { browser } = require('@web/core/browser/browser');
-    const { patchWithCleanup } = require('@web/../tests/helpers/utils');
-    const cpHelpers = require('@web/../tests/search/helpers');
-    const {
+/** @odoo-module **/
+    
+    import { browser } from "@web/core/browser/browser";
+    import { patchWithCleanup } from "@web/../tests/helpers/utils";
+    import * as cpHelpers from "@web/../tests/search/helpers";
+    import {
         createControlPanel,
         mock,
-    } = require('web.test_utils');
+    } from "web.test_utils";
 
     const { patchDate } = mock;
     const searchMenuTypes = ['filter', 'comparison'];
@@ -166,4 +165,3 @@ odoo.define('web.comparison_menu_tests', function (require) {
             assert.notOk("timeRanges" in controlPanel.getQuery());
         });
     });
-});

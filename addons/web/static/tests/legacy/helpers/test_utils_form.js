@@ -1,5 +1,4 @@
-odoo.define('web.test_utils_form', function (require) {
-"use strict";
+/** @odoo-module alias=web.test_utils_form **/
 
 /**
  * Form Test Utils
@@ -10,7 +9,7 @@ odoo.define('web.test_utils_form', function (require) {
  * testUtils file.
  */
 
-var testUtilsDom = require('web.test_utils_dom');
+import testUtilsDom from "web.test_utils_dom";
 
 /**
  * Clicks on the Edit button in a form view, to set it to edit mode. Note that
@@ -63,12 +62,10 @@ function reload(form, params) {
     return form.reload(params);
 }
 
-return {
+export default {
     clickEdit: clickEdit,
     clickSave: clickSave,
     clickCreate: clickCreate,
     clickDiscard: clickDiscard,
     reload: reload,
 };
-
-});

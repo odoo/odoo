@@ -1,6 +1,5 @@
-odoo.define('web.test_utils_create', function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.test_utils_create **/
+    
     /**
      * Create Test Utils
      *
@@ -10,19 +9,19 @@ odoo.define('web.test_utils_create', function (require) {
      * testUtils file.
      */
 
-    const ActionMenus = require('web.ActionMenus');
-    const concurrency = require('web.concurrency');
-    const ControlPanel = require('web.ControlPanel');
-    const { useListener } = require("@web/core/utils/hooks");
-    const dom = require('web.dom');
-    const makeTestEnvironment = require('web.test_env');
-    const ActionModel = require('web.ActionModel');
-    const Registry = require('web.Registry');
-    const testUtilsMock = require('web.test_utils_mock');
-    const Widget = require('web.Widget');
-    const { destroy, getFixture, mount, useChild } = require('@web/../tests/helpers/utils');
-    const { registerCleanup } = require("@web/../tests/helpers/cleanup");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+    import ActionMenus from "web.ActionMenus";
+    import concurrency from "web.concurrency";
+    import ControlPanel from "web.ControlPanel";
+    import { useListener } from "@web/core/utils/hooks";
+    import dom from "web.dom";
+    import makeTestEnvironment from "web.test_env";
+    import ActionModel from "web.ActionModel";
+    import Registry from "web.Registry";
+    import testUtilsMock from "web.test_utils_mock";
+    import Widget from "web.Widget";
+    import { destroy, getFixture, mount, useChild } from "@web/../tests/helpers/utils";
+    import { registerCleanup } from "@web/../tests/helpers/cleanup";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { Component, onMounted, onWillStart, useState, xml } = owl;
 
@@ -391,7 +390,7 @@ odoo.define('web.test_utils_create', function (require) {
         return debug ? document.body : document.getElementById('qunit-fixture');
     }
 
-    return {
+    export default {
         createCalendarView,
         createComponent,
         createControlPanel,
@@ -400,4 +399,3 @@ odoo.define('web.test_utils_create', function (require) {
         createView,
         prepareTarget,
     };
-});

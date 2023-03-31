@@ -1,8 +1,7 @@
-odoo.define('web.dropdown_menu_mobile_tests', function (require) {
-    "use strict";
-
-    const DropdownMenu = require('web.DropdownMenu');
-    const testUtils = require('web.test_utils');
+/** @odoo-module **/
+    
+    import DropdownMenu from "web.DropdownMenu";
+    import testUtils from "web.test_utils";
 
     const { createComponent } = testUtils;
 
@@ -65,4 +64,3 @@ odoo.define('web.dropdown_menu_mobile_tests', function (require) {
 
         });
     });
-});

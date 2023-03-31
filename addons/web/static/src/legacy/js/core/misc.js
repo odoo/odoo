@@ -1,9 +1,8 @@
-odoo.define('web.framework', function (require) {
-"use strict";
+/** @odoo-module alias=web.framework **/
 
-var core = require('web.core');
-var ajax = require('web.ajax');
-var Widget = require('web.Widget');
+import core from "web.core";
+import ajax from "web.ajax";
+import Widget from "web.Widget";
 
 var _t = core._t;
 
@@ -141,10 +140,8 @@ if (!document.contains) {
     };
 }
 
-return {
+export default {
     blockUI: blockUI,
     unblockUI: unblockUI,
     redirect: redirect,
 };
-
-});

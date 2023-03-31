@@ -1,5 +1,4 @@
-odoo.define('web.utils', function (require) {
-"use strict";
+/** @odoo-module alias=web.utils **/
 
 /**
  * Utils
@@ -7,9 +6,9 @@ odoo.define('web.utils', function (require) {
  * Various generic utility functions
  */
 
-var translation = require('web.translation');
+import translation from "web.translation";
 
-const { Component } = require("@odoo/owl");
+import { Component } from "@odoo/owl";
 
 var _t = translation._t;
 var id = -1;
@@ -1130,6 +1129,4 @@ const utils = {
     },
 };
 
-return utils;
-
-});
+export default utils;

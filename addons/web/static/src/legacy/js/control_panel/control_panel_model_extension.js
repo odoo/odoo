@@ -1,13 +1,12 @@
-odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", function (require) {
-    "use strict";
+/** @odoo-module alias=web/static/src/js/control_panel/control_panel_model_extension.js **/
+    
+    import ActionModel from "web.ActionModel";
+    import Domain from "web.Domain";
+    import pyUtils from "web.py_utils";
 
-    const ActionModel = require("web.ActionModel");
-    const Domain = require('web.Domain');
-    const pyUtils = require('web.py_utils');
-
-    const { DEFAULT_INTERVAL, DEFAULT_PERIOD,
+    import { DEFAULT_INTERVAL, DEFAULT_PERIOD,
         getComparisonOptions, getIntervalOptions, getPeriodOptions,
-        constructDateDomain, rankInterval, yearSelected } = require('web.searchUtils');
+        constructDateDomain, rankInterval, yearSelected } from "web.searchUtils";
 
     const FAVORITE_PRIVATE_GROUP = 1;
     const FAVORITE_SHARED_GROUP = 2;
@@ -1671,5 +1670,4 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
 
     ActionModel.registry.add("ControlPanel", ControlPanelModelExtension, 10);
 
-    return ControlPanelModelExtension;
-});
+    export default ControlPanelModelExtension;

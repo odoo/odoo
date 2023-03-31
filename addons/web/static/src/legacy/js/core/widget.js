@@ -1,10 +1,9 @@
-odoo.define('web.Widget', function (require) {
-"use strict";
+/** @odoo-module alias=web.Widget **/
 
-var core = require('web.core');
-var mixins = require('web.mixins');
-var ServicesMixin = require('web.ServicesMixin');
-const { loadBundle } = require("@web/core/assets");
+import core from "web.core";
+import mixins from "web.mixins";
+import ServicesMixin from "web.ServicesMixin";
+import { loadBundle } from "@web/core/assets";
 
 
 /**
@@ -430,6 +429,4 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
     },
 });
 
-return Widget;
-
-});
+export default Widget;

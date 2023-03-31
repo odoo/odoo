@@ -1,5 +1,4 @@
-odoo.define('web.basic_fields', function (require) {
-"use strict";
+/** @odoo-module alias=web.basic_fields **/
 
 /**
  * This module contains most of the basic (meaning: non relational) field
@@ -7,15 +6,15 @@ odoo.define('web.basic_fields', function (require) {
  * BasicView, so, they can work with the records obtained from a BasicModel.
  */
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var datepicker = require('web.datepicker');
-var dom = require('web.dom');
-var framework = require('web.framework');
-var py_utils = require('web.py_utils');
-var session = require('web.session');
-var field_utils = require('web.field_utils');
-var utils = require('web.utils');
+import AbstractField from "web.AbstractField";
+import core from "web.core";
+import datepicker from "web.datepicker";
+import dom from "web.dom";
+import framework from "web.framework";
+import py_utils from "web.py_utils";
+import session from "web.session";
+import field_utils from "web.field_utils";
+import utils from "web.utils";
 
 var _t = core._t;
 var _lt = core._lt;
@@ -1760,7 +1759,7 @@ var FieldToggleBoolean = AbstractField.extend({
     },
 });
 
-return {
+export default {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
     FieldBinaryFile: FieldBinaryFile,
@@ -1782,5 +1781,3 @@ return {
     NumericField: NumericField,
     UrlWidget: UrlWidget,
 };
-
-});

@@ -1,7 +1,6 @@
-odoo.define('web.registry_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var Registry = require('web.Registry');
+import Registry from "web.Registry";
 
 QUnit.module('core', {}, function () {
 
@@ -85,6 +84,4 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(registry.entries(), { age: 23 });
         assert.verifySteps(["age"]);
     });
-});
-
 });

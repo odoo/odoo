@@ -1,9 +1,8 @@
-odoo.define("web.Model", function (require) {
-    "use strict";
-
-    const { groupBy  } = require("web.utils");
-    const Registry = require("web.Registry");
-    const { useBus } = require("@web/core/utils/hooks");
+/** @odoo-module alias=web.Model **/
+    
+    import { groupBy  } from "web.utils";
+    import Registry from "web.Registry";
+    import { useBus } from "@web/core/utils/hooks";
 
     const { EventBus, onWillRender, useComponent } = owl;
     const isNotNull = (val) => val !== null && val !== undefined;
@@ -473,8 +472,7 @@ odoo.define("web.Model", function (require) {
         return model;
     }
 
-    return {
+    export default {
         Model,
         useModel,
     };
-});

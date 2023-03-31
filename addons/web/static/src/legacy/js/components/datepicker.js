@@ -1,11 +1,10 @@
-odoo.define('web.DatePickerOwl', function (require) {
-    "use strict";
-
-    const config = require('web.config');
-    const field_utils = require('web.field_utils');
-    const time = require('web.time');
-    const { useAutofocus } = require("@web/core/utils/hooks");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.DatePickerOwl **/
+    
+    import config from "web.config";
+    import field_utils from "web.field_utils";
+    import time from "web.time";
+    import { useAutofocus } from "@web/core/utils/hooks";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const {
         onMounted,
@@ -284,8 +283,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         },
     });
 
-    return {
+    export default {
         DatePicker,
         DateTimePicker,
     };
-});

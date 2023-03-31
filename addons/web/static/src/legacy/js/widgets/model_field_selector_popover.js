@@ -1,9 +1,8 @@
-odoo.define("web.ModelFieldSelectorPopover", function (require) {
-"use strict";
+/** @odoo-module alias=web.ModelFieldSelectorPopover **/
 
-var core = require("web.core");
-var Widget = require("web.Widget");
-const { fuzzyLookup } = require('@web/core/utils/search');
+import core from "web.core";
+import Widget from "web.Widget";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 var _t = core._t;
 
@@ -702,7 +701,7 @@ var ModelFieldSelectorPopover = Widget.extend({
     }
 });
 
-return ModelFieldSelectorPopover;
+export default ModelFieldSelectorPopover;
 
 /**
  * Allows to transform a mapping field name -> field info in an array of the
@@ -729,4 +728,3 @@ function sortFields(fields, model, order) {
             }, p[1]);
         }).value();
 }
-});

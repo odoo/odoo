@@ -1,13 +1,12 @@
-odoo.define('web.LocalStorageService', function (require) {
-'use strict';
+/** @odoo-module alias=web.LocalStorageService **/
 
 /**
  * This module defines a service to access the localStorage object.
  */
 
-var AbstractStorageService = require('web.AbstractStorageService');
-var core = require('web.core');
-var localStorage = require('web.local_storage');
+import AbstractStorageService from "web.AbstractStorageService";
+import core from "web.core";
+import localStorage from "web.local_storage";
 
 var LocalStorageService = AbstractStorageService.extend({
     storage: localStorage,
@@ -15,6 +14,4 @@ var LocalStorageService = AbstractStorageService.extend({
 
 core.serviceRegistry.add('local_storage', LocalStorageService);
 
-return LocalStorageService;
-
-});
+export default LocalStorageService;

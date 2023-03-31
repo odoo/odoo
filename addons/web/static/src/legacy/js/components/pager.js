@@ -1,8 +1,7 @@
-odoo.define('web.Pager', function (require) {
-    "use strict";
-
-    const { useAutofocus } = require("@web/core/utils/hooks");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.Pager **/
+    
+    import { useAutofocus } from "@web/core/utils/hooks";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { onWillUpdateProps, useState } = owl;
 
@@ -222,5 +221,4 @@ odoo.define('web.Pager', function (require) {
     };
     Pager.template = 'web.legacy.Pager';
 
-    return Pager;
-});
+    export default Pager;

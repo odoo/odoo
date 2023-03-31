@@ -1,7 +1,6 @@
-odoo.define("web.patch_tests", function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { AlreadyDefinedPatchError, patch, unpatch, UnknownPatchError } = require('web.utils');
+import { AlreadyDefinedPatchError, patch, unpatch, UnknownPatchError } from "web.utils";
 
 function makeBaseClass(assert, assertInSetup) {
     class BaseClass {
@@ -1212,5 +1211,4 @@ QUnit.module('core', {}, function () {
             assert.verifySteps([ "obj" ]);
         });
     });
-});
 });

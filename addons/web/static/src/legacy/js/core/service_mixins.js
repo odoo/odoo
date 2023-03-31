@@ -1,106 +1,6 @@
-odoo.define('web.ServiceProviderMixin', function (require) {
-"use strict";
+/** @odoo-module alias=web.ServicesMixin **/
 
-var core = require('web.core');
-
-// ServiceProviderMixin is deprecated. It is only used by the ProjectTimesheet
-// app. As soon as it no longer uses it, we can remove it.
-var ServiceProviderMixin = {
-    services: {}, // dict containing deployed service instances
-    UndeployedServices: {}, // dict containing classes of undeployed services
-    /**
-     * @override
-     */
-    init: function (parent) {
-        var self = this;
-        // to properly instantiate services with this as parent, this mixin
-        // assumes that it is used along the EventDispatcherMixin, and that
-        // EventDispatchedMixin's init is called first
-        // as EventDispatcherMixin's init is already called, this handler has
-        // to be bound manually
-        this.on('call_service', this, this._call_service.bind(this));
-
-        // add already registered services from the service registry
-        _.each(core.serviceRegistry.map, function (Service, serviceName) {
-            if (serviceName in self.UndeployedServices) {
-                throw new Error('Service "' + serviceName + '" is already loaded.');
-            }
-            self.UndeployedServices[serviceName] = Service;
-        });
-        this._deployServices();
-
-        // listen on newly added services
-        core.serviceRegistry.onAdd(function (serviceName, Service) {
-            if (serviceName in self.services || serviceName in self.UndeployedServices) {
-                throw new Error('Service "' + serviceName + '" is already loaded.');
-            }
-            self.UndeployedServices[serviceName] = Service;
-            self._deployServices();
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _deployServices: function () {
-        var self = this;
-        var done = false;
-        while (!done) {
-            var serviceName = _.findKey(this.UndeployedServices, function (Service) {
-                // no missing dependency
-                return !_.some(Service.prototype.dependencies, function (depName) {
-                    return !self.services[depName];
-                });
-            });
-            if (serviceName) {
-                var service = new this.UndeployedServices[serviceName](this);
-                this.services[serviceName] = service;
-                delete this.UndeployedServices[serviceName];
-                service.start();
-            } else {
-                done = true;
-            }
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Call the 'service', using data from the 'event' that
-     * has triggered the service call.
-     *
-     * For the ajax service, the arguments are extended with
-     * the target so that it can call back the caller.
-     *
-     * @private
-     * @param  {OdooEvent} event
-     */
-    _call_service: function (event) {
-        var args = event.data.args || [];
-        if (event.data.service === 'ajax' && event.data.method === 'rpc') {
-            // ajax service uses an extra 'target' argument for rpc
-            args = args.concat(event.target);
-        }
-        var service = this.services[event.data.service];
-        var result = service[event.data.method].apply(service, args);
-        event.data.callback(result);
-    },
-};
-
-return ServiceProviderMixin;
-
-});
-
-odoo.define('web.ServicesMixin', function (require) {
-"use strict";
-
-var rpc = require('web.rpc');
+import rpc from "web.rpc";
 
 /**
  * @mixin
@@ -242,6 +142,4 @@ var ServicesMixin = {
     },
 };
 
-return ServicesMixin;
-
-});
+export default ServicesMixin;

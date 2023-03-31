@@ -1,11 +1,9 @@
-odoo.define("web.public_env", function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.public_env **/
+    
     /**
      * This file defines the env to use in the public side.
      */
 
-    const commonEnv = require("web.commonEnv");
+    import commonEnv from "web.commonEnv";
 
-    return commonEnv;
-});
+    export default commonEnv;

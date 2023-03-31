@@ -1,9 +1,8 @@
-odoo.define('web.dialog_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var Dialog = require('web.Dialog');
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
+import Dialog from "web.Dialog";
+import testUtils from "web.test_utils";
+import Widget from "web.Widget";
 
 var ESCAPE_KEY = $.Event("keyup", { which: 27 });
 
@@ -321,6 +320,4 @@ QUnit.module('core', {}, function () {
         await testUtils.nextTick();
         assert.containsNone(document.body, ".modal[role='dialog']");
     });
-});
-
 });

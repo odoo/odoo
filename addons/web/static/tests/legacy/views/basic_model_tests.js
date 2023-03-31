@@ -1,9 +1,8 @@
-odoo.define('web.basic_model_tests', function (require) {
-    "use strict";
-
-    var BasicModel = require('web.BasicModel');
-    var testUtils = require('web.test_utils');
-    const session = require('web.session');
+/** @odoo-module **/
+    
+    import BasicModel from "web.BasicModel";
+    import testUtils from "web.test_utils";
+    import session from "web.session";
 
     var createModel = testUtils.createModel;
 
@@ -2494,4 +2493,3 @@ odoo.define('web.basic_model_tests', function (require) {
                 'basic_model _getEvalContext returns session.user_companies.current_company when session.user_context.allowed_company_ids is not set');
         });
     });
-});

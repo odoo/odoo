@@ -1,10 +1,9 @@
-odoo.define('web.Dialog', function (require) {
-"use strict";
+/** @odoo-module alias=web.Dialog **/
 
-var core = require('web.core');
-var dom = require('web.dom');
-var Widget = require('web.Widget');
-const OwlDialog = require('web.OwlDialog');
+import core from "web.core";
+import dom from "web.dom";
+import Widget from "web.Widget";
+import OwlDialog from "web.OwlDialog";
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -535,6 +534,4 @@ Dialog.safeConfirm = function (owner, message, options) {
     return dialog.open();
 };
 
-return Dialog;
-
-});
+export default Dialog;

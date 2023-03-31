@@ -171,6 +171,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/core/cookie_utils.js',
             'web/static/src/legacy/js/core/utils.js',
             'web/static/src/legacy/js/core/dom.js',
+            'web/static/src/legacy/js/core/dom_ready.js',
             'web/static/src/legacy/js/core/qweb.js',
             'web/static/src/legacy/js/core/bus.js',
             'web/static/src/legacy/js/services/core.js',

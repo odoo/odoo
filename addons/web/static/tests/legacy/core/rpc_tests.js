@@ -1,7 +1,6 @@
-odoo.define('web.rpc_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var rpc = require('web.rpc');
+import rpc from "web.rpc";
 
 QUnit.module('core', {}, function () {
 
@@ -311,6 +310,4 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(query.params.limit, undefined, "should not enforce a default value for limit");
         assert.deepEqual(query.params.sort, undefined, "should not enforce a default value for order");
     });
-});
-
 });

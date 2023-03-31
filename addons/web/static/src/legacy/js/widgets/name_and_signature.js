@@ -1,10 +1,9 @@
-odoo.define('web.name_and_signature', function (require) {
-'use strict';
+/** @odoo-module alias=web.name_and_signature **/
 
-var core = require('web.core');
-var config = require('web.config');
-var utils = require('web.utils');
-var Widget = require('web.Widget');
+import core from "web.core";
+import config from "web.config";
+import utils from "web.utils";
+import Widget from "web.Widget";
 
 
 /**
@@ -681,7 +680,6 @@ var NameAndSignature = Widget.extend({
     },
 });
 
-return {
+export default {
     NameAndSignature: NameAndSignature,
 };
-});

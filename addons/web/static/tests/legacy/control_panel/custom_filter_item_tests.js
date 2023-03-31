@@ -1,14 +1,13 @@
-odoo.define('web.filter_menu_generator_tests', function (require) {
-    "use strict";
+/** @odoo-module **/
+    
+    import Domain from "web.Domain";
+    import CustomFilterItem from "web.CustomFilterItem";
+    import ActionModel from "web.ActionModel";
+    import pyUtils from "web.py_utils";
+    import testUtils from "web.test_utils";
 
-    const Domain = require('web.Domain');
-    const CustomFilterItem = require('web.CustomFilterItem');
-    const ActionModel = require('web.ActionModel');
-    const pyUtils = require('web.py_utils');
-    const testUtils = require('web.test_utils');
-
-    const { getFixture } = require('@web/../tests/helpers/utils');
-    const cpHelpers = require('@web/../tests/search/helpers');
+    import { getFixture } from "@web/../tests/helpers/utils";
+    import * as cpHelpers from "@web/../tests/search/helpers";
     const { createComponent } = testUtils;
 
     const toggleAddCustomFilterStandalone = async (el) => {
@@ -621,4 +620,3 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await cpHelpers.applyFilter(target);
         });
     });
-});

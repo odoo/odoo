@@ -1,9 +1,8 @@
-odoo.define('web.MockServer', function (require) {
-"use strict";
+/** @odoo-module alias=web.MockServer **/
 
-var Class = require('web.Class');
-var Domain = require('web.Domain');
-var pyUtils = require('web.py_utils');
+import Class from "web.Class";
+import Domain from "web.Domain";
+import pyUtils from "web.py_utils";
 
 var MockServer = Class.extend({
     /**
@@ -2271,6 +2270,4 @@ var MockServer = Class.extend({
     },
 });
 
-return MockServer;
-
-});
+export default MockServer;

@@ -1,9 +1,8 @@
-odoo.define('web.datepicker_tests', function (require) {
-    "use strict";
-
-    const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
-    const testUtils = require('web.test_utils');
-    const time = require('web.time');
+/** @odoo-module **/
+    
+    import { DatePicker, DateTimePicker } from "web.DatePickerOwl";
+    import testUtils from "web.test_utils";
+    import time from "web.time";
 
     const { createComponent } = testUtils;
 
@@ -330,4 +329,3 @@ odoo.define('web.datepicker_tests', function (require) {
             testUtils.mock.unpatch(time);
         });
     });
-});

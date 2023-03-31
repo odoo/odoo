@@ -1,5 +1,4 @@
-odoo.define('web.relational_fields', function (require) {
-"use strict";
+/** @odoo-module alias=web.relational_fields **/
 
 /**
  * Relational Fields
@@ -13,16 +12,16 @@ odoo.define('web.relational_fields', function (require) {
  * the corresponding record(s), or alter some of their fields.
  */
 
-var AbstractField = require('web.AbstractField');
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var dom = require('web.dom');
-const { FormViewDialog } = require("@web/views/view_dialogs/form_view_dialog");
-const { SelectCreateDialog } = require("@web/views/view_dialogs/select_create_dialog");
-const Domain = require('web.Domain');
-const { sprintf } = require("web.utils");
-const { escape } = require("@web/core/utils/strings");
+import AbstractField from "web.AbstractField";
+import concurrency from "web.concurrency";
+import core from "web.core";
+import Dialog from "web.Dialog";
+import dom from "web.dom";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import Domain from "web.Domain";
+import { sprintf } from "web.utils";
+import { escape } from "@web/core/utils/strings";
 
 var _t = core._t;
 var _lt = core._lt;
@@ -1703,7 +1702,7 @@ var FieldRadio = FieldSelection.extend({
     },
 });
 
-return {
+export default {
     FieldMany2One: FieldMany2One,
     Many2OneAvatar: Many2OneAvatar,
     FieldMany2ManyTags: FieldMany2ManyTags,
@@ -1714,5 +1713,3 @@ return {
     FieldRadio: FieldRadio,
     FieldSelection: FieldSelection,
 };
-
-});

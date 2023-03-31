@@ -1,8 +1,7 @@
-odoo.define('web.DropdownMenuItem', function (require) {
-    "use strict";
-
-    const { useListener } = require("@web/core/utils/hooks");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.DropdownMenuItem **/
+    
+    import { useListener } from "@web/core/utils/hooks";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useExternalListener, useRef, useState } = owl;
 
@@ -125,5 +124,4 @@ odoo.define('web.DropdownMenuItem', function (require) {
 
     DropdownMenuItem.template = 'web.DropdownMenuItem';
 
-    return DropdownMenuItem;
-});
+    export default DropdownMenuItem;
