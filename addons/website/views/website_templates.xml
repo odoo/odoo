@@ -1154,6 +1154,107 @@
     </xpath>
 </template>
 
+<!-- "Sales four" template -->
+<template id="template_header_sales_four" inherit_id="website.layout" name="Template Header Sale 4" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <t t-call="website.navbar">
+            <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top d-none d-lg-block p-0 shadow-sm z-index-1"/>
+
+            <div id="top_menu_container">
+                <div aria-label="Top" class="container d-flex">
+                    <!-- Navbar -->
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-valuef="align-items-center me-auto pe-3"/>
+
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-valuef="nav-item small"/>
+                                <t t-set="link_class" t-valuef="nav-link"/>
+                            </t>
+                        </t>
+                    </t>
+                    <ul class="o_header_separator navbar-nav align-items-center gap-3 flex-shrink-0">
+                        <!-- Text element -->
+                        <t t-call="website.placeholder_header_text_element">
+                            <t t-set="_txt_elt_content" t-valuef="mail"/>
+                            <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
+                            <t t-set="_link_class" t-valuef="nav-link"/>
+                            <t t-set="_item_class" t-valuef="position-relative"/>
+                        </t>
+                        <!-- Social -->
+                        <t t-call="website.header_social_links_no_color">
+                            <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
+                            <t t-set="_item_class" t-valuef="position-relative"/>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-valuef="position-relative"/>
+                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center h-100 border-0"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-valuef="dropdown position-relative d-flex align-items-center"/>
+                            <t t-set="_link_class" t-valuef="nav-link border-0"/>
+                            <t t-set="_user_name_class" t-valuef="small"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                        </t>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="position-relative"/>
+                            <t t-set="_btn_class" t-valuef="nav-link"/>
+                            <t t-set="_txt_class" t-valuef="small"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
+                        </t>
+                    </ul>
+                </div>
+                <div aria-label="Bottom" class="o_header_sales_four_bot z-index-0">
+                    <div class="container">
+                        <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
+                            <!-- Search bar -->
+                            <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
+                            <t t-call="website.placeholder_header_search_box">
+                                <t t-set="_form_classes" t-valuef="me-auto"/>
+                                <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
+                                <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 lh-1"/>
+                                <t t-set="_item_class" t-valuef="d-flex"/>
+                            </t>
+                            <!-- Brand -->
+                            <li t-if="is_view_active('website.placeholder_header_brand')">
+                            <t t-call="website.placeholder_header_brand">
+                                <t t-set="_link_class" t-valuef="mx-auto mw-100"/>
+                            </t>
+                            </li>
+                            <li class="d-flex align-items-center gap-3 ms-auto mb-0">
+                                <ul class="navbar-nav gap-2">
+                                    <!-- Call To Action -->
+                                    <t t-call="website.header_call_to_action_pill"/>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-call="website.template_header_mobile">
+            <t t-set="_txt_elt_content" t-valuef="mail"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="template_header_sales_four_align_center" inherit_id="website.template_header_sales_four" active="False">
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="align-items-center mx-auto px-3"/>
+    </xpath>
+</template>
+
+<template id="template_header_sales_four_align_right" inherit_id="website.template_header_sales_four" active="False">
+    <xpath expr="//t[@t-set='_nav_class']" position="replace">
+        <t t-set="_nav_class" t-valuef="align-items-center ms-auto pe-3"/>
+    </xpath>
+</template>
+
 <template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_sidebar" separator=" "/>
