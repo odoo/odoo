@@ -44,3 +44,21 @@ ProductScreen.check.selectedOrderlineHas('product2', 1);
 ProductScreen.check.totalAmountIs("11.00");
 
 registry.category("web_tour.tours").add('PosSettleOrderIncompatiblePartner', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.selectFirstOrder();
+ProductScreen.do.clickOrderline("Product A", "1");
+ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
+ProductScreen.do.clickOrderline("Product B", "1");
+ProductScreen.do.pressNumpad('Qty 0');
+ProductScreen.check.selectedOrderlineHas('Product B', '0.00');
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.isShown();
+
+registry.category("web_tour.tours").add('PosSettleOrder2', { test: true, url: '/pos/ui', steps: getSteps() });
