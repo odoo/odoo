@@ -207,6 +207,8 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         """ Check if the MO account analytic lines are correctly updated
             after the change of the MO account analytic.
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         # create a mo
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
@@ -217,6 +219,14 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 0)
+
+        # Change duration to 60
+        mo_form = Form(mo)
+        with mo_form.workorder_ids.edit(0) as line_edit:
+            line_edit.duration = 60.0
+        mo_form.save()
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
 
         # Mark as done
         wizard_dict = mo.button_mark_done()
@@ -230,16 +240,21 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # Change the MO analytic account
         mo.analytic_account_id = new_analytic_account
         self.assertEqual(mo.move_raw_ids.analytic_account_line_id.account_id.id, new_analytic_account.id)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id.id, new_analytic_account.id)
 
         #Get the MO analytic account lines
-        mo_analytic_account_lines = mo.move_raw_ids.analytic_account_line_id
+        mo_analytic_account_raw_lines = mo.move_raw_ids.analytic_account_line_id
+        mo_analytic_account_wc_lines = mo.workorder_ids.mo_analytic_account_line_id
         mo.analytic_account_id = False
         # Check that the MO analytic account lines are deleted
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
-        self.assertFalse(mo_analytic_account_lines.exists())
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 0)
+        self.assertFalse(mo_analytic_account_raw_lines.exists())
+        self.assertFalse(mo_analytic_account_wc_lines.exists())
         # Check that the AA lines are recreated correctly if we delete the AA, save the MO, and assign a new one
         mo.analytic_account_id = self.analytic_account
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 1)
 
     def test_add_wo_analytic_no_company(self):
         """Test the addition of work orders to a MO linked to
