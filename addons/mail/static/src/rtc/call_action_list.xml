@@ -37,10 +37,10 @@
                             }"/>
                         </div>
                     </button>
-                    <t t-if="rtc.state?.selfSession.isRaisingHand" t-set="handText">Lower hand</t>
+                    <t t-if="rtc.state?.selfSession.raisingHand" t-set="handText">Lower hand</t>
                     <t t-else="" t-set="handText">Raise hand</t>
                     <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall, 'bg-500' : rtc.state?.selfSession.isRaisingHand }"
+                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall, 'bg-500' : rtc.state?.selfSession.raisingHand }"
                         t-att-aria-label="handText"
                         t-att-title="handText"
                         t-on-click="onClickRaiseHand">

@@ -378,7 +378,25 @@ export class Thread {
                 orderedOnlineMembers.push(member);
             }
         }
-        return orderedOnlineMembers.sort((m1, m2) => (m1.persona.name < m2.persona.name ? -1 : 1));
+        return orderedOnlineMembers.sort((m1, m2) => {
+            const m1HasRtc = Boolean(m1.rtcSession);
+            const m2HasRtc = Boolean(m2.rtcSession);
+            if (m1HasRtc === m2HasRtc) {
+                /**
+                 * If raisingHand is falsy, it gets an Infinity value so that when
+                 * we sort by [oldest/lowest-value]-first, falsy values end up last.
+                 */
+                const m1RaisingValue = m1.rtcSession?.raisingHand || Infinity;
+                const m2RaisingValue = m2.rtcSession?.raisingHand || Infinity;
+                if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
+                    return m1RaisingValue - m2RaisingValue;
+                } else {
+                    return m1.persona.name?.localeCompare(m2.persona.name) ?? 1;
+                }
+            } else {
+                return m2HasRtc - m1HasRtc;
+            }
+        });
     }
 
     get unknownMembersCount() {
