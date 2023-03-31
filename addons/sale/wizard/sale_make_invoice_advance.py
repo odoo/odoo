@@ -287,12 +287,15 @@ class SaleAdvancePaymentInv(models.TransientModel):
         order_lines = order.order_line.filtered(lambda l: not l.display_type)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
 
-        tax_base_line_dicts = [line._convert_to_tax_base_line_dict(
-            analytic_distribution=line.analytic_distribution) for line in order_lines]
+        tax_base_line_dicts = [
+            line._convert_to_tax_base_line_dict(
+                analytic_distribution=line.analytic_distribution,
+                handle_price_include=False
+            )
+            for line in order_lines
+        ]
         computed_taxes = self.env['account.tax']._compute_taxes(
-            tax_base_line_dicts,
-            handle_price_include=False
-        )
+            tax_base_line_dicts)
         down_payment_values = []
         for line, tax_repartition in computed_taxes['base_lines_to_update']:
             taxes = line['taxes'].flatten_taxes_hierarchy()
