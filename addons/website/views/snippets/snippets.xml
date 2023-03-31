@@ -761,6 +761,11 @@
                        data-customize-website-views="website.template_header_vertical"
                        data-customize-website-variable="'vertical'"
                        data-img="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
+            <we-button title="Menu with Search bar"
+                       data-name="header_search_opt"
+                       data-customize-website-views="website.template_header_search"
+                       data-customize-website-variable="'search'"
+                       data-img="/website/static/src/img/snippets_options/header_template_search.svg"/>
             <we-button title="Sidebar"
                        data-name="header_sidebar_opt"
                        data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
@@ -776,11 +781,6 @@
                        data-customize-website-views="website.template_header_contact"
                        data-customize-website-variable="'Contact'"
                        data-img="/website/static/src/img/snippets_options/header_template_contact.svg"/>
-            <we-button title="Centered Logo"
-                       data-name="header_centered_logo_opt"
-                       data-customize-website-views="website.template_header_centered_logo"
-                       data-customize-website-variable="'centered_logo'"
-                       data-img="/website/static/src/img/snippets_options/header_template_centered_logo.svg"/>
             <we-button title="Image"
                        data-name="header_image_opt"
                        data-customize-website-views="website.template_header_image"
@@ -957,15 +957,15 @@
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_slogan_opt, header_boxed_opt, header_stretch_opt">
+            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_slogan_opt, header_boxed_opt, header_stretch_opt, header_search_opt">
                 <we-button data-customize-website-views=""
                            data-customize-website-variable="'left'"
                            data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_slogan_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center"
+                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_slogan_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center"
                            data-customize-website-variable="'center'"
                            data-icon="fa-align-center"
                            data-dependencies="!header_hamburger_opt"/>
-                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_slogan_align_right, website.template_header_stretch_align_right"
+                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_slogan_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right"
                            data-customize-website-variable="'right'"
                            data-icon="fa-align-right"/>
             </we-select>
