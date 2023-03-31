@@ -134,7 +134,7 @@ export class KanbanRenderer extends Component {
                 }
 
                 // Open first link
-                const firstLink = target.querySelector("a, button");
+                const firstLink = target.querySelector(".oe_kanban_global_click, a, button");
                 if (firstLink && firstLink instanceof HTMLElement) {
                     firstLink.click();
                 }
