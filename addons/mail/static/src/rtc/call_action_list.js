@@ -36,7 +36,7 @@ export class CallActionList extends Component {
     }
 
     async onClickRaiseHand(ev) {
-        this.rtc.raiseHand(!this.rtc.state.selfSession.isRaisingHand);
+        this.rtc.raiseHand(!this.rtc.state.selfSession.raisingHand);
     }
 
     /**
