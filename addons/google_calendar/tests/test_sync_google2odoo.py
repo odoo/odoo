@@ -1364,3 +1364,43 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(event.partner_ids[0], event.attendee_ids[0].partner_id)
         self.assertEqual('accepted', event.attendee_ids[0].state)
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_recurrence_range_start_date_in_other_dst_period(self):
+        """
+            It is possible to create recurring events that are in the same DST period
+            but when calculating the start date for the range, it is possible to change the dst period.
+            This results in a duplication of the basic event.
+        """
+        # DST change: 2023-03-26
+        frequency = "MONTHLY"
+        count = "1" # Just to go into the flow of the recurrence
+        recurrence_id = "9lxiofipomymx2yr1yt0hpep99"
+        google_value = [{
+                "summary": "Start date in DST period",
+                "id": recurrence_id,
+                "creator": {"email": "john.doe@example.com"},
+                "organizer": {"email": "john.doe@example.com"},
+                "created": "2023-03-27T11:45:07.000Z",
+                "start": {"dateTime": "2023-03-27T09:00:00+02:00", "timeZone": "Europe/Brussels"},
+                "end": {"dateTime": "2023-03-27T10:00:00+02:00", "timeZone": "Europe/Brussels"},
+                "recurrence": [f"RRULE:FREQ={frequency};COUNT={count}"],
+                "reminders": {"useDefault": True},
+                "updated": "2023-03-27T11:45:08.547Z",
+            }]
+        google_event = GoogleEvent(google_value)
+        self.env['calendar.recurrence']._sync_google2odoo(google_event)
+        # Get the time slot of the day
+        day_start = datetime.fromisoformat(google_event.start["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=0)
+        day_end = datetime.fromisoformat(google_event.end["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=23)
+        # Get created events
+        day_events = self.env["calendar.event"].search(
+            [
+                ("name", "=", google_event.summary),
+                ("start", ">=", day_start),
+                ("stop", "<=", day_end)
+            ]
+        )
+        self.assertGoogleAPINotCalled()
+        # Check for non-duplication
+        self.assertEqual(len(day_events), 1)
