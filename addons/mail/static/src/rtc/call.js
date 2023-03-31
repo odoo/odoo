@@ -72,14 +72,20 @@ export class Call extends Component {
     }
 
     get visibleCards() {
+        const raisingHandCards = [];
         const cards = [];
         const filterVideos = this.userSettings.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of Object.values(this.props.thread.rtcSessions)) {
             if (!filterVideos || session.videoStream) {
-                cards.push({
+                const data = {
                     key: "session_" + session.id,
                     session,
-                });
+                };
+                if (session.raisingHand) {
+                    raisingHandCards.push(data);
+                } else {
+                    cards.push(data);
+                }
             }
         }
         if (!filterVideos) {
@@ -90,7 +96,7 @@ export class Call extends Component {
                 });
             }
         }
-        return cards;
+        return raisingHandCards.concat(cards);
     }
 
     get visibleMainCards() {
