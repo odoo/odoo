@@ -1,8 +1,7 @@
-odoo.define('web.model_field_selector_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var ModelFieldSelector = require("web.ModelFieldSelector");
-var testUtils = require("web.test_utils");
+import ModelFieldSelector from "web.ModelFieldSelector";
+import testUtils from "web.test_utils";
 
 QUnit.module('widgets', {}, function () {
 
@@ -320,6 +319,5 @@ QUnit.module('ModelFieldSelector', {
 
         fieldSelector.destroy();
     });
-});
 });
 });

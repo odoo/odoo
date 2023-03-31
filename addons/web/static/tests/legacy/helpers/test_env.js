@@ -1,11 +1,10 @@
-odoo.define('web.test_env', async function (require) {
-    "use strict";
-
-    const Bus = require('web.Bus');
-    const session = require('web.session');
-    const { makeTestEnvServices } = require('@web/../tests/legacy/helpers/test_services');
-    const { templates, setLoadXmlDefaultApp } = require("@web/core/assets");
-    const { renderToString } = require('@web/core/utils/render');
+/** @odoo-module alias=web.test_env **/
+    
+    import Bus from "web.Bus";
+    import session from "web.session";
+    import { makeTestEnvServices } from "@web/../tests/legacy/helpers/test_services";
+    import { templates, setLoadXmlDefaultApp } from "@web/core/assets";
+    import { renderToString } from "@web/core/utils/render";
     const { App, Component } = owl;
 
     let app;
@@ -84,5 +83,4 @@ odoo.define('web.test_env', async function (require) {
         Component.env = makeTestEnvironment();
     });
 
-    return makeTestEnvironment;
-});
+    export default makeTestEnvironment;

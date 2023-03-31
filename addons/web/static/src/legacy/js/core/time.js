@@ -1,8 +1,7 @@
-odoo.define('web.time', function (require) {
-"use strict";
+/** @odoo-module alias=web.time **/
 
-var translation = require('web.translation');
-var utils = require('web.utils');
+import translation from "web.translation";
+import utils from "web.utils";
 
 var lpad = utils.lpad;
 var rpad = utils.rpad;
@@ -329,7 +328,7 @@ function getLangTimeFormatWoZero() {
     return timeFormatWoZeroCache[timeFormat];
 }
 
-return {
+export default {
     date_to_utc: date_to_utc,
     str_to_datetime: str_to_datetime,
     str_to_date: str_to_date,
@@ -347,6 +346,3 @@ return {
     getLangTimeFormatWoZero: getLangTimeFormatWoZero,
     getLangDatetimeFormat: getLangDatetimeFormat,
 };
-
-});
-

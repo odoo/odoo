@@ -1,8 +1,7 @@
-odoo.define('web.local_storage', function (require) {
-'use strict';
+/** @odoo-module alias=web.local_storage **/
 
-var RamStorage = require('web.RamStorage');
-var mixins = require('web.mixins');
+import RamStorage from "web.RamStorage";
+import mixins from "web.mixins";
 
 // use a fake localStorage in RAM if the native localStorage is unavailable
 // (e.g. private browsing in Safari)
@@ -49,6 +48,4 @@ try {
     storage = new RamStorage();
 }
 
-return storage;
-
-});
+export default storage;

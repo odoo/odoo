@@ -1,10 +1,9 @@
-odoo.define('web.Colorpicker', function (require) {
-'use strict';
+/** @odoo-module alias=web.Colorpicker **/
 
-var core = require('web.core');
-var utils = require('web.utils');
-var Dialog = require('web.Dialog');
-var Widget = require('web.Widget');
+import core from "web.core";
+import utils from "web.utils";
+import Dialog from "web.Dialog";
+import Widget from "web.Widget";
 
 var _t = core._t;
 
@@ -736,8 +735,7 @@ const ColorpickerDialog = Dialog.extend({
     },
 });
 
-return {
+export default {
     ColorpickerDialog: ColorpickerDialog,
     ColorpickerWidget: ColorpickerWidget,
 };
-});

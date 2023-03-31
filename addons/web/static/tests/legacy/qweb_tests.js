@@ -1,10 +1,9 @@
-odoo.define('web.qweb_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {Markup} = require('web.utils');
+import {Markup} from "web.utils";
 
 var qwebPath = '/web/static/lib/qweb/';
-const {hushConsole} = require('@web/../tests/helpers/utils');
+import {hushConsole} from "@web/../tests/helpers/utils";
 
 function trim(s) {
     return s.replace(/(^\s+|\s+$)/g, '');
@@ -188,5 +187,4 @@ QUnit.module('QWeb', {
             assert.equal(trim(qweb.render('bodyout', {val: '<a/>'})), '<x>&lt;a/&gt;</x>');
         });
     })
-});
 });

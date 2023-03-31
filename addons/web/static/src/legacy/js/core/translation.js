@@ -1,9 +1,8 @@
 
-odoo.define('web.translation', function (require) {
-"use strict";
+/** @odoo-module alias=web.translation **/
 
-var Class = require('web.Class');
-const { _lt } = require("@web/core/l10n/translation");
+import Class from "web.Class";
+import { _lt } from "@web/core/l10n/translation";
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
@@ -114,10 +113,8 @@ var _t = new TranslationDataBase().build_translation_function();
 }
 
 
-return {
+export default {
     _t: _t,
     _lt: _lt,
     TranslationDataBase: TranslationDataBase,
 };
-
-});

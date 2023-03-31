@@ -1,12 +1,11 @@
-odoo.define('web.widget_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var AjaxService = require('web.AjaxService');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var QWeb = require('web.QWeb');
-var Widget = require('web.Widget');
-var testUtils = require('web.test_utils');
+import AjaxService from "web.AjaxService";
+import core from "web.core";
+import Dialog from "web.Dialog";
+import QWeb from "web.QWeb";
+import Widget from "web.Widget";
+import testUtils from "web.test_utils";
 
 QUnit.module('core', {}, function () {
 
@@ -525,6 +524,4 @@ QUnit.module('core', {}, function () {
 
         dialog.close();
     });
-});
-
 });

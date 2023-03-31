@@ -1,14 +1,4 @@
-odoo.define('web.dom_ready', function (require) {
-'use strict';
-
-    return new Promise(function (resolve, reject) {
-        $(resolve);
-    });
-});
-//==============================================================================
-
-odoo.define('web.dom', function (require) {
-"use strict";
+/** @odoo-module alias=web.dom **/
 
 /**
  * DOM Utility helpers
@@ -19,8 +9,8 @@ odoo.define('web.dom', function (require) {
  * something happens in the DOM.
  */
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
+import concurrency from "web.concurrency";
+import core from "web.core";
 var _t = core._t;
 
 /**
@@ -634,5 +624,4 @@ var dom = {
         });
     },
 };
-return dom;
-});
+export default dom;

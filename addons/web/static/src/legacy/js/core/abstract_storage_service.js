@@ -1,12 +1,11 @@
-odoo.define('web.AbstractStorageService', function (require) {
-'use strict';
+/** @odoo-module alias=web.AbstractStorageService **/
 
 /**
  * This module defines an abstraction for services that write into Storage
  * objects (e.g. localStorage or sessionStorage).
  */
 
-var AbstractService = require('web.AbstractService');
+import AbstractService from "web.AbstractService";
 
 var AbstractStorageService = AbstractService.extend({
     // the 'storage' attribute must be set by actual StorageServices extending
@@ -83,6 +82,4 @@ var AbstractStorageService = AbstractService.extend({
     },
 });
 
-return AbstractStorageService;
-
-});
+export default AbstractStorageService;

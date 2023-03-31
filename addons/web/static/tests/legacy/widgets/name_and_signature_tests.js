@@ -1,8 +1,7 @@
-odoo.define('web.name_and_signature_tests', function (require) {
-    "use strict";
-
-    const { NameAndSignature } = require("web.name_and_signature");
-    const testUtils = require("web.test_utils");
+/** @odoo-module **/
+    
+    import { NameAndSignature } from "web.name_and_signature";
+    import testUtils from "web.test_utils";
     const MockedNameAndSignature = NameAndSignature.extend({
         events: {
             ...NameAndSignature.prototype.events,
@@ -77,4 +76,3 @@ odoo.define('web.name_and_signature_tests', function (require) {
             });
         });
     });
-});

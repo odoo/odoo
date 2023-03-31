@@ -1,5 +1,4 @@
-odoo.define('web.test_utils_file', function () {
-"use strict";
+/** @odoo-module alias=web.test_utils_file **/
 
 /**
  * FILE Test Utils
@@ -147,12 +146,10 @@ function inputFiles(el, files) {
 // Exposed API
 //------------------------------------------------------------------------------
 
-return {
+export default {
     createFile: createFile,
     dragoverFile: dragoverFile,
     dropFile: dropFile,
     dropFiles,
     inputFiles,
 };
-
-});

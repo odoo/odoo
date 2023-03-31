@@ -1,7 +1,6 @@
-odoo.define('web.BrowserDetection', function (require) {
-    "use strict";
-    var Class = require('web.Class');
-    const { isMacOS, isBrowserChrome } = require('@web/core/browser/feature_detection');
+/** @odoo-module alias=web.BrowserDetection **/
+    import Class from "web.Class";
+    import { isMacOS, isBrowserChrome } from "@web/core/browser/feature_detection";
 
     var BrowserDetection = Class.extend({
         init: function () {
@@ -10,6 +9,4 @@ odoo.define('web.BrowserDetection', function (require) {
         isOsMac: isMacOS,
         isBrowserChrome,
     });
-    return BrowserDetection;
-});
-
+    export default BrowserDetection;

@@ -1,13 +1,12 @@
-odoo.define('web.DataManager', function (require) {
-"use strict";
+/** @odoo-module alias=web.data_manager **/
 
-var config = require('web.config');
-var core = require('web.core');
-var rpc = require('web.rpc');
-var session = require('web.session');
-const { generateLegacyLoadViewsResult } = require("@web/legacy/legacy_load_views");
+import config from "web.config";
+import core from "web.core";
+import rpc from "web.rpc";
+import session from "web.session";
+import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
 
-return core.Class.extend({
+const DataManager = core.Class.extend({
     init: function () {
         this._init_cache();
         core.bus.on('clear_cache', this, this.invalidate.bind(this));
@@ -222,15 +221,6 @@ return core.Class.extend({
     },
 });
 
-});
-
-odoo.define('web.data_manager', function (require) {
-"use strict";
-
-var DataManager = require('web.DataManager');
-
 var data_manager = new DataManager();
 
-return data_manager;
-
-});
+export default data_manager;

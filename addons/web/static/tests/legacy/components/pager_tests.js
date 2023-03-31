@@ -1,9 +1,8 @@
-odoo.define('web.pager_tests', function (require) {
-    "use strict";
-
-    const Pager = require('web.Pager');
-    const testUtils = require('web.test_utils');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module **/
+    
+    import Pager from "web.Pager";
+    import testUtils from "web.test_utils";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { createComponent } = testUtils;
 
@@ -185,4 +184,3 @@ odoo.define('web.pager_tests', function (require) {
                 "pager edition is re-enabled");
         });
     });
-});

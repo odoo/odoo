@@ -1,8 +1,7 @@
-odoo.define('web.OwlCompatibility', function (require) {
-    "use strict";
-
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
-    const { templates } = require("@web/core/assets");
+/** @odoo-module alias=web.OwlCompatibility **/
+    
+    import { LegacyComponent } from "@web/legacy/legacy_component";
+    import { templates } from "@web/core/assets";
 
     /**
      * This file defines the necessary tools for the transition phase where Odoo
@@ -753,10 +752,9 @@ odoo.define('web.OwlCompatibility', function (require) {
         }
     }
 
-    return {
+    export default {
         ComponentAdapter,
         ComponentWrapper,
         WidgetAdapterMixin,
         standaloneAdapter,
     };
-});

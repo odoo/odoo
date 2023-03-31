@@ -1,9 +1,8 @@
-odoo.define("web.ModelFieldSelector", function (require) {
-"use strict";
+/** @odoo-module alias=web.ModelFieldSelector **/
 
-var core = require("web.core");
-var Widget = require("web.Widget");
-var ModelFieldSelectorPopover = require("web.ModelFieldSelectorPopover");
+import core from "web.core";
+import Widget from "web.Widget";
+import ModelFieldSelectorPopover from "web.ModelFieldSelectorPopover";
 
  /**
  * The ModelFieldSelector widget can be used to display/select a particular
@@ -175,5 +174,4 @@ var ModelFieldSelector = Widget.extend({
     },
 });
 
-return ModelFieldSelector;
-});
+export default ModelFieldSelector;

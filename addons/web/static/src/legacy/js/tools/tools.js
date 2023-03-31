@@ -1,5 +1,4 @@
-odoo.define('web.tools', function (require) {
-"use strict";
+/** @odoo-module alias=web.tools **/
 
 /**
  * Wrapper for deprecated functions that display a warning message.
@@ -15,8 +14,6 @@ function deprecated(fn, message) {
     };
 }
 
-return {
+export default {
     deprecated: deprecated,
 };
-
-});

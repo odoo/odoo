@@ -1,16 +1,15 @@
-odoo.define('web.mixins_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const  AbstractAction = require("web.AbstractAction");
-const  core = require("web.core");
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
+import AbstractAction from "web.AbstractAction";
+import core from "web.core";
+import testUtils from "web.test_utils";
+import Widget from "web.Widget";
 
-const { dialogService } = require('@web/core/dialog/dialog_service');
-const { errorService } = require("@web/core/errors/error_service");
-const { registry } = require('@web/core/registry');
-const { getFixture, nextTick, patchWithCleanup } = require('@web/../tests/helpers/utils');
-const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { errorService } from "@web/core/errors/error_service";
+import { registry } from "@web/core/registry";
+import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 
 QUnit.module('core', {}, function () {
 
@@ -73,6 +72,3 @@ QUnit.module('core', {}, function () {
         assert.containsOnce(target, ".o_dialog");
     });
 });
-
-});
-

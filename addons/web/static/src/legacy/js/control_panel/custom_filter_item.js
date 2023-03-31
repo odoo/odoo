@@ -1,13 +1,12 @@
-odoo.define('web.CustomFilterItem', function (require) {
-    "use strict";
-
-    const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
-    const Domain = require('web.Domain');
-    const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
-    const field_utils = require('web.field_utils');
-    const { useModel } = require('web.Model');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.CustomFilterItem **/
+    
+    import { Dropdown } from "@web/core/dropdown/dropdown";
+    import { DatePicker, DateTimePicker } from "web.DatePickerOwl";
+    import Domain from "web.Domain";
+    import { FIELD_OPERATORS, FIELD_TYPES } from "web.searchUtils";
+    import field_utils from "web.field_utils";
+    import { useModel } from "web.Model";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useState } = owl;
 
@@ -279,5 +278,4 @@ odoo.define('web.CustomFilterItem', function (require) {
     CustomFilterItem.props = { fields: Object };
     CustomFilterItem.template = "web.CustomFilterItem";
 
-    return CustomFilterItem;
-});
+    export default CustomFilterItem;

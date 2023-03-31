@@ -1,11 +1,10 @@
-odoo.define('web.popover_tests', function (require) {
-    'use strict';
-
-    const makeTestEnvironment = require('web.test_env');
-    const Popover = require('web.Popover');
-    const testUtils = require('web.test_utils');
-    const { click, mount } = require("@web/../tests/helpers/utils");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module **/
+    
+    import makeTestEnvironment from "web.test_env";
+    import Popover from "web.Popover";
+    import testUtils from "web.test_utils";
+    import { click, mount } from "@web/../tests/helpers/utils";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useState, xml } = owl;
 
@@ -268,4 +267,3 @@ odoo.define('web.popover_tests', function (require) {
             assert.containsNone(body, '#close');
         });
     });
-});

@@ -1,6 +1,5 @@
-odoo.define("web.commonEnv", function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.commonEnv **/
+    
     /**
      * This file defines the common environment, which contains everything that
      * is needed in the env for both the backend and the frontend (Odoo
@@ -17,13 +16,13 @@ odoo.define("web.commonEnv", function (require) {
      * [1] https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
      */
 
-    const { jsonRpc } = require("web.ajax");
-    const { device, isDebug } = require("web.config");
-    const { bus } = require("web.core");
-    const rpc = require("web.rpc");
-    const session = require("web.session");
-    const { _t } = require("web.translation");
-    const {getCookie, setCookie} = require('web.utils.cookies');
+    import { jsonRpc } from "web.ajax";
+    import { device, isDebug } from "web.config";
+    import { bus } from "web.core";
+    import rpc from "web.rpc";
+    import session from "web.session";
+    import { _t } from "web.translation";
+    import {getCookie, setCookie} from "web.utils.cookies";
 
     const browser = {
         clearInterval: window.clearInterval.bind(window),
@@ -96,5 +95,4 @@ odoo.define("web.commonEnv", function (require) {
         session,
     };
 
-    return env;
-});
+    export default env;

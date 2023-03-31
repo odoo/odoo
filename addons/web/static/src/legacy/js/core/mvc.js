@@ -1,5 +1,4 @@
-odoo.define('web.mvc', function (require) {
-"use strict";
+/** @odoo-module alias=web.mvc **/
 
 /**
  * This file contains a 'formalization' of a MVC pattern, applied to Odoo
@@ -29,11 +28,11 @@ odoo.define('web.mvc', function (require) {
  *     simple as possible.
  */
 
-var Class = require('web.Class');
-var mixins = require('web.mixins');
-var ServicesMixin = require('web.ServicesMixin');
-var Widget = require('web.Widget');
-const { loadBundle } = require('@web/core/assets');
+import Class from "web.Class";
+import mixins from "web.mixins";
+import ServicesMixin from "web.ServicesMixin";
+import Widget from "web.Widget";
+import { loadBundle } from "@web/core/assets";
 
 
 /**
@@ -240,11 +239,9 @@ var Factory = Class.extend({
 });
 
 
-return {
+export default {
     Factory: Factory,
     Model: Model,
     Renderer: Renderer,
     Controller: Controller,
 };
-
-});

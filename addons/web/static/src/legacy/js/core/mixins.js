@@ -1,8 +1,7 @@
-odoo.define('web.mixins', function (require) {
-"use strict";
+/** @odoo-module alias=web.mixins **/
 
-var Class = require('web.Class');
-var utils = require('web.utils');
+import Class from "web.Class";
+import utils from "web.utils";
 
 /**
  * Mixin to structure objects' life-cycles folowing a parent-children
@@ -409,10 +408,8 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
     }
 });
 
-return {
+export default {
     ParentedMixin: ParentedMixin,
     EventDispatcherMixin: EventDispatcherMixin,
     PropertiesMixin: PropertiesMixin,
 };
-
-});

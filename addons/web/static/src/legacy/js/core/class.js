@@ -1,5 +1,4 @@
-odoo.define('web.Class', function () {
-"use strict";
+/** @odoo-module alias=web.Class **/
 /**
  * Improved John Resig's inheritance, based on:
  *
@@ -152,5 +151,4 @@ OdooClass.extend = function() {
     return Class;
 };
 
-return OdooClass;
-});
+export default OdooClass;

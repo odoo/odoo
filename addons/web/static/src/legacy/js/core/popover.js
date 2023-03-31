@@ -1,7 +1,6 @@
-odoo.define('web.Popover', function (require) {
-    'use strict';
-
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.Popover **/
+    
+    import { LegacyComponent } from "@web/legacy/legacy_component";
     const { status, onWillUnmount, useEffect, useRef, useState } = owl;
 
     /**
@@ -356,5 +355,4 @@ odoo.define('web.Popover', function (require) {
         },
     };
 
-    return Popover;
-});
+    export default Popover;

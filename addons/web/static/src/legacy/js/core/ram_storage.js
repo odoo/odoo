@@ -1,5 +1,4 @@
-odoo.define('web.RamStorage', function (require) {
-'use strict';
+/** @odoo-module alias=web.RamStorage **/
 
 /**
  * This module defines an alternative of the Storage objects (localStorage,
@@ -7,8 +6,8 @@ odoo.define('web.RamStorage', function (require) {
  * are unavailable (e.g. in private browsing on Safari).
  */
 
-var Class = require('web.Class');
-var mixins = require('web.mixins');
+import Class from "web.Class";
+import mixins from "web.mixins";
 
 
 var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
@@ -77,6 +76,4 @@ var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
     },
 });
 
-return RamStorage;
-
-});
+export default RamStorage;

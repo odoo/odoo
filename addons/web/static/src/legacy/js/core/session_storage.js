@@ -1,8 +1,7 @@
-odoo.define('web.sessionStorage', function (require) {
-'use strict';
+/** @odoo-module alias=web.sessionStorage **/
 
-var RamStorage = require('web.RamStorage');
-var mixins = require('web.mixins');
+import RamStorage from "web.RamStorage";
+import mixins from "web.mixins";
 
 // use a fake sessionStorage in RAM if the native sessionStorage is unavailable
 // (e.g. private browsing in Safari)
@@ -51,6 +50,4 @@ try {
     storage = new RamStorage();
 }
 
-return storage;
-
-});
+export default storage;

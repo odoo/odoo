@@ -1,7 +1,6 @@
-odoo.define('web.QWeb', function (require) {
-"use strict";
+/** @odoo-module alias=web.QWeb **/
 
-var translation = require('web.translation');
+import translation from "web.translation";
 
 var _t = translation._t;
 
@@ -57,6 +56,4 @@ function preprocess_node() {
     }
 }
 
-return QWeb;
-
-});
+export default QWeb;

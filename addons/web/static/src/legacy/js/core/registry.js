@@ -1,7 +1,6 @@
-odoo.define("web.Registry", function (require) {
-    "use strict";
-
-    const { sortBy } = require("web.utils");
+/** @odoo-module alias=web.Registry **/
+    
+    import { sortBy } from "web.utils";
 
     /**
      * The registry is really pretty much only a mapping from some keys to some
@@ -150,5 +149,4 @@ odoo.define("web.Registry", function (require) {
         }
     }
 
-    return Registry;
-});
+    export default Registry;

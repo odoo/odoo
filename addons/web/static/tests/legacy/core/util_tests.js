@@ -1,7 +1,6 @@
-odoo.define('web.util_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var utils = require('web.utils');
+import utils from "web.utils";
 
 QUnit.module('core', {}, function () {
 
@@ -302,6 +301,4 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(sortBy(ints, null, 'desc'), [5, 2, 1]);
         assert.deepEqual(sortBy(objstrss, prop, 'desc'), [{ x: 'z' }, { x: 'b' }, { x: 'a' }]);
     });
-});
-
 });

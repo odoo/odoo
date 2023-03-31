@@ -1,8 +1,7 @@
-odoo.define('web.Context', function (require) {
-"use strict";
+/** @odoo-module alias=web.Context **/
 
-var Class = require('web.Class');
-var pyUtils = require('web.py_utils');
+import Class from "web.Class";
+import pyUtils from "web.py_utils";
 
 var Context = Class.extend({
     init: function () {
@@ -48,6 +47,4 @@ var Context = Class.extend({
     },
 });
 
-return Context;
-
-});
+export default Context;

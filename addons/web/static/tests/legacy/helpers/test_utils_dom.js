@@ -1,8 +1,7 @@
-odoo.define('web.test_utils_dom', function (require) {
-    "use strict";
-
-    const concurrency = require('web.concurrency');
-    const Widget = require('web.Widget');
+/** @odoo-module alias=web.test_utils_dom **/
+    
+    import concurrency from "web.concurrency";
+    import Widget from "web.Widget";
 
     const { Component } = owl;
 
@@ -588,7 +587,7 @@ odoo.define('web.test_utils_dom', function (require) {
         return element;
     }
 
-    return {
+    export default {
         click,
         clickFirst,
         clickLast,
@@ -604,4 +603,3 @@ odoo.define('web.test_utils_dom', function (require) {
         triggerPositionalMouseEvent,
         triggerPositionalTapEvents,
     };
-});

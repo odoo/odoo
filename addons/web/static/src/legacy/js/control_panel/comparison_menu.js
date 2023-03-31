@@ -1,11 +1,10 @@
-odoo.define("web.ComparisonMenu", function (require) {
-    "use strict";
-
-    const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
-    const { FACET_ICONS } = require("web.searchUtils");
-    const { useModel } = require("web.Model");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.ComparisonMenu **/
+    
+    import { Dropdown } from "@web/core/dropdown/dropdown";
+    import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
+    import { FACET_ICONS } from "web.searchUtils";
+    import { useModel } from "web.Model";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     class ComparisonMenu extends LegacyComponent {
         setup() {
@@ -31,5 +30,4 @@ odoo.define("web.ComparisonMenu", function (require) {
     ComparisonMenu.template = "web.ComparisonMenu";
     ComparisonMenu.components = { Dropdown, SearchDropdownItem };
 
-    return ComparisonMenu;
-});
+    export default ComparisonMenu;

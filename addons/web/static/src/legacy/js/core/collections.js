@@ -1,7 +1,6 @@
-odoo.define("web.collections", function (require) {
-    "use strict";
-
-    var Class = require("web.Class");
+/** @odoo-module alias=web.collections **/
+    
+    import Class from "web.Class";
 
     /**
      * Allows to build a tree representation of a data.
@@ -38,7 +37,6 @@ odoo.define("web.collections", function (require) {
         },
     });
 
-    return {
+    export default {
         Tree: Tree,
     };
-});

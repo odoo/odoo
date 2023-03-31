@@ -1,5 +1,4 @@
-odoo.define('web.test_utils_kanban', function (require) {
-"use strict";
+/** @odoo-module alias=web.test_utils_kanban **/
 
 /**
  * Kanban Test Utils
@@ -10,8 +9,8 @@ odoo.define('web.test_utils_kanban', function (require) {
  * testUtils file.
  */
 
-var testUtilsDom = require('web.test_utils_dom');
-var testUtilsFields = require('web.test_utils_fields');
+import testUtilsDom from "web.test_utils_dom";
+import testUtilsFields from "web.test_utils_fields";
 
 /**
  * Clicks on the Create button in a kanban view. Note that this method checks that
@@ -91,12 +90,10 @@ function toggleRecordDropdown($record) {
 }
 
 
-return {
+export default {
     clickCreate: clickCreate,
     quickCreate: quickCreate,
     reload: reload,
     toggleGroupSettings: toggleGroupSettings,
     toggleRecordDropdown: toggleRecordDropdown,
 };
-
-});

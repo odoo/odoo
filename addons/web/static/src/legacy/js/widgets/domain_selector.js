@@ -1,13 +1,12 @@
-odoo.define("web.DomainSelector", function (require) {
-"use strict";
+/** @odoo-module alias=web.DomainSelector **/
 
-var core = require("web.core");
-var datepicker = require("web.datepicker");
-var dom = require('web.dom');
-var Domain = require("web.Domain");
-var field_utils = require("web.field_utils");
-var ModelFieldSelector = require("web.ModelFieldSelector");
-var Widget = require("web.Widget");
+import core from "web.core";
+import datepicker from "web.datepicker";
+import dom from "web.dom";
+import Domain from "web.Domain";
+import field_utils from "web.field_utils";
+import ModelFieldSelector from "web.ModelFieldSelector";
+import Widget from "web.Widget";
 
 var _t = core._t;
 var _lt = core._lt;
@@ -1013,5 +1012,4 @@ function instantiateNode(parent, model, domain, options) {
     return null;
 }
 
-return DomainSelector;
-});
+export default DomainSelector;

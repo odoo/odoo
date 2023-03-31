@@ -1,8 +1,7 @@
-odoo.define('web.custom_file_input_tests', function (require) {
-    "use strict";
-
-    const CustomFileInput = require('web.CustomFileInput');
-    const testUtils = require('web.test_utils');
+/** @odoo-module **/
+    
+    import CustomFileInput from "web.CustomFileInput";
+    import testUtils from "web.test_utils";
 
     const { createComponent } = testUtils;
 
@@ -83,4 +82,3 @@ odoo.define('web.custom_file_input_tests', function (require) {
             assert.verifySteps(['/web/binary/upload_attachment']);
         });
     });
-});

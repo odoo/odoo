@@ -1,9 +1,8 @@
-odoo.define('web.keyboard_navigation_mixin_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
+import KeyboardNavigationMixin from "web.KeyboardNavigationMixin";
+import testUtils from "web.test_utils";
+import Widget from "web.Widget";
 
 QUnit.module('KeyboardNavigationMixin', function () {
     QUnit.test('aria-keyshortcuts is added on elements with accesskey', async function (assert) {
@@ -84,5 +83,4 @@ QUnit.module('KeyboardNavigationMixin', function () {
 
         parent.destroy();
     });
-});
 });

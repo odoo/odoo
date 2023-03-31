@@ -1,5 +1,4 @@
-odoo.define('web.BasicModel', function (require) {
-"use strict";
+/** @odoo-module alias=web.BasicModel **/
 
 /**
  * Basic Model
@@ -83,14 +82,14 @@ odoo.define('web.BasicModel', function (require) {
  *   element, so it can be edited later.
  */
 
-var AbstractModel = require('web.AbstractModel');
-var concurrency = require('web.concurrency');
-var Context = require('web.Context');
-var core = require('web.core');
-var Domain = require('web.Domain');
-var session = require('web.session');
-var utils = require('web.utils');
-var viewUtils = require('web.viewUtils');
+import AbstractModel from "web.AbstractModel";
+import concurrency from "web.concurrency";
+import Context from "web.Context";
+import core from "web.core";
+import Domain from "web.Domain";
+import session from "web.session";
+import utils from "web.utils";
+import viewUtils from "web.viewUtils";
 
 var _t = core._t;
 
@@ -5428,5 +5427,4 @@ var BasicModel = AbstractModel.extend({
     },
 });
 
-return BasicModel;
-});
+export default BasicModel;

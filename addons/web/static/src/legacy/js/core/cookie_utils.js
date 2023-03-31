@@ -1,5 +1,4 @@
-odoo.define('web.utils.cookies', function (require) {
-"use strict";
+/** @odoo-module alias=web.utils.cookies **/
 
 const utils = {
     /**
@@ -70,5 +69,4 @@ const utils = {
         ].join(';');
     },
 };
-return utils;
-});
+export default utils;

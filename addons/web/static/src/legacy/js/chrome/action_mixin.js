@@ -1,6 +1,5 @@
-odoo.define('web.ActionMixin', function (require) {
-    "use strict";
-
+/** @odoo-module alias=web.ActionMixin **/
+    
     /**
      * We define here the ActionMixin, the generic notion of action (from the point
      * of view of the web client).  In short, an action is a widget which controls
@@ -21,8 +20,8 @@ odoo.define('web.ActionMixin', function (require) {
      * @extends WidgetAdapterMixin
      */
 
-    const core = require('web.core');
-    const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+    import core from "web.core";
+    import { WidgetAdapterMixin } from "web.OwlCompatibility";
 
     const ActionMixin = Object.assign({}, WidgetAdapterMixin, {
         template: 'Action',
@@ -231,5 +230,4 @@ odoo.define('web.ActionMixin', function (require) {
         },
     });
 
-    return ActionMixin;
-});
+    export default ActionMixin;

@@ -1,10 +1,9 @@
-odoo.define('web.AbstractService', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractService **/
 
-var Class = require('web.Class');
-const { serviceRegistry } = require("web.core");
-var Mixins = require('web.mixins');
-var ServicesMixin = require('web.ServicesMixin');
+import Class from "web.Class";
+import { serviceRegistry } from "web.core";
+import Mixins from "web.mixins";
+import ServicesMixin from "web.ServicesMixin";
 
 var AbstractService = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     dependencies: [],
@@ -87,5 +86,4 @@ var AbstractService = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     }
 });
 
-return AbstractService;
-});
+export default AbstractService;

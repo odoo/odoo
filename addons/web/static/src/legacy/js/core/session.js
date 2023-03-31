@@ -1,12 +1,11 @@
-odoo.define('web.Session', function (require) {
-"use strict";
+/** @odoo-module alias=web.Session **/
 
-var ajax = require('web.ajax');
-var core = require('web.core');
-var mixins = require('web.mixins');
-const {setCookie} = require('web.utils.cookies');
-const { session } = require('@web/session');
-const { loadJS } = require('@web/core/assets');
+import ajax from "web.ajax";
+import core from "web.core";
+import mixins from "web.mixins";
+import {setCookie} from "web.utils.cookies";
+import { session } from "@web/session";
+import { loadJS } from "@web/core/assets";
 
 
 var _t = core._t;
@@ -349,6 +348,4 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
 });
 
-return Session;
-
-});
+export default Session;

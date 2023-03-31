@@ -1,7 +1,6 @@
-odoo.define('web.py_utils', function (require) {
-"use strict";
+/** @odoo-module alias=web.py_utils **/
 
-var core = require('web.core');
+import core from "web.core";
 
 var _t = core._t;
 var py = window.py; // to silence linters
@@ -547,7 +546,7 @@ function _normalizeDomainAST(domain) {
     return domain;
 }
 
-return {
+export default {
     context: pycontext,
     ensure_evaluated: ensure_evaluated,
     eval: pyeval,
@@ -559,4 +558,3 @@ return {
     _formatAST: _formatAST,
     _normalizeDomainAST: _normalizeDomainAST,
 };
-});

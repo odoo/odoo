@@ -1,5 +1,4 @@
-odoo.define('web.public.lazyloader', function (require) {
-'use strict';
+/** @odoo-module alias=web.public.lazyloader **/
 
 var blockEvents = ['submit', 'click'];
 var blockFunction = function (ev) {
@@ -108,8 +107,7 @@ function _loadScripts(scripts, index) {
     script.removeAttribute('data-src');
 }
 
-return {
+export default {
     loadScripts: _loadScripts,
     allScriptsLoaded: _allScriptsLoaded,
 };
-});

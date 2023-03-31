@@ -1,10 +1,9 @@
-odoo.define('web.ActionMenus', function (require) {
-    "use strict";
-
-    const Context = require('web.Context');
-    const DropdownMenu = require('web.DropdownMenu');
-    const Registry = require('web.Registry');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.ActionMenus **/
+    
+    import Context from "web.Context";
+    import DropdownMenu from "web.DropdownMenu";
+    import Registry from "web.Registry";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const {
         onMounted,
@@ -204,5 +203,4 @@ odoo.define('web.ActionMenus', function (require) {
     };
     ActionMenus.template = 'web.Legacy.ActionMenus';
 
-    return ActionMenus;
-});
+    export default ActionMenus;

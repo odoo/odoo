@@ -1,20 +1,19 @@
-odoo.define('web.OwlCompatibilityTests', function (require) {
-    "use strict";
-
-    const {
+/** @odoo-module **/
+    
+    import {
         ComponentAdapter,
         ComponentWrapper,
         WidgetAdapterMixin,
-    } = require('web.OwlCompatibility');
-    const testUtils = require('web.test_utils');
-    const Widget = require('web.Widget');
-    const { registry } = require("@web/core/registry");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
-    const { mapLegacyEnvToWowlEnv, useWowlService } = require("@web/legacy/utils");
+    } from "web.OwlCompatibility";
+    import testUtils from "web.test_utils";
+    import Widget from "web.Widget";
+    import { registry } from "@web/core/registry";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
+    import { mapLegacyEnvToWowlEnv, useWowlService } from "@web/legacy/utils";
 
-    const makeTestEnvironment = require("web.test_env");
-    const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
-    const { getFixture, mount, useLogLifeCycle, destroy } = require("@web/../tests/helpers/utils");
+    import makeTestEnvironment from "web.test_env";
+    import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+    import { getFixture, mount, useLogLifeCycle, destroy } from "@web/../tests/helpers/utils";
 
     const makeTestPromise = testUtils.makeTestPromise;
     const nextTick = testUtils.nextTick;
@@ -1679,4 +1678,3 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             await mount(MyComponent, getFixture(), { env: legacyEnv });
         });
     });
-});

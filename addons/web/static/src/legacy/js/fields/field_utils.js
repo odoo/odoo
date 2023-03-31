@@ -1,5 +1,4 @@
-odoo.define('web.field_utils', function (require) {
-"use strict";
+/** @odoo-module alias=web.field_utils **/
 
 /**
  * Field Utils
@@ -15,11 +14,11 @@ odoo.define('web.field_utils', function (require) {
  * conversions.
  */
 
-var core = require('web.core');
-var dom = require('web.dom');
-var session = require('web.session');
-var time = require('web.time');
-var utils = require('web.utils');
+import core from "web.core";
+import dom from "web.dom";
+import session from "web.session";
+import time from "web.time";
+import utils from "web.utils";
 
 var _t = core._t;
 
@@ -745,7 +744,7 @@ function parseMany2one(value) {
     return value;
 }
 
-return {
+export default {
     format: {
         binary: formatBinary,
         boolean: formatBoolean,
@@ -791,5 +790,3 @@ return {
         json: _.identity, // todo
     },
 };
-
-});

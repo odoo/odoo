@@ -1,9 +1,8 @@
-odoo.define('web.config', function (require) {
-"use strict";
+/** @odoo-module alias=web.config **/
 
-const Bus = require('web.Bus');
-const { hasTouch, isAndroid, isIOS, isMobileOS } = require('@web/core/browser/feature_detection');
-const { getMediaQueryLists } = require('@web/core/ui/ui_service');
+import Bus from "web.Bus";
+import { hasTouch, isAndroid, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
+import { getMediaQueryLists } from "@web/core/ui/ui_service";
 
 const bus = new Bus();
 
@@ -118,6 +117,4 @@ function _updateSizeProps() {
 _.invoke(medias, 'addListener', _updateSizeProps);
 _updateSizeProps();
 
-return config;
-
-});
+export default config;

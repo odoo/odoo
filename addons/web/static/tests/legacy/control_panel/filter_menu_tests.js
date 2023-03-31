@@ -1,11 +1,10 @@
-odoo.define('web.filter_menu_tests', function (require) {
-    "use strict";
+/** @odoo-module **/
+    
+    import { browser } from "@web/core/browser/browser";
+    import { patchWithCleanup } from "@web/../tests/helpers/utils";
+    import testUtils from "web.test_utils";
 
-    const { browser } = require('@web/core/browser/browser');
-    const { patchWithCleanup } = require('@web/../tests/helpers/utils');
-    const testUtils = require('web.test_utils');
-
-    const cpHelpers = require('@web/../tests/search/helpers');
+    import * as cpHelpers from "@web/../tests/search/helpers";
     const { createControlPanel, mock } = testUtils;
     const { patchDate } = mock;
 
@@ -484,4 +483,3 @@ odoo.define('web.filter_menu_tests', function (require) {
             });
         });
     });
-});

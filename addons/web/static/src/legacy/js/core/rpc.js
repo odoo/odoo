@@ -1,7 +1,6 @@
-odoo.define('web.rpc', function (require) {
-"use strict";
+/** @odoo-module alias=web.rpc **/
 
-var ajax = require('web.ajax');
+import ajax from "web.ajax";
 
 const rpc = {
     /**
@@ -123,6 +122,4 @@ const rpc = {
     },
 };
 
-return rpc;
-
-});
+export default rpc;

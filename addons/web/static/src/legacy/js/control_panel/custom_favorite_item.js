@@ -1,11 +1,10 @@
-odoo.define('web.CustomFavoriteItem', function (require) {
-    "use strict";
-
-    const { CheckBox } = require("@web/core/checkbox/checkbox");
-    const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const FavoriteMenu = require('web.FavoriteMenu');
-    const { useModel } = require('web.Model');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.CustomFavoriteItem **/
+    
+    import { CheckBox } from "@web/core/checkbox/checkbox";
+    import { Dropdown } from "@web/core/dropdown/dropdown";
+    import FavoriteMenu from "web.FavoriteMenu";
+    import { useModel } from "web.Model";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useState, useRef } = owl;
 
@@ -147,5 +146,4 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
     FavoriteMenu.registry.add('favorite-generator-menu', CustomFavoriteItem, 0);
 
-    return CustomFavoriteItem;
-});
+    export default CustomFavoriteItem;

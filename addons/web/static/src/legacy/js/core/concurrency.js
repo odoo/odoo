@@ -1,5 +1,4 @@
-odoo.define('web.concurrency', function (require) {
-"use strict";
+/** @odoo-module alias=web.concurrency **/
 
 /**
  * Concurrency Utils
@@ -15,9 +14,9 @@ odoo.define('web.concurrency', function (require) {
  * we solved some concurrency issues, when we noticed that a pattern emerged.
  */
 
-var Class = require('web.Class');
+import Class from "web.Class";
 
-return {
+export default {
     /**
      * Returns a promise resolved after 'wait' milliseconds
      *
@@ -319,5 +318,3 @@ return {
         });
     }
 };
-
-});

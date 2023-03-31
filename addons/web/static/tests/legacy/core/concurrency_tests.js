@@ -1,8 +1,7 @@
-odoo.define('web.concurrency_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var concurrency = require('web.concurrency');
-var testUtils = require('web.test_utils');
+import concurrency from "web.concurrency";
+import testUtils from "web.test_utils";
 
 var makeTestPromise = testUtils.makeTestPromise;
 var makeTestPromiseWithAssert = testUtils.makeTestPromiseWithAssert;
@@ -586,7 +585,5 @@ QUnit.module('core', {}, function () {
 
         assert.verifySteps(['ok d3', 'p3 resolved']);
     });
-
-});
 
 });

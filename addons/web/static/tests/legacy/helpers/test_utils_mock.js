@@ -1,5 +1,4 @@
-odoo.define('web.test_utils_mock', function (require) {
-"use strict";
+/** @odoo-module alias=web.test_utils_mock **/
 
 /**
  * Mock Test Utils
@@ -10,23 +9,23 @@ odoo.define('web.test_utils_mock', function (require) {
  * testUtils file.
  */
 
-const AbstractStorageService = require('web.AbstractStorageService');
-const AjaxService = require('web.AjaxService');
-const basic_fields = require('web.basic_fields');
-const Bus = require('web.Bus');
-const config = require('web.config');
-const core = require('web.core');
-const dom = require('web.dom');
-const makeTestEnvironment = require('web.test_env');
-const MockServer = require('web.MockServer');
-const RamStorage = require('web.RamStorage');
-const session = require('web.session');
-const { patchWithCleanup, patchDate } = require("@web/../tests/helpers/utils");
-const { browser } = require("@web/core/browser/browser");
-const { assets } = require("@web/core/assets");
-const { processArch } = require("@web/legacy/legacy_load_views");
+import AbstractStorageService from "web.AbstractStorageService";
+import AjaxService from "web.AjaxService";
+import basic_fields from "web.basic_fields";
+import Bus from "web.Bus";
+import config from "web.config";
+import core from "web.core";
+import dom from "web.dom";
+import makeTestEnvironment from "web.test_env";
+import MockServer from "web.MockServer";
+import RamStorage from "web.RamStorage";
+import session from "web.session";
+import { patchWithCleanup, patchDate } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
+import { assets } from "@web/core/assets";
+import { processArch } from "@web/legacy/legacy_load_views";
 
-const { Component } = require("@odoo/owl");
+import { Component } from "@odoo/owl";
 const DebouncedField = basic_fields.DebouncedField;
 
 
@@ -721,7 +720,7 @@ function patchSetTimeout() {
     };
 }
 
-return {
+export default {
     addMockEnvironment: addMockEnvironment,
     getView: getView,
     addMockEnvironmentOwl: addMockEnvironmentOwl,
@@ -731,5 +730,3 @@ return {
     unpatch: unpatch,
     patchSetTimeout: patchSetTimeout,
 };
-
-});

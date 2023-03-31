@@ -1,7 +1,6 @@
-odoo.define('web.testUtilsTests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var testUtils = require('web.test_utils');
+import testUtils from "web.test_utils";
 
 QUnit.module('web', {}, function () {
 QUnit.module('testUtils', {}, function () {
@@ -31,6 +30,5 @@ QUnit.test('new moment', function (assert) {
     unpatchDate();
 });
 
-});
 });
 });

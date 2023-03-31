@@ -13,7 +13,7 @@ import { makeLegacyActionManagerService } from "./backend_utils";
 import * as AbstractService from "web.AbstractService";
 import legacyEnv from "web.env";
 import * as session from "web.session";
-import * as makeLegacyWebClientService from "web.pseudo_web_client";
+import makeLegacyWebClientService from "web.pseudo_web_client";
 import { templates } from "@web/core/assets";
 
 import { Component, whenReady } from "@odoo/owl";

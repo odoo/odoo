@@ -1,7 +1,6 @@
-odoo.define('web.domain_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var Domain = require('web.Domain');
+import Domain from "web.Domain";
 
 QUnit.module('core', {}, function () {
 
@@ -195,5 +194,4 @@ QUnit.module('core', {}, function () {
         assert.ok(new Domain([['a', '=ilike', '%value']]).compute({ a: 'Some Value' }));
         assert.notOk(new Domain([['a', '=ilike', '%value']]).compute({ a: false }));
     });
-});
 });

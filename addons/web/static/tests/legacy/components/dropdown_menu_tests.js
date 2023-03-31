@@ -1,11 +1,10 @@
-odoo.define('web.dropdown_menu_tests', function (require) {
-    "use strict";
-
-    const DropdownMenu = require('web.DropdownMenu');
-    const testUtils = require('web.test_utils');
-    const makeTestEnvironment  = require("web.test_env");
-    const { mount } = require("@web/../tests/helpers/utils");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module **/
+    
+    import DropdownMenu from "web.DropdownMenu";
+    import testUtils from "web.test_utils";
+    import makeTestEnvironment  from "web.test_env";
+    import { mount } from "@web/../tests/helpers/utils";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useState, xml } = owl;
     const { createComponent } = testUtils;
@@ -427,4 +426,3 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             assert.hasClass(firstItemEl.querySelector("i"), "o_icon_right fa fa-caret-down");
         });
     });
-});

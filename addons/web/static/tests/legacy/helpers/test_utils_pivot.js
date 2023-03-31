@@ -1,7 +1,6 @@
-odoo.define('web.test_utils_pivot', function (require) {
-"use strict";
+/** @odoo-module alias=web.test_utils_pivot **/
 
-var testUtilsDom = require('web.test_utils_dom');
+import testUtilsDom from "web.test_utils_dom";
 
 /**
  * Pivot Test Utils
@@ -48,10 +47,8 @@ function reload(pivot, params) {
     return pivot.reload(params);
 }
 
-return {
+export default {
     clickMeasure: clickMeasure,
     reload: reload,
     toggleMeasuresDropdown: toggleMeasuresDropdown,
 };
-
-});

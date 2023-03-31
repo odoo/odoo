@@ -1,21 +1,20 @@
-odoo.define('web.owl_dialog_tests', function (require) {
-    "use strict";
+/** @odoo-module **/
+    
+    import LegacyDialog from "web.Dialog";
+    import makeTestEnvironment from "web.test_env";
+    import Dialog from "web.OwlDialog";
+    import testUtils from "web.test_utils";
 
-    const LegacyDialog = require('web.Dialog');
-    const makeTestEnvironment = require('web.test_env');
-    const Dialog = require('web.OwlDialog');
-    const testUtils = require('web.test_utils');
-
-    const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
-    const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
-    const { WithEnv } = require("@web/core/utils/components");
-    const {
+    import { makeLegacyDialogMappingTestEnv } from "@web/../tests/helpers/legacy_env_utils";
+    import { Dialog as WowlDialog } from "@web/core/dialog/dialog";
+    import { WithEnv } from "@web/core/utils/components";
+    import {
         getFixture,
         nextTick,
         mount,
         destroy,
-    } = require("@web/../tests/helpers/utils");
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+    } from "@web/../tests/helpers/utils";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { Component, useState, xml } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
@@ -413,4 +412,3 @@ odoo.define('web.owl_dialog_tests', function (require) {
             destroy(parent2);
         });
     });
-});

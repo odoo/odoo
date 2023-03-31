@@ -1,8 +1,7 @@
-odoo.define('web.time_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const core = require('web.core');
-var time = require('web.time');
+import core from "web.core";
+import time from "web.time";
 
 QUnit.module('core', {}, function () {
 
@@ -159,7 +158,5 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(time.getLangTimeFormatWoZero(), "H:m:s");
         Object.assign(core._t.database.parameters, originalParameters);
     });
-
-});
 
 });

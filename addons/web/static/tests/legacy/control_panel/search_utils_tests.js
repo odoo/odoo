@@ -1,14 +1,13 @@
-odoo.define('web.search_utils_tests', function (require) {
-    "use strict";
-
-    const { constructDateDomain } = require('web.searchUtils');
-    const testUtils = require('web.test_utils');
-    const { registry } = require("@web/core/registry");
-    const { translatedTerms } = require("@web/core/l10n/translation");
-    const { patchWithCleanup } = require("@web/../tests/helpers/utils");
-    const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
-    const { makeFakeLocalizationService } = require("@web/../tests/helpers/mock_services");
-    const { _t } = require('web.core');
+/** @odoo-module **/
+    
+    import { constructDateDomain } from "web.searchUtils";
+    import testUtils from "web.test_utils";
+    import { registry } from "@web/core/registry";
+    import { translatedTerms } from "@web/core/l10n/translation";
+    import { patchWithCleanup } from "@web/../tests/helpers/utils";
+    import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+    import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+    import { _t } from "web.core";
 
     const patchDate = testUtils.mock.patchDate;
 
@@ -366,4 +365,3 @@ odoo.define('web.search_utils_tests', function (require) {
             unpatchDate();
         });
     });
-});

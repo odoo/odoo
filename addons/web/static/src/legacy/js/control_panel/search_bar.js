@@ -1,12 +1,11 @@
-odoo.define('web.SearchBar', function (require) {
-    "use strict";
-
-    const Domain = require('web.Domain');
-    const field_utils = require('web.field_utils');
-    const { useAutofocus } = require("@web/core/utils/hooks");
-    const { useModel } = require('web.Model');
-    const { fuzzyTest } = require('@web/core/utils/search');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+/** @odoo-module alias=web.SearchBar **/
+    
+    import Domain from "web.Domain";
+    import field_utils from "web.field_utils";
+    import { useAutofocus } from "@web/core/utils/hooks";
+    import { useModel } from "web.Model";
+    import { fuzzyTest } from "@web/core/utils/search";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { onMounted, onWillUnmount, toRaw, useExternalListener, useState } = owl;
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
@@ -489,5 +488,4 @@ odoo.define('web.SearchBar', function (require) {
     };
     SearchBar.template = 'web.Legacy.SearchBar';
 
-    return SearchBar;
-});
+    export default SearchBar;
