@@ -2405,7 +2405,7 @@ class IrQWeb(models.AbstractModel):
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
-        if debug and 'assets' in debug:
+        if (debug and 'assets' in debug) or 'xml' in tools.config['dev_mode']:
             return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
         else:
             return self._generate_asset_nodes_cache(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
@@ -2456,14 +2456,12 @@ class IrQWeb(models.AbstractModel):
         return get_value()
 
     # other methods used for the asset bundles
-    @tools.conditional(
-        # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
-        # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
-        'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
-    )
     def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
+        return tools.call_cached(
+            (bundle, css, js, debug, async_load, defer_load, lazy_load, media, *map(self.env.context.get, self._get_template_cache_keys())),
+            self._generate_asset_nodes,
+            bundle, css, js, debug, async_load, defer_load, lazy_load, media
+        )
 
     @tools.ormcache('bundle', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
     def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):

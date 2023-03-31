@@ -3,6 +3,8 @@
 
 # decorator makes wrappers that have the same API as their wrapped function
 from collections import Counter, defaultdict
+from typing import Mapping, Tuple, Callable
+
 from decorator import decorator
 from inspect import signature, Parameter
 import logging
@@ -26,8 +28,11 @@ class ormcache_counter(object):
         return 100.0 * self.hit / (self.hit + self.miss or 1)
 
 # statistic counters dictionary, maps (dbname, modelname, method) to counter
-STAT = defaultdict(ormcache_counter)
+STAT: Mapping[Tuple[str, str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
 
+def lru(model, fn):
+    counter = STAT[(model.pool.db_name, model._name, fn)]
+    return model.pool._Registry__cache, (model._name, fn), counter
 
 class ormcache(object):
     """ LRU cache decorator for model methods.
@@ -80,12 +85,8 @@ class ormcache(object):
             # backward-compatible function that uses self.skiparg
             self.key = lambda *args, **kwargs: args[self.skiparg:]
 
-    def lru(self, model):
-        counter = STAT[(model.pool.db_name, model._name, self.method)]
-        return model.pool._Registry__cache, (model._name, self.method), counter
-
     def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
+        d, key0, counter = lru(args[0], self.method)
         key = key0 + self.key(*args, **kwargs)
         try:
             r = d[key]
@@ -163,7 +164,7 @@ class ormcache_multi(ormcache):
         self.multi_pos = list(sign.parameters).index(self.multi)
 
     def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
+        d, key0, counter = lru(args[0], self.method)
         base_key = key0 + self.key(*args, **kwargs)
         ids = self.key_multi(*args, **kwargs)
         result = {}
@@ -239,6 +240,23 @@ def get_cache_key_counter(bound_method, *args, **kwargs):
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter
+
+def call_cached(key, method, *args, **kwargs):
+    cache, key0, counter = lru(method.__self__, method.__func__)
+    key = (*key0, *key)
+
+    try:
+        r = cache[key]
+        counter.hit += 1
+        return r
+    except KeyError:
+        counter.miss += 1
+        val = cache[key] = method(*args, **kwargs)
+        return val
+    except TypeError:
+        _logger.warning("cache lookup error on %r", key, exc_info=True)
+        counter.err += 1
+        return method(*args, **kwargs)
 
 # For backward compatibility
 cache = ormcache
