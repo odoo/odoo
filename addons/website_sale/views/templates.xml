@@ -116,22 +116,24 @@
         </xpath>
     </template>
 
+    <template id="template_header_sales_three" inherit_id="website.template_header_sales_three">
+        <xpath expr="//t[@t-call='website.placeholder_header_language_selector']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'position-relative'"/>
+                <t t-set="_link_class" t-value="'nav-link btn btn-sm d-flex flex-row-reverse align-items-center text-uppercase fw-bold'"/>
+                <t t-set="_icon_wrap_class" t-value="'d-contains'"/>
+                <t t-set="_badge_class" t-value="'top-0 d-block ms-2'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
-                <t t-set="_link_class" t-value="'nav-link'"/>
-            </t>
-        </xpath>
-    </template>
-
-    <template id="template_header_contact" inherit_id="website.template_header_contact">
-        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
-            <t t-call="website_sale.header_cart_link">
-                <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>

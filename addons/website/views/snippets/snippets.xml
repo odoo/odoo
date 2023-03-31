@@ -776,16 +776,16 @@
                        data-customize-website-views="website.template_header_sales_two"
                        data-customize-website-variable="'sales_two'"
                        data-img="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
+            <we-button title="Menu - Sales 3"
+                       data-name="header_sales_three_opt"
+                       data-customize-website-views="website.template_header_sales_three"
+                       data-customize-website-variable="'sales_three'"
+                       data-img="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
             <we-button title="Sidebar"
                        data-name="header_sidebar_opt"
                        data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
                        data-customize-website-variable="'sidebar'"
                        data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
-            <we-button title="Contact"
-                       data-name="header_contact_opt"
-                       data-customize-website-views="website.template_header_contact"
-                       data-customize-website-variable="'Contact'"
-                       data-img="/website/static/src/img/snippets_options/header_template_contact.svg"/>
             <we-button title="Image"
                        data-name="header_image_opt"
                        data-customize-website-views="website.template_header_image"
@@ -829,6 +829,13 @@
             <we-colorpicker data-dependencies="header_sales_two_opt"
                             data-customize-website-color="" data-color="header-sales_two"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_two-custom" data-layer-gradient="menu-secondary-gradient"
+                            data-no-bundle-reload="true"
+                            data-null-value="'NULL'"
+                            data-with-combinations="customizeWebsiteColor"
+                            data-with-gradients="true"/>
+            <we-colorpicker data-dependencies="header_sales_three_opt"
+                            data-customize-website-color="" data-color="header-sales_three"
+                            data-customize-website-layer2-color="" data-layer-color="header-sales_three-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
