@@ -545,6 +545,7 @@ function handleMasonry(editable) {
         for (const td of [...tr.children].filter(child => child.nodeName === 'TD')) {
             td.classList.toggle('o_desktop_h100', true);
             td.style.setProperty('height', '100%');
+            td.style.setProperty('padding', '0px');
             const childrenNames = [...td.children].map(child => child.nodeName);
             if (!childrenNames.includes('TABLE')) {
                 // Hack that makes vertical-align possible within an inline-block.
