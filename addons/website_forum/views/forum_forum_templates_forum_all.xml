@@ -5,25 +5,25 @@
 <!-- All Forums Layout -->
 <template id="forum_all" name="Forum Navigation">
 
-    <t t-set="col_class" t-valuef="mb-3 col-sm-6"/>
+    <t t-set="col_class" t-valuef="col-md col-xl-3 col-xxl-2 mb-3"/>
     <t t-set="img_class" t-valuef="col-md-4"/>
     <t t-set="content_class" t-valuef="col-md-8"/>
-    <t t-set="last_post_class" t-valuef="col-md-12 pe-md-3 pt-3"/>
-    <t t-set="nb_post_class" t-valuef="col-md-12 pe-md-3 pt-2"/>
 
     <t t-call="website.layout">
         <t t-set="pageName" t-value="'website_forum'"/>
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_forum_all_top"/>
-            <div id="o_wforum_forums_index_list" class="container pt-4 pb-5">
-                <div t-if="forums" class="row">
-                    <t t-call="website_forum.forum_all_all_entries">
-                        <t t-set="_forums" t-value="forums"/>
+            <div id="o_wforum_forums_index_list" class="container pt-lg-4 pb-5">
+                <div class="row justify-content-center">
+                    <t t-if="forums">
+                        <t t-call="website_forum.forum_all_all_entries">
+                            <t t-set="_forums" t-value="forums"/>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="alert alert-info">No forum is available yet.</div>
                     </t>
                 </div>
-                <t t-else="">
-                    <div class="alert alert-info">No forum is available yet.</div>
-                </t>
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_forum_all_bottom"/>
         </div>
@@ -39,37 +39,25 @@
     <t t-foreach="sorted_forums" t-as="forum">
         <t t-set="has_desc" t-value="forum.description"/>
         <div t-attf-class="#{col_class}">
-            <div class="row py-4 bg-200 mx-1 h-100 o_forum_row">
-                <div t-attf-class="o_forum_image_container pe-md-0 h-100 #{img_class}">
-                    <a t-attf-href="/forum/#{slug(forum)}">
-                        <div t-attf-class="h-100 w-100 #{not forum.image_1920 and 'rounded o_wforum_forum_card_bg shadow-sm flex-shrink-0'}">
-                            <div t-if="forum.image_1920 or editable" t-attf-class="h-100"
-                            t-field="forum.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256', 'class': 'w-100 h-100 o_object_fit_cover rounded'}" />
-                        </div>
-                    </a>
+            <a t-attf-href="/forum/#{slug(forum)}" class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base" t-attf-style="background-image: url('#{forum.image_1920 and website.image_url(forum, 'image_1920') or ''}')">
+                <div class="o_we_bg_filter" style="background-image: linear-gradient(0deg, rgba(255, 255, 255, .75) 30%, rgba(255, 255, 255, 0) 100%);"></div>
+                <div t-if="_forums == courses_discussions" class="badge position-absolute top-0 end-0 m-3 border text-bg-light">
+                    Course
                 </div>
-                <div t-attf-class="#{content_class} mt-2 mt-md-0 d-flex flex-column h-100">
-                    <a t-attf-href="/forum/#{slug(forum)}" class="text-reset" t-att-title="forum.name">
-                        <h3 class="h4" t-field="forum.name"/>
-                    </a>
-                    <p class="m-0 flex-grow-1"
-                    placeholder="Description"
-                    t-field="forum.teaser"/>
-                    <t t-if="is_view_active('website_forum.opt_post_count') or is_view_active('website_forum.opt_last_post')" t-call="website_forum.forum_post_options"/>
+                <div class="mt-5 pt-5">
+                    <h3 class="mb-0 fw-bold" t-field="forum.name"/>
+                    <t t-if="is_view_active('website_forum.opt_post_count')">
+                        <span t-if="forum.total_posts > 0 " class="badge text-bg-dark">
+                            <t t-out="forum.total_posts"/> post<t t-if="forum.total_posts > 1">s</t>
+                        </span>
+                        <span t-else="" class="badge text-dark">No posts yet</span>
+                    </t>
                 </div>
-            </div>
+            </a>
         </div>
     </t>
-</template>
-
-<template id="forum_post_options">
-    <div class="row">
-        <div t-attf-class="#{last_post_class}">
-            <div t-if="is_view_active('website_forum.opt_last_post') and forum.post_ids" class="text-truncate">Last Post: <a t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"><t t-esc="forum.last_post_id.name"/></a></div>
-        </div>
-        <div t-attf-class="#{nb_post_class}">
-            <div t-if="is_view_active('website_forum.opt_post_count')">Posts: <strong><t t-esc="forum.total_posts"/></strong></div>
-        </div>
+    <div t-if="_forums == courses_discussions" class="d-flex justify-content-center">
+        <a href="/slides" class="btn btn-link">Check out our courses <i class="fa fa-long-arrow-right"></i></a>
     </div>
 </template>
 
@@ -77,19 +65,13 @@
     Display forums as a list  -->
 <template name="List View" id="website_forum.opt_list_view" inherit_id="website_forum.forum_all" active="False">
     <xpath expr="//t[@t-set='col_class']" position="attributes">
-        <attribute name="t-valuef">mb-3 col-sm-12</attribute>
+        <attribute name="t-valuef">col-8 mb-3</attribute>
     </xpath>
     <xpath expr="//t[@t-set='img_class']" position="attributes">
         <attribute name="t-valuef">col-md-3</attribute>
     </xpath>
     <xpath expr="//t[@t-set='content_class']" position="attributes">
         <attribute name="t-valuef">col-md-9</attribute>
-    </xpath>
-    <xpath expr="//t[@t-set='last_post_class']" position="attributes">
-        <attribute name="t-valuef">col-md-10 pe-md-0 pt-3</attribute>
-    </xpath>
-    <xpath expr="//t[@t-set='nb_post_class']" position="attributes">
-        <attribute name="t-valuef">col-md-2 pe-md-3 pt-3</attribute>
     </xpath>
 </template>
 
@@ -106,18 +88,13 @@
 <template id="forum_all_oe_structure_forum_all_top" inherit_id="website_forum.forum_all" name="Forum Navigation (oe_structure_forum_all_top)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_forum_all_top']" position="replace">
         <div class="oe_structure oe_empty" id="oe_structure_forum_all_top">
-            <section class="s_cover parallax s_parallax_is_fixed bg-black-50 py-5" data-scroll-background-ratio="1" data-snippet="s_cover">
-                <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
-                <div class="o_we_bg_filter bg-black-50"/>
-                <div class="container">
-                    <div class="row s_nb_column_fixed">
-                        <div class="col-lg-12">
-                            <h1 class="o_default_snippet_text text-center">Our forums</h1>
-                            <p class="lead o_default_snippet_text mb-0" style="text-align: center;">
-                                This community is for professional and enthusiast users, partners and programmers.
-                            </p>
-                        </div>
-                    </div>
+            <section class="s_cover o_colored_level s_parallax_no_overflow_hidden pt96 pb48" data-scroll-background-ratio="0" data-snippet="s_cover" data-name="Cover" style="">
+                <div class="s_allow_columns container">
+                    <h1 style="text-align: center;"><font style="font-size: 62px; font-weight: bold;">Community Forums</font></h1>
+                    <p class="lead" style="text-align: center;">Tap into the collective knowledge of our community by asking your questions in our forums,<br/> where helpful members are ready to assist you.</p>
+                    <p style="text-align: center;">
+                        <a class="mb-2" href="/profile/users?forum_origin=#{request.httprequest.path}" data-bs-original-title="" title="" target="_blank" style="">Meet our community members</a>
+                    </p>
                 </div>
             </section>
         </div>

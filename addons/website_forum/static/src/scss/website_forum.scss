@@ -279,10 +279,11 @@ img.o_forum_avatar_big {
     max-width: 552px;
 }
 
-.o_wforum_forum_card_bg {
-    background-image: linear-gradient(99deg, map-get($theme-colors, 'secondary') 10%, darken(map-get($theme-colors, 'secondary'), 10%) 90%);
+#o_wforum_forums_index_list .card {
+    border-radius: .75rem;
 
-    #o_wforum_forums_index_list & {
-        min-height: 100px;
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $box-shadow !important;
     }
 }
