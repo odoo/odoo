@@ -362,6 +362,9 @@ class ReportMoOverview(models.AbstractModel):
         return currency.round(product.standard_price * uom_id._compute_quantity(quantity, product.uom_id))
 
     def _get_replenishment_receipt(self, doc_in, components):
+        if doc_in._name == 'stock.picking':
+            return self._format_receipt_date('expected', doc_in.scheduled_date)
+
         if doc_in._name == 'mrp.production':
             max_date_start = doc_in.date_start
             all_available = True
