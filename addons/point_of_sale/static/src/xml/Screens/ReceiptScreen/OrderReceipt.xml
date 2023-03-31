@@ -29,10 +29,7 @@
                 <t t-if="receipt.company.website">
                     <div><t t-esc="receipt.company.website" /></div>
                 </t>
-                <t t-if="receipt.header_html">
-                    <t t-out="receipt.header_html" />
-                </t>
-                <t t-if="!receipt.header_html and receipt.header">
+                <t t-if="receipt.header">
                     <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
                 </t>
                 <t t-if="receipt.cashier">
@@ -141,11 +138,7 @@
             </div>
 
             <!-- Footer -->
-            <div t-if="receipt.footer_html"  class="pos-receipt-center-align">
-                <t t-out="receipt.footer_html" />
-            </div>
-
-            <div t-if="!receipt.footer_html and receipt.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
+            <div t-if="receipt.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
                 <br/>
                 <t t-esc="receipt.footer" />
                 <br/>
