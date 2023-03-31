@@ -959,7 +959,7 @@
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment">
+            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_slogan_opt">
                 <we-button data-customize-website-views=""
                            data-customize-website-variable="'left'"
                            data-icon="fa-align-left"/>
