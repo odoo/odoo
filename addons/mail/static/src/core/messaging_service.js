@@ -2,7 +2,6 @@
 
 import { markup, reactive } from "@odoo/owl";
 import { Deferred } from "@web/core/utils/concurrency";
-import { memoize } from "@web/core/utils/functions";
 import { cleanTerm } from "@mail/utils/format";
 import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/arrays";
 import { LinkPreview } from "./link_preview_model";
@@ -251,10 +250,15 @@ export class Messaging {
                         type: notif.payload.channel.channel_type,
                     });
                     break;
-                case "mail.channel/transient_message":
-                    return this.messageService.createTransient(
+                case "mail.channel/transient_message": {
+                    const channel =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.res_id)];
+                    const message = this.messageService.createTransient(
                         Object.assign(notif.payload, { body: markup(notif.payload.body) })
                     );
+                    channel.messages.push(message);
+                    break;
+                }
                 case "mail.link.preview/delete":
                     {
                         const { id, message_id } = notif.payload;
@@ -266,7 +270,12 @@ export class Messaging {
                     break;
                 case "mail.message/inbox": {
                     const data = Object.assign(notif.payload, { body: markup(notif.payload.body) });
-                    this.messageService.insert(data);
+                    const message = this.messageService.insert(data);
+                    const inbox = this.store.discuss.inbox;
+                    if (!inbox.messages.includes(message)) {
+                        inbox.messages.push(message);
+                        inbox.counter++;
+                    }
                     break;
                 }
                 case "mail.message/delete": {
@@ -295,12 +304,22 @@ export class Messaging {
                                 message.originThread.messages,
                                 ({ id }) => id === message.id
                             );
+                            if (message.isNeedaction) {
+                                removeFromArrayWithPredicate(
+                                    message.originThread.needactionMessages,
+                                    ({ id }) => id === message.id
+                                );
+                            }
+                            if (message.id > message.originThread.seen_message_id) {
+                                message.originThread.message_unread_counter--;
+                            }
                         }
                     }
                     break;
                 }
                 case "mail.message/mark_as_read": {
                     const { message_ids: messageIds, needaction_inbox_counter } = notif.payload;
+                    const inbox = this.store.discuss.inbox;
                     for (const messageId of messageIds) {
                         // We need to ignore all not yet known messages because we don't want them
                         // to be shown partially as they would be linked directly to cache.
@@ -315,25 +334,25 @@ export class Messaging {
                         const originThread = message.originThread;
                         if (originThread && message.isNeedaction) {
                             originThread.message_needaction_counter--;
+                            removeFromArrayWithPredicate(
+                                originThread.needactionMessages,
+                                ({ id }) => id === messageId
+                            );
                         }
                         // move messages from Inbox to history
                         const partnerIndex = message.needaction_partner_ids.find(
                             (p) => p === this.store.user?.id
                         );
                         removeFromArray(message.needaction_partner_ids, partnerIndex);
-                        removeFromArrayWithPredicate(
-                            this.store.discuss.inbox.messages,
-                            ({ id }) => id === messageId
-                        );
-                        if (this.store.discuss.history.messages.length > 0) {
-                            this.store.discuss.history.messages.push(message);
+                        removeFromArrayWithPredicate(inbox.messages, ({ id }) => id === messageId);
+                        const history = this.store.discuss.history;
+                        if (!history.messages.includes(message)) {
+                            history.messages.push(message);
                         }
                     }
-                    this.store.discuss.inbox.counter = needaction_inbox_counter;
-                    if (
-                        this.store.discuss.inbox.counter > this.store.discuss.inbox.messages.length
-                    ) {
-                        this.threadService.fetchMessages(this.store.discuss.inbox);
+                    inbox.counter = needaction_inbox_counter;
+                    if (inbox.counter > inbox.messages.length) {
+                        this.threadService.fetchMoreMessages(inbox);
                     }
                     break;
                 }
@@ -342,7 +361,6 @@ export class Messaging {
                     for (const messageId of messageIds) {
                         const message = this.messageService.insert({ id: messageId });
                         this.messageService.updateStarred(message, starred);
-                        this.messageService.sortMessages(this.store.discuss.starred);
                     }
                     break;
                 }
@@ -354,8 +372,8 @@ export class Messaging {
                         // knowledge of the channel
                         continue;
                     }
-                    if (partner_id && this.store.user?.id === partner_id) {
-                        channel.serverLastSeenMsgBySelf = last_message_id;
+                    if (partner_id && partner_id === this.store.user?.id) {
+                        this.threadService.updateSeen(channel, last_message_id);
                     }
                     const seenInfo = channel.seenInfos.find(
                         (seenInfo) => seenInfo.partner.id === partner_id
@@ -490,6 +508,25 @@ export class Messaging {
             res_id: channel.id,
             model: channel.model,
         });
+        if (!channel.messages.includes(message)) {
+            channel.messages.push(message);
+            if (message.isSelfAuthored) {
+                channel.seen_message_id = message.id;
+            } else {
+                channel.message_unread_counter++;
+                if (message.isNeedaction) {
+                    const inbox = this.store.discuss.inbox;
+                    if (!inbox.messages.includes(message)) {
+                        inbox.messages.push(message);
+                        inbox.counter++;
+                    }
+                    if (!channel.needactionMessages.includes(message)) {
+                        channel.needactionMessages.push(message);
+                        channel.message_needaction_counter++;
+                    }
+                }
+            }
+        }
         if (channel.chatPartnerId !== this.store.odoobot?.id) {
             if (!this.presence.isOdooFocused() && channel.isChatChannel) {
                 this.outOfFocusService.notify(message, channel);
@@ -504,9 +541,9 @@ export class Messaging {
         if (
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            channel.mostRecentNonTransientMessage &&
+            channel.newestPersistentMessage &&
             !this.store.guest &&
-            channel.mostRecentNonTransientMessage === channel.mostRecentMsg
+            channel.newestPersistentMessage === channel.newestMessage
         ) {
             this.threadService.markAsRead(channel);
         }
@@ -617,25 +654,6 @@ export class Messaging {
     // -------------------------------------------------------------------------
     // actions that can be performed on the messaging system
     // -------------------------------------------------------------------------
-
-    fetchPreviews = memoize(async () => {
-        const ids = [];
-        for (const thread of Object.values(this.store.threads)) {
-            if (["channel", "group", "chat"].includes(thread.type)) {
-                ids.push(thread.id);
-            }
-        }
-        if (ids.length) {
-            const previews = await this.orm.call("mail.channel", "channel_fetch_preview", [ids]);
-            for (const preview of previews) {
-                const thread = this.store.threads[createLocalId("mail.channel", preview.id)];
-                const data = Object.assign(preview.last_message, {
-                    body: markup(preview.last_message.body),
-                });
-                this.messageService.insert({ ...data, res_id: thread.id, model: thread.model });
-            }
-        }
-    });
 
     async searchPartners(searchStr = "", limit = 10) {
         let partners = [];

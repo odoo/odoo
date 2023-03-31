@@ -1557,7 +1557,6 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
     // this test requires several messages so that the last message is not
     // visible. This is necessary in order to display 'new messages' and not
     // remove from DOM right away from seeing last message.
-    // AKU TODO: thread specific test
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
     const userId = pyEnv["res.users"].create({
