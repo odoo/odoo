@@ -125,7 +125,7 @@ export class MessageService {
     createTransient(data) {
         const { body, res_id, model } = data;
         const lastMessageId = this.getLastMessageId();
-        this.insert({
+        return this.insert({
             author: this.store.odoobot,
             body,
             id: lastMessageId + 0.01,
@@ -177,17 +177,15 @@ export class MessageService {
 
     updateStarred(message, isStarred) {
         message.isStarred = isStarred;
+        const starred = this.store.discuss.starred;
         if (isStarred) {
-            this.store.discuss.starred.counter++;
-            if (this.store.discuss.starred.messages.length > 0) {
-                this.store.discuss.starred.messages.push(message);
+            starred.counter++;
+            if (!starred.messages.includes(message)) {
+                starred.messages.push(message);
             }
         } else {
-            this.store.discuss.starred.counter--;
-            removeFromArrayWithPredicate(
-                this.store.discuss.starred.messages,
-                ({ id }) => id === message.id
-            );
+            starred.counter--;
+            removeFromArrayWithPredicate(starred.messages, ({ id }) => id === message.id);
         }
     }
 
@@ -287,28 +285,6 @@ export class MessageService {
             message.originThread.modelName = data.res_model_name;
         }
         this._updateReactions(message, data.messageReactionGroups);
-        if (message.originThread && !message.originThread.messages.includes(message)) {
-            message.originThread.messages.push(message);
-            this.sortMessages(message.originThread);
-        }
-        if (message.isNeedaction && !this.store.discuss.inbox.messages.includes(message)) {
-            if (!fromFetch) {
-                this.store.discuss.inbox.counter++;
-                if (message.originThread) {
-                    message.originThread.message_needaction_counter++;
-                }
-            }
-            this.store.discuss.inbox.messages.push(message);
-            this.sortMessages(this.store.discuss.inbox);
-        }
-        if (message.isStarred && !this.store.discuss.starred.messages.includes(message)) {
-            this.store.discuss.starred.messages.push(message);
-            this.sortMessages(this.store.discuss.starred);
-        }
-        if (message.isHistory && !this.store.discuss.history.messages.includes(message)) {
-            this.store.discuss.history.messages.push(message);
-            this.sortMessages(this.store.discuss.history);
-        }
     }
 
     updateNotifications(message) {
@@ -472,15 +448,6 @@ export class MessageService {
             }
         }
         group.resIds.add(data.resId);
-    }
-
-    /**
-     * @param {import("@mail/core/thread_model").Thread} thread
-     */
-    sortMessages(thread) {
-        thread.messages.sort((msg1, msg2) => {
-            return msg1.id - msg2.id;
-        });
     }
 
     scheduledDateSimple(message) {

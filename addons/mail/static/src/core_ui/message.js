@@ -336,7 +336,7 @@ export class Message extends Component {
     onClickMarkAsUnread() {
         const previousMessageId =
             this.message.originThread.getPreviousMessage(this.message)?.id ?? false;
-        if (this.threadService.lastSeenBySelfMessageId(this.props.thread) === previousMessageId) {
+        if (this.props.thread.seen_message_id === previousMessageId) {
             return;
         }
         return this.rpc("/mail/channel/set_last_seen_message", {

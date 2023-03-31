@@ -74,9 +74,6 @@ export class Message {
      * @returns {boolean}
      */
     get editable() {
-        if (this.isEmpty) {
-            return false;
-        }
         if (!this._store.user?.isAdmin && !this.isSelfAuthored) {
             return false;
         }

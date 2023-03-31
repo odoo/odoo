@@ -63,12 +63,32 @@ export class Thread {
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
-    /** @type {import("@mail/core/message_model").Message[]} */
+    /**
+     * Contains continuous sequence of messages to show in message list.
+     * There should not be any hole in this list: there can be unknown
+     * messages before start and after end, but there should not be any
+     * unknown in-between messages.
+     *
+     * Content should be fetched and inserted in a controlled way.
+     *
+     * @type {import("@mail/core/message_model").Message[]}
+     */
     messages = [];
+    /**
+     * Contains continuous sequence of needaction messages to show in messaging menu.
+     * There should not be any hole in this list: there can be unknown
+     * messages before start and after end, but there should not be any
+     * unknown in-between messages.
+     *
+     * Content should be fetched and inserted in a controlled way.
+     *
+     * @type {import("@mail/core/message_model").Message[]}
+     */
+    needactionMessages = [];
     /** @type {string} */
     name;
     /** @type {number|false} */
-    serverLastSeenMsgBySelf;
+    seen_message_id;
     /** @type {'opened' | 'folded' | 'closed'} */
     state;
     status = "new";
@@ -82,7 +102,6 @@ export class Thread {
     defaultDisplayMode;
     /** @type {SeenInfo[]} */
     seenInfos = [];
-    serverMessageUnreadCounter = 0;
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
     hasLoadingFailed = false;
@@ -241,7 +260,7 @@ export class Thread {
     }
 
     get lastEditableMessageOfSelf() {
-        const editableMessagesBySelf = this.messages.filter(
+        const editableMessagesBySelf = this.nonEmptyMessages.filter(
             (message) => message.isSelfAuthored && message.editable
         );
         if (editableMessagesBySelf.length > 0) {
@@ -254,41 +273,25 @@ export class Thread {
         return createLocalId(this.model, this.id);
     }
 
-    get needactionMessages() {
-        return this.messages.filter(({ isNeedaction }) => isNeedaction);
-    }
-
     /** @returns {import("@mail/core/message_model").Message | undefined} */
-    get mostRecentMsg() {
-        if (this.messages.length === 0) {
-            return undefined;
-        }
-        return this._store.messages[Math.max(...this.nonEmptyMessages.map((m) => m.id))];
+    get newestMessage() {
+        return [...this.messages].reverse().find((msg) => !msg.isEmpty);
     }
 
-    get mostRecentNeedactionMsg() {
-        const mostRecentNeedactionMsgId = this.mostRecentNeedactionMsgId;
-        if (!mostRecentNeedactionMsgId) {
-            return undefined;
-        }
-        return this._store.messages[mostRecentNeedactionMsgId];
+    get newestNeedactionMessage() {
+        return this.needactionMessages[this.needactionMessages.length - 1];
     }
 
-    get mostRecentNeedactionMsgId() {
-        const needactionMessages = this.needactionMessages;
-        return needactionMessages.length > 0
-            ? Math.max(...needactionMessages.map(({ id }) => id))
-            : undefined;
+    get oldestNeedactionMessage() {
+        return this.needactionMessages[0];
     }
 
-    get mostRecentNonTransientMessage() {
-        if (this.messages.length === 0) {
-            return undefined;
-        }
-        const oldestNonTransientMessage = [...this.messages]
-            .reverse()
-            .find((message) => Number.isInteger(message.id));
-        return oldestNonTransientMessage;
+    get newestPersistentMessage() {
+        return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
+    }
+
+    get oldestPersistentMessage() {
+        return this.messages.find((msg) => Number.isInteger(msg.id));
     }
 
     get hasSelfAsMember() {
@@ -318,21 +321,11 @@ export class Thread {
         return orderedOnlineMembers.sort((m1, m2) => (m1.persona.name < m2.persona.name ? -1 : 1));
     }
 
-    get oldestNonTransientMessage() {
-        if (this.messages.length === 0) {
-            return undefined;
-        }
-        const oldestNonTransientMessage = this.messages.find((message) =>
-            Number.isInteger(message.id)
-        );
-        return oldestNonTransientMessage;
-    }
-
     get nonEmptyMessages() {
         return this.messages.filter((message) => !message.isEmpty);
     }
 
-    get nonTransientMessages() {
+    get persistentMessages() {
         return this.messages.filter((message) => !message.isTransient);
     }
 
@@ -350,7 +343,7 @@ export class Thread {
             return false;
         }
         const lastMessageSeenByAllId = Math.min(...otherLastSeenMessageIds);
-        const orderedSelfSeenMessages = this.nonTransientMessages.filter((message) => {
+        const orderedSelfSeenMessages = this.persistentMessages.filter((message) => {
             return message.author === this._store.self && message.id <= lastMessageSeenByAllId;
         });
         if (!orderedSelfSeenMessages || orderedSelfSeenMessages.length === 0) {

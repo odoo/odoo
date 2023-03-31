@@ -44,14 +44,14 @@ patch(ThreadService.prototype, "im_livechat", {
 
     canUnpin(thread) {
         if (thread.type === "livechat") {
-            return this.localMessageUnreadCounter(thread) === 0;
+            return thread.message_unread_counter === 0;
         }
         return this._super(thread);
     },
 
     getCounter(thread) {
         if (thread.type === "livechat") {
-            return this.localMessageUnreadCounter(thread);
+            return thread.message_needaction_counter;
         }
         return this._super(thread);
     },
