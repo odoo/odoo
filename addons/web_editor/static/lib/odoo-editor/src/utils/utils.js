@@ -1832,11 +1832,13 @@ export function setTagName(el, newTagName) {
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    const closestLi = el.closest('li');
+    // For the case wherein a node is a direct child of LI,
+    // do not wrap it in <p> when converting it to normal.
+    const containerEl = el.tagName === 'LI' ? el : el.parentNode;
     if (el.tagName === 'LI' && newTagName !== 'p') {
         el.append(n);
-    } else if (closestLi && newTagName === 'p') {
-        closestLi.replaceChildren(...n.childNodes);
+    } else if (containerEl && containerEl.tagName === 'LI' && newTagName === 'p') {
+        containerEl.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }
