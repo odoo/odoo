@@ -8244,6 +8244,103 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
     },
 });
 
+/*
+ * Abstract option to be extended by the Carousel and gallery options (through
+ * the "CarouselHandler" option) that handles all the common parts (reordering
+ * of elements).
+ */
+registry.GalleryHandler = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles reodering of items.
+     *
+     * @override
+     */
+    notify(name, data) {
+        this._super(...arguments);
+        if (name === "reoder_items") {
+            const itemsEls = this._getItemsGallery();
+            const oldPosition = itemsEls.indexOf(data.itemEl);
+            itemsEls.splice(oldPosition, 1);
+            switch (data.position) {
+                case "first":
+                    itemsEls.unshift(data.itemEl);
+                    break;
+                case "prev":
+                    itemsEls.splice(Math.max(oldPosition - 1, 0), 0, data.itemEl);
+                    break;
+                case "next":
+                    itemsEls.splice(oldPosition + 1, 0, data.itemEl);
+                    break;
+                case "last":
+                    itemsEls.push(data.itemEl);
+                    break;
+            }
+            this._reorderItems(itemsEls, itemsEls.indexOf(data.itemEl));
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called to get the items of the gallery sorted by index if any (see
+     * gallery option) or by the order on the DOM otherwise.
+     *
+     * @abstract
+     * @returns {HTMLElement[]}
+     */
+    _getItemsGallery() {},
+    /**
+     * Called to reorder the items of the gallery.
+     *
+     * @abstract
+     * @param {HTMLElement[]} itemsEls - the items to reorder.
+     * @param {integer} newItemPosition - the new position of the moved items.
+     */
+    _reorderItems(itemsEls, newItemPosition) {},
+});
+
+/*
+ * Abstract option to be extended by the Carousel and gallery options that
+ * handles the update of the carousel indicator.
+ */
+registry.CarouselHandler = registry.GalleryHandler.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Update the carousel indicator.
+     *
+     * @private
+     * @param {integer} position - the position of the indicator to activate on
+     * the carousel.
+     */
+    _updateIndicatorAndActivateSnippet(position) {
+        const carouselEl = this.$target[0].classList.contains("carousel") ? this.$target[0]
+            : this.$target[0].querySelector(".carousel");
+        carouselEl.classList.remove("slide");
+        $(carouselEl).carousel(position);
+        for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators li")) {
+            indicatorEl.classList.remove("active");
+        }
+        this.$target[0].querySelector(`.carousel-indicators li[data-bs-slide-to="${position}"]`)
+                    .classList.add("active");
+        this.trigger_up("activate_snippet", {
+            $snippet: $(this.$target[0].querySelector(".carousel-item.active")),
+            ifInactiveOptions: true,
+        });
+        carouselEl.classList.add("slide");
+    },
+});
+
 
 export default {
     SnippetOptionWidget: SnippetOptionWidget,

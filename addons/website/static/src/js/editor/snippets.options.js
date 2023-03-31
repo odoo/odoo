@@ -1721,7 +1721,7 @@ options.registry.company_data = options.Class.extend({
     },
 });
 
-options.registry.Carousel = options.Class.extend({
+options.registry.Carousel = options.registry.CarouselHandler.extend({
     /**
      * @override
      */
@@ -1848,6 +1848,26 @@ options.registry.Carousel = options.Class.extend({
             .insertAfter($active);
         this.$bsTarget.carousel('next');
     },
+    /**
+     * @override
+     */
+    _getItemsGallery() {
+        return Array.from(this.$target[0].querySelectorAll(".carousel-item"));
+    },
+    /**
+     * @override
+     */
+    _reorderItems(itemsEls, newItemPosition) {
+        const carouselInnerEl = this.$target[0].querySelector(".carousel-inner");
+        // First, empty the content of the carousel.
+        carouselInnerEl.replaceChildren();
+        // Then fill it with the new slides.
+        for (const itemsEl of itemsEls) {
+            carouselInnerEl.append(itemsEl);
+        }
+        this._updateIndicatorAndActivateSnippet(newItemPosition);
+    },
+
 });
 
 options.registry.CarouselItem = options.Class.extend({
@@ -3834,6 +3854,33 @@ options.registry.GridImage = options.Class.extend({
         return this._super(...arguments);
     },
 });
+
+options.registry.GalleryElement = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to change the position of an item on the set.
+     *
+     * @see this.selectClass for parameters
+     */
+    position(previewMode, widgetValue, params) {
+        const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel"
+            : "gallery";
+        const itemEl = this.$target[0];
+        this.trigger_up("option_update", {
+            optionName: optionName,
+            name: "reoder_items",
+            data: {
+                itemEl: itemEl,
+                position: widgetValue,
+            },
+        });
+    },
+});
+
 
 export default {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
