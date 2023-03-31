@@ -1169,6 +1169,7 @@ class MassMailing(models.Model):
             link_trackers_body = self.env['ir.qweb']._render(
                 'mass_mailing.mass_mailing_kpi_link_trackers',
                 {
+                    'company': self.env.user.company_id,
                     'object': mailing,
                     'link_trackers': link_trackers,
                     'mailing_type': mailing_type,
