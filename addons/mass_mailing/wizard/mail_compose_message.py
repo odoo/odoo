@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from markupsafe import Markup
+import re
 
+html_element_attrs_re = re.compile(r"<html([^>]*)>", re.IGNORECASE)
 
 class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
@@ -48,7 +51,12 @@ class MailComposeMessage(models.TransientModel):
                                 {'body': mail_values['body_html']},
                                 minimal_qcontext=True, raise_if_not_found=False)
                     if body:
-                        mail_values['body_html'] = body
+                        mail_values['body_html'] = Markup(
+                            html_element_attrs_re.sub(
+                                r'<html\1 xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"',
+                                str(body)
+                            )
+                        )
 
                 trace_vals = {
                     'model': self.model,
