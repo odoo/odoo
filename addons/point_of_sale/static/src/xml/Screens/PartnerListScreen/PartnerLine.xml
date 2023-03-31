@@ -16,10 +16,12 @@
                     <span> unselect </span>
                 </div>
             </td>
-            <td t-if="!env.isMobile">
-                <t t-esc="props.partner.address" />
+            <td>
+                <div class="partner-line-adress" t-if="props.partner.address">
+                    <t t-esc="props.partner.address" />
+                </div>
             </td>
-            <td class="partner-line-email" t-if="!env.isMobile">
+            <td class="partner-line-email" >
                 <div t-if="props.partner.phone">
                     <i class="fa fa-fw fa-phone"/><t t-esc="props.partner.phone"/>
                 </div>
@@ -30,13 +32,13 @@
                     <i class="fa fa-fw fa-paper-plane-o"/><t t-esc="props.partner.email" />
                 </div>
             </td>
-            <td t-if="env.isMobile">
-                <t t-esc="props.partner.zip or ''" />
-                <span t-if="highlight"><br/></span>
-            </td>
             <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
             <td class="edit-partner-button-cell">
                 <button class="edit-partner-button" t-on-click.stop="() => props.onClickEdit(props.partner)">DETAILS</button>
+                <div t-if="_isPartnerSelected" class="unselect-tag-mobile">
+                    <i class="fa fa-times"></i>
+                    <span> unselect </span>
+                </div>
             </td>
             <td class="partner-line-last-column-placeholder oe_invisible"></td>
         </tr>
