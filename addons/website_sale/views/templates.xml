@@ -1618,7 +1618,7 @@
                                         </div>
                                         <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                                         <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
-                                        <div class="d-flex flex-column"
+                                        <div id="process_checkout" class="d-flex flex-column"
                                              t-if="website_sale_order and website_sale_order.website_order_line">
                                             <a class="btn btn-primary float-end" role="button" t-attf-href="{{redirect_url}}">
                                                 <t t-if="redirect_to_sign_in">
@@ -2164,6 +2164,7 @@
                     <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
                     <a role="button" t-if="website_sale_order and website_sale_order.website_order_line"
                        class="btn btn-secondary float-end d-none d-xl-inline-block"
+                       id="process_checkout_cart_summary"
                        t-attf-href="{{redirect_url}}">
                         <t t-if="redirect_to_sign_in">
                             <span>Sign In</span>
