@@ -2902,6 +2902,11 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"고객의 미수금 계정을 사용하려면 공란으로 두십시오.\n"
+"세션 종료 후 누적 결제 (또는 확인된 고객이 해당하는 경우 개별 결제)를 기장할 장부를 설정합니다.\n"
+"현금 분개장의 경우, 명세서 내역에 따라 분개장의 기본 계정에 바로 작성됩니다.\n"
+"은행 분개장의 경우, 해당 결제 방법에 지정되어 있는 미결제 계좌로 작성됩니다.\n"
+"현금 및 은행 분개장만 사용이 허용됩니다."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.letter_tray
@@ -4429,7 +4434,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Price excl. VAT:"
-msgstr ""
+msgstr "VAT 제외 가격:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7114,4 +7119,12 @@ msgstr "기존 주문과 중복"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
 msgstr ""

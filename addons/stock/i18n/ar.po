@@ -3521,6 +3521,8 @@ msgstr "Invalid domain right operand %s"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"تهيئة القاعدة غير الصحيحة. تتسبب القاعدة التالية في حدوث حلقة لا نهاية لها: "
+"%s "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -5907,6 +5909,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"يتم حذف الكميات تلقائياً عندما يكون ذلك مناسباً. إذا كان لابد من حذفها "
+"يدوياً، يرجى طلب ذلك من مدير المخزون. "
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8021,6 +8025,7 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"لا يمكن تغيير شركة المنتج طالما أنه توجد كميات منه منتمية إلى شركة أخرى. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8429,8 +8434,8 @@ msgstr "وحدات القياس"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
-msgstr "وحدة القياس "
+msgid "Unit of measure"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9189,7 +9194,7 @@ msgstr "لا يمكنك إلغاء حجز حركة مخزون تم تعيينه�
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
+msgstr "لا يمكنك تغيير حركة مخزون ملغاة. قم بإنشاء بند جديد عوضاً عن ذلك. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9526,4 +9531,4 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
+msgstr "أيام الظهور العالمي "
