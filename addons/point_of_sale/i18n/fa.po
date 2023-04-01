@@ -300,7 +300,7 @@ msgid ""
 "A session is a period of time, usually one day, during which you sell "
 "through the Point of Sale."
 msgstr ""
-"یک جلسه یک دوره زمانی است، معمولا یک روزه، که در طی آن شما از طریق پایانه "
+"یک نشست یک دوره زمانی است، معمولا یک روزه، که در طی آن شما از طریق پایانه "
 "فروش اقدام به فروش می کنید."
 
 #. module: point_of_sale
@@ -698,7 +698,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr "در حال حاضر یک جلسه دیگر برای این پایانه فروش باز شده است."
+msgstr "در حال حاضر یک نشست دیگر برای این پایانه فروش باز شده است."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1213,8 +1213,8 @@ msgstr "چک کنید که آیا می خواهید این محصول در پا�
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
-"بررسی کنید که آیا می خواهید محصولات این دسته را در سفارشات فروش گروه بندی "
-"کنید"
+"بررسی کنید که آیا می خواهید محصولات این دسته را در سفارشات پایانه فروش گروه "
+"بندی کنید"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
@@ -1844,12 +1844,12 @@ msgstr "لیست قیمت پیش فرض"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
 msgid "Default Sale Tax"
-msgstr "مالیات فروش پیش فرض"
+msgstr "مالیات فروش پیشفرض"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Sales Tax"
-msgstr "مالیات فروش پیش فرض"
+msgstr "مالیات فروش پیشفرض"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1864,7 +1864,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default sales tax for products"
-msgstr "مالیات بر فروش پیش فرض برای محصولات"
+msgstr "مالیات بر فروش پیشفرض برای محصولات"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
@@ -7635,3 +7635,11 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "تکثیر شده از سفارشات موجود"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""

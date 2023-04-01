@@ -70,6 +70,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
@@ -341,6 +348,15 @@ msgstr "30% Now, Balance 60 Days"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 Hari"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -2644,6 +2660,8 @@ msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Terjadi error saat menghitung inalterability. Mustahil mengambil entri "
+"jurnal sebelumnya yang secara unik di-posting."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
@@ -5100,7 +5118,7 @@ msgstr "Dashboard"
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
 msgid "Data Inalterability Check"
-msgstr "Data Inalterability Check"
+msgstr "Pemeriksaan Data Inalterability "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6560,7 +6578,7 @@ msgstr "Fiscal Years"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr ""
+msgstr "Fiscal position"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -6571,9 +6589,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
+"Fiscal position digunakan untuk mengadaptasi pajak dan akun untuk pelanggan-"
+"pelanggan atau sales order/faktur tertentu. Default value fiscal position "
+"akan datang dari pelanggan."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7288,6 +7306,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Apabila kotak centang ini ditandai, itu berarti user tidak yakin dengan "
+"semua informasi terkait saat membuat pergerakan dan pergerakan tersebut "
+"perlu diperiksa lagi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7720,7 +7741,7 @@ msgstr "INTRASTAT"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Invalid"
-msgstr ""
+msgstr "Tidak valid"
 
 #. module: account
 #. odoo-python
@@ -8131,7 +8152,7 @@ msgstr "Is Printed"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_reconciled
 #: model:ir.model.fields,field_description:account.field_account_payment__is_reconciled
 msgid "Is Reconciled"
-msgstr ""
+msgstr "Direkonsiliasi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_refund
@@ -9143,7 +9164,7 @@ msgstr "Artikel Jurnal Sudah Dicocokkan"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Transactions"
-msgstr ""
+msgstr "Transaksi-Transaksi Cocok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -9915,7 +9936,7 @@ msgstr "Setelah selesai, tekan lanjutkan."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once everything is as you want it, validate."
-msgstr "Setelah semuanya seperti yang Anda inginkan, validasi."
+msgstr "Setelah semuanya seperti yang Anda inginkan, simpan."
 
 #. module: account
 #. odoo-javascript
@@ -12719,6 +12740,8 @@ msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
 msgstr ""
+"Tentukan apakah entri ini akan di-posting secara otomatis pada tanggal "
+"akuntansi, dan juga untuk faktur-faktur berulang yang mirip."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -14555,8 +14578,8 @@ msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
 msgstr ""
-"There isn't any journal entry flagged for data inalterability yet for this "
-"journal."
+"Belum ada entri jurnal yang ditandai untuk data inalterability untuk jurnal "
+"ini."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -14936,7 +14959,7 @@ msgstr "Kepada"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Check"
-msgstr "To Check"
+msgstr "Untuk Diperiksa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -16377,8 +16400,8 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
-"You cannot overwrite the values ensuring the inalterability of the "
-"accounting."
+"Anda tidak dapat menulis ulang value ini untuk memastikan inalterability "
+"akuntansi."
 
 #. module: account
 #. odoo-python
@@ -16898,7 +16921,7 @@ msgstr "kepada"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr "to check"
+msgstr "untuk diperiksa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

@@ -12679,7 +12679,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
 msgid "Blank"
-msgstr "Blank"
+msgstr "Kosong"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -13181,6 +13181,13 @@ msgstr "Batalkan Perbaruan"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "Tidak dapat menjumlah keseluruhan baris %r."
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following language is not activated: %(missing_names)s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -13780,14 +13787,14 @@ msgstr "Detail Perusahaan"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
 msgid "Company Favicon"
-msgstr ""
+msgstr "Favicon Perusahaan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry
 msgid "Company ID"
-msgstr ""
+msgstr "ID Perusahaan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -14321,6 +14328,12 @@ msgstr "Kelompok Negara"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nama Negara"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -17924,7 +17937,7 @@ msgstr "Garis Bujur"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__geometric
 msgid "Geometric"
-msgstr ""
+msgstr "Geometris"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -30606,6 +30619,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Nomor Identifikasi Pajak. Nomor di sini akan divalidasi berdasarkan format "
+"negara. Anda dapat menggunakan '/' untuk mengindikasikan bahwa mitra tidak "
+"dikenakan pajak."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -30646,6 +30662,14 @@ msgstr ""
 "sendiri, bahkan bila hal tersebut dibuat setelah syarat dan ketentuan "
 "standar penjualan. Agar valid, derogation apapun harus disetujui secara "
 "eksplisit terlebih dahulu secara tertulis."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -31089,6 +31113,8 @@ msgid ""
 "The registry number of the company. Use it if it is different from the Tax "
 "ID. It must be unique across all partners of a same country"
 msgstr ""
+"Nomor registrasi perusahaan. Isi bila berbeda dari ID Pajak. Harus unik "
+"untuk semua mitra di negara yang sama"
 
 #. module: base
 #. odoo-python
@@ -31306,6 +31332,8 @@ msgstr ""
 msgid ""
 "This field holds the image used to display a favicon for a given company."
 msgstr ""
+"Field ini memegang gambar favorit yang digunakan untuk menampilkan favicon "
+"untuk perusahaan."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
@@ -34791,3 +34819,9 @@ msgstr "ya"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Kepulauan Aland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
