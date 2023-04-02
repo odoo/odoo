@@ -9,6 +9,7 @@
 # Patricia Lorenzo Bartolomé, 2023
 # Luis D. Lafaurie <luislafaurie@hotmail.com>, 2023
 # Martin Trigaux, 2023
+# Richard Mouthier <rmo@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:14+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Richard Mouthier <rmo@odoo.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -323,6 +324,9 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"Cree una licitación añadiendo solicitudes de oferta alternativas a distintos proveedores.\n"
+"Haga su elección seleccionando la mejor combinación de plazo de entrega, OTD y/o importe total.\n"
+"Comparando líneas de productos también puede decidir pedir algunos productos a un proveedor y otros a otro."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -493,12 +497,19 @@ msgid ""
 " normally these fields are cleared w/warning message within form view, but "
 "we cannot recreate that in this case."
 msgstr ""
+"Si el proveedor elegido o cualquiera de los productos de la orden de compra "
+"original tienen una advertencia de bloqueo entonces no dejamos que cree "
+"órdenes de compra alternativas. Esto se debe a que normalmente estos campos "
+"se autorizan con un mensaje de advertencia dentro de la vista de formulario,"
+" pero no podemos recrearlo en este caso."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
+"Si esto está marcado, las cantidades de producto de la orden de compra "
+"original se copiarán"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
