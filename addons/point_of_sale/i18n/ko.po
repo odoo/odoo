@@ -784,7 +784,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "예금거래 명세서 내역"
+msgstr "은행거래명세서 내역"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2910,6 +2910,11 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"고객의 미수금 계정을 사용하려면 공란으로 두십시오.\n"
+"세션 종료 후 누적 결제 (또는 확인된 고객이 해당하는 경우 개별 결제)를 기장할 장부를 설정합니다.\n"
+"현금 분개장의 경우, 명세서 내역에 따라 분개장의 기본 계정에 바로 작성됩니다.\n"
+"은행 분개장의 경우, 해당 결제 방법에 지정되어 있는 미결제 계좌로 작성됩니다.\n"
+"현금 및 은행 분개장만 사용이 허용됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_amount
@@ -4059,6 +4064,8 @@ msgid ""
 "Please check if the printer is still connected. \n"
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
+"프린터 연결을 확인하십시오.\n"
+"일부 브라우저는 웹사이트에서 네트워크 장치로의 HTTP 호출을 허용하지 않습니다 (보안 상의 이유). 이러한 경우에는 해당 문제 해결을 위해 'ePOS 프린터용 자체 인증서' 및 '보안 연결 (HTTP)'에 대한 Odoo의 문서를 참고하여 실행하십시오."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4480,7 +4487,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Price excl. VAT:"
-msgstr ""
+msgstr "VAT 제외 가격:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
@@ -6921,7 +6928,7 @@ msgstr "계정 잠금 날짜 이전에는 세션을 작성할 수 없습니다."
 #, python-format
 msgid ""
 "You cannot delete a bank statement line linked to Point of Sale session."
-msgstr ""
+msgstr "POS 세션에 연결되어 있는 은행거래명세서 내역은 삭제할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python
