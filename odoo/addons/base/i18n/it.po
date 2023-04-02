@@ -1935,6 +1935,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestione degli sconti con le consegne nei calcoli TaxCloud.\n"
+"    Questo modulo segue la stessa logica di \"TaxCloud per contabilità - Vendita (buono sconto)\".\n"
+"    Lì possono essere trovate maggiori informazioni su come vengono effettuati i calcoli degli sconti per TaxCloud.\n"
+"\n"
+"    Per lo sconto (spedizione gratuita) sulle consegne è presente un'opzione aggiuntiva.\n"
+"    Con la consegna nei buoni sconto vendita, non viene applicato il calcolo dello sconto nelle righe di consegna.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -7146,6 +7154,9 @@ msgid ""
 "The module adds Microsoft user in res user.\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"Module che aggiunge l'utente Microsoft a res.users.\n"
+"==================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -11810,7 +11821,7 @@ msgstr "Permetti alle persone di prenotare riunioni nella tua agenda"
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
 msgid "Allow per-order lead creation mode"
-msgstr ""
+msgstr "Consente la modalità di creazione contatti CRM per ordine"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -13745,6 +13756,13 @@ msgstr "Impossibile aggregare il campo %r."
 
 #. module: base
 #. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following language is not activated: %(missing_names)s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Cannot create %r because the template to inherit %r is not found."
@@ -14920,6 +14938,12 @@ msgstr "Raggruppamenti nazioni"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nome nazione"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -28882,7 +28906,7 @@ msgstr "Invia messaggi come promemoria di eventi"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr ""
+msgstr "Invio di SMS con l'ultimo movimento di magazzino"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sms
@@ -30689,6 +30713,14 @@ msgstr ""
 "concordata in anticipo per iscritto."
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
 msgid "The code of the country must be unique !"
 msgstr "Il codice della nazione deve essere unico !"
@@ -31566,6 +31598,10 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Modulo che contiene test relativi a mail. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli. Inoltre la maggior parte dei\n"
+"moduli costruiti su mail (sms, snailmail, mail_enterprise) vengono impostati come dipendenze, in modo da effettuare test per l'intera base di codice di mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -31661,6 +31697,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Modulo che contiene test relativi al sito web. Si trovano\n"
+"in un modulo separato in quanto vengono effettuati test di installazione/disinstallazione/aggiornamento,\n"
+"per evitare di dover ricaricare ogni volta il modulo sito web incluse le sue possibili dipendenze. \n"
+"Evita anche di dover aggiungere nel modulo sito web alcuni percorsi, viste e modelli che hanno\n"
+"il solo scopo di eseguire test."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -35009,3 +35050,9 @@ msgstr "sì"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Isole Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

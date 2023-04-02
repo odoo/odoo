@@ -14222,7 +14222,7 @@ msgstr "تطبيق اختبار المواعيد "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
 msgid "Appointments"
-msgstr "التعيينات "
+msgstr "المواعيد  "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
@@ -15010,7 +15010,7 @@ msgstr "الكائن الأساسي"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Base Properties"
-msgstr "الخصائص الأساسي "
+msgstr "الخصائص الأساسية "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
@@ -15071,7 +15071,7 @@ msgstr "دفعة مجمعة "
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
 msgid "Batch Transfer, Carrier"
-msgstr "الدفعة نقل ، الناقل"
+msgstr "الشحنة المجمعة، شركة الشحن "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
@@ -15796,6 +15796,13 @@ msgstr "إلغاء الترقية"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "لا يمكن تجميع الحقل %r. "
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following language is not activated: %(missing_names)s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -16978,6 +16985,12 @@ msgid "Country Name"
 msgstr "اسم الدولة"
 
 #. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
 msgstr "الولاية "
@@ -17657,7 +17670,7 @@ msgstr "DLE 26 110 x 220 مم"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
-msgstr "Dash"
+msgstr "شَرطة "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -18722,7 +18735,7 @@ msgstr "رقم هوية صاحب العمل (EIN) "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
-msgstr "ESC/POS Hardware Driver"
+msgstr "جهاز ESC/POS "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss
@@ -20841,8 +20854,8 @@ msgid ""
 "Global rules are combined together with a logical AND operator, and with the"
 " result of the following steps"
 msgstr ""
-"Global rules are combined together with a logical AND operator, and with the"
-" result of the following steps"
+"القواعد الشاملة إضافة إلى القواعد المنطقية والقواعد التشغيلية، ومع نتيجة "
+"الخطوات التالية "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_gmail
@@ -20984,7 +20997,7 @@ msgstr "مجموعة من جهات الاتصالات"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Group-specific rules are combined together with a logical OR operator"
-msgstr "Group-specific rules are combined together with a logical OR operator"
+msgstr "القواعد الخاصة بالمجموعة إضافة إلى القواعد المنطقية أو التشغيلية "
 
 #. module: base
 #. odoo-python
@@ -21010,7 +21023,7 @@ msgstr "المجموعات"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr "Groups (no group = global)"
+msgstr "المجموعات (بلا مجموعة = شامل) "
 
 #. module: base
 #: model:res.country,name:base.gp
@@ -21513,7 +21526,7 @@ msgstr "توقع نفقة المنتج في الموارد البشرية "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_extract
 msgid "Hr Recruitment Extract"
-msgstr "  الموارد البشرية مستخرج التوظيف"
+msgstr "استخراج توظيف الموارد البشرية "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
@@ -21680,12 +21693,12 @@ msgstr "بطاقة الهوية المستخدمة للتعرف على المو�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
 msgid "IM Bus"
-msgstr "IM Bus"
+msgstr "ناقل IM "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_form
 msgid "IR Profile"
-msgstr "IR Profile"
+msgstr "الملف التعريفي IR "
 
 #. module: base
 #: model:res.country,vat_label:base.nz
@@ -21860,8 +21873,8 @@ msgid ""
 "If user belongs to several groups, the results from step 2 are combined with"
 " logical OR operator"
 msgstr ""
-"If user belongs to several groups, the results from step 2 are combined with"
-" logical OR operator"
+"إذا كان المستخدم ينتمي إلى عدة مجموعات، سيتم جمع النتائج من الخطوة الثانية "
+"مع القواعد المنطقية أو التشغيلية "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__overwrite
@@ -22562,9 +22575,8 @@ msgid ""
 "comma-separated list of valid field names (optionally followed by asc/desc "
 "for the direction)"
 msgstr ""
-"Invalid \"order\" specified (%s). A valid \"order\" specification is a "
-"comma-separated list of valid field names (optionally followed by asc/desc "
-"for the direction)"
+"\"الطلب\" المحدد غير صحيح (%s). مواصفات \"الطلب\" الصحيح هي قائمة مفصولة "
+"بفواصل لأسماء حقول صحيحة (يمكن أن تكون متبوعة بتصاعدي/تنازلي للاتجاه) "
 
 #. module: base
 #. odoo-python
@@ -23663,7 +23675,7 @@ msgstr "البنود"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr "Link Field"
+msgstr "حقل رابط "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -24888,7 +24900,7 @@ msgstr "الآنسة"
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Missing SMTP Server"
-msgstr "سيرفر SMTP مفقود"
+msgstr "خادم SMTP مفقود "
 
 #. module: base
 #. odoo-python
@@ -24909,7 +24921,7 @@ msgstr "قيمة مطلوبة مفقودة للحقل '%s' (%s)"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Missing view architecture."
-msgstr "Missing view architecture."
+msgstr "بنية واجهة العرض مفقودة "
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -24957,7 +24969,7 @@ msgstr "الجوال:"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Model"
-msgstr "الكائن"
+msgstr "النموذج "
 
 #. module: base
 #. odoo-python
@@ -24983,7 +24995,7 @@ msgstr "يحتوي النموذج '%s' على بيانات تطبيق ولا ي�
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr "الوصول للكائن"
+msgstr "الوصول للنموذج "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
@@ -25002,7 +25014,7 @@ msgstr "قيود النموذج "
 #: model:ir.model,name:base.model_ir_model_data
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model_data_id
 msgid "Model Data"
-msgstr "بيانات الكائن"
+msgstr "بيانات النموذج "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__name
@@ -25010,7 +25022,7 @@ msgstr "بيانات الكائن"
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_tree
 msgid "Model Description"
-msgstr "وصف الكائن"
+msgstr "وصف النموذج "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__model
@@ -25019,7 +25031,7 @@ msgstr "وصف الكائن"
 #: model:ir.model.fields,field_description:base.field_ir_model_data__model
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__model
 msgid "Model Name"
-msgstr "اسم الكائن"
+msgstr "اسم النموذج "
 
 #. module: base
 #: model:ir.actions.report,name:base.report_ir_model_overview
@@ -25033,8 +25045,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"الكائن المستخدم في إنشاء أو تحديث السجل. اختر قيمة لهذا الحقل فقط إذا كنت "
-"تريد كائنًا مختلفًا عن الكائن الأساسي."
+"النموذج المستخدم لإنشاء أو تحديث السجل. قم بضبط هذا الحقل فقط إذا كنت تريد "
+"نموذجاً مختلفاً عن النموذج الأساسي. "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_model
@@ -25047,13 +25059,13 @@ msgstr "اسم نموذج الكائن الذي سيتم فتحه في نافذ�
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Model not found: %(model)s"
-msgstr "لم نعثر على الكائن: %(model)s"
+msgstr "لم يتم العثور على النموذج: %(model)s "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__model_id
 #: model:ir.model.fields,help:base.field_ir_cron__model_id
 msgid "Model on which the server action runs."
-msgstr "الكائن الذي تجرى عليه إجراءات السيرفر."
+msgstr "النموذج الذي تجرى فيه إجراءات الخادم. "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -25061,7 +25073,7 @@ msgstr "الكائن الذي تجرى عليه إجراءات السيرفر."
 #: model:ir.ui.menu,name:base.ir_model_model_menu
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Models"
-msgstr "كائنات"
+msgstr "النماذج "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -25111,7 +25123,7 @@ msgstr "معلومات التطبيق "
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Module Name"
-msgstr "اسم الموديول"
+msgstr "اسم التطبيق "
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
@@ -25121,7 +25133,7 @@ msgstr "التقرير المرجعي للتطبيق (الأساس) "
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr "إزالة الموديول"
+msgstr "إلغاء تثبيث التطبيق "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -25131,7 +25143,7 @@ msgstr "تحديث التطبيق "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Module Update Result"
-msgstr "نتيجة تحديث الموديول"
+msgstr "نتيجة تحديث التطبيق "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
@@ -25141,7 +25153,7 @@ msgstr "تثبيت ترقية التطبيق "
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
-msgstr "اعتماد الموديول على الموديولات الأخرى"
+msgstr "اعتماد التطبيق على التطبيقات الأخرى "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
@@ -25169,7 +25181,7 @@ msgstr "التطبيقات "
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Modules \"%s\" and \"%s\" are incompatible."
-msgstr "الموديولان \"%s\" و\"%s\" غير متوافقين."
+msgstr "التطبيقان \"%s\" و\"%s\" غير متوافقان. "
 
 #. module: base
 #: model:res.country,name:base.md
@@ -25641,7 +25653,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
-msgstr "No spaces allowed in view_mode: %r"
+msgstr "لا يُسمح بالمسافات في view_mode: %r "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -30534,7 +30546,7 @@ msgstr "قواعد السجلات"
 #. module: base
 #: model:ir.module.module,summary:base.module_timer
 msgid "Record time"
-msgstr "وقت السجل "
+msgstr "تسجيل الوقت "
 
 #. module: base
 #. odoo-python
@@ -33624,6 +33636,14 @@ msgstr ""
 "انتقاص مسبقاً. "
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
 msgid "The code of the country must be unique !"
 msgstr "يجب أن يكون رمز الدولة فريداً!"
@@ -35037,7 +35057,7 @@ msgstr "عابر"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__transient
 msgid "Transient Model"
-msgstr "Transient Model"
+msgstr "نموذج عابر "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -35577,7 +35597,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
-msgstr "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr "حقل غير قابل للبحث %(field)r في المسار %(field_path)r في %(use)s) "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
@@ -36186,7 +36206,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' is private"
-msgstr "View '%(name)s' is private"
+msgstr "عرض '%(name)s' خاص "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -36931,7 +36951,7 @@ msgstr "لا يمكن لمستخدمين استخدام نفس بيانات ال
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
-"لا يمكنك إزالة مفاتيح الواجهة البرمجية للتطبيق إلا إذا كانت تخصل أو إذا كنت "
+"لا يمكنك إزالة مفاتيح الواجهة البرمجية للتطبيق إلا إذا كانت تخصك أو إذا كنت "
 "مستخدماً للنظام "
 
 #. module: base
@@ -36942,8 +36962,8 @@ msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
 msgstr ""
-"لا يمكنك إزالة المستخدم المدير حيث أنه يُستخدم داخلياً للموارد بواسطة أودو "
-"(التحديثات، تثبيت التطبيقات، ...) "
+"لا يمكنك إزالة المستخدم المدير حيث أنه يُستخدم داخلياً للموارد المنشأة من "
+"قِبَل أودو (التحديثات، تثبيت التطبيقات، ...) "
 
 #. module: base
 #. odoo-python
@@ -37980,3 +38000,9 @@ msgstr "نعم"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "جزر آلاند"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

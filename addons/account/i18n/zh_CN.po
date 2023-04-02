@@ -16,8 +16,8 @@
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
 # Pierre Masereel, 2023
-# Emily Jia <eji@odoo.com>, 2023
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2023\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +74,13 @@ msgstr ""
 "       例如180 /（1 - 10％）= 200（不含价格）\n"
 "       例如200 *（1 - 10％）= 180（含价格）\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -344,6 +351,15 @@ msgstr "30%现在，余额60天"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 天"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -1404,7 +1420,7 @@ msgstr "第二笔支付将在目的日记账中自动创建。"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr ""
+msgstr "对账单应只包含来自同一日记账的行。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -14216,7 +14232,7 @@ msgstr "对于付款和非付款，此日记帐的顺序不同，但您选择了
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "未结余额（%s）与指定的期末余额不匹配。"
 
 #. module: account
 #. odoo-python
@@ -14225,7 +14241,7 @@ msgstr ""
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr ""
+msgstr "期初余额与上一对账单的期末余额不匹配，或没有上一对帐单。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14998,7 +15014,7 @@ msgstr "向上"
 msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
-msgstr ""
+msgstr "无法创建对账单，因为没有交易。继续操作之前，您可能希望对交易进行重新排序。"
 
 #. module: account
 #. odoo-python
@@ -15936,7 +15952,7 @@ msgstr "已经存在日记账科目，不能修改公司的币种"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
+msgstr "请联系会计打印散列完整性结果。"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16044,6 +16060,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"不能编辑以下字段：%s。\n"
+"以下分录已散列：\n"
+"%s"
 
 #. module: account
 #. odoo-python

@@ -15721,6 +15721,13 @@ msgstr "Impossible d'agréger le champ %r."
 
 #. module: base
 #. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following language is not activated: %(missing_names)s"
+msgstr "La langue suivante n'est pas activée : %(missing_names)s"
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Cannot create %r because the template to inherit %r is not found."
@@ -16915,6 +16922,12 @@ msgstr "Groupes de pays"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Nom du pays"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "Le code de pays ne peut pas être vide"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -27941,7 +27954,7 @@ msgstr "Propriété \"Lors de la suppression\" des champs many2one"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_picking
 msgid "On site Payment & Picking"
-msgstr "Paiements & Picking sur site"
+msgstr "Paiement & retrait sur site"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -33727,6 +33740,16 @@ msgstr ""
 " expressément convenue au préalable par écrit."
 
 #. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"Le nom du taux actuel est vide.\n"
+"Veuillez le définir."
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
 msgid "The code of the country must be unique !"
 msgstr "Le code du pays doit être unique !"
@@ -38173,3 +38196,11 @@ msgstr "oui"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Îles Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Cette devise est définie sur une entreprise et ne peut donc pas être "
+"désactivée."
