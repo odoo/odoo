@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2022-06-17 09:50+0000\n"
-"Last-Translator: Thin Tran <trvathin@gmail.com>, 2022\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -560,12 +561,13 @@ msgstr "Tên Bí danh Mặc định cho Chi tiêu"
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default Expense Journal"
-msgstr ""
+msgstr "Nhật ký chi phí mặc định"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
 msgstr ""
+"Nhật ký kế toán mặc định cho các chi phí được thanh toán bởi nhân viên."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -707,7 +709,7 @@ msgstr "Các dòng Chi tiêu"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "Người dùng hiện tại có thể chỉnh sửa các dòng chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -784,7 +786,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__expense_sheet_id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__expense_sheet_id
 msgid "Expense Sheet"
-msgstr ""
+msgstr "Bảng chi phí"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -876,7 +878,7 @@ msgstr "Chi phí theo ngày"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses must have the same To Reimburse status."
-msgstr ""
+msgstr "Chi phí phải có cùng trạng thái Hoàn trả."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -938,7 +940,7 @@ msgstr "Thông tin chung"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generate Expenses"
-msgstr ""
+msgstr "Tạo chi phí"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1018,7 +1020,7 @@ msgstr "Thanh toán"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr ""
+msgstr "Đã bao gồm thuế"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1199,7 +1201,7 @@ msgstr "Báo cáo chi phí mới"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Reports"
-msgstr ""
+msgstr "Báo cáo chi phí mới"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1304,7 +1306,7 @@ msgstr "Số lượng đính kèm"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_number
 msgid "Number of Expenses"
-msgstr ""
+msgstr "Số lượng chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1464,7 +1466,7 @@ msgstr "Sản phẩm"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
 msgid "Product Description"
-msgstr ""
+msgstr "Mô tả Sản phẩm"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1724,7 +1726,7 @@ msgstr "Tờ"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
 msgid "Sheet Is Editable"
-msgstr ""
+msgstr "Trang tính có thể chỉnh sửa"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1746,7 +1748,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "Chỉ định sổ nhật ký chi phí để tạo các bút toán."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1800,22 +1802,22 @@ msgstr "Đã Trình"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
 msgid "Tax amount"
-msgstr ""
+msgstr "Tổng thuế"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in Currency"
-msgstr ""
+msgstr "Số tiền thuế theo tiền tệ"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
 msgid "Tax amount in company currency"
-msgstr ""
+msgstr "Số tiền thuế theo đơn vị tiền tệ của công ty"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in currency"
-msgstr ""
+msgstr "Số tiền thuế theo tiền tệ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
@@ -1957,12 +1959,12 @@ msgstr "Tổng tiền tệ công ty"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "Tổng tiền tệ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount In Currency"
-msgstr ""
+msgstr "Tổng số tiền chưa tính thuế bằng tiền tệ"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -1980,7 +1982,7 @@ msgstr "Đơn giá"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount_display
 msgid "Unit Price Display"
-msgstr ""
+msgstr "Hiển thị đơn giá"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -2086,7 +2088,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
 msgid "Whether tax is defined on a selected product"
-msgstr ""
+msgstr "Liệu thuế có được xác định trên một sản phẩm đã chọn hay không"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2179,7 +2181,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report the expenses without amount!"
-msgstr ""
+msgstr "Bạn không thể báo cáo các chi phí mà không có số tiền!"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

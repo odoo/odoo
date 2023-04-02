@@ -1099,6 +1099,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        Module for the import of FEC standard files, useful for importing accounting history.\n"
+"\n"
+"        FEC files (fichier des écritures comptables) are the standard accounting reports that French businesses have to submit to the tax authorities.\n"
+"        This module allows the import of accounts, journals, partners and moves from these files.\n"
+"\n"
+"        Only the CSV format of FEC is implemented.\n"
+"        'utf-8', 'utf-8-sig' and 'iso8859_15' are the only allowed encodings.\n"
+"        Several delimiters are allowed : ';' or '|' or ',' or '\t'.\n"
+"\n"
+"        Official Technical Specification (fr)\n"
+"        https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"        FEC Testing tool from the tax authorities\n"
+"        https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2021
@@ -1400,6 +1417,22 @@ msgid ""
 "        You need to configure your certificate and the tax agency.  \n"
 "    "
 msgstr ""
+"\n"
+"        Dieses Modul sendet die Steuerinformationen (hauptsächlich MwSt.) der \n"
+"        der Lieferanten- und Kundenrechnungen an den SII.  Es heißt \n"
+"        Procedimiento G417 - IVA. Llevanza de libros registro. Es ist \n"
+"        für alle Unternehmen mit einem Umsatz von mehr als 6 Mio. € vorgeschrieben, andere können \n"
+"        es bereits nutzen.  Die Rechnungen werden nach der \n"
+"        Validierung automatisch verschickt.  \n"
+"        \n"
+"        Wie die Informationen an den SII gesendet werden, hängt von \n"
+"        der Konfiguration ab, die für die Steuern vorgenommen wird.  Die Steuern, \n"
+"        die in der Kontenplanvorlage (l10n_es) enthalten waren, werden automatisch \n"
+"        entsprechend konfiguriert.  Es ist jedoch möglich, \n"
+"        dass zusätzliche Steuern für bestimmte steuerbefreite/nichtsteuerpflichtige Gründe erstellt werden müssen.   \n"
+"        \n"
+"        Sie müssen Ihr Zertifikat und die Steuerbehörde konfigurieren..  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -1443,6 +1476,9 @@ msgid ""
 "        XML Export of the Journal Entries for the Mexican Tax Authorities for a compulsory audit.\n"
 "    "
 msgstr ""
+"\n"
+"        XML-Export der Journalposten für die mexikanischen Steuerbehörden für eine Pflichtprüfung..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
@@ -1699,6 +1735,11 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    Das norwegische SAF-T ist ein Standarddateiformat für den Export verschiedener Arten von Buchhaltungstransaktionsdaten im XML-Format.\n"
+"    Die erste Version des SAF-T Financial beschränkt sich auf die Ebene des Hauptbuchs einschließlich der Kunden- und Lieferantentransaktionen.\n"
+"    Erforderliche Stammdaten sind ebenfalls enthalten.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -2386,6 +2427,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Accounting reports for Portugal\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -7159,6 +7205,13 @@ msgid ""
 "It also includes the invoice OCR payment reference handling.\n"
 "    "
 msgstr ""
+"\n"
+"Schwedische Buchhaltung\n"
+"------------------\n"
+"\n"
+"Das ist das Basismodul zur Verwaltung des Kontenplans für Schweden in Odoo.\n"
+"Es beinhaltet auch die OCR-Zahlungsreferenz für Rechnungen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7636,6 +7689,10 @@ msgid ""
 "==============================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Dies ist das Basismodul zur Verwaltung des Kontenplans für Ägypten in Odoo.\n"
+"==============================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9515,6 +9572,8 @@ msgid ""
 " This is the base module to manage chart of accounts and localization for "
 "the Pakistan "
 msgstr ""
+"Dies ist das Basismodul zum Verwalten des Kontenplans und der Lokalisierung "
+"für Pakistan "
 
 #. module: base
 #: code:addons/model.py:0
@@ -18827,7 +18886,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock_account
 msgid "Helpdesk, Stock, Account"
-msgstr ""
+msgstr "Kundendienst, Lager. Konto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
@@ -21598,7 +21657,7 @@ msgstr "Malta"
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr
 msgid "Manage Appointments with Employees"
-msgstr ""
+msgstr "Termine mit Mitarbeitern verwalten"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_title_contact
@@ -26792,7 +26851,7 @@ msgstr "Portal-Bewertung"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Portal Users"
-msgstr ""
+msgstr "Portalbenutzer"
 
 #. module: base
 #: model:res.groups,comment:base.group_portal
@@ -26821,7 +26880,7 @@ msgstr "Portugal - Buchhaltung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt_reports
 msgid "Portugal - Accounting Reports"
-msgstr ""
+msgstr "Portugal - Accounting Reports"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -30636,7 +30695,7 @@ msgstr "Der Regionalcode muss per Land eindeutig sein!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr ""
+msgstr "Die Kombination Kontonummer/Partner muss eindeutig sein."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
@@ -30966,7 +31025,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The rate of the currency to the currency of rate 1 "
-msgstr ""
+msgstr "Der Kurs der Währung zur Währung von Kurs 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -31245,7 +31304,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_din5008
 msgid "This is the base module that defines the DIN 5008 standard in Odoo."
-msgstr ""
+msgstr "Dies ist das Basismodul, das den DIN 5008-Standard in Odoo definiert."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -31390,6 +31449,8 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dieses Modul enthält Tests im Zusammenhang mit dem Timer. Diese befinden sich in einem separaten Modul, da es Modelle enthält, die nur zur Durchführung\n"
+"von Tests unabhängig von funktionalen Aspekten anderer Modelle verwendet werden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -34023,7 +34084,7 @@ msgstr "Binär"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "binary_field_real_user should be a res.users record."
-msgstr ""
+msgstr "binary_field_real_user sollte ein res.users-Datensatz sein."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean

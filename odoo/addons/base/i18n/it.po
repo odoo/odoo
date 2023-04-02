@@ -1762,6 +1762,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestione degli sconti con le consegne nei calcoli TaxCloud.\n"
+"    Questo modulo segue la stessa logica di \"TaxCloud per contabilità - Vendita (buono sconto)\".\n"
+"    Lì possono essere trovate maggiori informazioni su come vengono effettuati i calcoli degli sconti per TaxCloud.\n"
+"\n"
+"    Per lo sconto (spedizione gratuita) sulle consegne è presente un'opzione aggiuntiva.\n"
+"    Con la consegna nei buoni sconto vendita, non viene applicato il calcolo dello sconto nelle righe di consegna.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -6734,6 +6742,12 @@ msgid ""
 "It also enables the \"optional products\" feature.\n"
 "    "
 msgstr ""
+"\n"
+"Modulo tecnico installato quando l'utente seleziona l'impostazione \"module_sale_product_configurator\".\n"
+"Lo scopo principale è di sovrascrivere la vista sale_order per consentire la configurazione dei prodotti nella scheda dell'OdV.\n"
+"\n"
+"Abilita anche la funzionalità \"prodotti opzionali\".\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -6827,6 +6841,9 @@ msgid ""
 "The module adds Microsoft user in res user.\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"Module che aggiunge l'utente Microsoft a res.users.\n"
+"==================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -11042,7 +11059,7 @@ msgstr "Permetti alle persone di prenotare riunioni nella tua agenda"
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
 msgid "Allow per-order lead creation mode"
-msgstr ""
+msgstr "Consente la modalità di creazione contatti CRM per ordine"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -27419,7 +27436,7 @@ msgstr "Invia messaggi come promemoria di eventi"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr ""
+msgstr "Invio di SMS con l'ultimo movimento di magazzino"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
@@ -29658,6 +29675,10 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Modulo che contiene test relativi a mail. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli. Inoltre la maggior parte dei\n"
+"moduli costruiti su mail (sms, snailmail, mail_enterprise) vengono impostati come dipendenze, in modo da effettuare test per l'intera base di codice di mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -29745,6 +29766,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Modulo che contiene test relativi al sito web. Si trovano\n"
+"in un modulo separato in quanto vengono effettuati test di installazione/disinstallazione/aggiornamento,\n"
+"per evitare di dover ricaricare ogni volta il modulo sito web incluse le sue possibili dipendenze. \n"
+"Evita anche di dover aggiungere nel modulo sito web alcuni percorsi, viste e modelli che hanno\n"
+"il solo scopo di eseguire test."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
