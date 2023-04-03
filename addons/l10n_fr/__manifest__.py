@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'France - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/france.html',
     'version': '2.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

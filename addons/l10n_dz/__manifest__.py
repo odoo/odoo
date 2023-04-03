@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Algeria - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

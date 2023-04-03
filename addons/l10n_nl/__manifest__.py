@@ -3,8 +3,8 @@
     'name': 'Netherlands - Accounting',
     'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
-    'author': 'Onestein',
-    'website': 'http://www.onestein.eu',
+    'author': 'Onestein (http://www.onestein.eu)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/netherlands.html',
     'depends': [
         'base_iban',
         'base_vat',

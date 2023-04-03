@@ -8,8 +8,8 @@
 
     - a Chart of Accounts customised to Ireland
     - VAT Rates and Structure""",
-    'author': 'Target Integration',
-    'website': 'http://www.targetintegration.com',
+    'author': 'Target Integration (http://www.targetintegration.com)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
         'base_iban',

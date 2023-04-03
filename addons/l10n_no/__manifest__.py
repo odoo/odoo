@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Norway - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'version': '2.1',
     'author': 'Rolv Råen',
     'category': 'Accounting/Localizations/Account Charts',

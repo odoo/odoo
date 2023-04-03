@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Canada - Accounting',
-    'author': 'Savoir-faire Linux',
-    'website': 'https://www.savoirfairelinux.com',
+    'author': 'Savoir-faire Linux (https://www.savoirfairelinux.com)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the module to manage the Canadian accounting chart in Odoo.

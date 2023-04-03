@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Indian - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/india.html',
     'version': '2.0',
     'description': """
 Indian Accounting: Chart of Account.
