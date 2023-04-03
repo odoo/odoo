@@ -17,6 +17,7 @@
                     noContentHelp="props.info.noContentHelp"
                     scrollTop.bind="scrollTop"
                     canQuickCreate="canQuickCreate"
+                    quickCreateState="quickCreateState"
                 />
 
             </Layout>
@@ -26,7 +27,7 @@
     <t t-name="web.KanbanView.Buttons" owl="1">
         <div t-if="props.showButtons" class="o_cp_buttons d-flex align-items-baseline" role="toolbar" aria-label="Main actions">
             <t t-if="canCreate">
-                <button type="button" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord(null)" data-bounce-button="">
+                <button type="button" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
                     New
                 </button>
             </t>

@@ -61,13 +61,14 @@
                             </div>
                         </div>
                         <t t-if="!group.isFolded">
-                            <t t-if="props.list.quickCreateInfo and group.quickCreateRecord">
+                            <t t-if="group.id === props.quickCreateState.groupId">
                                 <KanbanRecordQuickCreate
-                                    record="group.quickCreateRecord"
-                                    archInfo="props.list.quickCreateInfo"
-                                    onCancel="force => group.cancelQuickCreate(force)"
-                                    onValidate="mode => this.validateQuickCreate(mode, group)"
-                                    listIsGrouped="props.list.isGrouped"
+                                    context="props.list.context"
+                                    resModel="props.list.resModel"
+                                    group="group"
+                                    onCancel="force => this.cancelQuickCreate(force)"
+                                    onValidate="(record, mode) => this.validateQuickCreate(record, mode, group)"
+                                    quickCreateView="props.quickCreateState.view"
                                 />
                             </t>
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
