@@ -1056,6 +1056,13 @@ header {
                     // menu when the off-canvas menu is open.
                     display: none;
                 }
+                #top_menu {
+                    // This is useful because otherwise, the 'order-first' class
+                    // of the 'template_header_vertical' template puts the menu
+                    // behind the "backdrop" and it's no longer possible to
+                    // click on the menu links (only on Firefox).
+                    order: unset;
+                }
             }
             .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
                 padding-top: $o-navbar-height;
