@@ -12,6 +12,9 @@ registerModel({
         },
     },
     recordMethods: {
+        _computeCurrentDateEveryMinute() {
+            return new Date();
+        },
         /**
          * @private
          * @returns {number}
@@ -32,7 +35,7 @@ registerModel({
          * (re-)computed every minute.
          */
         currentDateEveryMinute: attr({
-            default: new Date(),
+            compute: '_computeCurrentDateEveryMinute',
         }),
         everyMinuteIntervalId: attr({
             compute: '_computeEveryMinuteIntervalId',
