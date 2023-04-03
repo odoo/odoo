@@ -369,7 +369,7 @@ export class Thread {
         return orderedOnlineMembers.sort((m1, m2) => {
             if (Boolean(m1.rtcSession) && Boolean(m2.rtcSession)) {
                 if (m1.rtcSession.isRaisingHand !== m2.rtcSession.isRaisingHand) {
-                    return m1.rtcSession.isRaisingHand ? -1 : 1;
+                    return m2.rtcSession.isRaisingHand - m1.rtcSession.isRaisingHand;
                 } else {
                     return m1.persona.name < m2.persona.name ? -1 : 1;
                 }

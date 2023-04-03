@@ -30,6 +30,7 @@ const DEFAULT_ICE_SERVERS = [
 ];
 
 let tmpId = 0;
+let raiseHandCount = Number.MAX_SAFE_INTEGER;
 
 /**
  * Returns a string representation of a data channel for logging and
@@ -436,7 +437,9 @@ export class Rtc {
                 this.disconnect(session);
                 break;
             case "raise_hand":
-                Object.assign(session, { isRaisingHand: payload.active });
+                Object.assign(session, {
+                    isRaisingHand: payload.active ? --raiseHandCount : false,
+                });
                 // eslint-disable-next-line no-case-declarations
                 const notificationId = "raise_hand_" + session.id;
                 if (session.isRaisingHand) {
@@ -1058,7 +1061,9 @@ export class Rtc {
         if (!this.state.selfSession || !this.state.channel) {
             return;
         }
-        this.state.selfSession.isRaisingHand = isRaisingHand;
+        this.state.selfSession.isRaisingHand = this.state.selfSession.isRaisingHand
+            ? false
+            : --raiseHandCount;
         await this.notify(Object.values(this.state.channel.rtcSessions), "raise_hand", {
             active: this.state.selfSession.isRaisingHand,
         });
