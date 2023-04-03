@@ -430,14 +430,19 @@ class SurveyUserInput(models.Model):
         scored_questions = self.mapped('predefined_question_ids').filtered(lambda question: question.is_scored_question)
 
         for question in scored_questions:
+            if question.question_type == 'simple_choice':
+                question_incorrect_scored_answers = question.suggested_answer_ids.filtered(lambda answer: not answer.is_correct and answer.answer_score > 0)
+
             if question.question_type in ['simple_choice', 'multiple_choice']:
                 question_correct_suggested_answers = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
 
             question_section = question.page_id.title or _('Uncategorized')
             for user_input in self:
                 user_input_lines = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
-                if question.question_type in ['simple_choice', 'multiple_choice']:
-                    answer_result_key = self._choice_question_answer_result(user_input_lines, question_correct_suggested_answers)
+                if question.question_type == 'simple_choice':
+                    answer_result_key = self._simple_choice_question_answer_result(user_input_lines, question_correct_suggested_answers, question_incorrect_scored_answers)
+                elif question.question_type == 'multiple_choice':
+                    answer_result_key = self._multiple_choice_question_answer_result(user_input_lines, question_correct_suggested_answers)
                 else:
                     answer_result_key = self._simple_question_answer_result(user_input_lines)
 
@@ -474,7 +479,7 @@ class SurveyUserInput(models.Model):
 
         return res
 
-    def _choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers):
+    def _multiple_choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers):
         correct_user_input_lines = user_input_lines.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
         incorrect_user_input_lines = user_input_lines.filtered(lambda line: not line.answer_is_correct and not line.skipped)
         if question_correct_suggested_answers and correct_user_input_lines == question_correct_suggested_answers:
@@ -482,6 +487,18 @@ class SurveyUserInput(models.Model):
         elif correct_user_input_lines and correct_user_input_lines < question_correct_suggested_answers:
             return 'partial'
         elif not correct_user_input_lines and incorrect_user_input_lines:
+            return 'incorrect'
+        else:
+            return 'skipped'
+
+    def _simple_choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers, question_incorrect_scored_answers):
+        user_input_line = user_input_lines[0]
+        user_answer = user_input_line.suggested_answer_id if not user_input_line.skipped else self.env['survey.question.answer']
+        if user_answer in question_correct_suggested_answers:
+            return 'correct'
+        elif user_answer in question_incorrect_scored_answers:
+            return 'partial'
+        elif user_answer:
             return 'incorrect'
         else:
             return 'skipped'

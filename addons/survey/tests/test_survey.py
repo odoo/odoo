@@ -271,6 +271,64 @@ class TestSurveyInternals(common.TestSurveyCommon):
         self.assertEqual(user_input.scoring_percentage, 100)
         self.assertTrue(user_input.scoring_success)
 
+    def test_simple_choice_question_answer_result(self):
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test This Survey',
+            'scoring_type': 'scoring_with_answers',
+            'scoring_success_min': 80.0,
+        })
+        [a_01, a_02, a_03, a_04] = self.env['survey.question.answer'].create([{
+            'value': 'In Europe',
+            'answer_score': 0.0,
+            'is_correct': False
+        }, {
+            'value': 'In Asia',
+            'answer_score': 5.0,
+            'is_correct': True
+        }, {
+            'value': 'In South Asia',
+            'answer_score': 10.0,
+            'is_correct': True
+        }, {
+            'value': 'On Globe',
+            'answer_score': 5.0,
+            'is_correct': False
+        }])
+        q_01 = self.env['survey.question'].create({
+            'survey_id': test_survey.id,
+            'title': 'Where is india?',
+            'sequence': 1,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': [(6, 0, (a_01 | a_02 | a_03 | a_04).ids)]
+        })
+
+        user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id})
+        user_input_line = self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': q_01.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': a_01.id
+        })
+
+        # this answer is incorrect with no score: should be considered as incorrect
+        statistics = user_input._prepare_statistics()[user_input]
+        self.assertAnswerStatus('Incorrect', statistics)
+
+        # this answer is correct with a positive score (even if not the maximum): should be considered as correct
+        user_input_line.suggested_answer_id = a_02.id
+        statistics = user_input._prepare_statistics()[user_input]
+        self.assertAnswerStatus('Correct', statistics)
+
+        # this answer is correct with the best score: should be considered as correct
+        user_input_line.suggested_answer_id = a_03.id
+        statistics = user_input._prepare_statistics()[user_input]
+        self.assertAnswerStatus('Correct', statistics)
+
+        # this answer is incorrect but has a score: should be considered as "partially"
+        user_input_line.suggested_answer_id = a_04.id
+        statistics = user_input._prepare_statistics()[user_input]
+        self.assertAnswerStatus('Partially', statistics)
+
     @users('survey_manager')
     def test_skipped_values(self):
         """ Create one question per type of questions.
@@ -526,3 +584,8 @@ class TestSurveyInternals(common.TestSurveyCommon):
         returned_questions_and_pages = my_survey._get_pages_and_questions_to_show()
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
+
+    def assertAnswerStatus(self, expected_answer_status, questions_statistics):
+        ''' Assert counts for 'Correct', 'Partially', 'Incorrect', 'Unanswered' are 0, and 1 for our expected answer status '''
+        for status, count in [(total['text'], total['count']) for total in questions_statistics['totals']]:
+            self.assertEqual(count, 1 if status == expected_answer_status else 0)
