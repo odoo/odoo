@@ -3,14 +3,11 @@
 import core from "web.core";
 import dom from "web.dom";
 import publicWidget from "web.public.widget";
-import time from "web.time";
 import portalComposer from "portal.composer";
 import {Markup} from "web.utils";
 import { range } from "@web/core/utils/numbers";
-import { sprintf } from "@web/core/utils/strings";
 
 var qweb = core.qweb;
-var _t = core._t;
 
 /**
  * Widget PortalChatter
@@ -103,8 +100,6 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     preprocessMessages(messages) {
         messages.forEach((m) => {
-            m['author_avatar_url'] = sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
-            m['published_date_str'] = sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
             m['body'] = Markup(m.body);
         });
         return messages;
