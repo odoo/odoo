@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { patchDate } from '@web/../tests/helpers/utils';
 
 import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';
@@ -143,6 +144,7 @@ QUnit.test('activity with note layout', async function (assert) {
 QUnit.test('activity info layout when planned after tomorrow', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
@@ -186,6 +188,7 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
 QUnit.test('activity info layout when planned tomorrow', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
@@ -229,6 +232,7 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
 QUnit.test('activity info layout when planned today', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     this.data['res.partner'].records.push({
         activity_ids: [12],
         id: 100,
@@ -269,6 +273,7 @@ QUnit.test('activity info layout when planned today', async function (assert) {
 QUnit.test('activity info layout when planned yesterday', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
@@ -312,6 +317,7 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
 QUnit.test('activity info layout when planned before yesterday', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);
