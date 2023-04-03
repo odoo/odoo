@@ -10,7 +10,7 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { KanbanRenderer } from "./kanban_renderer";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, reactive, useRef } from "@odoo/owl";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -30,7 +30,6 @@ export class KanbanController extends Component {
             limit: archInfo.limit || limit,
             countLimit: archInfo.countLimit,
             onCreate: archInfo.onCreate,
-            quickCreateView: archInfo.quickCreateView,
             defaultGroupBy,
             defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
@@ -39,6 +38,22 @@ export class KanbanController extends Component {
             rootState,
         });
         this.headerButtons = archInfo.headerButtons;
+
+        const self = this;
+        this.quickCreateState = reactive({
+            get groupId() {
+                return this._groupId || false;
+            },
+            set groupId(groupId) {
+                if (self.model.useSampleModel) {
+                    self.model.useSampleModel = false;
+                    self.model.root.groups.forEach((g) => g.empty());
+                    self.render();
+                }
+                this._groupId = groupId;
+            },
+            view: archInfo.quickCreateView,
+        });
 
         this.rootRef = useRef("root");
         useViewButtons(this.model, this.rootRef, {
@@ -93,16 +108,20 @@ export class KanbanController extends Component {
         this.props.selectRecord(record.resId, { activeIds, mode });
     }
 
-    async createRecord(group) {
+    async createRecord() {
         const { onCreate } = this.props.archInfo;
         const { root } = this.model;
         if (this.canQuickCreate && onCreate === "quick_create") {
-            await root.quickCreate(group);
+            const firstGroup = root.groups[0];
+            if (firstGroup.isFolded) {
+                await firstGroup.toggle();
+            }
+            this.quickCreateState.groupId = firstGroup.id;
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {
                 additionalContext: root.context,
                 onClose: async () => {
-                    await this.model.root.load();
+                    await root.load();
                     this.model.useSampleModel = false;
                     this.render(true); // FIXME WOWL reactivity
                 },

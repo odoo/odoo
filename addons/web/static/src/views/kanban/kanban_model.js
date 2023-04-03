@@ -143,18 +143,6 @@ class KanbanGroup extends Group {
         };
     }
 
-    /**
-     * @override
-     */
-    quickCreate(activeFields, context) {
-        const ctx = { ...context };
-        if (this.hasActiveProgressValue && this.progressValue.active !== FALSE) {
-            const { fieldName } = this.model.progressAttributes;
-            ctx[`default_${fieldName}`] = this.progressValue.active;
-        }
-        return super.quickCreate(activeFields, ctx);
-    }
-
     async load() {
         this.loadTooltip();
         await super.load();
@@ -281,38 +269,6 @@ class KanbanGroup extends Group {
             pv.count = counts.get(pv.value) || 0;
         }
         await this.checkActiveValue();
-    }
-
-    /**
-     * @param {number} index
-     * @returns {Promise<Record | false>}
-     */
-    async validateQuickCreate(record, mode) {
-        let saved = false;
-        if (record) {
-            saved = await this.model.mutex.exec(async () => {
-                return await record._save({ noReload: true, stayInEdition: true });
-            });
-            if (saved) {
-                if (mode === "add") {
-                    await this.model.root.quickCreate(this);
-                } else {
-                    this.quickCreateRecord = null;
-                }
-                if (record.parentActiveFields) {
-                    record.setActiveFields(record.parentActiveFields);
-                    record.parentActiveFields = false;
-                }
-                await this.model.reloadRecords(record);
-                record.switchMode("readonly");
-                this.addRecord(record, 0);
-                this.model.bus.trigger("group-updated", {
-                    group: this,
-                    withProgressBars: true,
-                });
-            }
-        }
-        return saved ? record : false;
     }
 
     // ------------------------------------------------------------------------
@@ -606,7 +562,7 @@ export class KanbanModel extends RelationalModel {
                 // example background. Return true so that we don't get sample data instead
                 return true;
             }
-            return this.root.groups.some((group) => group.count > 0 || group.quickCreateRecord);
+            return this.root.groups.some((group) => group.count > 0);
         }
         return this.root.records.length > 0;
     }
