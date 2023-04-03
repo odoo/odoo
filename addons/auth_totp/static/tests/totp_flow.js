@@ -54,7 +54,7 @@ function closeProfileDialog({content, totp_state}) {
         content,
         trigger,
         run() {
-            const $modal = this.$anchor.parents('.o_dialog_container');
+            const $modal = this.$anchor.parents('.o_dialog');
             if ($modal.length) {
                 $modal.find('button[name=preference_cancel]').click()
             }
@@ -62,7 +62,7 @@ function closeProfileDialog({content, totp_state}) {
     }, {
         trigger: 'body',
         async run() {
-            while (document.querySelector('.o_dialog_container .o_dialog')) {
+            while (document.querySelector('.o_dialog')) {
                 await Promise.resolve();
             }
             this.$anchor.addClass('dialog-closed');
