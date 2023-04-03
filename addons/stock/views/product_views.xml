@@ -161,7 +161,7 @@
                     <field name="show_on_hand_qty_status_button"/>
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
-                    <div t-if="record.show_on_hand_qty_status_button.raw_value">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                    <div t-if="record.show_on_hand_qty_status_button.raw_value">On hand: <field name="qty_available" widget="float"/> <field name="uom_id"/></div>
                 </xpath>
             </field>
         </record>
