@@ -78,6 +78,6 @@ class AccountMoveLine(models.Model):
 
     def create(self, vals_list):
         lines = super().create(vals_list)
-        for line in lines.filtered('is_landed_costs_line'):
+        for line in lines.filtered(lambda x: x.is_landed_costs_line and x.product_id.categ_id.property_valuation == 'real_time'):
             line.account_id = line._get_landed_costs_account(line.product_id.product_tmpl_id._get_product_accounts())
         return lines
