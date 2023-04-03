@@ -3389,13 +3389,10 @@ class BaseModel(metaclass=MetaModel):
         or to change the values that are put in cache.
         """
 
-        if isinstance(fields, collections.abc.Sequence):
-            fields = { field_name : {} for field_name in fields }
-
         # determine columns fields and those with their own read() method
         column_fields = OrderedSet()
         other_fields = OrderedSet()
-        for field, specification in fields.items():
+        for field in fields:
             if field.name == 'id':
                 continue
             assert field.store
@@ -3451,12 +3448,7 @@ class BaseModel(metaclass=MetaModel):
         # process non-column fields
         if fetched:
             for field in other_fields:
-                try:
-                    orderby = fields[field].get('order')
-                except AttributeError:
-                    # fields is a list and not a dict, so it doesn't have any information about a specific order
-                    orderby = 'Id'
-                field.read(fetched, orderby)
+                field.read(fetched)
 
         return fetched
 
