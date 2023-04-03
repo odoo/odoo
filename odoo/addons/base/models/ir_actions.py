@@ -301,6 +301,22 @@ class IrActionsActWindow(models.Model):
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result
 
+    def unity_read(self, fields={}):
+        """ call the method get_empty_list_help of the model and set the window action help message
+        """
+        result = super().unity_read(fields)
+        if not fields or 'help' in fields:
+            for values in result:
+                model = values.get('res_model')
+                if model in self.env:
+                    eval_ctx = dict(self.env.context)
+                    try:
+                        ctx = safe_eval(values.get('context', '{}'), eval_ctx)
+                    except:
+                        ctx = {}
+                    values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
+        return result
+
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()

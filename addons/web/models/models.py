@@ -71,7 +71,7 @@ class Base(models.AbstractModel):
         }
 
     @api.model
-    def web_search_read_unity(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
+    def unity_web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
         """
         Performs a search_read and a search_count.
 
@@ -85,20 +85,7 @@ class Base(models.AbstractModel):
             'length': number of records matching the domain (result of a call to 'search_count')
         }
         """
-        # records = self.search_read(domain, fields, offset=offset, limit=limit, order=order)
-        fields = self.check_field_access_rights('read', fields)
-        recordset = self.search_fetch(domain or [], fields, offset=offset, limit=limit, order=order)
-
-        # Method _read_format() ignores 'active_test', but it would forward it
-        # to any downstream search call(e.g. for x2m or computed fields), and
-        # this is not the desired behavior. The flag was presumably only meant
-        # for the main search().
-        if 'active_test' in self._context:
-            context = dict(self._context)
-            del context['active_test']
-            recordset = recordset.with_context(context)
-
-        records = recordset._unity_read_format(specification=fields, offset=offset, limit=limit, order=order)
+        records = self.unity_search_read(domain, fields, offset=offset, limit=limit, order=order)
         if not records:
             return {
                 'length': 0,

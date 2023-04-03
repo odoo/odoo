@@ -840,6 +840,10 @@ class Task(models.Model):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
 
+    def unity_read(self, fields={}):
+        self._ensure_fields_are_accessible(fields)
+        return super(Task, self).unity_read(fields)
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fields_list = ([f.split(':')[0] for f in fields] or [])

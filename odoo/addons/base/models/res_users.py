@@ -30,7 +30,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
+from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property, submap
 
 _logger = logging.getLogger(__name__)
 
@@ -547,6 +547,18 @@ class Users(models.Model):
                 self = self.sudo()
 
         return super(Users, self).read(fields=fields, load=load)
+    
+    def unity_read(self, fields={}):
+        if fields and self == self.env.user:
+            readable = self.SELF_READABLE_FIELDS
+            for key in fields:
+                if not (key in readable or key.startswith('context_')):
+                    break
+            else:
+                # safe fields only, so we read as super-user to bypass access rights
+                self = self.sudo()
+
+        return super(Users, self).unity_read(fields)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -1720,6 +1732,32 @@ class UsersView(models.Model):
             other_fields = fields
 
         res = super(UsersView, self).read(other_fields, load=load)
+
+        # post-process result to add reified group fields
+        if group_fields:
+            for values in res:
+                self._add_reified_groups(group_fields, values)
+                if drop_groups_id:
+                    values.pop('groups_id', None)
+        return res
+    
+    def unity_read(self, fields={}):
+        # determine whether reified groups fields are required, and which ones
+        fields1 = fields.keys() or list(self.fields_get())
+        group_fields, other_fields = partition(is_reified_group, fields1)
+
+        # read regular fields (other_fields); add 'groups_id' if necessary
+        drop_groups_id = False
+        if group_fields and fields:
+            other_fields = submap(fields, other_fields)
+            if 'groups_id' not in other_fields:
+                other_fields['groups_id'] = {}
+                drop_groups_id = True
+        else:
+            other_fields = fields
+
+
+        res = super(UsersView, self).unity_read(other_fields)
 
         # post-process result to add reified group fields
         if group_fields:

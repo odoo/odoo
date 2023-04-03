@@ -665,10 +665,16 @@ class Message(models.Model):
         return messages
 
     def read(self, fields=None, load='_classic_read'):
-        """ Override to explicitely call check_access_rule, that is not called
+        """ Override to explicitly call check_access_rule, that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access_rule('read')
         return super(Message, self).read(fields=fields, load=load)
+    
+    def unity_read(self, fields={}):
+        """ Override to explicitly call check_access_rule, that is not called
+            by the ORM. It instead directly fetches ir.rules and apply them. """
+        self.check_access_rule('read')
+        return super(Message, self).unity_read(fields)
 
     def fetch(self, field_names):
         # This freaky hack is aimed at reading data without the overhead of
