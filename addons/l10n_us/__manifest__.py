@@ -3,6 +3,7 @@
 
 {
     'name': 'United States - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

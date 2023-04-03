@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Croatia - Accounting (Euro)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'description': """
     Croatian Chart of Accounts updated (RRIF ver.2021)
 

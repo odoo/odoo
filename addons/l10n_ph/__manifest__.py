@@ -7,7 +7,7 @@
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     'author': 'Odoo PS',
-    'website': 'https://www.odoo.com',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
         'base_vat',

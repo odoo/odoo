@@ -8,8 +8,8 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
 ================================================================================
     - a generic chart of accounts
     - SARS VAT Ready Structure""",
-    'author': 'Paradigm Digital',
-    'website': 'https://www.paradigmdigital.co.za',
+    'author': 'Paradigm Digital (https://www.paradigmdigital.co.za)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
         'base_vat',

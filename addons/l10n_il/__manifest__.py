@@ -12,7 +12,7 @@ This module consists of:
  - Taxes and tax report
  - Multiple Fiscal positions
  """,
-    'website': 'http://www.odoo.com/accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
     ],
