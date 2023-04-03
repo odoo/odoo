@@ -844,30 +844,31 @@ class ChromeBrowser:
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        self.devtools_port = None
-        self.ws_url = ''  # WebSocketUrl
-        self.ws = None  # websocket
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
-        self.chrome_pid = None
 
         otc = odoo.tools.config
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
-        self.screencasts_dir = None
-        self.screencasts_frames_dir = None
-        if otc['screencasts']:
-            self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
-            self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
-            os.makedirs(self.screencasts_frames_dir, exist_ok=True)
-        self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
-        self.window_size = test_class.browser_size
-        self.touch_enabled = test_class.touch_enabled
-        self.sigxcpu_handler = None
-        self._chrome_start(headless=headless)
-        self._find_websocket()
-        self._logger.info('Websocket url found: %s', self.ws_url)
-        self._open_websocket()
+        self.screencasts_dir = None
+        self.screencast_frames = []
+        if otc['screencasts']:
+            self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
+            os.makedirs(self.screencasts_frames_dir, exist_ok=True)
+
+        if os.name == 'posix':
+            self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
+            signal.signal(signal.SIGXCPU, self.signal_handler)
+        else:
+            self.sigxcpu_handler = None
+
+        self.chrome, self.devtools_port = self._chrome_start(
+            user_data_dir=self.user_data_dir,
+            window_size=test_class.browser_size,
+            touch_enabled=test_class.touch_enabled,
+            headless=headless,
+        )
+        self.ws = self._open_websocket()
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
@@ -892,9 +893,10 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
-        if os.name == 'posix':
-            self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
-            signal.signal(signal.SIGXCPU, self.signal_handler)
+
+    @property
+    def screencasts_frames_dir(self):
+        return os.path.join(self.screencasts_dir, 'frames')
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -903,27 +905,29 @@ class ChromeBrowser:
             os._exit(0)
 
     def stop(self):
-        self._websocket_send('Page.stopScreencast')
-        if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
-            shutil.rmtree(self.screencasts_frames_dir)
+        # only cleanup chrome if it was started before SIGXCPU triggered
+        if self.chrome:
+            self._websocket_send('Page.stopScreencast')
+            if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
+                shutil.rmtree(self.screencasts_frames_dir)
 
-        self._websocket_request('Page.stopLoading')
-        self._websocket_request('Runtime.evaluate', params={'expression': """
-        ('serviceWorker' in navigator) &&
-            navigator.serviceWorker.getRegistrations().then(
-                registrations => Promise.all(registrations.map(r => r.unregister()))
-            )
-        """, 'awaitPromise': True})
-        # wait for the screenshot or whatever
-        wait(self._responses.values(), 10)
-        self._result.cancel()
+            self._websocket_request('Page.stopLoading')
+            self._websocket_request('Runtime.evaluate', params={'expression': """
+            ('serviceWorker' in navigator) &&
+                navigator.serviceWorker.getRegistrations().then(
+                    registrations => Promise.all(registrations.map(r => r.unregister()))
+                )
+            """, 'awaitPromise': True})
+            # wait for the screenshot or whatever
+            wait(self._responses.values(), 10)
+            self._result.cancel()
 
-        self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
-        self._websocket_send('Browser.close')
-        self._logger.info("Closing websocket connection")
-        self.ws.close()
-        self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
-        os.kill(self.chrome_pid, signal.SIGTERM)
+            self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
+            self._websocket_send('Browser.close')
+            self._logger.info("Closing websocket connection")
+            self.ws.close()
+            self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
+            self.chrome.terminate()
 
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
@@ -986,14 +990,15 @@ class ChromeBrowser:
             time.sleep(CHECK_BROWSER_SLEEP)
             if port_file.is_file() and port_file.stat().st_size > 5:
                 with port_file.open('r', encoding='utf-8') as f:
-                    self.devtools_port = int(f.readline())
-                    return proc.pid
+                    return proc, int(f.readline())
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
 
-    def _chrome_start(self, headless=True):
-        if self.chrome_pid is not None:
-            return
-
+    def _chrome_start(
+            self,
+            user_data_dir: str,
+            window_size: str, touch_enabled: bool,
+            headless=True
+    ):
         headless_switches = {
             '--headless': '',
             '--disable-extensions': '',
@@ -1019,14 +1024,14 @@ class ChromeBrowser:
             '--no-default-browser-check': '',
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
-            '--user-data-dir': self.user_data_dir,
-            '--window-size': self.window_size,
+            '--user-data-dir': user_data_dir,
+            '--window-size': window_size,
             # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
             # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
         }
         if headless:
             switches.update(headless_switches)
-        if self.touch_enabled:
+        if touch_enabled:
             # enable Chrome's Touch mode, useful to detect touch capabilities using
             # "'ontouchstart' in window"
             switches['--touch-events'] = ''
@@ -1036,18 +1041,13 @@ class ChromeBrowser:
         url = 'about:blank'
         cmd.append(url)
         try:
-            self.chrome_pid = self._spawn_chrome(cmd)
+            proc, devtools_port = self._spawn_chrome(cmd)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
-        self._logger.info('Chrome pid: %s', self.chrome_pid)
-
-    def _find_websocket(self):
-        version = self._json_command('version')
-        self._logger.info('Browser version: %s', version['Browser'])
-        infos = self._json_command('', get_key=0)  # Infos about the first tab
-        self.ws_url = infos['webSocketDebuggerUrl']
-        self.dev_tools_frontend_url = infos.get('devtoolsFrontendUrl')
+        self._logger.info('Chrome pid: %s', proc.pid)
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
+
+        return proc, devtools_port
 
     def _json_command(self, command, timeout=3, get_key=None):
         """Queries browser state using JSON
@@ -1078,7 +1078,7 @@ class ChromeBrowser:
         message = None
         while timeout > 0:
             try:
-                os.kill(self.chrome_pid, 0)
+                self.chrome.send_signal(0)
             except ProcessLookupError:
                 message = 'Chrome crashed at startup'
                 break
@@ -1111,10 +1111,16 @@ class ChromeBrowser:
         raise unittest.SkipTest("Error during Chrome headless connection")
 
     def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url, enable_multithread=True, suppress_origin=True)
-        if self.ws.getstatus() != 101:
+        version = self._json_command('version')
+        self._logger.info('Browser version: %s', version['Browser'])
+        infos = self._json_command('', get_key=0)  # Infos about the first tab
+        ws_url = infos['webSocketDebuggerUrl']
+        self._logger.info('Websocket url found: %s', ws_url)
+        ws = websocket.create_connection(ws_url, enable_multithread=True, suppress_origin=True)
+        if ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
-        self.ws.settimeout(0.01)
+        ws.settimeout(0.01)
+        return ws
 
     def _receive(self, dbname):
         threading.current_thread().dbname = dbname
