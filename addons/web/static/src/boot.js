@@ -120,10 +120,6 @@
                                 resolve();
                                 odoo.__DEBUG__.processJobs();
                             })
-                            .guardedCatch(function (e) {
-                                job.rejected = e || true;
-                                jobs.push(job);
-                            })
                             .catch(function (e) {
                                 if (e instanceof Error) {
                                     onError(e);
@@ -141,7 +137,6 @@
             function isReady(job) {
                 return (
                     !job.error &&
-                    !job.rejected &&
                     job.factory.deps.every(function (name) {
                         return name in services;
                     })
@@ -243,8 +238,6 @@
 
         if (jobs.length) {
             var debugJobs = {};
-            var rejected = [];
-            var rejectedLinked = [];
             var job;
             var jobdep;
 
@@ -260,10 +253,6 @@
                 if (jobs[k].error) {
                     job.error = jobs[k].error;
                 }
-                if (jobs[k].rejected) {
-                    job.rejected = jobs[k].rejected;
-                    rejected.push(job.name);
-                }
                 var deps = odoo.__DEBUG__.getDependencies(job.name);
                 for (var i = 0; i < deps.length; i++) {
                     if (job.name !== deps[i] && !(deps[i] in services)) {
@@ -276,18 +265,10 @@
                                 }
                             }
                         }
-                        if (jobdep && jobdep.rejected) {
-                            if (!job.rejected) {
-                                job.rejected = [];
-                                rejectedLinked.push(job.name);
-                            }
-                            job.rejected.push(deps[i]);
-                        } else {
-                            if (!job.missing) {
-                                job.missing = [];
-                            }
-                            job.missing.push(deps[i]);
+                        if (!job.missing) {
+                            job.missing = [];
                         }
+                        job.missing.push(deps[i]);
                     }
                 }
             }
@@ -318,12 +299,6 @@
                             return fail.name;
                         })
                     );
-                }
-                if (rejected.length) {
-                    log("Rejected modules:        ", rejected);
-                }
-                if (rejectedLinked.length) {
-                    log("Rejected linked modules: ", rejectedLinked);
                 }
                 if (unloaded.length) {
                     cycle = findCycle(unloaded);
