@@ -18,7 +18,8 @@ export class RtcSession {
     audioStream;
     /** @type {RTCDataChannel} */
     dataChannel;
-    isAudioInError;
+    audioError;
+    videoError;
     isRaisingHand;
     isTalking;
     localVolume;
@@ -82,6 +83,18 @@ export class RtcSession {
             this.audioElement.volume = value;
         }
         this.localVolume = value;
+    }
+
+    async playAudio() {
+        if (!this.audioElement) {
+            return;
+        }
+        try {
+            await this.audioElement.play();
+            this.audioError = undefined;
+        } catch (error) {
+            this.audioError = error.name;
+        }
     }
 
     async updateStats() {

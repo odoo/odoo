@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, onMounted, onPatched, useRef } from "@odoo/owl";
+import { Component, onMounted, onPatched, useExternalListener, useRef } from "@odoo/owl";
 import { useRtc } from "@mail/rtc/rtc_hook";
 
 export class CallParticipantVideo extends Component {
@@ -12,6 +12,9 @@ export class CallParticipantVideo extends Component {
         this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());
+        useExternalListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
+            await this.play();
+        });
     }
 
     _update() {
@@ -26,16 +29,16 @@ export class CallParticipantVideo extends Component {
         this.root.el.load();
     }
 
-    async onVideoLoadedMetaData(ev) {
+    async play() {
         try {
-            await ev.target.play();
+            await this.root.el?.play?.();
+            this.props.session.videoError = undefined;
         } catch (error) {
-            if (typeof error === "object" && error.name === "NotAllowedError") {
-                // Ignored as some browsers may reject play() calls that do not
-                // originate from a user input.
-                return;
-            }
-            throw error;
+            this.props.session.videoError = error.name;
         }
+    }
+
+    async onVideoLoadedMetaData() {
+        await this.play();
     }
 }

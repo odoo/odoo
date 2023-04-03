@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useStore } from "@mail/core/messaging_hook";
+import { useHover } from "@mail/utils/hooks";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
@@ -24,6 +25,7 @@ export class CallParticipantCard extends Component {
         this.rpc = useService("rpc");
         this.rtc = useRtc();
         this.store = useStore();
+        this.rootHover = useHover("root");
         this.threadService = useService("mail.thread");
         onMounted(() => {
             if (!this.rtcSession) {
@@ -74,6 +76,13 @@ export class CallParticipantCard extends Component {
         return this.channelMember?.persona.name;
     }
 
+    get hasMediaError() {
+        return (
+            this.isOfActiveCall &&
+            Boolean(this.rtcSession?.videoError || this.rtcSession?.audioError)
+        );
+    }
+
     get hasVideo() {
         return Boolean(this.rtcSession?.videoStream);
     }
@@ -104,6 +113,10 @@ export class CallParticipantCard extends Component {
                 invitedMembers: channelData.invitedMembers,
             },
         });
+    }
+
+    async onClickReplay() {
+        this.env.bus.trigger("RTC-SERVICE:PLAY_MEDIA");
     }
 
     /**
