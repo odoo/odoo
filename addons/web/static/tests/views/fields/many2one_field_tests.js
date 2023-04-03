@@ -885,6 +885,43 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal .btn-primary");
     });
 
+    QUnit.test(
+        "..._view_ref keys are removed from many2one context on create and edit",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                context: {
+                    form_view_ref: "test_form_view",
+                },
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "get_views") {
+                        assert.step(method);
+                        if (kwargs.context.default_name === "ABC") {
+                            assert.strictEqual(kwargs.context.form_view_ref, undefined);
+                        } else {
+                            assert.strictEqual(kwargs.context.form_view_ref, "test_form_view");
+                        }
+                    }
+                },
+            });
+
+            assert.verifySteps(["get_views"]);
+            await editInput(target, ".o_field_widget[name=trululu] input", "ABC");
+            await click(target, ".o_field_widget[name=trululu] .o_m2o_dropdown_option_create_edit");
+            assert.verifySteps(["get_views"]);
+        }
+    );
+
     QUnit.test("empty a many2one field in list view", async function (assert) {
         await makeView({
             type: "list",
