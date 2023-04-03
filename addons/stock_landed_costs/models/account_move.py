@@ -67,6 +67,7 @@ class AccountMoveLine(models.Model):
         else:
             self.is_landed_costs_line = False
 
+<<<<<<< HEAD
     @api.onchange('is_landed_costs_line')
     def _onchange_is_landed_costs_line(self):
         if self.is_landed_costs_line and self.product_id and self.product_type != 'service':
@@ -75,3 +76,16 @@ class AccountMoveLine(models.Model):
     def _get_stock_valuation_layers(self, move):
         layers = super()._get_stock_valuation_layers(move)
         return layers.filtered(lambda svl: not svl.stock_landed_cost_id)
+||||||| parent of 26f81667718 (temp)
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line in lines.filtered('is_landed_costs_line'):
+            line.account_id = line._get_landed_costs_account(line.product_id.product_tmpl_id._get_product_accounts())
+        return lines
+=======
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line in lines.filtered(lambda x: x.is_landed_costs_line and x.product_id.categ_id.property_valuation == 'real_time'):
+            line.account_id = line._get_landed_costs_account(line.product_id.product_tmpl_id._get_product_accounts())
+        return lines
+>>>>>>> 26f81667718 (temp)
