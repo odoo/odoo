@@ -79,7 +79,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
+        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
         <img src="http://test.external.link/img.png" loading="lazy"/>

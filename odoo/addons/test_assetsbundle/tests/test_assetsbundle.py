@@ -624,7 +624,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="%(js)s" data-asset-bundle="%(asset_bundle_js)s" data-asset-version="%(asset_version_js)s"></script>
+        <script type="text/javascript" src="%(js)s" data-asset-bundle="%(asset_bundle_js)s" data-asset-version="%(asset_version_js)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
     </body>
@@ -655,7 +655,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="%(js)s" data-asset-bundle="%(asset_bundle_js)s" data-asset-version="%(asset_version_js)s"></script>
+        <script type="text/javascript" src="%(js)s" data-asset-bundle="%(asset_bundle_js)s" data-asset-version="%(asset_version_js)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
     </body>
