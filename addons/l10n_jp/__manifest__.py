@@ -19,8 +19,8 @@ Note:
 [1] See https://github.com/odoo/odoo/pull/6470 for detail.
 
     """,
-    'author': 'Quartile Limited',
-    'website': 'https://www.quartile.co/',
+    'author': 'Quartile Limited (https://www.quartile.co/)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
     ],

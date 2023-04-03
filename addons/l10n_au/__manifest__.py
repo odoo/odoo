@@ -2,6 +2,7 @@
 
 {
     'name': 'Australia - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/australia.html',
     'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

@@ -2,8 +2,8 @@
 {
     'name': 'Poland - Accounting',
     'version': '2.0',
-    'author': 'Odoo S.A., Grzegorz Grzelak (OpenGLOBE)',
-    'website': 'http://www.openglobe.pl',
+    'author': 'Odoo S.A., Grzegorz Grzelak (OpenGLOBE) (http://www.openglobe.pl)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the module to manage the accounting chart and taxes for Poland in Odoo.

@@ -3,7 +3,7 @@
     'name': 'Vietnam - Accounting',
     'version': '2.0.1',
     'author': 'General Solutions',
-    'website': 'http://gscom.vn',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the module to manage the accounting chart for Vietnam in Odoo.

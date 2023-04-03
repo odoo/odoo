@@ -15,7 +15,7 @@
     """,
     'license': 'LGPL-3',
     'author': 'Focusate',
-    'website': 'http://www.focusate.eu',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',

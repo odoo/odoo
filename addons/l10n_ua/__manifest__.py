@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Ukraine - Accounting',
-    'author': 'ERP Ukraine',
-    'website': 'https://erp.co.ua',
+    'author': 'ERP Ukraine (https://erp.co.ua)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'version': '1.4',
     'description': """
 Ukraine - Chart of accounts.

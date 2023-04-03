@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Egypt - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/egypt.html',
     'description': """
 This is the base module to manage the accounting chart for Egypt in Odoo.
 ==============================================================================

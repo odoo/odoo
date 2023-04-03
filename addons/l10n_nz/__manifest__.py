@@ -14,7 +14,7 @@ Also:
     - sets up New Zealand taxes.
     """,
     'author': 'Richard deMeester - Willow IT',
-    'website': 'http://www.willowit.com',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
     ],

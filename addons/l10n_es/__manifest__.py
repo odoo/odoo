@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Spain - Accounting (PGCE 2008)',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/spain.html',
     'version': '5.1',
     'author': 'Spanish Localization Team',
     'category': 'Accounting/Localizations/Account Charts',

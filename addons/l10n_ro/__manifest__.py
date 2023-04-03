@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Romania - Accounting',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'author': 'Fekete Mihai (NextERP Romania SRL), Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',

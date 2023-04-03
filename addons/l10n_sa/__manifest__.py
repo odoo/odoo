@@ -2,12 +2,12 @@
 {
     'name': 'Saudi Arabia - Accounting',
     'version': '2.0',
-    'author': 'Odoo S.A., DVIT.ME',
+    'author': 'Odoo S.A., DVIT.ME (http://www.dvit.me)',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Odoo Arabic localization for most Saudi Arabia.
 """,
-    'website': 'http://www.dvit.me',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
         'l10n_gcc_invoice',
         'account',

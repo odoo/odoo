@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Finnish Localization',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'version': '13.0.1',
     'author': 'Avoin.Systems, Tawasta, Vizucom, Sprintit',
     'category': 'Accounting/Localizations/Account Charts',
