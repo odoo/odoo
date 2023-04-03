@@ -576,7 +576,7 @@ actual arch.
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
-        custom_view = self.env['ir.ui.view.custom'].search([('ref_id', 'in', self.ids)])
+        custom_view = self.env['ir.ui.view.custom'].sudo().search([('ref_id', 'in', self.ids)])
         if custom_view:
             custom_view.unlink()
 

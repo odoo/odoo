@@ -6,6 +6,7 @@
         </record>
 
     <data noupdate="1">
+        <!-- TODO Remove me? Ony group system -->
         <record model="ir.rule" id="res_users_log_rule">
             <field name="name">res.users.log per user</field>
             <field name="model_id" ref="model_res_users_log"/>
@@ -50,6 +51,7 @@
         </record>
 
         <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
+        <!-- Remove me? users never create those directly -->
         <record model="ir.rule" id="ir_ui_view_custom_personal">
             <field name="name">ir.ui.view_custom rule</field>
             <field name="model_id" ref="model_ir_ui_view_custom"/>

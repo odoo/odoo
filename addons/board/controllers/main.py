@@ -34,7 +34,7 @@ class Board(Controller):
                     })
                     column.insert(0, new_action)
                     arch = ElementTree.tostring(board_arch, encoding='unicode')
-                    request.env['ir.ui.view.custom'].create({
+                    request.env['ir.ui.view.custom'].sudo().create({
                         'user_id': request.session.uid,
                         'ref_id': view_id,
                         'arch': arch

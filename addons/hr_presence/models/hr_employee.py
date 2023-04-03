@@ -49,7 +49,7 @@ class Employee(models.AbstractModel):
             ip_list = ip_list.split(',') if ip_list else []
             ip_employees = self.env['hr.employee']
             for employee in employees:
-                employee_ips = self.env['res.users.log'].search([
+                employee_ips = self.env['res.users.log'].sudo().search([
                     ('create_uid', '=', employee.user_id.id),
                     ('ip', '!=', False),
                     ('create_date', '>=', Datetime.to_string(Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)))]

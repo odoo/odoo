@@ -187,7 +187,7 @@ class DiscussChannel(models.Model):
         :param string body: message HTML body """
 
         return self.with_context(mail_create_nosubscribe=True).message_post(
-            author_id=chatbot_script.operator_partner_id.id,
+            author_id=chatbot_script.sudo().operator_partner_id.id,
             body=body,
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
