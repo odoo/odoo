@@ -351,7 +351,7 @@ class TestPermissions(TransactionCase):
         wrinkles as the ACLs may diverge a lot more
         """
         # create an other unwritable record in a different model
-        unwritable = self.env['res.users.log'].create({})
+        unwritable = self.env['res.users.apikeys.description'].create({'name': 'Unwritable'})
         with self.assertRaises(AccessError):
             unwritable.write({})  # checks unwritability
         # create a writable record in the same model
