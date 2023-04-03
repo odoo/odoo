@@ -28,7 +28,7 @@
                         </t>
                         <div class="o_portal_chatter_message_title">
                             <h5 class='mb-1'><t t-out="message.author_id[1]"/></h5>
-                            <p class="o_portal_chatter_puslished_date"><t t-out="message.published_date_str"/></p>
+                            <p class="o_portal_chatter_puslished_date">Published on <t t-out="message.published_date_str"/></p>
                         </div>
                         <t t-out="message.body"/>
                         <div class="o_portal_chatter_attachments">
