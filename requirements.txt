@@ -46,7 +46,7 @@ pyserial==3.5
 python-dateutil==2.8.1
 python-ldap==3.4.0 ; sys_platform != 'win32'  # min version = 3.2.0 (Focal with security backports)
 python-stdnum==1.16
-pytz==2021.1
+pytz  # no version pinning to avoid OS perturbations
 pyusb==1.0.2 ; python_version <= '3.10'
 pyusb==1.2.1 ; python_version > '3.10'
 qrcode==6.1
