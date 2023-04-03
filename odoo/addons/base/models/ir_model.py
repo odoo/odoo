@@ -289,10 +289,15 @@ class IrModel(models.Model):
             if current_model is not None:
                 table = current_model._table
                 kind = tools.table_kind(self._cr, table)
-                if kind == 'v':
+                if kind == tools.TableKind.View:
                     self._cr.execute(sql.SQL('DROP VIEW {}').format(sql.Identifier(table)))
-                elif kind == 'r':
+                elif kind == tools.TableKind.Regular:
                     self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
+                else:
+                    _logger.warning(
+                        "Unable to drop table %r of model %r: unmanaged or unknown tabe type %r",
+                        table, model.model, kind
+                    )
             else:
                 _logger.runbot('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
@@ -445,8 +450,12 @@ class IrModel(models.Model):
         for model_data in cr.dictfetchall():
             model_class = self._instanciate(model_data)
             Model = model_class._build_model(self.pool, cr)
-            if tools.table_kind(cr, Model._table) not in ('r', None):
-                # not a regular table, so disable schema upgrades
+            kind = tools.table_kind(cr, Model._table)
+            if kind not in (tools.TableKind.Regular, None):
+                _logger.info(
+                    "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
+                    Model._name, Model._table, kind,
+                )
                 Model._auto = False
                 cr.execute(
                     '''
@@ -740,7 +749,7 @@ class IrModelFields(models.Model):
             if field.store:
                 # TODO: Refactor this brol in master
                 if is_model and tools.column_exists(self._cr, model._table, field.name) and \
-                        tools.table_kind(self._cr, model._table) == 'r':
+                        tools.table_kind(self._cr, model._table) == tools.TableKind.Regular:
                     self._cr.execute(sql.SQL('ALTER TABLE {} DROP COLUMN {} CASCADE').format(
                         sql.Identifier(model._table), sql.Identifier(field.name),
                     ))

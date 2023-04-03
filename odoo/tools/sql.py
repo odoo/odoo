@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 # pylint: disable=sql-injection
 
-from binascii import crc32
-import logging
+import enum
 import json
+import logging
 import re
+from binascii import crc32
+from collections import defaultdict
+from typing import Union
+
 import psycopg2
 from psycopg2.sql import SQL, Identifier
-
-from collections import defaultdict
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -39,20 +40,42 @@ def table_exists(cr, tablename):
     """ Return whether the given table exists. """
     return len(existing_tables(cr, {tablename})) == 1
 
-def table_kind(cr, tablename):
-    """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
-        ``'f'`` (foreign table), ``'t'`` (temporary table),
-        ``'m'`` (materialized view), or ``None``.
+class TableKind(enum.Enum):
+    Regular = 'r'
+    Temporary = 't'
+    View = 'v'
+    Materialized = 'm'
+    Foreign = 'f'
+    Other = None
+
+def table_kind(cr, tablename: str) -> Union[TableKind, None]:
+    """ Return the kind of a table, if ``tablename`` is a regular or foreign
+    table, or a view (ignores indexes, sequences, toast tables, and partitioned
+    tables; unlogged tables are considered regular)
     """
     query = """
-        SELECT c.relkind
+        SELECT c.relkind, c.relpersistence
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname = %s
            AND n.nspname = current_schema
     """
     cr.execute(query, (tablename,))
-    return cr.fetchone()[0] if cr.rowcount else None
+    if not cr.rowcount:
+        return None
+
+    kind, persistence = cr.fetchone()
+    # special case: permanent, temporary, and unlogged tables differ by their
+    # relpersistence, they're all "ordinary" (relkind = r)
+    if kind == 'r':
+        return TableKind.Temporary if persistence == 't' else TableKind.Regular
+
+    try:
+        return TableKind(kind)
+    except ValueError:
+        # NB: or raise? unclear if it makes sense to allow table_kind to
+        #     "work" with something like an index or sequence
+        return TableKind.Other
 
 # prescribed column order by type: columns aligned on 4 bytes, columns aligned
 # on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
