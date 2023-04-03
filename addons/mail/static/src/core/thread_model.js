@@ -366,7 +366,17 @@ export class Thread {
                 orderedOnlineMembers.push(member);
             }
         }
-        return orderedOnlineMembers.sort((m1, m2) => (m1.persona.name < m2.persona.name ? -1 : 1));
+        return orderedOnlineMembers.sort((m1, m2) => {
+            if (Boolean(m1.rtcSession) && Boolean(m2.rtcSession)) {
+                if (m1.rtcSession.isRaisingHand !== m2.rtcSession.isRaisingHand) {
+                    return m1.rtcSession.isRaisingHand ? -1 : 1;
+                } else {
+                    return m1.persona.name < m2.persona.name ? -1 : 1;
+                }
+            } else {
+                return Boolean(m2.rtcSession) - Boolean(m1.rtcSession);
+            }
+        });
     }
 
     get unknownMembersCount() {

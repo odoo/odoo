@@ -81,7 +81,7 @@ export class Call extends Component {
                     key: "session_" + session.id,
                     session,
                 };
-                if (session.raisingHand) {
+                if (session.isRaisingHand) {
                     raisingHandCards.push(data);
                 } else {
                     cards.push(data);
