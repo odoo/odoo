@@ -406,6 +406,15 @@
     }
 
     function displayModuleErrors({ failed, missing, unloaded, cycle }) {
+        if (window.__odooAssetError) {
+            // this flag is set when we have an error loading the script for an
+            // asset. We sometimes see a 404, probably due to the fact that the
+            // attachment has been deleted. It is unclear in which circumstances
+            // it can happen, but we sometimes observe it. We could here force a
+            // reload, but it seems dangerous, since in case of errors, this
+            // could easily lead to an infinite loop.
+            return;
+        }
         const list = (heading, arr) => {
             const frag = document.createDocumentFragment();
             if (!arr || !arr.length) {
