@@ -9,6 +9,8 @@
                 <div><span class="fw-bolder">ICE: </span><t t-esc="props.rtcSession.iceState"/></div>
                 <div><span class="fw-bolder">DTLS: </span><t t-esc="props.rtcSession.dtlsState"/></div>
                 <div><span class="fw-bolder">Data channel: </span><t t-esc="props.rtcSession.dataChannelState"/></div>
+                <div t-if="props.rtcSession.audioError"><span class="fw-bolder">Audio player: </span><t t-esc="props.rtcSession.audioError"/></div>
+                <div t-if="props.rtcSession.videoError"><span class="fw-bolder">Video player: </span><t t-esc="props.rtcSession.videoError"/></div>
                 <hr class="w-100 border-top"/>
                 <div><span class="fw-bolder">ICE gathering: </span><t t-esc="props.rtcSession.iceGatheringState"/></div>
                 <div><span class="fw-bolder">From peer: </span><t t-esc="inboundConnectionTypeText"/></div>

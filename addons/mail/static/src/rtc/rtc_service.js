@@ -194,7 +194,11 @@ export class Rtc {
                 }
             }
         );
-
+        this.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
+            for (const session of Object.values(this.state.channel.rtcSessions)) {
+                session.playAudio();
+            }
+        });
         browser.addEventListener("keydown", (ev) => {
             if (
                 !this.state.channel ||
@@ -926,7 +930,8 @@ export class Rtc {
         delete session.dtlsState;
         delete session.iceState;
         delete session.logStep;
-        session.isAudioInError = false;
+        delete session.audioError;
+        delete session.videoError;
         session.isRaisingHand = false;
         session.isTalking = false;
         this.removeVideoFromSession(session);
@@ -1417,11 +1422,7 @@ export class Rtc {
         stream.addTrack(track);
         if (track.kind === "audio") {
             const audioElement = session.audioElement || new window.Audio();
-            try {
-                audioElement.srcObject = stream;
-            } catch {
-                session.isAudioInError = true;
-            }
+            audioElement.srcObject = stream;
             audioElement.load();
             audioElement.muted = mute;
             audioElement.volume = this.userSettingsService.getVolume(session);
@@ -1432,17 +1433,7 @@ export class Rtc {
             session.audioStream = stream;
             session.isSelfMuted = false;
             session.isTalking = false;
-            try {
-                await audioElement.play();
-                session.isAudioInError = false;
-            } catch (error) {
-                if (typeof error === "object" && error.name === "NotAllowedError") {
-                    // Ignored as some browsers may reject play() calls that do not
-                    // originate from a user input.
-                    return;
-                }
-                session.isAudioInError = true;
-            }
+            await session.playAudio();
         }
         if (track.kind === "video") {
             session.videoStream = stream;
