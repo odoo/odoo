@@ -862,14 +862,28 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    def _message_format(self, fnames, format_reply=True):
+    def _message_format(self, fnames, format_reply=True, msg_vals=None):
         """Reads values from messages and formats them for the web client."""
         vals_list = self._read_format(fnames)
+        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         thread_ids_by_model_name = defaultdict(set)
         for message in self:
             if message.model and message.res_id:
                 thread_ids_by_model_name[message.model].add(message.res_id)
+
+        # fetch scheduled notifications once, only if msg_vals is not given to
+        # avoid useless queries when notifying Inbox right after a message_post
+        scheduled_dt_by_msg_id = {}
+        if msg_vals:
+            scheduled_dt_by_msg_id = {msg.id: msg_vals.get('scheduled_date') for msg in self}
+        elif self:
+            schedulers = self.env['mail.message.schedule'].sudo().search([
+                ('mail_message_id', 'in', self.ids)
+            ])
+            for scheduler in schedulers:
+                scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
@@ -910,6 +924,19 @@ class Message(models.Model):
                     'name': message_sudo.create_uid.name,
                 }
 
+            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
+            vals.update({
+                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
+                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
+                'is_note': message_sudo.subtype_id.id == note_id,
+                'is_discussion': message_sudo.subtype_id.id == com_id,
+                'subtype_description': message_sudo.subtype_id.description,
+                'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
+                'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
+            })
+            if vals['model'] and self.env[vals['model']]._original_module:
+                vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
+
             vals.update({
                 'author': author,
                 'default_subject': default_subject,
@@ -940,98 +967,69 @@ class Message(models.Model):
             domain = expression.AND([domain, [('id', '>', min_id)]])
         return self.search(domain, limit=limit)
 
-    def message_format(self, format_reply=True, msg_vals=None):
+    def message_format(self, msg_vals=None):
         """ Get the message values in the format for web client. Since message
         values can be broadcasted, computed fields MUST NOT BE READ and
         broadcasted.
 
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message`` without
+        :param dict msg_vals: dictionary of values used to create the message.
+          If given it may be used to access values related to ``self`` without
           accessing it directly. It lessens query count in some optimized use
           cases by avoiding access message content in db;
 
-        :returns list(dict).
-             Example :
+        :returns list(dict): a list of formatted values suitable for web client
+
+        {
+            'body': HTML content of the message,
+            'model': u'res.partner',
+            'record_name': u'Agrolait',
+            'attachment_ids': [
                 {
-                    'body': HTML content of the message
-                    'model': u'res.partner',
-                    'record_name': u'Agrolait',
-                    'attachment_ids': [
-                        {
-                            'file_type_icon': u'webimage',
-                            'id': 45,
-                            'name': u'sample.png',
-                            'filename': u'sample.png'
-                        }
-                    ],
-                    'needaction_partner_ids': [], # list of partner ids
-                    'res_id': 7,
-                    'trackingValues': [
-                        {
-                            'changedField': "Customer",
-                            'id': 2965,
-                            'newValue': {
-                                'currencyId': "",
-                                'fieldType': 'char',
-                                'value': "Axelor",
-                            ],
-                            'oldValue': {
-                                'currencyId': "",
-                                'fieldType': 'char',
-                                'value': "",
-                            ],
-                        }
-                    ],
-                    'author_id': (3, u'Administrator'),
-                    'email_from': 'sacha@pokemon.com' # email address or False
-                    'subtype_id': (1, u'Discussions'),
-                    'date': '2015-06-30 08:22:33',
-                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
-                    'message_type': u'comment',
-                    'id': 59,
-                    'subject': False
-                    'is_note': True # only if the message is a note (subtype == note)
-                    'is_discussion': False # only if the message is a discussion (subtype == discussion)
-                    'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
-                    'sender': {
-                        "id": 3, "name": 'Administrator'
-                    },
+                    'file_type_icon': u'webimage',
+                    'id': 45,
+                    'name': u'sample.png',
+                    'filename': u'sample.png'
                 }
+            ],
+            'needaction_partner_ids': [], # list of partner ids
+            'res_id': 7,
+            'trackingValues': [
+                {
+                    'changedField': "Customer",
+                    'id': 2965,
+                    'newValue': {
+                        'currencyId': "",
+                        'fieldType': 'char',
+                        'value': "Axelor",
+                    ],
+                    'oldValue': {
+                        'currencyId': "",
+                        'fieldType': 'char',
+                        'value': "",
+                    ],
+                }
+            ],
+            'author_id': (3, u'Administrator'),
+            'email_from': 'sacha@pokemon.com' # email address or False
+            'subtype_id': (1, u'Discussions'),
+            'date': '2015-06-30 08:22:33',
+            'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
+            'message_type': u'comment',
+            'id': 59,
+            'subject': False
+            'is_note': True # only if the message is a note (subtype == note)
+            'is_discussion': False # only if the message is a discussion (subtype == discussion)
+            'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
+            'sender': {
+                "id": 3, "name": 'Administrator'
+            },
+        }
         """
         self.check_access_rule('read')
-        vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
-
-        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-
-
-        # fetch scheduled notifications once, only if msg_vals is not given to
-        # avoid useless queries when notifying Inbox right after a message_post
-        scheduled_dt_by_msg_id = {}
-        if msg_vals:
-            scheduled_dt_by_msg_id = {msg.id: msg_vals.get('scheduled_date') for msg in self}
-        elif self:
-            schedulers = self.env['mail.message.schedule'].sudo().search([
-                ('mail_message_id', 'in', self.ids)
-            ])
-            for scheduler in schedulers:
-                scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
-
-        for vals in vals_list:
-            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
-            vals.update({
-                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
-                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
-                'is_note': message_sudo.subtype_id.id == note_id,
-                'is_discussion': message_sudo.subtype_id.id == com_id,
-                'subtype_description': message_sudo.subtype_id.description,
-                'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
-                'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
-            })
-            if vals['model'] and self.env[vals['model']]._original_module:
-                vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
-        return vals_list
+        return self._message_format(
+            self._get_message_format_fields(),
+            msg_vals=msg_vals,
+        )
 
     def _get_message_format_fields(self):
         return [
