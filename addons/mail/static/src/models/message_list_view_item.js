@@ -47,7 +47,12 @@ registerModel({
         }),
         notificationMessageView: one('NotificationMessageView', {
             compute() {
-                if (this.message.message_type === 'notification' && this.message.originThread.channel) {
+                if (
+                    this.message &&
+                    this.message.originThread &&
+                    this.message.originThread.channel &&
+                    this.message.message_type === 'notification'
+                ) {
                     return {};
                 }
                 return clear();
@@ -56,7 +61,12 @@ registerModel({
         }),
         messageView: one('MessageView', {
             compute() {
-                if (this.message.message_type !== 'notification' || !this.message.originThread.channel) {
+                if (
+                    this.message &&
+                    this.message.originThread &&
+                    !this.message.originThread.channel ||
+                    this.message.message_type !== 'notification'
+                ) {
                     return {};
                 }
                 return clear();
