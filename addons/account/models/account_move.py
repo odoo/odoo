@@ -1043,8 +1043,7 @@ class AccountMove(models.Model):
                         company=invoice.company_id,
                         sign=sign
                     )
-                    multiple_installments = len(invoice_payment_terms['line_ids']) > 1
-                    for i, term_line in enumerate(invoice_payment_terms['line_ids']):
+                    for term_line in invoice_payment_terms['line_ids']:
                         key = frozendict({
                             'move_id': invoice.id,
                             'date_maturity': fields.Date.to_date(term_line.get('date')),
@@ -1053,13 +1052,10 @@ class AccountMove(models.Model):
                         values = {
                             'balance': term_line['company_amount'],
                             'amount_currency': term_line['foreign_amount'],
-                            'name': invoice.payment_reference or '',
                             'discount_date': invoice_payment_terms.get('discount_date'),
                             'discount_balance': invoice_payment_terms.get('discount_balance') or 0.0,
                             'discount_amount_currency': invoice_payment_terms.get('discount_amount_currency') or 0.0,
                         }
-                        if multiple_installments:
-                            values['name'] = f'{values["name"]} installment #{i + 1}'.lstrip()
                         if key not in invoice.needed_terms:
                             invoice.needed_terms[key] = values
                         else:
