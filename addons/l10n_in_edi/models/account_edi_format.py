@@ -483,7 +483,7 @@ class AccountEdiFormat(models.Model):
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
-                    sum(line.balance for line in invoice.invoice_line_ids if line.display_type == 'rounding')),
+                    sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding')),
                 "TotInvVal": self._l10n_in_round_value(
                     (tax_details.get("base_amount") + tax_details.get("tax_amount"))),
             },
