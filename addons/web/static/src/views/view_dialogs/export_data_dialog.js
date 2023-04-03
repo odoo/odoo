@@ -159,6 +159,7 @@ export class ExportDataDialog extends Component {
     async fetchFields() {
         this.state.search = [];
         this.knownFields = {};
+        this.expandedFields = {};
         await this.loadFields();
         await this.setDefaultExportList();
         if (this.searchRef.el) {
