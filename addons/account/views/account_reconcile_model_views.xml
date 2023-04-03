@@ -51,6 +51,7 @@
                     <field name="name"/>
                     <field name="rule_type"/>
                     <field name="auto_reconcile"/>
+                    <field name="match_journal_ids" optional="hidden" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>
@@ -232,11 +233,21 @@
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
-                        <filter string="With tax" name="withtax" domain="[('line_ids.tax_ids', '!=', False)]"/>
-                        <filter string="Auto Reconcile" name="auto_reconcile" domain="[('auto_reconcile', '=', True)]"/>
-                        <field name="rule_type"/>
-                        <separator/>
-                        <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                    <filter string="Matching rules" name="matching_rules" domain="[('rule_type', '=', 'invoice_matching')]"/>
+                    <filter string="Counterpart rules" name="counterpart_rules" domain="[('rule_type', '=', 'writeoff_suggestion')]"/>
+                    <filter string="Counterpart buttons" name="counterpart_buttons" domain="[('rule_type', '=', 'writeoff_button')]"/>
+                    <separator />
+                    <filter string="Auto validate" name="auto_validate" domain="[('auto_reconcile', '=', True)]"/>
+                    <separator />
+                    <filter string="With Partner matching" name="with_partner_matching" domain="[('match_partner', '=', True)]"/>
+                    <filter string="With tax" name="withtax" domain="[('line_ids.tax_ids', '!=', False)]"/>
+                    <separator/>
+                    <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="group_by_type" context="{'group_by': 'rule_type'}"/>
+                        <filter string="Journals Availability" name="group_by_journal" context="{'group_by': 'match_journal_ids'}"/>
+                        <filter string="Auto-validate" name="group_by_auto_validate" context="{'group_by': 'auto_reconcile'}"/>
+                    </group>
                 </search>
             </field>
         </record>
