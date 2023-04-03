@@ -2,9 +2,9 @@
 <odoo>
 
     <record id="account_tax_sale_vat1" model="account.tax.template">
-        <field name="name">НӨАТ бараа</field>
+        <field name="name">VAT goods</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">1</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -40,9 +40,9 @@
     </record>
 
     <record id="account_tax_purchase_vat1" model="account.tax.template">
-        <field name="name">НӨАТ-тэй худалдан авалт</field>
+        <field name="name">Purchase with VAT</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">1</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -78,9 +78,9 @@
     </record>
 
     <record id="account_tax_purchase_vat2" model="account.tax.template">
-        <field name="name">НӨАТ-гүй худалдан авалт</field>
+        <field name="name">Purchase without VAT</field>
         <field name="amount">0.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -112,9 +112,9 @@
     </record>
 
     <record id="account_tax_sale_vat2" model="account.tax.template">
-        <field name="name">НӨАТ 0% борлуулалт</field>
+        <field name="name">VAT 0% sales</field>
         <field name="amount">0.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -146,9 +146,9 @@
     </record>
 
     <record id="account_tax_sale_vat3" model="account.tax.template">
-        <field name="name">НӨАТ чөлөөлөх борлуулалт</field>
+        <field name="name">VAT exempt sales</field>
         <field name="amount">0.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -180,9 +180,9 @@
     </record>
 
     <record id="account_tax_sale_vat4" model="account.tax.template">
-        <field name="name">НӨАТ бусад барааны борлуулалт</field>
+        <field name="name">VAT sales of other goods</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -218,9 +218,9 @@
     </record>
 
     <record id="account_tax_sale_vat5" model="account.tax.template">
-        <field name="name">НӨАТ эрх борлуулалт</field>
+        <field name="name">VAT sales</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -256,9 +256,9 @@
     </record>
 
     <record id="account_tax_sale_vat6" model="account.tax.template">
-        <field name="name">НӨАТ татан буугдах үеийн борлуулалт</field>
+        <field name="name">Sales during VAT liquidation</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -294,9 +294,9 @@
     </record>
 
     <record id="account_tax_sale_vat7" model="account.tax.template">
-        <field name="name">НӨАТ өрийн төлбөрт өгсөн бараа</field>
+        <field name="name">Goods given in payment of VAT debt</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -332,9 +332,9 @@
     </record>
 
     <record id="account_tax_sale_vat8" model="account.tax.template">
-        <field name="name">НӨАТ нотариат үйлчилгээ</field>
+        <field name="name">VAT notary services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -370,9 +370,9 @@
     </record>
 
     <record id="account_tax_sale_vat9" model="account.tax.template">
-        <field name="name">НӨАТ өрийн төлбөрт өгсөн үйлчилгээ</field>
+        <field name="name">Services provided for payment of VAT debts</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -408,9 +408,9 @@
     </record>
 
     <record id="account_tax_sale_vat10" model="account.tax.template">
-        <field name="name">НӨАТ цахилгаан, дулаан, ус, шуудан, холбоо</field>
+        <field name="name">VAT electricity, heat, water, post, communications</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -446,9 +446,9 @@
     </record>
 
     <record id="account_tax_sale_vat11" model="account.tax.template">
-        <field name="name">НӨАТ бараа түрээслүүлэх, эзэмшүүлэх</field>
+        <field name="name">Renting and owning VAT goods</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -484,9 +484,9 @@
     </record>
 
     <record id="account_tax_sale_vat12" model="account.tax.template">
-        <field name="name">НӨАТ байр түрээслүүлэх, эзэмшүүлэх</field>
+        <field name="name">Renting and owning VAT premises</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -522,9 +522,9 @@
     </record>
 
     <record id="account_tax_sale_vat13" model="account.tax.template">
-        <field name="name">НӨАТ хөрөнгө түрээслүүлэх, эзэмшүүлэх</field>
+        <field name="name">Leasing and ownership of VAT assets</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -560,9 +560,9 @@
     </record>
 
     <record id="account_tax_sale_vat14" model="account.tax.template">
-        <field name="name">НӨАТ бүтээл, загвар, зохиогчийн эрх</field>
+        <field name="name">VAT works, designs and copyrights</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -598,9 +598,9 @@
     </record>
 
     <record id="account_tax_sale_vat15" model="account.tax.template">
-        <field name="name">НӨАТ хонжворт сугалаа, таавар, бооцоо</field>
+        <field name="name">VAT Lotteries, Riddles and Bets</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -636,9 +636,9 @@
     </record>
 
     <record id="account_tax_sale_vat16" model="account.tax.template">
-        <field name="name">НӨАТ зуучлалын үйлчилгээ</field>
+        <field name="name">VAT mediation services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -674,9 +674,9 @@
     </record>
 
     <record id="account_tax_sale_vat17" model="account.tax.template">
-        <field name="name">НӨАТ авсан хүү торгууль, алданги</field>
+        <field name="name">Interest, penalties and interest on VAT</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -712,9 +712,9 @@
     </record>
 
     <record id="account_tax_sale_vat18" model="account.tax.template">
-        <field name="name">НӨАТ хөрөнгийн үнэлгээний үйлчилгээ</field>
+        <field name="name">VAT Asset Valuation Services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -750,9 +750,9 @@
     </record>
 
     <record id="account_tax_sale_vat19" model="account.tax.template">
-        <field name="name">НӨАТ төсвийн санхүүжилт, татаас</field>
+        <field name="name">VAT budget financing and subsidies</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -788,9 +788,9 @@
     </record>
 
     <record id="account_tax_sale_vat20" model="account.tax.template">
-        <field name="name">НӨАТ хууль зүйн үйлчилгээ</field>
+        <field name="name">VAT legal services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -826,9 +826,9 @@
     </record>
 
     <record id="account_tax_sale_vat21" model="account.tax.template">
-        <field name="name">НӨАТ үсчин, гоо сайхан, угаалга, цэвэрлэгээ</field>
+        <field name="name">VAT hairdressing, beauty, laundry and cleaning</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -864,9 +864,9 @@
     </record>
 
     <record id="account_tax_sale_vat22" model="account.tax.template">
-        <field name="name">НӨАТ бусад үйлчилгээ</field>
+        <field name="name">VAT other services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">20</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -902,9 +902,9 @@
     </record>
 
     <record id="account_tax_sale_vat23" model="account.tax.template">
-        <field name="name">НӨАТ 0% экспорт бараа</field>
+        <field name="name">VAT 0% export goods</field>
         <field name="amount">0.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">30</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -936,9 +936,9 @@
     </record>
 
     <record id="account_tax_sale_vat24" model="account.tax.template">
-        <field name="name">НӨАТ 0% экспорт үйлчилгээ</field>
+        <field name="name">VAT 0% export service</field>
         <field name="amount">0.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">30</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -970,9 +970,9 @@
     </record>
 
     <record id="account_tax_purchase_vat3" model="account.tax.template">
-        <field name="name">НӨАТ импортоор авсан бараа, үйлчилгээ</field>
+        <field name="name">VAT on imported goods and services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1008,9 +1008,9 @@
     </record>
 
     <record id="account_tax_purchase_vat4" model="account.tax.template">
-        <field name="name">НӨАТ төлөгчөөр бүртгүүлэх үед худалдан авсан</field>
+        <field name="name">Purchased at the time of VAT registration</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1046,9 +1046,9 @@
     </record>
 
     <record id="account_tax_purchase_vat5" model="account.tax.template">
-        <field name="name">НӨАТ мал аж ахуй эрхлэгчээс худалдан авсан</field>
+        <field name="name">VAT was purchased from a livestock farmer</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1084,9 +1084,9 @@
     </record>
 
     <record id="account_tax_purchase_vat6" model="account.tax.template">
-        <field name="name">машин,тоног төхөөрөмж</field>
+        <field name="name">machinery and equipment</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1122,9 +1122,9 @@
     </record>
 
     <record id="account_tax_purchase_vat7" model="account.tax.template">
-        <field name="name">бусад үндсэн хөрөнгө</field>
+        <field name="name">other fixed assets</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1160,9 +1160,9 @@
     </record>
 
     <record id="account_tax_purchase_vat8" model="account.tax.template">
-        <field name="name">Хайгуул үнэлгээний хөрөнгө</field>
+        <field name="name">Exploratory appraisal assets</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1198,9 +1198,9 @@
     </record>
 
     <record id="account_tax_purchase_vat9" model="account.tax.template">
-        <field name="name">НӨАТ автомашин, эд анги худалдан авалт</field>
+        <field name="name">VAT purchase of cars and parts</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1236,9 +1236,9 @@
     </record>
 
     <record id="account_tax_purchase_vat10" model="account.tax.template">
-        <field name="name">НӨАТ чөлөөлөгдөх үйлдвэрлэлд зориулсан бараа, үйлчилгээ</field>
+        <field name="name">Goods and services for VAT-exempt production</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1274,9 +1274,9 @@
     </record>
 
     <record id="account_tax_purchase_vat11" model="account.tax.template">
-        <field name="name">НӨАТ хайгуулд зориулсан импортын бараа, үйлчилгээ</field>
+        <field name="name">Imported goods and services for VAT exploration</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1312,9 +1312,9 @@
     </record>
 
     <record id="account_tax_purchase_vat12" model="account.tax.template">
-        <field name="name">НӨАТ импортын бусад хамааралгүй бараа, үйлчилгээ</field>
+        <field name="name">Other non-VAT imported goods and services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">40</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1350,9 +1350,9 @@
     </record>
 
     <record id="account_tax_sale_vat25" model="account.tax.template">
-        <field name="name">НӨАТ дотоодод зарсан санхүүгийн түрээс</field>
+        <field name="name">VAT domestically sold finance lease</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">50</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -1388,9 +1388,9 @@
     </record>
 
     <record id="account_tax_sale_vat26" model="account.tax.template">
-        <field name="name">НӨАТ Факторинг, форфайтинг хэлцлийн үйлчилгээ</field>
+        <field name="name">VAT factoring and forfeiting services</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">50</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -1426,9 +1426,9 @@
     </record>
 
     <record id="account_tax_purchase_vat13" model="account.tax.template">
-        <field name="name">НӨАТ Санхүүгийн түрээсийн худалдан авалт</field>
+        <field name="name">VAT Finance Lease Purchase</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">50</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1464,9 +1464,9 @@
     </record>
 
     <record id="account_tax_purchase_vat14" model="account.tax.template">
-        <field name="name">форфайтинг зэрэг тэдгээртэй адилтгах хэлцлийн үйлчилгээний орлого</field>
+        <field name="name">revenue from similar transaction services such as forfeiture</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">50</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1502,9 +1502,10 @@
     </record>
 
     <record id="account_tax_purchase_vat15" model="account.tax.template">
-        <field name="name">түрээсийн зүйлийг санхүүгийн түрээсээр дотоодын зах зээлээс худалдан авахад төлсөн түрээсийн төлбөр</field>
+        <field name="name">rent paid to purchase the leased item in the domestic market under a
+            financial lease</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">50</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1540,9 +1541,10 @@
     </record>
 
     <record id="account_tax_purchase_vat16" model="account.tax.template">
-        <field name="name">Факторинг, форфайтинг зэрэг тэдгээртэй адилтгах хэлцлийг худалдан авахад төлсөн төлбөр</field>
+        <field name="name">Fees paid to purchase similar transactions such as factoring and
+            forfeiting</field>
         <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
+        <field name="price_include" eval="1" />
         <field name="sequence">50</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
