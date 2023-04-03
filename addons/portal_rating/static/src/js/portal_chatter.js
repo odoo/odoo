@@ -3,7 +3,6 @@
 import core from "web.core";
 import portalChatter from "portal.chatter";
 import { roundPrecision } from "@web/core/utils/numbers";
-import time from "web.time";
 
 var _t = core._t;
 var PortalChatter = portalChatter.PortalChatter;
@@ -192,17 +191,13 @@ PortalChatter.include({
         var ratingData = {
             id: rawRating.id,
             mes_index: messageIndex,
-            publisher_datetime: rawRating.publisher_datetime ? moment(time.str_to_datetime(rawRating.publisher_datetime)).format('MMMM Do YYYY, h:mm:ss a') : "",
-            publisher_comment: rawRating.publisher_comment ? rawRating.publisher_comment : '',
+            publisher_avatar: rawRating.publisher_avatar,
+            publisher_comment: rawRating.publisher_comment,
+            publisher_datetime: rawRating.publisher_datetime,
+            publisher_id: rawRating.publisher_id,
+            publisher_name: rawRating.publisher_name,
         };
-
-        // split array (id, display_name) of publisher_id into publisher_id and publisher_name
-        if (rawRating.publisher_id && rawRating.publisher_id.length >= 2) {
-            ratingData.publisher_id = rawRating.publisher_id[0];
-            ratingData.publisher_name = rawRating.publisher_id[1];
-            ratingData.publisher_avatar = `/web/image/res.partner/${ratingData.publisher_id}/avatar_128/50x50`;
-        }
-        var commentData = Object.assign(this._newPublisherCommentData(messageIndex), ratingData);
+        var commentData = {...this._newPublisherCommentData(messageIndex), ...ratingData};
         return commentData;
     },
 
