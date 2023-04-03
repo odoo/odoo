@@ -386,6 +386,19 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 9, 1, 0), datetime(2019, 11, 12, 18, 0)),
         ])
 
+    def test_shift_stop_all(self):
+        # testing the case where we only want to update the stop time
+        event = self.events[0]
+        event.write({
+            'recurrence_update': 'all_events',
+            'stop': event.stop + relativedelta(hours=1),
+        })
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2019, 10, 22, 2, 0), datetime(2019, 10, 24, 19, 0)),
+            (datetime(2019, 10, 29, 2, 0), datetime(2019, 10, 31, 19, 0)),
+            (datetime(2019, 11, 5, 2, 0), datetime(2019, 11, 7, 19, 0)),
+        ])
+
     def test_change_week_day_rrule(self):
         recurrence = self.events.recurrence_id
         recurrence.rrule = 'FREQ=WEEKLY;COUNT=3;BYDAY=WE' # from TU to WE
