@@ -459,31 +459,74 @@ function classToStyle($editable, cssRules) {
  * @param {Element} editable
  */
 function enforceTablesResponsivity(editable) {
-    for (const tr of editable.querySelectorAll('tr')) {
-        tr.style.setProperty('width', '100%');
-    }
-    for (const td of editable.querySelectorAll('td[colspan]')) {
-        const colspan = +td.getAttribute('colspan');
-        const tdSiblings = [...td.parentElement.children].filter(child => child.nodeName === 'TD');
-        if ( // Don't allow little duos of columns to wrap (eg., col-2 col-10).
-            colspan > 2 && colspan < 10 || tdSiblings.length > 2
-            || tdSiblings.some(td => [...td.children].some(child => child.style.width === '100%')) // Unless they have a full width child.
-           ) {
-            td.setAttribute('width', '100%');
-            td.style.setProperty('width', '100%');
-            td.style.setProperty('display', 'inline-block'); // Allow cells to wrap.
-        } else if (td.getAttribute('width') === '100%') {
-            if (td.children.length === 1 && td.firstElementChild.nodeName === 'IMG') {
-                const width = td.firstElementChild.getAttribute('width');
-                td.setAttribute('width', width);
-                td.style.removeProperty('width');
-                td.style.setProperty('min-width', width + 'px');
+    // Trying this: https://www.litmus.com/blog/mobile-responsive-email-stacking/
+    const trs = [...editable.querySelectorAll('.o_mail_wrapper tr')].reverse();
+    for (const tr of trs) {
+        const commonTable = _createTable();
+        const commonTr = document.createElement('tr');
+        const commonTd = document.createElement('td');
+        commonTr.appendChild(commonTd);
+        commonTable.appendChild(commonTr);
+        const tds = [...tr.children].filter(child => child.nodeName === 'TD');
+        let index = 0;
+        for (const td of tds) {
+            const width = td.style.maxWidth;;
+            const div = document.createElement('div');
+            div.style.display = 'inline-block';
+            div.style.verticalAlign = 'top';
+            div.classList.toggle('w100p', true);
+            commonTd.appendChild(div);
+            const newTable = _createTable();
+            newTable.style.width = width
+            newTable.classList.toggle('w100p', true);
+            div.appendChild(newTable);
+            const newTr = document.createElement('tr');
+            newTable.appendChild(newTr);
+            newTr.appendChild(td);
+            td.style.width = '100%';
+            td.removeAttribute('width');
+            if (index === 0) {
+                div.before(_createMso(`
+                    <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
+                        <tr>
+                            <td valign="top" style="width: ${width};">`));
             } else {
-                td.removeAttribute('width');
-                td.style.removeProperty('width');
+                div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
+                if (index === tds.length - 1) {
+                    div.after(_createMso(`</td></tr></table>`));
+                }
             }
+            index++;
         }
+        const topTd = document.createElement('td');
+        topTd.appendChild(commonTable);
+        tr.prepend(topTd);
     }
+    // for (const tr of editable.querySelectorAll('tr')) {
+    //     tr.style.setProperty('width', '100%');
+    // }
+    // for (const td of editable.querySelectorAll('td[colspan]')) {
+    //     const colspan = +td.getAttribute('colspan');
+    //     const tdSiblings = [...td.parentElement.children].filter(child => child.nodeName === 'TD');
+    //     if ( // Don't allow little duos of columns to wrap (eg., col-2 col-10).
+    //         colspan > 2 && colspan < 10 || tdSiblings.length > 2
+    //         || tdSiblings.some(td => [...td.children].some(child => child.style.width === '100%')) // Unless they have a full width child.
+    //        ) {
+    //         td.setAttribute('width', '100%');
+    //         td.style.setProperty('width', '100%');
+    //         td.style.setProperty('display', 'inline-block'); // Allow cells to wrap.
+    //     } else if (td.getAttribute('width') === '100%') {
+    //         if (td.children.length === 1 && td.firstElementChild.nodeName === 'IMG') {
+    //             const width = td.firstElementChild.getAttribute('width');
+    //             td.setAttribute('width', width);
+    //             td.style.removeProperty('width');
+    //             td.style.setProperty('min-width', width + 'px');
+    //         } else {
+    //             td.removeAttribute('width');
+    //             td.style.removeProperty('width');
+    //         }
+    //     }
+    // }
 }
 /**
  * Modify the styles of images so they are responsive.
@@ -631,10 +674,10 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
-    flattenBackgroundImages(editable);
     handleMasonry(editable);
-    responsiveToStaticForOutlook(editable);
     enforceTablesResponsivity(editable);
+    flattenBackgroundImages(editable);
+    responsiveToStaticForOutlook(editable);
     formatTables($editable);
     // Fix outlook image rendering bug (this change will be kept in both
     // fields).
