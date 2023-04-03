@@ -498,3 +498,74 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     }
                 ],
             })
+
+    def test_intracomm_bill_with_early_payment_included(self):
+        self.env.company.early_pay_discount_computation = 'included'
+
+        tax_tags = self.env['account.account.tag'].create({
+            'name': f'tax_tag_{i}',
+            'applicability': 'taxes',
+            'country_id': self.env.company.account_fiscal_country_id.id,
+        } for i in range(6))
+
+        intracomm_tax = self.env['account.tax'].create({
+            'name': 'tax20',
+            'amount_type': 'percent',
+            'amount': 20,
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': [
+                # pylint: disable=bad-whitespace
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0,    'tag_ids': [Command.set(tax_tags[0].ids)]}),
+                Command.create({'repartition_type': 'tax',  'factor_percent': 100.0,    'tag_ids': [Command.set(tax_tags[1].ids)]}),
+                Command.create({'repartition_type': 'tax',  'factor_percent': -100.0,   'tag_ids': [Command.set(tax_tags[2].ids)]}),
+            ],
+            'refund_repartition_line_ids': [
+                # pylint: disable=bad-whitespace
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0,    'tag_ids': [Command.set(tax_tags[3].ids)]}),
+                Command.create({'repartition_type': 'tax',  'factor_percent': 100.0,    'tag_ids': [Command.set(tax_tags[4].ids)]}),
+                Command.create({'repartition_type': 'tax',  'factor_percent': -100.0,   'tag_ids': [Command.set(tax_tags[5].ids)]}),
+            ],
+        })
+
+        early_payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'company_id': self.company_data['company'].id,
+            'line_ids': [
+                Command.create({
+                    'value': 'balance',
+                    'days': 30,
+                    'discount_percentage': 2,
+                    'discount_days': 7,
+                }),
+            ],
+        })
+
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': early_payment_term.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(intracomm_tax.ids)],
+                }),
+            ],
+        })
+        bill.action_post()
+
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=bill.ids)\
+            .create({'payment_date': '2019-01-01'})\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # pylint: disable=bad-whitespace
+            {'amount_currency': -980.0, 'tax_ids': [],                  'tax_tag_ids': [],              'tax_tag_invert': False},
+            {'amount_currency': -20.0,  'tax_ids': intracomm_tax.ids,   'tax_tag_ids': tax_tags[3].ids, 'tax_tag_invert': True},
+            {'amount_currency': -4.0,   'tax_ids': [],                  'tax_tag_ids': tax_tags[4].ids, 'tax_tag_invert': True},
+            {'amount_currency': 4.0,    'tax_ids': [],                  'tax_tag_ids': tax_tags[5].ids, 'tax_tag_invert': True},
+            {'amount_currency': 1000.0, 'tax_ids': [],                  'tax_tag_ids': [],              'tax_tag_invert': False},
+        ])

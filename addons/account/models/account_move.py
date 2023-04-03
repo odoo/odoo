@@ -2812,9 +2812,14 @@ class AccountMove(models.Model):
         def grouping_key_generator(base_line, tax_values):
             return self.env['account.tax']._get_generation_dict_from_base_line(base_line, tax_values)
 
+        def inverse_tax_rep(tax_rep):
+            tax = tax_rep.tax_id
+            index = list(tax.invoice_repartition_line_ids).index(tax_rep)
+            return tax.refund_repartition_line_ids[index]
+
         # Get the current tax amounts in the current invoice.
         tax_amounts = {
-            line.tax_repartition_line_id.id: {
+            inverse_tax_rep(line.tax_repartition_line_id).id: {
                 'amount_currency': line.amount_currency,
                 'balance': line.balance,
             }
@@ -2822,7 +2827,13 @@ class AccountMove(models.Model):
         }
 
         product_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        base_lines = [x._convert_to_tax_base_line_dict() for x in product_lines]
+        base_lines = [
+            {
+                **x._convert_to_tax_base_line_dict(),
+                'is_refund': True,
+            }
+            for x in product_lines
+        ]
         for base_line in base_lines:
             base_line['taxes'] = base_line['taxes'].filtered(lambda t: t.amount_type != 'fixed')
 
@@ -2933,6 +2944,7 @@ class AccountMove(models.Model):
                         'name': _("Early Payment Discount (%s)", tax.name),
                         'amount_currency': aml.currency_id.round(tax_detail['amount_currency'] * percentage_paid),
                         'balance': aml.company_currency_id.round(tax_detail['balance'] * percentage_paid),
+                        'tax_tag_invert': True,
                     }
 
                 for grouping_dict, base_detail in base_per_percentage[aml.discount_percentage].items():
