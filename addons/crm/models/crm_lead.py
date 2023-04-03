@@ -1809,6 +1809,13 @@ class Lead(models.Model):
             pass
         return recipients
 
+    def _message_merging_leads_failed(self, body):
+        subject = _('Lead Merge Failure Report')
+        self[0].message_post(body=body, subject=subject)
+        for lead in self[1:]:
+            lead._message_log(body=body, subject=subject)
+        return
+
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
