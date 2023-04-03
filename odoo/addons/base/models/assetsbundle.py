@@ -196,6 +196,7 @@ class AssetsBundle(object):
                 ["data-src" if lazy_load else "src", src],
                 ['data-asset-bundle', self.name],
                 ['data-asset-version', self.version],
+                ['onerror', '__odooAssetError=1']
             ])
             response.append(("script", attr, None))
 
