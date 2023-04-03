@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -26,6 +30,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
+    date = fields.Date(tracking=True)
 
     @api.depends('amount_total')
     def _compute_amount_total_words(self):
@@ -125,3 +130,12 @@ class AccountMove(models.Model):
                 if not move.l10n_in_state_id:
                     move.l10n_in_state_id = company_unit_partner.state_id
         return posted
+
+    def unlink(self):
+        # Prevent deleting entries once it's posted for Indian Company only
+        if any(m.country_code == 'IN' and m.posted_before for m in self):
+            if self._context.get('force_delete'):
+                moves_name = ", ".join("%s (%s)" % (m.name, m.id) for m in self)
+                _logger.info(_('Force Delete Journal Entrys %s by %s (%s)', moves_name, self.env.user.name, self.env.user.id))
+            else:
+                raise UserError(_("To keep the audit trail rules you can not delete journal entries once they have been posted."))
