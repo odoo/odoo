@@ -4,7 +4,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
@@ -56,9 +55,11 @@ export class KanbanRenderer extends Component {
         "noContentHelp?",
         "scrollTop?",
         "canQuickCreate?",
+        "quickCreateState?",
     ];
     static defaultProps = {
         scrollTop: () => {},
+        quickCreateState: { groupId: false },
     };
 
     setup() {
@@ -247,6 +248,9 @@ export class KanbanRenderer extends Component {
             return true;
         }
         if (isGrouped) {
+            if (this.props.quickCreateState.groupId) {
+                return false;
+            }
             if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
                 return false;
             }
@@ -409,45 +413,26 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     quickCreate(group) {
-        return this.props.list.quickCreate(group);
+        this.props.quickCreateState.groupId = group.id;
     }
 
-    async validateQuickCreate(mode, group) {
-        const values = group.quickCreateRecord.data;
-        let record = group.quickCreateRecord;
-        try {
-            record = await group.validateQuickCreate(record, mode);
-        } catch (e) {
-            // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
-            if (!(e instanceof RPCError)) {
-                throw e;
-            }
-            const context = { ...group.context };
-            context[`default_${group.groupByField.name}`] = group.value;
-            context.default_name = values.name || values.display_name;
-            this.dialogClose.push(
-                this.dialog.add(
-                    FormViewDialog,
-                    {
-                        resModel: this.props.list.resModel,
-                        context,
-                        title: this.env._t("Create"),
-                        onRecordSaved: async (record) => {
-                            await group.addExistingRecord(record.resId, true);
-                        },
-                    },
-                    {
-                        onClose: () => {
-                            this.props.list.quickCreate(group);
-                        },
-                    }
-                )
-            );
+    async validateQuickCreate(recordId, mode, group) {
+        this.props.quickCreateState.groupId = false;
+        if (mode === "add") {
+            this.props.quickCreateState.groupId = group.id;
         }
-
-        if (mode === "edit" && record) {
+        const record = await group.addExistingRecord(recordId, true);
+        group.model.bus.trigger("group-updated", {
+            group: group,
+            withProgressBars: true,
+        });
+        if (mode === "edit") {
             await this.props.openRecord(record, "edit");
         }
+    }
+
+    cancelQuickCreate() {
+        this.props.quickCreateState.groupId = false;
     }
 
     toggleGroup(group) {

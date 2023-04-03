@@ -1691,8 +1691,8 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
-            "onchange", // reopen the quick create automatically
             "read", // read the created record
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -1721,7 +1721,7 @@ QUnit.module("Views", (hooks) => {
                 assert.step(args.method || route);
                 if (args.method === "create") {
                     assert.deepEqual(
-                        args.args[0],
+                        args.args,
                         [
                             {
                                 foo: "new partner",
@@ -1771,35 +1771,40 @@ QUnit.module("Views", (hooks) => {
             "onchange", // quick create
             "create", // should perform a create to create the record
             "read",
-            "onchange", // new quick create
             "read", // read the created record
+            "onchange", // new quick create
         ]);
     });
 
     QUnit.test("quick create record flickering", async (assert) => {
         let def;
-        serverData.views["partner,some_view_ref,form"] =
-            "<form>" +
-            '<field name="foo"/>' +
-            '<field name="int_field"/>' +
-            '<field name="state" widget="priority"/>' +
-            "</form>";
+        serverData.views["partner,some_view_ref,form"] = `
+            <form>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="state" widget="priority"/>
+            </form>`;
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
-                '<field name="bar"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates></kanban>",
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             groupBy: ["bar"],
             async mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.deepEqual(
-                        args.args[0],
+                        args.args,
                         [
                             {
                                 foo: "new partner",
@@ -1835,7 +1840,7 @@ QUnit.module("Views", (hooks) => {
         await click(quickCreate, ".o_field_widget[name=state] .o_priority_star:first-child");
         def = makeDeferred();
         await validateRecord();
-        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
         def.resolve();
         await nextTick();
@@ -1996,8 +2001,8 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
-            "onchange", // reopen the quick create automatically
             "read", // read the created record
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2026,7 +2031,7 @@ QUnit.module("Views", (hooks) => {
                 assert.step(method || route);
                 if (method === "create") {
                     assert.deepEqual(
-                        args[0],
+                        args,
                         [
                             {
                                 foo: "new partner",
@@ -2067,8 +2072,8 @@ QUnit.module("Views", (hooks) => {
             "onchange", // quick create
             "create", // should perform a create to create the record
             "read",
-            "onchange", // reopen the quick create automatically
             "read", // read the created record
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2123,9 +2128,9 @@ QUnit.module("Views", (hooks) => {
             "read", // read display_name of categories
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
-            "onchange", // reopen the quick create automatically
             "read",
             "read", // read the created record
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2183,8 +2188,8 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // read records when unfolding 'None'
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
-            "onchange", // reopen the quick create automatically
             "read", // read the created record
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2210,7 +2215,7 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
                 if (method === "create") {
-                    assert.deepEqual(args[0], [
+                    assert.deepEqual(args, [
                         {
                             foo: "new partner",
                         },
@@ -2247,8 +2252,8 @@ QUnit.module("Views", (hooks) => {
             "get_views", // get form view
             "onchange", // quick create
             "create", // should perform a create to create the record
-            "onchange", // reopen the quick create automatically
             "read", // read the created record
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2275,7 +2280,7 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
                 if (method === "create") {
-                    assert.deepEqual(args[0], [
+                    assert.deepEqual(args, [
                         {
                             category_ids: [[6, false, [6]]],
                             foo: "new partner",
@@ -2322,8 +2327,8 @@ QUnit.module("Views", (hooks) => {
             "onchange", // quick create
             "read",
             "create", // should perform a create to create the record
-            "onchange",
             "read",
+            "onchange",
             "read",
         ]);
     });
@@ -2519,7 +2524,7 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("foo", "new partner");
         assert.verifySteps(["onchange"]);
         await validateRecord();
-        assert.verifySteps(["create", "onchange", "read"]);
+        assert.verifySteps(["create", "read", "onchange"]);
     });
 
     QUnit.test("quick create record and change state in grouped mode", async (assert) => {
@@ -2968,7 +2973,7 @@ QUnit.module("Views", (hooks) => {
                         }
                         case "create": {
                             assert.step(method);
-                            const [values] = args[0];
+                            const values = args[0];
                             assert.strictEqual(values.foo, "new partner");
                             assert.strictEqual(values.int_field, 3);
                             break;
@@ -3075,7 +3080,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     if (args.method === "create") {
                         assert.step("create");
-                        assert.deepEqual(_.pick(args.args[0][0], "foo", "int_field"), {
+                        assert.deepEqual(_.pick(args.args[0], "foo", "int_field"), {
                             foo: "new partner",
                             int_field: 3,
                         });
@@ -4078,7 +4083,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["foo"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], [{ foo: "blip" }]);
+                        assert.deepEqual(args, [{ foo: "blip" }]);
                         assert.strictEqual(kwargs.context.default_foo, "blip");
                     }
                 },
@@ -4120,7 +4125,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], [{ bar: true }]);
+                        assert.deepEqual(args, [{ bar: true }]);
                         assert.strictEqual(kwargs.context.default_bar, true);
                     }
                 },
@@ -4166,7 +4171,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["state"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], [{ state: "abc" }]);
+                        assert.deepEqual(args, [{ state: "abc" }]);
                         assert.strictEqual(kwargs.context.default_state, "abc");
                     }
                 },
@@ -4241,9 +4246,7 @@ QUnit.module("Views", (hooks) => {
         // click to add a new record
         await createRecord();
 
-        // should wait for the column to be created (and view to be re-rendered
-        // before opening the quick create
-        assert.containsNone(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_quick_create");
 
         // unlock column creation
         prom.resolve();

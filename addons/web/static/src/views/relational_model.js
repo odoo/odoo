@@ -16,12 +16,10 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
-import { memoize } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { getFieldFromRegistry } from "@web/views/fields/field";
-import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { ListConfirmationDialog } from "@web/views/list/list_confirmation_dialog";
 import { Model } from "@web/views/model";
 import { evalDomain, isNumeric, isRelational, isX2Many, orderByToString } from "@web/views/utils";
@@ -33,16 +31,6 @@ const preloadedDataRegistry = registry.category("preloadedData");
 const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
 const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 const DEFAULT_HANDLE_FIELD = "sequence";
-const DEFAULT_QUICK_CREATE_FIELDS = {
-    display_name: { string: "Display name", type: "char" },
-};
-const DEFAULT_QUICK_CREATE_VIEW = {
-    // note: the required modifier is written in the format returned by the server
-    arch: /* xml */ `
-        <form>
-            <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
-        </form>`,
-};
 
 /**
  * @typedef {import("@web/core/context").ContextDescription} ContextDescription
@@ -1451,18 +1439,8 @@ export class Record extends DataPoint {
         const context = this.context;
 
         if (this.isNew) {
-            if (keys.length === 1 && keys[0] === "display_name") {
-                const [resId] = await this.model.orm.call(
-                    this.resModel,
-                    "name_create",
-                    [changes.display_name],
-                    { context: this.context }
-                );
-                this.resId = resId;
-            } else {
-                const [resId] = await this.model.orm.create(this.resModel, [changes], { context });
-                this.resId = resId;
-            }
+            const [resId] = await this.model.orm.create(this.resModel, [changes], { context });
+            this.resId = resId;
             delete this.virtualId;
             this.data.id = this.resId;
             this.resIds.push(this.resId);
@@ -2070,15 +2048,6 @@ export class DynamicRecordList extends DynamicList {
         this.model.notify();
     }
 
-    async quickCreate(activeFields, context) {
-        await this.model.mutex.getUnlockedDef();
-        const rawContext = {
-            parent: this.rawContext,
-            make: () => makeContext([context, {}]),
-        };
-        return this.createRecord({ activeFields, rawContext, isInQuickCreation: true }, true);
-    }
-
     /**
      * @param {Record} record
      * @returns {Record}
@@ -2189,7 +2158,6 @@ export class DynamicGroupList extends DynamicList {
         /** @type {Group[]} */
         this.groups = state.groups || [];
         this.isGrouped = true;
-        this.quickCreateInfo = null; // Lazy loaded;
         this.expand = params.expand;
         this.limitByGroup = this.limit;
         this.limit =
@@ -2214,8 +2182,6 @@ export class DynamicGroupList extends DynamicList {
                 };
                 return onRemoveRecord;
             });
-
-        this._loadQuickCreateView = memoize(this._loadQuickCreateView.bind(this));
     }
 
     // -------------------------------------------------------------------------
@@ -2332,29 +2298,6 @@ export class DynamicGroupList extends DynamicList {
 
     get nbTotalRecords() {
         return this.groups.reduce((acc, group) => acc + group.count, 0);
-    }
-
-    async quickCreate(group) {
-        group = group || this.groups[0];
-        if (this.model.useSampleModel) {
-            // Empty the groups because they contain sample data
-            this.groups.forEach((g) => g.empty());
-        }
-        this.model.useSampleModel = false;
-        const { isFolded } = group;
-        this.quickCreateInfo = await this._loadQuickCreateView();
-        if (isFolded !== group.isFolded) {
-            // Group has been manually (un)folded => drop the quickCreate action
-            return;
-        }
-        if (isFolded) {
-            await group.toggle();
-        }
-        group.quickCreateRecord = await group.quickCreate(
-            this.quickCreateInfo.activeFields,
-            this.context
-        );
-        this.model.notify();
     }
 
     /**
@@ -2582,28 +2525,6 @@ export class DynamicGroupList extends DynamicList {
             this.model.createDataPoint("group", params, state)
         );
     }
-
-    async _loadQuickCreateView() {
-        const { quickCreateView: viewRef } = this.model;
-        let quickCreateFields = DEFAULT_QUICK_CREATE_FIELDS;
-        let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
-        let quickCreateRelatedModels = {};
-        if (viewRef) {
-            const { fields, relatedModels, views } = await this.model.viewService.loadViews({
-                context: { ...this.context, form_view_ref: viewRef },
-                resModel: this.resModel,
-                views: [[false, "form"]],
-            });
-            quickCreateFields = fields;
-            quickCreateForm = views.form;
-            quickCreateRelatedModels = relatedModels;
-        }
-        const models = {
-            ...quickCreateRelatedModels,
-            [this.modelName]: quickCreateFields,
-        };
-        return new FormArchParser().parse(quickCreateForm.arch, models, this.modelName);
-    }
 }
 
 DynamicGroupList.DEFAULT_LOAD_LIMIT = 10;
@@ -2777,21 +2698,6 @@ export class Group extends DataPoint {
             onWillSaveRecord: this.onWillSaveRecord,
             ...params,
         });
-    }
-
-    quickCreate(activeFields, context) {
-        const ctx = {
-            ...context,
-            [`default_${this.groupByField.name}`]: this.getServerValue(),
-        };
-        return this.list.quickCreate(activeFields, ctx);
-    }
-
-    async cancelQuickCreate(force = false) {
-        if (this.quickCreateRecord && (force || !this.quickCreateRecord.isDirty)) {
-            this.quickCreateRecord = null;
-            this.model.notify();
-        }
     }
 
     /**
@@ -3507,7 +3413,6 @@ export class RelationalModel extends Model {
 
         this.onCreate = params.onCreate;
         this.multiEdit = params.multiEdit || false;
-        this.quickCreateView = params.quickCreateView;
         this.defaultGroupBy = params.defaultGroupBy || false;
         this.defaultOrderBy = params.defaultOrder;
         this.handleField = params.handleField;
