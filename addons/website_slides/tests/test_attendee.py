@@ -225,6 +225,21 @@ class TestAttendee(common.SlidesCase):
         self.assertTrue(joined_cp.partner_id in partner_all_ids)
         self.assertTrue(invited_cp.partner_id in partner_all_ids)
 
+    def test_copy_partner_not_course_member(self):
+        """ To check members of the channel after duplication of contact """
+        # Adding member
+        self.channel._action_add_members(self.customer)
+        self.channel.invalidate_recordset()
+
+        # Member count before copy of contact
+        member_before = self.env['slide.channel.partner'].search_count([])
+
+        # Duplicating the contact
+        self.customer.copy()
+
+        # Member count after copy of contact
+        member_after = self.env['slide.channel.partner'].search_count([])
+        self.assertEqual(member_before, member_after, "Duplicating the contact should not create a new member")
 
 @tagged('-at_install', 'post_install')
 class TestAttendeeCase(HttpCaseWithUserPortal):
