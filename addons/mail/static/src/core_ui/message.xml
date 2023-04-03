@@ -95,7 +95,7 @@
                                 <t t-if="message.type !== 'notification' and !message.isTransient and (!message.isBodyEmpty or message.subtypeDescription)">
                                     <div class="position-relative">
                                         <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                    'bg-info-light border border-info': !message.isSelfAuthored and !message.isNote,
+                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
                                                     'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                         <div class="position-relative" t-att-class="{
