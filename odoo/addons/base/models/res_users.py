@@ -740,7 +740,7 @@ class Users(models.Model):
     def _update_last_login(self):
         # only create new records to avoid any side-effect on concurrent transactions
         # extra records will be deleted by the periodical garbage collection
-        self.env['res.users.log'].create({}) # populated by defaults
+        self.env['res.users.log'].sudo().create({}) # populated by defaults
 
     @api.model
     def _get_login_domain(self, login):

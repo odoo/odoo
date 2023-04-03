@@ -10,7 +10,7 @@ access_account_invoice_report_readonly,account.invoice.report_user,model_account
 access_account_invoice_report_billing,account.invoice.report_billing,model_account_invoice_report,account.group_account_invoice,1,0,0,0
 access_account_invoice_report,account.invoice.report,model_account_invoice_report,account.group_account_manager,1,1,1,1
 
-access_account_incoterms_all,account.incoterms all,model_account_incoterms,,1,0,0,0
+access_account_incoterms_all,account.incoterms all,model_account_incoterms,base.group_user,1,0,0,0
 access_account_incoterms_manager,account.incoterms manager,model_account_incoterms,account.group_account_manager,1,1,1,1
 
 access_account_fiscal_position_product_manager,account.fiscal.position account.manager,model_account_fiscal_position,account.group_account_manager,1,1,1,1
@@ -51,7 +51,7 @@ access_account_analytic_distribution_invoice,account.analytic.distribution invoi
 access_account_journal_readonly,account.journal,model_account_journal,account.group_account_readonly,1,0,0,0
 access_account_journal_manager,account.journal,model_account_journal,account.group_account_manager,1,1,1,1
 access_account_journal_invoice,account.journal invoice,model_account_journal,account.group_account_invoice,1,0,0,0
-access_account_journal_group_all,account.journal.group all,model_account_journal_group,,1,0,0,0
+access_account_journal_group_all,account.journal.group all,model_account_journal_group,account.group_account_readonly,1,0,0,0
 access_account_journal_group_manager,account.journal.group manager,model_account_journal_group,account.group_account_manager,1,1,1,1
 
 access_account_group_manager,account.group,model_account_group,account.group_account_manager,1,1,1,1

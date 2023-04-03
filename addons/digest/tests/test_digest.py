@@ -38,8 +38,8 @@ class TestDigest(TestDigestCommon):
         initial_values = self.all_digests.mapped('kpi_res_users_connected_value')
         self.assertEqual(initial_values, [0, 0, 0])
 
-        self.env['res.users.log'].with_user(self.user_employee).create({})
-        self.env['res.users.log'].with_user(self.user_admin).create({})
+        self.env['res.users'].with_user(self.user_employee)._update_last_login()
+        self.env['res.users'].with_user(self.user_admin)._update_last_login()
 
         self.all_digests.invalidate_recordset()
 
