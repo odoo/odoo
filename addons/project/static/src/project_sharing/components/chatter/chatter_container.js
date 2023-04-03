@@ -124,16 +124,6 @@ export class ChatterContainer extends Component {
     preprocessMessages(messages) {
         return messages.map(m => ({
             ...m,
-            author_avatar_url: sprintf('/web/image/mail.message/%s/author_avatar/50x50', m.id),
-            published_date_str: sprintf(
-                this.env._t('Published on %s'),
-                formatDateTime(
-                    parseDateTime(
-                        m.date,
-                        { format: 'MM-dd-yyy HH:mm:ss' },
-                    ),
-                )
-            ),
             body: markup(m.body),
         }));
     }

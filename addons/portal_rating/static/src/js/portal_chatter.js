@@ -4,7 +4,6 @@ odoo.define('rating.portal.chatter', function (require) {
 var core = require('web.core');
 var portalChatter = require('portal.chatter');
 var utils = require('web.utils');
-var time = require('web.time');
 
 var _t = core._t;
 var PortalChatter = portalChatter.PortalChatter;
@@ -190,16 +189,12 @@ PortalChatter.include({
         var ratingData = {
             id: rawRating.id,
             mes_index: messageIndex,
-            publisher_datetime: rawRating.publisher_datetime ? moment(time.str_to_datetime(rawRating.publisher_datetime)).format('MMMM Do YYYY, h:mm:ss a') : "",
-            publisher_comment: rawRating.publisher_comment ? rawRating.publisher_comment : '',
+            publisher_avatar: rawRating.publisher_avatar,
+            publisher_comment: rawRating.publisher_comment,
+            publisher_datetime: rawRating.publisher_datetime,
+            publisher_id: rawRating.publisher_id,
+            publisher_name: rawRating.publisher_name,
         };
-
-        // split array (id, display_name) of publisher_id into publisher_id and publisher_name
-        if (rawRating.publisher_id && rawRating.publisher_id.length >= 2) {
-            ratingData.publisher_id = rawRating.publisher_id[0];
-            ratingData.publisher_name = rawRating.publisher_id[1];
-            ratingData.publisher_avatar = _.str.sprintf('/web/image/res.partner/%s/avatar_128/50x50', ratingData.publisher_id);
-        }
         var commentData = _.extend(this._newPublisherCommentData(messageIndex), ratingData);
         return commentData;
     },
