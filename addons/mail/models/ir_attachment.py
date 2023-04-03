@@ -49,26 +49,19 @@ class IrAttachment(models.Model):
             })
         self.unlink()
 
-    def _attachment_format(self, legacy=False):
+    def _attachment_format(self):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
-        res_list = []
-        for attachment in self:
-            res = {
+        return [
+            {
                 'checksum': attachment.checksum,
                 'id': attachment.id,
                 'filename': attachment.name,
                 'name': attachment.name,
                 'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-            }
-            if not legacy:
-                res['originThread'] = [('insert', {
+                'originThread': [('insert', {
                     'id': attachment.res_id,
                     'model': attachment.res_model,
-                })]
-            else:
-                res.update({
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
-                })
-            res_list.append(res)
-        return res_list
+                })],
+            }
+            for attachment in self
+        ]
