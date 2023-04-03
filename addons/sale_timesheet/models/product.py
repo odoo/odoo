@@ -3,7 +3,7 @@
 
 import threading
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
 
@@ -68,6 +68,17 @@ class ProductTemplate(models.Model):
                         "project for the order to track the time spent."
                     )
 
+    @api.onchange('type', 'service_type', 'service_policy')
+    def _onchange_service_fields(self):
+        for record in self:
+            if record.type == 'service' and record.service_type == 'timesheet' and \
+               not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
+                record.uom_id = self.env.ref('uom.product_uom_hour')
+            elif record._origin.uom_id:
+                record.uom_id = record._origin.uom_id
+            else:
+                record.uom_id = self._get_default_uom_id()
+
     def _get_service_to_general_map(self):
         return {
             **super()._get_service_to_general_map(),
@@ -114,10 +125,25 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    @tools.ormcache()
+    def _get_default_uom_id(self):
+        return self.env.ref('uom.product_uom_unit')
+
     def _is_delivered_timesheet(self):
         """ Check if the product is a delivered timesheet """
         self.ensure_one()
         return self.type == 'service' and self.service_policy == 'delivered_timesheet'
+
+    @api.onchange('type', 'service_type', 'service_policy')
+    def _onchange_service_fields(self):
+        for record in self:
+            if record.type == 'service' and record.service_type == 'timesheet' and \
+               not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
+                record.uom_id = self.env.ref('uom.product_uom_hour')
+            elif record._origin.uom_id:
+                record.uom_id = record._origin.uom_id
+            else:
+                record.uom_id = self._get_default_uom_id()
 
     @api.onchange('service_policy')
     def _onchange_service_policy(self):
