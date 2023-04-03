@@ -71,6 +71,19 @@ $i: 1;
 @each $font-name, $font-config in $o-theme-font-configs {
     we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
         font-family: o-safe-get($font-config, 'family', $font-family-base);
+<<<<<<< HEAD
+||||||| parent of bc488212152 (temp)
+
+        &::before {
+            content: $font-name;
+        }
+=======
+
+        &::before {
+            // Must prevail against the '/' for missing values.
+            content: $font-name !important;
+        }
+>>>>>>> bc488212152 (temp)
     }
     $i: $i + 1;
 }
