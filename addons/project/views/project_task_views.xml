@@ -718,7 +718,7 @@
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
-                    <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                     <field name="stage_id" attrs="{'invisible': ['|', ('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
                     <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('project_id', '!=', False), ('personal_stage_id', '=', False)]}"/>
