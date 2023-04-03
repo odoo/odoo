@@ -99,7 +99,8 @@ $i: 1;
         font-family: o-safe-get($font-config, 'family', $font-family-base);
 
         &::before {
-            content: $font-name;
+            // Must prevail against the '/' for missing values.
+            content: $font-name !important;
         }
     }
     $i: $i + 1;
