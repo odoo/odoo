@@ -214,7 +214,7 @@ class ReplenishmentReport(models.AbstractModel):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if not float_is_zero(reserved_availability, precision_rounding=product_rounding):
-                    reserved = out.product_uom._compute_quantity(reserved_availability, product.uom_id)
+                    reserved = reserved_availability
                 demand = out.product_qty - reserved
 
                 if float_is_zero(demand, precision_rounding=product_rounding):
