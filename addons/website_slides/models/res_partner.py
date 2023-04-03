@@ -9,7 +9,7 @@ class ResPartner(models.Model):
 
     slide_channel_ids = fields.Many2many(
         'slide.channel', 'slide_channel_partner', 'partner_id', 'channel_id',
-        string='eLearning Courses')
+        string='eLearning Courses', copy=False)
     slide_channel_count = fields.Integer('Course Count', compute='_compute_slide_channel_count')
     slide_channel_company_count = fields.Integer('Company Course Count', compute='_compute_slide_channel_company_count')
 
