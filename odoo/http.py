@@ -345,6 +345,15 @@ class WebRequest(object):
             if self._cr and not first_time:
                 self._cr.rollback()
                 self.env.clear()
+
+            # Rewind files in case of failure
+            if not first_time:
+                for filename, file in self.httprequest.files.items():
+                    if hasattr(file, "seekable") and file.seekable():
+                        file.seek(0)
+                    else:
+                        raise RuntimeError("Cannot retry request on input file %r after serialization failure" % filename)
+
             first_time = False
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
