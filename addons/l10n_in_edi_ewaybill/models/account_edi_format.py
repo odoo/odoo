@@ -212,7 +212,7 @@ class AccountEdiFormat(models.Model):
                     if response.get("error"):
                         error = response["error"]
                         error_codes = [e.get("code") for e in error]
-            if "4002" in error_codes:
+            if "4002" in error_codes or "4026" in error_codes:
                 # Get E-waybill by details in case of IRN is already generated
                 # this happens when timeout from the Government portal but E-waybill is generated
                 response = self._l10n_in_edi_irn_ewaybill_get(invoices.company_id, generate_json.get("Irn"))
