@@ -63,6 +63,72 @@ class TestStockValuation(TransactionCase):
         })
         cls.env.ref('base.EUR').active = True
 
+
+    def test_different_uom(self):
+        """ Set a quantity to replenish via the "Buy" route
+        where product_uom is different from purchase uom
+        """
+
+        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', False)
+
+        # Create and set a new weight unit.
+        kgm = self.env.ref('uom.product_uom_kgm')
+        ap = self.env['uom.uom'].create({
+            'category_id': kgm.category_id.id,
+            'name': 'Algerian Pounds',
+            'uom_type': 'bigger',
+            'ratio': 2.47541,
+            'rounding': 0.001,
+        })
+        kgm_price = 100
+        ap_price = kgm_price / ap.factor
+
+        self.product1.uom_id = ap
+        self.product1.uom_po_id = kgm
+
+        # Set vendor
+        vendor = self.env['res.partner'].create(dict(name='The Replenisher'))
+        supplierinfo = self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
+            'price': kgm_price,
+        })
+        self.product1.seller_ids = [(4, supplierinfo.id, 0)]
+
+        # Automated stock valuation
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+
+        # Create a manual replenishment
+        replenishment_uom_qty = 200
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_uom_id': ap.id,
+            'quantity': replenishment_uom_qty,
+            'warehouse_id': self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1).id,
+        })
+        replenish_wizard.launch_replenishment()
+
+        last_po_id = self.env['purchase.order'].search([
+            ('origin', 'ilike', '%Manual Replenishment%'),
+            ('partner_id', '=', vendor.id)
+        ])[-1]
+        order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
+        self.assertEqual(order_line.product_qty,
+            ap._compute_quantity(replenishment_uom_qty, kgm, rounding_method='HALF-UP'),
+            'Quantities does not match')
+
+        # Recieve products
+        last_po_id.button_confirm()
+        picking = last_po_id.picking_ids[0]
+        move = picking.move_ids[0]
+        move.quantity_done = move.product_uom_qty
+        picking.button_validate()
+
+        self.assertEqual(move.stock_valuation_layer_ids.unit_cost,
+            last_po_id.currency_id.round(ap_price),
+            "Wrong Unit price")
+
     def test_change_unit_cost_average_1(self):
         """ Confirm a purchase order and create the associated receipt, change the unit cost of the
         purchase order before validating the receipt, the value of the received goods should be set
