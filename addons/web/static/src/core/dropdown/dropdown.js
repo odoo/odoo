@@ -58,14 +58,11 @@ export class Dropdown extends Component {
         });
 
         // Set up dynamic open/close behaviours --------------------------------
-        if (!this.props.manualOnly) {
-            // Close on outside click listener
-            useExternalListener(window, "click", this.onWindowClicked, { capture: true });
-            // Listen to all dropdowns state changes
-            useBus(Dropdown.bus, "state-changed", ({ detail }) =>
-                this.onDropdownStateChanged(detail)
-            );
-        }
+
+        // Close on outside click listener
+        useExternalListener(window, "click", this.onWindowClicked, { capture: true });
+        // Listen to all dropdowns state changes
+        useBus(Dropdown.bus, "state-changed", ({ detail }) => this.onDropdownStateChanged(detail));
 
         // Set up UI active element related behavior ---------------------------
         this.ui = useService("ui");
@@ -351,10 +348,6 @@ Dropdown.props = {
         optional: true,
     },
     startOpen: {
-        type: Boolean,
-        optional: true,
-    },
-    manualOnly: {
         type: Boolean,
         optional: true,
     },
