@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { usePopover } from "@web/core/popover/popover_hook";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Transition } from "@web/core/transition";
@@ -20,7 +19,6 @@ export class CalendarFilterPanel extends Component {
         });
         this.addDialog = useOwnedDialogs();
         this.orm = useService("orm");
-        this.popover = usePopover();
     }
 
     getFilterColor(filter) {
