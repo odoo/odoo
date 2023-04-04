@@ -154,6 +154,9 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
      */
     _mockMailThreadMessagePost(model, ids, kwargs, context) {
         const id = ids[0]; // ensure_one
+        if (context?.["mail_post_autofollow"] && kwargs["partner_ids"].length > 0) {
+            this._mockMailThreadMessageSubscribe(model, ids, kwargs["partner_ids"]);
+        }
         if (kwargs.attachment_ids) {
             const attachments = this.getRecords("ir.attachment", [
                 ["id", "in", kwargs.attachment_ids],
@@ -197,7 +200,7 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
      * @param {string} model not in server method but necessary for thread mock
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
-     * @param {integer[]} subtype_ids
+     * @param {integer[]} [subtype_ids]
      * @returns {boolean}
      */
     _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
@@ -207,6 +210,14 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                     ["partner_id", "=", partner_id],
                 ])[0];
                 if (!followerId) {
+                    if (!subtype_ids || subtype_ids.length === 0) {
+                        subtype_ids = this.pyEnv["mail.message.subtype"].search([
+                            ["default", "=", true],
+                            "|",
+                            ["res_model", "=", model],
+                            ["res_model", "=", false],
+                        ]);
+                    }
                     followerId = this.pyEnv["mail.followers"].create({
                         is_active: true,
                         partner_id,
@@ -215,6 +226,9 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                         subtype_ids: subtype_ids,
                     });
                 }
+                this.pyEnv[model].write(ids, {
+                    message_follower_ids: [followerId],
+                });
                 this.pyEnv["res.partner"].write([partner_id], {
                     message_follower_ids: [followerId],
                 });
