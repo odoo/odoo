@@ -125,9 +125,8 @@ export async function loadEmoji() {
     try {
         await _loadEmoji();
         return odoo.runtimeImport("@mail/emoji_picker/emoji_data");
-    } catch (error) {
+    } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
-        console.warn("Failed to load Emojis", error);
         return { emojis: [], categories: [] };
     }
 }
