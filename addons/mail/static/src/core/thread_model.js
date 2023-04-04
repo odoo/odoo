@@ -367,14 +367,16 @@ export class Thread {
             }
         }
         return orderedOnlineMembers.sort((m1, m2) => {
-            if (Boolean(m1.rtcSession) && Boolean(m2.rtcSession)) {
-                if (m1.rtcSession.isRaisingHand !== m2.rtcSession.isRaisingHand) {
+            const m1HasRtc = Boolean(m1.rtcSession);
+            const m2HasRtc = Boolean(m2.rtcSession);
+            if (m1HasRtc === m2HasRtc) {
+                if (m1HasRtc && m1.rtcSession.isRaisingHand !== m2.rtcSession.isRaisingHand) {
                     return m2.rtcSession.isRaisingHand - m1.rtcSession.isRaisingHand;
                 } else {
-                    return m1.persona.name < m2.persona.name ? -1 : 1;
+                    return String.prototype.localeCompare.call(m1.persona.name, m2.persona.name);
                 }
             } else {
-                return Boolean(m2.rtcSession) - Boolean(m1.rtcSession);
+                return m2HasRtc - m1HasRtc;
             }
         });
     }
