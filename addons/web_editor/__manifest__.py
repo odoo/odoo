@@ -175,6 +175,7 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
             # insert module dependencies here
+            'web/static/src/core/utils/concurrency.js',
 
             'web_editor/static/src/js/editor/odoo-editor/src/**/*js',
             'web_editor/static/src/js/editor/odoo-editor/test/spec/*js',
