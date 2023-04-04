@@ -95,6 +95,9 @@ registerModel({
             if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
             }
+            if ('sender' in data) {
+                data2.sender = data.sender;
+            }
             if ('subject' in data) {
                 data2.subject = data.subject;
             }
@@ -703,6 +706,7 @@ registerModel({
             },
         }),
         recipients: many('Partner'),
+        sender: one('Partner'),
         shortTime: attr({
             compute() {
                 if (!this.date) {

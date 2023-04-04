@@ -4,6 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { sprintf } from "@web/core/utils/strings";
 
 registerModel({
     name: 'MessageView',
@@ -245,6 +246,34 @@ registerModel({
         */
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
+        }),
+        /**
+         * Enriched date (contains the from, email-like)
+         */
+        dateEnriched: attr({
+            compute() {
+                if (!this.message) {
+                    return clear();
+                }
+                if (this.message.message_type === 'email' && this.message.email_from) {
+                    if (this.message.datetime) {
+                        return sprintf(
+                            this.env._t("Sent by %s on %s"),
+                            this.message.email_from,
+                            this.message.datetime
+                        );
+                    }
+                    else {
+                        return sprintf(
+                            this.env._t("Sent by %s"),
+                            this.message.email_from
+                        );
+                    }
+                }
+                return sprintf(
+                    this.env._t("Posted on %s"), this.message.datetime
+                );
+            },
         }),
         /**
          * States the time elapsed since date up to now.

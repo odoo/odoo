@@ -847,6 +847,8 @@ class Message(models.Model):
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
+
+            # author, sender
             author = {
                 'id': message_sudo.author_id.id,
                 'name': message_sudo.author_id.name,
@@ -855,6 +857,21 @@ class Message(models.Model):
                 'id': message_sudo.author_guest_id.id,
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
+            if message_sudo.author_guest_id:
+                sender = guestAuthor
+            # impersonation of post
+            elif message_sudo.author_id and message_sudo.message_type != 'email':
+                sender = {
+                    'id': message_sudo.create_uid.partner_id.id,
+                    'name': message_sudo.create_uid.name,
+                }
+            # don't want to see "Sent by Odoobot"
+            elif message_sudo.author_id and message_sudo.message_type == 'email':
+                sender = author
+            else:
+                sender = [('clear',)]
+
+            # other
             if message_sudo.model and message_sudo.res_id:
                 record_name = self.env[message_sudo.model] \
                     .browse(message_sudo.res_id) \
@@ -885,6 +902,7 @@ class Message(models.Model):
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
+                'sender': sender,
             })
 
         return vals_list
@@ -905,53 +923,55 @@ class Message(models.Model):
         return self.search(domain, limit=limit)
 
     def message_format(self, format_reply=True):
-        """ Get the message values in the format for web client. Since message values can be broadcasted,
-            computed fields MUST NOT BE READ and broadcasted.
-            :returns list(dict).
-             Example :
+        """ Get the message values in the format for web client. Since message
+        values can be broadcasted, computed fields MUST NOT BE READ and
+        broadcasted.
+
+        :returns list(dict). Example :
+        {
+            'attachment_ids': [
                 {
-                    'body': HTML content of the message
-                    'model': u'res.partner',
-                    'record_name': u'Agrolait',
-                    'attachment_ids': [
-                        {
-                            'file_type_icon': u'webimage',
-                            'id': 45,
-                            'name': u'sample.png',
-                            'filename': u'sample.png'
-                        }
-                    ],
-                    'needaction_partner_ids': [], # list of partner ids
-                    'res_id': 7,
-                    'trackingValues': [
-                        {
-                            'changedField': "Customer",
-                            'id': 2965,
-                            'newValue': {
-                                'currencyId': "",
-                                'fieldType': 'char',
-                                'value': "Axelor",
-                            ],
-                            'oldValue': {
-                                'currencyId': "",
-                                'fieldType': 'char',
-                                'value': "",
-                            ],
-                        }
-                    ],
-                    'author_id': (3, u'Administrator'),
-                    'email_from': 'sacha@pokemon.com' # email address or False
-                    'subtype_id': (1, u'Discussions'),
-                    'date': '2015-06-30 08:22:33',
-                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
-                    'message_type': u'comment',
-                    'id': 59,
-                    'subject': False
-                    'is_note': True # only if the message is a note (subtype == note)
-                    'is_discussion': False # only if the message is a discussion (subtype == discussion)
-                    'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
-                    'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
+                    'id': 45,
+                    'name': u'sample.png',
+                    'filename': u'sample.png'
+                    'file_type_icon': u'webimage',
                 }
+            ],
+            'author': { 'id': 3, 'name': 'Administrator' },
+            'body': HTML content of the message
+            'date': '2015-06-30 08:22:33',
+            'email_from': 'sacha@pokemon.com' # email address or False
+            'id': 59,
+            'is_discussion': False # only if the message is a discussion (subtype == discussion)
+            'is_note': True # only if the message is a note (subtype == note)
+            'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
+            'message_type': u'comment',
+            'model': u'res.partner',
+            'needaction_partner_ids': [], # list of partner ids
+            'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
+            'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
+            'record_name': u'Agrolait',
+            'res_id': 7,
+            'sender': { 'id': 3, 'name': 'Administrator' },
+            'subject': u'Subject','
+            'subtype_id': (1, u'Discussions'),
+            'trackingValues': [
+                {
+                    'changedField': "Customer",
+                    'id': 2965,
+                    'newValue': {
+                        'currencyId': "",
+                        'fieldType': 'char',
+                        'value': "Axelor",
+                    ],
+                    'oldValue': {
+                        'currencyId': "",
+                        'fieldType': 'char',
+                        'value': "",
+                    ],
+                }
+            ],
+        }
         """
         vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
 
