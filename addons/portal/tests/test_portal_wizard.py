@@ -174,3 +174,15 @@ class TestPortalWizard(MailCommon):
         portal_user.with_company(company_1).action_grant_access()
 
         self.assertEqual(portal_user.user_id.company_id, company_2, 'Must create the user in the same company as the partner.')
+
+    def test_login_changed_granting_access(self):
+        """Test that the login is changed when the email is changed while granting access"""
+        partner1 = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'email': 'a@a.com',
+        })
+        portal_wizard1 = self.env['portal.wizard'].with_context(active_ids=[partner1.id]).create({})
+        portal_user1 = portal_wizard1.user_ids
+        portal_user1.email = 't@t.com'
+        portal_user1.action_grant_access()
+        self.assertEqual(portal_user1.user_id.login, 't@t.com', 'Login should be same as email')
