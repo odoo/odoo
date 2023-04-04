@@ -328,9 +328,11 @@ class MailComposer(models.TransientModel):
                             if wizard.model:
                                 post_params['model'] = wizard.model
                                 post_params['res_id'] = res_id
-                            if not ActiveModel.message_notify(**post_params):
+                            message = ActiveModel.message_notify(**post_params)
+                            if not message:
                                 # if message_notify returns an empty record set, no recipients where found.
                                 raise UserError(_("No recipient found."))
+                            result_messages += message
                         else:
                             result_messages += ActiveModel.browse(res_id).message_post(**post_params)
 
