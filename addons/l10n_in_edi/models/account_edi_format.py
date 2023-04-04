@@ -281,7 +281,7 @@ class AccountEdiFormat(models.Model):
                 "GSTIN": partner.vat or "URP",
             })
         else:
-            partner_details.update({"Nm": partner.name})
+            partner_details.update({"Nm": partner.name or partner.commercial_partner_id.name})
         # For no country I would suppose it is India, so not sure this is super right
         if is_overseas and (not partner.country_id or partner.country_id.code != 'IN'):
             partner_details.update({
