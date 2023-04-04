@@ -3016,10 +3016,10 @@ class BaseModel(metaclass=MetaModel):
         self.fetch(fields)
         return self._read_format(fnames=fields, load=load)
 
-    def unity_read(self, fields=None):
-        fields = self.check_field_access_rights('read', fields)
-        self.fetch(fields)
-        return self._unity_read_format(fields)
+    def unity_read(self, specification=None):
+        specification = self.check_field_access_rights('read', specification)
+        self.fetch(specification)
+        return self._unity_read_format(specification)
 
     def _unity_read_format(self, specification: list | dict, limit: int | None = None, offset: int | None = None, order: str | None = None) -> list[dict]:
         # TODO VSC: replace _read_format
