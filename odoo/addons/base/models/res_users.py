@@ -548,7 +548,7 @@ class Users(models.Model):
 
         return super(Users, self).read(fields=fields, load=load)
     
-    def unity_read(self, fields={}):
+    def unity_read(self, fields=None):
         if fields and self == self.env.user:
             readable = self.SELF_READABLE_FIELDS
             for key in fields:
@@ -1741,8 +1741,10 @@ class UsersView(models.Model):
                     values.pop('groups_id', None)
         return res
     
-    def unity_read(self, fields={}):
+    def unity_read(self, fields=None):
         # determine whether reified groups fields are required, and which ones
+        if fields is None:
+            fields = {}
         fields1 = fields.keys() or list(self.fields_get())
         group_fields, other_fields = partition(is_reified_group, fields1)
 

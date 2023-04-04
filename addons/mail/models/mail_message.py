@@ -670,7 +670,7 @@ class Message(models.Model):
         self.check_access_rule('read')
         return super(Message, self).read(fields=fields, load=load)
     
-    def unity_read(self, fields={}):
+    def unity_read(self, fields=None):
         """ Override to explicitly call check_access_rule, that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access_rule('read')

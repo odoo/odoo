@@ -840,7 +840,7 @@ class Task(models.Model):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
 
-    def unity_read(self, fields={}):
+    def unity_read(self, fields=None):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).unity_read(fields)
 
