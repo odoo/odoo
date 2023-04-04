@@ -4937,19 +4937,8 @@ class BaseModel(metaclass=MetaModel):
         if not parent:
             parent = self._parent_name
 
-        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
-        cr = self._cr
         self.flush_model([parent])
-        query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
-        for id in self.ids:
-            current_id = id
-            while current_id:
-                cr.execute(query, (current_id,))
-                result = cr.fetchone()
-                current_id = result[0] if result else None
-                if current_id == id:
-                    return False
-        return True
+        return tools.check_relation_loop(self._cr, self._table, 'id', parent, self.ids)
 
     def _check_m2m_recursion(self, field_name):
         """
@@ -4966,30 +4955,7 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError('invalid field_name: %r' % (field_name,))
 
         self.flush_model([field_name])
-
-        cr = self._cr
-        query = 'SELECT "%s", "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % \
-                    (field.column1, field.column2, field.relation, field.column1, field.column2)
-
-        succs = defaultdict(set)        # transitive closure of successors
-        preds = defaultdict(set)        # transitive closure of predecessors
-        todo, done = set(self.ids), set()
-        while todo:
-            # retrieve the respective successors of the nodes in 'todo'
-            cr.execute(query, [tuple(todo)])
-            done.update(todo)
-            todo.clear()
-            for id1, id2 in cr.fetchall():
-                # connect id1 and its predecessors to id2 and its successors
-                for x, y in itertools.product([id1] + list(preds[id1]),
-                                              [id2] + list(succs[id2])):
-                    if x == y:
-                        return False    # we found a cycle here!
-                    succs[x].add(y)
-                    preds[y].add(x)
-                if id2 not in done:
-                    todo.add(id2)
-        return True
+        return tools.check_relation_loop(self._cr, field.relation, field.column1, field.column2, self.ids)
 
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
