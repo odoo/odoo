@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountAnalyticAccount(models.Model):
@@ -100,3 +101,18 @@ class AccountAnalyticAccount(models.Model):
             'view_mode': 'tree,form',
         }
         return result
+
+    @api.ondelete(at_uninstall = False)
+    def _unlink_except_account_set_on_account_move_line(self):
+        query = self.env['account.move.line']._search([])
+        query.order = None
+        query.add_where(
+            'account_move_line.analytic_distribution ?| %s',
+            [[str(account_id) for account_id in self.ids]],
+        )
+        query_string, query_param = query.select('DISTINCT account_move_line.move_name')
+        self._cr.execute(query_string, query_param)
+        move_names = [str(line.get('move_name', '')) for line in self._cr.dictfetchall()]
+        if any(move_names):
+            raise UserError(_('You cannot remove the accounts "%s" because they are used in lines in invoices "%s"'
+                              , ' ,'.join(self.mapped('name')), ' ,'.join(move_names)))
