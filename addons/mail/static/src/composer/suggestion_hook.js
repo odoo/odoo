@@ -38,7 +38,6 @@ export function useSuggestion() {
             if (selectionStart > 0) {
                 candidatePositions.push(selectionStart - 1);
             }
-            const suggestionDelimiters = ["@", ":", "#", "/"];
             for (const candidatePosition of candidatePositions) {
                 if (candidatePosition < 0 || candidatePosition >= content.length) {
                     continue;
@@ -47,7 +46,11 @@ export function useSuggestion() {
                 if (candidateChar === "/" && candidatePosition !== 0) {
                     continue;
                 }
-                if (!suggestionDelimiters.includes(candidateChar)) {
+                if (
+                    !suggestionService
+                        .getSupportedDelimiters(comp.props.composer.thread)
+                        .includes(candidateChar)
+                ) {
                     continue;
                 }
                 const charBeforeCandidate = content[candidatePosition - 1];
