@@ -235,7 +235,7 @@ export class Messaging {
                     const command = rtcSessions[0][0];
                     this._updateRtcSessions(thread.id, sessionsData, command);
 
-                    if (invitedByUserId !== this.store.user?.user.id) {
+                    if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
                         this.notificationService.add(
                             sprintf(_t("You have been invited to #%s"), thread.displayName),
                             { type: "info" }
@@ -318,7 +318,7 @@ export class Messaging {
                         }
                         // move messages from Inbox to history
                         const partnerIndex = message.needaction_partner_ids.find(
-                            (p) => p === this.store.user.id
+                            (p) => p === this.store.user?.id
                         );
                         removeFromArray(message.needaction_partner_ids, partnerIndex);
                         removeFromArrayWithPredicate(
@@ -354,7 +354,7 @@ export class Messaging {
                         // knowledge of the channel
                         continue;
                     }
-                    if (this.store.user.id === partner_id) {
+                    if (partner_id && this.store.user?.id === partner_id) {
                         channel.serverLastSeenMsgBySelf = last_message_id;
                     }
                     const seenInfo = channel.seenInfos.find(
