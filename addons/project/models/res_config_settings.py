@@ -65,6 +65,10 @@ class ResConfigSettings(models.TransientModel):
         if project_stage_change_mail_type.hidden == self['group_project_stages']:
             project_stage_change_mail_type.hidden = not self['group_project_stages']
         # Hide task rating tempalate when customer rating is disbled
+        task_rating_subtype_id = self.env.ref('project.mt_project_task_rating')
+        task_rating_subtype_id.hidden = not self['group_project_rating']
+        self.env.ref('project.mt_task_rating').hidden = not self['group_project_rating']
+        task_rating_subtype_id.default = self['group_project_rating']
         rating_project_request_email_template = self.env.ref('project.rating_project_request_email_template')
         if rating_project_request_email_template.active != self['group_project_rating']:
             rating_project_request_email_template.active = self['group_project_rating']
