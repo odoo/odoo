@@ -78,6 +78,9 @@ function serviceCached(service) {
         },
     });
 }
+// Outdated snippets whose alert has been discarded.
+const controlledSnippets = new Set();
+const clearControlledSnippets = () => controlledSnippets.clear();
 /**
  * @param {HTMLElement} el
  * @param {string} [title]
@@ -8782,20 +8785,79 @@ registry.many2one = SnippetOptionWidget.extend({
  * Allows to display a warning message on outdated snippets.
  */
 registry.VersionControl = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replaces an outdated snippet by its new version.
+     */
+    async replaceSnippet() {
+        // Getting the new block version.
+        let newBlockEl;
+        this.trigger_up("find_snippet_template", {
+            snippet: this.$target[0],
+            callback: (_, snippetBody) => {
+                newBlockEl = snippetBody.cloneNode(true);
+            },
+        });
+        // Replacing the block.
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
+        this.$target[0].classList.add("d-none"); // Hiding the block to replace it smoothly.
+        this.$target[0].insertAdjacentElement("beforebegin", newBlockEl);
+        // Initializing the new block as if it was dropped: the mutex needs to
+        // be free for that so we wait for it first.
+        this.options.wysiwyg.waitForEmptyMutexAction().then(async () => {
+            await this.options.wysiwyg.snippetsMenu.callPostSnippetDrop($(newBlockEl));
+            await new Promise(resolve => {
+                this.trigger_up("remove_snippet",
+                    {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false}
+                );
+            });
+            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+            newBlockEl.classList.remove("oe_snippet_body");
+            this.options.wysiwyg.odooEditor.historyStep();
+        });
+    },
+    /**
+     * Allows to still access the options of an outdated block, despite the
+     * warning.
+     */
+    discardAlert() {
+        const alertEl = this.$el[0].querySelector("we-alert");
+        const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
+        alertEl.remove();
+        optionsSectionEl.classList.remove("o_we_outdated_block_options");
+        // Preventing the alert to reappear at each render.
+        controlledSnippets.add(this.$target[0].dataset.snippet);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
-    start: function () {
-        this.trigger_up('get_snippet_versions', {
-            snippetName: this.$target[0].dataset.snippet,
+    _renderCustomXML(uiFragment) {
+        const snippetName = this.$target[0].dataset.snippet;
+        // Do not display the alert if it was previously discarded.
+        if (controlledSnippets.has(snippetName)) {
+            return;
+        }
+        this.trigger_up("get_snippet_versions", {
+            snippetName: snippetName,
             onSuccess: snippetVersions => {
-                const isUpToDate = snippetVersions && ['vjs', 'vcss', 'vxml'].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
+                const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
                 if (!isUpToDate) {
-                    this.$el.prepend(renderToElement('web_editor.outdated_block_message'));
+                    uiFragment.prepend(renderToElement("web_editor.outdated_block_message"));
+                    // Hide the other options, to only have the alert displayed.
+                    const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
+                    optionsSectionEl.classList.add("o_we_outdated_block_options");
                 }
             },
         });
-        return this._super(...arguments);
     },
 });
 
@@ -9274,4 +9336,5 @@ export default {
     registry: registry,
     serviceCached,
     clearServiceCache,
+    clearControlledSnippets,
 };

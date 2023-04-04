@@ -2118,6 +2118,7 @@ var SnippetsMenu = Widget.extend({
         // Dispose BS tooltips.
         this.tooltips.dispose();
         options.clearServiceCache();
+        options.clearControlledSnippets();
     },
 
     //--------------------------------------------------------------------------
@@ -3943,7 +3944,7 @@ var SnippetsMenu = Widget.extend({
         this.$snippets.each(function () {
             const snippetBody = this.querySelector(`.oe_snippet_body[data-snippet=${ev.data.snippet.dataset.snippet}]`);
             if (snippetBody) {
-                ev.data.callback(snippetBody.parentElement);
+                ev.data.callback(snippetBody.parentElement, snippetBody);
                 return false;
             }
         });
