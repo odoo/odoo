@@ -68,6 +68,7 @@ export class PropertyTags extends Component {
             return {
                 id: tagId,
                 text: tagLabel,
+                className: this.props.canChangeTags ? "" : "pe-none",
                 colorIndex: tagColorIndex || 0,
                 onClick: (event) => this.onTagClick(event, tagId, tagColorIndex),
                 onDelete: canDeleteTag && (() => this.onTagDelete(tagId)),
