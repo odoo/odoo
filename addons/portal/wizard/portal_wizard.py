@@ -129,8 +129,7 @@ class PortalWizardUser(models.TransientModel):
         group_public = self.env.ref('base.group_public')
 
         # update partner email, if a new one was introduced
-        if self.partner_id.email != self.email:
-            self.partner_id.write({'email': self.email})
+        self._update_partner_email()
 
         user_sudo = self.user_id.sudo()
 
@@ -243,3 +242,10 @@ class PortalWizardUser(models.TransientModel):
 
         if user:
             raise UserError(_('The contact "%s" has the same email has an existing user (%s).', self.partner_id.name, user.name))
+
+    def _update_partner_email(self):
+        """Update partner email on portal action, if a new one was introduced and is valid."""
+        email_normalized = email_normalize(self.email)
+        if email_normalize(self.partner_id.email) != email_normalized:
+            self.partner_id.write({'email': email_normalized})
+            self.user_id.login = email_normalized
