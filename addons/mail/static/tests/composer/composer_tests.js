@@ -393,36 +393,6 @@ QUnit.test("add an emoji after a command", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "/who 😊");
 });
 
-QUnit.test("add an emoji after a canned response", async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
-        name: "Mario Party",
-    });
-    pyEnv["mail.shortcode"].create({
-        source: "hello",
-        substitution: "Hello! How are you?",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
-    await click(".o-mail-Composer-suggestion");
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "Hello! How are you? ",
-        "previous content + canned response substitution + additional whitespace afterwards"
-    );
-
-    await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "Hello! How are you? 😊"
-    );
-});
-
 QUnit.test("add an emoji after a partner mention", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({

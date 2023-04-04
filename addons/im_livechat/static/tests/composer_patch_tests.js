@@ -1,7 +1,13 @@
 /** @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { afterNextRender, click, dragenterFiles, start } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    insertText,
+    click,
+    dragenterFiles,
+    start,
+} from "@mail/../tests/helpers/test_utils";
 import { editInput, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("composer (patch)");
@@ -86,4 +92,121 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
         })
     );
     assert.containsOnce($, ".o-mail-Typing:contains(Visitor 20 is typing...)");
+});
+
+QUnit.test('display canned response suggestions on typing ":"', async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Mario",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["mail.shortcode"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    await insertText(".o-mail-Composer-input", ":");
+    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
+});
+
+QUnit.test("use a canned response", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Mario",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["mail.shortcode"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", ":");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
+    assert.strictEqual(
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        "Hello! How are you? ",
+        "canned response + additional whitespace afterwards"
+    );
+});
+
+QUnit.test("use a canned response some text", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Mario",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["mail.shortcode"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", "bluhbluh ");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
+    await insertText(".o-mail-Composer-input", ":");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
+    assert.strictEqual(
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        "bluhbluh Hello! How are you? ",
+        "previous content + canned response substitution + additional whitespace afterwards"
+    );
+});
+
+QUnit.test("add an emoji after a canned response", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 20",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["mail.shortcode"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", ":");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion");
+    assert.strictEqual(
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        "Hello! How are you? ",
+        "previous content + canned response substitution + additional whitespace afterwards"
+    );
+    await click("button[aria-label='Emojis']");
+    await click(".o-mail-Emoji:contains(😊)");
+    assert.strictEqual(
+        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        "Hello! How are you? 😊"
+    );
 });
