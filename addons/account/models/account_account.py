@@ -697,7 +697,7 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
+        raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
 
     @api.model_create_multi
     def create(self, vals_list):
