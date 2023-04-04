@@ -4,8 +4,7 @@
 import base64
 from unittest.mock import patch
 
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import is_html_empty, mute_logger, formataddr
@@ -13,7 +12,7 @@ from odoo.tests import tagged, users
 
 
 @tagged('mail_message')
-class TestMessageValues(TestMailCommon):
+class TestMessageValues(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -321,7 +320,7 @@ class TestMessageValues(TestMailCommon):
 
 
 @tagged('mail_message')
-class TestMessageAccess(TestMailCommon):
+class TestMessageAccess(MailCommon):
 
     @classmethod
     def setUpClass(cls):

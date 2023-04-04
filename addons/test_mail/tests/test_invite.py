@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
 @tagged('mail_followers')
-class TestInvite(TestMailCommon):
+class TestInvite(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_invite_email(self):

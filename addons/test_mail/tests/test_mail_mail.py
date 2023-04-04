@@ -13,14 +13,14 @@ from unittest.mock import call, patch
 
 from odoo import api, Command
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import common, tagged, users
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('mail_mail')
-class TestMailMail(TestMailCommon):
+class TestMailMail(MailCommon):
 
     @classmethod
     def setUpClass(cls):

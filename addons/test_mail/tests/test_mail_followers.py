@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 
 @tagged('mail_followers')
-class BaseFollowersTest(TestMailCommon):
+class BaseFollowersTest(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -229,7 +229,7 @@ class BaseFollowersTest(TestMailCommon):
 
 
 @tagged('mail_followers')
-class AdvancedFollowersTest(TestMailCommon):
+class AdvancedFollowersTest(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -440,7 +440,9 @@ class AdvancedFollowersTest(TestMailCommon):
         )
 
 
-class AdvancedResponsibleNotifiedTest(TestMailCommon):
+@tagged('mail_followers')
+class AdvancedResponsibleNotifiedTest(MailCommon):
+
     def setUp(self):
         super(AdvancedResponsibleNotifiedTest, self).setUp()
 
@@ -486,7 +488,7 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
 
 
 @tagged('mail_followers', 'post_install', '-at_install')
-class RecipientsNotificationTest(TestMailCommon):
+class RecipientsNotificationTest(MailCommon):
     """ Test advanced and complex recipients computation / notification, such
     as multiple users, batch computation, ... Post install because we need the
     registry to be ready to send notifications."""

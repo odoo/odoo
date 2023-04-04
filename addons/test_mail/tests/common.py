@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import TransactionCase
-
-
-class TestMailCommon(MailCommon):
-    """ Main entry point for functional tests. Kept to ease backward
-    compatibility. """
 
 
 class TestRecipients(TransactionCase):

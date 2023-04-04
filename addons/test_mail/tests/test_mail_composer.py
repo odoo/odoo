@@ -10,10 +10,10 @@ from itertools import product
 from unittest.mock import DEFAULT, patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.wizard.mail_compose_message import MailComposer
 from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
@@ -22,7 +22,7 @@ from odoo.tools import mute_logger, formataddr
 
 
 @tagged('mail_composer')
-class TestMailComposer(TestMailCommon, TestRecipients):
+class TestMailComposer(MailCommon, TestRecipients):
     """ Test Composer internals """
 
     @classmethod
