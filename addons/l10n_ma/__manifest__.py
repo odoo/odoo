@@ -9,7 +9,13 @@
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Morocco.
+<<<<<<< HEAD
 ====================================================================
+||||||| parent of 74ce1174481 (temp)
+=================================================================
+=======
+===================================================================
+>>>>>>> 74ce1174481 (temp)
 
 Ce Module charge le modèle du plan de comptes standard Marocain et permet de
 générer les états comptables aux normes marocaines (Bilan, CPC (comptes de
