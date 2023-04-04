@@ -1246,6 +1246,8 @@ class Task(models.Model):
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()
+        if not self.project_id.rating_active:
+            res -= self.env.ref('project.mt_task_rating')
         if len(self) == 1:
             dependency_subtype = self.env.ref('project.mt_task_dependency_change')
             waiting_subtype = self.env.ref('project.mt_task_waiting')
