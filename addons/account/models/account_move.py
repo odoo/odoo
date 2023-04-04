@@ -39,8 +39,8 @@ TYPE_REVERSE_MAP = {
     'out_refund': 'entry',
     'in_invoice': 'in_refund',
     'in_refund': 'entry',
-    'out_receipt': 'entry',
-    'in_receipt': 'entry',
+    'out_receipt': 'out_refund',
+    'in_receipt': 'in_refund',
 }
 
 EMPTY = object()
@@ -890,12 +890,10 @@ class AccountMove(models.Model):
                         source_line.id AS source_line_id,
                         source_line.move_id AS source_move_id,
                         account.account_type AS source_line_account_type,
-                        ARRAY_AGG(counterpart_move.reversed_entry_id)
-                            FILTER (WHERE counterpart_move.reversed_entry_id IS NOT NULL) AS counterpart_reversed_entry_ids,
-                        ARRAY_AGG(counterpart_move.move_type)
-                            FILTER (WHERE counterpart_move.reversed_entry_id IS NOT NULL) AS counterpart_move_types,
+                        ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
                         COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
-                            FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched
+                            FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
+                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment
                     FROM account_partial_reconcile part
                     JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
                     JOIN account_account account ON account.id = source_line.account_id
@@ -938,26 +936,29 @@ class AccountMove(models.Model):
                 if payment_state_matters:
 
                     if currency.is_zero(invoice.amount_residual):
-                        # Check if the invoice/expense entry is fully paid or 'in_payment'.
-                        if all(x['all_payments_matched'] for x in reconciliation_vals):
-                            new_pmt_state = 'paid'
+                        if any(x['has_payment'] for x in reconciliation_vals):
+
+                            # Check if the invoice/expense entry is fully paid or 'in_payment'.
+                            if all(x['all_payments_matched'] for x in reconciliation_vals):
+                                new_pmt_state = 'paid'
+                            else:
+                                new_pmt_state = invoice._get_invoice_in_payment_state()
+
                         else:
-                            new_pmt_state = invoice._get_invoice_in_payment_state()
+                            new_pmt_state = 'paid'
+
+                            reverse_move_types = set()
+                            for x in reconciliation_vals:
+                                for move_type in x['counterpart_move_types']:
+                                    reverse_move_types.add(move_type)
+
+                            if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == {'in_refund'}) \
+                              or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == {'out_refund'}) \
+                              or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == {'entry'}):
+                                new_pmt_state = 'reversed'
+
                     elif reconciliation_vals:
                         new_pmt_state = 'partial'
-
-                # Check if the journal entry is 'reversed' (1 on 1 full reconciliation with entries being of the opposite types)
-                if new_pmt_state == 'paid':
-                    reverse_move_types = []
-                    for x in reconciliation_vals:
-                        for rec_move_type, rec_reversed_entry_id in zip(x['counterpart_move_types'] or [], x['counterpart_reversed_entry_ids'] or []):
-                            if rec_reversed_entry_id == invoice.id:
-                                reverse_move_types.append(rec_move_type)
-
-                    if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == ['in_refund']) \
-                      or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == ['out_refund']) \
-                      or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == ['entry']):
-                        new_pmt_state = 'reversed'
 
             invoice.payment_state = new_pmt_state
 
