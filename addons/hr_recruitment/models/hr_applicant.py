@@ -373,12 +373,14 @@ class Applicant(models.Model):
 
     def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """
-            Do not notify members of the Recruitment Interviewer group, as this
+            Do not notify members of the Recruitment Interviewer group that are not part of
+            Recruitment User group as well, as this
             might leak some data they shouldn't have access to.
         """
         recipients = super()._notify_get_recipients(message, msg_vals, **kwargs)
         interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id
-        return [recipient for recipient in recipients if interviewer_group not in recipient['groups']]
+        user_group = self.env.ref('hr_recruitment.group_hr_recruitment_user').id
+        return [recipient for recipient in recipients if not (interviewer_group in recipient['groups'] and user_group not in recipient['groups'])]
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
@@ -389,7 +391,12 @@ class Applicant(models.Model):
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
+        # As we are redirected from the hr.applicant, calendar checks rules on "hr.applicant",
+        # in order to decide whether to allow creation of a meeting.
+        # As interviewer does not have create right on the hr.applicant, in order to allow them
+        # to create a meeting for an applicant, we pass 'create': True to the context.
         res['context'] = {
+            'create': True,
             'default_applicant_id': self.id,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,

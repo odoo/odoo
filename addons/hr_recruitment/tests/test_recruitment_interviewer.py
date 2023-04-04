@@ -67,11 +67,6 @@ class TestRecruitmentInterviewer(MailCommon):
         applicant.interviewer_ids = False
         self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
 
-        # A Manager should not be added to the Interviewer group
-        self.assertFalse(interviewer_group.id in self.manager_user.groups_id.ids, "Manager User should not be interviewer")
-        applicant.interviewer_ids = self.manager_user.ids
-        self.assertFalse(interviewer_group.id in self.manager_user.groups_id.ids, "Manager User should not be added in Interviewer group")
-
     def test_interviewer_access_rights(self):
         applicant = self.env['hr.applicant'].create({
             'name': 'toto',
