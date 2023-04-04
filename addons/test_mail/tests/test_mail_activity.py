@@ -11,14 +11,13 @@ from unittest.mock import DEFAULT
 import pytz
 
 from odoo import fields, exceptions, tests
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
 from odoo.tests.common import Form, users
 
 
-class TestActivityCommon(TestMailCommon):
+class TestActivityCommon(MailCommon):
 
     @classmethod
     def setUpClass(cls):

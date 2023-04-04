@@ -5,14 +5,15 @@ from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 from odoo import exceptions
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests.common import tagged, Form, users
 from odoo.tools import mute_logger
 
 
 @tagged('mail_thread')
-class TestAPI(TestMailCommon, TestRecipients):
+class TestAPI(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -99,7 +100,7 @@ class TestAPI(TestMailCommon, TestRecipients):
 
 
 @tagged('mail_thread')
-class TestChatterTweaks(TestMailCommon, TestRecipients):
+class TestChatterTweaks(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -199,7 +200,7 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
 
 
 @tagged('mail_thread')
-class TestDiscuss(TestMailCommon, TestRecipients):
+class TestDiscuss(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -399,7 +400,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
 
 
 @tagged('mail_thread')
-class TestNoThread(TestMailCommon, TestRecipients):
+class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
 
     @users('employee')

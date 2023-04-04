@@ -9,11 +9,10 @@ from unittest.mock import DEFAULT
 from unittest.mock import patch
 
 from odoo import exceptions
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
-from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.sql_db import Cursor
 from odoo.tests import tagged
 from odoo.tests.common import users
@@ -21,7 +20,7 @@ from odoo.tools import email_split_and_format, formataddr, mute_logger
 
 
 @tagged('mail_gateway')
-class TestEmailParsing(TestMailCommon):
+class TestEmailParsing(MailCommon):
 
     def test_message_parse_and_replace_binary_octetstream(self):
         """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
@@ -140,7 +139,7 @@ class TestEmailParsing(TestMailCommon):
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))
 
 @tagged('mail_gateway')
-class TestMailAlias(TestMailCommon):
+class TestMailAlias(MailCommon):
 
     @users('employee')
     @mute_logger('odoo.addons.base.models.ir_model')
@@ -234,7 +233,7 @@ class TestMailAlias(TestMailCommon):
 
 
 @tagged('mail_gateway')
-class TestMailAliasMixin(TestMailCommon):
+class TestMailAliasMixin(MailCommon):
 
     @users('employee')
     def test_alias_mixin_copy_content(self):
@@ -258,7 +257,7 @@ class TestMailAliasMixin(TestMailCommon):
 
 
 @tagged('mail_gateway')
-class TestMailgateway(TestMailCommon):
+class TestMailgateway(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -1684,7 +1683,8 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
 
-class TestMailThreadCC(TestMailCommon):
+@tagged('mail_gateway')
+class TestMailThreadCC(MailCommon):
 
     @classmethod
     def setUpClass(cls):

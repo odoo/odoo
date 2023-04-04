@@ -6,12 +6,13 @@ import datetime
 
 from freezegun import freeze_time
 
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 
-class TestMailTemplateCommon(TestMailCommon, TestRecipients):
+class TestMailTemplateCommon(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):

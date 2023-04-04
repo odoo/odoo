@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
 @tagged('ir_actions')
-class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
+class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
     def setUp(self):
         super(TestServerActionsEmail, self).setUp()
