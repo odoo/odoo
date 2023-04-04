@@ -6,6 +6,10 @@ import re
 import textwrap
 from binascii import Error as binascii_error
 from collections import defaultdict
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
+from lxml import etree
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
@@ -748,6 +752,73 @@ class Message(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
         }
+
+    # ------------------------------------------------------
+    # CRONS
+    # ------------------------------------------------------
+
+    def _cron_compress_messages(self, older_than_days=0, batch_size=None):
+        """
+        Compress messages:
+            - Remove quotes from the message's body (ex: email reply of reply of reply... )
+            - Convert message's html `body` to their plaintext variant.
+        This action is irreversible.
+        The primary use-case for this cron is saving space.
+        Removing quotes saves space by removing content that is already present in other messages in the thread.
+        Converting html to plaintext reduces consumned space by removing tags, styling and excessive spacing.
+
+        :param int older_than_days: number of days the message needs to be older than to be converted
+        :param int batch_size: maximum number of message compression per cron dispatching
+        """
+        def remove_quotes(msg_body):
+            """
+            Remove quotes from the message's body
+            :param msg_body: mail.message body field
+            :return: new message's body, without quotes
+            """
+            quote_attr_types = [
+                'data-o-mail-quote-container',
+                'data-o-mail-quote',
+            ]
+            xpath_query = " | ".join(f'.//*[@{quote_type}="1"]' for quote_type in quote_attr_types)
+            html_body = etree.fromstring(msg_body, parser=etree.HTMLParser())
+            if html_body is not None:
+                for node in html_body.xpath(xpath_query):
+                    node.getparent().remove(node)
+                return etree.tostring(html_body)
+            return msg_body
+
+        last_compressed_msg_id = int(self.env['ir.config_parameter'].sudo().get_param('mail_message.last_compressed_id'))
+        if not last_compressed_msg_id:
+            _logger.exception("The ir.config_parameter mail_message.last_compressed_id is undefined.")
+            return
+
+        domain = [
+            ('id', '>', last_compressed_msg_id),
+            ('body', '!=', ''),
+            ('message_type', '=', 'email'),
+            ('date', '<=', datetime.now() - relativedelta(days=older_than_days)),
+        ]
+        if len(self) > 0:
+            # this branching makes the cron testable
+            messages = self.filtered_domain(domain)
+        else:
+            messages = self.env['mail.message'].search_fetch(domain, ['body'], limit=batch_size, order='id')
+        for msg in messages:
+            try:
+                if tools.is_html_empty(msg.body):
+                    compressed_body = ''
+                else:
+                    # old msg's may have not been normalized in the past,
+                    # this also decorates quotes with attr for proper removal
+                    normalized_body = tools.html_normalize(msg.body)
+                    no_quote_body = remove_quotes(normalized_body)
+                    compressed_body = tools.html2plaintext(no_quote_body)
+            except Exception:
+                _logger.exception("Error while compressing message id=%s", msg.id)
+            else:
+                msg.body = '<pre style="white-space:pre-wrap">' + compressed_body + '</pre>'
+        self.env['ir.config_parameter'].sudo().set_param('mail_message.last_compressed_id', str(max(messages.ids)))
 
     # ------------------------------------------------------
     # DISCUSS API

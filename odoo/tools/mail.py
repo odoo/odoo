@@ -291,7 +291,14 @@ TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
 HTML_TAGS_REGEX = re.compile('<.*?>')
 HTML_NEWLINES_REGEX = re.compile('<(div|p|br|tr)[^>]*>|\n')
-
+HTML_ZERO_WIDTH_SPACE_ENTITIES = (
+    '&ZeroWidthSpace;',
+    '&NegativeThickSpace;',
+    '&NegativeMediumSpace;',
+    '&NegativeThinSpace;',
+    '&NegativeThinSpace;',
+    '&NegativeVeryThinSpace;',
+)
 
 def validate_url(url):
     if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
@@ -388,10 +395,14 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('</p>', '\n')
     html = re.sub('<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
+    html = html.replace('&nbsp;', ' ')
     html = html.replace(' ' * 2, ' ')
     html = html.replace('&gt;', '>')
     html = html.replace('&lt;', '<')
     html = html.replace('&amp;', '&')
+
+    for entity in HTML_ZERO_WIDTH_SPACE_ENTITIES:
+        html = html.replace(entity, '')
 
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])
