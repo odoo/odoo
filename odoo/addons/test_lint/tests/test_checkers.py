@@ -418,5 +418,20 @@ class TestSqlLint(TransactionCase):
             a, _ =  return_tuple(var)
             cr.execute(a)#@
         """)
-        with self.assertMessages(): # this should pass
+        with self.assertMessages():
+            checker.visit_call(node)
+        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        def not_injectable5(var):
+            star = ('defined','constant','string')
+            cr.execute(*star)#@
+        """)
+        with self.assertMessages():
+            checker.visit_call(node)
+
+        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        def injectable6(var):
+            star = ('defined','variable','string',var)
+            cr.execute(*star)#@
+        """)
+        with self.assertMessages("sql-injection"):
             checker.visit_call(node)
