@@ -173,7 +173,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         if not reload_template:
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
-                self.env[model].search([('company_id', '=', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                self.env[model].sudo().search([('company_id', '=', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
