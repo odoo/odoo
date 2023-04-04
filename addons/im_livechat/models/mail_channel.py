@@ -87,7 +87,9 @@ class MailChannel(models.Model):
 
     def _execute_command_help_message_extra(self):
         msg = super(MailChannel, self)._execute_command_help_message_extra()
-        return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
+        if self.channel_type == 'livechat':
+            return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
+        return msg
 
     def execute_command_history(self, **kwargs):
         self.env['bus.bus']._sendone(self.uuid, 'im_livechat.history_command', {'id': self.id})

@@ -177,64 +177,6 @@ QUnit.test(
     }
 );
 
-QUnit.test('display canned response suggestions on typing ":"', async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "Mario Party" });
-    pyEnv["mail.shortcode"].create({
-        source: "hello",
-        substitution: "Hello! How are you?",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
-});
-
-QUnit.test("use a canned response", async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "Mario Party" });
-    pyEnv["mail.shortcode"].create({
-        source: "hello",
-        substitution: "Hello! How are you?",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
-    await click(".o-mail-Composer-suggestion");
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "Hello! How are you? ",
-        "canned response + additional whitespace afterwards"
-    );
-});
-
-QUnit.test("use a canned response some text", async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "Mario Party" });
-    pyEnv["mail.shortcode"].create({
-        source: "hello",
-        substitution: "Hello! How are you?",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", "bluhbluh ");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
-    await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
-    await click(".o-mail-Composer-suggestion");
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "bluhbluh Hello! How are you? ",
-        "previous content + canned response substitution + additional whitespace afterwards"
-    );
-});
-
 QUnit.test('display channel mention suggestions on typing "#"', async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
