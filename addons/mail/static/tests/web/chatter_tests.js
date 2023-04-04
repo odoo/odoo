@@ -14,7 +14,7 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { editInput, triggerHotkey } from "@web/../tests/helpers/utils";
+import { editInput, triggerHotkey, getFixture } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
 
 const { createFile } = file;
@@ -770,3 +770,48 @@ QUnit.test("upload attachment on draft record", async (assert) => {
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], [file]));
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
+
+QUnit.test(
+    "Form modifications are automatically saved on message posted with post_refresh",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            activity_ids: [],
+            display_name: "Partner 11",
+            description: "base",
+            message_ids: [],
+            message_follower_ids: [],
+        });
+        const views = {
+            "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                    <field name="description"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" options="{'post_refresh': 'always'}"/>
+                </div>
+            </form>`,
+        };
+        const target = getFixture();
+        target.classList.add("o_web_client");
+        const { openFormView } = await start({
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/res.partner/write") {
+                    assert.step("trigger autosave");
+                }
+            },
+            serverData: { views },
+            target,
+        });
+        await openFormView("res.partner", partnerId);
+        editInput(document.body, "#description_0", "test");
+        await click("button:contains(Send message)");
+        await afterNextRender(() =>
+            editInput(document.body, ".o-mail-Composer-input", "New Message")
+        );
+        await click(".o-mail-Composer-send");
+        assert.verifySteps(["trigger autosave"]);
+    }
+);

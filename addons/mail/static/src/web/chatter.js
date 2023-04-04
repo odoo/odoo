@@ -296,11 +296,7 @@ export class Chatter extends Component {
 
     async reloadParentView() {
         if (this.props.webRecord) {
-            await this.props.webRecord.model.root.load(
-                { resId: this.props.threadId },
-                { keepChanges: true }
-            );
-            this.props.webRecord.model.notify();
+            await this.props.webRecord.model.root.save();
         }
     }
 
