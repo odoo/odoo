@@ -98,16 +98,18 @@ class TestMessageValues(TestMailCommon):
     @mute_logger('odoo.models.unlink')
     def test_mail_message_format(self):
         record1 = self.env['mail.test.simple'].create({'name': 'Test1'})
-        message = self.env['mail.message'].create([{
-            'model': 'mail.test.simple',
-            'res_id': record1.id,
-        }])
-        res = message.message_format()
-        self.assertEqual(res[0].get('record_name'), 'Test1')
-
-        record1.write({"name": "Test2"})
-        res = message.message_format()
-        self.assertEqual(res[0].get('record_name'), 'Test2')
+        record2 = self.env['mail.test.nothread'].create({'name': 'Test2'})
+        messages = self.env['mail.message'].create([{
+            'model': record._name,
+            'res_id': record.id,
+        } for record in [record1, record2]])
+        for message, record in zip(messages, [record1, record2]):
+            with self.subTest(record=record):
+                formatted = message.message_format()[0]
+                self.assertEqual(formatted['record_name'], record.name)
+                record.write({'name': 'Just Test'})
+                formatted = message.message_format()[0]
+                self.assertEqual(formatted['record_name'], 'Just Test')
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_format_access(self):

@@ -377,33 +377,62 @@ class TestDiscuss(TestMailCommon, TestRecipients):
 
 @tagged('mail_thread')
 class TestNoThread(TestMailCommon, TestRecipients):
-    """ Specific tests for cross models thread features """
+    """ Specific tests for cross models thread features"""
 
     @users('employee')
-    def test_message_notify(self):
+    def test_message_format(self):
+        """ Test formatting of messages when linked to non-thread models.
+        Format could be asked notably if an inbox notification due to a
+        'message_notify' happens. """
         test_record = self.env['mail.test.nothread'].create({
             'customer_id': self.partner_1.id,
             'name': 'Not A Thread',
         })
-        with self.assertPostNotifications([{
-                'content': 'Hello Paulo',
-                'email_values': {
-                    'reply_to': self.company_admin.catchall_formatted,
-                },
-                'message_type': 'user_notification',
-                'notif': [{
-                    'check_send': True,
-                    'is_read': True,
-                    'partner': self.partner_2,
-                    'status': 'sent',
-                    'type': 'email',
-                }],
-                'subtype': 'mail.mt_note',
-            }]):
-            _message = self.env['mail.thread'].message_notify(
-                body='<p>Hello Paulo</p>',
-                model=test_record._name,
-                res_id=test_record.id,
-                subject='Test Notify',
-                partner_ids=self.partner_2.ids
-            )
+        message = self.env['mail.message'].create({
+            'model': test_record._name,
+            'record_name': 'Not used in message_format',
+            'res_id': test_record.id,
+        })
+        formatted = message.message_format()[0]
+        self.assertEqual(formatted['default_subject'], test_record.name)
+        self.assertEqual(formatted['record_name'], test_record.name)
+
+        test_record.write({'name': 'Just Test'})
+        formatted = message.message_format()[0]
+        self.assertEqual(formatted['default_subject'], 'Just Test')
+        self.assertEqual(formatted['record_name'], 'Just Test')
+
+    @users('employee')
+    def test_message_notify(self):
+        """ Test notifying on non-thread models, using MailThread as an abstract
+        class with model and res_id giving the record used for notification.
+
+        Test default subject computation is also tested. """
+        test_record = self.env['mail.test.nothread'].create({
+            'customer_id': self.partner_1.id,
+            'name': 'Not A Thread',
+        })
+        for subject in ["Test Notify", False]:
+            with self.subTest():
+                with self.assertPostNotifications([{
+                        'content': 'Hello Paulo',
+                        'email_values': {
+                            'reply_to': self.company_admin.catchall_formatted,
+                        },
+                        'message_type': 'user_notification',
+                        'notif': [{
+                            'check_send': True,
+                            'is_read': True,
+                            'partner': self.partner_2,
+                            'status': 'sent',
+                            'type': 'email',
+                        }],
+                        'subtype': 'mail.mt_note',
+                    }]):
+                    _message = self.env['mail.thread'].message_notify(
+                        body='<p>Hello Paulo</p>',
+                        model=test_record._name,
+                        partner_ids=self.partner_2.ids,
+                        res_id=test_record.id,
+                        subject=subject,
+                    )
