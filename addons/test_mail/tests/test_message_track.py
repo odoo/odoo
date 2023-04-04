@@ -3,13 +3,13 @@
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import tagged
 from odoo.tests import Form
 
 
 @tagged('mail_track')
-class TestTracking(TestMailCommon):
+class TestTracking(MailCommon):
 
     def setUp(self):
         super(TestTracking, self).setUp()
@@ -315,7 +315,7 @@ class TestTracking(TestMailCommon):
         ])
 
 @tagged('mail_track')
-class TestTrackingMonetary(TestMailCommon):
+class TestTrackingMonetary(MailCommon):
 
     def setUp(self):
         super(TestTrackingMonetary, self).setUp()
@@ -355,8 +355,9 @@ class TestTrackingMonetary(TestMailCommon):
             ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
         ])
 
+
 @tagged('mail_track')
-class TestTrackingInternals(TestMailCommon):
+class TestTrackingInternals(MailCommon):
 
     def setUp(self):
         super(TestTrackingInternals, self).setUp()

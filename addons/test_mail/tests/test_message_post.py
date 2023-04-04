@@ -11,10 +11,10 @@ from unittest.mock import patch
 
 from odoo import tools
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
@@ -22,7 +22,7 @@ from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
 
 
-class TestMessagePostCommon(TestMailCommon, TestRecipients):
+class TestMessagePostCommon(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -1525,7 +1525,7 @@ class TestMessagePostGlobal(TestMessagePostCommon):
 
 
 @tagged('mail_post', 'multi_lang')
-class TestMessagePostLang(TestMailCommon, TestRecipients):
+class TestMessagePostLang(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):

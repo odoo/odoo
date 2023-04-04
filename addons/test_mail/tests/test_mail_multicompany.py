@@ -9,7 +9,8 @@ from unittest.mock import patch
 from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.mail.models.mail_message import Message
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users, HttpCase
@@ -17,7 +18,7 @@ from odoo.tools import formataddr, mute_logger
 
 
 @tagged('multi_company')
-class TestMultiCompanySetup(TestMailCommon, TestRecipients):
+class TestMultiCompanySetup(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -384,7 +385,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
 
 
 @tagged('-at_install', 'post_install', 'multi_company')
-class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
+class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
