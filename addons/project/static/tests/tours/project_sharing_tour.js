@@ -14,7 +14,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
 }, {
     trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
-    extra_trigger: 'label[for=partner_ids]:contains("Invite People")',
+    extra_trigger: 'label[for=partner_ids_0]:contains("Invite People")',
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: 'text Georges',
 }, {

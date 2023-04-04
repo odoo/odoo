@@ -12,6 +12,7 @@ export class ActivityArchParser extends XMLParser {
 
         const fieldNodes = {};
         const templateDocs = {};
+        const fieldNextIds = {};
         const activeFields = {};
 
         this.visitXML(xmlDoc, (node) => {
@@ -28,9 +29,12 @@ export class ActivityArchParser extends XMLParser {
                     "activity",
                     jsClass
                 );
-                const name = fieldInfo.name;
-                fieldNodes[name] = fieldInfo;
-                node.setAttribute("field_id", name);
+                if (!(fieldInfo.name in fieldNextIds)) {
+                    fieldNextIds[fieldInfo.name] = 0;
+                }
+                const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+                fieldNodes[fieldId] = fieldInfo;
+                node.setAttribute("field_id", fieldId);
 
                 addFieldDependencies(
                     activeFields,
@@ -47,8 +51,20 @@ export class ActivityArchParser extends XMLParser {
                 }
             }
 
-            for (const [key, field] of Object.entries(fieldNodes)) {
-                activeFields[key] = field;
+            // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
+            for (const fieldNode of Object.values(fieldNodes)) {
+                const fieldName = fieldNode.name;
+                if (activeFields[fieldName]) {
+                    const { alwaysInvisible } = fieldNode;
+                    activeFields[fieldName] = {
+                        ...fieldNode,
+                        // a field can only be considered to be always invisible
+                        // if all its nodes are always invisible
+                        alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                    };
+                } else {
+                    activeFields[fieldName] = fieldNode;
+                }
             }
         });
         return {

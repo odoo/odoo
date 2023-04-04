@@ -361,7 +361,7 @@ export class ViewCompiler {
      */
     compileField(el, params) {
         const fieldName = el.getAttribute("name");
-        const fieldId = el.getAttribute("field_id") || fieldName;
+        const fieldId = el.getAttribute("field_id");
 
         const field = createElement("Field");
         field.setAttribute("id", `'${fieldId}'`);

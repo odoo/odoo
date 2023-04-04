@@ -49,7 +49,7 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test(
         "label with empty string compiles to FormLabel with empty string",
         async (assert) => {
-            const arch = /*xml*/ `<form><field name="test"/><label for="test" string=""/></form>`;
+            const arch = /*xml*/ `<form><field field_id="test" name="test"/><label for="test" string=""/></form>`;
             const expected = /*xml*/ `
             <t>
                 <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
@@ -62,7 +62,7 @@ QUnit.module("Form Compiler", (hooks) => {
     );
 
     QUnit.test("properly compile simple div with field", async (assert) => {
-        const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
+        const arch = /*xml*/ `<form><div class="someClass">lol<field field_id="display_name" name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
                 <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
@@ -80,8 +80,8 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `
             <form>
                 <group>
-                    <group><field name="display_name"/></group>
-                    <group><field name="charfield"/></group>
+                    <group><field field_id="display_name" name="display_name"/></group>
+                    <group><field field_id="charfield" name="charfield"/></group>
                 </group>
             </form>`;
         const expected = /*xml*/ `
@@ -112,7 +112,7 @@ QUnit.module("Form Compiler", (hooks) => {
                     <group>
                         <form>
                             <div>
-                                <field name="test"/>
+                                <field field_id="test" name="test"/>
                             </div>
                         </form>
                     </group>
@@ -143,8 +143,8 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `
                 <form>
                     <notebook>
-                        <page name="p1" string="Page1"><field name="charfield"/></page>
-                        <page name="p2" string="Page2"><field name="display_name"/></page>
+                        <page name="p1" string="Page1"><field field_id="charfield" name="charfield"/></page>
+                        <page name="p2" string="Page2"><field field_id="display_name" name="display_name"/></page>
                     </notebook>
                 </form>`;
 
@@ -164,7 +164,7 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test("properly compile field without placeholder", async (assert) => {
         const arch = /*xml*/ `
             <form>
-                <field name="display_name" placeholder="e.g. Contact's Name or //someinfo..."/>
+                <field field_id="display_name" name="display_name" placeholder="e.g. Contact's Name or //someinfo..."/>
             </form>`;
 
         const expected = /*xml*/ `
@@ -232,7 +232,7 @@ QUnit.module("Form Compiler", (hooks) => {
         //    </form>````
         const arch = /*xml*/ `
             <form>
-                <field name="display_name" modifiers="{&quot;invisible&quot;: true}" />
+                <field field_id="display_name" name="display_name" modifiers="{&quot;invisible&quot;: true}" />
                 <div class="visible3" modifiers="{&quot;invisible&quot;: false}"/>
                 <div modifiers="{&quot;invisible&quot;: [[&quot;display_name&quot;, &quot;=&quot;, &quot;take&quot;]]}"/>
             </form>`;
@@ -299,7 +299,7 @@ QUnit.module("Form Compiler", (hooks) => {
                          help="this is bar"
                          documentation="/applications/technical/web/settings/this_is_a_test.html"
                          company_dependent="1">
-                    <field name="bar"/>
+                    <field field_id="bar" name="bar"/>
                     <label>label with content</label>
                 </setting>
             </form>`;

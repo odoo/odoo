@@ -24,12 +24,12 @@ stepUtils.showAppsMenuItem(),
     trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
 }, {
     content: "search the pricelist",
-    trigger: 'input[id="pricelist_id"]',
+    trigger: 'input[id="pricelist_id_0"]',
     // Wait for onchange to come back
     extra_trigger: "[name=partner_id]:contains(Fremont)",
 }, {
     content: "search the pricelist",
-    trigger: 'input[id="pricelist_id"]',
+    trigger: 'input[id="pricelist_id_0"]',
     run: 'text Custo'
 }, {
     content: "select the pricelist",
