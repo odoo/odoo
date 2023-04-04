@@ -34,6 +34,7 @@ class PosController(PortalAccount):
                 ]
         if config_id:
             domain = AND([domain,[('config_id', '=', int(config_id))]])
+            pos_config = request.env['pos.config'].sudo().browse(int(config_id))
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
         # The same POS session can be opened by a different user => search without restricting to
@@ -46,8 +47,7 @@ class PosController(PortalAccount):
                 ('config_id', '=', int(config_id)),
             ]
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
-
-        if not pos_session:
+        if not pos_session or config_id and not pos_config.active:
             return request.redirect('/web#action=point_of_sale.action_client_pos_menu')
         # The POS only work in one company, so we enforce the one of the session in the context
         company = pos_session.company_id
