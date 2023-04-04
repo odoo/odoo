@@ -5171,12 +5171,12 @@ class BaseModel(metaclass=MetaModel):
         return records._read_format(fnames=fields, **read_kwargs)
 
     @api.model
-    def unity_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
+    def unity_search_read(self, domain=None, specification=None, offset=0, limit=None, order=None, **read_kwargs):
         """ Perform a :meth:`search_fetch` followed by a :meth:`_read_format`.
 
         :param domain: Search domain, see ``args`` parameter in :meth:`search`.
             Defaults to an empty domain that will match all records.
-        :param fields: List of fields to read, see ``fields`` parameter in :meth:`read`.
+        :param specification: List of fields to read, see ``fields`` parameter in :meth:`read`.
             Defaults to all fields.
         :param int offset: Number of records to skip, see ``offset`` parameter in :meth:`search`.
             Defaults to 0.
@@ -5190,8 +5190,8 @@ class BaseModel(metaclass=MetaModel):
         :return: List of dictionaries containing the asked fields.
         :rtype: list(dict).
         """
-        fields = self.check_field_access_rights('read', fields)
-        records = self.search_fetch(domain or [], fields, offset=offset, limit=limit, order=order)
+        specification = self.check_field_access_rights('read', specification)
+        records = self.search_fetch(domain or [], specification, offset=offset, limit=limit, order=order)
 
         # Method _read_format() ignores 'active_test', but it would forward it
         # to any downstream search call(e.g. for x2m or computed fields), and
@@ -5202,7 +5202,7 @@ class BaseModel(metaclass=MetaModel):
             del context['active_test']
             records = records.with_context(context)
 
-        return records._unity_read_format(fnames=fields, **read_kwargs)
+        return records._unity_read_format(fnames=specification, **read_kwargs)
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."

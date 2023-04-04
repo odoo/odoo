@@ -301,11 +301,11 @@ class IrActionsActWindow(models.Model):
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result
 
-    def unity_read(self, fields=None):
+    def unity_read(self, specification=None):
         """ call the method get_empty_list_help of the model and set the window action help message
         """
-        result = super().unity_read(fields)
-        if not fields or 'help' in fields:
+        result = super().unity_read(specification)
+        if not specification or 'help' in specification:
             for values in result:
                 model = values.get('res_model')
                 if model in self.env:

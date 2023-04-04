@@ -71,12 +71,12 @@ class Base(models.AbstractModel):
         }
 
     @api.model
-    def unity_web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
+    def unity_web_search_read(self, domain=None, specification=None, offset=0, limit=None, order=None, count_limit=None):
         """
         Performs a search_read and a search_count.
 
         :param domain: search domain
-        :param fields: list of fields to read
+        :param specification: list of fields to read
         :param limit: maximum number of records to read
         :param offset: number of records to skip
         :param order: columns to sort results
@@ -85,7 +85,7 @@ class Base(models.AbstractModel):
             'length': number of records matching the domain (result of a call to 'search_count')
         }
         """
-        records = self.unity_search_read(domain, fields, offset=offset, limit=limit, order=order)
+        records = self.unity_search_read(domain, specification, offset=offset, limit=limit, order=order)
         if not records:
             return {
                 'length': 0,

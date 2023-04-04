@@ -1275,7 +1275,7 @@ class AccountMoveLine(models.Model):
         )
         return super(AccountMoveLine, contextualized).search_read(domain, fields, offset, limit, order)
     @api.model
-    def unity_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def unity_search_read(self, domain=None, specification=None, offset=0, limit=None, order=None):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
         # Make an explicit order because we will need to reverse it

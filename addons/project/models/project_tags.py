@@ -42,10 +42,10 @@ class ProjectTags(models.Model):
             domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
     @api.model
-    def unity_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def unity_search_read(self, domain=None, specification=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
             domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
-        return super().unity_search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
+        return super().unity_search_read(domain=domain, specification=specification, offset=offset, limit=limit, order=order)
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):

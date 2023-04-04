@@ -840,9 +840,9 @@ class Task(models.Model):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
 
-    def unity_read(self, fields=None):
-        self._ensure_fields_are_accessible(fields)
-        return super(Task, self).unity_read(fields)
+    def unity_read(self, specification=None):
+        self._ensure_fields_are_accessible(specification)
+        return super(Task, self).unity_read(specification)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

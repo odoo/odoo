@@ -548,17 +548,17 @@ class Users(models.Model):
 
         return super(Users, self).read(fields=fields, load=load)
     
-    def unity_read(self, fields=None):
-        if fields and self == self.env.user:
+    def unity_read(self, specification=None):
+        if specification and self == self.env.user:
             readable = self.SELF_READABLE_FIELDS
-            for key in fields:
+            for key in specification:
                 if not (key in readable or key.startswith('context_')):
                     break
             else:
                 # safe fields only, so we read as super-user to bypass access rights
                 self = self.sudo()
 
-        return super(Users, self).unity_read(fields)
+        return super(Users, self).unity_read(specification)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -1741,22 +1741,22 @@ class UsersView(models.Model):
                     values.pop('groups_id', None)
         return res
     
-    def unity_read(self, fields=None):
+    def unity_read(self, specification=None):
         # determine whether reified groups fields are required, and which ones
-        if fields is None:
-            fields = {}
-        fields1 = fields.keys() or list(self.fields_get())
+        if specification is None:
+            specification = {}
+        fields1 = specification.keys() or list(self.fields_get())
         group_fields, other_fields = partition(is_reified_group, fields1)
 
         # read regular fields (other_fields); add 'groups_id' if necessary
         drop_groups_id = False
-        if group_fields and fields:
-            other_fields = submap(fields, other_fields)
+        if group_fields and specification:
+            other_fields = submap(specification, other_fields)
             if 'groups_id' not in other_fields:
                 other_fields['groups_id'] = {}
                 drop_groups_id = True
         else:
-            other_fields = fields
+            other_fields = specification
 
 
         res = super(UsersView, self).unity_read(other_fields)
