@@ -89,7 +89,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts">
+                <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
                     <field name="company_id" column_invisible="True"/>
                     <field name="code"/>
                     <field name="name"/>
@@ -103,7 +103,6 @@
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                    <button name="action_read_account" type="object" string="Setup" class="float-end btn-secondary"/>
                 </tree>
             </field>
         </record>
