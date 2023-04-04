@@ -187,6 +187,25 @@ export class Message {
         );
     }
 
+    /**
+     * Determines if the link preview is actually the main content of the
+     * message. Meaning:
+     * - The link is the only part of the message body.
+     * - There is only one link in the message body.
+     * - The link preview is of image type.
+     */
+    get linkPreviewSquash() {
+        return (
+            this._store.hasLinkPreviewFeature &&
+            this.body &&
+            this.body.startsWith("<a") &&
+            this.body.endsWith("/a>") &&
+            this.body.match(/<\/a>/im)?.length === 1 &&
+            this.linkPreviews.length === 1 &&
+            this.linkPreviews[0].isImage
+        );
+    }
+
     get inlineBody() {
         if (!this.body) {
             return "";

@@ -17,7 +17,11 @@
 
 .o-mail-LinkPreviewImage img {
     max-height: $o-mail-LinkPreview-height;
-    max-width: Min($o-mail-LinkPreview-width, 100%);
+    max-width: $o-mail-LinkPreview-width;
+}
+
+.o-mail-ChatWindow-content .o-mail-LinkPreviewImage img {
+    max-width: 100%;
 }
 
 .o-mail-LinkPreviewVideo {
