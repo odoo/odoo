@@ -7,12 +7,12 @@ from unittest.mock import DEFAULT
 from odoo import exceptions
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.sms.models.sms_sms import SmsSms as SmsModel
-from odoo.addons.test_mail_sms.tests.common import TestSMSCommon
+from odoo.addons.sms.tests.common import SMSCommon
 from odoo.tests import tagged
 
 
 @tagged('link_tracker')
-class TestSMSPost(TestSMSCommon, MockLinkTracker):
+class TestSMSPost(SMSCommon, MockLinkTracker):
 
     @classmethod
     def setUpClass(cls):

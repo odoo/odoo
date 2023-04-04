@@ -4,10 +4,9 @@
 from odoo.addons.phone_validation.tools import phone_validation
 
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
-from odoo.addons.test_mail_sms.tests.common import TestSMSCommon
 
 
-class TestMassMailCommon(MassSMSCommon, TestSMSCommon):
+class TestMassMailCommon(MassSMSCommon):
 
     @classmethod
     def setUpClass(cls):
