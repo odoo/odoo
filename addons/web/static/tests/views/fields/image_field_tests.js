@@ -399,7 +399,12 @@ QUnit.module("Fields", (hooks) => {
             "if only the width is set to 0, the width attribute is not set on the img"
         );
         assert.deepEqual(
-            [imgs[1].style.width, imgs[1].style.maxWidth, imgs[1].style.height, imgs[1].style.maxHeight],
+            [
+                imgs[1].style.width,
+                imgs[1].style.maxWidth,
+                imgs[1].style.height,
+                imgs[1].style.maxHeight,
+            ],
             ["auto", "100%", "", "50px"],
             "the image should correctly set its attributes"
         );
@@ -410,7 +415,12 @@ QUnit.module("Fields", (hooks) => {
             "if only the height is set to 0, the height attribute is not set on the img"
         );
         assert.deepEqual(
-            [imgs[2].style.width, imgs[2].style.maxWidth, imgs[2].style.height, imgs[2].style.maxHeight],
+            [
+                imgs[2].style.width,
+                imgs[2].style.maxWidth,
+                imgs[2].style.height,
+                imgs[2].style.maxHeight,
+            ],
             ["", "50px", "auto", "100%"],
             "the image should correctly set its attributes"
         );
@@ -627,17 +637,35 @@ QUnit.module("Fields", (hooks) => {
             await nextTick();
         }
 
-        assert.strictEqual(target.querySelector("input[type=file]").files.length, 0, "there shouldn't be any file");
+        assert.strictEqual(
+            target.querySelector("img[data-alt='Binary file']").dataset.src,
+            "/web/static/img/placeholder.png",
+            "image field should not be set"
+        );
 
         await setFiles();
-        assert.strictEqual(target.querySelector("input[type=file]").files.length, 1, "there should be a single file");
+        assert.ok(
+            target
+                .querySelector("img[data-alt='Binary file']")
+                .dataset.src.includes("data:image/png;base64"),
+            "image field should be set"
+        );
 
         await clickSave(target);
         await click(target, ".o_form_button_create");
-        assert.strictEqual(target.querySelector("input[type=file]").files.length, 0, "there shouldn't be any file");
+        assert.strictEqual(
+            target.querySelector("img[data-alt='Binary file']").dataset.src,
+            "/web/static/img/placeholder.png",
+            "image field should be reset"
+        );
 
         await setFiles();
-        assert.strictEqual(target.querySelector("input[type=file]").files.length, 1, "there should be a single file");
+        assert.ok(
+            target
+                .querySelector("img[data-alt='Binary file']")
+                .dataset.src.includes("data:image/png;base64"),
+            "image field should be set"
+        );
     });
 
     QUnit.test("unique in url doesn't change on onchange", async (assert) => {
