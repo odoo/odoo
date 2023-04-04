@@ -5,17 +5,14 @@ import { Component } from "@odoo/owl";
 export class TagsList extends Component {
     static template = "web.TagsList";
     static defaultProps = {
-        className: "",
         displayBadge: true,
         displayText: true,
     };
     static props = {
-        className: { type: String, optional: true },
         displayBadge: { type: Boolean, optional: true },
         displayText: { type: Boolean, optional: true },
-        name: { type: String, optional: true },
         itemsVisible: { type: Number, optional: true },
-        tags: { type: Object, optional: true },
+        tags: { type: Object },
     };
     get visibleTagsCount() {
         return this.props.itemsVisible - 1;
