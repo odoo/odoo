@@ -31,8 +31,8 @@ class SurveyInvite(models.TransientModel):
             survey = self.survey_id.with_context(clean_context(self.env.context))
 
             if not self.applicant_id.response_ids.filtered(lambda res: res.survey_id.id == self.survey_id.id):
-                self.applicant_id.write({
-                    'response_ids': (self.applicant_id.response_ids | survey._create_answer(partner=self.applicant_id.partner_id,
+                self.applicant_id.sudo().write({
+                    'response_ids': (self.applicant_id.response_ids | survey.sudo()._create_answer(partner=self.applicant_id.partner_id,
                         **self._get_answers_values())).ids
                 })
 

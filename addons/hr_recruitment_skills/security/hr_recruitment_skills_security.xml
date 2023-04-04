@@ -11,4 +11,12 @@
         ]</field>
         <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
     </record>
+
+    <record id="hr_applicant_skill_officer_rule" model="ir.rule">
+        <field name="name">Applicant Skill: Officer</field>
+        <field name="model_id" ref="model_hr_applicant_skill"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+
 </odoo>

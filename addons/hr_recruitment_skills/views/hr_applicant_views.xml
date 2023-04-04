@@ -12,7 +12,7 @@
                             <field name="id" invisible="1"/>
                             <field name="is_interviewer" invisible="1"/>
                             <field mode="tree" nolabel="1" name="applicant_skill_ids" widget="skills_one2many"
-                                context="{'default_applicant_id': id}" attrs="{'readonly': [('is_interviewer', '=', True)]}">
+                                context="{'default_applicant_id': id}">
                                 <tree>
                                     <field name="skill_type_id" invisible="1"/>
                                     <field name="skill_id"/>
