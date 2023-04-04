@@ -5596,34 +5596,25 @@ class BaseModel(metaclass=MetaModel):
         by following the parent relationship using the **parent** field until a
         loop is detected or until a top-level record is found.
 
+        Since EXCLUSIVE LOCK is not added for sake of performance, loops may be
+        created by concurrent transactions
+
         :param parent: optional parent field name (default: ``self._parent_name``)
         :return: **True** if no loop was found, **False** otherwise.
         """
         if not parent:
             parent = self._parent_name
 
-        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
-        cr = self._cr
         self.flush_model([parent])
-        for id in self.ids:
-            current_id = id
-            seen_ids = {current_id}
-            while current_id:
-                cr.execute(SQL(
-                    "SELECT %s FROM %s WHERE id = %s",
-                    SQL.identifier(parent), SQL.identifier(self._table), current_id,
-                ))
-                result = cr.fetchone()
-                current_id = result[0] if result else None
-                if current_id in seen_ids:
-                    return False
-                seen_ids.add(current_id)
-        return True
+        return tools.check_relation_loop(self._cr, self._table, 'id', parent, self.ids)
 
     def _check_m2m_recursion(self, field_name):
         """
         Verifies that there is no loop in a directed graph of records, by
         following a many2many relationship with the given field name.
+
+        Since EXCLUSIVE LOCK is not added for sake of performance, loops may be
+        created by concurrent transactions
 
         :param field_name: field to check
         :return: **True** if no loop was found, **False** otherwise.
@@ -5635,34 +5626,7 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError('invalid field_name: %r' % (field_name,))
 
         self.flush_model([field_name])
-
-        cr = self._cr
-        succs = defaultdict(set)        # transitive closure of successors
-        preds = defaultdict(set)        # transitive closure of predecessors
-        todo, done = set(self.ids), set()
-        while todo:
-            # retrieve the respective successors of the nodes in 'todo'
-            cr.execute(SQL(
-                """ SELECT %(col1)s, %(col2)s FROM %(rel)s
-                    WHERE %(col1)s IN %(ids)s AND %(col2)s IS NOT NULL """,
-                rel=SQL.identifier(field.relation),
-                col1=SQL.identifier(field.column1),
-                col2=SQL.identifier(field.column2),
-                ids=tuple(todo),
-            ))
-            done.update(todo)
-            todo.clear()
-            for id1, id2 in cr.fetchall():
-                # connect id1 and its predecessors to id2 and its successors
-                for x, y in itertools.product([id1] + list(preds[id1]),
-                                              [id2] + list(succs[id2])):
-                    if x == y:
-                        return False    # we found a cycle here!
-                    succs[x].add(y)
-                    preds[y].add(x)
-                if id2 not in done:
-                    todo.add(id2)
-        return True
+        return tools.check_relation_loop(self._cr, field.relation, field.column1, field.column2, self.ids)
 
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.

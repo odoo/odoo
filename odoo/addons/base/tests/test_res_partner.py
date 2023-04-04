@@ -731,6 +731,10 @@ class TestPartnerRecursion(TransactionCase):
             self.p2.write({'child_ids': [Command.update(self.p3.id, {'parent_id': p3b.id}),
                                          Command.update(p3b.id, {'parent_id': self.p3.id})]})
 
+    def test_105_res_partner_recursion(self):
+        with self.assertRaises(ValidationError):
+            (self.p3 + self.p1).parent_id = self.p2
+
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
         ps = self.p1 + self.p2 + self.p3

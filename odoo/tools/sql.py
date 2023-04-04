@@ -13,11 +13,13 @@ from collections import defaultdict
 
 if TYPE_CHECKING:
     from odoo.fields import Field
+    from odoo.sql_db import BaseCursor
     from collections.abc import Iterator, Iterable
 
 import psycopg2
 
 from .misc import named_to_positional_printf
+
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -711,3 +713,37 @@ def make_identifier(identifier: str) -> str:
 def make_index_name(table_name: str, column_name: str) -> str:
     """ Return an index name according to conventions for the given table and column. """
     return make_identifier(f"{table_name}__{column_name}_index")
+
+def check_relation_loop(cr: BaseCursor, table: str, col1: str, col2: str, col1_in: Iterable) -> bool:
+    """
+    (col1, col2) is a directed relation
+    check if any col1 value in col1_in is in a relation loop of the table
+    :return: **True** if no loop was found, **False** otherwise.
+    """
+
+    # The relation __graph is defined as follows:
+    # - path is a sequences of nodes that follow the relation
+    # - next is a node that follows immediately the last node in path (so path[-1], next is in the relation)
+    # - loop is only a flag that indicates whether path contains a cycle
+    query = SQL(
+        '''
+        WITH RECURSIVE __graph(path, next, loop) AS (
+            SELECT ARRAY[%(col1)s], %(col2)s, FALSE
+            FROM %(table)s
+            WHERE %(col1)s IN %(col1_in)s
+        
+            UNION ALL
+        
+            SELECT __graph.path || __graph.next, __rel.%(col2)s, __graph.next = ANY(__graph.path)
+            FROM __graph, %(table)s AS __rel
+            WHERE __graph.next = __rel.%(col1)s AND NOT __graph.loop
+        )
+        SELECT 1 FROM __graph WHERE loop IS TRUE LIMIT 1
+    ''',
+        table=SQL.identifier(table),
+        col1=SQL.identifier(col1),
+        col2=SQL.identifier(col2),
+        col1_in=tuple(col1_in),
+    )
+    cr.execute(query)
+    return not cr.fetchone()
