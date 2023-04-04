@@ -32,6 +32,7 @@ import {
     isImageSupportedForStyle,
     createDataURL,
     isGif,
+    getDataURLBinarySize,
 } from "web_editor.image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
@@ -5851,7 +5852,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return;
         }
         const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
-        this._filesize = dataURL.split(',')[1].length / 4 * 3 / 1024;
+        this._filesize = getDataURLBinarySize(dataURL) / 1024;
 
         if (update) {
             img.classList.add('o_modified_image_to_save');

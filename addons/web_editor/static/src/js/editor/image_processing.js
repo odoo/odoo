@@ -496,6 +496,15 @@ function createDataURL(blob) {
     });
 }
 
+/**
+ * @param {String} dataURL
+ * @returns {Number} number of bytes represented with base64
+ */
+function getDataURLBinarySize(dataURL) {
+    // Every 4 bytes of base64 represent 3 bytes.
+    return dataURL.split(',')[1].length / 4 * 3;
+}
+
 export default {
     applyModifications,
     cropperDataFields,
@@ -507,4 +516,5 @@ export default {
     isImageSupportedForStyle,
     createDataURL,
     isGif,
+    getDataURLBinarySize,
 };
