@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActivityMenu" owl="1">
-    <Dropdown position="'bottom-end'" beforeOpen.bind="onBeforeOpen" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
+    <Dropdown position="'bottom-end'" autoOpen="false" beforeOpen.bind="onBeforeOpen" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
             <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge"><t t-esc="store.activityCounter"/></span>

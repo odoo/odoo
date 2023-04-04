@@ -558,6 +558,56 @@ QUnit.module("Components", ({ beforeEach }) => {
         }
     );
 
+    QUnit.test("siblings dropdowns with autoOpen", async (assert) => {
+        class Parent extends Component {}
+        Parent.template = xml`
+        <div>
+          <Dropdown class="'one'" autoOpen="false"/>
+          <Dropdown class="'two'" autoOpen="false"/>
+          <Dropdown class="'three'"/>
+          <Dropdown class="'four'"/>
+          <div class="outside">OUTSIDE</div>
+        </div>
+      `;
+        Parent.components = { Dropdown };
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        // Click on one
+        await click(target, ".one button");
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".one .dropdown-menu");
+        // Hover on two
+        const two = target.querySelector(".two");
+        two.querySelector("button").dispatchEvent(new MouseEvent("mouseenter"));
+        await nextTick();
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".one .dropdown-menu");
+        // Hover on three
+        const three = target.querySelector(".three");
+        three.querySelector("button").dispatchEvent(new MouseEvent("mouseenter"));
+        await nextTick();
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".one .dropdown-menu");
+        // Click outside
+        await click(target, "div.outside");
+        assert.containsNone(target, ".dropdown-menu");
+        // Click on three
+        await click(target, ".three button");
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".three .dropdown-menu");
+        // Hover on two
+        two.querySelector("button").dispatchEvent(new MouseEvent("mouseenter"));
+        await nextTick();
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".three .dropdown-menu");
+        // Hover on four
+        const four = target.querySelector(".four");
+        four.querySelector("button").dispatchEvent(new MouseEvent("mouseenter"));
+        await nextTick();
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".four .dropdown-menu");
+    });
+
     QUnit.test("siblings dropdowns: toggler focused on mouseenter", async (assert) => {
         class Parent extends Component {}
         Parent.template = xml`
