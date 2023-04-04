@@ -27,12 +27,12 @@
             run: 'click',
         },
         {
-            trigger: '#name',
+            trigger: '#name_0',
             content: 'Give a name to the new event',
             run: 'text TEST EVENT',
         },
         {
-            trigger: '#start',
+            trigger: '#start_0',
             content: 'Give a date to the new event',
             run: `text ${todayDate()}`,
         },

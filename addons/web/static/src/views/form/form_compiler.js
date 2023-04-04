@@ -189,7 +189,7 @@ export class FormCompiler extends ViewCompiler {
 
         const fieldName = el.getAttribute("name");
         const fieldString = el.getAttribute("string");
-        const fieldId = el.getAttribute("field_id") || fieldName;
+        const fieldId = el.getAttribute("field_id");
         const labelsForAttr = el.getAttribute("id") || fieldName;
         const labels = this.getLabels(labelsForAttr);
         const dynamicLabel = (label) => {
@@ -609,7 +609,7 @@ export class FormCompiler extends ViewCompiler {
                     setting.setAttribute("fieldName", toStringExpression(fieldName));
                     setting.setAttribute(
                         "fieldId",
-                        toStringExpression(child.getAttribute("field_id") || fieldName)
+                        toStringExpression(child.getAttribute("field_id"))
                     );
                 }
                 append(setting, fieldSlot);

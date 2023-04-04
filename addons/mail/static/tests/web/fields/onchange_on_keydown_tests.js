@@ -58,7 +58,7 @@ QUnit.test(
                 }
             },
         });
-        const textarea = $('textarea[id="description"]')[0];
+        const textarea = $('textarea[id="description_0"]')[0];
         await dom.click(textarea);
         for (const key of "testing the keydown event") {
             // trigger each key separately to simulate a user typing

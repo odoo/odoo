@@ -20,12 +20,10 @@ export class FormArchParser extends XMLParser {
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "form", jsClass);
-                let fieldId = fieldInfo.name;
-                if (fieldInfo.name in fieldNextIds) {
-                    fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
-                } else {
-                    fieldNextIds[fieldInfo.name] = 1;
+                if (!(fieldInfo.name in fieldNextIds)) {
+                    fieldNextIds[fieldInfo.name] = 0;
                 }
+                const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
                 fieldNodes[fieldId] = fieldInfo;
                 node.setAttribute("field_id", fieldId);
                 if (archParseBoolean(node.getAttribute("default_focus") || "")) {

@@ -312,12 +312,14 @@ export class KanbanRecord extends Component {
             }
             case "set_cover": {
                 const { autoOpen, fieldName } = params;
-                const { widget } = archInfo.fieldNodes[fieldName];
+                const widgets = Object.values(archInfo.fieldNodes)
+                    .filter((x) => x.name === fieldName)
+                    .map((x) => x.widget);
                 const field = record.fields[fieldName];
                 if (
                     field.type === "many2one" &&
                     field.relation === "ir.attachment" &&
-                    widget === "attachment_image"
+                    widgets.includes("attachment_image")
                 ) {
                     this.dialog.add(KanbanCoverImageDialog, { autoOpen, fieldName, record });
                 } else {

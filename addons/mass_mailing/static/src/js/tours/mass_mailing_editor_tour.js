@@ -46,7 +46,7 @@
         trigger: '[name="body_arch"] iframe .o_editable h1',
         run: () => {},
     }, {
-        trigger: 'input#subject',
+        trigger: 'input#subject_0',
         run: 'text Test',
     }, {
         trigger: '.o_form_view', // blur previous input

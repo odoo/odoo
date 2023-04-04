@@ -119,7 +119,7 @@ export class KanbanCompiler extends ViewCompiler {
             compiled = createElement("span", { "t-out": `record["${fieldName}"].value` });
         } else {
             compiled = super.compileField(el, params);
-            const fieldId = el.getAttribute("field_id") || el.getAttribute("name");
+            const fieldId = el.getAttribute("field_id");
             compiled.setAttribute("id", `'${fieldId}_' + __comp__.props.record.id`);
         }
 

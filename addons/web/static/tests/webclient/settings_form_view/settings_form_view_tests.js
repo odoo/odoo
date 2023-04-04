@@ -658,7 +658,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "checkbox should not be checked"
         );
         assert.containsNone(target, ".o_dirty_warning", "warning message should not be shown");
-        await click(target.querySelector(".o_field_boolean input[id=bar]"));
+        await click(target.querySelector(".o_field_boolean input[id=bar_0]"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
 
         window.dispatchEvent(new Event("beforeunload"));
@@ -1139,7 +1139,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "checkbox should not be checked"
         );
         assert.containsNone(target, ".o_dirty_warning", "warning message should not be shown");
-        await click(target.querySelector(".o_field_boolean input[id=bar]"));
+        await click(target.querySelector(".o_field_boolean input[id=bar_0]"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
         assert.containsOnce(target, ".o_dirty_warning", "warning message should be shown");
     });
@@ -1170,7 +1170,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                     </form>`,
             });
 
-            await click(target.querySelector("input[id=bar]"));
+            await click(target.querySelector("input[id=bar_0]"));
             assert.containsOnce(target, ".o_dirty_warning", "warning message should be shown");
             await click(target.querySelector(".o_form_button_save"));
             assert.containsOnce(target, ".o_dirty_warning", "warning message should be shown");
@@ -1517,8 +1517,8 @@ QUnit.module("SettingsFormView", (hooks) => {
             <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
                     <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true" labels="[&quot;\`My\\&quot; little '  Label\`&quot;]">
-                        <FormLabel id="'display_name'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
-                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']"/>
+                        <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
+                        <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']"/>
                     </SearchableSetting>
                 </SettingsApp>
             </SettingsPage>`;
@@ -1559,7 +1559,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         const expectedCompiled = `
             <HighlightText originalText="\`this is Baz value: \`"/>
-            <Field id="'baz'" name="'baz'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['baz']"/>
+            <Field id="'baz_0'" name="'baz'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['baz_0']"/>
             <HighlightText originalText="\` and this is the after text\`"/>`;
         assert.areEquivalent(
             compiled.querySelector("SearchableSetting div.text-muted").innerHTML,

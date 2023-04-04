@@ -62,15 +62,15 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
         "there should be one modal opened to edit the empty email"
     );
     assert.strictEqual(
-        $(".modal-content .o_form_view .o_input#name").val(),
+        $(".modal-content .o_form_view .o_input#name_0").val(),
         "silver",
         "the opened modal in edit mode should be a form view dialog with the res.partner 14"
     );
-    assert.containsOnce($, ".modal-content .o_form_view .o_input#email");
+    assert.containsOnce($, ".modal-content .o_form_view .o_input#email_0");
 
     // set the email and save the modal (will rerender the form view)
     await testUtils.fields.editInput(
-        $(".modal-content .o_form_view .o_input#email"),
+        $(".modal-content .o_form_view .o_input#email_0"),
         "coucou@petite.perruche"
     );
     await testUtils.dom.click($(".modal-content .o_form_button_save"));

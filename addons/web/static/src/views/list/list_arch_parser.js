@@ -16,6 +16,7 @@ import { encodeObjectForTemplate } from "@web/views/view_compiler";
 export class GroupListArchParser extends XMLParser {
     parse(arch, models, modelName, jsClass) {
         const fieldNodes = {};
+        const fieldNextIds = {};
         const buttons = [];
         let buttonId = 0;
         this.visitXML(arch, (node) => {
@@ -27,12 +28,20 @@ export class GroupListArchParser extends XMLParser {
                 return false;
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "list", jsClass);
-                fieldNodes[fieldInfo.name] = fieldInfo;
-                node.setAttribute("field_id", fieldInfo.name);
+                if (!(fieldInfo.name in fieldNextIds)) {
+                    fieldNextIds[fieldInfo.name] = 0;
+                }
+                const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+                fieldNodes[fieldId] = fieldInfo;
+                node.setAttribute("field_id", fieldId);
                 return false;
             }
         });
-        return { fieldNodes, buttons };
+        const activeFields = {};
+        for (const fieldNode of Object.values(fieldNodes)) {
+            activeFields[fieldNode.name] = fieldNode;
+        }
+        return { fieldNodes, activeFields, buttons };
     }
 }
 
@@ -74,6 +83,7 @@ export class ListArchParser extends XMLParser {
         const treeAttr = {};
         let nextId = 0;
         const activeFields = {};
+        const fieldNextIds = {};
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
@@ -101,8 +111,12 @@ export class ListArchParser extends XMLParser {
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = this.parseFieldNode(node, models, modelName);
-                fieldNodes[fieldInfo.name] = fieldInfo;
-                node.setAttribute("field_id", fieldInfo.name);
+                if (!(fieldInfo.name in fieldNextIds)) {
+                    fieldNextIds[fieldInfo.name] = 0;
+                }
+                const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+                fieldNodes[fieldId] = fieldInfo;
+                node.setAttribute("field_id", fieldId);
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
@@ -158,7 +172,7 @@ export class ListArchParser extends XMLParser {
                 const groupByArchInfo = groupListArchParser.parse(groupByArch, models, coModelName);
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
-                    activeFields: groupByArchInfo.fieldNodes,
+                    activeFields: groupByArchInfo.activeFields,
                     fieldNodes: groupByArchInfo.fieldNodes,
                     fields: models[coModelName],
                 };
@@ -233,8 +247,19 @@ export class ListArchParser extends XMLParser {
             treeAttr.defaultOrder = stringToOrderBy(handleField);
         }
 
-        for (const [key, field] of Object.entries(fieldNodes)) {
-            activeFields[key] = field; // TODO process
+        for (const fieldNode of Object.values(fieldNodes)) {
+            const fieldName = fieldNode.name;
+            if (activeFields[fieldName]) {
+                const { alwaysInvisible } = fieldNode;
+                activeFields[fieldName] = {
+                    ...fieldNode,
+                    // a field can only be considered to be always invisible
+                    // if all its nodes are always invisible
+                    alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                };
+            } else {
+                activeFields[fieldName] = fieldNode;
+            }
         }
 
         return {

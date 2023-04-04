@@ -867,7 +867,7 @@ QUnit.module("Views", (hooks) => {
                             str: "some string",
                             bool: "true",
                             num: "4.5",
-                            field_id: "int_field",
+                            field_id: "int_field_0",
                         });
                     }
                 }
