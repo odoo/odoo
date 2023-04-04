@@ -239,6 +239,23 @@ export class OdooEditor extends EventTarget {
                 preHistoryUndo: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
+                /**
+                 * In case an external asynchronous post processing has to be
+                 * applied on some nodes after an external step (i.e. render
+                 * an OWL Component), the owner of the post-processing will
+                 * return a Promise through this hook resolved when it is done.
+                 * Further collaborative external steps will be buffered as
+                 * long as that promise is not resolved, to avoid a situation
+                 * where the editor tries to apply mutations inside a node that
+                 * is currently being rendered (not ready).
+                 *
+                 * @param {Element} editable
+                 * @returns {Promise|null} Promise that will be resolved when
+                 *          the rendering is done, or null if there is no
+                 *          rendering to do. The editor will buffer new external
+                 *          steps (collaborative) until the promise is resolved.
+                 */
+                postProcessExternalSteps: () => null,
                 onPostSanitize: () => {},
                 direction: 'ltr',
                 _t: string => string,
@@ -324,6 +341,11 @@ export class OdooEditor extends EventTarget {
         this._collabSelectionsContainer = this.document.createElement('div');
         this._collabSelectionsContainer.classList.add('oe-collaboration-selections-container');
         this.editable.before(this._collabSelectionsContainer);
+
+        // Promise for extra rendering, collaborative external steps will be
+        // buffered (delayed) until it is resolved.
+        this._postProcessExternalStepsPromise = null;
+        this._externalStepsBuffer = [];
 
         this.idSet(editable);
         this._historyStepsActive = true;
@@ -1071,10 +1093,11 @@ export class OdooEditor extends EventTarget {
         this._historySnapshots = [{ step: steps[0] }];
         this._historySteps = steps;
 
+        this._postProcessExternalStepsPromise = this.options.postProcessExternalSteps(this.editable);
+
         this._handleCommandHint();
         this.multiselectionRefresh();
         this.observerActive();
-        this.dispatchEvent(new Event('historyResetFromSteps'));
     }
     historyGetMissingSteps({fromStepId, toStepId}) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
@@ -1535,19 +1558,40 @@ export class OdooEditor extends EventTarget {
         this._collabClientId = id;
     }
 
+    /**
+     * Apply external steps coming from the collaboration. Buffer them if
+     * _postProcessExternalStepsPromise is not null until it is resolved (since
+     * steps could potentially concern elements currently being rendered
+     * asynchronously).
+     *
+     * @param {Object} newSteps External steps to be applied
+     */
     onExternalHistorySteps(newSteps) {
+        if (this._postProcessExternalStepsPromise) {
+            this._externalStepsBuffer.push(...newSteps);
+        }
         this.observerUnactive();
         this._computeHistorySelection();
 
+        let stepIndex = 0;
         for (const newStep of newSteps) {
             this._historyAddExternalStep(newStep);
+            stepIndex++;
+            this._postProcessExternalStepsPromise = this.options.postProcessExternalSteps(this.editable);
+            if (this._postProcessExternalStepsPromise) {
+                this._postProcessExternalStepsPromise.then(() => {
+                    this._postProcessExternalStepsPromise = undefined;
+                    this.onExternalHistorySteps(this._externalStepsBuffer);
+                });
+                this._externalStepsBuffer = newSteps.slice(stepIndex);
+                break;
+            }
         }
 
         this.observerActive();
         this.historyResetLatestComputedSelection();
         this._handleCommandHint();
         this.multiselectionRefresh();
-        this.dispatchEvent(new Event('onExternalHistorySteps'));
     }
 
     // Multi selection
