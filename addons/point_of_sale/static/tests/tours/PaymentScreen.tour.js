@@ -181,7 +181,8 @@ ProductScreen.exec.addOrderline('Product Test', '1');
 ProductScreen.do.clickPayButton();
 
 PaymentScreen.check.totalIs('1.95');
-PaymentScreen.exec.pay('Cash', '5');
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.pressNumpad('5');
 
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('3.05');
