@@ -361,22 +361,13 @@ export const editorCommands = {
                     block.nodeName,
                 )
             ) {
-                setSelection(block, 0, block, nodeSize(block));
-                editor.historyPauseSteps();
-                // Keep the alignment and remove rest of the applied styles.
-                const textAlign = block.style.textAlign;
-                editor.execCommand('removeFormat');
-                if (textAlign) {
-                    block.style.textAlign = textAlign;
-                }
-                editor.historyUnpauseSteps();
                 const inLI = block.closest('li');
                 if (inLI && tagName === "P") {
                     inLI.oToggleList(0);
                 } else {
                     setTagName(block, tagName);
                 }
-            }  else {
+            } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
                 const newBlock = editor.document.createElement(tagName);
