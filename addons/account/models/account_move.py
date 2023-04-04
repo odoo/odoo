@@ -1924,6 +1924,33 @@ class AccountMove(models.Model):
             if record.is_sale_document() and journal_type != 'sale' or record.is_purchase_document() and journal_type != 'purchase':
                 raise ValidationError(_("The chosen journal has a type that is not compatible with your invoice type. Sales operations should go to 'sale' journals, and purchase operations to 'purchase' ones."))
 
+    @api.constrains('auto_post', 'partner_id', 'invoice_line_ids')
+    def _check_post_entries(self):
+        if not self._context.get('check_auto_post'):
+            self = self.filtered(lambda m: m.auto_post)
+        for move in self:
+            if move.partner_bank_id and not move.partner_bank_id.active:
+                raise UserError(_("The recipient bank account link to this invoice is archived.\nSo you cannot confirm the invoice."))
+            if move.state == 'posted':
+                raise UserError(_('The entry %s (id %s) is already posted.') % (move.name, move.id))
+            if not move.line_ids.filtered(lambda line: not line.display_type):
+                raise UserError(_('You need to add a line before posting.'))
+
+            if not move.partner_id:
+                if move.is_sale_document():
+                    raise UserError(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
+                elif move.is_purchase_document():
+                    raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
+
+            if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
+                raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
+
+            if move.line_ids.account_id.filtered(lambda account: account.deprecated):
+                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
+
+            if not move.invoice_date and move.is_purchase_document(include_receipts=True):
+                raise UserError(_("The Bill/Refund date is required to validate this document."))
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -2705,39 +2732,19 @@ class AccountMove(models.Model):
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
+        to_post.with_context({'check_auto_post': True})._check_post_entries()
         for move in to_post:
-            if move.partner_bank_id and not move.partner_bank_id.active:
-                raise UserError(_("The recipient bank account link to this invoice is archived.\nSo you cannot confirm the invoice."))
-            if move.state == 'posted':
-                raise UserError(_('The entry %s (id %s) is already posted.') % (move.name, move.id))
-            if not move.line_ids.filtered(lambda line: not line.display_type):
-                raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
-
-            if not move.partner_id:
-                if move.is_sale_document():
-                    raise UserError(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
-                elif move.is_purchase_document():
-                    raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
-
-            if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
-                raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
-
-            if move.line_ids.account_id.filtered(lambda account: account.deprecated):
-                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if not move.invoice_date:
-                if move.is_sale_document(include_receipts=True):
-                    move.invoice_date = fields.Date.context_today(self)
-                    move.with_context(check_move_validity=False)._onchange_invoice_date()
-                elif move.is_purchase_document(include_receipts=True):
-                    raise UserError(_("The Bill/Refund date is required to validate this document."))
+            if not move.invoice_date and move.is_sale_document(include_receipts=True):
+                move.invoice_date = fields.Date.context_today(self)
+                move.with_context(check_move_validity=False)._onchange_invoice_date()
 
             # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
