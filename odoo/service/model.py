@@ -142,6 +142,12 @@ def retrying(func, env):
                 env.registry.reset_changes()
                 if request:
                     request.session = request._get_session_and_dbname()[0]
+                    # Rewind files in case of failure
+                    for filename, file in request.httprequest.files.items():
+                        if hasattr(file, "seekable") and file.seekable():
+                            file.seek(0)
+                        else:
+                            raise RuntimeError(f"Cannot retry request on input file {filename!r} after serialization failure") from exc
                 if isinstance(exc, IntegrityError):
                     raise _as_validation_error(env, exc) from exc
                 if exc.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
