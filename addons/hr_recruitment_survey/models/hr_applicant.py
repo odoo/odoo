@@ -18,12 +18,18 @@ class Applicant(models.Model):
             .filtered(lambda i: i.survey_id == self.survey_id)\
             .sorted(lambda i: i.create_date, reverse=True)
         if not sorted_interviews:
-            return self.survey_id.action_print_survey()
+            action = self.survey_id.action_print_survey()
+            action['target'] = 'new'
+            return action
 
         answered_interviews = sorted_interviews.filtered(lambda i: i.state == 'done')
         if answered_interviews:
-            return self.survey_id.action_print_survey(answer=answered_interviews[0])
-        return self.survey_id.action_print_survey(answer=sorted_interviews[0])
+            action = self.survey_id.action_print_survey(answer=answered_interviews[0])
+            action['target'] = 'new'
+            return action
+        action = self.survey_id.action_print_survey(answer=sorted_interviews[0])
+        action['target'] = 'new'
+        return action
 
     def action_send_survey(self):
         self.ensure_one()
@@ -32,7 +38,7 @@ class Applicant(models.Model):
         if not self.partner_id:
             if not self.partner_name:
                 raise UserError(_('Please provide an applicant name.'))
-            self.partner_id = self.env['res.partner'].create({
+            self.partner_id = self.env['res.partner'].sudo().create({
                 'is_company': False,
                 'type': 'private',
                 'name': self.partner_name,
