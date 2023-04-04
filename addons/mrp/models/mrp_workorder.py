@@ -90,9 +90,6 @@ class MrpWorkorder(models.Model):
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
         group_operator="avg", readonly=True, store=True)
-    duration_percent = fields.Integer(
-        'Duration Deviation (%)', compute='_compute_duration',
-        group_operator="avg", readonly=True, store=True)
     progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
@@ -321,10 +318,6 @@ class MrpWorkorder(models.Model):
         for order in self:
             order.duration = sum(order.time_ids.mapped('duration'))
             order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
-            if order.duration_expected:
-                order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
-            else:
-                order.duration_percent = 0
 
     def _set_duration(self):
 
@@ -883,7 +876,6 @@ class MrpWorkorder(models.Model):
                 raise UserError(_('Some workorders require another workorder to be completed first'))
             if wo.duration == 0.0:
                 wo.duration = wo.duration_expected
-                wo.duration_percent = 100
         wo.state = 'done'
 
     def action_mass_start(self):
