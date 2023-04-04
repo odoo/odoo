@@ -77,7 +77,7 @@
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                    <div class="o_primary ps-3">
+                                    <div class="o_primary d-flex align-items-center justify-content-between ps-3 pe-4">
                                         <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
                                     </div>
                                     <div class="ps-3 text-muted">
@@ -98,7 +98,7 @@
                                             <field name="new_application_count"/> New Applications
                                         </button>
                                     </div>
-                                    <ul class="col-5 o_job_activities">
+                                    <ul class="col-5 o_job_activities list-unstyled">
                                         <li>
                                             <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'to-recruit' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_interviewer">
                                                 <field name="no_of_recruitment"/> To Recruit
