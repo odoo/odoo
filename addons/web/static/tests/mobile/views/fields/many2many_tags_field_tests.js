@@ -44,7 +44,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags" placeholder="foo"/>
                 </form>`,
         });
-        assert.strictEqual(target.querySelector("#timmy").placeholder, "foo");
+        assert.strictEqual(target.querySelector("#timmy_0").placeholder, "foo");
     });
 
     QUnit.test("Many2ManyTagsField placeholder should be empty", async function (assert) {
@@ -57,6 +57,6 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags"/>
                 </form>`,
         });
-        assert.strictEqual(target.querySelector("#timmy").placeholder, "");
+        assert.strictEqual(target.querySelector("#timmy_0").placeholder, "");
     });
 });

@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption', {
             trigger: ".o_pager_value:first()",
         },
         {
-            trigger: "input[id='qty_producing']",
+            trigger: "input[id='qty_producing_0']",
             run: 'text 8.0',
         },
         {
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption', {
             run: 'click',
         },
         {
-            trigger: "input[id='qty_producing']",
+            trigger: "input[id='qty_producing_0']",
             run: 'text 2.0',
         },
         {

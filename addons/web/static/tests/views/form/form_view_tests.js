@@ -863,9 +863,9 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_char");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "col-lg-6");
 
-        assert.hasClass(target.querySelector(".o_form_label[for=foo]"), "plop");
-        assert.hasClass(target.querySelector(".o_form_label[for=foo]"), "plop2");
-        assert.hasClass(target.querySelector(".o_form_label[for=foo]"), "col-lg-6");
+        assert.hasClass(target.querySelector(".o_form_label[for=foo_0]"), "plop");
+        assert.hasClass(target.querySelector(".o_form_label[for=foo_0]"), "plop2");
+        assert.hasClass(target.querySelector(".o_form_label[for=foo_0]"), "col-lg-6");
     });
 
     QUnit.test("group containing both a field and a group", async function (assert) {
@@ -2350,14 +2350,14 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
 
-        await mouseEnter(target.querySelector(".o_form_label[for=foo] sup"));
+        await mouseEnter(target.querySelector(".o_form_label[for=foo_0] sup"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "foo tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for=bar] sup"));
+        await mouseEnter(target.querySelector(".o_form_label[for=bar_0] sup"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
@@ -4911,7 +4911,7 @@ QUnit.module("Views", (hooks) => {
             ".o_statusbar_status button",
             "Must have only one statusbar button"
         );
-        await editInput(target, "input#name.o_input", "xpad");
+        await editInput(target, "input#name_0.o_input", "xpad");
         assert.containsN(
             target,
             ".o_statusbar_status button",
@@ -8750,7 +8750,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(rows[0], "> .o_cell", "Should only contain one cell");
             assert.containsOnce(rows[0], ".o_horizontal_separator");
             assert.containsN(rows[1], "> .o_cell", 2, "Should contain 2 cells");
-            assert.containsOnce(rows[1], "label[for=display_name]");
+            assert.containsOnce(rows[1], "label[for=display_name_0]");
             assert.containsOnce(rows[1], "div[name=display_name]");
         }
     );
@@ -11220,14 +11220,14 @@ QUnit.module("Views", (hooks) => {
                     </form>`,
             });
 
-            await mouseEnter(target.querySelector(".o_form_label[for=product_id] sup"));
+            await mouseEnter(target.querySelector(".o_form_label[for=product_id_0] sup"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,
                 "this is a tooltip\n\nValues set here are company-specific."
             );
 
-            await mouseEnter(target.querySelector(".o_form_label[for=foo] sup"));
+            await mouseEnter(target.querySelector(".o_form_label[for=foo_0] sup"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,

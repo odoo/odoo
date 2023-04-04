@@ -18,14 +18,14 @@ const commonSteps = [
         trigger: ".o_list_button_add",
     },
     {
-        trigger: 'input[id="title"]',
+        trigger: 'input[id="title_0"]',
         run: "text Test Chatbot Sequence",
     },
     {
         trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
     },
     {
-        trigger: "textarea#message",
+        trigger: "textarea#message_0",
         run: "text Step 1",
     },
     {
@@ -37,7 +37,7 @@ const commonSteps = [
         run: () => {},
     },
     {
-        trigger: "textarea#message",
+        trigger: "textarea#message_0",
         run: "text Step 2",
     },
     {
@@ -49,7 +49,7 @@ const commonSteps = [
         run: () => {},
     },
     {
-        trigger: "textarea#message",
+        trigger: "textarea#message_0",
         run: "text Step 3",
     },
 ];
@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             run: () => {},
         },
         {
-            trigger: "textarea#message",
+            trigger: "textarea#message_0",
             run: "text Step 4",
         },
         {
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             run: () => {},
         },
         {
-            trigger: "textarea#message",
+            trigger: "textarea#message_0",
             run: "text Step 5",
         },
         {
@@ -136,14 +136,16 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
                         clientY: fromPosition.y,
                     })
                 );
-                from.dispatchEvent(new MouseEvent("mousemove", {
-                    bubbles: true,
-                    which: 1,
-                    button: 0,
-                    // dragging is only enabled when the mouse have moved from at least 10 pixels from the original position
-                    clientX: fromPosition.x + 20,
-                    clientY: fromPosition.y + 20,
-                }));
+                from.dispatchEvent(
+                    new MouseEvent("mousemove", {
+                        bubbles: true,
+                        which: 1,
+                        button: 0,
+                        // dragging is only enabled when the mouse have moved from at least 10 pixels from the original position
+                        clientX: fromPosition.x + 20,
+                        clientY: fromPosition.y + 20,
+                    })
+                );
                 to.dispatchEvent(new Event("mouseenter", { bubbles: true }));
                 from.dispatchEvent(new Event("mouseup", { bubbles: true }));
             },
@@ -152,7 +154,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
         },
         {
-            trigger: "textarea#message",
+            trigger: "textarea#message_0",
             run: "text Step 6",
         },
         {

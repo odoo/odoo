@@ -53,6 +53,7 @@ export class KanbanArchParser extends XMLParser {
         const tooltipInfo = {};
         let handleField = null;
         const fieldNodes = {};
+        const fieldNextIds = {};
         const widgetNodes = {};
         let widgetNextId = 0;
         const jsClass = xmlDoc.getAttribute("js_class");
@@ -111,8 +112,12 @@ export class KanbanArchParser extends XMLParser {
                     fieldInfo.forceSave = true;
                 }
                 const name = fieldInfo.name;
-                fieldNodes[name] = fieldInfo;
-                node.setAttribute("field_id", name);
+                if (!(fieldInfo.name in fieldNextIds)) {
+                    fieldNextIds[fieldInfo.name] = 0;
+                }
+                const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+                fieldNodes[fieldId] = fieldInfo;
+                node.setAttribute("field_id", fieldId);
                 if (fieldInfo.options.group_by_tooltip) {
                     tooltipInfo[name] = fieldInfo.options.group_by_tooltip;
                 }
@@ -140,8 +145,12 @@ export class KanbanArchParser extends XMLParser {
             // Keep track of last update so images can be reloaded when they may have changed.
             if (node.tagName === "img") {
                 const attSrc = node.getAttribute("t-att-src");
-                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.write_date) {
-                    fieldNodes.write_date = { type: "datetime" };
+                if (
+                    attSrc &&
+                    /\bkanban_image\b/.test(attSrc) &&
+                    !Object.values(fieldNodes).some((f) => f.name === "write_date")
+                ) {
+                    fieldNodes.write_date_0 = { name: "write_date", type: "datetime" };
                 }
             }
         });
@@ -170,8 +179,19 @@ export class KanbanArchParser extends XMLParser {
             defaultOrder = stringToOrderBy(handleField);
         }
 
-        for (const [key, field] of Object.entries(fieldNodes)) {
-            activeFields[key] = field; // TODO process
+        for (const fieldNode of Object.values(fieldNodes)) {
+            const fieldName = fieldNode.name;
+            if (activeFields[fieldName]) {
+                const { alwaysInvisible } = fieldNode;
+                activeFields[fieldName] = {
+                    ...fieldNode,
+                    // a field can only be considered to be always invisible
+                    // if all its nodes are always invisible
+                    alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                };
+            } else {
+                activeFields[fieldName] = fieldNode;
+            }
         }
 
         return {
