@@ -368,7 +368,7 @@
                                    context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
                                    widget="subtasks_one2many">
-                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
+                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="display_in_project" column_invisible="True" force_save="1"/>
                                     <field name="sequence" widget="handle"/>
@@ -397,14 +397,13 @@
                                         class="fw-bold" widget="badge" optional="hide" invisible="rating_last_text == 'none'" column_invisible="True" groups="project.group_project_rating"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="hide" context="{'default_project_id': project_id}"/>
-                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"/>
                                 </tree>
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1"
                                    context="{'default_project_id': project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view', 'search_default_open_tasks': 1}">
-                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
+                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="parent_id" column_invisible="True" />
                                     <field name="subtask_count" column_invisible="True"/>
@@ -432,7 +431,6 @@
                                         class="fw-bold" widget="badge" optional="hide" invisible="rating_last_text == 'none'" column_invisible="True" groups="project.group_project_rating"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="hide"/>
-                                    <button class="oe_link float-end" string="View Task" name="action_open_task" type="object"/>
                                 </tree>
                             </field>
                         </page>
