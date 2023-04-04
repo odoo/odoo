@@ -120,7 +120,7 @@ export class Message {
     }
 
     get isSelfAuthored() {
-        if (!this.author) {
+        if (!this.author || !this._store.self) {
             return false;
         }
         return this.author.id === this._store.self.id && this.author.type === this._store.self.type;
