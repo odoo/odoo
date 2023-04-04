@@ -27,6 +27,14 @@
         });
     }
 
+    // Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
+    // all "`" character by `&lsquo;`.
+    const getQuotesEncodedName = function (name) {
+            return name.replaceAll(/"/g, character => `&quot;`)
+                       .replaceAll(/'/g, character => `&apos;`)
+                       .replaceAll(/`/g, character => `&lsquo;`);
+    };
+
     const selectButtonByText = function (text) {
         return [{
             content: "Open the select",
@@ -81,7 +89,7 @@
             });
         }
         if (label) {
-            testText += `:has(label:contains("${label}"))`;
+            testText += `:has(label:contains(${label}))`;
             ret.push({
                 content: "Change the label text",
                 trigger: 'we-input[data-set-label-text] input',
@@ -90,7 +98,7 @@
         }
         if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
-            const nameAttribute = isCustom && label ? label : name;
+            const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
             testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
         }
         ret.push({
@@ -390,6 +398,9 @@
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        ...addCustomField("char", "text", "''", false),
+        ...addCustomField("char", "text", '""', false),
+        ...addCustomField("char", "text", "``", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
