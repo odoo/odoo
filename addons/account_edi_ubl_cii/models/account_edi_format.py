@@ -183,6 +183,8 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
 
         if not journal:
+            journal = self.env['account.journal'].browse(self._context.get("default_journal_id"))
+        if not journal:
             context_move_type = self._context.get("default_move_type", "entry")
             if context_move_type in self.env['account.move'].get_sale_types():
                 journal_type = "sale"
