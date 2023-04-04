@@ -39,7 +39,7 @@ Dashboard / Reports for Warehouse Management includes:
     ],
     'installable': True,
     'auto_install': True,
-    'post_init_hook': '_configure_journals',
+    'post_init_hook': '_configure_product_categories',
     'assets': {
         'web.assets_backend': [
             'stock_account/static/src/stock_account_forecasted/*',
