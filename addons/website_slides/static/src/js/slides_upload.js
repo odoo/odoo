@@ -146,7 +146,7 @@ var SlideUploadDialog = Dialog.extend({
     _formValidateGetValues: async function (forcePublished) {
         var slideCategory = 'document';
         // default slide_category (for article for instance)
-        if (this.slide_category_data.includes(this.get('state'))) {
+        if (this.slide_category_data.hasOwnProperty(this.get('state'))) {
             slideCategory = this.get('state');
         }
 
