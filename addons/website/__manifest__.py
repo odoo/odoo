@@ -218,6 +218,7 @@
             'website/static/src/js/editor/editor.js',
             'website/static/src/js/editor/snippets.editor.js',
             'website/static/src/js/editor/snippets.options.js',
+            'website/static/src/js/editor/megamenu.js',
             'website/static/src/snippets/s_facebook_page/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',
             'website/static/src/snippets/s_image_gallery/000.xml',

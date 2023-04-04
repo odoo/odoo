@@ -1728,6 +1728,7 @@ var SnippetsMenu = Widget.extend({
         'clone_snippet': '_onCloneSnippet',
         'cover_update': '_onOverlaysCoverUpdate',
         'deactivate_snippet': '_onDeactivateSnippet',
+        'deactivate_snippet_if_any': '_onDeactivateSnippetIfAny',
         'drag_and_drop_stop': '_onSnippetDragAndDropStop',
         'drag_and_drop_start': '_onSnippetDragAndDropStart',
         'get_snippet_versions': '_onGetSnippetVersions',
@@ -1882,6 +1883,7 @@ var SnippetsMenu = Widget.extend({
         this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', this._onClick);
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
+        core.bus.on('deactivate_snippet_if_any', this, this._onDeactivateSnippetIfAny);
 
         // Adapt overlay covering when the window is resized / content changes
         var debouncedCoverUpdate = _.throttle(() => {
@@ -2041,6 +2043,7 @@ var SnippetsMenu = Widget.extend({
             }
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
+        core.bus.off('deactivate_snippet_if_any', this, this._onDeactivateSnippetIfAny);
         $(document.body).off('click', this._checkEditorToolbarVisibilityCallback);
         this.el.ownerDocument.body.classList.remove('editor_has_snippets');
     },
@@ -3625,6 +3628,23 @@ var SnippetsMenu = Widget.extend({
      */
     _onDeactivateSnippet: function () {
         this._activateSnippet(false);
+    },
+    /**
+     * Called when a child editor asks to deactivate the current snippet
+     * overlay if the active snippet fulfills a given condition.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {function} ev.data.targetCondition
+     */
+    _onDeactivateSnippetIfAny(ev) {
+        for (const editor of this.snippetEditors) {
+            if (ev.data.targetCondition(editor.$target[0])) {
+                this._activateSnippet(false);
+                return;
+            }
+        }
     },
     /**
     * Called when a snippet will move in the page.
