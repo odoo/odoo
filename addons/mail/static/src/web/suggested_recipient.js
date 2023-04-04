@@ -29,14 +29,10 @@ export class SuggestedRecipient extends Component {
         );
     }
 
-    onChangeCheckbox() {
-        if (this.props.recipient.persona) {
-            this.props.recipient.checked = !this.props.recipient.checked;
-        }
-    }
-
-    onClick() {
-        if (!this.props.recipient.persona) {
+    onChangeCheckbox(ev) {
+        this.props.recipient.checked = !this.props.recipient.checked;
+        if (this.props.recipient.checked && !this.props.recipient.persona) {
+            this.props.recipient.checked = false;
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
             // should be opened.

@@ -240,3 +240,17 @@ QUnit.test(
         assert.containsNone($, ".form-check-input:checked");
     }
 );
+
+QUnit.test(
+    "suggested recipient without partner can be clicked from the checkbox",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
+        const { openFormView } = await start();
+        await openFormView("res.fake", fakeId);
+        await click("button:contains(Send message)");
+        await click(".o-mail-SuggestedRecipient input");
+        await waitUntil(".modal-header");
+        assert.containsOnce($, ".modal-header");
+    }
+);
