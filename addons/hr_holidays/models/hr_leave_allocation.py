@@ -446,6 +446,8 @@ class HolidaysAllocation(models.Model):
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= date_to:
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
+                if not current_level:
+                    break
                 current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "days" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
