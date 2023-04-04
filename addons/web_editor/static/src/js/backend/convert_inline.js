@@ -559,6 +559,7 @@ function handleMasonry(editable) {
         const tds = [...tr.children].filter(child => child.nodeName === 'TD');
         const tdsWithTable = tds.filter(td => [...td.children].some(child => child.nodeName === 'TABLE'));
         if (tdsWithTable.length) {
+            // TODO: this seems a duplicate of the other o_desktop_h100 set below.
             // Set the cells' heights to fill their parents.
             for (const tdWithTable of tdsWithTable) {
                 tdWithTable.classList.toggle('o_desktop_h100', true);
@@ -578,6 +579,7 @@ function handleMasonry(editable) {
     }
     for (const tr of masonryTrs) {
         const height = tr.style.height.includes('px') ? parseFloat(tr.style.height.replace('px', '').trim()) : _getHeight(tr);
+        tr.closest('table').classList.toggle('o_desktop_h100', true);
         tr.classList.toggle('o_desktop_h100', true);
         for (const td of [...tr.children].filter(child => child.nodeName === 'TD')) {
             td.classList.toggle('o_desktop_h100', true);
