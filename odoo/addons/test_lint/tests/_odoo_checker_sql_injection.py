@@ -149,6 +149,8 @@ class OdooBaseChecker(BaseChecker):
                 self._is_constexpr(k, args_allowed=args_allowed) and self._is_constexpr(v, args_allowed=args_allowed)
                 for k, v in node.items
             )
+        elif isinstance(node, astroid.Starred):
+            return self._is_constexpr(node.value, args_allowed=args_allowed, position=position)
         elif isinstance(node, astroid.BinOp): # recusively infer both side of the operation. Failing if either side is not inferable
             left_operand = self._is_constexpr(node.left, args_allowed=args_allowed)
             right_operand = self._is_constexpr(node.right, args_allowed=args_allowed)
