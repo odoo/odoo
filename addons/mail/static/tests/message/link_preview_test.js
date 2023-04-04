@@ -262,3 +262,73 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
     await nextAnimationFrame();
     assert.ok(true);
 });
+
+QUnit.test(
+    "Squash the message and the link preview when the link preview is an image and the link is the only text in the message",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const linkPreviewId = pyEnv["mail.link.preview"].create({
+            image_mimetype: "image/jpg",
+            source_url:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+        });
+        const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+        pyEnv["mail.message"].create({
+            body: "<a href='linkPreviewLink'>http://linkPreview</a>",
+            link_preview_ids: [linkPreviewId],
+            message_type: "comment",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsNone($, ".o-mail-Message-bubble");
+    }
+);
+
+QUnit.test(
+    "Link preview and message should not be squashed when the link preview is not an image",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const linkPreviewId = pyEnv["mail.link.preview"].create({
+            og_description: "Description",
+            og_title: "Article title",
+            og_type: "article",
+            source_url: "https://www.odoo.com",
+        });
+        const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+        pyEnv["mail.message"].create({
+            body: "<a href='linkPreviewLink'>http://linkPreview</a>",
+            link_preview_ids: [linkPreviewId],
+            message_type: "comment",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce($, ".o-mail-Message-bubble");
+    }
+);
+
+QUnit.test(
+    "Link preview and message should not be squashed when there is more than the link in the message",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const linkPreviewId = pyEnv["mail.link.preview"].create({
+            image_mimetype: "image/jpg",
+            source_url:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+        });
+        const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+        pyEnv["mail.message"].create({
+            body: "<a href='linkPreviewLink'>http://linkPreview</a> not empty",
+            link_preview_ids: [linkPreviewId],
+            message_type: "comment",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce($, ".o-mail-Message-bubble");
+    }
+);

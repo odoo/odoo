@@ -94,21 +94,24 @@
                         >
                             <div t-if="!state.isEditing" class="o-mail-Message-content position-relative" t-att-class="{'d-flex': env.inDiscussApp}">
                                 <t t-if="message.type !== 'notification' and !message.isTransient and (!message.isBodyEmpty or message.subtypeDescription)">
-                                    <div class="position-relative">
-                                        <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
-                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
-                                                    }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
-                                        <div class="position-relative" t-att-class="{
-                                                    'p-1': message.isNote,
-                                                    'o-mail-Message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 p-3': !message.isNote,
-                                                    'flex-grow-1': state.isEditing,
-                                                    }" t-ref="body">
-                                            <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
-                                            <t t-if="message.body" t-out="message.body"/>
-                                            <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                    <t t-if="!message.linkPreviewSquash">
+                                        <div class="position-relative">
+                                            <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
+                                                        'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
+                                                        'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
+                                                        }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
+                                            <div class="position-relative" t-att-class="{
+                                                        'p-1': message.isNote,
+                                                        'o-mail-Message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 p-3': !message.isNote,
+                                                        'flex-grow-1': state.isEditing,
+                                                        }" t-ref="body">
+                                                <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
+                                                <t t-if="message.body" t-out="message.body"/>
+                                                <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </t>
+                                    <LinkPreviewList t-else="" linkPreviews="message.linkPreviews" deletable="false"/>
                                 </t>
 
                             </div>
@@ -167,7 +170,7 @@
                             attachments="message.attachments"
                             unlinkAttachment.bind="onClickAttachmentUnlink"
                             imagesHeight="300"/>
-                        <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature" linkPreviews="message.linkPreviews" deletable="deletable"/>
+                        <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
                 </div>
