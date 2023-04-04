@@ -39,7 +39,7 @@
                 <!-- the user list is editable, but one cannot add or delete rows -->
                 <tree string="Users" editable="bottom" create="false" delete="false">
                     <field name="user_id" invisible="1"/>
-                    <field name="user_login"/>
+                    <field name="user_login"  force_save="1"/>
                     <field name="new_passwd" required="True" password="True"/>
                 </tree>
             </field>
