@@ -95,6 +95,7 @@ insertModelFields("mail.message", {
     res_model_name: { string: "Res Model Name", type: "char" },
 });
 insertModelFields("mail.message.subtype", {
+    default: { default: true },
     subtype_xmlid: { type: "char" },
 });
 insertModelFields("mail.tracking.value", {

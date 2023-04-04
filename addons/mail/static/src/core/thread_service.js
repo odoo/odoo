@@ -681,6 +681,7 @@ export class ThreadService {
         const tmpId = lastMessageId + 0.01;
         const params = {
             context: {
+                mail_post_autofollow: !isNote && thread.hasWriteAccess,
                 temporary_id: tmpId,
             },
             post_data: {
