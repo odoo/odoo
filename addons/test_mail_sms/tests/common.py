@@ -2,14 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.tests.common import SMSCommon
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
-
-
-class TestSMSCommon(SMSCommon, MailCommon):
-    """ Main entry point for functional tests. It combines both SMS and MAIL
-    testing classes. """
 
 
 class TestSMSRecipients(TestRecipients):
