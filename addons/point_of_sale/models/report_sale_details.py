@@ -119,7 +119,7 @@ class ReportSaleDetails(models.AbstractModel):
             is_cash_method = False
             for payment in payments:
                 account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
-                if payment['session'] == session.id:
+                if payment.get('session') == session.id:
                     if not payment['cash']:
                         for account_payment in account_payments:
                             if payment['id'] == account_payment.pos_payment_method_id.id:
