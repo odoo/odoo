@@ -3,12 +3,13 @@
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests.common import SMSCommon
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.tests.common import TestRecipients
 
 
-class TestSMSCommon(SMSCommon, TestMailCommon):
-    """ Main entry point for functional tests. Kept to ease backward
-    compatibility and updating common. """
+class TestSMSCommon(SMSCommon, MailCommon):
+    """ Main entry point for functional tests. It combines both SMS and MAIL
+    testing classes. """
 
 
 class TestSMSRecipients(TestRecipients):
