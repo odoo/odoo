@@ -50,9 +50,12 @@
         </we-customizeblock-options>
     </t>
     <t t-name="web_editor.outdated_block_message">
-        <we-alert class="mt-2">
-            <we-title>This block is outdated</we-title>
-            <span>To make changes, drop this block and use the new options in the last version.</span>
+        <we-alert class="d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
+            <we-title>This block is outdated.</we-title>
+            <span>You might not be able to customize it anymore.</span>
+            <we-button class="o_we_bg_brand_primary py-2 my-4 border-0" data-no-preview="true" data-replace-snippet="">REPLACE BY NEW VERSION</we-button>
+            <span>You can still access the block options but it might be ineffective.</span>
+            <we-button class="o_we_bg_brand_primary py-2 my-4 border-0" data-no-preview="true" data-discard-alert="">ACCESS OPTIONS ANYWAY</we-button>
         </we-alert>
     </t>
 
