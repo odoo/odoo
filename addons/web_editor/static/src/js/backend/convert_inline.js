@@ -460,7 +460,9 @@ function classToStyle($editable, cssRules) {
  */
 function enforceTablesResponsivity(editable) {
     // Trying this: https://www.litmus.com/blog/mobile-responsive-email-stacking/
-    const trs = [...editable.querySelectorAll('.o_mail_wrapper tr')].reverse();
+    const trs = [...editable.querySelectorAll('.o_mail_wrapper tr')]
+        .filter(tr => [...tr.children].some(td => td.classList.contains('o_converted_col')))
+        .reverse();
     for (const tr of trs) {
         const commonTable = _createTable();
         const commonTr = document.createElement('tr');
@@ -470,14 +472,14 @@ function enforceTablesResponsivity(editable) {
         const tds = [...tr.children].filter(child => child.nodeName === 'TD');
         let index = 0;
         for (const td of tds) {
-            const width = td.style.maxWidth;;
+            const width = td.style.maxWidth;
             const div = document.createElement('div');
             div.style.display = 'inline-block';
             div.style.verticalAlign = 'top';
             div.classList.toggle('w100p', true);
             commonTd.appendChild(div);
             const newTable = _createTable();
-            newTable.style.width = width
+            newTable.style.width = width;
             newTable.classList.toggle('w100p', true);
             div.appendChild(newTable);
             const newTr = document.createElement('tr');
@@ -1106,7 +1108,7 @@ function normalizeRem($editable, rootFontSize=16) {
  */
  function responsiveToStaticForOutlook(editable) {
     // Replace the responsive tables with static ones for Outlook
-    for (const td of editable.querySelectorAll('td:not(.mso-hide)')) {
+    for (const td of editable.querySelectorAll('td.o_converted_col:not(.mso-hide)')) {
         const tdStyle = td.getAttribute('style') || '';
         const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
         const msoWidth = td.style.getPropertyValue('max-width');
@@ -1184,6 +1186,7 @@ function _applyColspan(element, colspan, tableWidth) {
     // Round to 2 decimal places.
     const width = Math.round(tableWidth * widthPercentage * 100) / 100;
     element.style.setProperty('max-width', width + 'px');
+    element.classList.toggle('o_converted_col', true);
 }
 /**
  * Take an element with a background image and return a string containing the
