@@ -269,6 +269,13 @@ class AccountMove(models.Model):
         index=True,
         copy=False,
     )
+    vat_date = fields.Date(
+        string='VAT Date',
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+        index=True,
+        copy=False,
+    )
     invoice_date_due = fields.Date(
         string='Due Date',
         compute='_compute_invoice_date_due', store=True, readonly=False,
