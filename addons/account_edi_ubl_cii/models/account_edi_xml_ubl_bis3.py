@@ -261,6 +261,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
             'currency_dp': 2,
+            'ubl_version_id': None,
         })
         vals['vals']['legal_monetary_total_vals']['currency_dp'] = 2
 
