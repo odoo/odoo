@@ -20,11 +20,11 @@ class WebsiteRoute(models.Model):
     path = fields.Char('Route')
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
-        query = super()._name_search(name, domain, operator, limit, order, name_get_uid)
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        query = super()._name_search(name, domain, operator, limit, order)
         if not query:
             self._refresh()
-            return super()._name_search(name, domain, operator, limit, order, name_get_uid)
+            return super()._name_search(name, domain, operator, limit, order)
         return query
 
     def _refresh(self):

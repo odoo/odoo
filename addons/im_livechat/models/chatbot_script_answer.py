@@ -38,7 +38,7 @@ class ChatbotScriptAnswer(models.Model):
         return result
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         """
         Search the records whose name or step message are matching the ``name`` pattern.
         The chatbot_script_id is also passed to the context through the custom widget
@@ -57,4 +57,4 @@ class ChatbotScriptAnswer(models.Model):
         if force_domain_chatbot_script_id:
             domain = expression.AND([domain, [('chatbot_script_id', '=', force_domain_chatbot_script_id)]])
 
-        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
+        return self._search(domain, limit=limit, order=order)

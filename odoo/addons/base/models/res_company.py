@@ -151,7 +151,7 @@ class Company(models.Model):
             self.currency_id = self.country_id.currency_id
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         context = dict(self.env.context)
         newself = self
         if context.pop('user_preference', None):
@@ -163,7 +163,7 @@ class Company(models.Model):
             domain = (domain or []) + [('id', 'in', companies.ids)]
             newself = newself.sudo()
         self = newself.with_context(context)
-        return super()._name_search(name, domain, operator, limit, order, name_get_uid)
+        return super()._name_search(name, domain, operator, limit, order)
 
     @api.model
     @api.returns('self', lambda value: value.id)

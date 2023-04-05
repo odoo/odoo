@@ -46,12 +46,12 @@ class FleetVehicleModel(models.Model):
     electric_assistance = fields.Boolean(default=False)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
         if operator != 'ilike' or (name or '').strip():
             name_domain = ['|', ('name', 'ilike', name), ('brand_id.name', 'ilike', name)]
             domain = expression.AND([name_domain, domain])
-        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
+        return self._search(domain, limit=limit, order=order)
 
     def name_get(self):
         res = []

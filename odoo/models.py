@@ -1694,12 +1694,10 @@ class BaseModel(metaclass=MetaModel):
         return self.browse(ids).sudo().name_get()
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
-        """ _name_search(name='', domain=None, operator='ilike', limit=None, order=None, name_get_uid=None) -> ids
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        """ _name_search(name='', domain=None, operator='ilike', limit=None, order=None) -> ids
 
         Private implementation of name_search, returning ids or a :class:`Query` object.
-        It allows passing a dedicated user for the name_get part to solve some
-        access rights issues.
 
         No default is applied for parameters ``limit`` and ``order``.
         """
@@ -1711,7 +1709,7 @@ class BaseModel(metaclass=MetaModel):
         elif not (name == '' and operator in ('like', 'ilike')):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
             domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
-        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
+        return self._search(domain, limit=limit, order=order)
 
     @api.model
     def _add_missing_default_values(self, values):
