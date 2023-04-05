@@ -414,12 +414,16 @@ class AccountAccount(models.Model):
         with opening debit/credit. In that case, the auto-balance is postpone
         until the whole file has been imported.
         """
-        rslt = super(AccountAccount, self).load(fields, data)
-
         if 'import_file' in self.env.context:
+            # Never automatically delete imported accounts when upgrading modules.
+            rslt = super(AccountAccount, self.with_context(noupdate=True)).load(fields, data)
+
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
             for company in companies:
                 company._auto_balance_opening_move()
+        else:
+            rslt = super().load(fields, data)
+
         return rslt
 
     def _toggle_reconcile_to_true(self):
