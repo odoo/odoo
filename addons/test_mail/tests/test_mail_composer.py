@@ -1201,34 +1201,41 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     @users('employee')
     def test_mail_composer_default_subject(self):
         """ Make sure the default subject is applied in the composer. """
-        simple_record = self.env['mail.test.simple'].create({'name': 'TestSimple'})
-        ticket_record = self.env['mail.test.ticket'].create({'name': 'TestTicket'})
+        simple_record = self.env['mail.test.simple'].create({'name': 'TestA'})
+        ticket_record = self.env['mail.test.ticket'].create({'name': 'Test1'})
+        nonthread_record = self.env['mail.test.nothread'].create({'name': 'TestNoThread'})
 
-        # default behavior: use record name
-        _, message = self.env['mail.compose.message'].with_context(
-            self._get_web_context(simple_record, add_web=False, composition_mode='comment')
-        ).create({
+        # default behavior: use the record name
+        ctx = self._get_web_context(simple_record, add_web=False, default_composition_mode='comment')
+        _, message = self.env['mail.compose.message'].with_context(ctx).create({
             'body': '<p>Test Body</p>',
         })._action_send_mail()
         self.assertEqual(message.subject, simple_record.name)
 
-        # overridden in model
-        _, message = self.env['mail.compose.message'].with_context(
-            self._get_web_context(ticket_record, add_web=False, composition_mode='comment')
-        ).create({
+        # default behavior without thread: use record name
+        ctx = self._get_web_context(nonthread_record, add_web=False, default_composition_mode='comment')
+        _, message = self.env['mail.compose.message'].with_context(ctx).create({
+            'body': '<p>Test Body</p>',
+            'partner_ids': self.env.user.partner_id.ids,
+        })._action_send_mail()
+        self.assertEqual(message.record_name, nonthread_record.name)
+        self.assertEqual(message.subject, nonthread_record.name)
+
+        # custom subject
+        ctx = self._get_web_context(ticket_record, add_web=False, default_composition_mode='comment')
+        _, message = self.env['mail.compose.message'].with_context(ctx).create({
             'body': '<p>Test Body</p>',
         })._action_send_mail()
         self.assertEqual(message.subject, ticket_record._message_compute_subject())
-        self.assertIn(f'Ticket for {ticket_record.name}', message.subject)
+        self.assertEqual(message.subject, f'Ticket for {ticket_record.name} on {ticket_record.datetime.strftime("%m/%d/%Y, %H:%M:%S")}')
 
         # forced value
-        _, message = self.env['mail.compose.message'].with_context(
-            self._get_web_context(ticket_record, add_web=False, composition_mode='comment')
-        ).create({
+        ctx = self._get_web_context(ticket_record, add_web=False, default_composition_mode='comment')
+        _, message = self.env['mail.compose.message'].with_context(ctx).create({
             'body': '<p>Test Body</p>',
             'subject': 'Forced Subject',
         })._action_send_mail()
-        self.assertEqual(message.subject, 'Forced Subject',)
+        self.assertEqual(message.subject, 'Forced Subject')
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
