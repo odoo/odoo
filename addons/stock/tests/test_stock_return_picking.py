@@ -32,11 +32,11 @@ class TestReturnPicking(TestStockCommon):
         move_1.quantity_done = 2
         move_2.quantity_done = 1
         picking_out.button_validate()
-        return_wizard = StockReturnObj.with_context(active_id=picking_out.id, active_ids=picking_out.ids).create({
+        return_picking = StockReturnObj.with_context(active_id=picking_out.id, active_ids=picking_out.ids).create({
             'location_id': self.stock_location,
             'picking_id': picking_out.id,
         })
-        return_wizard._onchange_picking_id()
+        return_picking._compute_moves_locations()
 
         ReturnPickingLineObj = self.env['stock.return.picking.line']
         # Check return line of uom_unit move

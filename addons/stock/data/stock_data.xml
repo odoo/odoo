@@ -42,6 +42,7 @@
             <field name="name">Vendors</field>
             <field name="location_id" ref="stock_location_locations_partner"/>
             <field name="usage">supplier</field>
+            <field name="return_location">True</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_customers" model="stock.location">
@@ -114,10 +115,6 @@
             }, {
                 'xml_id': 'stock.picking_type_out',
                 'record': obj().env.ref('stock.warehouse0').out_type_id,
-                'noupdate': True,
-            },{
-                'xml_id': 'stock.picking_type_return',
-                'record': obj().env.ref('stock.warehouse0').return_type_id,
                 'noupdate': True,
             }]"/>
         </function>

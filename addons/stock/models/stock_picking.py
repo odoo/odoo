@@ -43,6 +43,9 @@ class PickingType(models.Model):
         'stock.location', 'Default Destination Location',
         check_company=True,
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
+    default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
+        help="This is the default location for returns created from a picking with this operation type.",
+        domain="[('return_location', '=', 'True')]")
     code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', required=True)
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
@@ -67,7 +70,8 @@ class PickingType(models.Model):
     show_reserved = fields.Boolean(
         'Pre-fill Detailed Operations', default=True,
         help="If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
-        "operations with the corresponding products, locations and lot/serial numbers.")
+        "operations with the corresponding products, locations and lot/serial numbers. "
+        "For moves that are returns, the detailed operations will always be prefilled, regardless of this option.")
     reservation_method = fields.Selection(
         [('at_confirm', 'At Confirmation'), ('manual', 'Manually'), ('by_date', 'Before scheduled date')],
         'Reservation Method', required=True, default='at_confirm',
@@ -301,6 +305,11 @@ class Picking(models.Model):
         check_company=True,
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
     backorder_ids = fields.One2many('stock.picking', 'backorder_id', 'Back Orders')
+    return_id = fields.Many2one('stock.picking', 'Return of', copy=False, index='btree_not_null', readonly=True, check_company=True,
+        help="If this picking was created as a return of another picking, this field links to the original picking.")
+    return_ids = fields.One2many('stock.picking', 'return_id', 'Returns')
+    return_count = fields.Integer('# Returns', compute='_compute_return_count', compute_sudo=False)
+
     move_type = fields.Selection([
         ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
         default='direct', required=True,
@@ -684,6 +693,11 @@ class Picking(models.Model):
 
                 picking.location_id = location_id
                 picking.location_dest_id = location_dest_id
+
+    @api.depends('return_ids')
+    def _compute_return_count(self):
+        for picking in self:
+            picking.return_count = len(picking.return_ids)
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
@@ -1611,6 +1625,23 @@ class Picking(models.Model):
             body=message,
         )
         return True
+
+    def action_see_returns(self):
+        self.ensure_one()
+        if len(self.return_ids) == 1:
+            return {
+                "type": "ir.actions.act_window",
+                "res_model": "stock.picking",
+                "views": [[False, "form"]],
+                "res_id": self.return_ids.id
+            }
+        return {
+            'name': _('Returns'),
+            "type": "ir.actions.act_window",
+            "res_model": "stock.picking",
+            "views": [[False, "tree"], [False, "form"]],
+            "domain": [('id', 'in', self.return_ids.ids)],
+        }
 
     def _get_report_lang(self):
         return self.move_ids and self.move_ids[0].partner_id.lang or self.partner_id.lang or self.env.lang

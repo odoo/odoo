@@ -322,4 +322,6 @@ class StockRule(models.Model):
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         res['purchase_line_id'] = None
+        if self.location_dest_id.usage == "supplier":
+            res['purchase_line_id'], res['partner_id'] = move_to_copy._get_purchase_line_and_partner_from_chain()
         return res
