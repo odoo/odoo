@@ -375,27 +375,12 @@ export class PosGlobalState extends PosModel {
     // updated partners, and fails if not
     async load_new_partners() {
         const search_params = { domain: this.prepare_new_partners_domain() };
-        if (this.config.limited_partners_loading) {
-            search_params["order"] = "write_date desc";
-            if (this.config.partner_load_background) {
-                search_params["limit"] = this.config.limited_partners_amount || 1;
-            } else {
-                search_params["limit"] = 1;
-            }
-        }
         // FIXME POSREF TIMEOUT 3000
         const partners = await this.orm.silent.call(
             "pos.session",
             "get_pos_ui_res_partner_by_params",
             [[odoo.pos_session_id], search_params]
         );
-        if (this.config.partner_load_background) {
-            this.loadPartnersBackground(
-                search_params["domain"],
-                this.config.limited_partners_amount || 1,
-                "write_date desc"
-            );
-        }
         return this.addPartners(partners);
     }
 
@@ -589,48 +574,6 @@ export class PosGlobalState extends PosModel {
             }
         }
         await this._loadPartners([...missingPartnerIds]);
-    }
-    async loadProductsBackground() {
-        let page = 0;
-        let products = [];
-        do {
-            products = await this.orm.silent.call(
-                "pos.session",
-                "get_pos_ui_product_product_by_params",
-                [
-                    odoo.pos_session_id,
-                    {
-                        offset: page * this.config.limited_products_amount,
-                        limit: this.config.limited_products_amount,
-                    },
-                ]
-            );
-            this._loadProductProduct(products);
-            page += 1;
-        } while (products.length == this.config.limited_products_amount);
-    }
-    async loadPartnersBackground(domain = [], offset = 0, order = false) {
-        // Start at the first page since the first set of loaded partners are not actually in the
-        // same order as this background loading procedure.
-        let i = 0;
-        let partners = [];
-        do {
-            partners = await this.orm.silent.call(
-                "pos.session",
-                "get_pos_ui_res_partner_by_params",
-                [
-                    [odoo.pos_session_id],
-                    {
-                        order,
-                        domain,
-                        limit: this.config.limited_partners_amount,
-                        offset: offset + this.config.limited_partners_amount * i,
-                    },
-                ]
-            );
-            this.addPartners(partners);
-            i += 1;
-        } while (partners.length);
     }
     setLoadingOrderState(bool) {
         this.loadingOrderState = bool;

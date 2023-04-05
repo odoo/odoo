@@ -160,20 +160,6 @@ class PosConfig(models.Model):
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
-    limited_products_loading = fields.Boolean('Limited Product Loading',
-                                              default=True,
-                                              help="we load all starred products (favorite), all services, recent inventory movements of products, and the most recently updated products.\n"
-                                                   "When the session is open, we keep on loading all remaining products in the background.\n"
-                                                   "In the meantime, you can click on the 'database icon' in the searchbar to load products from database.")
-    limited_products_amount = fields.Integer(default=20000)
-    product_load_background = fields.Boolean(default=False)
-    limited_partners_loading = fields.Boolean('Limited Partners Loading',
-                                              default=True,
-                                              help="By default, 100 partners are loaded.\n"
-                                                   "When the session is open, we keep on loading all remaining partners in the background.\n"
-                                                   "In the meantime, you can use the 'Load Customers' button to load partners from database.")
-    limited_partners_amount = fields.Integer(default=100)
-    partner_load_background = fields.Boolean(default=False)
     auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
     trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
                                           column2="is_trusted", string="Trusted Point of Sale Configurations",
@@ -681,7 +667,7 @@ class PosConfig(models.Model):
             'company_id': self.company_id.id,
             'available_categ_ids': self.iface_available_categ_ids.mapped('id') if self.iface_available_categ_ids else None,
             'tip_product_id': self.tip_product_id.id if self.tip_product_id else None,
-            'limit': self.limited_products_amount
+            'limit': 20000
         }
         self.env.cr.execute(query, params)
         product_ids = self.env.cr.fetchall()
@@ -706,7 +692,7 @@ class PosConfig(models.Model):
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s;
-        """, [self.company_id.id, str(self.limited_partners_amount)])
+        """, [self.company_id.id, str(100)])
         result = self.env.cr.fetchall()
         return result
 

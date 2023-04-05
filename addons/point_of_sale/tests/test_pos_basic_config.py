@@ -888,8 +888,6 @@ class TestPoSBasicConfig(TestPoSCommon):
             'company_id': company2.id,
         })
 
-        # activate limited partners loading
-        self.config.limited_partners_loading = True
         self.open_new_session()
 
         # calling load_pos_data should not raise an error
