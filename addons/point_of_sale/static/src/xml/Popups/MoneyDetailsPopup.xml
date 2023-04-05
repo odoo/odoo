@@ -10,7 +10,7 @@
                     <div t-foreach="[firstHalfMoneyDetails, lastHalfMoneyDetails]" t-as="moneyDetailsList" t-key="moneyDetailsList_index">
                         <t t-foreach="moneyDetailsList" t-as="moneyValue" t-key="moneyValue">
                             <div class="money-details-value" t-on-input="updateMoneyDetailsAmount">
-                                <input class="pos-input" t-att-id="moneyValue" type="number" t-model.number="state.moneyDetails[moneyValue]"/>
+                                <input class="pos-input" t-att-id="moneyValue" type="number" t-model.number="state.moneyDetails[moneyValue]" t-on-focus="ev=>ev.target.select()"/>
                                 <CurrencyAmount forTarget="moneyValue" currency="currency" amount="moneyValue"/>
                             </div>
                         </t>

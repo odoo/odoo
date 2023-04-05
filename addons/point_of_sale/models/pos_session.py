@@ -4,7 +4,7 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
-from markupsafe import Markup
+from markupsafe import Markup, escape
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -1499,9 +1499,9 @@ class PosSession(models.Model):
             message = f"{state} difference: " \
                       f"{self.currency_id.symbol + ' ' if self.currency_id.position == 'before' else ''}" \
                       f"{self.currency_id.round(difference)} " \
-                      f"{self.currency_id.symbol if self.currency_id.position == 'after' else ''}<br/>"
+                      f"{self.currency_id.symbol if self.currency_id.position == 'after' else ''}" + Markup('<br/>')
         if notes:
-            message += notes.replace('\n', Markup('<br/>'))
+            message += escape(notes).replace('\n', Markup('<br/>'))
         if message:
             self.message_post(body=message)
 
@@ -1979,8 +1979,8 @@ class PosSession(models.Model):
         return {
             'search_params': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
-                'fields': ['name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image'],
-                'order': 'is_cash_count desc, id',
+                'fields': ['name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence'],
+                'order': 'sequence',
             },
         }
 

@@ -32,6 +32,14 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
         } else if (linkedPrograms.length === 1) {
             selectedProgram = linkedPrograms[0];
         }
+        const orderTotal = this.globalState.get_order().get_total_with_tax();
+        if (
+            selectedProgram &&
+            ["gift_card", "ewallet"].includes(selectedProgram.program_type) &&
+            orderTotal < 0
+        ) {
+            options.price = -orderTotal;
+        }
         if (selectedProgram && selectedProgram.program_type == "gift_card") {
             const shouldProceed = await this._setupGiftCardOptions(selectedProgram, options);
             if (!shouldProceed) {
@@ -52,7 +60,6 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
                 }
             }
         }
-
         await _super(product, options);
         await order._updatePrograms();
         if (rewardsToApply.length == 1) {
