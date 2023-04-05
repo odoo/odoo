@@ -5,6 +5,10 @@ export class Composer {
     attachments = [];
     /** @type {import("@mail/core/message_model").Message} */
     message;
+    rawMentions = {
+        partnerIds: new Set(),
+        threadIds: new Set(),
+    };
     /** @type {string} */
     textInputContent;
     /** @type {import("@mail/core/thread_model").Thread */
