@@ -1693,11 +1693,9 @@ class DynamicList extends DataPoint {
         }, []);
 
         if (validSelection.length === 0) {
+            record.discard();
             const dialogProps = {
                 body: this.model.env._t("No valid record to save"),
-                confirm: () => {
-                    record.discard();
-                },
             };
             await this.model.dialogService.add(AlertDialog, dialogProps);
         } else if (validSelection.length > 1) {
