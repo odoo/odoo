@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     expense_count = fields.Integer("# of Expenses", compute='_compute_expense_count', compute_sudo=True)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         """ For expense, we want to show all sales order but only their name_get (no ir.rule applied), this is the only way to do it. """
         if (
             self._context.get('sale_expense_all_order')
@@ -20,8 +20,8 @@ class SaleOrder(models.Model):
             and not self.user_has_groups('sales_team.group_sale_salesman_all_leads')
         ):
             domain = expression.AND([domain or [], ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]])
-            return super(SaleOrder, self.sudo())._name_search(name, domain, operator, limit, order, name_get_uid)
-        return super()._name_search(name, domain, operator, limit, order, name_get_uid)
+            return super(SaleOrder, self.sudo())._name_search(name, domain, operator, limit, order)
+        return super()._name_search(name, domain, operator, limit, order)
 
     @api.depends('expense_ids')
     def _compute_expense_count(self):
