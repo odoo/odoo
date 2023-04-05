@@ -71,31 +71,27 @@
                             <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
                                 <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
                                     <div class="col wide">
-                                        <div t-if="env.isMobile">Date</div>
                                         <div><t t-esc="getDate(order)"></t></div>
+                                        <div t-if="env.isMobile"><t t-esc="getTotal(order)"></t></div>
                                     </div>
                                     <div class="col wide">
-                                        <div t-if="env.isMobile">Receipt Number</div>
                                         <div><t t-esc="order.name"></t></div>
+                                        <div t-if="env.isMobile"><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div class="col">
-                                        <div t-if="env.isMobile">Customer</div>
+                                    <div class="col" t-if="!env.isMobile">
                                         <div><t t-esc="getPartner(order)"></t></div>
                                     </div>
-                                    <div t-if="showCardholderName()" class="col">
-                                        <div t-if="env.isMobile">Cardholder Name</div>
+                                    <div t-if="showCardholderName() &amp;&amp; !env.isMobile" class="col">
                                         <div><t t-esc="getCardholderName(order)"></t></div>
                                     </div>
                                     <div class="col">
-                                        <div t-if="env.isMobile">Cashier</div>
-                                        <div><t t-esc="getCashier(order)"></t></div>
+                                        <div t-if="env.isMobile"><t t-esc="getPartner(order)"></t></div>
+                                        <div t-att-class = "env.isMobile ? 'cashier':''"><t t-esc="getCashier(order)"></t></div>
                                     </div>
-                                    <div class="col end">
-                                        <div t-if="env.isMobile">Total</div>
+                                    <div class="col end" t-if="!env.isMobile">
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col narrow">
-                                        <div t-if="env.isMobile">Status</div>
+                                    <div class="col narrow" t-if="!env.isMobile">
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
                                     <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">

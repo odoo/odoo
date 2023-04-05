@@ -815,3 +815,21 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyFreeProductTour2",
             login="accountman",
         )
+
+    def test_refund_with_gift_card(self):
+        """When adding a gift card when there is a refund in the order, the amount
+        of the gift card is set to the amount of the refund"""
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the gift_card_product_50 because it's shared among new gift card programs.
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        # Create gift card program
+        self.create_programs([('arbitrary_name', 'gift_card')])
+        # Change the gift card program settings
+        self.main_pos_config.write({'gift_card_settings': 'create_set'})
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardWithRefundtTour",
+            login="accountman"
+        )

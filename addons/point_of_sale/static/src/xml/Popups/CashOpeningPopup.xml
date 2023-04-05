@@ -9,9 +9,9 @@
                 <div class="opening-cash-section">
                     <span class="info-title">Opening cash</span>
                     <div class="cash-input-sub-section" t-on-input="handleInputChange">
-                        <input class="pos-input" type="number" t-model.number="state.openingCash"/>
+                        <input class="pos-input" type="number" t-model.number="state.openingCash" t-ref="cash-input" t-on-focus="ev=>ev.target.select()"/>
                         <div class="button icon" t-on-click="openDetailsPopup">
-                            <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
+                            <i class="fa fa-money" role="img" title="Open the money details popup"/>
                         </div>
                     </div>
                 </div>

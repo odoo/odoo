@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 import { useState } from "@odoo/owl";
@@ -21,6 +21,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         });
         this.popup = useService("popup");
         this.orm = useService("orm");
+        useAutofocus({ refName: "cash-input" });
     }
     //@override
     async confirm() {
