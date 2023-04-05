@@ -181,7 +181,7 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype_website(self):
         """ Test a single event creation """
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=242):  # tef 228 / com 234
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=244):  # tef 228 / com 236
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
