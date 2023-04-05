@@ -35,6 +35,10 @@ class TestEsEdiCommon(AccountEdiTestCommon):
             'l10n_es_edi_tax_agency': 'bizkaia',
         })
 
+        # To be sure it is put by default on purchase journals as well (tbai module)
+        cls.company_data['default_journal_purchase'].write({
+            'edi_format_ids': [(6, 0, cls.edi_format.ids)],
+        })
         # ==== Business ====
 
         cls.partner_a.write({
