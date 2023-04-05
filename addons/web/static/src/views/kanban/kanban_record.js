@@ -14,7 +14,7 @@ import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/ima
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
-import { evalDomain } from "../utils";
+import { evalDomain, getFormattedValue } from "../utils";
 import {
     KANBAN_BOX_ATTRIBUTE,
     KANBAN_MENU_ATTRIBUTE,
@@ -200,6 +200,12 @@ export class KanbanRecord extends Component {
             this.allowGlobalClick = !!this.rootRef.el.querySelector(ALLOW_GLOBAL_CLICK);
         });
         onWillUpdateProps(this.createRecordAndWidget);
+    }
+
+    getFormattedValue(fieldId) {
+        const { archInfo, record } = this.props;
+        const { attrs, name } = archInfo.fieldNodes[fieldId];
+        return getFormattedValue(record, name, attrs);
     }
 
     /**
