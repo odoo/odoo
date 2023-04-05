@@ -1405,11 +1405,19 @@ class MrpProduction(models.Model):
     def _action_generate_backorder_wizard(self, quantity_issues):
         ctx = self.env.context.copy()
         lines = []
+        ask_backorder = always_backorder = self.env["mrp.production"]
         for order in quantity_issues:
-            lines.append((0, 0, {
-                'mrp_production_id': order.id,
-                'to_backorder': True
-            }))
+            if order.picking_type_id.create_backorder == "ask" or (order.picking_type_id.create_backorder == "never" and order.product_id.tracking == "serial"):
+                lines.append((0, 0, {
+                    'mrp_production_id': order.id,
+                    'to_backorder': True
+                }))
+                ask_backorder += order
+            if order.picking_type_id.create_backorder == "always":
+                always_backorder += order
+        (self-ask_backorder).with_context(ctx, skip_backorder=True, mo_ids_to_backorder=always_backorder.ids).button_mark_done()
+        if not ask_backorder:
+            return True
         ctx.update({'default_mrp_production_ids': self.ids, 'default_mrp_production_backorder_line_ids': lines})
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_mrp_production_backorder")
         action['context'] = ctx
@@ -1796,6 +1804,10 @@ class MrpProduction(models.Model):
                 'is_locked': True,
                 'state': 'done',
             })
+
+        for production in self:
+            if production.mrp_production_backorder_count > 1 and production.picking_type_id.create_backorder == "always":
+                backorders = self.procurement_group_id.mrp_production_ids.filtered(lambda p: p.state != "done" and p.id not in self.ids)
 
         if not backorders:
             if self.env.context.get('from_workorder'):
