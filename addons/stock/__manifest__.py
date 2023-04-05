@@ -41,6 +41,7 @@
         'report/picking_templates.xml',
         'report/product_templates.xml',
         'report/product_packaging.xml',
+        'report/report_return_slip.xml',
         'data/mail_template_data.xml',
 
         'views/stock_menu_views.xml',

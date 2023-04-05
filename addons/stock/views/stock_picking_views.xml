@@ -149,6 +149,11 @@
                     <div class="oe_button_box" name="button_box">
                         <field name="has_scrap_move" invisible="True"/>
                         <field name="has_tracking" invisible="True"/>
+                        <button name="action_see_returns" type="object"
+                            class="oe_stat_button" icon="fa-rotate-left"
+                            attrs="{'invisible': [('return_count', '=', 0)]}">
+                            <field string="Returns" name="return_count" widget="statinfo"/>
+                        </button>
                         <button name="action_see_move_scrap" string="Scraps" type="object"
                             class="oe_stat_button" icon="oi-arrows-v"
                             attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>

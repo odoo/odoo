@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import deque
 
 from odoo import api, Command, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
@@ -219,3 +220,16 @@ class StockMove(models.Model):
 
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)
+
+    def _get_purchase_line_and_partner_from_chain(self):
+        moves_to_check = deque(self)
+        seen_moves = set()
+        while moves_to_check:
+            current_move = moves_to_check.popleft()
+            if current_move.purchase_line_id:
+                return current_move.purchase_line_id.id, current_move.picking_id.partner_id.id
+            seen_moves.add(current_move)
+            moves_to_check.extend(
+                [move for move in current_move.move_orig_ids if move not in moves_to_check and move not in seen_moves]
+            )
+        return None, None

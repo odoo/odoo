@@ -34,46 +34,47 @@ class ReturnPicking(models.TransientModel):
         return res
 
     picking_id = fields.Many2one('stock.picking')
-    product_return_moves = fields.One2many('stock.return.picking.line', 'wizard_id', 'Moves')
-    move_dest_exists = fields.Boolean('Chained Move Exists', readonly=True)
-    original_location_id = fields.Many2one('stock.location')
-    parent_location_id = fields.Many2one('stock.location')
+    product_return_moves = fields.One2many('stock.return.picking.line', 'wizard_id', 'Moves', compute='_compute_moves_locations', readonly=False, store=True)
+    move_dest_exists = fields.Boolean('Chained Move Exists', compute='_compute_moves_locations', store=True)
+    original_location_id = fields.Many2one('stock.location', compute='_compute_moves_locations', store=True)
+    parent_location_id = fields.Many2one('stock.location', compute='_compute_moves_locations', store=True)
     company_id = fields.Many2one(related='picking_id.company_id')
     location_id = fields.Many2one(
-        'stock.location', 'Return Location',
+        'stock.location', 'Return Location', compute='_compute_moves_locations', readonly=False, store=True,
         domain="['|', ('id', '=', original_location_id), '|', '&', ('return_location', '=', True), ('company_id', '=', False), '&', ('return_location', '=', True), ('company_id', '=', company_id)]")
 
-    @api.onchange('picking_id')
-    def _onchange_picking_id(self):
-        move_dest_exists = False
-        product_return_moves = [(5,)]
-        if self.picking_id and self.picking_id.state != 'done':
-            raise UserError(_("You may only return Done pickings."))
-        # In case we want to set specific default values (e.g. 'to_refund'), we must fetch the
-        # default values for creation.
-        line_fields = [f for f in self.env['stock.return.picking.line']._fields.keys()]
-        product_return_moves_data_tmpl = self.env['stock.return.picking.line'].default_get(line_fields)
-        for move in self.picking_id.move_ids:
-            if move.state == 'cancel':
-                continue
-            if move.scrapped:
-                continue
-            if move.move_dest_ids:
-                move_dest_exists = True
-            product_return_moves_data = dict(product_return_moves_data_tmpl)
-            product_return_moves_data.update(self._prepare_stock_return_picking_line_vals_from_move(move))
-            product_return_moves.append((0, 0, product_return_moves_data))
-        if self.picking_id and not product_return_moves:
-            raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
-        if self.picking_id:
-            self.product_return_moves = product_return_moves
-            self.move_dest_exists = move_dest_exists
-            self.parent_location_id = self.picking_id.picking_type_id.warehouse_id and self.picking_id.picking_type_id.warehouse_id.view_location_id.id or self.picking_id.location_id.location_id.id
-            self.original_location_id = self.picking_id.location_id.id
-            location_id = self.picking_id.location_id.id
-            if self.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.return_location:
-                location_id = self.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.id
-            self.location_id = location_id
+    @api.depends('picking_id')
+    def _compute_moves_locations(self):
+        for wizard in self:
+            move_dest_exists = False
+            product_return_moves = [(5,)]
+            if wizard.picking_id and wizard.picking_id.state != 'done':
+                raise UserError(_("You may only return Done pickings."))
+            # In case we want to set specific default values (e.g. 'to_refund'), we must fetch the
+            # default values for creation.
+            line_fields = [f for f in self.env['stock.return.picking.line']._fields.keys()]
+            product_return_moves_data_tmpl = self.env['stock.return.picking.line'].default_get(line_fields)
+            for move in wizard.picking_id.move_ids:
+                if move.state == 'cancel':
+                    continue
+                if move.scrapped:
+                    continue
+                if move.move_dest_ids:
+                    move_dest_exists = True
+                product_return_moves_data = dict(product_return_moves_data_tmpl)
+                product_return_moves_data.update(wizard._prepare_stock_return_picking_line_vals_from_move(move))
+                product_return_moves.append((0, 0, product_return_moves_data))
+            if wizard.picking_id and not product_return_moves:
+                raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
+            if wizard.picking_id:
+                wizard.product_return_moves = product_return_moves
+                wizard.move_dest_exists = move_dest_exists
+                wizard.parent_location_id = wizard.picking_id.picking_type_id.warehouse_id and wizard.picking_id.picking_type_id.warehouse_id.view_location_id.id or wizard.picking_id.location_id.location_id.id
+                wizard.original_location_id = wizard.picking_id.location_id.id
+                location_id = wizard.picking_id.location_id.id
+                if wizard.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.return_location:
+                    location_id = wizard.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.id
+                wizard.location_id = location_id
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
@@ -115,6 +116,7 @@ class ReturnPicking(models.TransientModel):
             'move_ids': [],
             'picking_type_id': self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id,
             'state': 'draft',
+            'return_id': self.picking_id.id,
             'origin': _("Return of %s") % self.picking_id.name,
         }
         # TestPickShip.test_mto_moves_return, TestPickShip.test_mto_moves_return_extra,

@@ -337,7 +337,7 @@ class TestRepair(AccountTestInvoicingCommon):
         # Required for `location_dest_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
         picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.stock_warehouse.return_type_id
+        picking_form.picking_type_id = self.stock_warehouse.in_type_id
         picking_form.partner_id = self.res_partner_1
         picking_form.location_dest_id = self.stock_location_14
         return_picking = picking_form.save()

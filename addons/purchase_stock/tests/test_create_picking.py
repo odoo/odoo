@@ -640,3 +640,67 @@ class TestCreatePicking(common.TestProductCommon):
         # check that the price has been updated in the purchase order line and in the stock.move
         self.assertEqual(purchase_order.order_line.price_unit, 0)
         self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 0)
+
+    def test_return_to_vendor_multi_step(self):
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+
+        with Form(warehouse) as w:
+            w.reception_steps = 'three_steps'
+
+        vendor_returns_loc = self.env['stock.location'].create({
+            'name': 'Vendor returns processing',
+            'usage': 'internal',
+            'location_id': warehouse.view_location_id.id,
+        })
+
+        self.env['stock.rule'].create({
+            'name': 'Vendor returns',
+            'route_id': warehouse.reception_route_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_src_id': vendor_returns_loc.id,
+            'action': 'push',
+            'auto': 'manual',
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_id_1
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_approve()
+
+        first_picking = po.picking_ids
+        first_picking.move_ids.quantity_done = 10
+        first_picking.button_validate()
+        second_picking = first_picking.move_ids.move_dest_ids.picking_id
+        second_picking.move_ids.quantity_done = 10
+        second_picking.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 10)
+
+        stock_return_picking_form = Form(
+            self.env['stock.return.picking'].with_context(
+                active_ids=second_picking.ids,
+                active_id=second_picking.ids[0],
+                active_model='stock.picking'
+            )
+        )
+        stock_return_picking_form.location_id = vendor_returns_loc
+        stock_return_picking_form.product_return_moves._records[0]['quantity'] = 2
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.action_assign()
+        return_pick.move_ids.quantity_done = 2
+        return_pick._action_done()
+        push_pick = return_pick.move_ids.move_dest_ids.picking_id
+        push_pick.action_assign()
+        push_pick.move_ids.quantity_done = 2
+        push_pick._action_done()
+
+        self.assertEqual(po.order_line.qty_received, 8)
+        self.assertEqual(push_pick.partner_id, po.partner_id)

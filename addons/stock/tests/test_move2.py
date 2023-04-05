@@ -858,7 +858,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(return_pick.move_line_ids[0].reserved_uom_qty, 4)
         self.assertEqual(return_pick.move_line_ids[1].lot_id, lot3)
         self.assertEqual(return_pick.move_line_ids[1].reserved_uom_qty, 6)
-        self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.return_type_id)
+        self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.in_type_id)
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):

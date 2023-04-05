@@ -189,6 +189,7 @@ class StockMove(models.Model):
         help="Computes when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
+    show_reserved = fields.Boolean(compute='_compute_show_reserved')
 
     @api.depends('product_id')
     def _compute_product_uom(self):
@@ -310,7 +311,7 @@ class StockMove(models.Model):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
         self.ensure_one()
-        if self.picking_type_id.show_reserved is False:
+        if not self.show_reserved:
             return self.move_line_nosuggest_ids
         return self.move_line_ids
 
@@ -326,6 +327,11 @@ class StockMove(models.Model):
                 move.delay_alert_date = prev_max_date
             else:
                 move.delay_alert_date = False
+
+    @api.depends('picking_type_id', 'origin_returned_move_id')
+    def _compute_show_reserved(self):
+        for move in self:
+            move.show_reserved = move.picking_type_id.show_reserved or move.origin_returned_move_id
 
     def _quantity_done_sml(self):
         self.ensure_one()
@@ -551,14 +557,14 @@ Please change the quantity done or the rounding precision of your unit of measur
             )
             lots_by_move_id_list.append({move.id: lot_ids for move, lot_ids in lots_by_move_id})
         for move in self:
-            move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move._origin.id, [])
+            move.lot_ids = lots_by_move_id_list[0 if move.show_reserved else 1].get(move._origin.id, [])
 
     def _set_lot_ids(self):
         for move in self:
             if move.product_id.tracking != 'serial':
                 continue
             move_lines_commands = []
-            if move.picking_type_id.show_reserved is False:
+            if not move.show_reserved:
                 mls = move.move_line_nosuggest_ids
             else:
                 mls = move.move_line_ids
@@ -789,7 +795,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
         # different views to display one field or another so that the webclient doesn't have to
         # fetch both.
-        if self.picking_type_id.show_reserved:
+        if self.show_reserved:
             view = self.env.ref('stock.view_stock_move_operations')
         else:
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
@@ -834,7 +840,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         since there's no way to undo the action.
         """
         self.ensure_one()
-        if self.picking_type_id.show_reserved:
+        if self.show_reserved:
             move_lines = self.move_line_ids
         else:
             move_lines = self.move_line_nosuggest_ids
@@ -910,7 +916,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
         field_data = [{'lot_name': lot_name[0], 'qty_done': lot_name[1]} for lot_name in lot_names]
         move_lines_commands = self._generate_serial_move_line_commands(field_data)
-        if self.picking_type_id.show_reserved:
+        if self.show_reserved:
             self.move_line_ids = move_lines_commands
         else:
             self.move_line_nosuggest_ids = move_lines_commands
@@ -954,7 +960,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                     break
             move_lines_vals.append(move_line_vals)
         move_lines_commands = self._generate_serial_move_line_commands(move_lines_vals, location_dest_id=location_id)
-        if self.picking_type_id.show_reserved:
+        if self.show_reserved:
             self.update({'move_line_ids': move_lines_commands})
         else:
             self.update({'move_line_nosuggest_ids': move_lines_commands})
@@ -1279,7 +1285,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'product_uom_id': self.product_id.uom_id.id,
         }
         # Select the right move lines depending of the picking type's configuration.
-        move_lines = self['move_line_ids' if self.picking_type_id.show_reserved else 'move_line_nosuggest_ids']
+        move_lines = self['move_line_ids' if self.show_reserved else 'move_line_nosuggest_ids']
         move_lines = move_lines.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
 
         if origin_move_line:
