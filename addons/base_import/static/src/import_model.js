@@ -4,12 +4,60 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { groupBy, sortBy } from "@web/core/utils/arrays";
+import { memoize } from "@web/core/utils/functions";
 import { sprintf } from "@web/core/utils/strings";
 import { useState } from "@odoo/owl";
 import { ImportBlockUI } from "./import_block_ui";
-import { moment_to_strftime_format } from "web.time";
 
 const mainComponentRegistry = registry.category("main_components");
+
+const strftimeFormatTable = {
+    d: "w",
+    DD: "d",
+    ddd: "a",
+    dddd: "A",
+    DDDD: "j",
+    ww: "U",
+    WW: "W",
+    mm: "M",
+    MM: "m",
+    MMM: "b",
+    MMMM: "B",
+    YYYY: "Y",
+    YY: "y",
+    ss: "S",
+    hh: "h",
+    HH: "H",
+    A: "p",
+};
+
+/**
+ * Convert a human readable format to Python strftime format. In case
+ * no corresponding format is supported, a similar fallback is given
+ * from the list of other supported formatting value.
+ *
+ * @param {string} value original Luxon format
+ * @returns {string} valid strftime format
+ */
+const humanToStrftimeFormat = memoize(function humanToStrftimeFormat(value) {
+    const regex = /(dddd|ddd|dd|d|mmmm|mmm|mm|ww|yyyy|yy|hh|ss|a)/gi;
+    return value.replace(regex, (value) => {
+        if (strftimeFormatTable[value]) {
+            return "%" + strftimeFormatTable[value];
+        }
+        return (
+            "%" +
+            (strftimeFormatTable[value.toLowerCase()] || strftimeFormatTable[value.toUpperCase()])
+        );
+    });
+});
+
+const strftimeToHumanFormat = memoize(function strftimeToHumanFormat(value) {
+    Object.entries(strftimeFormatTable).forEach(([k, v]) => {
+        value = value.replace(`%${v}`, k);
+    });
+    return value;
+});
 
 /**
  * -------------------------------------------------------------------------
@@ -90,6 +138,17 @@ export class BaseImportModel {
         return pick(this.importOptionsValues, ...Object.keys(this.formattingOptionsValues));
     }
 
+    /**
+     * This getter returns the current values pf the options, formatted to match the
+     * server API (date and datetime options should be Python strftime formatted)
+     */
+    get formattedImportOptions() {
+        const options = this.importOptions;
+        options.date_format = humanToStrftimeFormat(options.date_format);
+        options.datetime_format = humanToStrftimeFormat(options.datetime_format);
+        return options;
+    }
+
     get importOptions() {
         const tempImportOptions = {
             import_skip_records: [],
@@ -98,9 +157,7 @@ export class BaseImportModel {
             name_create_enabled_fields: {},
         };
         for (const [name, option] of Object.entries(this.importOptionsValues)) {
-            tempImportOptions[name] = ['date_format', 'datetime_format'].includes(name) && !option.value.includes('%')
-                ? moment_to_strftime_format(option.value)
-                : option.value;
+            tempImportOptions[name] = option.value;
         }
 
         for (const key in this.fieldsToHandle) {
@@ -252,15 +309,16 @@ export class BaseImportModel {
 
         const res = await this.orm.call("base_import.import", "parse_preview", [
             this.id,
-            this.importOptions,
+            this.formattedImportOptions,
         ]);
 
         if (!res.error) {
+            res.options.date_format = strftimeToHumanFormat(res.options.date_format);
+            res.options.datetime_format = strftimeToHumanFormat(res.options.datetime_format);
             this._onLoadSuccess(res);
         } else {
             this._onLoadError();
         }
-
         return { res, error: res.error };
     }
 
@@ -309,7 +367,12 @@ export class BaseImportModel {
     }
 
     async _executeImportStep(isTest, importRes) {
-        const importArgs = [this.id, importRes.fields, importRes.columns, this.importOptions];
+        const importArgs = [
+            this.id,
+            importRes.fields,
+            importRes.columns,
+            this.formattedImportOptions,
+        ];
         const { ids, messages, nextrow, name, error } = await this._callImport(isTest, importArgs);
 
         // Handle server errors
@@ -662,38 +725,38 @@ export class BaseImportModel {
                 label: _t("Text Delimiter:"),
                 type: "input",
                 value: '"',
-                options: "",
             },
             date_format: {
+                help: _t(
+                    "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+                ),
                 label: _t("Date Format:"),
-                type: "select",
+                type: "input",
                 value: "",
                 options: [
                     "YYYY-MM-DD",
-                    "DD/MM/YY",
-                    "DD/MM/YYYY",
-                    "DD-MM-YYYY",
-                    "DD-MMM-YY",
-                    "DD-MMM-YYYY",
-                    "MM/DD/YY",
-                    "MM/DD/YYYY",
-                    "MM-DD-YY",
-                    "MM-DD-YYYY",
-                    "DDMMYY",
-                    "DDMMYYYY",
-                    "YYMMDD",
-                    "YYYYMMDD",
-                    "YY/MM/DD",
                     "YYYY/MM/DD",
-                    "MMDDYY",
+                    "DD/MM/YYYY",
+                    "DDMMYYYY",
+                    "MM/DD/YYYY",
                     "MMDDYYYY",
                 ],
             },
             datetime_format: {
+                help: _t(
+                    "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+                ),
                 label: _t("Datetime Format:"),
                 type: "input",
                 value: "",
-                options: "",
+                options: [
+                    "YYYY-MM-DD HH:mm:SS",
+                    "YYYY/MM/DD HH:mm:SS",
+                    "DD/MM/YYYY HH:mm:SS",
+                    "DDMMYYYY HH:mm:SS",
+                    "MM/DD/YYYY II:mm:SS p",
+                    "MMDDYYYY II:mm:SS p",
+                ],
             },
             float_thousand_separator: {
                 label: _t("Thousands Separator:"),
