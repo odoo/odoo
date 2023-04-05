@@ -62,6 +62,11 @@ export class Message {
     type;
     /** @type {string} */
     temporary_id = null;
+    /** @type {string|undefined} */
+    notificationType;
+    /** @type {string} */
+    pinned_at;
+
     /**
      * We exclude the milliseconds because datetime string from the server don't
      * have them. Message without date like transient message can be missordered
@@ -189,7 +194,22 @@ export class Message {
         return htmlToTextContentInline(this.body);
     }
 
+    get notificationIcon() {
+        switch (this.notificationType) {
+            case "pin":
+                return "fa fa-thumb-tack";
+        }
+        return null;
+    }
+
     get failureNotifications() {
         return this.notifications.filter((notification) => notification.isFailure);
+    }
+
+    get pinnedAt() {
+        if (!this.pinned_at) {
+            return null;
+        }
+        return luxon.DateTime.fromISO(new Date(this.pinned_at).toISOString());
     }
 }

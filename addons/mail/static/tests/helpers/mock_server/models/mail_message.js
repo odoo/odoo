@@ -139,7 +139,24 @@ patch(MockServer.prototype, "mail/models/mail_message", {
      * @param {integer} [limit=30]
      * @returns {Object[]}
      */
-    _mockMailMessage_MessageFetch(domain, before, after, limit = 30) {
+    _mockMailMessage_MessageFetch(domain, before, after, around, limit = 30) {
+        if (around) {
+            const messagesBefore = this._mockMailMessage_MessageFetch(
+                domain.concat([["id", "<=", around]]),
+                before,
+                after,
+                false,
+                limit / 2
+            );
+            const messagesAfter = this._mockMailMessage_MessageFetch(
+                domain.concat([["id", ">", around]]),
+                before,
+                after,
+                false,
+                limit / 2
+            );
+            return messagesAfter.concat(messagesBefore.reverse());
+        }
         if (before) {
             domain.push(["id", "<", before]);
         }
@@ -255,8 +272,12 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 attachment_ids: formattedAttachments,
                 author: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
-                default_subject: message.model && message.res_id &&
-                    this.mockMailThread_MessageComputeSubject(message.model, [message.res_id]).get(message.res_id),
+                default_subject:
+                    message.model &&
+                    message.res_id &&
+                    this.mockMailThread_MessageComputeSubject(message.model, [message.res_id]).get(
+                        message.res_id
+                    ),
                 linkPreviews: linkPreviewsFormatted,
                 messageReactionGroups: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
@@ -268,6 +289,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
                 trackingValues: formattedTrackingValues,
+                pinned_at: message.pinned_at,
             });
             delete response["author_id"];
             if (message.subtype_id) {

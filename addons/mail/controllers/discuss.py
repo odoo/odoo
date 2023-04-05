@@ -213,8 +213,8 @@ class DiscussController(http.Controller):
     # --------------------------------------------------------------------------
 
     @http.route('/mail/inbox/messages', methods=['POST'], type='json', auth='user')
-    def discuss_inbox_messages(self, before=None, after=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], before=before, after=after, limit=limit).message_format()
+    def discuss_inbox_messages(self, before=None, after=None, limit=30, around=None, **kwargs):
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], before=before, after=after, around=around, limit=limit).message_format()
 
     @http.route('/mail/history/messages', methods=['POST'], type='json', auth='user')
     def discuss_history_messages(self, before=None, after=None, limit=30, **kwargs):
@@ -406,16 +406,22 @@ class DiscussController(http.Controller):
                 raise NotFound()
 
     @http.route('/mail/channel/messages', methods=['POST'], type='json', auth='public')
-    def mail_channel_messages(self, channel_id, before=None, after=None, limit=30, **kwargs):
+    def mail_channel_messages(self, channel_id, before=None, after=None, limit=30, around=None, **kwargs):
         channel_member_sudo = request.env['mail.channel.member']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        messages = channel_member_sudo.env['mail.message']._message_fetch(domain=[
+        domain = [
             ('res_id', '=', channel_id),
             ('model', '=', 'mail.channel'),
             ('message_type', '!=', 'user_notification'),
-        ], before=before, after=after, limit=limit)
-        if not request.env.user._is_public():
+        ]
+        messages = channel_member_sudo.env['mail.message']._message_fetch(domain=domain, before=before, after=after, around=around, limit=limit)
+        if not request.env.user._is_public() and not around:
             messages.set_message_done()
-        return messages.message_format()
+        return messages.sorted('id', reverse=True).message_format()
+
+    @http.route('/mail/channel/pinned_messages', methods=['POST'], type='json', auth='public')
+    def mail_channel_pins(self, channel_id, **kwargs):
+        channel_member_sudo = request.env['mail.channel.member']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        return channel_member_sudo.channel_id.pinned_message_ids.sorted(key='pinned_at', reverse=True).message_format()
 
     @http.route('/mail/channel/set_last_seen_message', methods=['POST'], type='json', auth='public')
     def mail_channel_mark_as_seen(self, channel_id, last_message_id, allow_older=False, **kwargs):
@@ -451,12 +457,12 @@ class DiscussController(http.Controller):
         return thread._get_mail_thread_data(request_list)
 
     @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
-    def mail_thread_messages(self, thread_model, thread_id, before=None, after=None, limit=30, **kwargs):
+    def mail_thread_messages(self, thread_model, thread_id, before=None, after=None, around=None, limit=30, **kwargs):
         messages = request.env['mail.message']._message_fetch(domain=[
             ('res_id', '=', int(thread_id)),
             ('model', '=', thread_model),
             ('message_type', '!=', 'user_notification'),
-        ], before=before, after=after, limit=limit)
+        ], before=before, after=after, around=around, limit=limit)
         if not request.env.user._is_public():
             messages.set_message_done()
         return messages.message_format()

@@ -144,6 +144,13 @@ export class MessageService {
         await this.orm.silent.call("mail.message", "set_message_done", [[message.id]]);
     }
 
+    setPin(message, pinned) {
+        return this.orm.call("mail.channel", "set_message_pin", [message.originThread.id], {
+            message_id: message.id,
+            pinned,
+        });
+    }
+
     async unstarAll() {
         // apply the change immediately for faster feedback
         this.store.discuss.starred.counter = 0;
@@ -222,6 +229,12 @@ export class MessageService {
      * @param {boolean} [fromFetch=false]
      */
     _update(message, data, fromFetch = false) {
+        if (message.pinned_at && data.pinned_at === false) {
+            removeFromArrayWithPredicate(
+                message.originThread.pinnedMessages,
+                ({ id }) => id === message.id
+            );
+        }
         const {
             attachment_ids: attachments = message.attachments,
             default_subject: defaultSubject = message.defaultSubject,
@@ -285,6 +298,12 @@ export class MessageService {
             message.originThread.modelName = data.res_model_name;
         }
         this._updateReactions(message, data.messageReactionGroups);
+        if (message.isNotification && !message.notificationType) {
+            const parser = new DOMParser();
+            const htmlBody = parser.parseFromString(message.body, "text/html");
+            message.notificationType =
+                htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
+        }
     }
 
     updateNotifications(message) {

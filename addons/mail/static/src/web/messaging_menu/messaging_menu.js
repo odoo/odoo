@@ -134,7 +134,7 @@ export class MessagingMenu extends Component {
                     id: `preview-${thread.localId}`,
                     count: thread.message_unread_counter,
                     imgUrl: thread.imgUrl,
-                    hasMarkAsReadButton: this.threadService.isUnread(thread),
+                    hasMarkAsReadButton: thread.message_unread_counter > 0,
                     message,
                     thread,
                     isNeedaction: false,
@@ -302,7 +302,7 @@ export class MessagingMenu extends Component {
         let value =
             this.store.discuss.inbox.counter +
             Object.values(this.store.threads).filter(
-                (thread) => thread.is_pinned && this.threadService.isUnread(thread)
+                (thread) => thread.is_pinned && thread.message_unread_counter > 0
             ).length +
             Object.values(this.store.notificationGroups).reduce(
                 (acc, ng) => acc + parseInt(Object.values(ng.notifications).length),

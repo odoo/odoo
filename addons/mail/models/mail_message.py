@@ -147,6 +147,7 @@ class Message(models.Model):
     # user interface
     starred_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
+    pinned_at = fields.Datetime('Pinned', help='Datetime at which the message has been pinned')
     starred = fields.Boolean(
         'Starred', compute='_compute_starred', search='_search_starred', compute_sudo=False,
         help='Current user has a starred notification linked to this message')
@@ -911,25 +912,32 @@ class Message(models.Model):
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,
+                'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
             })
 
         return vals_list
 
     @api.model
-    def _message_fetch(self, domain, before=None, after=None, limit=30):
+    def _message_fetch(self, domain, before=None, after=None, around=None, limit=30):
         """ Get a limited amount of formatted messages with provided domain.
             :param domain: the domain to filter messages;
-            :param after: messages must be more recent than this id
-            :param before: message must be less recent than this id
+            :param before: fetch messages before this message id.
+            :param after: fetch messages after this message id.
+            :param around: fetch messages around this message id
+                i.e. limit//2 before and limit//2 after.
             :param limit: the maximum amount of messages to get;
             :returns: record set of mail.message
         """
+        if around:
+            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
+            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
+            return messages_after + messages_before
         if before:
             domain = expression.AND([domain, [('id', '<', before)]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
-        return self.search(domain, limit=limit)
+        return self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
 
     def message_format(self, format_reply=True, msg_vals=None):
         """ Get the message values in the format for web client. Since message
