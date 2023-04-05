@@ -1250,6 +1250,7 @@ class AccountMove(models.Model):
                             is_refund=move.move_type in ('out_refund', 'in_refund'),
                             handle_price_include=False,
                         ))
+                kwargs['is_company_currency_requested'] = move.currency_id != move.company_id.currency_id
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 rounding_line = move.line_ids.filtered(lambda l: l.display_type == 'rounding')
                 if rounding_line:

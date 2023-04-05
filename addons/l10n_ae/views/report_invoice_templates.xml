@@ -31,33 +31,16 @@
                 <span t-field="line.l10n_ae_vat_amount" id="line_tax_amount"/>
             </td>
         </xpath>
+    </template>
 
-        <xpath expr="//div[@id='right-elements']" position="after">
-            <div t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_id.currency_id"
-                 id="aed_amounts" class="row clearfix ms-auto my-3 text-nowrap table">
-                <t t-set="aed_rate"
-                   t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
-                <div name="exchange_rate" class="col-auto">
-                    <strong>Exchange Rate</strong>
-                    <p class="m-0" t-out="aed_rate" t-options='{"widget": "float", "precision": 5}'/>
-                </div>
-                <div name="aed_subtotal" class="col-auto">
-                    <strong>Subtotal (AED)</strong>
-                    <p class="m-0" t-out="o.amount_untaxed_signed"
-                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
-                </div>
-                <div name="aed_vat_amount" class="col-auto">
-                    <strong>VAT Amount (AED)</strong>
-                    <p class="m-0"
-                       t-out="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"
-                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
-                </div>
-                <div name="aed_total" class="col-auto">
-                    <strong>Total (AED)</strong>
-                    <p class="m-0" t-out="o.amount_total_signed"
-                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
-                </div>
-            </div>
+    <template id="document_tax_totals_company_currency_template" inherit_id="account.document_tax_totals_company_currency_template">
+        <xpath expr="//p[hasclass('tax_computation_company_currency')]" position="after">
+            <tr t-if="o.company_id.country_id.code == 'AE'">
+                <t t-set="exchange_rate"
+                   t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                <td>Exchange Rate</td>
+                <td class="text-end" t-out="exchange_rate" t-options='{"widget": "float", "precision": 5}'/>
+            </tr>
         </xpath>
     </template>
 </odoo>

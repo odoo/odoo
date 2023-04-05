@@ -1154,13 +1154,17 @@ class AccountTax(models.Model):
         return res
 
     @api.model
-    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None):
+    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None, is_company_currency_requested=False):
         """ Compute the tax totals details for the business documents.
-        :param base_lines:  A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
-        :param currency:    The currency set on the business document.
-        :param tax_lines:   Optional list of python dictionaries created using the '_convert_to_tax_line_dict' method.
-                            If specified, the taxes will be recomputed using them instead of recomputing the taxes on
-                            the provided base lines.
+        :param base_lines:                      A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
+        :param currency:                        The currency set on the business document.
+        :param tax_lines:                       Optional list of python dictionaries created using the '_convert_to_tax_line_dict'
+                                                method. If specified, the taxes will be recomputed using them instead of
+                                                recomputing the taxes on the provided base lines.
+        :param is_company_currency_requested :  Optional boolean which indicates whether or not the company currency is
+                                                requested from the function. This can typically be used when using an
+                                                invoice in foreign currency and the company currency is required.
+
         :return: A dictionary in the following form:
             {
                 'amount_total':                 The total amount to be displayed on the document, including every total
@@ -1175,14 +1179,20 @@ class AccountTax(models.Model):
                                                 default one: 'Untaxed Amount'.
                                                 And groups_data is a list of dict in the following form:
                     {
-                        'tax_group_name':                   The name of the tax groups this total is made for.
-                        'tax_group_amount':                 The total tax amount in this tax group.
-                        'tax_group_base_amount':            The base amount for this tax group.
-                        'formatted_tax_group_amount':       Same as tax_group_amount, but as a string formatted accordingly
-                                                            with partner's locale.
-                        'formatted_tax_group_base_amount':  Same as tax_group_base_amount, but as a string formatted
-                                                            accordingly with partner's locale.
-                        'tax_group_id':                     The id of the tax group corresponding to this dict.
+                        'tax_group_name':                           The name of the tax groups this total is made for.
+                        'tax_group_amount':                         The total tax amount in this tax group.
+                        'tax_group_base_amount':                    The base amount for this tax group.
+                        'formatted_tax_group_amount':               Same as tax_group_amount, but as a string formatted accordingly
+                                                                    with partner's locale.
+                        'formatted_tax_group_base_amount':          Same as tax_group_base_amount, but as a string formatted
+                                                                    accordingly with partner's locale.
+                        'tax_group_id':                             The id of the tax group corresponding to this dict.
+                        'tax_group_base_amount_company_currency':   OPTIONAL: the base amount of the tax group expressed in
+                                                                    the company currency when the parameter
+                                                                    is_company_currency_requested is True
+                        'tax_group_amount_company_currency':        OPTIONAL: the tax amount of the tax group expressed in
+                                                                    the company currency when the parameter
+                                                                    is_company_currency_requested is True
                     }
                 'subtotals':                    A list of dictionaries in the following form, one for each subtotal in
                                                 'groups_by_subtotals' keys.
@@ -1192,6 +1202,8 @@ class AccountTax(models.Model):
                                                             belonging to preceding subtotals and the base amount
                         'formatted_amount':                 Same as amount, but as a string formatted accordingly with
                                                             partner's locale.
+                        'amount_company_currency':          OPTIONAL: The total amount in company currency when the
+                                                            parameter is_company_currency_requested is True
                     }
                 'subtotals_order':              A list of keys of `groups_by_subtotals` defining the order in which it needs
                                                 to be displayed
@@ -1218,6 +1230,9 @@ class AccountTax(models.Model):
                 'base_amount': tax_detail['base_amount_currency'],
                 'tax_amount': tax_detail['tax_amount_currency'],
             }
+            if is_company_currency_requested:
+                tax_group_vals['base_amount_company_currency'] = tax_detail['base_amount']
+                tax_group_vals['tax_amount_company_currency'] = tax_detail['tax_amount']
 
             # Handle a manual edition of tax lines.
             if tax_lines is not None:
@@ -1238,6 +1253,9 @@ class AccountTax(models.Model):
         amount_untaxed = global_tax_details['base_amount_currency']
         amount_tax = 0.0
 
+        amount_untaxed_company_currency = global_tax_details['base_amount']
+        amount_tax_company_currency = 0.0
+
         subtotal_order = {}
         groups_by_subtotal = defaultdict(list)
         for tax_group_vals in tax_group_vals_list:
@@ -1256,6 +1274,9 @@ class AccountTax(models.Model):
                 'formatted_tax_group_amount': formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_group_vals['base_amount'], currency_obj=currency),
             })
+            if is_company_currency_requested:
+                groups_by_subtotal[subtotal_title][-1]['tax_group_amount_company_currency'] = tax_group_vals['tax_amount_company_currency']
+                groups_by_subtotal[subtotal_title][-1]['tax_group_base_amount_company_currency'] = tax_group_vals['base_amount_company_currency']
 
         # ==== Build the final result ====
 
@@ -1267,6 +1288,10 @@ class AccountTax(models.Model):
                 'amount': amount_total,
                 'formatted_amount': formatLang(self.env, amount_total, currency_obj=currency),
             })
+            if is_company_currency_requested:
+                subtotals[-1]['amount_company_currency'] = amount_untaxed_company_currency + amount_tax_company_currency
+                amount_tax_company_currency += sum(x['tax_group_amount_company_currency'] for x in groups_by_subtotal[subtotal_title])
+
             amount_tax += sum(x['tax_group_amount'] for x in groups_by_subtotal[subtotal_title])
 
         amount_total = amount_untaxed + amount_tax

@@ -48,7 +48,7 @@
                         </div>
                     </t>
                 </div>
-                <div class="mt-5">
+                <div class="mt-5 clearfix">
                     <div class="page mb-4">
                         <h2>
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
@@ -210,6 +210,7 @@
                                 <small class="text-muted lh-sm"><span t-field="o.amount_total_words"/></small>
                             </p>
                         </div>
+                        <t t-call="account.document_tax_totals_company_currency_template"/>
                     </div>
                     <div id="payment_term">
                         <div class="justify-text">
@@ -347,6 +348,67 @@
                     </t>
                 </tr>
             </t>
+        </template>
+
+        <template id="document_tax_totals_company_currency_template">
+            <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
+                 t-if="o.company_id.currency_id != o.currency_id and o.amount_tax != 0 and o.move_type in ['out_invoice', 'out_refund']">
+                <table class="table table-sm table-borderless mb-0">
+                    <p class="tax_computation_company_currency">
+                        Tax computation in <span t-field="o.company_currency_id"/>
+                    </p>
+                    <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                        <tr class="border-black o_subtotal">
+                            <td><strong t-out="subtotal['name']"/></td>
+                            <td class="text-end">
+                                <span
+                                    t-out="subtotal['amount_company_currency']"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                                />
+                            </td>
+                        </tr>
+                        <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                        <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
+                            <tr>
+                                <t t-if="tax_totals['display_tax_base']">
+                                    <td>
+                                        <span t-out="amount_by_group['tax_group_name']"/>
+                                        <span class="text-nowrap"> on
+                                            <t t-out="amount_by_group['tax_group_base_amount_company_currency']"
+                                               t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                                            />
+                                        </span>
+                                    </td>
+                                    <td class="text-end o_price_total">
+                                        <span class="text-nowrap"
+                                              t-out="amount_by_group['tax_group_amount_company_currency']"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                                        />
+                                    </td>
+                                </t>
+                                <t t-else="">
+                                    <td><span class="text-nowrap" t-out="amount_by_group['tax_group_name']"/></td>
+                                    <td class="text-end o_price_total">
+                                        <span class="text-nowrap"
+                                              t-out="amount_by_group['tax_group_amount_company_currency']"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                                        />
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </t>
+                    <!--Total amount with all taxes-->
+                    <tr class="border-black o_total">
+                        <td><strong>Total</strong></td>
+                        <td class="text-end">
+                            <span t-out="abs(o.amount_total_signed)"
+                                  t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                            />
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </template>
 
         <template id="report_invoice">
