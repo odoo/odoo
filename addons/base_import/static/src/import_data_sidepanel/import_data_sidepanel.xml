@@ -32,14 +32,21 @@
                 <div t-foreach="Object.entries(props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
                     <label t-att-for="`${option[0]}-${option_index}`">
                         <t t-esc="option[1].label" />
+                        <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-esc="'?'" />
                     </label>
                     <input
                         t-if="option[1].type === 'input'"
                         t-att-id="`${option[0]}-${option_index}`"
+                        t-att-list="option[1].options ? `list-${ option_index }` : null"
                         t-attf-class="o_import_#{option[0]} o_import_dropdown w-100 mb-3"
                         t-att-value="option[1].value"
                         t-on-change="(ev) => this.setOptionValue(option[0], ev.target.value)"
                     />
+                    <datalist t-if="option[1].type === 'input' and option[1].options" t-att-id="`list-${ option_index }`">
+                        <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
+                            <t t-esc="opt.label ? opt.label : opt" />
+                        </option>
+                    </datalist>
                     <select
                         t-elif="option[1].type === 'select'"
                         t-att-class="`o_select form-select w-100 mb-3 o_import_${option[0]} o_import_dropdown`"
