@@ -8,8 +8,9 @@ from datetime import timedelta
 
 from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.tools import format_datetime, is_html_empty
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
+from odoo.tools import format_datetime, is_html_empty
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
@@ -402,17 +403,16 @@ class EventEvent(models.Model):
         if operator != 'ilike' or not isinstance(value, str):
             raise NotImplementedError(_('Operation not supported.'))
 
-        address_ids = self.env['res.partner']._search([
-            '|', '|', '|', '|', '|',
-            ('street', 'ilike', value),
-            ('street2', 'ilike', value),
-            ('city', 'ilike', value),
-            ('zip', 'ilike', value),
-            ('state_id', 'ilike', value),
-            ('country_id', 'ilike', value),
+        return expression.OR([
+            [('address_id.name', 'ilike', value)],
+            [('address_id.street', 'ilike', value)],
+            [('address_id.street2', 'ilike', value)],
+            [('address_id.city', 'ilike', value)],
+            [('address_id.zip', 'ilike', value)],
+            [('address_id.state_id', 'ilike', value)],
+            [('address_id.country_id', 'ilike', value)],
         ])
 
-        return [('address_id', 'in', address_ids)]
 
     # seats
 
