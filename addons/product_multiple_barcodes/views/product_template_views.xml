@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="product_variant_barcode_multi_view_form" model="ir.ui.view">
+        <field name="name">product.variant.barcode.multi.view.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                <field name="barcode_ids">
+                    <tree editable="bottom">
+                        <field name="name" />
+                    </tree>
+                </field>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_variant_barcode_multi_easy_view_form" model="ir.ui.view">
+        <field name="name">product.variant.barcode.multi.easy.view.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
+                <field name="barcode_ids">
+                    <tree editable="bottom">
+                        <field name="name" />
+                    </tree>
+                </field>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_barcode_multi_view_search" model="ir.ui.view">
+        <field name="name">product.barcode.multi.view.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="replace">
+                <field name="name" string="Product" filter_domain="['|', '|', '|', ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self), ('product_variant_ids.barcode_ids.name', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_variant_barcode_multi_view_search" model="ir.ui.view">
+        <field name="name">product.variant.barcode.multi.view.search</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" string="Product" filter_domain="['|', '|', '|', ('default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self), ('barcode_ids.name', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_view_form_multiply_barcode" model="ir.ui.view">
+        <field name="name">product.product.view.form.multiply.barcode</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+                <field name="barcode" position="replace">
+                    <label for="barcode"/>
+                    <div>
+                        <field name="barcode" string="" class="oe_inline"/>
+                        <button string="Update Barcode" type="action"
+                            name="%(product_multiple_barcodes.action_multiply_barcode_wizard)d"
+                            class="oe_inline"
+                            icon="fa-arrow-right"/>
+                    </div>
+                </field>
+        </field>
+    </record>
+
+    <record id="product_template_view_form_multiply_barcode" model="ir.ui.view">
+        <field name="name">product.template.view.form.multiply.barcode</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+                <field name="barcode" position="replace">
+                    <label for="barcode" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}" />
+                    <div attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}" >
+                        <field name="barcode"
+                               string=""
+                               class="oe_inline" />
+                        <button string="Update Barcode" type="action"
+                            name="%(product_multiple_barcodes.action_multiply_barcode_wizard)d"
+                            class="oe_inline"
+                            icon="fa-arrow-right"
+                            attrs="{'invisible': [('product_variant_count', '!=', 1)]}"/>
+                    </div>
+                    <field name="barcode_ids" attrs="{'invisible': [('product_variant_count', '!=', 1)]}">
+                        <tree editable="bottom">
+                            <field name="name" />
+                        </tree>
+                    </field>
+                </field>
+        </field>
+    </record>
+
+</odoo>

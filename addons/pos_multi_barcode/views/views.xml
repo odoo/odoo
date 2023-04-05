@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_normal_form_view">
+            <field name="name">product.product.view.form.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <field name="barcode" position="after">
+                    <field name='pos_multi_barcode'>
+                        <tree editable="bottom">
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
+    <record id="view_pos_pos_form_test" model="ir.ui.view">
+            <field name="name">pos.order.form.test</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='barcode']" position="after">
+                        <field name='pos_multi_barcode' widget="many2many_tags"/>
+
+                </xpath>
+
+            </field>
+          </record>
+    </data>
+</odoo>

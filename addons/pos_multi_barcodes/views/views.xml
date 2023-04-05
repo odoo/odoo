@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_normal_form_view">
+            <field name="name">product.product.view.form.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page name="barcode_options" string="Barcode Options">
+                        <field name='pos_multi_barcode_option'>
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="qty"/>
+                                <field name="price"/>
+                                <field name="unit"/>
+                                <field name="product_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+    <record id="view_pos_pos_form_test" model="ir.ui.view">
+            <field name="name">pos.order.form.test</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='barcode']" position="after">
+                        <field name='pos_multi_barcode_option' widget="many2many_tags"/>
+
+                </xpath>
+
+            </field>
+          </record>
+
+        <record id="view_pos_pos_form" model="ir.ui.view">
+            <field name="name">pos.order.form</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lines']/tree/field[@name='full_product_name']" position="after">
+                    <field name="product_uom"/>
+                </xpath>
+            </field>
+        </record>
+</data>
+
+</odoo>

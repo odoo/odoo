@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_multiply_barcode_wizard_form" model="ir.ui.view">
+        <field name="name">multiply.barcode.wizard.form</field>
+        <field name="model">multiply.barcode.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update Product Barcode">
+                <group>
+                    <p>Use this popup in case you would like to update barcode of current product. It also allows you to record automatically previous barcode into "Additional Barcodes" field,
+                        so it will still be searchable and also in this case you will be 100% sure that this barcode will not be used by other products also</p>
+                </group>
+                <group>
+                    <field name="name"/>
+                    <field name="remember_previous_barcode"/>
+                </group>
+                <footer>
+                    <button name="update_barcode" type="object" string="Update Barcode" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_highlight" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="action_multiply_barcode_wizard" model="ir.actions.act_window">
+        <field name="name">Update Product Barcode</field>
+        <field name="res_model">multiply.barcode.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_multiply_barcode_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
