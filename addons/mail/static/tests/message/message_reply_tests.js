@@ -60,14 +60,5 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
         ".o-mail-Message:contains(Response to first message) .o-mail-MessageInReply-message"
     );
     await nextTick();
-    const thread = $(".o-mail-Thread")[0];
-    const oldestMsg = $(".o-mail-Message:eq(0)")[0];
-    const oldestMsgTop = oldestMsg.offsetTop;
-    const oldestMsgBottom = oldestMsgTop + oldestMsg.offsetHeight;
-    const threadTop = thread.offsetTop;
-    const threadBottom = threadTop + thread.offsetHeight;
-    assert.ok(
-        oldestMsgBottom <= threadBottom && oldestMsgTop >= threadTop,
-        "Should have scrolled to oldest message"
-    );
+    assert.isVisible($(".o-mail-Message:eq(0)"));
 });

@@ -4043,7 +4043,9 @@ class MailThread(models.AbstractModel):
                 self.env['mail.message.schedule'].sudo()._send_message_notifications(message)
 
         # cleanup related message data if the message is empty
-        message.sudo()._filter_empty()._cleanup_side_records()
+        empty_messages = message.sudo()._filter_empty()
+        empty_messages._cleanup_side_records()
+        empty_messages.write({'pinned_at': None})
 
         return self._message_update_content_after_hook(message)
 

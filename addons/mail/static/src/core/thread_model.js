@@ -54,10 +54,13 @@ export class Thread {
     /** @type {import("@mail/core/follower_model").Follower[]} */
     followers = [];
     isAdmin = false;
-    loadMore = false;
+    loadOlder = false;
+    loadNewer = false;
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = false;
+    /** @type {"loading"|"loaded"} */
+    pinLoadState;
     /** @type {import("@mail/attachments/attachment_model").Attachment} */
     mainAttachment;
     memberCount = 0;
@@ -65,6 +68,7 @@ export class Thread {
     message_unread_counter = 0;
     /**
      * Contains continuous sequence of messages to show in message list.
+     * Messages are ordered from older to most recent.
      * There should not be any hole in this list: there can be unknown
      * messages before start and after end, but there should not be any
      * unknown in-between messages.
@@ -75,7 +79,16 @@ export class Thread {
      */
     messages = [];
     /**
+     * Contains messages received from the bus that are not yet inserted in
+     * `messages` list. This is a temporary storage to ensure nothing is lost
+     * when fetching newer messages.
+     *
+     * @type {import("@mail/core/message_model").Message[]}
+     */
+    pendingNewMessages = [];
+    /**
      * Contains continuous sequence of needaction messages to show in messaging menu.
+     * Messages are ordered from older to most recent.
      * There should not be any hole in this list: there can be unknown
      * messages before start and after end, but there should not be any
      * unknown in-between messages.
@@ -85,6 +98,8 @@ export class Thread {
      * @type {import("@mail/core/message_model").Message[]}
      */
     needactionMessages = [];
+    /** @type {import("@mail/core/message_model").Message[]} */
+    pinnedMessages = [];
     /** @type {string} */
     name;
     /** @type {number|false} */

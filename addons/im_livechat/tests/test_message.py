@@ -64,6 +64,7 @@ class TestImLivechatMessage(TransactionCase):
             'module_icon': '/mail/static/description/icon.png',
             'needaction_partner_ids': [],
             'notifications': [],
+            'pinned_at': False,
             'rating': {
                 'id': record_rating.id,
                 'ratingImageUrl': record_rating.rating_image_url,

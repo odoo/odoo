@@ -89,7 +89,7 @@ export class MailFormCompiler extends ViewCompiler {
             });
             const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
             setAttributes(chatterContainerXml, {
-                hasMessageScrollAdjustInChatter: "true",
+                hasMessageListScrollAdjust: "true",
                 isInFormSheetBg: "false",
             });
         }
@@ -158,7 +158,7 @@ patch(FormCompiler.prototype, "mail", {
         }
         const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
         setAttributes(chatterContainerXml, {
-            hasMessageScrollAdjustInChatter: "false",
+            hasMessageListScrollAdjust: "false",
             isInFormSheetBg: "false",
             saveRecord: "__comp__.props.saveButtonClicked",
         });

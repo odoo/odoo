@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter" owl="1">
-    <div class="o-mail-Chatter bg-view h-100 flex-grow-1 d-flex flex-column overflow-auto" t-att-class="props.threadId === false ? 'o-chatter-disabled' : ''" t-ref="root">
+    <div class="o-mail-Chatter bg-view h-100 flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto': props.hasMessageListScrollAdjust, 'o-chatter-disabled': props.threadId === false }" t-ref="root">
         <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0">
             <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-2" t-att-class="{ 'btn-odoo': state.thread.composer.type !== 'note', 'btn-light': state.thread.composer.type === 'note', 'o-active': state.thread.composer.type === 'message', 'my-2': !props.compactHeight }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                 Send message
@@ -83,7 +83,7 @@
             <Composer composer="state.thread.composer" autofocus="true" mode="'extended'" onPostCallback.bind="onPostCallback" placeholder="placeholder" dropzoneRef="rootRef" className="state.thread.composer.type === 'message' ? 'pt-0' : ''"/>
             <hr/>
         </t>
-        <div class="o-mail-Chatter-scrollable overflow-auto" t-ref="scrollable">
+        <div class="o-mail-Chatter-scrollable" t-att-class="{ 'overflow-auto': props.hasMessageListScrollAdjust }" t-ref="scrollable">
             <t t-if="props.hasActivities and activities.length">
                 <t t-call="mail.ActivityList"/>
             </t>
@@ -111,7 +111,7 @@
                     </FileUploader>
                 </div>
             </div>
-            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.localId" order="'desc'" hasMessageScrollAdjustInChatter="props.hasMessageScrollAdjustInChatter"/>
+            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.localId" order="'desc'" hasScrollAdjust="!props.hasMessageListScrollAdjust"/>
         </div>
     </div>
 </t>

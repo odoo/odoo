@@ -9,6 +9,7 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 function useExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -114,9 +115,9 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
     onPatched(applyScroll);
 }
 
-export function useVisible(refName, cb) {
+export function useVisible(refName, cb, { init = false } = {}) {
     const ref = useRef(refName);
-    const state = { isVisible: false };
+    const state = { isVisible: init };
     const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
             const newVal = entry.isIntersecting;
@@ -202,8 +203,10 @@ export function useScrollSnapshot(refName, { onWillPatch: p_onWillPatch, onPatch
  */
 export function useMessageHighlight(duration = 2000) {
     let timeout;
+    const threadService = useService("mail.thread");
     const state = useState({
-        async highlightMessage(msgId) {
+        async highlightMessage(msgId, thread) {
+            await threadService.loadAround(thread, msgId);
             const lastHighlightedMessageId = state.highlightedMessageId;
             clearHighlight();
             if (lastHighlightedMessageId === msgId) {

@@ -20,7 +20,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { MessageDeleteDialog } from "../core_ui/message_delete_dialog";
+import { MessageConfirmDialog } from "../core_ui/message_confirm_dialog";
 
 export const SHORT_TYPING = 5000;
 export const LONG_TYPING = 50000;
@@ -45,7 +45,6 @@ export class Composer extends Component {
     static props = [
         "composer",
         "autofocus?",
-        "highlightReplyTo?",
         "messageToReplyTo?",
         "onDiscardCallback?",
         "onPostCallback?",
@@ -493,9 +492,11 @@ export class Composer extends Component {
                 )
             );
         } else {
-            this.env.services.dialog.add(MessageDeleteDialog, {
+            this.env.services.dialog.add(MessageConfirmDialog, {
                 message: this.props.composer.message,
                 messageComponent: this.props.messageComponent,
+                onConfirm: () => this.messageService.delete(this.message),
+                prompt: _t("Are you sure you want to delete this message?"),
             });
         }
         this.suggestion?.clearRawMentions();

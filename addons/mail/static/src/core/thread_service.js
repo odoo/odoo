@@ -109,7 +109,11 @@ export class ThreadService {
         }
         const newestPersistentMessage = thread.newestPersistentMessage;
         thread.seen_message_id = thread.newestPersistentMessage?.id ?? false;
-        if (this.isUnread(thread) && thread.allowSetLastSeenMessage && newestPersistentMessage) {
+        if (
+            thread.message_unread_counter > 0 &&
+            thread.allowSetLastSeenMessage &&
+            newestPersistentMessage
+        ) {
             this.rpc("/mail/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
@@ -163,6 +167,58 @@ export class ThreadService {
         await this.orm.silent.call("mail.channel", "channel_fetched", [[thread.id]]);
     }
 
+    async fetchPinnedMessages(thread) {
+        if (
+            thread.model !== "mail.channel" ||
+            ["loaded", "loading"].includes(thread.pinLoadState)
+        ) {
+            return;
+        }
+        thread.pinLoadState = "loading";
+        try {
+            const messages = await this.rpc("/mail/channel/pinned_messages", {
+                channel_id: thread.id,
+            });
+            const pinnedMessages = messages.map((message) => {
+                if (message.parentMessage) {
+                    message.parentMessage.body = markup(message.parentMessage.body);
+                }
+                message.body = markup(message.body);
+                return this.messageService.insert(message);
+            });
+            thread.pinnedMessages = pinnedMessages;
+        } finally {
+            thread.pinLoadState = "loaded";
+        }
+    }
+
+    getFetchRoute(thread) {
+        if (thread.model === "mail.channel") {
+            return "/mail/channel/messages";
+        }
+        switch (thread.type) {
+            case "chatter":
+                return "/mail/thread/messages";
+            case "mailbox":
+                return `/mail/${thread.id}/messages`;
+            default:
+                throw new Error(`Unknown thread type: ${thread.type}`);
+        }
+    }
+
+    getFetchParams(thread) {
+        if (thread.model === "mail.channel") {
+            return { channel_id: thread.id };
+        }
+        if (thread.type === "chatter") {
+            return {
+                thread_id: thread.id,
+                thread_model: thread.model,
+            };
+        }
+        return {};
+    }
+
     /**
      * @param {Thread} thread
      * @param {{after: Number, before: Number}}
@@ -172,35 +228,10 @@ export class ThreadService {
         if (thread.type === "chatter" && !thread.id) {
             return [];
         }
-        const route = (() => {
-            if (thread.model === "mail.channel") {
-                return "/mail/channel/messages";
-            }
-            switch (thread.type) {
-                case "chatter":
-                    return "/mail/thread/messages";
-                case "mailbox":
-                    return `/mail/${thread.id}/messages`;
-                default:
-                    throw new Error(`Unknown thread type: ${thread.type}`);
-            }
-        })();
-        const params = (() => {
-            if (thread.model === "mail.channel") {
-                return { channel_id: thread.id };
-            }
-            if (thread.type === "chatter") {
-                return {
-                    thread_id: thread.id,
-                    thread_model: thread.model,
-                };
-            }
-            return {};
-        })();
         try {
             // ordered messages received: newest to oldest
-            const rawMessages = await this.rpc(route, {
-                ...params,
+            const rawMessages = await this.rpc(this.getFetchRoute(thread), {
+                ...this.getFetchParams(thread),
                 limit: FETCH_LIMIT,
                 after,
                 before,
@@ -242,10 +273,19 @@ export class ThreadService {
             // feed messages
             // could have received a new message as notification during fetch
             // filter out already fetched (e.g. received as notification in the meantime)
-            const startIndex =
-                after === undefined
-                    ? 0
-                    : thread.messages.findIndex((message) => message.id === after);
+            let startIndex;
+            if (after === undefined) {
+                startIndex = 0;
+            } else {
+                const afterIndex = thread.messages.findIndex((message) => message.id === after);
+                if (afterIndex === -1) {
+                    // there might have been a jump to message during RPC fetch.
+                    // Abort feeding messages as to not put holes in message list.
+                    return;
+                } else {
+                    startIndex = afterIndex + 1;
+                }
+            }
             const alreadyKnownMessages = new Set(thread.messages.map((m) => m.id));
             const filtered = fetched.filter(
                 (message) =>
@@ -280,15 +320,49 @@ export class ThreadService {
                 thread.needactionMessages.splice(startNeedactionIndex, 0, ...filteredNeedaction);
             }
             Object.assign(thread, {
-                loadMore:
+                loadOlder:
                     after === undefined && fetched.length === FETCH_LIMIT
                         ? true
                         : after === undefined && fetched.length !== FETCH_LIMIT
                         ? false
-                        : thread.loadMore,
+                        : thread.loadOlder,
             });
         } catch {
             // handled in fetchMessages
+        }
+    }
+
+    /**
+     * Get ready to jump to a message in a thread. This method will fetch the
+     * messages around the message to jump to if required, and update the thread
+     * messages accordingly.
+     *
+     * @param {Message} [messageId] if not provided, load around newest message
+     */
+    async loadAround(thread, messageId) {
+        if (!thread.messages.some(({ id }) => id === messageId)) {
+            const messages = await this.rpc(this.getFetchRoute(thread), {
+                ...this.getFetchParams(thread),
+                around: messageId,
+            });
+            thread.messages = messages.reverse().map((message) =>
+                this.messageService.insert({
+                    ...message,
+                    body: message.body ? markup(message.body) : message.body,
+                })
+            );
+            thread.loadNewer = true;
+            thread.loadOlder = true;
+            if (messages.length < FETCH_LIMIT) {
+                const olderMessagesCount = messages.filter(({ id }) => id < messageId).length;
+                if (olderMessagesCount < FETCH_LIMIT / 2) {
+                    thread.loadOlder = false;
+                } else {
+                    thread.loadNewer = false;
+                }
+            }
+            // Give some time to the UI to update.
+            await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         }
     }
 
@@ -319,7 +393,7 @@ export class ThreadService {
                     }
                 }
                 thread.isLoaded = true;
-                thread.loadMore = true;
+                thread.loadOlder = true;
                 thread.status = "ready";
             }
         }
@@ -327,22 +401,55 @@ export class ThreadService {
 
     /**
      * @param {Thread} thread
+     * @param {"older"|"newer"} epoch
      */
-    async fetchMoreMessages(thread) {
-        if (thread.status === "loading") {
+    async fetchMoreMessages(thread, epoch = "older") {
+        if (
+            thread.status === "loading" ||
+            (epoch === "older" && !thread.loadOlder) ||
+            (epoch === "newer" && !thread.loadNewer)
+        ) {
             return;
         }
+        const before = epoch === "older" ? thread.oldestPersistentMessage?.id : undefined;
+        const after = epoch === "newer" ? thread.newestPersistentMessage?.id : undefined;
         try {
-            const fetched = await this.fetchMessages(thread, {
-                before: thread.oldestPersistentMessage?.id,
-            });
-            thread.messages.unshift(...fetched);
+            const fetched = await this.fetchMessages(thread, { after, before });
+            if (
+                (after !== undefined && !thread.messages.some((message) => message.id === after)) ||
+                (before !== undefined && !thread.messages.some((message) => message.id === before))
+            ) {
+                // there might have been a jump to message during RPC fetch.
+                // Abort feeding messages as to not put holes in message list.
+                return;
+            }
+            const alreadyKnownMessages = new Set(thread.messages.map(({ id }) => id));
+            const messagesToAdd = fetched.filter(
+                (message) => !alreadyKnownMessages.has(message.id)
+            );
+            if (epoch === "older") {
+                thread.messages.unshift(...messagesToAdd);
+            } else {
+                thread.messages.push(...messagesToAdd);
+            }
             if (fetched.length < FETCH_LIMIT) {
-                thread.loadMore = false;
+                if (epoch === "older") {
+                    thread.loadOlder = false;
+                } else if (epoch === "newer") {
+                    thread.loadNewer = false;
+                    const missingMessages = thread.pendingNewMessages.filter(
+                        ({ id }) => !alreadyKnownMessages.has(id)
+                    );
+                    if (missingMessages.length > 0) {
+                        thread.messages.push(...missingMessages);
+                        thread.messages.sort((m1, m2) => m1.id - m2.id);
+                    }
+                }
             }
         } catch {
             // handled in fetchMessages
         }
+        thread.pendingNewMessages = [];
     }
 
     async createChannel(name) {
@@ -875,13 +982,6 @@ export class ThreadService {
     /**
      * @param {Thread} thread
      */
-    isUnread(thread) {
-        return thread.message_unread_counter > 0;
-    }
-
-    /**
-     * @param {Thread} thread
-     */
     canLeave(thread) {
         return (
             ["channel", "group"].includes(thread.type) &&
@@ -916,7 +1016,7 @@ export class ThreadService {
             if (categoryId === "channels") {
                 return channel.message_needaction_counter > 0 ? acc + 1 : acc;
             } else {
-                return this.isUnread(channel) > 0 ? acc + 1 : acc;
+                return channel.message_unread_counter > 0 ? acc + 1 : acc;
             }
         }, 0);
     }

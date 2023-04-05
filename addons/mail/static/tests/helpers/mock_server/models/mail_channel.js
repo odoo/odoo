@@ -5,6 +5,7 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 
 import { datetime_to_str } from "web.time";
 import { assignDefined } from "@mail/utils/misc";
+import { formatDate } from "@web/core/l10n/dates";
 
 patch(MockServer.prototype, "mail/models/mail_channel", {
     async _performRPC(route, args) {
@@ -29,6 +30,13 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             const name = args.args[0];
             const groupId = args.args[1];
             return this._mockMailChannelChannelCreate(name, groupId);
+        }
+        if (args.model === "mail.channel" && args.method === "set_message_pin") {
+            return this._mockMailChannelSetMessagePin(
+                args.args[0],
+                args.kwargs.message_id,
+                args.kwargs.pinned
+            );
         }
         if (args.model === "mail.channel" && args.method === "channel_get") {
             const partners_to = args.args[0] || args.kwargs.partners_to;
@@ -95,7 +103,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         if (args.model === "mail.channel" && args.method === "load_more_members") {
             const [channel_ids] = args.args;
             const { known_member_ids } = args.kwargs;
-            return this._mockMailChannelLoadMoreMembers(channel_ids, known_member_ids);
+            return this._mockMailChannelloadOlderMembers(channel_ids, known_member_ids);
         }
         if (args.model === "mail.channel" && args.method === "get_mention_suggestions") {
             return this._mockMailChannelGetMentionSuggestions(args);
@@ -262,6 +270,35 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 },
             });
         }
+    },
+    /**
+     * Simulates `set_message_pin` on `mail.channel`.
+     *
+     * @param {number} ids
+     * @param {number} message_id
+     * @param {boolean} pinned
+     */
+    _mockMailChannelSetMessagePin(id, message_id, pinned) {
+        const pinnedAt = pinned ? formatDate(luxon.DateTime.now()) : false;
+        this.pyEnv["mail.message"].write([message_id], {
+            pinned_at: pinnedAt,
+        });
+        const notification = `<div data-oe-type="pin" class="o_mail_notification">
+                ${this.pyEnv.currentPartner.display_name} pinned a
+                <a href="#" data-oe-type="highlight" data-oe-id='${message_id}'>message</a> to this channel.
+                <a href="#" data-oe-type="pin-menu">See all pinned messages</a>
+            </div>`;
+        this._mockMailChannelMessagePost(id, {
+            body: notification,
+            message_type: "notification",
+            subtype_xmlid: "mail.mt_comment",
+        });
+        this.pyEnv["bus.bus"]._sendone(id, "mail.record/insert", {
+            Message: {
+                id: message_id,
+                pinned_at: pinnedAt,
+            },
+        });
     },
     /**
      * Simulates `_broadcast` on `mail.channel`.
@@ -868,7 +905,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
      * @param {integer[]} channel_ids
      * @param {integer[]} known_member_ids
      */
-    _mockMailChannelLoadMoreMembers(channel_ids, known_member_ids) {
+    _mockMailChannelloadOlderMembers(channel_ids, known_member_ids) {
         const members = this.pyEnv["mail.channel.member"].searchRead(
             [
                 ["id", "not in", known_member_ids],

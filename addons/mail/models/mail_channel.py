@@ -6,6 +6,7 @@ import logging
 from collections import defaultdict
 from hashlib import sha512
 from secrets import choice
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
@@ -65,6 +66,7 @@ class Channel(models.Model):
     channel_member_ids = fields.One2many(
         'mail.channel.member', 'channel_id', string='Members',
         groups='base.group_user')
+    pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=lambda self: [('model', '=', 'mail.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
     rtc_session_ids = fields.One2many('mail.channel.rtc.session', 'channel_id', groups="base.group_system")
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', search='_search_is_member')
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
@@ -743,6 +745,46 @@ class Channel(models.Model):
     # A message should be broadcasted:
     #   - when a message is posted on a channel (to the channel, using _notify() method)
     # ------------------------------------------------------------
+
+    def set_message_pin(self, message_id, pinned):
+        """ (Un)pin a message on the channel and send a notification to the
+        members.
+        :param message_id: id of the message to be pinned.
+        :param pinned: whether the message should be pinned or unpinned.
+        """
+        self.ensure_one()
+        message_to_update = self.env['mail.message'].search([
+            ['id', '=', message_id],
+            ['model', '=', 'mail.channel'],
+            ['res_id', '=', self.id],
+            ['pinned_at', '=' if pinned else '!=', False]
+        ])
+        if not message_to_update:
+            return
+        message_to_update.write({'pinned_at': fields.datetime.now() if pinned else False})
+        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+            'Message': {
+                'id': message_id,
+                'pinned_at': fields.Datetime.to_string(message_to_update.pinned_at),
+            }
+        })
+        if pinned:
+            notification_text = '''
+                <div data-oe-type="pin" class="o_mail_notification">
+                    %(user_pinned_a_message_to_this_channel)s
+                    <a href="#" data-oe-type="pin-menu">%(see_all_pins)s</a>
+                </div>
+            '''
+            notification = Markup(notification_text) % {
+                'user_pinned_a_message_to_this_channel': _(
+                    Markup('%(user_name)s pinned a <a href="#" data-oe-type="highlight" data-oe-id="%(message_id)s">message</a> to this channel.') % {
+                        'user_name': self.env.user.display_name,
+                        'message_id': message_id
+                    }
+                ),
+                'see_all_pins': _('See all pinned messages.'),
+            }
+            self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
 
     def channel_info(self):
         """ Get the informations header for the current channels

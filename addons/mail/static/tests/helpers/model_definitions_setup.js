@@ -85,6 +85,7 @@ insertModelFields("mail.message", {
         string: "Partners with History",
         type: "many2many",
     },
+    pinned_at: { default: () => false },
     is_discussion: { string: "Discussion", type: "boolean" },
     is_note: { string: "Discussion", type: "boolean" },
     needaction_partner_ids: {

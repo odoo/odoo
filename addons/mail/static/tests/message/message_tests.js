@@ -372,8 +372,7 @@ QUnit.test("Deleting parent message of a reply should adapt reply visual", async
     await triggerHotkey("Enter", false);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Delete']");
-    $('button:contains("Delete")').click();
-    await nextTick();
+    await click("button:contains(Confirm)");
     assert.containsOnce($, ".o-mail-MessageInReply:contains(Original message was deleted)");
 });
 

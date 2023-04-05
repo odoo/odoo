@@ -24,6 +24,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ChannelInvitation } from "./channel_invitation";
 import { _t } from "@web/core/l10n/translation";
+import { PinnedMessagesPanel } from "./pinned_messages_panel";
 
 export class Discuss extends Component {
     static components = {
@@ -34,6 +35,7 @@ export class Discuss extends Component {
         Call,
         CallSettings,
         ChannelMemberList,
+        PinnedMessagesPanel,
     };
     static props = {
         public: { type: Boolean, optional: true },
@@ -42,6 +44,7 @@ export class Discuss extends Component {
 
     MODES = Object.freeze({
         MEMBER_LIST: "member-list",
+        PINNED_MESSAGES: "pinned-messages",
         SETTINGS: "settings",
         NONE: "",
     });
@@ -67,7 +70,18 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.prevInboxCounter = this.store.discuss.inbox.counter;
-        useChildSubEnv({ inDiscussApp: true });
+        useChildSubEnv({
+            inDiscussApp: true,
+            messageHighlight: this.messageHighlight,
+            pinMenu: {
+                open: () => (this.state.activeMode = this.MODES.PINNED_MESSAGES),
+                close: () => {
+                    if (this.state.activeMode === this.MODES.PINNED_MESSAGES) {
+                        this.state.activeMode = this.MODES.NONE;
+                    }
+                },
+            },
+        });
         useEffect(
             () => {
                 if (
@@ -96,6 +110,13 @@ export class Discuss extends Component {
 
     get thread() {
         return this.store.threads[this.store.discuss.threadLocalId];
+    }
+
+    togglePinMenu() {
+        this.state.activeMode =
+            this.state.activeMode === this.MODES.PINNED_MESSAGES
+                ? this.MODES.NONE
+                : this.MODES.PINNED_MESSAGES;
     }
 
     toggleInviteForm() {
