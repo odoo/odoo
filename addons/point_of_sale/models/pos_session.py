@@ -1796,8 +1796,6 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_res_partner(self, params):
-        if not self.config_id.limited_partners_loading:
-            return self.env['res.partner'].search_read(**params['search_params'])
         partner_ids = [res[0] for res in self.config_id.get_limited_partners_loading()]
         # Need to search_read because get_limited_partners_loading
         # might return a partner id that is not accessible.
@@ -1937,10 +1935,7 @@ class PosSession(models.Model):
 
     def _get_pos_ui_product_product(self, params):
         self = self.with_context(**params['context'])
-        if not self.config_id.limited_products_loading:
-            products = self.env['product.product'].search_read(**params['search_params'])
-        else:
-            products = self.config_id.get_limited_products_loading(params['search_params']['fields'])
+        products = self.config_id.get_limited_products_loading(params['search_params']['fields'])
 
         self._process_pos_ui_product_product(products)
         return products

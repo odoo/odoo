@@ -374,35 +374,6 @@
                                 <field name="update_stock_quantities" colspan="4" widget="radio"/>
                             </setting>
                         </block>
-
-                        <block title="Technical" id="pos_technical_section" groups="base.group_no_one">
-                            <setting string="Limited Products Loading" help="Only load most common products at the opening of the PoS.">
-                                <field name="pos_limited_products_loading"/>
-                                <div class="content-group mt16" attrs="{'invisible' : [('pos_limited_products_loading', '=', False)]}">
-                                    <div class="row">
-                                        <label for="pos_limited_products_amount" string="Number of Products Loaded" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_limited_products_amount"  class="oe_inline"/>
-                                    </div>
-                                    <div class="mt8">
-                                        <field name="pos_product_load_background" class="oe_inline" />
-                                        <label for="pos_product_load_background" string="Load all remaining products in the background" />
-                                    </div>
-                                </div>
-                            </setting>
-                            <setting string="Limited Partners Loading" help="Only load a limited number of customers at the opening of the PoS.">
-                                <field name="pos_limited_partners_loading"/>
-                                <div class="content-group mt16" attrs="{'invisible' : [('pos_limited_partners_loading', '=', False)]}">
-                                    <div class="row">
-                                        <label for="pos_limited_partners_amount" string="Number of Partners Loaded" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_limited_partners_amount" class="oe_inline"/>
-                                    </div>
-                                    <div class="mt8">
-                                        <field name="pos_partner_load_background" class="oe_inline" />
-                                        <label for="pos_partner_load_background" string="Load all remaining partners in the background" />
-                                    </div>
-                                </div>
-                            </setting>
-                        </block>
                     </div>
                 </app>
             </xpath>
