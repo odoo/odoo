@@ -20,9 +20,10 @@
                                  attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
                             <field name="survey_start_url" nolabel="1" readonly="1" widget="CopyClipboardChar"
                                  attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
-                            <field string="Send by Email" name="send_email" widget="boolean_toggle"
+                            <field string="Send by Email" name="send_email" widget="boolean_toggle" options="{'autosave': False}"
                                    attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
                             <field name="partner_ids"
+                                required="true"
                                 widget="many2many_tags_email"
                                 placeholder="Add existing contacts..."
                                 context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"
