@@ -8,6 +8,7 @@ class Course(models.Model):
     name = fields.Char('Name')
     lesson_ids = fields.One2many('test_new_api.lesson', 'course_id')
     author_id = fields.Many2one('test_new_api.person')
+    private_field = fields.Char(groups="base.group_no_one")
 
 
 class Lesson(models.Model):

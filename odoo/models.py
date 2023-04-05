@@ -3017,7 +3017,7 @@ class BaseModel(metaclass=MetaModel):
         return self._read_format(fnames=fields, load=load)
 
     def unity_read(self, specification=None):
-        accessible_field_names = self.check_field_access_rights('read', specification)
+        accessible_field_names = self.check_field_access_rights('read', specification.keys())
         accessible_specification = {field_name: specification.get(field_name, {}) for field_name in accessible_field_names}
         self.fetch(accessible_field_names)
         return self._unity_read_format(accessible_specification)
@@ -3312,27 +3312,19 @@ class BaseModel(metaclass=MetaModel):
         if not self or not field_names:
             return
 
-        is_unity = isinstance(field_names, dict)
-
         # determine fields to fetch
-        fields_to_fetch  = OrderedDict()
+        fields_to_fetch  = OrderedSet()
         cache = self.env.cache
-        if is_unity:
-            # restore the field specification for the accessible fields
-            field_names = { field_name: field_names.get(field_name, dict()) for field_name in
-                            self.check_field_access_rights('read', field_names) }
-        else:
-            field_names = { field_name: dict() for field_name in
-                           self.check_field_access_rights('read', field_names) }
+        field_names = { field_name for field_name in self.check_field_access_rights('read', field_names) }
 
-        for field_name, specification in field_names.items():
+        for field_name in field_names:
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
             if not any(cache.get_missing_ids(self, field)):
                 continue
             if field.store:
-                fields_to_fetch[field] = specification
+                fields_to_fetch.add(field)
             elif field.compute:
                 # TODO VSC: if a dependency of a compute is also requested in the fields to read after the compute, and has
                 #           has extra info (like it's an x2many and needs to be sorted a special way), this information is lost.
@@ -3341,7 +3333,7 @@ class BaseModel(metaclass=MetaModel):
                 for dotname in self.pool.field_depends[field]:
                     dep = self._fields[dotname.split('.', 1)[0]]
                     if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_fetch[dep] = dict()
+                        fields_to_fetch.add(dep)
 
         if not fields_to_fetch:
             # there is nothing to fetch, but we expect an error anyway in case

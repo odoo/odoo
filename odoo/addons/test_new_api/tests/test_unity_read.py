@@ -37,8 +37,7 @@ class TestUnityRead(TransactionCase):
         cls.course_no_author = cls.env['test_new_api.course'].create({'name': 'some other course without author'})
 
     def test_reading_no_field_reads_all_accessible_fields(self):
-        read = self.course.unity_read({})
-        result = {
+        public_fields = {
             'id': self.course.id,
             'name': 'introduction to OWL',
             'display_name': 'introduction to OWL',
@@ -49,13 +48,16 @@ class TestUnityRead(TransactionCase):
             'write_date': self.course.write_date,
             'write_uid': self.course.write_uid.id
         }
+        read = self.course.with_user(self.only_course_user).unity_read({})
+        self.assertEqual(read, [public_fields])  # all fields are read except the private field for this user
+
+        read = self.course.unity_read({})
         self.assertEqual(read, [{
-            **result,
+            **public_fields,
             'private_field': False,
         }])
 
-        read = self.course.with_user(self.only_course_user).unity_read({})
-        self.assertEqual(read, [result]) # all fields are read except the private field for this user
+
 
     def test_read_add_id(self):
         read = self.course.unity_read({'display_name': {}})
