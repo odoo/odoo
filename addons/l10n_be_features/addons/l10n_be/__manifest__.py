@@ -34,10 +34,12 @@ Wizards provided by this module:
     """,
     'author': 'Noviat, Odoo S.A.',
     'depends': [
+        'l10n_be_features',
         'account',
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account', 'l10n_be_features'],
     'data': [
         'data/account_tax_report_data.xml',
         'data/l10n_be_sequence_data.xml',

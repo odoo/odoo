@@ -86,6 +86,20 @@ class UpgradeHook(object):
 
         return sys.modules[name]
 
+def add_module_group(manifest, module):
+    if manifest.get('category') == 'Localizations':
+        new_paths = []
+        this_path = tools.misc.file_path(f"{manifest['addons_path']}/{module}/addons")
+        if this_path not in odoo.addons.__path__:
+            new_paths.append(this_path)
+        for path in odoo.addons.__path__:
+            # submodules of the module itself are in a `addons` subfolder
+            if path != manifest['addons_path'] and module not in path:
+                try:
+                    new_paths.append(tools.misc.file_path(f'{path}/{module}'))
+                except FileNotFoundError:
+                    continue
+        odoo.addons.__path__.extend(new_paths)
 
 def initialize_sys_path():
     """
@@ -333,6 +347,7 @@ def load_manifest(module, mod_path=None):
 
     manifest['version'] = adapt_version(manifest['version'])
     manifest['addons_path'] = normpath(opj(mod_path, os.pardir))
+    add_module_group(manifest, module)
 
     return manifest
 
@@ -409,7 +424,10 @@ def get_modules():
         if not os.path.exists(ad):
             _logger.warning("addons path does not exist: %s", ad)
             continue
-        plist.extend(listdir(ad))
+        modules = listdir(ad)
+        plist.extend(modules)
+        for module in modules:
+            load_manifest(module)
     return list(set(plist))
 
 def get_modules_with_version():

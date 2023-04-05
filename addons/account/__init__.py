@@ -17,13 +17,9 @@ def _set_fiscal_country(env):
 
 def _auto_install_l10n(env):
     # Check the country of the main company (only) and eventually load some module needed in that country
-    country = env.company.country_id
-    country_code = country.code
+    country_code = env.company.country_id.code
     if country_code:
         module_list = []
-        if not env.company.chart_template:
-            template_code = env['account.chart.template']._guess_chart_template(country)
-            module_list.append(env['account.chart.template']._get_chart_template_mapping()[template_code]['module'])
         if country_code in ['US', 'CA']:
             module_list.append('account_check_printing')
         if country_code in SYSCOHADA_LIST + VAT_LIST:

@@ -254,7 +254,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             concrete_models = [model for model in model_names if not registry[model]._abstract]
             if concrete_models:
                 env.cr.execute("""
-                    SELECT model FROM ir_model 
+                    SELECT model FROM ir_model
                     WHERE id NOT IN (SELECT DISTINCT model_id FROM ir_model_access) AND model IN %s
                 """, [tuple(concrete_models)])
                 models = [model for [model] in env.cr.fetchall()]
@@ -356,7 +356,13 @@ def load_marked_modules(env, graph, states, force, progressdict, report,
 
     processed_modules = []
     while True:
-        env.cr.execute("SELECT name from ir_module_module WHERE state IN %s", (tuple(states),))
+        env.cr.execute("""
+            SELECT mod.name
+              FROM ir_module_module mod
+              JOIN ir_module_category cat ON mod.category_id = cat.id
+             WHERE state IN %s
+          ORDER BY cat.name ->> 'en_US' != 'Localizations'
+        """, (tuple(states),))
         module_list = [name for (name,) in env.cr.fetchall() if name not in graph]
         if not module_list:
             break
