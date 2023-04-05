@@ -764,16 +764,6 @@ function makeActionManager(env) {
             env.services.router.redirect(url);
         } else {
             const w = browser.open(url, "_blank", "noreferrer");
-            if (!w || w.closed || typeof w.closed === "undefined") {
-                const msg = env._t(
-                    "A popup window has been blocked. You may need to change your " +
-                        "browser settings to allow popup windows for this page."
-                );
-                env.services.notification.add(msg, {
-                    sticky: true,
-                    type: "warning",
-                });
-            }
             if (options.onClose) {
                 options.onClose();
             }
