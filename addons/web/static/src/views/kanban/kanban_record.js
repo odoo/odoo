@@ -308,6 +308,7 @@ export class KanbanRecord extends Component {
                     this.dialog.add(ConfirmationDialog, {
                         body: env._t("Are you sure you want to delete this record?"),
                         confirm: () => listOrGroup.deleteRecords([record]),
+                        confirmLabel: env._t("Delete"),
                         cancel: () => {},
                     });
                 } else {

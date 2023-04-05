@@ -373,6 +373,7 @@ export class FormController extends Component {
                     this.env.config.historyBack();
                 }
             },
+            confirmLabel: this.env._t("Delete"),
             cancel: () => {},
         };
         this.dialogService.add(ConfirmationDialog, dialogProps);

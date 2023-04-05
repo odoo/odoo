@@ -509,6 +509,7 @@ export class ListController extends Component {
                     );
                 }
             },
+            confirmLabel: this.env._t("Delete"),
             cancel: () => {},
         };
         this.dialogService.add(ConfirmationDialog, dialogProps);
