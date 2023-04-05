@@ -650,6 +650,13 @@ export class ThreadService {
         if ("selection" in data) {
             Object.assign(composer.selection, data.selection);
         }
+        if ("mentions" in data) {
+            for (const mention of data.mentions) {
+                if (mention.type === "partner") {
+                    composer.rawMentions.partnerIds.add(mention.id);
+                }
+            }
+        }
         return composer;
     }
 

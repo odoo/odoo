@@ -502,6 +502,19 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "#General 😊");
 });
 
+QUnit.test("pending mentions are kept when toggling composer", async (assert) => {
+    const pyEnv = await startServer();
+    const { openFormView } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await click("button:contains(Send message)");
+    await insertText(".o-mail-Composer-input", "@");
+    await click(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
+    await click("button:contains(Send message)");
+    await click("button:contains(Send message)");
+    await click(".o-mail-Composer-send");
+    assert.containsOnce($, ".o-mail-Message-body a.o_mail_redirect:contains(@Mitchell Admin)");
+});
+
 QUnit.test(
     'do not post message on channel with "SHIFT-Enter" keyboard shortcut',
     async (assert) => {

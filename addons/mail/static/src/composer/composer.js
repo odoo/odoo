@@ -445,7 +445,7 @@ export class Composer extends Component {
                 isNote:
                     this.props.composer.type === "note" ||
                     this.props.messageToReplyTo?.message?.isNote,
-                rawMentions: this.suggestion ? this.suggestion.rawMentions : [],
+                rawMentions: this.props.composer.rawMentions,
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
             const message = await this.threadService.post(thread, value, postData);
@@ -489,7 +489,7 @@ export class Composer extends Component {
                     this.props.composer.message,
                     value,
                     this.props.composer.attachments,
-                    this.suggestion?.rawMentions
+                    this.props.composer.rawMentions
                 )
             );
         } else {
