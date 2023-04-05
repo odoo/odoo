@@ -44,7 +44,7 @@ class ProjectTags(models.Model):
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         if self.env.context.get('project_id') and operator == 'ilike':
             # `domain` has the form of the default filter ['!', ['id', 'in', <ids>]]
             # passed to exclude already selected tags -> exclude them in our query too
@@ -99,7 +99,7 @@ class ProjectTags(models.Model):
             self.env.cr.execute(query, params)
             return [row[0] for row in self.env.cr.fetchall()]
         else:
-            return super()._name_search(name, domain, operator, limit, order, name_get_uid)
+            return super()._name_search(name, domain, operator, limit, order)
 
     @api.model
     def name_create(self, name):

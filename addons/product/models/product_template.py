@@ -490,12 +490,12 @@ class ProductTemplate(models.Model):
                 for template in self]
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
         domain = domain or []
         if not name or any(term[0] == 'id' for term in domain):
-            return super()._name_search(name, domain, operator, limit, order, name_get_uid)
+            return super()._name_search(name, domain, operator, limit, order)
 
         Product = self.env['product.product']
         templates = self.browse()
@@ -503,7 +503,7 @@ class ProductTemplate(models.Model):
             extra = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             # Product._name_search has default value limit=100
             # So, we either use that value or override it to None to fetch all products at once
-            products_ids = Product._name_search(name, domain + extra, operator, limit=None, name_get_uid=name_get_uid)
+            products_ids = Product._name_search(name, domain + extra, operator, limit=None)
             products = Product.browse(products_ids)
             new_templates = products.product_tmpl_id
             if new_templates & templates:
@@ -525,11 +525,11 @@ class ProductTemplate(models.Model):
             tmpl_without_variant = self.search([('id', 'not in', tmpl_with_variant_ids)])
         if tmpl_without_variant:
             domain2 = expression.AND([domain, [('id', 'in', tmpl_without_variant.ids)]])
-            searched_ids |= set(super()._name_search(name, domain2, operator, limit, order, name_get_uid))
+            searched_ids |= set(super()._name_search(name, domain2, operator, limit, order))
 
         # re-apply product.template order + name_get
         domain = [('id', 'in', list(searched_ids))]
-        return super()._name_search('', domain, 'ilike', limit, order, name_get_uid)
+        return super()._name_search('', domain, 'ilike', limit, order)
 
     def action_open_label_layout(self):
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')

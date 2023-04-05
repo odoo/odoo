@@ -252,10 +252,10 @@ class AccountTax(models.Model):
         return ''.join(list_name)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         if operator in ("ilike", "like"):
             name = AccountTax._parse_name_search(name)
-        return super()._name_search(name, domain, operator, limit, order, name_get_uid)
+        return super()._name_search(name, domain, operator, limit, order)
 
     def _search_name(self, operator, value):
         if operator not in ("ilike", "like") or not isinstance(value, str):

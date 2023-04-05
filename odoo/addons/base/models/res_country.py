@@ -82,7 +82,7 @@ class Country(models.Model):
             'The code of the country must be unique!')
     ]
 
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         if domain is None:
             domain = []
 
@@ -169,7 +169,7 @@ class CountryState(models.Model):
     ]
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
         if self.env.context.get('country_id'):
             domain = expression.AND([domain, [('country_id', '=', self.env.context.get('country_id'))]])
@@ -184,12 +184,12 @@ class CountryState(models.Model):
         first_state_ids = []
         if domain1:
             first_state_ids = list(self._search(
-                expression.AND([domain1, domain]), limit=limit, order=order, access_rights_uid=name_get_uid,
+                expression.AND([domain1, domain]), limit=limit, order=order,
             ))
         return first_state_ids + [
             state_id
             for state_id in self._search(expression.AND([domain2, domain]),
-                                         limit=limit, order=order, access_rights_uid=name_get_uid)
+                                         limit=limit, order=order)
             if state_id not in first_state_ids
         ]
 

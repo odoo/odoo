@@ -648,7 +648,7 @@ class Users(models.Model):
         self.clear_caches()
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
         user_ids = []
         if operator not in expression.NEGATIVE_TERM_OPERATORS:
@@ -656,9 +656,9 @@ class Users(models.Model):
                 name_domain = []
             else:
                 name_domain = [('login', '=', name)]
-            user_ids = self._search(expression.AND([name_domain, domain]), limit=limit, order=order, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
         if not user_ids:
-            user_ids = self._search(expression.AND([[('name', operator, name)], domain]), limit=limit, order=order, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([[('name', operator, name)], domain]), limit=limit, order=order)
         return user_ids
 
     def copy(self, default=None):

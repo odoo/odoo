@@ -143,13 +143,13 @@ class PartnerCategory(models.Model):
         return res
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
         if name:
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             domain = [('name', operator, name)] + domain
-        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
+        return self._search(domain, limit=limit, order=order)
 
 
 class PartnerTitle(models.Model):
