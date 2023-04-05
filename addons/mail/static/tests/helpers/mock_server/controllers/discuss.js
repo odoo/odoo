@@ -40,8 +40,12 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailAttachmentRemove(attachment_id);
         }
         if (route === "/mail/channel/messages") {
-            const { channel_id, after, before, limit } = args;
-            return this._mockRouteMailChannelMessages(channel_id, before, after, limit);
+            const { channel_id, after, around, before, limit } = args;
+            return this._mockRouteMailChannelMessages(channel_id, before, after, around, limit);
+        }
+        if (route === "/mail/channel/pinned_messages") {
+            const { channel_id } = args;
+            return this._mockRouteMailChannelPins(channel_id);
         }
         if (route === "/mail/channel/notify_typing") {
             const id = args.channel_id;
@@ -57,7 +61,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         }
         if (route === "/mail/channel/members") {
             const { channel_id, known_member_ids } = args;
-            return this._mockMailChannelLoadMoreMembers([channel_id], known_member_ids);
+            return this._mockMailChannelloadOlderMembers([channel_id], known_member_ids);
         }
         if (route === "/mail/history/messages") {
             const { after, before, limit } = args;
@@ -67,8 +71,8 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailInitMessaging();
         }
         if (route === "/mail/inbox/messages") {
-            const { after, before, limit } = args;
-            return this._mockRouteMailMessageInbox(after, before, limit);
+            const { after, around, before, limit } = args;
+            return this._mockRouteMailMessageInbox(after, before, around, limit);
         }
         if (route === "/mail/link_preview") {
             return this._mockRouteMailLinkPreview(args.message_id);
@@ -153,16 +157,28 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             );
         }
         if (route === "/mail/thread/messages") {
-            const { after, before, limit, thread_model, thread_id } = args;
+            const { after, around, before, limit, thread_model, thread_id } = args;
             return this._mockRouteMailThreadFetchMessages(
                 thread_model,
                 thread_id,
                 before,
                 after,
+                around,
                 limit
             );
         }
         return this._super(route, args);
+    },
+    /**
+     * Simulates the `/mail/channel/pinned_messages` route.
+     */
+    _mockRouteMailChannelPins(channel_id) {
+        const messageIds = this.pyEnv["mail.message"].search([
+            ["model", "=", "mail.channel"],
+            ["res_id", "=", channel_id],
+            ["pinned_at", "!=", false],
+        ]);
+        return this._mockMailMessageMessageFormat(messageIds);
     },
     /**
      * Simulates the `/mail/init_messaging` route.
@@ -193,16 +209,25 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      * @param {integer} limit
      * @param {integer} before
      * @param {integer} after
+     * @param {integer} around
      * @returns {Object} list of messages
      */
-    async _mockRouteMailChannelMessages(channel_id, before = false, after = false, limit = 30) {
+    async _mockRouteMailChannelMessages(
+        channel_id,
+        before = false,
+        after = false,
+        around = false,
+        limit = 30
+    ) {
         const domain = [
             ["res_id", "=", channel_id],
             ["model", "=", "mail.channel"],
             ["message_type", "!=", "user_notification"],
         ];
-        const messages = this._mockMailMessage_MessageFetch(domain, before, after, limit);
-        this._mockMailMessageSetMessageDone(messages.map((message) => message.id));
+        const messages = this._mockMailMessage_MessageFetch(domain, before, after, around, limit);
+        if (!around) {
+            this._mockMailMessageSetMessageDone(messages.map((message) => message.id));
+        }
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
     },
     /**
@@ -299,7 +324,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      */
     _mockRouteMailMessageHistory(after = false, before = false, limit = 30) {
         const domain = [["needaction", "=", false]];
-        const messages = this._mockMailMessage_MessageFetch(domain, before, after, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, before, after, false, limit);
         const messagesWithNotification = messages.filter((message) => {
             const notifs = this.pyEnv["mail.notification"].searchRead([
                 ["mail_message_id", "=", message.id],
@@ -319,9 +344,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      * @private
      * @returns {Object}
      */
-    _mockRouteMailMessageInbox(after = false, before = false, limit = 30) {
+    _mockRouteMailMessageInbox(after = false, before = false, around = false, limit = 30) {
         const domain = [["needaction", "=", true]];
-        const messages = this._mockMailMessage_MessageFetch(domain, before, after, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, before, after, around, limit);
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
     },
     /**
@@ -332,7 +357,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      */
     _mockRouteMailMessageStarredMessages(after = false, before = false, limit = 30) {
         const domain = [["starred_partner_ids", "in", [this.currentPartnerId]]];
-        const messages = this._mockMailMessage_MessageFetch(domain, before, after, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, before, after, false, limit);
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
     },
     /**
@@ -524,6 +549,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         res_id,
         before = false,
         after = false,
+        around = false,
         limit = 30
     ) {
         const domain = [
@@ -531,7 +557,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             ["model", "=", res_model],
             ["message_type", "!=", "user_notification"],
         ];
-        const messages = this._mockMailMessage_MessageFetch(domain, before, after, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, before, after, around, limit);
         this._mockMailMessageSetMessageDone(messages.map((message) => message.id));
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
     },

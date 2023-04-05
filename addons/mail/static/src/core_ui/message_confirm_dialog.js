@@ -6,10 +6,10 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-export class MessageDeleteDialog extends Component {
+export class MessageConfirmDialog extends Component {
     static components = { Dialog };
-    static props = ["close", "message", "messageComponent"];
-    static template = "mail.MessageDeleteDialog";
+    static props = ["close", "message", "messageComponent", "prompt", "onConfirm"];
+    static template = "mail.MessageConfirmDialog";
 
     setup() {
         /** @type {import("@mail/core/message_service").MessageService} */
@@ -17,8 +17,8 @@ export class MessageDeleteDialog extends Component {
         this.title = _t("Confirmation");
     }
 
-    onClickDelete() {
-        this.messageService.delete(this.props.message);
+    onClickConfirm() {
+        this.props.onConfirm();
         this.props.close();
     }
 }

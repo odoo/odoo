@@ -15,6 +15,7 @@ import { ThreadIcon } from "@mail/discuss/thread_icon";
 import { ChannelInvitation } from "@mail/discuss/channel_invitation";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss/channel_selector";
+import { PinnedMessagesPanel } from "@mail/discuss/pinned_messages_panel";
 
 /**
  * @typedef {Object} Props
@@ -32,6 +33,7 @@ export class ChatWindow extends Component {
         ChannelMemberList,
         ThreadIcon,
         ChannelInvitation,
+        PinnedMessagesPanel,
     };
     static props = ["chatWindow", "right?"];
     static template = "mail.ChatWindow";
@@ -49,6 +51,7 @@ export class ChatWindow extends Component {
         this.state = useState({
             /**
              * activeMode:
+             *   "pinned-messages": pin menu is displayed
              *   "member-list": channel member list is displayed
              *   "in-settings": settings is displayed
              *   "add-users": add users is displayed (small device)
@@ -58,7 +61,18 @@ export class ChatWindow extends Component {
         });
         this.action = useService("action");
         this.contentRef = useRef("content");
-        useChildSubEnv({ inChatWindow: true });
+        useChildSubEnv({
+            inChatWindow: true,
+            messageHighlight: this.messageHighlight,
+            pinMenu: {
+                open: () => (this.state.activeMode = "pinned-messages"),
+                close: () => {
+                    if (this.state.activeMode === "pinned-messages") {
+                        this.state.activeMode = "";
+                    }
+                },
+            },
+        });
     }
 
     get thread() {
@@ -106,6 +120,11 @@ export class ChatWindow extends Component {
             this.chatWindowService.toggleFold(this.props.chatWindow);
         }
         this.chatWindowService.notifyState(this.props.chatWindow);
+    }
+
+    togglePinMenu() {
+        this.state.activeMode =
+            this.state.activeMode === "pinned-messages" ? "" : "pinned-messages";
     }
 
     toggleSettings() {

@@ -8,7 +8,7 @@ import { useMessaging, useStore } from "@mail/core/messaging_hook";
 import { url } from "@web/core/utils/urls";
 
 export class MessageInReply extends Component {
-    static props = ["message", "alignedRight", "onClick"];
+    static props = ["message", "alignedRight", "onClick?"];
     static template = "mail.MessageInReply";
 
     setup() {

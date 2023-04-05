@@ -310,6 +310,10 @@ export class Messaging {
                                     ({ id }) => id === message.id
                                 );
                             }
+                            removeFromArrayWithPredicate(
+                                message.originThread.pinnedMessages,
+                                ({ id }) => id === message.id
+                            );
                             if (message.id > message.originThread.seen_message_id) {
                                 message.originThread.message_unread_counter--;
                             }
@@ -509,7 +513,11 @@ export class Messaging {
             model: channel.model,
         });
         if (!channel.messages.includes(message)) {
-            channel.messages.push(message);
+            if (!channel.loadNewer) {
+                channel.messages.push(message);
+            } else if (channel.state === "loading") {
+                channel.pendingNewMessages.push(message);
+            }
             if (message.isSelfAuthored) {
                 channel.seen_message_id = message.id;
             } else {
@@ -539,6 +547,7 @@ export class Messaging {
             }
         }
         if (
+            !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
             channel.newestPersistentMessage &&
@@ -606,8 +615,21 @@ export class Messaging {
                 ...messageData,
                 body: messageData.body ? markup(messageData.body) : messageData.body,
             });
+            if (
+                message.pinned_at &&
+                !message.originThread?.pinnedMessages.some(({ id }) => id === message.id)
+            ) {
+                message.originThread.pinnedMessages.unshift(message);
+            }
             if (isStarred && message.isEmpty) {
                 this.messageService.updateStarred(message, false);
+            }
+            if (message.pinned_at && message.isEmpty) {
+                message.pinned_at = false;
+                removeFromArrayWithPredicate(
+                    message.originThread.pinnedMessages,
+                    ({ id }) => id === message.id
+                );
             }
         }
         const { "res.users.settings": settings } = notif.payload;
