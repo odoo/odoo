@@ -520,6 +520,29 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
+        "Ensure float fields are formatted properly without using a widget",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="qux" digits="[0,5]"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+            // Would display 0.40 if digits attr is not applied
+            assert.strictEqual(target.querySelector(".o_kanban_record").innerText, "0.40000");
+        }
+    );
+
+    QUnit.test(
         "basic grouped rendering with active field and archive enabled (archivable true)",
         async (assert) => {
             // add active field on partner model and make all records active
