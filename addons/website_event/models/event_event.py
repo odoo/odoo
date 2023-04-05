@@ -63,6 +63,7 @@ class Event(models.Model):
     location_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Location Menus",
         domain=[("menu_type", "=", "location_menu")])
+    address_name = fields.Char(related='address_id.name')
     register_menu = fields.Boolean(
         "Register Menu", compute="_compute_website_menu_data",
         readonly=False, store=True)
@@ -516,10 +517,11 @@ class Event(models.Model):
                     current_date = date_details[1]
 
         search_fields = ['name']
-        fetch_fields = ['name', 'website_url']
+        fetch_fields = ['name', 'website_url', 'address_name']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'address_name': {'name': 'address_name', 'type': 'text', 'match': True},
         }
         if with_description:
             search_fields.append('subtitle')
@@ -527,10 +529,19 @@ class Event(models.Model):
             mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
         if with_date:
             mapping['detail'] = {'name': 'range', 'type': 'html'}
+
+        # Bypassing the access rigths of partner to search the address.
+        def search_in_address(env, search_term):
+            ret = env['event.event'].sudo()._search([
+               ('address_search', 'ilike', search_term),
+            ])
+            return [('id', 'in', ret)]
+
         return {
             'model': 'event.event',
             'base_domain': domain,
             'search_fields': search_fields,
+            'search_extra': search_in_address,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-ticket',
