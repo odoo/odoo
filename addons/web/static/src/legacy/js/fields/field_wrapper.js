@@ -111,7 +111,9 @@ odoo.define('web.FieldWrapper', function (require) {
             return $(this.componentRef.comp.focusableElement);
         }
         isEmpty() {
-            return this.componentRef.comp.isEmpty;
+			if (this.componentRef.comp) {
+            	return this.componentRef.comp.isEmpty;
+            }
         }
         isFocusable() {
             return this.componentRef.comp.isFocusable;
@@ -162,7 +164,9 @@ odoo.define('web.FieldWrapper', function (require) {
                 const fieldsInfo = this.props.record.fieldsInfo[viewType];
                 fieldsInfo[this.props.fieldName].modifiersValue = modifiers || {};
             }
-            this.componentRef.comp.props = this.props;
+            if (this.componentRef.comp) {
+            	this.componentRef.comp.props = this.props;
+            }
         }
     }
 
