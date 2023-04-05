@@ -263,7 +263,7 @@ class AccountMoveLine(models.Model):
     def _compute_account_id(self):
         super()._compute_account_id()
         input_lines = self.filtered(lambda line: (
-            line.product_id.type == 'product'
+            line._can_use_stock_accounts()
             and line.move_id.company_id.anglo_saxon_accounting
             and line.move_id.is_purchase_document()
         ))
@@ -393,6 +393,9 @@ class AccountMoveLine(models.Model):
                 break
 
         return svl_vals_list
+
+    def _can_use_stock_accounts(self):
+        return self.product_id.type == 'product'
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
