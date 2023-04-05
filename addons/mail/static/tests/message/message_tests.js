@@ -263,6 +263,30 @@ QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     assert.strictEqual($textarea[0].scrollTop, 0);
 });
 
+QUnit.test("mentions are kept when editing message", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "Hello @Mitchell Admin",
+        model: "mail.channel",
+        partner_ids: [pyEnv.currentPartnerId],
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await editInput(document.body, ".o-mail-Message .o-mail-Composer-input", "Hi @Mitchell Admin");
+    await click(".o-mail-Message a:contains('save')");
+    assert.strictEqual($(".o-mail-Message-body")[0].innerText, "Hi @Mitchell Admin");
+    assert.containsOnce($, ".o-mail-Message-body a.o_mail_redirect:contains(@Mitchell Admin)");
+});
+
 QUnit.test("Other messages are grayed out when replying to another one", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({

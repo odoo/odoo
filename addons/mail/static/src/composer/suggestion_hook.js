@@ -8,8 +8,8 @@ export function useSuggestion() {
     const suggestionService = useService("mail.suggestion");
     const self = {
         clearRawMentions() {
-            self.rawMentions.partnerIds.length = 0;
-            self.rawMentions.threadIds.length = 0;
+            comp.props.composer.rawMentions.partnerIds.length = 0;
+            comp.props.composer.rawMentions.threadIds.length = 0;
         },
         clearSearch() {
             Object.assign(self.search, {
@@ -78,10 +78,10 @@ export function useSuggestion() {
             }
             const recordReplacement = option.label;
             if (option.partner) {
-                self.rawMentions.partnerIds.add(option.partner.id);
+                comp.props.composer.rawMentions.partnerIds.add(option.partner.id);
             }
             if (option.thread) {
-                self.rawMentions.threadIds.add(option.thread.id);
+                comp.props.composer.rawMentions.threadIds.add(option.thread.id);
             }
             self.clearSearch();
             comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;
@@ -101,10 +101,6 @@ export function useSuggestion() {
             if (self.fetch.nextMentionRpcFunction) {
                 self.process(self.fetch.nextMentionRpcFunction);
             }
-        },
-        rawMentions: {
-            partnerIds: new Set(),
-            threadIds: new Set(),
         },
         search: {
             delimiter: undefined,

@@ -413,6 +413,7 @@ export class Message extends Component {
     enterEditMode() {
         const messageContent = convertBrToLineBreak(this.props.message.body);
         this.threadService.insertComposer({
+            mentions: this.props.message.recipients,
             message: this.props.message,
             textInputContent: messageContent,
             selection: {
