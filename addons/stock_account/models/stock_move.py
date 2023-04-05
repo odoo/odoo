@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=False,
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=True,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')

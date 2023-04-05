@@ -14,14 +14,11 @@ class StockReturnPicking(models.TransientModel):
             vals.update({'to_refund': True})
         return res
 
-    def _create_returns(self):
-        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
-        new_picking = self.env['stock.picking'].browse([new_picking_id])
-        for move in new_picking.move_ids:
-            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)[:1]
-            if return_picking_line and return_picking_line.to_refund:
-                move.to_refund = True
-        return new_picking_id, pick_type_id
+    def _prepare_move_default_values(self, return_line, new_picking):
+        vals = super(StockReturnPicking, self)._prepare_move_default_values(return_line, new_picking)
+        if return_line.to_refund:
+            vals['to_refund'] = True
+        return vals
 
 
 class StockReturnPickingLine(models.TransientModel):
